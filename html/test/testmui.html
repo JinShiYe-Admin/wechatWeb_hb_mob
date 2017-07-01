@@ -18,10 +18,18 @@
 
 	<body>
 		<header class="mui-bar mui-bar-nav">
-		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-		    <h1 class="mui-title">Hello World</h1>
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">Hello World</h1>
 		</header>
 		<div class="mui-content">
+			<div id="loadingToast">
+				<div class="weui-mask_transparent"></div>
+				<div class="weui-toast">
+					<i class="weui-loading weui-icon_toast"></i>
+					<p class="weui-toast__content">数据加载中</p>
+				</div>
+			</div>
+			<div>---页面加载状态---</div>
 			<div>mui.ready:
 				<div id="ready" class="custom-div">false</div>
 			</div>
@@ -31,17 +39,20 @@
 			<div>windowOnload:
 				<div id="windowOnload" class="custom-div">false</div>
 			</div>
+			<div>---打开页面的方式---</div>
+			<button value="0">mui-打开新页面</button>
 			<br />
-			<button id="openNewWindow">mui-打开新页面</button>
-			<br />
-			<button id="openNewWindow">mui-打开新页面</button>
-			<div>num:
+			<button value="1">window-打开新页面</button>
+			<div>window打开次数:
 				<div class="custom-div" id="openNewWindow_num">0</div>
 			</div>
-			<button id="getWebView">mui-获取webview</button>
+			<button value="2">mui-获取webview</button>
 			<div>webview.id:
 				<div id="webView" class="custom-div"></div>
 			</div>
+			<div>---打开新页面+传值---</div>
+			<button value="3">mui-通过URL传值</button>
+			<button value="4">window-通过URL传值</button>
 		</div>
 		<script type="text/javascript" src="../../js/jweixin.js"></script>
 		<script type="text/javascript" src="../../js/mui.min.js"></script>
@@ -58,19 +69,37 @@
 			});
 
 			window.onload = function() {
+				setTimeout(function() {
+					document.getElementById("loadingToast").style.display = "none";
+				}, 2000);
 				document.getElementById("windowOnload").innerText = "true";
 
-				//mui的方法打开一个新页面
-				document.getElementById('openNewWindow').addEventListener('click', function() {
-					var num = document.getElementById("openNewWindow_num");
-					num.innerText = num.innerText * 1 + 1;
-					mui.openWindow("muiWindow.html", "muiWindow.html");
+				//按钮监听
+				mui('.mui-content').on('tap', 'button', function() {
+					var value = this.getAttribute("value");
+					console.log("value " + value);
+					switch(value) {
+						case "0": //mui的方法打开一个新页面
+							mui.openWindow("testnewwindow.html","testnewwindow.html");
+							break;
+						case "1": //window 打开新的页面
+							var num = document.getElementById("openNewWindow_num");
+							num.innerText = num.innerText * 1 + 1;
+							window.open("testnewwindow.html");
+							break;
+						case "2": //mui的方法获取当前webview
+							var web = plus.webview.currentWebview();
+							document.getElementById("webView").innerText = web.id;
+							break;
+						case "3": //mui-通过URL传值
+							break;
+						case "4": //window-通过URL传值
+							break;
+						default:
+							break;
+					}
 				});
-				//mui的方法获取当前webview
-				document.getElementById('getWebView').addEventListener('tap', function() {
-					var web = plus.webview.currentWebview();
-					document.getElementById("webView").innerText = web.id;
-				});
+
 			}
 		</script>
 	</body>

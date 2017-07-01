@@ -30,6 +30,7 @@
 			</div>
 		</div>
 		<script src="../../js/mui.min.js"></script>
+		<script type="text/javascript" src="../../js/utils.js"></script>
 		<script type="text/javascript">
 			mui.init();
 			mui.plusReady(function() {
@@ -43,7 +44,10 @@
 			});
 
 			window.onload = function() {
-				console.log("window.onload");
+				console.log("window.onload " + JSON.stringify(window.location));
+				if(window.location.search != "") {
+					var search = window.location.search.substr(1);
+				}
 				document.getElementById("windowOnload").innerText = "true";
 			}
 		</script>

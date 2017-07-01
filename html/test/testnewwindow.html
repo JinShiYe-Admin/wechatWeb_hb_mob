@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<style>
+			.custom-div {
+				display: inline;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">mui</h1>
+		</header>
+		<div class="mui-content">
+			<div>mui.ready:
+				<div id="ready" class="custom-div">false</div>
+			</div>
+			<div>mui.plusReady:
+				<div id="plusReady" class="custom-div">false</div>
+			</div>
+			<div>windowOnload:
+				<div id="windowOnload" class="custom-div">false</div>
+			</div>
+		</div>
+		<script src="../../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			mui.plusReady(function() {
+				console.log("mui.plusReady");
+				document.getElementById("plusReady").innerText = "true";
+			});
+
+			mui.ready(function() {
+				console.log("mui.ready");
+				document.getElementById("ready").innerText = "true";
+			});
+
+			window.onload = function() {
+				console.log("window.onload");
+				document.getElementById("windowOnload").innerText = "true";
+			}
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>Hello World</title>
+		<link rel="stylesheet" href="../../css/mui.min.css" />
+		<link rel="stylesheet" href="../../css/weui.min.css" />
+		<style>
+			.custom-div {
+				display: inline;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">Hello World</h1>
+		</header>
+		<div class="mui-content">
+			<div>mui.ready:
+				<div id="ready" class="custom-div">false</div>
+			</div>
+			<div>mui.plusReady:
+				<div id="plusReady" class="custom-div">false</div>
+			</div>
+			<div>windowOnload:
+				<div id="windowOnload" class="custom-div">false</div>
+			</div>
+			<br />
+			<button id="openNewWindow">mui-打开新页面</button>
+			<br />
+			<button id="openNewWindow">mui-打开新页面</button>
+			<div>num:
+				<div class="custom-div" id="openNewWindow_num">0</div>
+			</div>
+			<button id="getWebView">mui-获取webview</button>
+			<div>webview.id:
+				<div id="webView" class="custom-div"></div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../../js/jweixin.js"></script>
+		<script type="text/javascript" src="../../js/mui.min.js"></script>
+		<script type="text/javascript" src="../../js/weui.min.js"></script>
+		<script type="text/javascript" src="../../js/utils.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			mui.plusReady(function() {
+				document.getElementById("plusReady").innerText = "true";
+			});
+
+			mui.ready(function() {
+				document.getElementById("ready").innerText = "true";
+			});
+
+			window.onload = function() {
+				document.getElementById("windowOnload").innerText = "true";
+
+				//mui的方法打开一个新页面
+				document.getElementById('openNewWindow').addEventListener('click', function() {
+					var num = document.getElementById("openNewWindow_num");
+					num.innerText = num.innerText * 1 + 1;
+					mui.openWindow("muiWindow.html", "muiWindow.html");
+				});
+				//mui的方法获取当前webview
+				document.getElementById('getWebView').addEventListener('tap', function() {
+					var web = plus.webview.currentWebview();
+					document.getElementById("webView").innerText = web.id;
+				});
+			}
+		</script>
+	</body>
+
+</html>

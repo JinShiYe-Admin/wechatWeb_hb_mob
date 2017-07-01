@@ -1,0 +1,183 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>首页</title>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+
+	</head>
+
+	<body>
+		<h1>test</h1>
+		<button onclick="getConfigMsg()">获取config</button>
+		<button onclick="getToken()">发送config协议</button>
+		<button onclick="hideOptionMenu()">隐藏右上角按钮</button>
+		<button onclick="showOptionMenu()">显示右上角按钮</button>
+		<button onclick="chooseImage()">拍照或从手机相册中选图</button>
+		<button onclick="uploadImage()">上传图片</button>
+		<button onclick="previewImage()">预览图片</button>
+		<button onclick="downloadImage()">下载图片</button>
+		<button onclick="previewFile()">预览文件</button>
+		<button onclick="openNewWindow()">mui-打开一个新页面</button>
+		<button onclick="openWindow()">window-打开一个新页面</button>
+		<ul class="mui-table-view">
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right">
+					Item 1
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right">
+					Item 2
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right">
+					Item 3
+				</a>
+			</li>
+		</ul>
+
+		<script type="text/javascript" src="../../js/mui.min.js"></script>
+		<script type="text/javascript" src="../../js/jweixin.js"></script>
+		<script type="text/javascript" src="../../js/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/utils.js" ></script>
+		<script type="text/javascript">
+			mui.init();
+			var configmsg;
+			var localIds;
+			var serverId;
+			var localId;
+			window.onload = function() {
+				mui.toast('window.onload');
+			}
+
+			mui.ready(function() {
+				alert('mui.ready');
+				var url = window.location.href;
+				var cncodeUrl = encodeURIComponent(url);
+
+				jQuery.post('../wxth/jssdkapi.aspx', {
+					reuri: cncodeUrl
+				}, function(data) {
+					alert('666');
+					configmsg = JSON.parse(data);
+					getToken();
+				});
+
+				//			var tempUrl = 'https://jsypay.jiaobaowang.net/wxth/jssdkapi.aspx?reuri=' + cncodeUrl;
+				//			if(window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+				//				xmlhttp = new XMLHttpRequest();
+				//			} else { // code for IE6, IE5
+				//				xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+				//			}
+				//			xmlhttp.onreadystatechange = function(e) {
+				//				alert('xmlhttp:' + xmlhttp.readyState + ',' + xmlhttp.status + ',' + xmlhttp.responseText);
+				//				if(xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				//					alert('text:' + xmlhttp.responseText);
+				//					configmsg = JSON.parse(xmlhttp.responseText);
+				//					getToken();
+				//				}
+				//			}
+				//			xmlhttp.open("GET", tempUrl, true);
+				//			xmlhttp.send();
+
+				mui(".mui-table-view").on('tap', '.mui-table-view-cell', function() {
+					alert('点击cell');
+				});
+			});
+
+			wx.ready(function(e) {
+				// config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+			});
+
+			wx.error(function(res) {
+				// config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
+			});
+
+			function hideOptionMenu() {
+				wx.hideOptionMenu();
+			}
+
+			function showOptionMenu() {
+				wx.showOptionMenu();
+			}
+
+			//预览图片
+			function previewImage() {
+				wx.previewImage({
+					current: localIds[0], // 当前显示图片的http链接
+					urls: localIds // 需要预览的图片http链接列表
+				});
+			}
+			//上传图片
+			function uploadImage() {
+				wx.uploadImage({
+					localId: localIds[0], // 需要上传的图片的本地ID，由chooseImage接口获得
+					isShowProgressTips: 1, // 默认为1，显示进度提示
+					success: function(res) {
+						serverId = res.serverId; // 返回图片的服务器端ID
+						alert('serverId:' + serverId);
+					}
+				});
+			}
+			//下载图片
+			function downloadImage() {
+				wx.downloadImage({
+					serverId: serverId, // 需要下载的图片的服务器端ID，由uploadImage接口获得
+					isShowProgressTips: 1, // 默认为1，显示进度提示
+					success: function(res) {
+						localId = res.localId; // 返回图片下载后的本地ID
+						alert('localId:' + localId);
+					}
+				});
+			}
+			//预览文件
+			function previewFile() {
+				wx.previewFile({
+					url: '', // 需要预览文件的地址(必填，可以使用相对路径)
+					name: '', // 需要预览文件的文件名(不填的话取url的最后部分)
+					size: 1048576 // 需要预览文件的字节大小(必填)
+				});
+			}
+			//拍照或从手机相册中选图
+			function chooseImage() {
+				wx.chooseImage({
+					count: 3, // 默认9
+					sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+					sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+					success: function(res) {
+						localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+						alert('localIds:' + localIds);
+					}
+				});
+			}
+
+			function getToken() {
+				wx.config({
+					debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+					appId: configmsg.appId, // 必填，公众号的唯一标识
+					timestamp: configmsg.timestamp, // 必填，生成签名的时间戳
+					nonceStr: configmsg.nonceStr, // 必填，生成签名的随机串
+					signature: configmsg.signature, // 必填，签名
+					jsApiList: ['onMenuShareAppMessage', 'onMenuShareWechat', 'chooseImage', 'previewImage', 'uploadImage', 'downloadImage'] // 必填，需要使用的JS接口列表
+				});
+				alert('发送config协议完毕，参数:' + configmsg.appId + ',' + configmsg.timestamp + ',' + configmsg.nonceStr + ',' + configmsg.signature);
+			}
+
+			function openNewWindow() {
+				mui.openWindow("../test/testmui.html", "testmui.html");
+			}
+
+			function openWindow() {
+				window.open("../test/testmui.html");
+			}
+		</script>
+
+	</body>
+
+</html>

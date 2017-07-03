@@ -53,12 +53,18 @@
 			<div>---打开新页面+传值---</div>
 			<button value="3">mui-通过URL传值</button>
 			<button value="4">window-通过URL传值</button>
+			<div>---HTML 5 Web 存储---</div>
+			<button value="5">localStorage</button>
+			<button value="6">sessionStorage</button>
+			<button value="7">get-localStorage</button>
+			<button value="8">get-sessionStorage</button>
 		</div>
 		<script type="text/javascript" src="../../js/jweixin.js"></script>
 		<script type="text/javascript" src="../../js/mui.min.js"></script>
 		<script type="text/javascript" src="../../js/weui.min.js"></script>
 		<script type="text/javascript" src="../../js/utils.js"></script>
 		<script type="text/javascript">
+			var testData = "test";
 			mui.init();
 			mui.plusReady(function() {
 				document.getElementById("plusReady").innerText = "true";
@@ -80,7 +86,7 @@
 					console.log("value " + value);
 					switch(value) {
 						case "0": //mui的方法打开一个新页面
-							mui.openWindow("testnewwindow.html","testnewwindow.html");
+							mui.openWindow("testnewwindow.html");
 							break;
 						case "1": //window 打开新的页面
 							var num = document.getElementById("openNewWindow_num");
@@ -92,12 +98,31 @@
 							document.getElementById("webView").innerText = web.id;
 							break;
 						case "3": //mui-通过URL传值
+							mui.openWindow("testnewwindow.html?urla=1&urlb=2", "testnewwindow.html");
 							break;
 						case "4": //window-通过URL传值
+							window.open("testnewwindow.html?urlc=3&urld=4", "testnewwindow.html");
+							break;
+						case "5": //localStorage
+							localStorage.myLocalStorage = "myLocalStorage-0";
+							break;
+						case "6": //sessionStorage
+							sessionStorage.mySessionStorage = "mySessionStorage-0";
+							break;
+						case "7": //get-localStorage
+							alert("myLocalStorage " + localStorage.myLocalStorage)
+							break;
+						case "8": //get-sessionStorage
+							alert("mySessionStorage " + sessionStorage.mySessionStorage)
 							break;
 						default:
 							break;
 					}
+				});
+
+				window.addEventListener('muiFire', function(event) {
+					var data = event.detail;
+					console.log("muiFire " + JSON.stringify(data));
 				});
 
 			}

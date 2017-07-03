@@ -28,8 +28,13 @@
 			<div>windowOnload:
 				<div id="windowOnload" class="custom-div">false</div>
 			</div>
+			<button value="0">get-localStorage</button>
+			<button value="1">get-sessionStorage</button>
+			<button value="2">window.opener</button>
+			<button value="3">mui.fire</button>
 		</div>
 		<script src="../../js/mui.min.js"></script>
+		<script type="text/javascript" src="../../js/jquery.min.js"></script>
 		<script type="text/javascript" src="../../js/utils.js"></script>
 		<script type="text/javascript">
 			mui.init();
@@ -45,10 +50,33 @@
 
 			window.onload = function() {
 				console.log("window.onload " + JSON.stringify(window.location));
-				if(window.location.search != "") {
-					var search = window.location.search.substr(1);
-				}
 				document.getElementById("windowOnload").innerText = "true";
+				var data = utils.getDataFromUrl(window.location.href);
+				alert("data " + JSON.stringify(data));
+
+				mui('.mui-content').on('tap', 'button', function() {
+					var value = this.getAttribute("value");
+					console.log("value " + value);
+					switch(value) {
+						case "0": //get-localStorage
+							alert("myLocalStorage " + localStorage.myLocalStorage)
+							break;
+						case "1": //get-sessionStorage
+							alert("mySessionStorage " + sessionStorage.mySessionStorage)
+							break;
+						case "2": //get-sessionStorage
+							var parent = window.opener;
+							console.log("parent " + parent.testData);
+							break;
+						case "3": //mui.fire
+							mui.fire(window.opener, 'muiFire', {
+								data: 'muiFire'
+							});
+							break;
+						default:
+							break;
+					}
+				});
 			}
 		</script>
 	</body>

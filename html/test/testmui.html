@@ -58,6 +58,9 @@
 			<button value="6">sessionStorage</button>
 			<button value="7">get-localStorage</button>
 			<button value="8">get-sessionStorage</button>
+			<div>子页触发父页面的方法data:
+				<div id="windowOpenerFuction"></div>
+			</div>
 		</div>
 		<script type="text/javascript" src="../../js/jweixin.js"></script>
 		<script type="text/javascript" src="../../js/mui.min.js"></script>
@@ -125,6 +128,14 @@
 					console.log("muiFire " + JSON.stringify(data));
 				});
 
+			}
+
+			/**
+			 * 子页触发父页的事件
+			 */
+			function testfun(data) {
+				console.log("testfun " + data);
+				document.getElementById("windowOpenerFuction").innerText = data;
 			}
 		</script>
 	</body>

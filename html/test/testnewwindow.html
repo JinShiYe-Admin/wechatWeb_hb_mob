@@ -30,8 +30,12 @@
 			</div>
 			<button value="0">get-localStorage</button>
 			<button value="1">get-sessionStorage</button>
-			<button value="2">window.opener</button>
-			<button value="3">mui.fire</button>
+			<div>获取父页面的数据data:
+				<div id="windowOpenerdata"></div>
+				<button value="2">window.opener</button>
+			</div>
+			<button value="3">window.opener function</button>
+			<button value="4">mui.fire</button>
 		</div>
 		<script src="../../js/mui.min.js"></script>
 		<script type="text/javascript" src="../../js/jquery.min.js"></script>
@@ -64,11 +68,14 @@
 						case "1": //get-sessionStorage
 							alert("mySessionStorage " + sessionStorage.mySessionStorage)
 							break;
-						case "2": //get-sessionStorage
-							var parent = window.opener;
-							console.log("parent " + parent.testData);
+						case "2": //window.opener
+							console.log("window.opener " + window.opener.testData);
+							document.getElementById("windowOpenerdata").innerText=window.opener.testData;
 							break;
-						case "3": //mui.fire
+						case "3": //window.opener
+							console.log("window.opener function " + window.opener.testfun("123"));
+							break;
+						case "4": //mui.fire
 							mui.fire(window.opener, 'muiFire', {
 								data: 'muiFire'
 							});

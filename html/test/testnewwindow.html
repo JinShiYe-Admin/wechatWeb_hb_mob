@@ -28,8 +28,18 @@
 			<div>windowOnload:
 				<div id="windowOnload" class="custom-div">false</div>
 			</div>
+			<button value="0">get-localStorage</button>
+			<button value="1">get-sessionStorage</button>
+			<div>获取父页面的数据data:
+				<div id="windowOpenerdata"></div>
+				<button value="2">window.opener</button>
+			</div>
+			<button value="3">window.opener function</button>
+			<button value="4">mui.fire</button>
 		</div>
 		<script src="../../js/mui.min.js"></script>
+		<script type="text/javascript" src="../../js/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/utils.js"></script>
 		<script type="text/javascript">
 			mui.init();
 			mui.plusReady(function() {
@@ -43,8 +53,37 @@
 			});
 
 			window.onload = function() {
-				console.log("window.onload");
+				console.log("window.onload " + JSON.stringify(window.location));
 				document.getElementById("windowOnload").innerText = "true";
+				var data = utils.getDataFromUrl(window.location.href);
+				alert("data " + JSON.stringify(data));
+
+				mui('.mui-content').on('tap', 'button', function() {
+					var value = this.getAttribute("value");
+					console.log("value " + value);
+					switch(value) {
+						case "0": //get-localStorage
+							alert("myLocalStorage " + localStorage.myLocalStorage)
+							break;
+						case "1": //get-sessionStorage
+							alert("mySessionStorage " + sessionStorage.mySessionStorage)
+							break;
+						case "2": //window.opener
+							console.log("window.opener " + window.opener.testData);
+							document.getElementById("windowOpenerdata").innerText=window.opener.testData;
+							break;
+						case "3": //window.opener
+							console.log("window.opener function " + window.opener.testfun("123"));
+							break;
+						case "4": //mui.fire
+							mui.fire(window.opener, 'muiFire', {
+								data: 'muiFire'
+							});
+							break;
+						default:
+							break;
+					}
+				});
 			}
 		</script>
 	</body>

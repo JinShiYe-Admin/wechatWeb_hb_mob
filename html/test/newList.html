@@ -141,7 +141,7 @@
 			//请求列表信息流
 			mui.getJSON("http://spider.dcloud.net.cn/api/news", data, function(rsp) {
 				console.log(JSON.stringify(rsp))
-				mui('#list').pullRefresh().endPulldown();
+//				mui('#list').pullRefresh().endPulldown();
 				if(rsp && rsp.length > 0) {
 					lastId = rsp[0].id; //保存最新消息的id，方便下拉刷新时使用
 					news.items = news.items.concat(convert(rsp));

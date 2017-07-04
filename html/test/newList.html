@@ -122,17 +122,6 @@
 			mui.ready(function() {
 				alert('进入ready方法');
 				var lastId = ''; //最新新闻的id
-				var webview_detail = null; //详情页webview
-				var titleNView = { //详情页原生导航配置
-					backgroundColor: '#f7f7f7', //导航栏背景色
-					titleText: '', //导航栏标题
-					titleColor: '#000000', //文字颜色
-					type: 'transparent', //透明渐变样式
-					autoBackButton: true, //自动绘制返回箭头
-					splitLine: { //底部分割线
-						color: '#cccccc'
-					}
-				}
 				var data = {
 					column: "id,post_id,title,author_name,cover,published_at" //需要的字段名
 				}
@@ -141,44 +130,170 @@
 					data.lastId = lastId;
 					data.time = new Date().getTime() + "";
 				}
-				alert('发送新闻请求开始');
-				//请求顶部banner信息
-//				jQuery.getJSON("http://spider.dcloud.net.cn/api/banner/36kr", data, function(rsp) {
-//					console.log(JSON.stringify(rsp));
-//					alert('发送新闻请求成功0');
-//					news.banner = {
-//						guid: rsp.post_id,
-//						title: rsp.title,
-//						cover: rsp.cover,
-//						author: rsp.author_name,
-//						time: dateUtils.format(rsp.published_at)
-//					};
-//				});
-//
-//				//请求列表信息流
-//				jQuery.getJSON("http://spider.dcloud.net.cn/api/news", data, function(rsp) {
-//					console.log(JSON.stringify(rsp));
-//					alert('发送新闻请求成功1');
-//					//				mui('#list').pullRefresh().endPulldown();
-//					if(rsp && rsp.length > 0) {
-//						lastId = rsp[0].id; //保存最新消息的id，方便下拉刷新时使用
-//						news.items = news.items.concat(convert(rsp));
-//					}
-//				});
-			});
+				var rsp = {
+					"id": 29534,
+					"post_id": "5081660",
+					"title": "从次时代游戏到VR游戏，荔枝文化认为打造一款好的游戏必须具备“工匠精神”",
+					"author_name": "张达",
+					"cover": "https://pic.36krcnd.com/avatar/201707/04070536/rf5n3pp8fwka9iai.jpg!feature",
+					"published_at": "2017-07-04 15:34:15"
+				}
 
-			//			//预加载详情页
-			//			webview_detail = mui.preload({
-			//				url: 'new-detail.html',
-			//				id: 'news-detail',
-			//				styles: {
-			//					"render": "always",
-			//					"popGesture": "hide",
-			//					"bounce": "vertical",
-			//					"bounceBackground": "#efeff4",
-			//					"titleNView": titleNView
-			//				}
-			//			});
+				//请求顶部banner信息
+				news.banner = {
+					guid: rsp.post_id,
+					title: rsp.title,
+					cover: rsp.cover,
+					author: rsp.author_name,
+					time: dateUtils.format(rsp.published_at)
+				};
+				var rspArr = [{
+					"id": 29536,
+					"post_id": "5082204",
+					"title": "主打肉多量足的中式馅料，宇宙卷饼要你把卷饼当正餐",
+					"author_name": "邓痕痕",
+					"cover": "https://pic.36krcnd.com/avatar/201707/04075413/j1eyit9eank8kzaf.jpg!feature",
+					"published_at": "2017-07-04 15:52:13"
+				}, {
+					"id": 29535,
+					"post_id": "5082218",
+					"title": "视频 | 陌生人社交领域，一种常被忽视但很赚钱的模式",
+					"author_name": "36氪渠道",
+					"cover": "https://pic.36krcnd.com/avatar/201707/04070954/hofbxwffinv4i8r2.png!feature",
+					"published_at": "2017-07-04 15:33:29"
+				}, {
+					"id": 29533,
+					"post_id": "5082163",
+					"title": "基石资本张维：投资的本质是考察公司高层对管理的认知",
+					"author_name": "捕手志",
+					"cover": "https://pic.36krcnd.com/avatar/201707/04015731/ylhjcgq2n05tvk5h.jpg!feature",
+					"published_at": "2017-07-04 15:25:38"
+				}, {
+					"id": 29532,
+					"post_id": "5082219",
+					"title": "老年人也爱美，如何让50+女性继续光彩照人？",
+					"author_name": "36氪的朋友们",
+					"cover": "https://pic.36krcnd.com/avatar/201707/04071517/8t0bzpqtetb3lmso.jpg!feature",
+					"published_at": "2017-07-04 15:18:58"
+				}, {
+					"id": 29531,
+					"post_id": "5082199",
+					"title": "阅文集团收入占网络文学半壁江山，利润率1.2% | IPO观察",
+					"author_name": "卢晓明",
+					"cover": "https://pic.36krcnd.com/avatar/201707/04063218/cx2gxyuiwvzlh0n3.jpg!feature",
+					"published_at": "2017-07-04 15:06:44"
+				}, {
+					"id": 29530,
+					"post_id": "5082202",
+					"title": "硅谷再爆丑闻，500 Startups 投资人因性骚扰指控辞职",
+					"author_name": "胡颖",
+					"cover": "https://pic.36krcnd.com/avatar/201707/04063723/bfpnz0zz26phxrhd.jpg!feature",
+					"published_at": "2017-07-04 14:53:34"
+				}, {
+					"id": 29528,
+					"post_id": "5082213",
+					"title": "食品10大消费升级趋势：地方味大放异彩、无添加糖成为新时尚",
+					"author_name": "36氪的朋友们",
+					"cover": "https://pic.36krcnd.com/avatar/201707/04064626/bmu3ariaakepl5az.jpg!feature",
+					"published_at": "2017-07-04 14:50:06"
+				}, {
+					"id": 29529,
+					"post_id": "5082166",
+					"title": "定增寒冬真相：融资额下滑15%，业绩好的企业却“门槛”倍升",
+					"author_name": "读懂新三板",
+					"cover": "https://pic.36krcnd.com/avatar/201707/04021903/ibxpm3ec6038udj2.png!feature",
+					"published_at": "2017-07-04 14:45:21"
+				}, {
+					"id": 29527,
+					"post_id": "5082186",
+					"title": "日本破产渔夫开了个“名创优品十元店”，逆袭成了亿万富翁",
+					"author_name": "Evelyn 杜",
+					"cover": "https://pic.36krcnd.com/avatar/201707/04054755/li7annfo1u6m7j2k.jpg!feature",
+					"published_at": "2017-07-04 14:38:49"
+				}, {
+					"id": 29526,
+					"post_id": "5082189",
+					"title": "暑期档三大疑问：单片能否破10亿？大盘是否继续下滑？ 黑马有没有？",
+					"author_name": "犀牛娱乐",
+					"cover": "https://pic.36krcnd.com/avatar/201707/04061717/f0xm6x4k78a307zf.jpg!feature",
+					"published_at": "2017-07-04 14:28:10"
+				}, {
+					"id": 29524,
+					"post_id": "5079685",
+					"title": "背靠京东阿里顺丰巨头，无人驾驶的首个破局会是低速送货物流车吗？| 36氪新风向",
+					"author_name": "Nicholas",
+					"cover": "https://pic.36krcnd.com/avatar/201707/04061342/09u3lm17cad8oqfi.png!feature",
+					"published_at": "2017-07-04 14:14:18"
+				}, {
+					"id": 29525,
+					"post_id": "5082167",
+					"title": "2017年Q2教育行业投融资分析：2/3的公司处于早期融资，财务投资人超60%",
+					"author_name": "鲸媒体",
+					"cover": "https://pic.36krcnd.com/avatar/201707/04022532/n00udf2ewxnohcwm.jpg!feature",
+					"published_at": "2017-07-04 14:11:17"
+				}, {
+					"id": 29523,
+					"post_id": "5082194",
+					"title": "三星向自家芯片工厂投资180亿美元，满足物联网、人工智能设备的芯片爆发需求",
+					"author_name": "高小倩",
+					"cover": "https://pic.36krcnd.com/avatar/201707/04044724/6t04o1xqceus0jer.png!feature",
+					"published_at": "2017-07-04 13:32:02"
+				}, {
+					"id": 29522,
+					"post_id": "5082173",
+					"title": "《王者荣耀》制作人回应：不止是游戏，“小号”是整个互联网行业都面临的难题",
+					"author_name": "高小倩",
+					"cover": "https://pic.36krcnd.com/avatar/201707/04035207/8hszzeqkaofcmlc4.png!feature",
+					"published_at": "2017-07-04 13:15:11"
+				}, {
+					"id": 29519,
+					"post_id": "5082165",
+					"title": "运用人工智能进行宫颈癌筛查，四维祥泰获数千万元天使融资  ",
+					"author_name": "顿雨婷",
+					"cover": "https://pic.36krcnd.com/avatar/201707/04022611/cg13ab0zc4ogvqnb.jpg!feature",
+					"published_at": "2017-07-04 13:00:53"
+				}, {
+					"id": 29520,
+					"post_id": "5082153",
+					"title": "摩托罗拉推出Moto Mod相机，支持360度全景拍摄   ",
+					"author_name": "顿雨婷",
+					"cover": "https://pic.36krcnd.com/avatar/201707/04012142/og9o7xpb1yxwxs88.jpg!feature",
+					"published_at": "2017-07-04 12:59:33"
+				}, {
+					"id": 29521,
+					"post_id": "5076229",
+					"title": "“妹夫家”建立正版视频素材的“早集”，想让短视频交易变得常买常卖",
+					"author_name": "一九",
+					"cover": "https://pic.36krcnd.com/avatar/201707/04030340/019k9aff0mknd85e.PNG!feature",
+					"published_at": "2017-07-04 12:51:29"
+				}, {
+					"id": 29518,
+					"post_id": "5082193",
+					"title": "攻占杭州！马云的金融子弟兵以及“叛徒”们",
+					"author_name": "36氪的朋友们",
+					"cover": "https://pic.36krcnd.com/avatar/201707/04041425/2vvxvd03jyjm4rtt.jpg!feature",
+					"published_at": "2017-07-04 12:15:27"
+				}, {
+					"id": 29517,
+					"post_id": "5082185",
+					"title": "你是如何被微信广告选中的？微信广告引擎与社交传播算法实践",
+					"author_name": "InfoQ技术媒体",
+					"cover": "https://pic.36krcnd.com/avatar/201707/04034625/j7rblc88pok59e1h.jpg!feature",
+					"published_at": "2017-07-04 11:47:04"
+				}, {
+					"id": 29510,
+					"post_id": "5082106",
+					"title": "a16z 合伙人：再过几年，投资人就不会关注 AI 创业公司了",
+					"author_name": "小兵手",
+					"cover": "https://pic.36krcnd.com/avatar/201707/04033823/2v04zjbdaswbg6hf.jpg!feature",
+					"published_at": "2017-07-04 11:40:51"
+				}]
+
+				if(rspArr && rspArr.length > 0) {
+					lastId = rspArr[0].id; //保存最新消息的id，方便下拉刷新时使用
+					news.items = news.items.concat(convert(rspArr));
+				}
+			});
 
 			/**
 			 * 1、将服务端返回数据，转换成前端需要的格式
@@ -186,60 +301,60 @@
 			 * 
 			 * @param {Array} items 
 			 */
-//			function convert(items) {
-//				var newItems = [];
-//				items.forEach(function(item) {
-//					newItems.push({
-//						guid: item.post_id,
-//						title: item.title,
-//						author: item.author_name,
-//						cover: item.cover,
-//						time: dateUtils.format(item.published_at)
-//					});
-//				});
-//				return newItems;
-//			}
+			function convert(items) {
+				var newItems = [];
+				items.forEach(function(item) {
+					newItems.push({
+						guid: item.post_id,
+						title: item.title,
+						author: item.author_name,
+						cover: item.cover,
+						time: dateUtils.format(item.published_at)
+					});
+				});
+				return newItems;
+			}
 
 			/**
 			 * 格式化时间的辅助类，将一个时间转换成x小时前、y天前等
 			 */
-//			var dateUtils = {
-//				UNITS: {
-//					'年': 31557600000,
-//					'月': 2629800000,
-//					'天': 86400000,
-//					'小时': 3600000,
-//					'分钟': 60000,
-//					'秒': 1000
-//				},
-//				humanize: function(milliseconds) {
-//					var humanize = '';
-//					mui.each(this.UNITS, function(unit, value) {
-//						if(milliseconds >= value) {
-//							humanize = Math.floor(milliseconds / value) + unit + '前';
-//							return false;
-//						}
-//						return true;
-//					});
-//					return humanize || '刚刚';
-//				},
-//				format: function(dateStr) {
-//					var date = this.parse(dateStr)
-//					var diff = Date.now() - date.getTime();
-//					if(diff < this.UNITS['天']) {
-//						return this.humanize(diff);
-//					}
-//
-//					var _format = function(number) {
-//						return(number < 10 ? ('0' + number) : number);
-//					};
-//					return date.getFullYear() + '/' + _format(date.getMonth() + 1) + '/' + _format(date.getDay()) + '-' + _format(date.getHours()) + ':' + _format(date.getMinutes());
-//				},
-//				parse: function(str) { //将"yyyy-mm-dd HH:MM:ss"格式的字符串，转化为一个Date对象
-//					var a = str.split(/[^0-9]/);
-//					return new Date(a[0], a[1] - 1, a[2], a[3], a[4], a[5]);
-//				}
-//			};
+			var dateUtils = {
+				UNITS: {
+					'年': 31557600000,
+					'月': 2629800000,
+					'天': 86400000,
+					'小时': 3600000,
+					'分钟': 60000,
+					'秒': 1000
+				},
+				humanize: function(milliseconds) {
+					var humanize = '';
+					mui.each(this.UNITS, function(unit, value) {
+						if(milliseconds >= value) {
+							humanize = Math.floor(milliseconds / value) + unit + '前';
+							return false;
+						}
+						return true;
+					});
+					return humanize || '刚刚';
+				},
+				format: function(dateStr) {
+					var date = this.parse(dateStr)
+					var diff = Date.now() - date.getTime();
+					if(diff < this.UNITS['天']) {
+						return this.humanize(diff);
+					}
+
+					var _format = function(number) {
+						return(number < 10 ? ('0' + number) : number);
+					};
+					return date.getFullYear() + '/' + _format(date.getMonth() + 1) + '/' + _format(date.getDay()) + '-' + _format(date.getHours()) + ':' + _format(date.getMinutes());
+				},
+				parse: function(str) { //将"yyyy-mm-dd HH:MM:ss"格式的字符串，转化为一个Date对象
+					var a = str.split(/[^0-9]/);
+					return new Date(a[0], a[1] - 1, a[2], a[3], a[4], a[5]);
+				}
+			};
 		</script>
 	</body>
 

@@ -36,10 +36,14 @@
 			</div>
 			<button value="3">window.opener function</button>
 			<button value="4">mui.fire</button>
+			<button value="5">wx.closeWindow</button>
+			<button value="6">history.back()</button>
+			<button value="7">history.go(-1)</button>
 		</div>
 		<script src="../../js/mui.min.js"></script>
 		<script type="text/javascript" src="../../js/jquery.min.js"></script>
-		<script type="text/javascript" src="../../js/utils.js"></script>
+		<script type="text/javascript" src="../../js/utils/utils.js"></script>
+		<script type="text/javascript" src="../../js/jweixin.js"></script>
 		<script type="text/javascript">
 			mui.init();
 			mui.plusReady(function() {
@@ -70,7 +74,7 @@
 							break;
 						case "2": //window.opener
 							console.log("window.opener " + window.opener.testData);
-							document.getElementById("windowOpenerdata").innerText=window.opener.testData;
+							document.getElementById("windowOpenerdata").innerText = window.opener.testData;
 							break;
 						case "3": //window.opener
 							console.log("window.opener function " + window.opener.testfun("123"));
@@ -79,6 +83,15 @@
 							mui.fire(window.opener, 'muiFire', {
 								data: 'muiFire'
 							});
+							break;
+						case "5": // wx.closeWindow();
+							wx.closeWindow();
+							break;
+						case "6": //history.back()
+							window.history.back();
+							break;
+						case "7": //history.go(-1);
+							window.history.go(-1);
 							break;
 						default:
 							break;

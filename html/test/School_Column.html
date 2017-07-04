@@ -1,11 +1,21 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 
 	<head>
 		<meta charset="UTF-8">
-		<title>学校展示</title>
+		<title>中山市实验中学</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link href="css/utils/common.css" rel="stylesheet" />
+		<link href="css/iconfont/iconfont.css" rel="stylesheet" />
+		<script src="js/mui.min.js"></script>
+		<script src="js/utils/events.js"></script>
+		<link href="css/icons-extra.css" />
 		<link href="../../css/mui.min.css" rel="stylesheet" />
 		<link href="../../css/iconfont.css" rel="stylesheet" />
+		<link href="css/utils/common.css" rel="stylesheet" />
 
 	</head>
 	<style>
@@ -20,7 +30,7 @@
 		}
 		
 		.bg {
-			background-image: url(../../img/beijing.jpg);
+			background-image: url(img/beijing.jpg);
 			width: 100%;
 			height: 100%;
 			background-size: 100% 100%;
@@ -28,114 +38,116 @@
 			filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='bg-login.png', sizingMethod='scale');
 		}
 		
-		.div-c {
-			float: left;
-			width: 49%;
-			border: 1px solid lightgray;
-			text-align: center;
-			height: 80px;
-			margin: 1px;
-			background-color: #E8E8E8;
-		}
-		
-		.div-d {
-			float: right;
-			width: 49%;
-			height: 80px;
-			border: 1px solid lightgray;
-			text-align: center;
-			margin: 1px;
-			background-color: #E8E8E8;
-		}
-		
-		.div {
-			margin: 0 auto;
-			width: 500px;
-			border: 1px;
-		}
+	.mui-grid-view.mui-grid-9 {
+	margin: 0;
+	padding: 0;
+	border-top: 1px solid #eee;
+	border-left: 1px solid #eee;
+	background-color: #f2f2f2
+}
+
+.mui-grid-view.mui-grid-9:after,
+.mui-grid-view.mui-grid-9:before {
+	display: table;
+	content: ' '
+}
+
+.mui-grid-view.mui-grid-9:after {
+	clear: both;
+	position: static
+}
+
+.mui-grid-view.mui-grid-9 .mui-table-view-cell {
+	margin: 0;
+	padding: 0px 0px;
+	vertical-align: top;
+	border-right: 1px solid #eee;
+	border-bottom: 1px solid #eee
+}
+
+.mui-grid-view.mui-grid-9 .mui-table-view-cell.mui-active {
+	background-color: #eee
+}
+
+.mui-grid-view.mui-grid-9 .mui-table-view-cell>a:not(.mui-btn) {
+	margin: 0;
+	padding: 1px 0
+}
+
+.mui-grid-view.mui-grid-9:before {
+	height: 0
+}
+
+.mui-grid-view.mui-grid-9 .mui-media {
+	color: #797979
+}
+
+.mui-grid-view.mui-grid-9 .mui-media .mui-icon {
+	font-size: 2.4em;
+	position: relative
+}
 	</style>
 
 	<body class="bg">
-		<div style="height: 90px;">
-
-		</div>
-		<div class="div">
-			<div class="div-c">
-				<div style="padding-top: 30px;">
-					<a id="tabclass" class="mui-tab-item" href="#div-finished">
+		<div style="width:auto;height:auto">
+			<ul class="mui-table-view mui-grid-view mui-grid-9">
+				<li class="mui-table-view-cell mui-media mui-col-xs-6">
+					<a href="#">
 						<span class="mui-icon iconfont icon-shouyeshouye"></span>
-						<span class="mui-tab-label">学校简介</span>
+						<div class="mui-media-body">学校展示</div>
 					</a>
-				</div>
-			</div>
-			<div class="div-d">
-				<div style="padding-top: 30px;">
-					<a id="tabclass" class="mui-tab-item" onclick="openNews()">
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-6">
+					<a href="#" onclick="openNews()">
 						<span class="mui-icon iconfont icon-xinwendongtai"></span>
-						<span class="mui-tab-label">新闻动态</span>
+						<div class="mui-media-body">新闻动态</div>
 					</a>
-				</div>
-			</div>
-			<div class="div-c">
-				<div style="padding-top: 30px;">
-					<a id="tabclass" class="mui-tab-item" href="#div-finished">
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-6">
+					<a href="#">
 						<span class="mui-icon iconfont icon-qiapian3"></span>
-						<span class="mui-tab-label">办学理念</span>
+						<div class="mui-media-body">办学理念</div>
 					</a>
-				</div>
-			</div>
-			<div class="div-d">
-				<div style="padding-top: 30px;">
-					<a id="tabclass" class="mui-tab-item" href="#div-finished">
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-6">
+					<a href="#">
 						<span class="mui-icon iconfont icon-shizililiang"></span>
-						<span class="mui-tab-label">师资力量</span>
+						<div class="mui-media-body">师资力量</div>
 					</a>
-				</div>
-			</div>
-			<div class="div-c">
-				<div style="padding-top: 30px;">
-					<a id="tabclass" class="mui-tab-item" href="#div-finished">
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-6">
+					<a href="#">
 						<span class="mui-icon iconfont icon-jiaoxueguocheng"></span>
-						<span class="mui-tab-label">教学工作</span>
+						<div class="mui-media-body">教学工作</div>
 					</a>
-				</div>
-			</div>
-			<div class="div-d">
-				<div style="padding-top: 30px;">
-					<a id="tabclass" class="mui-tab-item" href="#div-finished">
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-6">
+					<a href="#">
 						<span class="mui-icon iconfont icon-dangjiandongtai"></span>
-						<span class="mui-tab-label">党建信息</span>
+						<div class="mui-media-body">党建信息</div>
 					</a>
-				</div>
-			</div>
-			<div class="div-c">
-				<div style="padding-top: 30px;">
-					<a id="tabclass" class="mui-tab-item" href="#div-finished">
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-6">
+					<a href="#">
 						<span class="mui-icon iconfont icon-zsxx"></span>
-						<span class="mui-tab-label">招生信息</span>
+						<div class="mui-media-body">招生信息</div>
 					</a>
-				</div>
-			</div>
-			<div class="div-d">
-				<div style="padding-top: 30px;">
-					<a id="tabclass" class="mui-tab-item" href="#div-finished">
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-6">
+					<a href="#">
 						<span class="mui-icon iconfont icon-youxiang"></span>
-						<span class="mui-tab-label">校长邮箱</span>
+						<div class="mui-media-body">校长邮箱</div>
 					</a>
-				</div>
-			</div>
+				</li>
+			</ul>
 		</div>
-		<div style="position: absolute;width:100%;left: 10%;margin-top: 400px; ">
-			<img class="Absolute-Center is-Image" src="../../img/10.png"></img>
-			<span style="font-size: 68px; color:#D43F3A;">中山市实验中学</span><br>
-			<span style="font-size: 28px; padding-left: 145px;color:#D43F3A;">Zhongshan Experimental Middle School</span>
-		</div>
-		<div style="position: absolute;width: 100%;left: 10%;margin-top: 800px; ">
-			<span style="font-size: 58px; color:#D43F3A;">百年名校 成长摇篮</span><br>
-			<div style="height: 50px;">
 
-			</div>
-			<span style="font-size: 58px; color:#D43F3A;">校训:饮水思源 宁静致远</span><br>
+		<div style="position: absolute;left: 30%;margin-top: 20px; ">
+			<img class="mui-icon-image" src="img/001 刘景新.jpg" style="border-radius:50%; height: 45px; overflow:hidden;" /><br />
+			<span style="font-size: 25px; color:#D43F3A;">中山市实验中学</span><br>
+			<span style="font-size: 10px; color:#D43F3A;">Zhongshan Experimental Middle School</span><br />
+			<span style="font-size: 20px; color:#D43F3A;">校训:饮水思源 宁静致远</span>
+
 		</div>
 	</body>
 	<script type="text/javascript" src="../../js/mui.min.js"></script>
@@ -145,8 +157,6 @@
 	<script>
 		function openNews() {
 			mui.openWindow("../test/newList.html", "newList.html");
-//			window.open("../test/News_Comment.html");
 		}
 	</script>
-
 </html>

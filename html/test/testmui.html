@@ -41,7 +41,6 @@
 			</div>
 			<div>---打开页面的方式---</div>
 			<button value="0">mui-打开新页面</button>
-			<br />
 			<button value="1">window-打开新页面</button>
 			<div>window打开次数:
 				<div class="custom-div" id="openNewWindow_num">0</div>
@@ -93,12 +92,12 @@
 					console.log("value " + value);
 					switch(value) {
 						case "0": //mui的方法打开一个新页面
-							mui.openWindow("testnewwindow.html");
+							mui.openWindow("testnewwindow.html","testnewwindow.html");
 							break;
 						case "1": //window 打开新的页面
 							var num = document.getElementById("openNewWindow_num");
 							num.innerText = num.innerText * 1 + 1;
-							window.open("testnewwindow.html");
+							window.open("testnewwindow.html","testnewwindow.html");
 							break;
 						case "2": //mui的方法获取当前webview
 							var web = plus.webview.currentWebview();

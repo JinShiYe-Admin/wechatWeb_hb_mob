@@ -115,9 +115,6 @@
 					items: [] //列表信息流数据
 				}
 			});
-			window.onload = function() {
-				alert('进入onload方法');
-			}
 
 			mui.ready(function() {
 				alert('进入ready方法');
@@ -293,6 +290,7 @@
 					lastId = rspArr[0].id; //保存最新消息的id，方便下拉刷新时使用
 					news.items = news.items.concat(convert(rspArr));
 				}
+
 			});
 
 			/**

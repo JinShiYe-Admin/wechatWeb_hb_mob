@@ -61,12 +61,6 @@
 				alert('mui.ready');
 				var url = window.location.href;
 				var cncodeUrl = encodeURIComponent(url);
-				jQuery.getJSON("http://spider.dcloud.net.cn/api/banner/36kr", {
-					column: "id,post_id,title,author_name,cover,published_at"
-				}, function(rsp) {
-					alert('666新闻');
-					alert('发送新闻请求成功0:'+JSON.stringify(rsp));
-				});
 
 				jQuery.post('https://jsypay.jiaobaowang.net/wxth/jssdkapi.aspx', {
 					reuri: cncodeUrl

@@ -1,0 +1,139 @@
+<!--
+	作者：444811716@qq.com
+	时间：2017-07-04
+	描述：网站配置
+-->
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>网站配置</title>
+		<link rel="stylesheet" href="../../css/weui.min.css" />
+	</head>
+
+	<body>
+		<div class="weui-cells weui-cells_form">
+			<div id="input_list">
+				<div v-for="(value,index) in inputArray">
+					<div class="weui-cells__title">{{value.title}}</div>
+					<div class="weui-cells">
+						<div class="weui-cell">
+							<div class="weui-cell__bd">
+								<input class="weui-input" v-model="value.message" type="text" :placeholder="'请输入'+value.title">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="switch_list">
+				<div v-for="(value,index) in switchArray">
+					<div class="weui-cell weui-cell_switch">
+						<div class="weui-cell__bd">{{value.title}}</div>
+						<div class="weui-cell__ft">
+							<input class="weui-switch" type="checkbox" v-model="value.check">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="weui-btn-area">
+				<button id="submit" v-on:click="submitClick" class="weui-btn weui-btn_primary">确定</button>
+			</div>
+		</div>
+		<script type="text/javascript" src="../../js/weui.min.js"></script>
+		<script type="text/javascript" src="../../js/vue.min.js"></script>
+		<script>
+			//输入框
+			var vue_input = new Vue({
+				el: '#input_list',
+				data: {
+					inputArray: [{
+						callcol: "cname",
+						title: "中文名",
+						message: ""
+					}, {
+						callcol: "ename",
+						title: "英文名",
+						message: ""
+					}, {
+						callcol: "logo",
+						title: "logourl",
+						message: ""
+					}, {
+						callcol: "banner",
+						title: "bannerurl",
+						message: ""
+					}, {
+						callcol: "skinid",
+						title: "皮肤ID",
+						message: ""
+					}, {
+						callcol: "corptel",
+						title: "单位联系方式",
+						message: ""
+					}]
+				}
+			});
+			//开关
+			var vue_switch = new Vue({
+				el: '#switch_list',
+				data: {
+					switchArray: [{
+						callcol: "stat",
+						title: "网站开启",
+						check: true
+					}, {
+						callcol: "isreply",
+						title: "整站新闻允许回复",
+						check: false
+					}, {
+						callcol: "isnewchk",
+						title: "允许新闻先发后审",
+						check: false
+					}, {
+						callcol: "isnewreplychk",
+						title: "允许回复先发后审",
+						check: false
+					}, {
+						callcol: "isfileup",
+						title: "允许新闻上传附件",
+						check: false
+					}, {
+						callcol: "isfiledown",
+						title: "允许附件被下载",
+						check: false
+					}, {
+						callcol: "iswrite",
+						title: "允许新闻普通人员投稿",
+						check: false
+					}, {
+						callcol: "isass",
+						title: "允许评论被评价",
+						check: false
+					}]
+				}
+			});
+
+			var vue_button = new Vue({
+				el: "#submit",
+				methods: {
+					submitClick: function() {
+						var commit = {};
+						for(var i in vue_input.inputArray) {
+							commit[vue_input.inputArray[i].callcol] = vue_input.inputArray[i].message;
+						}
+						for(var j in vue_switch.switchArray) {
+							commit[vue_switch.switchArray[j].callcol] = vue_switch.switchArray[j].check * 1;
+						}
+						console.log(JSON.stringify(commit));
+						alert("submitClick " + JSON.stringify(commit));
+					}
+				}
+			});
+		</script>
+	</body>
+
+</html>

@@ -61,11 +61,14 @@
 			<div>子页触发父页面的方法data:
 				<div id="windowOpenerFuction"></div>
 			</div>
+			<button value="9">history.back()</button>
+			<button value="10">history.go(-1)</button>
+			<button value="11">上拉加载，下拉刷新</button>
 		</div>
 		<script type="text/javascript" src="../../js/jweixin.js"></script>
 		<script type="text/javascript" src="../../js/mui.min.js"></script>
 		<script type="text/javascript" src="../../js/weui.min.js"></script>
-		<script type="text/javascript" src="../../js/utils.js"></script>
+		<script type="text/javascript" src="../../js/utils/utils.js"></script>
 		<script type="text/javascript">
 			var testData = "test";
 			mui.init();
@@ -80,7 +83,8 @@
 			window.onload = function() {
 				setTimeout(function() {
 					document.getElementById("loadingToast").style.display = "none";
-				}, 2000);
+				}, 1000);
+				console.log("testData " + testData);
 				document.getElementById("windowOnload").innerText = "true";
 
 				//按钮监听
@@ -101,6 +105,16 @@
 							document.getElementById("webView").innerText = web.id;
 							break;
 						case "3": //mui-通过URL传值
+							var keyword = "mui";
+							var data = "mui-data";
+							var state = {
+								key: keyword,
+								data: data
+							};
+							var title = '';
+							var url = '#key=' + keyword;
+							window.history.pushState(state, title, url); //浏览器地址改变，无刷新
+							testData = "test-1";
 							mui.openWindow("testnewwindow.html?urla=1&urlb=2", "testnewwindow.html");
 							break;
 						case "4": //window-通过URL传值
@@ -118,6 +132,15 @@
 						case "8": //get-sessionStorage
 							alert("mySessionStorage " + sessionStorage.mySessionStorage)
 							break;
+						case "9": //history.back()
+							window.history.back();
+							break;
+						case "10": //history.go(-1);
+							window.history.go(-1);
+							break;
+						case "11": //上拉加载，下拉刷新
+							mui.openWindow("testmuiscroll.html", "testmuiscroll.html");
+							break;
 						default:
 							break;
 					}
@@ -127,6 +150,10 @@
 					var data = event.detail;
 					console.log("muiFire " + JSON.stringify(data));
 				});
+
+				window.onpopstate = function(event) {
+					console.log("onpopstate");
+				};
 
 			}
 

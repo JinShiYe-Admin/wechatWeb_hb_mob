@@ -39,6 +39,8 @@
 			<button value="5">wx.closeWindow</button>
 			<button value="6">history.back()</button>
 			<button value="7">history.go(-1)</button>
+			<button value="8">mui-打开新页面</button>
+			<button value="9">window-打开新页面</button>
 		</div>
 		<script src="../../js/mui.min.js"></script>
 		<script type="text/javascript" src="../../js/jquery.min.js"></script>
@@ -92,6 +94,12 @@
 							break;
 						case "7": //history.go(-1);
 							window.history.go(-1);
+							break;
+						case "8": //
+							mui.openWindow("testmui.html", "testmui.html");
+							break;
+						case "9": //
+							window.open("testmui.html", "testmui.html");
 							break;
 						default:
 							break;

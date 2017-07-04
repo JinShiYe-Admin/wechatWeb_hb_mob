@@ -13,7 +13,7 @@
 		<div class="mui-content mui-scroll-wrapper" style="z-index: 1;">
 			<div class="mui-scroll">
 				<ul id="list" class="mui-table-view">
-					<li v-for="value in values" class="mui-table-view-cell">
+					<li v-for="(value,index) in listArray" :id="index" v-on:tap="vclick(index);" class="mui-table-view-cell">
 						<a class="mui-navigate-right">
 							{{value.title}}
 						</a>
@@ -30,17 +30,22 @@
 			var vue = new Vue({
 				el: '#list',
 				data: {
-					values: []
+					listArray: []
+				},
+				methods: {
+					vclick: function(index) {
+						alert('vclick ' + index + ' ' + JSON.stringify(vue.listArray[index]));
+					}
 				}
 			})
 			addItem();
 
 			function addItem() {
 				for(var i = 0; i < 10; i++) {
-					num++;
-					vue.values.push({
+					vue.listArray.push({
 						title: "Item " + num
 					});
+					num++;
 				}
 			}
 			mui.init();

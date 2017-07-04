@@ -25,11 +25,12 @@
 				color: #8f8f94;
 			}
 			
-			.meta-info .author,.meta-info .time{
+			.meta-info .author,
+			.meta-info .time {
 				display: inline-block;
 			}
 			
-			.meta-info .time{
+			.meta-info .time {
 				float: right;
 			}
 			
@@ -70,10 +71,6 @@
 	</head>
 
 	<body>
-<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">新闻</h1>
-		</header>
 		<div class="mui-content" id="news">
 			<!--顶部banner图 开始-->
 			<div class="banner">
@@ -121,71 +118,47 @@
 					color: '#cccccc'
 				}
 			}
+			var data = {
+				column: "id,post_id,title,author_name,cover,published_at" //需要的字段名
+			}
 
-			//mui初始化，配置下拉刷新
-			mui.init({
-				pullRefresh: {
-					container: '#list',
-					down: {
-						style: 'circle',
-						offset: '0px',
-						auto: true,
-						callback: function() {
-							if(window.plus && plus.networkinfo.getCurrentType() === plus.networkinfo.CONNECTION_NONE) {
-								plus.nativeUI.toast('似乎已断开与互联网的连接', {
-									verticalAlign: 'top'
-								});
-								return;
-							}
+			if(lastId) { //说明已有数据，目前处于下拉刷新，增加时间戳，触发服务端立即刷新，返回最新数据
+				data.lastId = lastId;
+				data.time = new Date().getTime() + "";
+			}
+			//请求顶部banner信息
+			mui.getJSON("http://spider.dcloud.net.cn/api/banner/36kr", data, function(rsp) {
+				console.log(JSON.stringify(rsp))
+				news.banner = {
+					guid: rsp.post_id,
+					title: rsp.title,
+					cover: rsp.cover,
+					author: rsp.author_name,
+					time: dateUtils.format(rsp.published_at)
+				};
+			});
 
-							var data = {
-								column: "id,post_id,title,author_name,cover,published_at" //需要的字段名
-							}
-
-							if(lastId) { //说明已有数据，目前处于下拉刷新，增加时间戳，触发服务端立即刷新，返回最新数据
-								data.lastId = lastId;
-								data.time = new Date().getTime() + "";
-							}
-
-							//请求顶部banner信息
-							mui.getJSON("http://spider.dcloud.net.cn/api/banner/36kr", data, function(rsp) {
-								console.log(JSON.stringify(rsp))
-								news.banner = {
-									guid: rsp.post_id,
-									title: rsp.title,
-									cover: rsp.cover,
-									author:rsp.author_name,
-									time:dateUtils.format(rsp.published_at)
-								};
-							});
-
-							//请求列表信息流
-							mui.getJSON("http://spider.dcloud.net.cn/api/news", data, function(rsp) {
-								console.log(JSON.stringify(rsp))
-								mui('#list').pullRefresh().endPulldown();
-								if(rsp && rsp.length > 0) {
-									lastId = rsp[0].id; //保存最新消息的id，方便下拉刷新时使用
-									news.items = news.items.concat(convert(rsp));
-								}
-							});
-						}
-					}
+			//请求列表信息流
+			mui.getJSON("http://spider.dcloud.net.cn/api/news", data, function(rsp) {
+				console.log(JSON.stringify(rsp))
+				mui('#list').pullRefresh().endPulldown();
+				if(rsp && rsp.length > 0) {
+					lastId = rsp[0].id; //保存最新消息的id，方便下拉刷新时使用
+					news.items = news.items.concat(convert(rsp));
 				}
 			});
 
-			mui.plusReady(function() {
-				//预加载详情页
-				webview_detail = mui.preload({
-					url: 'new-detail.html',
-					id: 'news-detail',
-					styles: {
-						"render": "always",
-						"popGesture": "hide",
-						"bounce": "vertical",
-						"bounceBackground": "#efeff4",
-						"titleNView": titleNView
-					}
-				});
+			//预加载详情页
+			webview_detail = mui.preload({
+				url: 'new-detail.html',
+				id: 'news-detail',
+				styles: {
+					"render": "always",
+					"popGesture": "hide",
+					"bounce": "vertical",
+					"bounceBackground": "#efeff4",
+					"titleNView": titleNView
+				}
 			});
 
 			var news = new Vue({
@@ -204,7 +177,7 @@
 				var author = this.querySelector(".author").innerHTML;
 				var time = this.querySelector(".time").innerHTML;
 				var cover = this.querySelector("img").getAttribute("src");
-				open_detail(guid, title,author,time,cover);
+				open_detail(guid, title, author, time, cover);
 			});
 
 			/**
@@ -213,7 +186,7 @@
 			 * @param {String} guid 新闻ID
 			 * @param {String} title  新闻标题
 			 */
-			function open_detail(guid, title,author,time,cover) {
+			function open_detail(guid, title, author, time, cover) {
 				//若详情页尚未预加载完成，则延时等待再执行
 				if(!webview_detail) {
 					setTimeout(function() {
@@ -223,10 +196,10 @@
 				//触发子窗口变更新闻详情
 				mui.fire(webview_detail, 'get_detail', {
 					guid: guid,
-					title:title,
-					author:author,
-					time:time,
-					cover:cover
+					title: title,
+					author: author,
+					time: time,
+					cover: cover
 				});
 
 				//更改详情页原生导航条信息
@@ -234,9 +207,9 @@
 				webview_detail.setStyle({
 					"titleNView": titleNView
 				});
-				setTimeout(function () {
+				setTimeout(function() {
 					webview_detail.show("slide-in-right", 300);
-				},150);
+				}, 150);
 			}
 
 			/**
@@ -253,7 +226,7 @@
 						title: item.title,
 						author: item.author_name,
 						cover: item.cover,
-						time:dateUtils.format(item.published_at)
+						time: dateUtils.format(item.published_at)
 					});
 				});
 				return newItems;
@@ -288,15 +261,15 @@
 					if(diff < this.UNITS['天']) {
 						return this.humanize(diff);
 					}
-					
+
 					var _format = function(number) {
 						return(number < 10 ? ('0' + number) : number);
 					};
 					return date.getFullYear() + '/' + _format(date.getMonth() + 1) + '/' + _format(date.getDay()) + '-' + _format(date.getHours()) + ':' + _format(date.getMinutes());
 				},
-				parse:function (str) {//将"yyyy-mm-dd HH:MM:ss"格式的字符串，转化为一个Date对象
+				parse: function(str) { //将"yyyy-mm-dd HH:MM:ss"格式的字符串，转化为一个Date对象
 					var a = str.split(/[^0-9]/);
-					return new Date (a[0],a[1]-1,a[2],a[3],a[4],a[5] );
+					return new Date(a[0], a[1] - 1, a[2], a[3], a[4], a[5]);
 				}
 			};
 		</script>

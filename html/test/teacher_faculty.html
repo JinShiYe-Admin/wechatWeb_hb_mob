@@ -1,0 +1,123 @@
+<!--
+	作者：444811716@qq.com
+	时间：2017-07-05
+	描述：师资力量
+-->
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>师资力量</title>
+		<link rel="stylesheet" href="../../css/weui.min.css" />
+		<link rel="stylesheet" href="../../css/mui.min.css" />
+		<link rel="stylesheet" href="../../css/utils/pullToRefresh.css" />
+		<style>
+			.weui-media-box__thumb {
+				height: 60px;
+				width: 60px;
+				background-position: 50% 50%;
+				background-repeat: no-repeat;
+				-webkit-background-size: cover;
+				-moz-background-size: cover;
+				-o-background-size: cover;
+				background-size: cover;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-content mui-scroll-wrapper" style="z-index: 1;">
+			<div class="mui-scroll">
+				<div class="weui-panel weui-panel_access">
+					<div id="tea_list" class="weui-panel__bd">
+						<div v-for="(value,index) in teaArray" class="weui-media-box weui-media-box_appmsg">
+							<div class="weui-media-box__hd">
+								<div class="weui-media-box__thumb" v-bind:style="{backgroundImage:'url('+ value.headImage+')'}"></div>
+							</div>
+							<div class="weui-media-box__bd">
+								<h4 class="weui-media-box__title">{{value.name}}</h4>
+								<p class="weui-media-box__desc">{{value.introduce}}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../../js/weui.min.js"></script>
+		<script type="text/javascript" src="../../js/vue.min.js"></script>
+		<script type="text/javascript" src="../../js/jweixin.js"></script>
+		<script type="text/javascript" src="../../js/mui.min.js"></script>
+		<script type="text/javascript" src="../../js/utils/mui.pullToRefresh.js"></script>
+		<script type="text/javascript" src="../../js/utils/mui.pullToRefresh.material.js"></script>
+		<script type="text/javascript" src="../../js/utils/utils.js"></script>
+		<script>
+			var teacher_list = new Vue({
+				el: "#tea_list",
+				data: {
+					teaArray: [{
+						name: "宋永忠",
+						headImage: "http://www.njnu.edu.cn/images/leaders/syzh.jpg",
+						introduce: "男，汉族，1958年2月生，江苏省沭阳县人。中共党员，理学博士，教授，博士生导师。现任南京师范大学党委书记，全国政协委员、中共江苏省纪委委员。",
+					}, {
+						name: "胡敏强",
+						headImage: "http://www.njnu.edu.cn/images/leaders/hmq.jpg",
+						introduce: "男，汉族，1961年9月生，江苏省丹阳市人。中共党员，工学博士，教授，博士生导师。 南京师范大学校长、党委副书记。",
+					}, {
+						name: "王建",
+						headImage: "http://www.njnu.edu.cn/images/leaders/wj.jpg",
+						introduce: "男，汉族， 1962年8月生，山东省昌邑市人。中共党员，理学博士，教授，博士生导师。现任南京师范大学党委副书记",
+					}, {
+						name: "潘百齐",
+						headImage: "http://www.njnu.edu.cn/images/leaders/pbq.jpg",
+						introduce: "男，汉族， 1957年5月生，江苏省常州市人。中共党员，博士研究生毕业，获文学博士学位，教授，博士生导师。现任南京师范大学党委常委、副校长。兼任江苏省文学艺术界联合会第九届委员会委员，江苏省艺术教育指导委员会副主任，江苏省高等学校后勤协会副会长，全国高师后勤工作研究会副理事长，《中国美术教育》主编。",
+					}, {
+						name: "田立新",
+						headImage: "http://www.njnu.edu.cn/images/leaders/tlx.jpg",
+						introduce: "男，汉族，1963年7月出生，江苏省姜堰市人。中共党员，理学博士，教授，博士生导师。南京师范大学副校长，党委常委。兼任中国数学会理事，江苏省工业与应用数学学会监事，江苏省系统科学学会副理事长，国际能源经济学会中国委员会副理事长，中国能源学会能源系统工程专业委员会副理事长，中国双法学会复杂系统专业委员会副理事长， Inter.J.Nonli.Sci.杂志常务副主编。",
+					}, {
+						name: "张利民",
+						headImage: "http://www.njnu.edu.cn/images/leaders/zlm.jpg",
+						introduce: "男，1966年6月生，江西赣州人。中共党员，理学博士，研究员，博士生导师。现任南京师范大学党委常委、副校长",
+					}, {
+						name: "傅康生",
+						headImage: "http://www.njnu.edu.cn/images/leaders/fks.jpg",
+						introduce: "男，汉族，1960年7月生，安徽省和县人。中共党员，博士，经济学教授，博士生导师。现任南京师范大学党委常委、副校长",
+					}]
+				}
+			});
+
+			window.onload = function() {
+				console.log('window.onload');
+			}
+
+			mui.init();
+			mui.ready(function() {
+				console.log('mui.ready');
+				utils.muiInitScroll();
+				var pullRefresh = mui('.mui-scroll-wrapper .mui-scroll').pullToRefresh({
+					down: {
+						callback: function() {
+							console.log('down');
+							setTimeout(function() {
+								pullRefresh.endPullDownToRefresh(); //结束下拉刷新
+							}, 1000);
+						}
+					},
+					up: {
+						callback: function() {
+							console.log('up');
+							setTimeout(function() {
+								pullRefresh.endPullUpToRefresh();
+							}, 1000);
+						}
+					}
+				});
+			});
+		</script>
+	</body>
+
+</html>

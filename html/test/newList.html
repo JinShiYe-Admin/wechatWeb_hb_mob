@@ -6,6 +6,7 @@
 		<title>学校新闻</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/utils/pullToRefresh.css" />
 		<style type="text/css">
 			.mui-media {
 				font-size: 14px;
@@ -71,41 +72,46 @@
 	</head>
 
 	<body>
-		<div class="mui-content" id="news">
-			<!--顶部banner图 开始-->
-			<div class="banner">
-				<a href="javascript:;" :data-guid="banner.guid">
-					<img :src="banner.cover" />
-					<h2 class="title mui-ellipsis-2">{{banner.title}}</h2>
-					<div style="display: none;">
-						<div class="author">{{banner.author}}</div>
-						<div class="time">{{banner.time}}</div>
-					</div>
-				</a>
-			</div>
-			<!--顶部banner图 结束-->
-
-			<!--列表信息流 开始-->
-			<ul id="list" class="mui-table-view">
-				<li class="mui-table-view-cell mui-media" v-for="item in items">
-					<a href="javascript:;" :data-guid="item.guid">
-						<img class="mui-media-object mui-pull-left" :src="item.cover">
-						<div class="mui-media-body">
-							<div class="mui-ellipsis-2">{{item.title}}</div>
-						</div>
-						<div class="meta-info">
-							<div class="author">{{item.author}}</div>
-							<div class="time">{{item.time}}</div>
+		<div class="mui-content mui-scroll-wrapper" style="z-index: 1;" id="news">
+			<div class="mui-scroll">
+				<!--顶部banner图 开始-->
+				<div class="banner">
+					<a href="javascript:;" :data-guid="banner.guid">
+						<img :src="banner.cover" />
+						<h2 class="title mui-ellipsis-2">{{banner.title}}</h2>
+						<div style="display: none;">
+							<div class="author">{{banner.author}}</div>
+							<div class="time">{{banner.time}}</div>
 						</div>
 					</a>
-				</li>
-			</ul>
-			<!--列表信息流 结束-->
+				</div>
+				<!--顶部banner图 结束-->
+
+				<!--列表信息流 开始-->
+				<ul id="list" class="mui-table-view">
+					<li class="mui-table-view-cell mui-media" v-for="item in items">
+						<a href="javascript:;" :data-guid="item.guid">
+							<img class="mui-media-object mui-pull-left" :src="item.cover">
+							<div class="mui-media-body">
+								<div class="mui-ellipsis-2">{{item.title}}</div>
+							</div>
+							<div class="meta-info">
+								<div class="author">{{item.author}}</div>
+								<div class="time">{{item.time}}</div>
+							</div>
+						</a>
+					</li>
+				</ul>
+				<!--列表信息流 结束-->
+			</div>
 		</div>
 
 		<script src="../../js/mui.min.js"></script>
 		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
-		<script type="text/javascript" src="../../js/jquery.min.js"></script>
+		<script src="../../js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/utils/utils.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/utils/mui.pullToRefresh.js"></script>
+		<script type="text/javascript" src="../../js/utils/mui.pullToRefresh.material.js"></script>
 		<script type="text/javascript">
 			mui.init();
 			var news = new Vue({
@@ -117,17 +123,93 @@
 			});
 
 			mui.ready(function() {
-				alert('进入ready方法');
-				var lastId = ''; //最新新闻的id
-				var data = {
-					column: "id,post_id,title,author_name,cover,published_at" //需要的字段名
-				}
+				addpullRefresh() //添加下拉刷新 上拉加载更多
 
-				if(lastId) { //说明已有数据，目前处于下拉刷新，增加时间戳，触发服务端立即刷新，返回最新数据
-					data.lastId = lastId;
-					data.time = new Date().getTime() + "";
+				var datasource = getData(); //获取新闻数据
+				var banner = datasource.banner; //顶部新闻数据
+
+				//请求顶部banner信息
+				news.banner = {
+					guid: banner.post_id,
+					title: banner.title,
+					cover: banner.cover,
+					author: banner.author_name,
+					time: dateUtils.format(banner.published_at)
+				};
+				var newsList = datasource.newsList; //新闻列表数据
+				news.items = convert(newsList);
+			});
+			//点击列表，打开详情
+			//TODO 后续应该封装一个v-tap指令，实现tap监听
+			mui('.mui-content').on('tap', '[data-guid]', function() {
+				var data = {
+					guid: this.getAttribute('data-guid'),
+					title: this.querySelector(".mui-ellipsis-2").innerHTML.trim(),
+					author: this.querySelector(".author").innerHTML,
+					time: this.querySelector(".time").innerHTML,
+					cover: this.querySelector("img").getAttribute("src"),
 				}
-				var rsp = {
+				utils.wOpenWithData("new-detail.html", data);
+
+			});
+
+			function addpullRefresh() {
+				var pullRefresh = mui('.mui-scroll-wrapper .mui-scroll').pullToRefresh({
+					down: {
+						callback: function() {
+							console.log('down');
+							setTimeout(function() {
+								var datasource = getData(); //获取新闻数据
+								var banner = datasource.banner; //顶部新闻数据
+
+								//请求顶部banner信息
+								news.banner = {
+									guid: banner.post_id,
+									title: banner.title,
+									cover: banner.cover,
+									author: banner.author_name,
+									time: dateUtils.format(banner.published_at)
+								};
+								var newsList = datasource.newsList; //新闻列表数据
+								news.items = convert(newsList);
+								pullRefresh.endPullDownToRefresh(); //结束下拉刷新
+							}, 1000);
+						}
+					},
+					up: {
+						callback: function() {
+							console.log('up');
+							setTimeout(function() {
+								var datasource = getData(); //获取新闻数据
+								var banner = datasource.banner; //顶部新闻数据
+
+								//请求顶部banner信息
+								news.banner = {
+									guid: banner.post_id,
+									title: banner.title,
+									cover: banner.cover,
+									author: banner.author_name,
+									time: dateUtils.format(banner.published_at)
+								};
+								var newsList = datasource.newsList; //新闻列表数据
+
+								if(newsList && newsList.length > 0) {
+									news.items = news.items.concat(convert(newsList));
+								}
+								if(newsList.length > 50) {
+									pullRefresh.endPullUpToRefresh(true);
+								} else {
+									pullRefresh.endPullUpToRefresh();
+								}
+							}, 1000);
+						}
+					}
+				});
+			}
+
+			function getData() {
+				var news = {};
+				news.banner = {
 					"id": 29534,
 					"post_id": "5081660",
 					"title": "从次时代游戏到VR游戏，荔枝文化认为打造一款好的游戏必须具备“工匠精神”",
@@ -135,16 +217,7 @@
 					"cover": "https://pic.36krcnd.com/avatar/201707/04070536/rf5n3pp8fwka9iai.jpg!feature",
 					"published_at": "2017-07-04 15:34:15"
 				}
-
-				//请求顶部banner信息
-				news.banner = {
-					guid: rsp.post_id,
-					title: rsp.title,
-					cover: rsp.cover,
-					author: rsp.author_name,
-					time: dateUtils.format(rsp.published_at)
-				};
-				var rspArr = [{
+				news.newsList = [{
 					"id": 29536,
 					"post_id": "5082204",
 					"title": "主打肉多量足的中式馅料，宇宙卷饼要你把卷饼当正餐",
@@ -285,13 +358,8 @@
 					"cover": "https://pic.36krcnd.com/avatar/201707/04033823/2v04zjbdaswbg6hf.jpg!feature",
 					"published_at": "2017-07-04 11:40:51"
 				}]
-
-				if(rspArr && rspArr.length > 0) {
-					lastId = rspArr[0].id; //保存最新消息的id，方便下拉刷新时使用
-					news.items = news.items.concat(convert(rspArr));
-				}
-
-			});
+				return news;
+			}
 
 			/**
 			 * 1、将服务端返回数据，转换成前端需要的格式

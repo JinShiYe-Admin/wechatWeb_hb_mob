@@ -34,6 +34,21 @@
 				<!--文章详细内容-->
 				<div id="kr-article-article" class="kr-article-article" v-html="content"></div>
 			</div>
+			<!--列表信息流 开始-->
+			<!--<ul id="list" class="mui-table-view">
+				<li class="mui-table-view-cell mui-media" v-for="item in items">
+					<a href="javascript:;" :data-guid="item.guid">
+						<img class="mui-media-object mui-pull-left" :src="item.cover">
+						<div class="mui-media-body">
+							<div class="mui-ellipsis-2">{{item.title}}</div>
+						</div>
+						<div class="meta-info">
+							<div class="author">{{item.author}}</div>
+							<div class="time">{{item.time}}</div>
+						</div>
+					</a>
+				</li>
+			</ul>-->
 		</div>
 
 		<script src="../../js/mui.min.js"></script>
@@ -43,12 +58,12 @@
 			mui.init();
 			window.onload = function() {
 				var detail = utils.getDataFromUrl(window.location.href);
-//				alert("detail " + JSON.stringify(detail));
+				//				alert("detail " + JSON.stringify(detail));
 
-				vm.cover = detail.cover;
-				vm.title = detail.title;
-				vm.author = detail.author;
-				vm.time = detail.time;
+				//				vm.cover = detail.cover;
+				//				vm.title = detail.title;
+				//				vm.author = detail.author;
+				//				vm.time = detail.time;
 			}
 
 			function getDefaultData() {
@@ -92,6 +107,10 @@
 				"created_at": "2017-07-04 15:42:03",
 				"updated_at": "2017-07-04 15:51:03"
 			}
+			vm.cover = rsp.cover;
+			vm.title = rsp.title;
+			vm.author = rsp.author_name;
+			vm.time = rsp.published_at;
 			vm.content = rsp.content;
 		</script>
 	</body>

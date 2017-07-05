@@ -59,11 +59,10 @@
 			window.onload = function() {
 				var detail = utils.getDataFromUrl(window.location.href);
 				//				alert("detail " + JSON.stringify(detail));
-
-				//				vm.cover = detail.cover;
-				//				vm.title = detail.title;
-				//				vm.author = detail.author;
-				//				vm.time = detail.time;
+				vm.cover = detail.cover;
+				vm.title = detail.title;
+				vm.author = detail.author;
+				vm.time = detail.time;
 			}
 
 			function getDefaultData() {
@@ -107,10 +106,10 @@
 				"created_at": "2017-07-04 15:42:03",
 				"updated_at": "2017-07-04 15:51:03"
 			}
-			vm.cover = rsp.cover;
-			vm.title = rsp.title;
-			vm.author = rsp.author_name;
-			vm.time = rsp.published_at;
+			//			vm.cover = rsp.cover;
+			//			vm.title = rsp.title;
+			//			vm.author = rsp.author_name;
+			//			vm.time = rsp.published_at;
 			vm.content = rsp.content;
 		</script>
 	</body>

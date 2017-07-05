@@ -22,7 +22,7 @@ var utils = (function(mod) {
 		var index = url.indexOf("?");
 		if(index != -1) {
 			var dataStr = url.substring(index + 1, url.length);
-			data = JSON.parse(unescape(dataStr));
+			data = JSON.parse(decodeURIComponent(dataStr));
 		}
 		console.log("getDataFromUrl url " + url);
 		console.log("getDataFromUrl data " + JSON.stringify(data));
@@ -35,10 +35,11 @@ var utils = (function(mod) {
 	 * @param {Object} data 数据对象
 	 */
 	mod.mOpenWithData = function(url, data) {
+		data = data || {};
 		var ids = url.split("/");
 		var dataStr = JSON.stringify(data);
 		console.log("mOpen " + url + ' ' + dataStr);
-		mui.openWindow(url + "?" + escape(dataStr), ids[ids.length - 1]);
+		mui.openWindow(url + "?" + encodeURIComponent(dataStr), ids[ids.length - 1]);
 	}
 
 	/**
@@ -47,10 +48,11 @@ var utils = (function(mod) {
 	 * @param {Object} data 数据对象
 	 */
 	mod.wOpenWithData = function(url, data) {
+		data = data || {};
 		var ids = url.split("/");
 		var dataStr = JSON.stringify(data);
 		console.log("wOpen " + url + ' ' + dataStr);
-		window.open(url + "?" + escape(dataStr), ids[ids.length - 1]);
+		window.open(url + "?" + encodeURIComponent(dataStr), ids[ids.length - 1]);
 	}
 
 	return mod;

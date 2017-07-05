@@ -92,7 +92,7 @@
 					console.log("value " + value);
 					switch(value) {
 						case "0": //mui的方法打开一个新页面
-							mui.openWindow("testnewwindow.html", "testnewwindow.html");
+							utils.mOpenWithData("testnewwindow.html");
 							break;
 						case "1": //window 打开新的页面
 							var num = document.getElementById("openNewWindow_num");
@@ -106,7 +106,7 @@
 						case "3": //mui-通过URL传值
 							var data = {
 								a: 1,
-								b: "一二三",
+								b: "一二三？?#   %",
 								c: "muiOpen"
 							}
 							utils.mOpenWithData("testnewwindow.html", data);

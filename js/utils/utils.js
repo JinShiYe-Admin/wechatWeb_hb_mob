@@ -55,5 +55,20 @@ var utils = (function(mod) {
 		window.open(url + "?" + encodeURIComponent(dataStr), ids[ids.length - 1]);
 	}
 
+	/**
+	 *初始化mui的scroll
+	 * @param {Object} muiString
+	 */
+	mod.muiInitScroll = function(muiString) {
+		muiString = muiString || ".mui-scroll-wrapper";
+		mui(muiString).scroll({
+			scrollY: true, //是否竖向滚动
+			scrollX: false, //是否横向滚动
+			indicators: true, //是否显示滚动条
+			deceleration: 0.003, //阻尼系数,系数越小滑动越灵敏
+			bounce: true, //是否启用回弹
+		});
+	}
+
 	return mod;
 })(window.utils || {});

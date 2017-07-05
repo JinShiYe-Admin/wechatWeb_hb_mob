@@ -292,6 +292,16 @@
 				}
 
 			});
+						//点击列表，打开详情
+			//TODO 后续应该封装一个v-tap指令，实现tap监听
+			mui('.mui-content').on('tap', '[data-guid]', function() {
+				var guid = this.getAttribute('data-guid');
+				var title = this.querySelector(".mui-ellipsis-2").innerHTML.trim();
+				var author = this.querySelector(".author").innerHTML;
+				var time = this.querySelector(".time").innerHTML;
+				var cover = this.querySelector("img").getAttribute("src");
+				mui.openWindow("new-detail.html", "new-detail.html");
+			});
 
 			/**
 			 * 1、将服务端返回数据，转换成前端需要的格式

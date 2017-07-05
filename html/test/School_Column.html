@@ -154,7 +154,7 @@
 	<script type="text/javascript" src="../../js/mui.min.js"></script>
 	<script type="text/javascript" src="../../js/jweixin.js"></script>
 	<script type="text/javascript" src="../../js/jquery.min.js"></script>
-	<script type="text/javascript" src="../../js/utils.js"></script>
+	<script type="text/javascript" src="../../js/utils/utils.js"></script>
 	<script>
 		mui.init();
 		mui.ready(function() {
@@ -169,7 +169,14 @@
 		 * 跳转到网站配置
 		 */
 		function openWebsiteConfig(){
-			mui.openWindow("website_config.html", "website_config.html");
+			utils.mOpenWithData("website_config.html", "website_config.html");
+		}
+
+		/**
+		 * 跳转到师资力量
+		 */
+		function openTeacherFaculty(){
+			utils.mOpenWithData("teacher_faculty.html", "teacher_faculty.html");
 		}
 	</script>
 

@@ -92,32 +92,32 @@
 					console.log("value " + value);
 					switch(value) {
 						case "0": //mui的方法打开一个新页面
-							mui.openWindow("testnewwindow.html","testnewwindow.html");
+							mui.openWindow("testnewwindow.html", "testnewwindow.html");
 							break;
 						case "1": //window 打开新的页面
 							var num = document.getElementById("openNewWindow_num");
 							num.innerText = num.innerText * 1 + 1;
-							window.open("testnewwindow.html","testnewwindow.html");
+							window.open("testnewwindow.html", "testnewwindow.html");
 							break;
 						case "2": //mui的方法获取当前webview
 							var web = plus.webview.currentWebview();
 							document.getElementById("webView").innerText = web.id;
 							break;
 						case "3": //mui-通过URL传值
-							var keyword = "mui";
-							var data = "mui-data";
-							var state = {
-								key: keyword,
-								data: data
-							};
-							var title = '';
-							var url = '#key=' + keyword;
-							window.history.pushState(state, title, url); //浏览器地址改变，无刷新
-							testData = "test-1";
-							mui.openWindow("testnewwindow.html?urla=1&urlb=2", "testnewwindow.html");
+							var data = {
+								a: 1,
+								b: "一二三",
+								c: "muiOpen"
+							}
+							utils.mOpenWithData("testnewwindow.html", data);
 							break;
 						case "4": //window-通过URL传值
-							window.open("testnewwindow.html?urlc=3&urld=4", "testnewwindow.html");
+							var data = {
+								a: 2,
+								b: "一二三，四五六。",
+								c: "windowOpen"
+							}
+							utils.wOpenWithData("testnewwindow.html", data);
 							break;
 						case "5": //localStorage
 							localStorage.myLocalStorage = "myLocalStorage-0";
@@ -149,11 +149,6 @@
 					var data = event.detail;
 					console.log("muiFire " + JSON.stringify(data));
 				});
-
-				window.onpopstate = function(event) {
-					console.log("onpopstate");
-				};
-
 			}
 
 			/**

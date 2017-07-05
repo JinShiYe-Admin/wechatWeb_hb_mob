@@ -15,22 +15,43 @@ var utils = (function(mod) {
 
 	/**
 	 * 获取url中的数据
-	 * @param {Object} url
+	 * @param {String} url
 	 */
 	mod.getDataFromUrl = function(url) {
 		var data = {};
 		var index = url.indexOf("?");
 		if(index != -1) {
 			var dataStr = url.substring(index + 1, url.length);
-			var dataArray = dataStr.split("&");
-			for(var i in dataArray) {
-				var keyValue = dataArray[i].split("=");
-				data[keyValue[0]] = keyValue[1];
-			}
+			data = JSON.parse(unescape(dataStr));
 		}
 		console.log("getDataFromUrl url " + url);
 		console.log("getDataFromUrl data " + JSON.stringify(data));
 		return data;
 	}
+
+	/**
+	 * 用mui打开一个页面，通过url传递数据
+	 * @param {String} url 路径
+	 * @param {Object} data 数据对象
+	 */
+	mod.mOpenWithData = function(url, data) {
+		var ids = url.split("/");
+		var dataStr = JSON.stringify(data);
+		console.log("mOpen " + url + ' ' + dataStr);
+		mui.openWindow(url + "?" + escape(dataStr), ids[ids.length - 1]);
+	}
+
+	/**
+	 * 用window打开一个页面，通过url传递数据
+	 * @param {String} url 路径
+	 * @param {Object} data 数据对象
+	 */
+	mod.wOpenWithData = function(url, data) {
+		var ids = url.split("/");
+		var dataStr = JSON.stringify(data);
+		console.log("wOpen " + url + ' ' + dataStr);
+		window.open(url + "?" + escape(dataStr), ids[ids.length - 1]);
+	}
+
 	return mod;
 })(window.utils || {});

@@ -88,8 +88,8 @@ function moveBalloon(w) {
             if (global[B + "_ti"] != x) {
                 global[B + "_ti"] = x;
                 var q = w.getElementsByClassName("page_guide_item")[x];
-                r.innerHTML = q.getElementsByClassName("page_guide_item_title")[0].innerHTML;
-                r.className = r.className.replace(/playing|canplay/g, "").replace(/(^\s)|(\s$)/g, "");
+              //  r.innerHTML = q.getElementsByClassName("page_guide_item_title")[0].innerHTML;
+               // r.className = r.className.replace(/playing|canplay/g, "").replace(/(^\s)|(\s$)/g, "");
                 var i = w.parentElement.getElementsByClassName("page_guide_balloon")[0];
             }
             break

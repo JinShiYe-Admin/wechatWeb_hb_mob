@@ -56,7 +56,9 @@
 		<script type="text/javascript" src="../../js/vue.min.js"></script>
 		<script type="text/javascript" src="../../js/jweixin.js"></script>
 		<script src="../../js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../../js/PublicProtocol.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../js/PublicProtocol.js?" + Math.random() + "'></s" + "cript>");
+		</script>
 		<script>
 			var webConfig;
 			window.onload = function() {
@@ -74,7 +76,7 @@
 							inputArray: [{
 								callcol: "cname",
 								title: "中文名",
-								message: webConfig.cname,
+								message: 'webConfig.cname',
 								type: "text",
 								maxlength: 25,
 							}, {

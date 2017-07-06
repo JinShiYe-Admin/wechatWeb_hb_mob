@@ -47,7 +47,9 @@
 		<script type="text/javascript" src="../../js/jweixin.js"></script>
 		<script type="text/javascript" src="../../js/jquery.min.js"></script>
 		<script type="text/javascript" src="../../js/utils/utils.js"></script>
-		<script src="../../js/PublicProtocol.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../js/PublicProtocol.js?" + Math.random() + "'></s" + "cript>");
+		</script>
 		<script type="text/javascript">
 			mui.init();
 			var configmsg;
@@ -60,17 +62,17 @@
 
 			mui.ready(function() {
 				alert('mui.ready');
-//				var url = window.location.href;
-//				var cncodeUrl = encodeURIComponent(url);
-//
-//				jQuery.post('https://jsypay.jiaobaowang.net/wxth/jssdkapi.aspx', {
-//					reuri: cncodeUrl
-//				}, function(data) {
-//					alert('666');
-//					configmsg = JSON.parse(data);
-//					getToken();
-//				});
-				getConfigParameter(function(data){
+				//				var url = window.location.href;
+				//				var cncodeUrl = encodeURIComponent(url);
+				//
+				//				jQuery.post('https://jsypay.jiaobaowang.net/wxth/jssdkapi.aspx', {
+				//					reuri: cncodeUrl
+				//				}, function(data) {
+				//					alert('666');
+				//					configmsg = JSON.parse(data);
+				//					getToken();
+				//				});
+				getConfigParameter(function(data) {
 					configmsg = data;
 					getToken();
 				});
@@ -92,10 +94,10 @@
 				//			xmlhttp.open("GET", tempUrl, true);
 				//			xmlhttp.send();
 			});
-			
+
 			mui(".mui-table-view").on('tap', '.mui-table-view-cell', function() {
-					alert('点击cell');
-				});
+				alert('点击cell');
+			});
 
 			wx.ready(function(e) {
 				// config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
@@ -164,20 +166,20 @@
 			}
 
 			function getToken() {
-				sendConfigPro(configmsg,['onMenuShareAppMessage', 'onMenuShareWechat', 'chooseImage', 'previewImage', 'uploadImage', 'downloadImage']);
+				sendConfigPro(configmsg, ['onMenuShareAppMessage', 'onMenuShareWechat', 'chooseImage', 'previewImage', 'uploadImage', 'downloadImage']);
 				alert('发送config协议完毕，参数:' + configmsg.appId + ',' + configmsg.timestamp + ',' + configmsg.nonceStr + ',' + configmsg.signature);
 			}
 
 			function openNewWindow() {
-				mui.openWindow("../unitWeb/testmui.html?abc="+Math.random(), "testmui.html");
+				mui.openWindow("../unitWeb/testmui.html?abc=" + Math.random(), "testmui.html" + Math.random());
 			}
 
 			function openWindow() {
-				window.open("../unitWeb/testmui.html?abc="+Math.random());
+				window.open("../unitWeb/testmui.html?abc=" + Math.random());
 			}
 
 			function openNews() {
-				mui.openWindow("../unitWeb/School_Column.html?abc="+Math.random(), "School_Column.html");
+				mui.openWindow("../unitWeb/School_Column.html?abc=" + Math.random(), "School_Column.html" + Math.random());
 			}
 		</script>
 

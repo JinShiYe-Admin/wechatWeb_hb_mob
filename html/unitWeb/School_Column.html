@@ -163,9 +163,9 @@
 		mui('.mui-table-view').on('tap', '.mui-table-view-cell', function() {
 			var title = this.querySelector(".mui-media-body").innerHTML
 			if(title == '网站栏目') {
-				mui.openWindow("../test/column.html?abc=" + Math.random(), "column.html");
+				mui.openWindow("../test/column.html?abc=" + Math.random(), "column.html" + Math.random());
 			} else if(title == '新闻动态') {
-				mui.openWindow("../unitWeb/newList.html?abc=" + Math.random(), "newList.html");
+				mui.openWindow("../unitWeb/newList.html?abc=" + Math.random(), "newList.html" + Math.random());
 			}
 		})
 
@@ -173,14 +173,14 @@
 		 * 跳转到网站配置
 		 */
 		function openWebsiteConfig() {
-			utils.mOpenWithData("website_config.html?abc=" + Math.random(), "website_config.html");
+			utils.mOpenWithData("website_config.html?abc=" + Math.random(), "website_config.html" + Math.random());
 		}
 
 		/**
 		 * 跳转到师资力量
 		 */
 		function openTeacherFaculty() {
-			utils.mOpenWithData("teacher_faculty.html?abc=" + Math.random(), "teacher_faculty.html");
+			utils.mOpenWithData("teacher_faculty.html?abc=" + Math.random(), "teacher_faculty.html" + Math.random());
 		}
 	</script>
 

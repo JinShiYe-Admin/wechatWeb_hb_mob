@@ -1,0 +1,173 @@
+<!--
+	作者：444811716@qq.com
+	时间：2017-07-04
+	描述：网站配置
+-->
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>网站栏目</title>
+		<link rel="stylesheet" href="../../css/weui.min.css" />
+		<style>
+			.weui-cells {
+				margin-top: 0px;
+			}
+			
+			.weui-cells__title {
+				color: black;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="conetent" class="weui-cells weui-cells_form">
+			<!--输入列表-->
+			<div id="input_list">
+				<div>
+					<div class="weui-cells__title">{{cname.title}}</div>
+					<div class="weui-cells">
+						<div class="weui-cell">
+							<div class="weui-cell__bd">
+								<input v-model.lazy="cname.message" class="weui-input" type="text" :placeholder="'请输入'+cname.title">
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div v-if="islink.check">
+					<div class="weui-cells__title">{{linkurl.title}}</div>
+					<div class="weui-cells">
+						<div class="weui-cell">
+							<div class="weui-cell__bd">
+								<input v-model.lazy="linkurl.message" class="weui-input" type="text" :placeholder="'请输入'+linkurl.title">
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div>
+					<div class="weui-cells__title">{{orderid.title}}</div>
+					<div class="weui-cells">
+						<div class="weui-cell">
+							<div class="weui-cell__bd">
+								<input v-model.lazy="orderid.message" class="weui-input" type="text" :placeholder="'请输入'+orderid.title+'，越小越前'">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--开关列表-->
+			<div id="switch_list">
+				<div>
+					<div class="weui-cell weui-cell_switch">
+						<div class="weui-cell__bd">{{islink.title}}</div>
+						<div class="weui-cell__ft">
+							<input class="weui-switch" type="checkbox" v-model="islink.check">
+						</div>
+					</div>
+				</div>
+
+				<div>
+					<div class="weui-cell weui-cell_switch">
+						<div class="weui-cell__bd">{{iswrite.title}}</div>
+						<div class="weui-cell__ft">
+							<input :disabled="islink.check" class="weui-switch mui-disabled" type="checkbox" v-model="write">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="weui-btn-area">
+				<button id="submit" v-on:click="submitClick" class="weui-btn weui-btn_primary">确定</button>
+			</div>
+		</div>
+		<script type="text/javascript" src="../../js/weui.min.js"></script>
+		<script type="text/javascript" src="../../js/vue.min.js"></script>
+		<script type="text/javascript" src="../../js/jweixin.js"></script>
+		<script type="text/javascript" src="../../js/jquery.min.js"></script>
+		<script>
+			var para = {
+				type: 'findpage',
+				pagesize: '10',
+				pageindex: '1',
+//				colid: '',
+//				cname: '',
+//				stat: '',
+//				iswrite: '',
+//				islink: '',
+
+			}
+			jQuery.post('https://jsypay.jiaobaowang.net/wxth/jssdkapi.aspx/chn', para, function(data,textStatus) {
+				alert(JSON.stringify(data));
+			});
+			var vm = new Vue({
+				el: '#conetent',
+				data: {
+					cname: {
+						title: "栏目名称",
+						message: ""
+					},
+					linkurl: {
+						title: "链接url",
+						message: ""
+					},
+					orderid: {
+						title: "排序ID",
+						message: ""
+					},
+					islink: {
+						title: "是否为链接",
+						check: true
+					},
+					iswrite: {
+						title: "是否允许投稿",
+						check: false
+					},
+				},
+
+				computed: {
+					// a computed getter
+					write: function() {
+						return !this.islink.check
+					}
+				},
+				watch: {
+					cname: function(newVal) {
+
+					},
+					linkurl: function(newVal) {
+
+					},
+					orderid: function(newVal) {
+
+					}
+				},
+
+				methods: {
+					submitClick: function() {
+						var para = {
+							type: 'add',
+							cname: vm.cname.message,
+							islink: vm.islink.check,
+							linkurl: vm.linkurl.message,
+							iswrite: vm.iswrite.check,
+							note: '',
+							orderid: vm.orderid.message,
+							pid: '',
+						}
+						console.log(JSON.stringify(para))
+						jQuery.post('https://jsypay.jiaobaowang.net/wxth/jssdkapi.aspx/chn', para, function(data,textStatus) {
+							alert(textStatus);
+						});
+					}
+				}
+
+			})
+		</script>
+	</body>
+
+</html>

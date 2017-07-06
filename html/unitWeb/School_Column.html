@@ -23,12 +23,12 @@
 			height: 100%;
 			overflow: hidden;
 		}
-
+		
 		body {
 			height: 100%;
 			overflow: hidden;
 		}
-
+		
 		.bg {
 			background-image: url(img/beijing.jpg);
 			width: 100%;
@@ -37,7 +37,7 @@
 			position: absolute;
 			filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='bg-login.png', sizingMethod='scale');
 		}
-
+		
 		.mui-grid-view.mui-grid-9 {
 			margin: 0;
 			padding: 0;
@@ -45,18 +45,18 @@
 			border-left: 1px solid #eee;
 			background-color: #f2f2f2
 		}
-
+		
 		.mui-grid-view.mui-grid-9:after,
 		.mui-grid-view.mui-grid-9:before {
 			display: table;
 			content: ' '
 		}
-
+		
 		.mui-grid-view.mui-grid-9:after {
 			clear: both;
 			position: static
 		}
-
+		
 		.mui-grid-view.mui-grid-9 .mui-table-view-cell {
 			margin: 0;
 			padding: 0px 0px;
@@ -64,24 +64,24 @@
 			border-right: 1px solid #eee;
 			border-bottom: 1px solid #eee
 		}
-
+		
 		.mui-grid-view.mui-grid-9 .mui-table-view-cell.mui-active {
 			background-color: #eee
 		}
-
+		
 		.mui-grid-view.mui-grid-9 .mui-table-view-cell>a:not(.mui-btn) {
 			margin: 0;
 			padding: 1px 0
 		}
-
+		
 		.mui-grid-view.mui-grid-9:before {
 			height: 0
 		}
-
+		
 		.mui-grid-view.mui-grid-9 .mui-media {
 			color: #797979
 		}
-
+		
 		.mui-grid-view.mui-grid-9 .mui-media .mui-icon {
 			font-size: 2.4em;
 			position: relative
@@ -99,7 +99,7 @@
 					</a>
 				</li>
 				<li class="mui-table-view-cell mui-media mui-col-xs-6">
-					<a href="#" onclick="openNews()">
+					<a href="#">
 						<span class="mui-icon iconfont icon-xinwendongtai"></span>
 						<div class="mui-media-body">新闻动态</div>
 					</a>
@@ -107,11 +107,11 @@
 				<li class="mui-table-view-cell mui-media mui-col-xs-6">
 					<a href="#">
 						<span class="mui-icon iconfont icon-qiapian3"></span>
-						<div class="mui-media-body">办学理念</div>
+						<div class="mui-media-body">网站栏目</div>
 					</a>
 				</li>
 				<li class="mui-table-view-cell mui-media mui-col-xs-6">
-					<a href="#"  onclick="openTeacherFaculty()">
+					<a href="#" onclick="openTeacherFaculty()">
 						<span class="mui-icon iconfont icon-shizililiang"></span>
 						<div class="mui-media-body">师资力量</div>
 					</a>
@@ -160,22 +160,26 @@
 		mui.ready(function() {
 
 		});
-
-		function openNews() {
+		mui('.mui-table-view').on('tap', '.mui-table-view-cell', function() {
+			var title = this.querySelector(".mui-media-body").innerHTML
+			if(title == '网站栏目') {
+				mui.openWindow("../test/column.html", "column.html");
+			}else if(title == '新闻动态'){
 			mui.openWindow("../unitWeb/newList.html", "newList.html");
-		}
+			}
+		})
 
 		/**
 		 * 跳转到网站配置
 		 */
-		function openWebsiteConfig(){
+		function openWebsiteConfig() {
 			utils.mOpenWithData("website_config.html", "website_config.html");
 		}
 
 		/**
 		 * 跳转到师资力量
 		 */
-		function openTeacherFaculty(){
+		function openTeacherFaculty() {
 			utils.mOpenWithData("teacher_faculty.html", "teacher_faculty.html");
 		}
 	</script>

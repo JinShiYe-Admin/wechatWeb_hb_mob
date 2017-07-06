@@ -196,7 +196,7 @@
 								if(newsList && newsList.length > 0) {
 									news.items = news.items.concat(convert(newsList));
 								}
-								if(newsList.length > 50) {
+								if(news.items.length > 50) {
 									pullRefresh.endPullUpToRefresh(true);
 								} else {
 									pullRefresh.endPullUpToRefresh();

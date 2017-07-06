@@ -17,10 +17,10 @@
 
 				<div class="mui-media-body">{{value.title}}</div>
 				<p class='mui-ellipsis'>
-					<button id="Priid" name="Priqy" class="mui-btn mui-btn-primary mui-pull-right" >启用</button><span><img src="../../image/config/zz (2).png" width="14px" height="14px" /> {{value.username}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<button id="Priid" name="Priqy" class="mui-btn mui-btn-primary mui-pull-right" onclick="change()" >启用</button><span><img src="../../image/config/zz (2).png" width="14px" height="14px" /> {{value.username}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<span><img src="../../image/config/sj.png" width="14px" height="14px" /> {{value.time}}</span>
 				</p>
-                <br />
+              
 				<!-- 代码部分begin -->
 				<div class="page_guide_slider" id="aaa">
 					<div class="page_guide_balloon"> 
@@ -41,11 +41,11 @@
 								<div class="page_guide_item_text" >
 								</div>
 								<div class="page_guide_item_image">
-									<img img_src="../../image/config/loading.jpg" src="../../image/config/func_actssm.jpg" />
-									<img img_src="../../image/config/loading.jpg" src="../../image/config/func_chat.jpg" />
-									<img img_src="../../image/config/loading.jpg" src="../../image/config/func_actssm.jpg" />
-									<img img_src="../../image/config/loading.jpg" src="../../image/config/func_disc.jpg" />
-									<img img_src="../../image/config/loading.jpg" src="../../image/config/func_worker.jpg" />
+									<img img_src="../../image/utils/loading.gif" src="../../image/config/func_actssm.jpg" />
+									<img img_src="../../image/utils/loading.gif" src="../../image/config/func_chat.jpg" />
+									<img img_src="../../image/utils/loading.gif" src="../../image/config/func_actssm.jpg" />
+									<img img_src="../../image/utils/loading.gif" src="../../image/config/func_disc.jpg" />
+									<img img_src="../../image/utils/loading.gif" src="../../image/config/func_worker.jpg" />
 								</div>
 							</div>
 						</div>
@@ -76,32 +76,39 @@
 						title: "皮肤标题111",
 						time: "2017-05-06",
 						username:"张三",
+						Isqy:"0",
 						content: "将软件嵌套到导航里，二者融为一体，能让用户一目了然，寻找需求，方便下载。其中包括：应用软件，手机软件，系统软件等"
 					}, {
 						title: "皮肤标题222",
 						time: "2017-05-28",
 						username:"李四",
+						Isqy:"1",
 						content: "将软件嵌套到导航里，二者融为一体，能让用户一目了然，寻找需求，方便下载。其中包括：应用软件，手机软件，系统软件等"}]
 }
 });
                  //  启用取消按钮
-//                var count = 0;
-//
-//                 function change() {
-//                 	if(count == 0) {
-//                 		document.getElementById('Priqy').style.backgroundColor = 'blue';
-//                 		document.getElementById('Priqy').style.color = "#FFFFFF";
-//                 		var button = document.getElementById("Priqy");
-//                 		button.innerText = "启用";
-//                 		count++;
-//                 	} else {
-//                 		document.getElementById('Priqy').style.backgroundColor = "#CCCCCC";
-//                 		var button = document.getElementById("Priqy");
-//                 		button.innerText = "取消";
-//                 		count = 0;
-//                 	}
-//
-//                 }
+                  var count = 0;
+                    
+                   function change() {
+                   	if(count == 0) {
+                   		
+                   	  
+                   		
+                   		//document.getElementById('Priqy').style.backgroundColor = 'blue';
+                   		//document.getElementById('Priqy').style.color = "#FFFFFF";
+                   		var button = document.getElementById("Priqy");
+                   		var o = document.getElementsByName("Priqy");
+                   		alert(o);
+                   		o.innerText = "启用111";
+                   		count++;
+                   	} else {
+                   		document.getElementById('Priqy').style.backgroundColor = "#CCCCCC";
+                   		var button = document.getElementById("Priqy");
+                   		button.innerText = "取消";
+                   		count = 0;
+                   	}
+
+                   }
 	</script>
 
 </html>

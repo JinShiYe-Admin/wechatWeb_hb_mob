@@ -1,0 +1,127 @@
+<!--
+	作者：444811716@qq.com
+	时间：2017-07-04
+	描述：网站配置
+-->
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>网站栏目</title>
+		<link rel="stylesheet" href="../../css/weui.min.css" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<style>
+			.weui-cells {
+				margin-top: 0px;
+			}
+			
+			.weui-cells__title {
+				color: black;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="conetent">
+			<br/>
+			<button onclick="addColumn()">添加栏目</button>
+			<!--列表信息流 开始-->
+			<ul id="list" class="mui-table-view">
+				<li class="mui-table-view-cell mui-media" v-for="(item,index) in columns" :data-index="index">
+					<div class="mui-media-body">
+						<div class="mui-ellipsis-2">栏目名称：{{item.cname}}</div>
+						<div class="author">链接地址：{{item.linkurl}}</div>
+						<div class="time">排序ID：{{item.orderid}}</div>
+					</div>
+
+				</li>
+			</ul>
+		</div>
+		<script src="../../js/mui.min.js"></script>
+		<script type="text/javascript" src="../../js/weui.min.js"></script>
+		<script type="text/javascript" src="../../js/vue.min.js"></script>
+		<script type="text/javascript" src="../../js/jweixin.js"></script>
+		<script type="text/javascript" src="../../js/jquery.min.js"></script>
+		<script src="../../js/PublicProtocol.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/utils/utils.js"></script>
+		<script>
+			var tempData = {
+				cmd: 'chn',
+				type: 'findpage',
+				pagesize: '10',
+				pageindex: '1',
+				colid: '',
+				cname: '',
+				stat: '',
+				iswrite: '',
+				islink: '',
+
+			}
+			unitWebsitePro(tempData, function(data) {
+				//				alert(JSON.stringify(data));
+				if(data.RspCode == 0) {
+					vm.columns = vm.columns.concat(data.dt);
+				} else {
+					getColumn();
+				}
+			});
+
+			function getColumn() {
+				var tempArr = [{
+						chnid: '1',
+						cname: '百度一下',
+						orderid: '1',
+						linkurl: "www.baidu.com",
+						islink:true,
+						iswrite:false
+					},
+					{
+						chnid: '2',
+						cname: '百度一下',
+						orderid: '2',
+						linkurl: "www.baidu.com",
+						islink:false,
+						iswrite:true
+					},
+					{
+						chnid: '3',
+						cname: '百度一下',
+						orderid: '3',
+						linkurl: "www.baidu.com",
+						islink:false,
+						iswrite:false
+					},
+
+				]
+				vm.columns = vm.columns.concat(tempArr);
+			}
+
+			function addColumn() {
+				console.log(1111)
+				var tempData = {
+					type: 'add'
+				}
+				utils.wOpenWithData("../unitWeb/column.html", tempData);
+			}
+			var vm = new Vue({
+				el: '#conetent',
+				data: {
+					columns: []
+				}
+
+			})
+			mui('.mui-table-view').on('tap', '.mui-table-view-cell', function() {
+				var index = this.getAttribute('data-index');
+				var tempData = vm.columns[index];
+				tempData.type = 'edit'
+				utils.wOpenWithData("../unitWeb/column.html", tempData);
+				
+			})
+		</script>
+	</body>
+
+</html>

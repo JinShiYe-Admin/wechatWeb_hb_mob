@@ -13,6 +13,7 @@
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<title>网站栏目</title>
 		<link rel="stylesheet" href="../../css/weui.min.css" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
 		<style>
 			.weui-cells {
 				margin-top: 0px;
@@ -25,6 +26,9 @@
 	</head>
 
 	<body>
+		<!--<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		</header>-->
 		<div id="conetent" class="weui-cells weui-cells_form">
 			<!--输入列表-->
 			<div id="input_list">
@@ -82,31 +86,46 @@
 				</div>
 			</div>
 			<div class="weui-btn-area">
-				<button id="submit" v-on:click="submitClick" class="weui-btn weui-btn_primary">确定</button>
+				<button id="submit" v-on:click="submitClick" class="weui-btn weui-btn_primary">{{editName}}</button>
 			</div>
 		</div>
+		<script src="../../js/mui.min.js"></script>
 		<script type="text/javascript" src="../../js/weui.min.js"></script>
 		<script type="text/javascript" src="../../js/vue.min.js"></script>
 		<script type="text/javascript" src="../../js/jweixin.js"></script>
 		<script type="text/javascript" src="../../js/jquery.min.js"></script>
+		<script src="../../js/PublicProtocol.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/utils/utils.js"></script>
 		<script>
-			var para = {
-				type: 'findpage',
-				pagesize: '10',
-				pageindex: '1',
-//				colid: '',
-//				cname: '',
-//				stat: '',
-//				iswrite: '',
-//				islink: '',
+			window.onload = function() {
+				var detail = utils.getDataFromUrl(window.location.href);
+				//				alert("detail " + JSON.stringify(detail));
+				vm.type = detail.type;
+				if(vm.type == 'edit') {
+					vm.editName = '删除'
+					vm.chnid = detail.chnid;
+					vm.cname.message = detail.cname;
+					vm.orderid.message = detail.orderid;
+					vm.linkurl.message = detail.linkurl;
+					vm.islink.check = detail.islink;
+					vm.iswrite.check = detail.iswrite;
+					for(var item in vm.$data) {
+						(function addwatch(key) {
+							vm.$watch(key + '.message', function(newVal, oldVal) {
+								edit(oldVal, newVal, key)
+							})
+						})(item)
+
+					}
+				} else {
+					vm.editName = '添加'
+				}
 
 			}
-			jQuery.post('https://jsypay.jiaobaowang.net/wxth/jssdkapi.aspx/chn', para, function(data,textStatus) {
-				alert(JSON.stringify(data));
-			});
 			var vm = new Vue({
 				el: '#conetent',
 				data: {
+					editName: '',
 					cname: {
 						title: "栏目名称",
 						message: ""
@@ -135,38 +154,57 @@
 						return !this.islink.check
 					}
 				},
-				watch: {
-					cname: function(newVal) {
-
-					},
-					linkurl: function(newVal) {
-
-					},
-					orderid: function(newVal) {
-
-					}
-				},
-
 				methods: {
 					submitClick: function() {
-						var para = {
-							type: 'add',
-							cname: vm.cname.message,
-							islink: vm.islink.check,
-							linkurl: vm.linkurl.message,
-							iswrite: vm.iswrite.check,
-							note: '',
-							orderid: vm.orderid.message,
-							pid: '',
+						if(vm.type == 'add') {//添加栏目
+							var para = {
+								cmd: 'chn',
+								type: 'add',
+								cname: vm.cname.message,
+								islink: vm.islink.check,
+								linkurl: vm.linkurl.message,
+								iswrite: vm.iswrite.check,
+								note: '',
+								orderid: vm.orderid.message,
+								pid: 0,
+							}
+							console.log(JSON.stringify(para))
+							unitWebsitePro(para, function(data) {
+								alert(JSON.stringify(data));
+							});
+						}else if(vm.type == 'edit') {//删除栏目
+							var para = {
+								cmd: 'chn',
+								type: 'del',
+								colid:vm.colid
+							}
+							console.log(JSON.stringify(para))
+							unitWebsitePro(para, function(data) {
+								alert(JSON.stringify(data));
+							});
 						}
-						console.log(JSON.stringify(para))
-						jQuery.post('https://jsypay.jiaobaowang.net/wxth/jssdkapi.aspx/chn', para, function(data,textStatus) {
-							alert(textStatus);
-						});
+
 					}
 				}
 
 			})
+
+			function edit(oldVal, newVal, key) {
+				console.log('key=' + key + '--oldVal=' + oldVal + '--newVal=' + newVal)
+				if(newVal == oldVal) {
+					return;
+				}
+				var para = {
+					cmd: 'chn',
+					type: 'edit',
+					colid: vm.colid,
+					callcol: key,
+
+				}
+				unitWebsitePro(para, function(data) {
+					alert(JSON.stringify(data));
+				});
+			}
 		</script>
 	</body>
 

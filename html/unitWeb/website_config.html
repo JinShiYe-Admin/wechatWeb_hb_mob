@@ -65,7 +65,7 @@
 					type: 'find'
 				}
 				unitWebsitePro(tempData, function(data) {
-					alert('配置为:' + data);
+					alert('配置为:' + JSON.stringify(data));
 					webConfig = data;
 					//输入框
 					var vue_input = new Vue({

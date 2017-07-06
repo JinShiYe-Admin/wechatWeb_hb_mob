@@ -58,98 +58,102 @@
 		<script src="../../js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/PublicProtocol.js" type="text/javascript" charset="utf-8"></script>
 		<script>
+			var webConfig;
 			window.onload = function() {
 				var tempData = {
 					cmd: 'webcfg',
 					type: 'find'
 				}
 				unitWebsitePro(tempData, function(data) {
-					alert('配置为:'+JSON.stringify(data));
+					alert('配置为:' + data);
+					webConfig = data;
+					//输入框
+					var vue_input = new Vue({
+						el: '#input_list',
+						data: {
+							inputArray: [{
+								callcol: "cname",
+								title: "中文名",
+								message: webConfig.cname,
+								type: "text",
+								maxlength: 25,
+							}, {
+								callcol: "ename",
+								title: "英文名",
+								message: webConfig.ename,
+								type: "text",
+								maxlength: 25,
+							}, {
+								callcol: "corptel",
+								title: "单位联系方式",
+								message: webConfig.corptel,
+								type: "tel",
+								maxlength: 25,
+							}]
+						},
+						methods: {
+							oninput: function(data) { //输入时的监听，0中文名，1英文名，2单位联系方式
+								console.log("oninput " + data + " " + vue_input.inputArray[data].message);
+								switch(data) {
+									case 0: //中文名
+										vue_input.inputArray[data].message = vue_input.inputArray[data].message.replace(/[^\u4E00-\u9FA5| ]/g, "").replace(/(^\s*)|(\s*$)/g, "");
+										break;
+									case 1: //英文名
+										vue_input.inputArray[data].message = vue_input.inputArray[data].message.replace(/[^\/a-z|A-Z| ]/g, "").replace(/(^\s*)|(\s*$)/g, "");
+										break;
+									case 2: //单位联系方式
+										vue_input.inputArray[data].message = vue_input.inputArray[data].message.replace(/[^\d]/g, "")
+										break;
+									default:
+										break;
+								}
+
+							}
+						}
+					});
+
+					//开关
+					var vue_switch = new Vue({
+						el: '#switch_list',
+						data: {
+							switchArray: [{
+								callcol: "stat",
+								title: "网站开启",
+								check: webConfig.stat
+							}, {
+								callcol: "isreply",
+								title: "整站新闻允许回复",
+								check: webConfig.isreply
+							}, {
+								callcol: "isnewchk",
+								title: "允许新闻先发后审",
+								check: webConfig.isnewchk
+							}, {
+								callcol: "isnewreplychk",
+								title: "允许回复先发后审",
+								check: webConfig.isnewreplychk
+							}, {
+								callcol: "isfileup",
+								title: "允许新闻上传附件",
+								check: webConfig.isfileup
+							}, {
+								callcol: "isfiledown",
+								title: "允许附件被下载",
+								check: webConfig.isfiledown
+							}, {
+								callcol: "iswrite",
+								title: "允许新闻普通人员投稿",
+								check: webConfig.iswrite
+							}, {
+								callcol: "isass",
+								title: "允许评论被评价",
+								check: webConfig.isass
+							}]
+						}
+					});
+
 				});
 			};
-			//输入框
-			var vue_input = new Vue({
-				el: '#input_list',
-				data: {
-					inputArray: [{
-						callcol: "cname",
-						title: "中文名",
-						message: "",
-						type: "text",
-						maxlength: 25,
-					}, {
-						callcol: "ename",
-						title: "英文名",
-						message: "",
-						type: "text",
-						maxlength: 25,
-					}, {
-						callcol: "corptel",
-						title: "单位联系方式",
-						message: "",
-						type: "tel",
-						maxlength: 25,
-					}]
-				},
-				methods: {
-					oninput: function(data) { //输入时的监听，0中文名，1英文名，2单位联系方式
-						console.log("oninput " + data + " " + vue_input.inputArray[data].message);
-						switch(data) {
-							case 0: //中文名
-								vue_input.inputArray[data].message = vue_input.inputArray[data].message.replace(/[^\u4E00-\u9FA5| ]/g, "").replace(/(^\s*)|(\s*$)/g, "");
-								break;
-							case 1: //英文名
-								vue_input.inputArray[data].message = vue_input.inputArray[data].message.replace(/[^\/a-z|A-Z| ]/g, "").replace(/(^\s*)|(\s*$)/g, "");
-								break;
-							case 2: //单位联系方式
-								vue_input.inputArray[data].message = vue_input.inputArray[data].message.replace(/[^\d]/g, "")
-								break;
-							default:
-								break;
-						}
-
-					}
-				}
-			});
-			//开关
-			var vue_switch = new Vue({
-				el: '#switch_list',
-				data: {
-					switchArray: [{
-						callcol: "stat",
-						title: "网站开启",
-						check: true
-					}, {
-						callcol: "isreply",
-						title: "整站新闻允许回复",
-						check: false
-					}, {
-						callcol: "isnewchk",
-						title: "允许新闻先发后审",
-						check: false
-					}, {
-						callcol: "isnewreplychk",
-						title: "允许回复先发后审",
-						check: false
-					}, {
-						callcol: "isfileup",
-						title: "允许新闻上传附件",
-						check: false
-					}, {
-						callcol: "isfiledown",
-						title: "允许附件被下载",
-						check: false
-					}, {
-						callcol: "iswrite",
-						title: "允许新闻普通人员投稿",
-						check: false
-					}, {
-						callcol: "isass",
-						title: "允许评论被评价",
-						check: false
-					}]
-				}
-			});
 
 			var vue_button = new Vue({
 				el: "#submit",

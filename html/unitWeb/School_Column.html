@@ -154,7 +154,9 @@
 	<script type="text/javascript" src="../../js/mui.min.js"></script>
 	<script type="text/javascript" src="../../js/jweixin.js"></script>
 	<script type="text/javascript" src="../../js/jquery.min.js"></script>
-	<script type="text/javascript" src="../../js/utils/utils.js"></script>
+	<script type="text/javascript">
+		document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
+	</script>
 	<script>
 		mui.init();
 		mui.ready(function() {
@@ -163,7 +165,7 @@
 		mui('.mui-table-view').on('tap', '.mui-table-view-cell', function() {
 			var title = this.querySelector(".mui-media-body").innerHTML
 			if(title == '网站栏目') {
-				mui.openWindow("../unitWeb/column-home.html?abc=" + Math.random(), "column-home.html"+ Math.random());
+				mui.openWindow("../unitWeb/column-home.html?abc=" + Math.random(), "column-home.html" + Math.random());
 			} else if(title == '新闻动态') {
 				mui.openWindow("../unitWeb/newList.html?abc=" + Math.random(), "newList.html" + Math.random());
 			}

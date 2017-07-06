@@ -94,8 +94,9 @@
 		<script type="text/javascript" src="../../js/vue.min.js"></script>
 		<script type="text/javascript" src="../../js/jweixin.js"></script>
 		<script type="text/javascript" src="../../js/jquery.min.js"></script>
-		<script src="../../js/PublicProtocol.js" type="text/javascript" charset="utf-8"></script>
-		<script type="text/javascript" src="../../js/utils/utils.js"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
+		</script>
 		<script>
 			window.onload = function() {
 				var detail = utils.getDataFromUrl(window.location.href);

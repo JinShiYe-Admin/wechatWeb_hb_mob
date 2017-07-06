@@ -75,11 +75,12 @@
 							alert("mySessionStorage " + sessionStorage.mySessionStorage)
 							break;
 						case "2": //window.opener
-							console.log("window.opener " + window.opener.testData);
+							alert("window.opener " + window.opener.testData);
 							document.getElementById("windowOpenerdata").innerText = window.opener.testData;
 							break;
 						case "3": //window.opener
-							console.log("window.opener function " + window.opener.testfun("123"));
+							window.opener.testfun("123");
+							alert("window.opener function ");
 							break;
 						case "4": //mui.fire
 							mui.fire(window.opener, 'muiFire', {

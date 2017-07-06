@@ -83,7 +83,7 @@
 				setTimeout(function() {
 					document.getElementById("loadingToast").style.display = "none";
 				}, 1000);
-				console.log("testData " + testData);
+				alert("testData " + testData);
 				document.getElementById("windowOnload").innerText = "true";
 
 				//按钮监听
@@ -156,6 +156,7 @@
 			 */
 			function testfun(data) {
 				console.log("testfun " + data);
+				testData=data;
 				document.getElementById("windowOpenerFuction").innerText = data;
 			}
 		</script>

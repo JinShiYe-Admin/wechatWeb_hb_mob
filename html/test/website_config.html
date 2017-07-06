@@ -1,5 +1,5 @@
 <!--
-	作者：444811716@qq.com
+	作者：莫尚霖
 	时间：2017-07-04
 	描述：网站配置
 -->
@@ -26,19 +26,19 @@
 
 	<body>
 		<div class="weui-cells weui-cells_form">
-			<div id="input_list">
+			<div id="input_list" style="display: none;">
 				<div v-for="(value,index) in inputArray">
 					<div class="weui-cells__title">{{value.title}}</div>
 					<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
-								<input class="weui-input" v-model="value.message" type="text" :placeholder="'请输入'+value.title">
+								<input class="weui-input" v-model="value.message" :maxlength="value.maxlength" :pattern="value.pattern" :type="value.type" :placeholder="'请输入'+value.title" v-on:input="oninput(index);">
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div id="switch_list">
+			<div id="switch_list" style="display: none;">
 				<div v-for="(value,index) in switchArray">
 					<div class="weui-cell weui-cell_switch">
 						<div class="weui-cell__bd">{{value.title}}</div>
@@ -48,7 +48,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="weui-btn-area">
+			<div id="div_button" class="weui-btn-area" style="display: none;">
 				<button id="submit" v-on:click="submitClick" class="weui-btn weui-btn_primary">确定</button>
 			</div>
 		</div>
@@ -63,28 +63,41 @@
 					inputArray: [{
 						callcol: "cname",
 						title: "中文名",
-						message: ""
+						message: "",
+						type: "text",
+						maxlength: 25,
 					}, {
 						callcol: "ename",
 						title: "英文名",
-						message: ""
-					}, {
-						callcol: "logo",
-						title: "logourl",
-						message: ""
-					}, {
-						callcol: "banner",
-						title: "bannerurl",
-						message: ""
-					}, {
-						callcol: "skinid",
-						title: "皮肤ID",
-						message: ""
+						message: "",
+						type: "text",
+						maxlength: 25,
 					}, {
 						callcol: "corptel",
 						title: "单位联系方式",
-						message: ""
+						message: "",
+						type: "tel",
+						maxlength: 25,
 					}]
+				},
+				methods: {
+					oninput: function(data) { //输入时的监听，0中文名，1英文名，2单位联系方式
+						console.log("oninput " + data + " " + vue_input.inputArray[data].message);
+						switch(data) {
+							case 0: //中文名
+								vue_input.inputArray[data].message = vue_input.inputArray[data].message.replace(/[^\u4E00-\u9FA5| ]/g, "").replace(/(^\s*)|(\s*$)/g, "");
+								break;
+							case 1: //英文名
+								vue_input.inputArray[data].message = vue_input.inputArray[data].message.replace(/[^\/a-z|A-Z| ]/g, "").replace(/(^\s*)|(\s*$)/g, "");
+								break;
+							case 2: //单位联系方式
+								vue_input.inputArray[data].message = vue_input.inputArray[data].message.replace(/[^\d]/g, "")
+								break;
+							default:
+								break;
+						}
+
+					}
 				}
 			});
 			//开关
@@ -143,6 +156,9 @@
 					}
 				}
 			});
+			document.getElementById("input_list").style.display = 'block';
+			document.getElementById("switch_list").style.display = 'block';
+			document.getElementById("div_button").style.display = 'block';
 		</script>
 	</body>
 

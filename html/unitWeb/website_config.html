@@ -55,7 +55,18 @@
 		<script type="text/javascript" src="../../js/weui.min.js"></script>
 		<script type="text/javascript" src="../../js/vue.min.js"></script>
 		<script type="text/javascript" src="../../js/jweixin.js"></script>
+		<script src="../../js/PublicProtocol.js" type="text/javascript" charset="utf-8"></script>
 		<script>
+			mui.init();
+			mui.ready(function(){
+				var tempData = {
+					cmd:webcfg,
+					type:find
+				}
+				unitWebsitePro(tempData,function(data){
+					alert('配置为:'+JSON.stringify(data));
+				});
+			});
 			//输入框
 			var vue_input = new Vue({
 				el: '#input_list',

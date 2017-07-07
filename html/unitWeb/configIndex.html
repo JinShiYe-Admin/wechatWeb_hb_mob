@@ -43,18 +43,18 @@
 			});
 
 			function modifyConfig() {
-				utils.mOpenWithData("website_config.html?abc=" + Math.random(), "website_config.html" + Math.random());
+				utils.mOpenWithData("website_config.html");
 			}
 
 			function addColumn() {
 				var tempData = {
 					type: 'add'
 				}
-				utils.wOpenWithData("column.html?abc=" + Math.random(), tempData);
+				utils.wOpenWithData("column.html", tempData);
 			}
 
 			function modifyColumn() {
-				utils.mOpenWithData("column-home.html?abc=" + Math.random(), "column-home.html" + Math.random());
+				utils.mOpenWithData("column-home.html");
 			}
 			mui('.mui-table-view').on('tap', '.mui-table-view-cell', function() {
 				//获取id

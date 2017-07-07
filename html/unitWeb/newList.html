@@ -98,12 +98,12 @@
 					cmd: 'news',//文章管理
 					type: 'findpage',//分页查找文章列表
 					pagesize:'10',//每页条数
-					pageindex:newsPage,//页码
-					topic:'',//模糊查找标题,可为空字符串查全部
-					chnid:'',//某个栏目下的文章
-					newsid:'',//文章ID
-					stat:'',//状态
-					recuser:''//作者
+					pageindex:newsPage//页码
+//					topic:'',//模糊查找标题,可为空字符串查全部
+//					chnid:'',//某个栏目下的文章
+//					newsid:'',//文章ID
+//					stat:'',//状态
+//					recuser:''//作者
 				}
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {

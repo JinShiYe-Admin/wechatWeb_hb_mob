@@ -132,6 +132,7 @@
 						})(item)
 
 					}
+					
 				} else {
 					vm.editName = '添加'
 				}
@@ -164,13 +165,6 @@
 					note: {
 						title: "备注",
 						message: ""
-					}
-				},
-
-				computed: {
-					// a computed getter
-					write: function() {
-						return !this.islink.check
 					}
 				},
 				methods: {
@@ -209,9 +203,9 @@
 			})
 
 			function edit(oldVal, newVal, key) {
-				alert('key=' + key + '--oldVal=' + oldVal + '--newVal=' + newVal)
+				console.log('key=' + key + '--oldVal=' + oldVal + '--newVal=' + newVal)
 				if(key =='islink'&&newVal==true){
-					vm.iswrite = false;
+					vm.iswrite.check = false;
 				}
 				if(newVal == oldVal) {
 					return;
@@ -223,9 +217,9 @@
 					callcol: key,
 					coly:boolToInt(newVal)
 				}
-				alert(JSON.stringify(para))
+				console.log(JSON.stringify(para))
 				unitWebsitePro(para, function(data) {
-					alert(JSON.stringify(data));
+//					alert(JSON.stringify(data));
 				});
 			}
 			function boolToInt(value){

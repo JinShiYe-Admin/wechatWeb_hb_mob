@@ -48,7 +48,7 @@
 					<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
-								<input v-model.lazy="linkurl.message" class="weui-input" type="text" :placeholder="'请输入'+linkurl.title">
+								<input id="linkurl" v-model.lazy="linkurl.message" class="weui-input" type="text" :placeholder="'请输入'+linkurl.title">
 							</div>
 						</div>
 					</div>
@@ -132,6 +132,7 @@
 						})(item)
 
 					}
+					
 				} else {
 					vm.editName = '添加'
 				}
@@ -166,14 +167,10 @@
 						message: ""
 					}
 				},
-
-				computed: {
-					// a computed getter
-					write: function() {
-						return !this.islink.check
-					}
-				},
 				methods: {
+					resetData: function() {//重置数据
+						Object.assign(this.$data, getDefaultData());
+					},
 					submitClick: function() {
 						if(vm.type == 'add') { //添加栏目
 							var para = {
@@ -189,7 +186,11 @@
 							}
 							alert(JSON.stringify(para))
 							unitWebsitePro(para, function(data) {
-								alert(JSON.stringify(data));
+								if(data.RspCode==0){
+									vm.resetData();
+									mui.back()
+								}
+//								alert(JSON.stringify(data));
 							});
 						} else if(vm.type == 'edit') { //删除栏目
 							var para = {
@@ -199,7 +200,11 @@
 							}
 							alert(JSON.stringify(para))
 							unitWebsitePro(para, function(data) {
-								alert(JSON.stringify(data));
+								if(data.RspCode==0){
+									vm.resetData();
+									mui.back()
+								}
+//								alert(JSON.stringify(data));
 							});
 						}
 
@@ -207,11 +212,41 @@
 				}
 
 			})
+			function getDefaultData() {
+				return {
+					editName: '',
+					cname: {
+						title: "栏目名称",
+						message: ""
+					},
+					linkurl: {
+						title: "链接url",
+						message: ""
+					},
+					orderid: {
+						title: "排序ID",
+						message: ""
+					},
+					islink: {
+						title: "是否为链接",
+						check: true
+					},
+					iswrite: {
+						title: "是否允许投稿",
+						check: false
+					},
+					note: {
+						title: "备注",
+						message: ""
+					}
+				}
+			}
 
 			function edit(oldVal, newVal, key) {
-				alert('key=' + key + '--oldVal=' + oldVal + '--newVal=' + newVal)
+				console.log('key=' + key + '--oldVal=' + oldVal + '--newVal=' + newVal)
 				if(key =='islink'&&newVal==true){
-					vm.iswrite = false;
+					$("#linkurl").focus();
+					vm.iswrite.check = false;
 				}
 				if(newVal == oldVal) {
 					return;
@@ -223,9 +258,9 @@
 					callcol: key,
 					coly:boolToInt(newVal)
 				}
-				alert(JSON.stringify(para))
+				console.log(JSON.stringify(para))
 				unitWebsitePro(para, function(data) {
-					alert(JSON.stringify(data));
+//					alert(JSON.stringify(data));
 				});
 			}
 			function boolToInt(value){

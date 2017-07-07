@@ -17,7 +17,7 @@
 			.weui-cells {
 				margin-top: 0px;
 			}
-			
+
 			.weui-cells__title {
 				color: black;
 			}
@@ -25,6 +25,13 @@
 	</head>
 
 	<body>
+		<div id="loading">
+			<div class="weui-mask_transparent"></div>
+			<div class="weui-toast">
+				<i class="weui-loading weui-icon_toast"></i>
+				<p class="weui-toast__content">数据加载中</p>
+			</div>
+		</div>
 		<div class="weui-cells weui-cells_form">
 			<div id="input_list" style="display: none;">
 				<div v-for="(value,index) in inputArray">
@@ -32,7 +39,7 @@
 					<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
-								<input class="weui-input" v-model="value.message" :maxlength="value.maxlength" :pattern="value.pattern" :type="value.type" :placeholder="'请输入'+value.title" v-on:input="oninput(index);">
+								<input class="weui-input" v-model="value.message" :maxlength="value.maxlength" :type="value.type" :placeholder="'请输入'+value.title" v-on:input="oninput(index);" v-on:blur="onblur(index);">
 							</div>
 						</div>
 					</div>
@@ -43,13 +50,10 @@
 					<div class="weui-cell weui-cell_switch">
 						<div class="weui-cell__bd">{{value.title}}</div>
 						<div class="weui-cell__ft">
-							<input class="weui-switch" type="checkbox" v-model="value.check">
+							<input class="weui-switch" type="checkbox" v-model="value.check" v-on:change="onchange(index);">
 						</div>
 					</div>
 				</div>
-			</div>
-			<div id="div_button" class="weui-btn-area" style="display: none;">
-				<button id="submit" v-on:click="submitClick" class="weui-btn weui-btn_primary">确定</button>
 			</div>
 		</div>
 		<script type="text/javascript" src="../../js/weui.min.js"></script>
@@ -60,128 +64,201 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 		<script>
-			var webConfig;
+			var webConfig; //网站配置的数据
+			//输入框
+//			webConfig = {};
+//			webConfig.cname = '';
+//			webConfig.ename = '';
+//			webConfig.corptel = '';
+//			webConfig.stat = 0;
+//			webConfig.isreply = 0;
+//			webConfig.isnewchk = 0;
+//			webConfig.isnewreplychk = 0;
+//			webConfig.isfileup = 0;
+//			webConfig.isfiledown = 0;
+//			webConfig.iswrite = 0;
+//			webConfig.isass = 0;
+			var loading = document.getElementById("loading"); //等待框
+			var vue_input = new Vue({
+				el: '#input_list',
+				data: {
+					inputArray: [{
+						callcol: "cname",
+						title: "中文名",
+						message: "",
+						type: "text",
+						maxlength: 25,
+					}, {
+						callcol: "ename",
+						title: "英文名",
+						message: "",
+						type: "text",
+						maxlength: 25,
+					}, {
+						callcol: "corptel",
+						title: "单位联系方式",
+						message: "",
+						type: "tel",
+						maxlength: 25,
+					}]
+				},
+				methods: {
+					oninput: function(index) { //输入时的监听，0中文名，1英文名，2单位联系方式
+						console.log("oninput " + index + " " + vue_input.inputArray[index].message);
+						switch(index) {
+							case 0: //中文名
+								vue_input.inputArray[index].message = vue_input.inputArray[index].message.replace(/[^\u4E00-\u9FA5| ]/g, "").replace(/(^\s*)|(\s*$)/g, "");
+								break;
+							case 1: //英文名
+								vue_input.inputArray[index].message = vue_input.inputArray[index].message.replace(/[^\/a-z|A-Z| ]/g, "").replace(/(^\s*)|(\s*$)/g, "");
+								break;
+							case 2: //单位联系方式
+								vue_input.inputArray[index].message = vue_input.inputArray[index].message.replace(/[^\d]/g, "")
+								break;
+							default:
+								break;
+						}
+					},
+					onblur: function(index) { //失去焦点时的监听，0中文名，1英文名，2单位联系方式
+						console.log("onblur " + index);
+						if(vue_input.inputArray[index].message != webConfig[vue_input.inputArray[index].callcol]) {
+							//有改变
+							loading.style.display = "block";
+							var data = {
+								type: 0,
+								index: index,
+								callcol: vue_input.inputArray[index].callcol,
+								colv: vue_input.inputArray[index].message
+							}
+							changeWebsiteConfig(data);
+						}
+					}
+				}
+			}); //输入框
+
+			var vue_switch = new Vue({
+				el: '#switch_list',
+				data: {
+					switchArray: [{
+						callcol: "stat",
+						title: "网站开启",
+						check: 0
+					}, {
+						callcol: "isreply",
+						title: "整站新闻允许回复",
+						check: 0
+					}, {
+						callcol: "isnewchk",
+						title: "允许新闻先发后审",
+						check: 0
+					}, {
+						callcol: "isnewreplychk",
+						title: "允许回复先发后审",
+						check: 0
+					}, {
+						callcol: "isfileup",
+						title: "允许新闻上传附件",
+						check: 0
+					}, {
+						callcol: "isfiledown",
+						title: "允许附件被下载",
+						check: 0
+					}, {
+						callcol: "iswrite",
+						title: "允许新闻普通人员投稿",
+						check: 0
+					}, {
+						callcol: "isass",
+						title: "允许评论被评价",
+						check: 0
+					}]
+				},
+				methods: {
+					onchange: function(index) {
+						console.log("onchange " + index + " " + vue_switch.switchArray[index].check);
+						if(vue_switch.switchArray[index].check != webConfig[vue_switch.switchArray[index].callcol]) {
+							loading.style.display = "block";
+							var data = {
+								type: 1,
+								index: index,
+								callcol: vue_switch.switchArray[index].callcol,
+								colv: vue_switch.switchArray[index].check * 1
+							}
+							changeWebsiteConfig(data);
+						}
+					}
+				}
+			}); //开关
+			//document.getElementById("input_list").style.display = 'block';
+			//document.getElementById("switch_list").style.display = 'block';
+
 			window.onload = function() {
+				//loading.style.display = "none";
 				var tempData = {
 					cmd: 'webcfg',
 					type: 'find'
 				}
 				unitWebsitePro(tempData, function(data) {
-					alert('配置为:' + JSON.stringify(data));
+					loading.style.display = "none";
+					weui.alert('配置为:' + JSON.stringify(data));
 					if(data.RspCode == 0) {
 						if(data.RspData.length > 0) {
 							webConfig = data.RspData[0];
 							//输入框
-							var vue_input = new Vue({
-								el: '#input_list',
-								data: {
-									inputArray: [{
-										callcol: "cname",
-										title: "中文名",
-										message: webConfig.cname,
-										type: "text",
-										maxlength: 25,
-									}, {
-										callcol: "ename",
-										title: "英文名",
-										message: webConfig.ename,
-										type: "text",
-										maxlength: 25,
-									}, {
-										callcol: "corptel",
-										title: "单位联系方式",
-										message: webConfig.corptel,
-										type: "tel",
-										maxlength: 25,
-									}]
-								},
-								methods: {
-									oninput: function(data) { //输入时的监听，0中文名，1英文名，2单位联系方式
-										console.log("oninput " + data + " " + vue_input.inputArray[data].message);
-										switch(data) {
-											case 0: //中文名
-												vue_input.inputArray[data].message = vue_input.inputArray[data].message.replace(/[^\u4E00-\u9FA5| ]/g, "").replace(/(^\s*)|(\s*$)/g, "");
-												break;
-											case 1: //英文名
-												vue_input.inputArray[data].message = vue_input.inputArray[data].message.replace(/[^\/a-z|A-Z| ]/g, "").replace(/(^\s*)|(\s*$)/g, "");
-												break;
-											case 2: //单位联系方式
-												vue_input.inputArray[data].message = vue_input.inputArray[data].message.replace(/[^\d]/g, "")
-												break;
-											default:
-												break;
-										}
-
-									}
-								}
-							});
+							vue_input.inputArray[0].message = webConfig.cname;
+							vue_input.inputArray[1].message = webConfig.ename;
+							vue_input.inputArray[2].message = webConfig.corptel;
 							//开关
-							var vue_switch = new Vue({
-								el: '#switch_list',
-								data: {
-									switchArray: [{
-										callcol: "stat",
-										title: "网站开启",
-										check: webConfig.stat
-									}, {
-										callcol: "isreply",
-										title: "整站新闻允许回复",
-										check: webConfig.isreply
-									}, {
-										callcol: "isnewchk",
-										title: "允许新闻先发后审",
-										check: webConfig.isnewchk
-									}, {
-										callcol: "isnewreplychk",
-										title: "允许回复先发后审",
-										check: webConfig.isnewreplychk
-									}, {
-										callcol: "isfileup",
-										title: "允许新闻上传附件",
-										check: webConfig.isfileup
-									}, {
-										callcol: "isfiledown",
-										title: "允许附件被下载",
-										check: webConfig.isfiledown
-									}, {
-										callcol: "iswrite",
-										title: "允许新闻普通人员投稿",
-										check: webConfig.iswrite
-									}, {
-										callcol: "isass",
-										title: "允许评论被评价",
-										check: webConfig.isass
-									}]
-								}
-							});
+							vue_switch.switchArray[0].check = webConfig.stat;
+							vue_switch.switchArray[1].check = webConfig.isreply;
+							vue_switch.switchArray[2].check = webConfig.isnewchk;
+							vue_switch.switchArray[3].check = webConfig.isnewreplychk;
+							vue_switch.switchArray[4].check = webConfig.isfileup;
+							vue_switch.switchArray[5].check = webConfig.isfiledown;
+							vue_switch.switchArray[6].check = webConfig.iswrite;
+							vue_switch.switchArray[7].check = webConfig.isass;
+							//显示列表
+							document.getElementById("input_list").style.display = 'block';
+							document.getElementById("switch_list").style.display = 'block';
 						} else {
-							alert('没有获取到配置信息');
+							weui.alert('没有获取到配置信息')
 						}
 					} else {
-						alert(data.RspTxt);
+						weui.alert(data.RspTxt);
 					}
 				});
 			};
 
-			var vue_button = new Vue({
-				el: "#submit",
-				methods: {
-					submitClick: function() {
-						var commit = {};
-						for(var i in vue_input.inputArray) {
-							commit[vue_input.inputArray[i].callcol] = vue_input.inputArray[i].message;
-						}
-						for(var j in vue_switch.switchArray) {
-							commit[vue_switch.switchArray[j].callcol] = vue_switch.switchArray[j].check * 1;
-						}
-						console.log(JSON.stringify(commit));
-						alert("submitClick " + JSON.stringify(commit));
-					}
+			/**
+			 * 修改网站设置
+			 * @param {Object} change 修改的数据
+			 * @param {String} type 类型，0输入;1开关
+			 * @param {String} index 第几个数据
+			 * @param {String} key 属性
+			 * @param {String} value 值
+			 */
+			function changeWebsiteConfig(change) {
+				var commit = {
+					cmd: 'webcfg',
+					type: 'edit',
+					callcol: change.callcol,
+					colv: change.colv
 				}
-			});
-			document.getElementById("input_list").style.display = 'block';
-			document.getElementById("switch_list").style.display = 'block';
-			document.getElementById("div_button").style.display = 'block';
+				weui.alert("changeWebsiteConfig:" + JSON.stringify(commit));
+				//loading.style.display = "none";
+				unitWebsitePro(commit, function(data) {
+					loading.style.display = "none";
+					weui.alert('修改网站设置:' + JSON.stringify(data));
+					if(data.RspCode == 0) {
+						webConfig[commit.callcol] = commit.colv;
+					} else {
+						if(change.type == 1) { //开关
+							vue_switch.switchArray[change.index].check = !change.colv;
+						}
+						weui.alert("修改失败:" + data.RspTxt);
+					}
+				});
+			}
 		</script>
 	</body>
 

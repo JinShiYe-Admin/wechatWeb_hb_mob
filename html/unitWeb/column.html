@@ -169,7 +169,7 @@
 								orderid: vm.orderid.message,
 								pid: 0,
 							}
-							console.log(JSON.stringify(para))
+							alert(JSON.stringify(para))
 							unitWebsitePro(para, function(data) {
 								alert(JSON.stringify(data));
 							});
@@ -179,7 +179,7 @@
 								type: 'del',
 								colid:vm.colid
 							}
-							console.log(JSON.stringify(para))
+							alert(JSON.stringify(para))
 							unitWebsitePro(para, function(data) {
 								alert(JSON.stringify(data));
 							});
@@ -191,7 +191,7 @@
 			})
 
 			function edit(oldVal, newVal, key) {
-				console.log('key=' + key + '--oldVal=' + oldVal + '--newVal=' + newVal)
+				alert('key=' + key + '--oldVal=' + oldVal + '--newVal=' + newVal)
 				if(newVal == oldVal) {
 					return;
 				}
@@ -199,8 +199,7 @@
 					cmd: 'chn',
 					type: 'edit',
 					colid: vm.colid,
-					callcol: key,
-
+					callcol: key
 				}
 				unitWebsitePro(para, function(data) {
 					alert(JSON.stringify(data));

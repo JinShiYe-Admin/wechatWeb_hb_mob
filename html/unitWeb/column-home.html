@@ -55,19 +55,18 @@
 				type: 'findpage',
 				pagesize: '10',
 				pageindex: '1',
-				colid: '',
+				conid: '',
 				cname: '',
 				stat: '',
 				iswrite: '',
-				islink: '',
-
+				islink: ''
 			}
 			unitWebsitePro(tempData, function(data) {
 				//				alert(JSON.stringify(data));
 				if(data.RspCode == 0) {
-					vm.columns = vm.columns.concat(data.dt);
+					vm.columns = vm.columns.concat(data.RspData.dt);
 				} else {
-					getColumn();
+					alert(data.RspTxt);
 				}
 			});
 
@@ -102,7 +101,6 @@
 			}
 
 			function addColumn() {
-				console.log(1111)
 				var tempData = {
 					type: 'add'
 				}

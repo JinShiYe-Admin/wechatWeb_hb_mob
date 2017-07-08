@@ -74,20 +74,18 @@
 					<div class="weui-cells__title">所属栏目</div>
 					<div class="weui-cells">
 					 <div>
-				<section class="container" id="chnid">
+				<section class="container">
                     <div class="dropdown">
-                      <select name="one" class="dropdown-select" style="font-size: 17px;color: #929292;">
-                      <option value="">请选择学校栏目</option>
-                      <option value="1" >新闻动态</option>
-                      <option value="2">学校首页</option>
-                      <option value="3">学校简介</option>
-                      <option value="4">师资力量</option>
+                      <select name="one"  id="chnid" class="dropdown-select" style="font-size: 17px;color: #929292;">
+                      <option value="" >请选择所属栏目....</option>
+                      <option value="{{value.id}}" v-for="(value,index) in inputArray">{{value.name}}</option>
+                      </select>
                     </div>
                 </select>
 			</div>
-					</div>
-				</div>
-		 
+			</div>
+		   </div>
+	 	 
 				
 			<!--输入列表-->
 				<div>
@@ -188,6 +186,21 @@
 					vm.editName = '添加'
 				}
 			}
+			//所属栏目下拉框
+			var vue_input = new Vue({
+				el: '#chnid',
+				data: {
+					inputArray: [{
+						name: "新闻动态",
+						id:0
+					}, {
+						name: "师资力量",
+						id:0
+                   },{
+						name: "学校简介",
+						id:0}]
+                    }
+            });
 			var vm = new Vue({
 				el: '#conetent',
 				data: {
@@ -238,7 +251,9 @@
             	var PriTopic = document.getElementById("cname").value;
             	var PriConten = document.getElementById("conten").value;
             	var PriSummas = document.getElementById("summas").value;
-            	var PriChnid = document.getElementById("chnid").value;
+            	var Chnid = document.getElementById("chnid");
+            	var PriChnid = Chnid.selectedIndex; // 选中索引
+            	console.log('所属栏目=========================:' + PriChnid);
                     PriIsquo = document.getElementById("islink").checked==true ? 1 : 0;
             	    PriIsReply = document.getElementById("isReply").checked==true ? 1 : 0;
                 if(PriIsquo==1 ){ 

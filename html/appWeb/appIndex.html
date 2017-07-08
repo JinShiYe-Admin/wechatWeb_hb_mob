@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>底部导航菜单切换</title>
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
+	</head>
+
+	<body>
+		<nav class="mui-bar mui-bar-tab " id="nav">
+			<a class="mui-tab-item mui-active" id="newsIndex">
+				<span class="mui-icon mui-icon-home"></span>
+				<span class="mui-tab-label">新闻</span>
+			</a>
+			<a class="mui-tab-item " id="mineIndex">
+				<span class="mui-icon mui-icon-email"></span>
+				<span class="mui-tab-label">我的</span>
+			</a>
+		</nav>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init({
+				subpages: [ //先加载首页  
+					{
+						url: 'newsIndex.html',
+						id: 'newsIndex',
+						styles: {
+							top: '0px',
+							bottom: '60px'
+						}
+					}
+
+				],
+				preloadPages: [ //缓存其他页面  
+					{
+						url: 'mineIndex.html',
+						id: 'mineIndex',
+						styles: {
+							top: '0px',
+							bottom: '60px'
+						}
+					}
+				]
+
+			});
+			mui.plusReady(function() {
+				// 获取所有Webview窗口  
+				var winAll = plus.webview.all(); //获取所有窗体  
+				//console.log(JSON.stringify(winAll))   
+				var newsIndex, mineIndex;
+				newsIndex = plus.webview.getWebviewById("newsIndex");
+				mineIndex = plus.webview.getWebviewById("mineIndex");
+				mui("#nav").on("tap", "#newsIndex", function() { //点击触发   
+					console.log('000');
+					newsIndex.show();
+					mineIndex.hide(); //这一步必须有  
+				});
+				mui("#nav").on("tap", "#mineIndex", function() { //点击触发  
+					console.log('111');
+					mineIndex.show();
+					newsIndex.hide();
+				});
+			});
+		</script>
+
+	</body>
+
+</html>

@@ -27,10 +27,6 @@
 					</a>
 				</li>
 			</ul>
-			<!--<button onclick="modifyConfig()">修改网站配置</button>
-			<button onclick="addColumn()">添加栏目</button>
-			<button onclick="modifyColumn()">修改栏目</button>
-			<button>新闻审核</button>-->
 		</div>
 		<script src="../../js/mui.min.js"></script>
 		<script type="text/javascript">
@@ -39,47 +35,30 @@
 		<script type="text/javascript">
 			mui.init();
 			mui.ready(function() {
-
+				mui('.mui-table-view').on('tap', '.mui-table-view-cell', function() {
+					//获取id
+					var id = this.getAttribute("id");
+					switch(id) {
+						case 'modifyConfig':
+							utils.mOpenWithData("website_config.html");
+							break;
+						case 'addColumn':
+							var tempData = {
+								type: 'add',
+							}
+							utils.mOpenWithData("column.html", tempData);
+							break;
+						case 'modifyColumn':
+							utils.mOpenWithData("column-home.html");
+							break;
+						case 'newsReview':
+							//						utils.mOpenWithData("website_config.html?abc=" + Math.random(), "website_config.html" + Math.random());
+							break;
+						default:
+							break;
+					}
+				})
 			});
-
-			function modifyConfig() {
-				utils.mOpenWithData("website_config.html?abc=" + Math.random(), "website_config.html" + Math.random());
-			}
-
-			function addColumn() {
-				var tempData = {
-					type: 'add'
-				}
-				utils.wOpenWithData("column.html?abc=" + Math.random(), tempData);
-			}
-
-			function modifyColumn() {
-				utils.mOpenWithData("column-home.html?abc=" + Math.random(), "column-home.html" + Math.random());
-			}
-			mui('.mui-table-view').on('tap', '.mui-table-view-cell', function() {
-				//获取id
-				var id = this.getAttribute("id");
-				switch(id) {
-					case 'modifyConfig':
-						utils.mOpenWithData("website_config.html?abc=" + Math.random(), "website_config.html" + Math.random());
-						break;
-					case 'addColumn':
-						var tempData = {
-							type: 'add',
-							abc: Math.random()
-						}
-						utils.mOpenWithData("column.html?abc=" + Math.random(), tempData);
-						break;
-					case 'modifyColumn':
-						utils.mOpenWithData("column-home.html?abc=" + Math.random(), "column-home.html" + Math.random());
-						break;
-					case 'newsReview':
-						//						utils.mOpenWithData("website_config.html?abc=" + Math.random(), "website_config.html" + Math.random());
-						break;
-					default:
-						break;
-				}
-			})
 		</script>
 	</body>
 

@@ -19,9 +19,10 @@ var utils = (function(mod) {
 	 */
 	mod.getDataFromUrl = function(url) {
 		var data = {};
-		var index = url.indexOf("?");
+		var index = url.indexOf("&");
 		if(index != -1) {
-			var dataStr = url.substring(index + 1, url.length);
+			var dataStr = url.substring(index + 6, url.length);
+			console.log("getDataFromUrl dataStr " + dataStr);
 			data = JSON.parse(decodeURIComponent(dataStr));
 		}
 		console.log("getDataFromUrl url " + url);
@@ -39,7 +40,7 @@ var utils = (function(mod) {
 		var ids = url.split("/");
 		var dataStr = JSON.stringify(data);
 		console.log("mOpen " + url + ' ' + dataStr);
-		mui.openWindow(url + "?" + encodeURIComponent(dataStr), ids[ids.length - 1]);
+		mui.openWindow(url + "?v=" + Math.random() + "&data=" + encodeURIComponent(dataStr), ids[ids.length - 1]);
 	}
 
 	/**
@@ -52,7 +53,7 @@ var utils = (function(mod) {
 		var ids = url.split("/");
 		var dataStr = JSON.stringify(data);
 		console.log("wOpen " + url + ' ' + dataStr);
-		window.open(url + "?" + encodeURIComponent(dataStr), ids[ids.length - 1]);
+		window.open(url + "?v=" + Math.random() + "&data=" + encodeURIComponent(dataStr), ids[ids.length - 1]);
 	}
 
 	/**

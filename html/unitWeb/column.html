@@ -43,9 +43,12 @@
 					</div>
 				</div>
 
-				<div v-if="islink.check">
+				<div>
 					<div class="weui-cells__title">{{linkurl.title}}</div>
-					<div class="weui-cells">
+					<div class="weui-cell__ft" style="margin-top: -35px;margin-right: 15px;">
+							<input class="weui-switch" type="checkbox" v-model="islink.check">
+						</div>
+					<div  v-if="islink.check" class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
 								<input id="linkurl" v-model.lazy="linkurl.message" class="weui-input" type="text" :placeholder="'请输入'+linkurl.title">
@@ -77,14 +80,14 @@
 			</div>
 			<!--开关列表-->
 			<div id="switch_list">
-				<div>
+				<!--<div>
 					<div class="weui-cell weui-cell_switch">
 						<div class="weui-cell__bd">{{islink.title}}</div>
 						<div class="weui-cell__ft">
 							<input class="weui-switch" type="checkbox" v-model="islink.check">
 						</div>
 					</div>
-				</div>
+				</div>-->
 
 				<div>
 					<div class="weui-cell weui-cell_switch">

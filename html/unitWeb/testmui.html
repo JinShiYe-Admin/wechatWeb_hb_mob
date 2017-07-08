@@ -120,16 +120,18 @@
 							utils.wOpenWithData("testnewwindow.html", data);
 							break;
 						case "5": //localStorage
-							localStorage.myLocalStorage = "myLocalStorage-0";
+							localStorage.setItem("myLocalStorage", "myLocalStorage-0");
 							break;
 						case "6": //sessionStorage
-							sessionStorage.mySessionStorage = "mySessionStorage-0";
+							sessionStorage.setItem("mySessionStorage", JSON.stringify("1$234"));
 							break;
 						case "7": //get-localStorage
-							alert("myLocalStorage " + localStorage.myLocalStorage)
+							alert("myLocalStorage " + localStorage.getItem("myLocalStorage"));
 							break;
 						case "8": //get-sessionStorage
-							alert("mySessionStorage " + sessionStorage.mySessionStorage)
+							var data = sessionStorage.getItem("mySessionStorage");
+							console.log("mySessionStorage " + data);
+							alert("mySessionStorage " + JSON.stringify(data));
 							break;
 						case "9": //history.back()
 							window.history.back();
@@ -156,7 +158,7 @@
 			 */
 			function testfun(data) {
 				console.log("testfun " + data);
-				testData=data;
+				testData = data;
 				document.getElementById("windowOpenerFuction").innerText = data;
 			}
 		</script>

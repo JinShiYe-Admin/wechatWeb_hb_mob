@@ -110,9 +110,9 @@
 						if(data.RspData.length > 0) {
 							//判断是刷新0，还是加载更多1
 							if (newsFlag == 0) {
-								news.items = data.RspData;
+								news.items = data.RspData.dt;
 							} else{
-								news.items = news.items.concat(data.RspData);
+								news.items = news.items.concat(data.RspData.dt);
 							}
 						}
 						newsPage++;

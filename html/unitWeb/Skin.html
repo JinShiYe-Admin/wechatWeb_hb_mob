@@ -1,114 +1,128 @@
 <!doctype html>
 <html>
+
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
 		<link href="../../css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" href="../../css/weui.min.css" />
-		<link href="../../css/style.css" rel="stylesheet" type="text/css"> 
-	</head> 
+		<link href="../../css/style.css" rel="stylesheet" type="text/css">
+	</head>
+
 	<body>
 		<div id="Priid">
-		 <ul class="mui-table-view">
-	 
-			<li class="mui-table-view-cell mui-media" v-for="(value,index) in inputArray"  >
-
-				<img class="mui-media-object mui-pull-left" style="width:150px; height: 50px;" src="../../image/config/lho.png">
-
-				<div class="mui-media-body">{{value.title}}</div>
-				<p class='mui-ellipsis'>
-					<button id="Priid" name="Priqy" class="mui-btn mui-btn-primary mui-pull-right" onclick="change()" >启用</button><span><img src="../../image/config/zz (2).png" width="14px" height="14px" /> {{value.username}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<span><img src="../../image/config/sj.png" width="14px" height="14px" /> {{value.time}}</span>
-				</p>
-              
-				<!-- 代码部分begin -->
-				<div class="page_guide_slider" id="aaa">
-					<div class="page_guide_balloon"> 
-			 			<div class="page_guide_pointer">
-							<div class="page_guide_point"></div>
-						</div>
-						<div class="page_guide_bar">
-							<div class="page_guide_progress">
-								<div></div>
-								<div></div>
-								<div></div>
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell mui-media" v-for="(value,index) in inputArray">
+					<img class="mui-media-object mui-pull-left" style="width:150px; height: 50px;" src="../../image/config/lho.png">
+					<div class="mui-media-body">{{value.title}}</div>
+					<p class='mui-ellipsis'>
+						<button id="Priid" name="Priqy" class="mui-btn mui-btn-primary mui-pull-right" onclick="change()">启用</button><span><img src="../../image/config/zz (2).png" width="14px" height="14px" /> {{value.username}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<span><img src="../../image/config/sj.png" width="14px" height="14px" /> {{value.time}}</span>
+					</p>
+					<!-- 代码部分begin -->
+					<div class="page_guide_slider" id="aaa">
+						<div class="page_guide_balloon">
+							<div class="page_guide_pointer">
+								<div class="page_guide_point"></div>
+							</div>
+							<div class="page_guide_bar">
+								<div class="page_guide_progress">
+									<div></div>
+									<div></div>
+									<div></div>
+								</div>
 							</div>
 						</div>
-					</div>
-					<div class="page_guide_container" onMouseDown="pageGuideMousedown(this,event)" onMouseMove="pageGuideMousemove(this,event)" onMouseUp="pageGuideMouseup(this,event)" onMouseOut="pageGuideMouseout(this,event)" ontouchstart="pageGuideTouchstart(this,event)" ontouchmove="pageGuideTouchmove(this,event)" ontouchend="pageGuideTouchend(this,event)">
-						<div class="page_guide_items">
-							<div id="3_4" class="page_guide_item">
-								<div class="page_guide_item_text" >
-								</div>
-								<div class="page_guide_item_image">
-									<img img_src="../../image/utils/loading.gif" src="../../image/config/func_actssm.jpg" />
-									<img img_src="../../image/utils/loading.gif" src="../../image/config/func_chat.jpg" />
-									<img img_src="../../image/utils/loading.gif" src="../../image/config/func_actssm.jpg" />
-									<img img_src="../../image/utils/loading.gif" src="../../image/config/func_disc.jpg" />
-									<img img_src="../../image/utils/loading.gif" src="../../image/config/func_worker.jpg" />
+						<div class="page_guide_container" onMouseDown="pageGuideMousedown(this,event)" onMouseMove="pageGuideMousemove(this,event)" onMouseUp="pageGuideMouseup(this,event)" onMouseOut="pageGuideMouseout(this,event)" ontouchstart="pageGuideTouchstart(this,event)" ontouchmove="pageGuideTouchmove(this,event)" ontouchend="pageGuideTouchend(this,event)">
+							<div class="page_guide_items">
+								<div id="3_4" class="page_guide_item">
+									<div class="page_guide_item_text">
+									</div>
+									<div class="page_guide_item_image">
+										<img img_src="../../image/utils/loading.gif" src="../../image/config/func_actssm.jpg" />
+										<img img_src="../../image/utils/loading.gif" src="../../image/config/func_chat.jpg" />
+										<img img_src="../../image/utils/loading.gif" src="../../image/config/func_actssm.jpg" />
+										<img img_src="../../image/utils/loading.gif" src="../../image/config/func_disc.jpg" />
+										<img img_src="../../image/utils/loading.gif" src="../../image/config/func_worker.jpg" />
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-               <div>
-               	<div class="mui-media-body">&nbsp;皮肤介绍：</div>
-               	 	<p>&nbsp;&nbsp;&nbsp;&nbsp;{{value.content}}</p>
-               </div>
-               <br />
-			</li>
+					<div>
+						<div class="mui-media-body">&nbsp;皮肤介绍：</div>
+						<p>&nbsp;&nbsp;&nbsp;&nbsp;{{value.content}}</p>
+					</div>
+					<br />
+				</li>
+			</ul>
+		</div>
 
-		</ul>
-        </div>
-	</body>
-	<script src="../../js/mui.min.js"></script>
-	<script src="../../js/lanren.js"></script>
-	<script src="../../js/jquery.min.js"></script>
-    <script type="text/javascript" src="../../js/weui.min.js"></script>
-	<script type="text/javascript" src="../../js/vue.min.js"></script>
-	<script type="text/javascript" src="../../js/jweixin.js"></script>
-	<script type="text/javascript">
-		 
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/lanren.js"></script>
+		<script src="../../js/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/weui.min.js"></script>
+		<script type="text/javascript" src="../../js/vue.min.js"></script>
+		<script type="text/javascript" src="../../js/jweixin.js"></script>
+		<script type="text/javascript" src="../../js/utils/utils.js"></script>
+		<script type="text/javascript" src="../../js/utils/storageutil.js"></script>
+		<script type="text/javascript">
 			var vue_input = new Vue({
 				el: '#Priid',
 				data: {
 					inputArray: [{
 						title: "皮肤标题111",
 						time: "2017-05-06",
-						username:"张三",
-						Isqy:"0",
+						username: "张三",
+						Isqy: "0",
 						content: "将软件嵌套到导航里，二者融为一体，能让用户一目了然，寻找需求，方便下载。其中包括：应用软件，手机软件，系统软件等"
 					}, {
 						title: "皮肤标题222",
 						time: "2017-05-28",
-						username:"李四",
-						Isqy:"1",
-						content: "将软件嵌套到导航里，二者融为一体，能让用户一目了然，寻找需求，方便下载。其中包括：应用软件，手机软件，系统软件等"}]
-}
-});
-                 //  启用取消按钮
-                  var count = 0;
-                    
-                   function change() {
-                   	if(count == 0) {
-                   		
-                   	  
-                   		
-                   		//document.getElementById('Priqy').style.backgroundColor = 'blue';
-                   		//document.getElementById('Priqy').style.color = "#FFFFFF";
-                   		var button = document.getElementById("Priqy");
-                   		var o = document.getElementsByName("Priqy");
-                   		alert(o);
-                   		o.innerText = "启用111";
-                   		count++;
-                   	} else {
-                   		document.getElementById('Priqy').style.backgroundColor = "#CCCCCC";
-                   		var button = document.getElementById("Priqy");
-                   		button.innerText = "取消";
-                   		count = 0;
-                   	}
+						username: "李四",
+						Isqy: "1",
+						content: "将软件嵌套到导航里，二者融为一体，能让用户一目了然，寻找需求，方便下载。其中包括：应用软件，手机软件，系统软件等"
+					}]
+				}
+			});
+			//  启用取消按钮
+			var count = 0;
 
-                   }
-	</script>
+			function change() {
+				if(count == 0) {
+
+					//document.getElementById('Priqy').style.backgroundColor = 'blue';
+					//document.getElementById('Priqy').style.color = "#FFFFFF";
+					var button = document.getElementById("Priqy");
+					var o = document.getElementsByName("Priqy");
+					alert(o);
+					o.innerText = "启用111";
+					count++;
+				} else {
+					document.getElementById('Priqy').style.backgroundColor = "#CCCCCC";
+					var button = document.getElementById("Priqy");
+					button.innerText = "取消";
+					count = 0;
+				}
+				changeSkinId(count);
+			}
+
+			function changeSkinId(id) {
+				console.log("changeSkinId:" + id);
+				//---假数据---start---
+				var data = utils.getDataFromUrl(window.location.href);
+				console.log("data " + JSON.stringify(data));
+				id = data.skinid + 1;
+				//---假数据---end---
+				var webData = JSON.parse(storageutil.getSessionStorage(storageutil.WEBSITECONFIG));
+				console.log("webData:" + JSON.stringify(webData));
+				if(webData && webData.open == 2 && webData.webCon) { //网站配置有数据
+					webData.changeSkinId = id;
+					storageutil.setSessionStorage(storageutil.WEBSITECONFIG, JSON.stringify(webData));
+					mui.back();
+				}
+			}
+		</script>
+	</body>
 
 </html>

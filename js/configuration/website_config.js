@@ -173,8 +173,12 @@ window.onload = function() {
  */
 function initData() {
 	console.log("initData");
-	var webData = storageutil.getSessionStorage(storageutil.WEBSITECONFIG);
-	console.log("webData:" + webData);
+	var webData = JSON.parse(storageutil.getSessionStorage(storageutil.WEBSITECONFIG));
+	console.log("webData:" + JSON.stringify(webData));
+	if(webData && webData.open == 0) {
+		webData.open = 1; //进入了网站配置页面
+		storageutil.setSessionStorage(storageutil.WEBSITECONFIG, JSON.stringify(webData));
+	}
 }
 
 /**

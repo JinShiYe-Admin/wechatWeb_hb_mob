@@ -34,7 +34,8 @@
 		</script>
 		<script type="text/javascript">
 			mui.init();
-			mui.ready(function() {
+
+			window.onload = function() {
 				mui('.mui-table-view').on('tap', '.mui-table-view-cell', function() {
 					//获取id
 					var id = this.getAttribute("id");
@@ -60,8 +61,8 @@
 						default:
 							break;
 					}
-				})
-			});
+				});
+			}
 		</script>
 	</body>
 

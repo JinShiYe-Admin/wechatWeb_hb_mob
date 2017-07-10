@@ -41,6 +41,21 @@ var storageutil = (function(mod) {
 	}
 
 	/**
+	 * 删除单个永久数据
+	 * @param {Object} key
+	 */
+	mod.removeLocalStorage = function(key) {
+		localStorage.removeItem(key);
+	}
+
+	/**
+	 * 删除所有的永久数据
+	 */
+	mod.clearLocalStorage = function() {
+		localStorage.clear();
+	}
+
+	/**
 	 * 在本地存临时数据
 	 * @param {Object} key
 	 * @param {Object} value
@@ -55,6 +70,21 @@ var storageutil = (function(mod) {
 	 */
 	mod.getSessionStorage = function(key) {
 		return sessionStorage.getItem(key);
+	}
+
+	/**
+	 * 删除单个临时数据
+	 * @param {Object} key
+	 */
+	mod.removeSessionStorage = function(key) {
+		sessionStorage.removeItem(key);
+	}
+
+	/**
+	 * 删除所有的临时数据
+	 */
+	mod.clearSessionStorage = function() {
+		sessionStorage.clear();
 	}
 	return mod;
 })(window.storageutil || {});

@@ -1,5 +1,5 @@
 var webConfig; //网站配置的数据
-//输入框
+//---假数据---start---
 webConfig = {};
 webConfig.cname = '中文名';
 webConfig.ename = 'yingwenming';
@@ -13,6 +13,8 @@ webConfig.isfiledown = 0;
 webConfig.iswrite = 0;
 webConfig.isass = 0;
 webConfig.skinid = 0;
+//---假数据---end---
+
 var loading = document.getElementById("loading"); //等待框
 
 //输入框组件
@@ -189,8 +191,6 @@ var vm_switch = new Vue({
 
 window.onload = function() {
 	initData();
-	loading.style.display = "none";
-	showList();
 };
 
 /**
@@ -207,12 +207,28 @@ function initData() {
 		if(webData.webCon) { //保存有本地数据
 			getData = false;
 			initWebsiteConfig(webData.webCon);
+			if(webData.changeSkinId && webData.webCon.skinid != webData.changeSkinId) { //修改皮肤ID
+				console.log("changeSkinId:" + webData.changeSkinId);
+				loading.style.display = "block";
+				var data = {
+					type: 2,
+					index: 0,
+					callcol: "skinid",
+					colv: webData.changeSkinId
+				}
+				changeWebsiteConfig(data);
+			} else {
+				loading.style.display = "none";
+			}
 		}
 	}
-	console.log("getData:" + getData)
+	console.log("getWebsitConfig:" + getData)
 	if(getData) {
-		getWebsitConfig();
-		initWebsiteConfig(webConfig)
+		getWebsitConfig(); //获取配置
+		//---假数据---start---
+		initWebsiteConfig(webConfig);
+		loading.style.display = "none";
+		//---假数据---end---
 	}
 }
 
@@ -280,7 +296,7 @@ function showList() {
 /**
  * 修改网站设置
  * @param {Object} change 修改的数据
- * @param {String} type 类型，0输入;1开关
+ * @param {String} type 类型，0输入;1开关;2皮肤id
  * @param {String} index 第几个数据
  * @param {String} key 属性
  * @param {String} value 值
@@ -292,14 +308,17 @@ function changeWebsiteConfig(change) {
 		callcol: change.callcol,
 		colv: change.colv
 	}
-	weui.alert("changeWebsiteConfig:" + JSON.stringify(commit));
+	console.log("changeWebsiteConfig:" + JSON.stringify(commit));
 	//loading.style.display = "none";
 	unitWebsitePro(commit, function(data) {
 		loading.style.display = "none";
 		weui.alert('修改网站设置:' + JSON.stringify(data));
-		if(data.RspCode == 0) {
+		if(data.RspCode == 0) { //成功
+			weui.toast("操作成功");
 			webConfig[commit.callcol] = commit.colv;
-
+			if(change.type == 2) { //皮肤id
+				vm_skin.skinId = commit.colv;
+			}
 		} else {
 			if(change.type == 1) { //开关
 				vm_switch.switchArray[change.index].check = !change.colv;
@@ -307,4 +326,19 @@ function changeWebsiteConfig(change) {
 			weui.alert("修改失败:" + data.RspTxt);
 		}
 	});
+	//---假数据---start---
+	loading.style.display = "none";
+	if(1) { //成功
+		weui.toast("操作成功");
+		webConfig[commit.callcol] = commit.colv;
+		if(change.type == 2) { //皮肤id
+			vm_skin.skinId = commit.colv;
+		}
+	} else {
+		if(change.type == 1) { //开关
+			vm_switch.switchArray[change.index].check = !change.colv;
+		}
+		weui.alert("修改失败");
+	}
+	//---假数据---end---
 }

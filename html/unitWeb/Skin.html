@@ -12,17 +12,13 @@
 	<body>
 		<div id="Priid">
 			<ul class="mui-table-view">
-
 				<li class="mui-table-view-cell mui-media" v-for="(value,index) in inputArray">
-
 					<img class="mui-media-object mui-pull-left" style="width:150px; height: 50px;" src="../../image/config/lho.png">
-
 					<div class="mui-media-body">{{value.title}}</div>
 					<p class='mui-ellipsis'>
 						<button id="Priid" name="Priqy" class="mui-btn mui-btn-primary mui-pull-right" onclick="change()">启用</button><span><img src="../../image/config/zz (2).png" width="14px" height="14px" /> {{value.username}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<span><img src="../../image/config/sj.png" width="14px" height="14px" /> {{value.time}}</span>
 					</p>
-
 					<!-- 代码部分begin -->
 					<div class="page_guide_slider" id="aaa">
 						<div class="page_guide_balloon">
@@ -59,7 +55,6 @@
 					</div>
 					<br />
 				</li>
-
 			</ul>
 		</div>
 
@@ -113,12 +108,16 @@
 			}
 
 			function changeSkinId(id) {
+				console.log("changeSkinId:" + id);
+				//---假数据---start---
+				var data = utils.getDataFromUrl(window.location.href);
+				console.log("data " + JSON.stringify(data));
+				id = data.skinid + 1;
+				//---假数据---end---
 				var webData = JSON.parse(storageutil.getSessionStorage(storageutil.WEBSITECONFIG));
 				console.log("webData:" + JSON.stringify(webData));
 				if(webData && webData.open == 2 && webData.webCon) { //网站配置有数据
-					webData.order = {
-						changeSkinId: id
-					}
+					webData.changeSkinId = id;
 					storageutil.setSessionStorage(storageutil.WEBSITECONFIG, JSON.stringify(webData));
 					mui.back();
 				}

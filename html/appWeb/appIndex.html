@@ -2,66 +2,74 @@
 <html>
 
 	<head>
-		<meta charset="UTF-8">
-		<title>底部导航菜单切换</title>
-		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
+		<title>首页</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+		<link rel="stylesheet" type="text/css" href="../../css/weui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/jquery-weui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/demos.css" />
+
 	</head>
 
-	<body>
-		<nav class="mui-bar mui-bar-tab " id="nav">
-			<a class="mui-tab-item mui-active" id="newsIndex">
-				<span class="mui-icon mui-icon-home"></span>
-				<span class="mui-tab-label">新闻</span>
-			</a>
-			<a class="mui-tab-item " id="mineIndex">
-				<span class="mui-icon mui-icon-email"></span>
-				<span class="mui-tab-label">我的</span>
-			</a>
-		</nav>
-		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
-		<script type="text/javascript" charset="utf-8">
-			mui.init({
-				subpages: [ //先加载首页  
-					{
-						url: 'newsIndex.html',
-						id: 'newsIndex',
-						styles: {
-							top: '0px',
-							bottom: '60px'
-						}
-					}
+	<body ontouchstart>
 
-				],
-				preloadPages: [ //缓存其他页面  
-					{
-						url: 'mineIndex.html',
-						id: 'mineIndex',
-						styles: {
-							top: '0px',
-							bottom: '60px'
-						}
-					}
-				]
+		<div class="weui-tab">
+			<div class="weui-tab__bd" id="tab11">
+				<div class="weui-tab__bd-item weui-tab__bd-item--active">
+					<div class="weui-tab">
+						<div class="weui-navbar">
+							<a class="weui-navbar__item weui-bar__item--on" href="#tab1">
+								选项一
+							</a>
+							<a class="weui-navbar__item" href="#tab2">
+								选项二
+							</a>
+							<a class="weui-navbar__item" href="#tab3">
+								选项三
+							</a>
+						</div>
+						<div class="weui-tab__bd">
+							<div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active">
+								<h1>页面一</h1>
+							</div>
+							<div id="tab2" class="weui-tab__bd-item">
+								<h1>页面二</h1>
+							</div>
+							<div id="tab3" class="weui-tab__bd-item">
+								<h1>页面三</h1>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="tab12" class="weui-tab__bd-item">
+					<h1>页面1二</h1>
+				</div>
+			</div>
 
-			});
-			mui.plusReady(function() {
-				// 获取所有Webview窗口  
-				var winAll = plus.webview.all(); //获取所有窗体  
-				//console.log(JSON.stringify(winAll))   
-				var newsIndex, mineIndex;
-				newsIndex = plus.webview.getWebviewById("newsIndex");
-				mineIndex = plus.webview.getWebviewById("mineIndex");
-				mui("#nav").on("tap", "#newsIndex", function() { //点击触发   
-					console.log('000');
-					newsIndex.show();
-					mineIndex.hide(); //这一步必须有  
-				});
-				mui("#nav").on("tap", "#mineIndex", function() { //点击触发  
-					console.log('111');
-					mineIndex.show();
-					newsIndex.hide();
-				});
-			});
+			<div class="weui-tabbar">
+				<a href="#tab11" class="weui-tabbar__item weui-bar__item--on">
+					<div class="weui-tabbar__icon">
+						<img src="../../image/icon_tabbar.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">新闻</p>
+				</a>
+				<a href="#tab12" class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
+						<img src="../../image/icon_tabbar.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">我的</p>
+				</a>
+			</div>
+		</div>
+
+		<script src="../../js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<!--<script src="../lib/fastclick.js"></script>-->
+		<script src="../../js/jquery-weui.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+			//			$(function() {
+			//				FastClick.attach(document.body);
+			//			});
 		</script>
 
 	</body>

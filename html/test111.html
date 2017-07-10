@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+
+	<head lang="en">
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>附近</title>
+		<link rel="stylesheet" href="http://cdn.bootcss.com/weui/0.4.3/style/weui.min.css">
+		<link rel="stylesheet" href="http://cdn.bootcss.com/jquery-weui/0.8.0/css/jquery-weui.min.css">
+		<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+		<!-- 新 Bootstrap 核心 CSS 文件 -->
+		<link rel="stylesheet" href="../src/iconfont/iconfont.css">
+		<!--引用阿里云矢量图标-->
+		<style>
+			body {
+				font-family: "微软雅黑";
+				background-color: #eeeeee;
+			}
+			
+			.has-max {
+				max-width: 640px;
+			}
+			/*搜索栏*/
+			
+			.header-search {
+				position: fixed!important;
+				z-index: 9;
+				width: 100%;
+				top: 0;
+				max-width: 640px;
+				background-color: #F9FAFA;
+				height: 70px;
+			}
+			
+			.search-form:after {
+				border-radius: 50px;
+			}
+			
+			.search-address {
+				margin-top: 23px;
+				font-size: 16px;
+				width: 35%;
+			}
+			
+			.search-icon {
+				margin-top: 23px;
+				font-size: 16px;
+				margin-right: 5%;
+			}
+			
+			.icon-jiantou {
+				font-size: 13px;
+				margin-left: 4px;
+			}
+			
+			.search-border {
+				width: 60%;
+			}
+			
+			.search-form {
+				border-radius: 50%;
+				height: 35px;
+				margin-top: 18px;
+			}
+			
+			.search-chacun {
+				height: 35px;
+				line-height: 35px!important;
+			}
+			
+			.search-input {
+				height: 35px!important;
+				padding: 0!important;
+			}
+			
+			.open-popup {
+				color: #000000;
+			}
+			
+			.open-popup:hover {
+				color: #000000;
+				text-decoration: none;
+			}
+			
+			.weui_search_outer:after {
+				background: #EAECED;
+			}
+			
+			.nearby_address {
+				overflow: hidden;
+				text-overflow: ellipsis;
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 1;
+			}
+			/*选择地址*/
+			
+			.weui_search_bar:before {
+				border: 0;
+			}
+			/*分类*/
+			
+			.header-classify {
+				position: fixed!important;
+				z-index: 9;
+				width: 100%;
+				top: 0;
+				max-width: 640px;
+				margin-top: 70px;
+			}
+			
+			.weui_navbar_item.weui_bar_item_on {
+				color: #FF566D;
+				background-color: #fafafa;
+				text-decoration: none;
+				border-bottom: 3px solid #FF566D;
+			}
+			
+			.weui_navbar_item:after {
+				border: 0;
+			}
+			
+			.weui_grids:before {
+				border: 0;
+			}
+			
+			.weui_navbar:after {
+				border: 0;
+			}
+			
+			.weui_grid:before {
+				border: 0;
+			}
+			
+			.two-border {
+				background-color: #F2F2F5;
+			}
+			
+			.two-level {
+				width: 25%;
+				padding: 8px 5px;
+			}
+			
+			.two-level:hover {
+				text-decoration: none;
+			}
+			
+			.two-level-name {
+				margin-bottom: 0;
+				border: 1px solid #fafafa;
+				background-color: #FFFFFF;
+				border-radius: 20px;
+				padding: 3px;
+				color: #888;
+			}
+			
+			.two-active {
+				background-color: #FF566D;
+				color: #fff;
+			}
+			/*产品分类展示*/
+			
+			.product-show-padding {
+				padding: 10px;
+			}
+			
+			.product-show-thumb {
+				width: 80px!important;
+				height: 80px!important;
+			}
+			
+			.product-show-title {
+				font-size: 15px;
+				float: left;
+				width: 78%;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 1;
+			}
+			
+			.product-show-distance {
+				font-size: 12px;
+				float: right;
+				color: #999;
+			}
+			
+			.product-show-introduce {
+				-webkit-line-clamp: 1!important;
+				color: #666!important;
+				margin-bottom: 5px;
+			}
+			
+			.product-show-price {
+				color: #000000;
+			}
+			
+			.product-show-discount {
+				font-size: 12px;
+			}
+			
+			.product-buttom {
+				margin-bottom: 5px;
+			}
+			
+			.product-show-dist {
+				font-size: 12px;
+				float: right;
+				background-color: #eeeeee;
+				border-radius: 2px;
+				padding: 2px 3px;
+			}
+			
+			.small-icon {
+				width: 18px;
+			}
+			
+			.small-icon2 {
+				width: 18px;
+				margin-right: 5px;
+				margin-top: -2px;
+			}
+			
+			.wujiaoxing {
+				width: 14px;
+			}
+			
+			.small-zan {
+				width: 15px;
+				float: left;
+				margin-right: 4px;
+			}
+			
+			.interval {
+				height: 10px;
+				background-color: #eee;
+			}
+			/*底部菜单栏*/
+			
+			.footer-menu {
+				position: fixed!important;
+				z-index: 9;
+				bottom: 0;
+				width: 100%;
+				height: 58px;
+				max-width: 640px;
+			}
+			
+			.weui_tabbar_item.weui_bar_item_on .weui_tabbar_label {
+				color: #05C1AE;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="has-max">
+			<!--分类-->
+			<div class="weui_tab" style="margin-top: 70px;" id="tab9">
+				<!--一级分类-->
+				<div class="weui_navbar header-classify">
+					<a href="#tab1" class="weui_navbar_item weui_bar_item_on"> 享美食 </a>
+					<a href="#tab2" class="weui_navbar_item"> 住酒店 </a>
+					<a href="#tab3" class="weui_navbar_item"> 爱玩乐 </a>
+					<a href="#tab4" class="weui_navbar_item"> 全部 </a>
+				</div>
+				<div class="weui_tab_bd">
+					<!--享美食-->
+					<div id="tab1" class="weui_tab_bd_item weui_tab_bd_item_active">
+						<h1>页面1</h1>
+					</div>
+					<!--住酒店-->
+					<div id="tab2" class="weui_tab_bd_item">
+						<!--二级分类-->
+						<h1>页面2</h1>
+					</div>
+					<!--爱玩乐-->
+					<div id="tab3" class="weui_tab_bd_item">
+						<!--二级分类-->
+						<h1>页面3</h1>
+					</div>
+					<!--全部-->
+					<div id="tab4" class="weui_tab_bd_item">
+						<h1 class="doc-head">页面4</h1> </div>
+				</div>
+			</div>
+			<div id="tab11" class="weui_tab">
+				<p>界面显示</p>
+			</div>
+			<!--产品分类展示-->
+			<!--底部菜单栏-->
+			<div class="weui_tab footer-menu">
+				<div class="weui_tabbar">
+					<a href="#tab9" class="weui_tabbar_item weui_bar_item_on">
+						<div class="weui_tabbar_icon"> <i class="iconfont icon-home"></i> </div>
+						<p class="weui_tabbar_label" style="margin-bottom: 5px;margin-top: 10px;">首页</p>
+					</a>
+					<a href="#tab10" class="weui_tabbar_item">
+						<div class="weui_tabbar_icon"> <i class="iconfont icon-fujin"></i> </div>
+						<p class="weui_tabbar_label" style="margin-bottom: 5px;margin-top: 10px;">附近</p>
+					</a>
+					<a href="#tab11" class="weui_tabbar_item">
+						<div class="weui_tabbar_icon"> <i class="iconfont icon-user"></i> </div>
+						<p class="weui_tabbar_label" style="margin-bottom: 5px;margin-top: 10px;">我的</p>
+					</a>
+				</div>
+			</div>
+		</div>
+		<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+		<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+		<script src="http://cdn.bootcss.com/jquery-weui/0.8.0/js/jquery-weui.min.js"></script>
+		<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+		<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+	</body>
+
+</html>

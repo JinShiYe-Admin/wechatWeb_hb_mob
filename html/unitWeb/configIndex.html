@@ -40,6 +40,9 @@
 					var id = this.getAttribute("id");
 					switch(id) {
 						case 'modifyConfig':
+							storageutil.setSessionStorage(storageutil.WEBSITECONFIG, JSON.stringify({
+								open: 0 //从配置主页进入
+							}))
 							utils.mOpenWithData("website_config.html");
 							break;
 						case 'addColumn':

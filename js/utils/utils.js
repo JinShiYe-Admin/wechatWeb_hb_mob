@@ -57,10 +57,10 @@ var utils = (function(mod) {
 	}
 
 	/**
-	 *初始化mui的scroll
+	 *初始化mui的scrollY
 	 * @param {Object} muiString
 	 */
-	mod.muiInitScroll = function(muiString) {
+	mod.muiInitScrollY = function(muiString) {
 		muiString = muiString || ".mui-scroll-wrapper";
 		mui(muiString).scroll({
 			scrollY: true, //是否竖向滚动
@@ -69,32 +69,6 @@ var utils = (function(mod) {
 			deceleration: 0.003, //阻尼系数,系数越小滑动越灵敏
 			bounce: true, //是否启用回弹
 		});
-	}
-
-	/**
-	 * 显示等待框
-	 * @param {Object} loadingElement
-	 * @param {Object} title
-	 */
-	mod.showWeUiLoadingElement = function(loadingElement, title) {
-		if(loadingElement) {
-			if(title == undefined || title == null || title == '') {
-				title = "数据加载中";
-			}
-			var titleElement = document.loadingElement.querySelector(".weui-toast__content");
-			titleElement.innerText = title;
-			loadingElement.style.display = "block";
-		}
-	}
-
-	/**
-	 * 隐藏等待框
-	 * @param {Object} loadingElement
-	 */
-	mod.hideWeUiLoadingElement = function(loadingElement) {
-		if(loadingElement) {
-			loadingElement.style.display = "none";
-		}
 	}
 
 	return mod;

@@ -42,7 +42,7 @@
 			<div class="mui-scroll">
 				<div class="weui-panel weui-panel_access">
 					<div id="tea_list" class="weui-panel__bd">
-						<div v-for="(value,index) in teaArray" class="weui-media-box weui-media-box_appmsg">
+						<!--<div v-for="(value,index) in teaArray" class="weui-media-box weui-media-box_appmsg">
 							<div class="weui-media-box__hd">
 								<div class="weui-media-box__thumb" v-bind:style="{backgroundImage:'url('+ value.headImage+')'}"></div>
 							</div>
@@ -50,7 +50,8 @@
 								<h4 class="weui-media-box__title">{{value.name}}</h4>
 								<p class="weui-media-box__desc">{{value.introduce}}</p>
 							</div>
-						</div>
+						</div>-->
+						<teacher-item v-for="(value,index) in teaArray" :value="value" :key="index"></teacher-item>
 					</div>
 				</div>
 			</div>
@@ -63,6 +64,19 @@
 		<script type="text/javascript" src="../../js/utils/mui.pullToRefresh.material.js"></script>
 		<script type="text/javascript" src="../../js/utils/utils.js"></script>
 		<script>
+			//教师item
+			Vue.component('teacher-item', {
+				props: ['value'],
+				template: '<div class="weui-media-box weui-media-box_appmsg">\
+							<div class="weui-media-box__hd">\
+								<div class="weui-media-box__thumb" :style="{backgroundImage:\'url(\'+ value.headImage+\')\'}"></div>\
+							</div>\
+							<div class="weui-media-box__bd">\
+								<h4 class="weui-media-box__title">{{value.name}}</h4>\
+								<p class="weui-media-box__desc">{{value.introduce}}</p>\
+							</div>\
+						</div>'
+			})
 			var teacher_list = new Vue({
 				el: "#tea_list",
 				data: {
@@ -105,7 +119,7 @@
 			mui.init();
 			mui.ready(function() {
 				console.log('mui.ready');
-				utils.muiInitScroll();
+				utils.muiInitScrollY();
 				var pullRefresh = mui('.mui-scroll-wrapper .mui-scroll').pullToRefresh({
 					down: {
 						callback: function() {

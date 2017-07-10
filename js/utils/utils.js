@@ -71,5 +71,31 @@ var utils = (function(mod) {
 		});
 	}
 
+	/**
+	 * 显示等待框
+	 * @param {Object} loadingElement
+	 * @param {Object} title
+	 */
+	mod.showWeUiLoadingElement = function(loadingElement, title) {
+		if(loadingElement) {
+			if(title == undefined || title == null || title == '') {
+				title = "数据加载中";
+			}
+			var titleElement = document.loadingElement.querySelector(".weui-toast__content");
+			titleElement.innerText = title;
+			loadingElement.style.display = "block";
+		}
+	}
+
+	/**
+	 * 隐藏等待框
+	 * @param {Object} loadingElement
+	 */
+	mod.hideWeUiLoadingElement = function(loadingElement) {
+		if(loadingElement) {
+			loadingElement.style.display = "none";
+		}
+	}
+
 	return mod;
 })(window.utils || {});

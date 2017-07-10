@@ -57,4 +57,4 @@ var storageutil = (function(mod) {
 		return sessionStorage.getItem(key);
 	}
 	return mod;
-})(storageutil.utils || {});
+})(window.storageutil || {});

@@ -1,9 +1,9 @@
 var webConfig; //网站配置的数据
 //输入框
 webConfig = {};
-webConfig.cname = '';
-webConfig.ename = '';
-webConfig.corptel = '';
+webConfig.cname = '中文名';
+webConfig.ename = 'yingwenming';
+webConfig.corptel = '110';
 webConfig.stat = 0;
 webConfig.isreply = 0;
 webConfig.isnewchk = 0;
@@ -12,11 +12,22 @@ webConfig.isfileup = 0;
 webConfig.isfiledown = 0;
 webConfig.iswrite = 0;
 webConfig.isass = 0;
+webConfig.skinid = 0;
 var loading = document.getElementById("loading"); //等待框
 
 //输入框组件
 Vue.component('input-item', {
 	props: ['value', 'index'],
+	template: '<div>\
+					<div class="weui-cells__title">{{value.title}}</div>\
+					<div class="weui-cells">\
+						<div class="weui-cell">\
+							<div class="weui-cell__bd">\
+								<input class="weui-input" v-model="value.message" :maxlength="value.maxlength" :type="value.type" :placeholder="\'请输入\'+value.title" @input="oninput(index);" @blur="onblur(index);">\
+							</div>\
+						</div>\
+					</div>\
+				</div>',
 	methods: {
 		oninput: function(index) { //输入时的监听，0中文名，1英文名，2单位联系方式
 			console.log("oninput " + index + " " + vm_input.inputArray[index].message);
@@ -53,22 +64,40 @@ Vue.component('input-item', {
 				}
 			}
 		}
-	},
-	template: '<div>\
-					<div class="weui-cells__title">{{value.title}}</div>\
-					<div class="weui-cells">\
-						<div class="weui-cell">\
-							<div class="weui-cell__bd">\
-								<input class="weui-input" v-model="value.message" :maxlength="value.maxlength" :type="value.type" :placeholder="\'请输入\'+value.title" v-on:input="oninput(index);" v-on:blur="onblur(index);">\
-							</div>\
-						</div>\
-					</div>\
-				</div>'
+	}
 });
-
+//皮肤选项组件
+Vue.component('skin-item', {
+	props: ['value'],
+	template: '<div>\
+					<div class="weui-cells__title">皮肤</div>\
+					<a class="weui-cell weui-cell_access"  @click="onclick(value);">\
+						<div class="weui-cell__bd">\
+							<p>{{value}}</p>\
+						</div>\
+						<div class="weui-cell__ft"></div>\
+					</a>\
+				</div>',
+	methods: {
+		onclick: function(value) {
+			console.log("skin " + value);
+			utils.mOpenWithData("Skin.html", {
+				skinid: value
+			});
+		}
+	}
+});
 //开关组件
 Vue.component('switch-item', {
 	props: ['value', 'index'],
+	template: '<div>\
+					<div class="weui-cell weui-cell_switch">\
+						<div class="weui-cell__bd">{{value.title}}</div>\
+						<div class="weui-cell__ft">\
+							<input class="weui-switch" type="checkbox" v-model="value.check" @change="onchange(index);">\
+						</div>\
+					</div>\
+				</div>',
 	methods: {
 		onchange: function(index) {
 			console.log("onchange " + index + " " + vm_switch.switchArray[index].check);
@@ -83,15 +112,7 @@ Vue.component('switch-item', {
 				changeWebsiteConfig(data);
 			}
 		}
-	},
-	template: '<div>\
-					<div class="weui-cell weui-cell_switch">\
-						<div class="weui-cell__bd">{{value.title}}</div>\
-						<div class="weui-cell__ft">\
-							<input class="weui-switch" type="checkbox" v-model="value.check" v-on:change="onchange(index);">\
-						</div>\
-					</div>\
-				</div>'
+	}
 });
 var vm_input = new Vue({
 	el: '#input_list',
@@ -118,7 +139,14 @@ var vm_input = new Vue({
 		}]
 	}
 }); //输入框
-
+var vm_skin = new Vue({
+	el: '#skin',
+	data: {
+		isShow: false,
+		callcol: "skinid",
+		skinId: 0
+	}
+}); //皮肤选项
 var vm_switch = new Vue({
 	el: '#switch_list',
 	data: {
@@ -159,25 +187,32 @@ var vm_switch = new Vue({
 	}
 }); //开关
 
-vm_input.isShow = true;
-vm_switch.isShow = true;
-
 window.onload = function() {
 	initData();
-	getWebsitConfig()
 	loading.style.display = "none";
+	showList();
 };
 
 /**
  * 初始化数据
  */
 function initData() {
-	console.log("initData");
 	var webData = JSON.parse(storageutil.getSessionStorage(storageutil.WEBSITECONFIG));
 	console.log("webData:" + JSON.stringify(webData));
+	var getData = true; //获取网站配置
 	if(webData && webData.open == 0) {
 		webData.open = 1; //进入了网站配置页面
 		storageutil.setSessionStorage(storageutil.WEBSITECONFIG, JSON.stringify(webData));
+	} else if(webData && webData.open == 2) {
+		if(webData.webCon) { //保存有本地数据
+			getData = false;
+			initWebsiteConfig(webData.webCon);
+		}
+	}
+	console.log("getData:" + getData)
+	if(getData) {
+		getWebsitConfig();
+		initWebsiteConfig(webConfig)
 	}
 }
 
@@ -195,22 +230,7 @@ function getWebsitConfig() {
 		if(data.RspCode == 0) {
 			if(data.RspData.length > 0) {
 				webConfig = data.RspData[0];
-				//输入框
-				vm_input.inputArray[0].message = webConfig.cname;
-				vm_input.inputArray[1].message = webConfig.ename;
-				vm_input.inputArray[2].message = webConfig.corptel;
-				//开关
-				vm_switch.switchArray[0].check = webConfig.stat;
-				vm_switch.switchArray[1].check = webConfig.isreply;
-				vm_switch.switchArray[2].check = webConfig.isnewchk;
-				vm_switch.switchArray[3].check = webConfig.isnewreplychk;
-				vm_switch.switchArray[4].check = webConfig.isfileup;
-				vm_switch.switchArray[5].check = webConfig.isfiledown;
-				vm_switch.switchArray[6].check = webConfig.iswrite;
-				vm_switch.switchArray[7].check = webConfig.isass;
-				//显示列表
-				vm_input.isShow = true;
-				vm_switch.isShow = true;
+
 			} else {
 				weui.alert('没有获取到配置信息')
 			}
@@ -218,6 +238,43 @@ function getWebsitConfig() {
 			weui.alert(data.RspTxt);
 		}
 	});
+}
+
+/**
+ * 保存并显示网站配置
+ */
+function initWebsiteConfig(data) {
+	//输入框
+	vm_input.inputArray[0].message = data.cname;
+	vm_input.inputArray[1].message = data.ename;
+	vm_input.inputArray[2].message = data.corptel;
+	//皮肤id
+	vm_skin.skinId = data.skinid;
+	//开关
+	vm_switch.switchArray[0].check = data.stat;
+	vm_switch.switchArray[1].check = data.isreply;
+	vm_switch.switchArray[2].check = data.isnewchk;
+	vm_switch.switchArray[3].check = data.isnewreplychk;
+	vm_switch.switchArray[4].check = data.isfileup;
+	vm_switch.switchArray[5].check = data.isfiledown;
+	vm_switch.switchArray[6].check = data.iswrite;
+	vm_switch.switchArray[7].check = data.isass;
+	//显示列表
+	showList();
+	//将数据保存到本地
+	var webData = {
+		open: 2,
+		webCon: data
+	}
+	storageutil.setSessionStorage(storageutil.WEBSITECONFIG, JSON.stringify(webData))
+}
+/**
+ * 显示列表
+ */
+function showList() {
+	vm_input.isShow = true;
+	vm_skin.isShow = true;
+	vm_switch.isShow = true;
 }
 
 /**
@@ -242,6 +299,7 @@ function changeWebsiteConfig(change) {
 		weui.alert('修改网站设置:' + JSON.stringify(data));
 		if(data.RspCode == 0) {
 			webConfig[commit.callcol] = commit.colv;
+
 		} else {
 			if(change.type == 1) { //开关
 				vm_switch.switchArray[change.index].check = !change.colv;

@@ -53,8 +53,8 @@
 				<!--列表信息流 开始-->
 				<ul id="list" class="mui-table-view">
 					<li class="mui-table-view-cell mui-media" v-for="item in items">
-						<a href="javascript:;" :data-guid="item.guid">
-							<img class="mui-media-object mui-pull-left" :src="item.cover">
+						<a href="javascript:;" :data-guid="item.newsid">
+							<img class="mui-media-object mui-pull-left" :src="item.imgurl">
 							<div class="mui-media-body">
 								<div class="mui-ellipsis-2">{{item.topic}}</div>
 							</div>
@@ -88,11 +88,16 @@
 					items: [] //列表信息流数据
 				}
 			});
+			window.onload = function() {
+					var detail = utils.getDataFromUrl(window.location.href);
+					chnid = detail.chnid; 
+					getNewsList();
+				}
 			
-			mui.ready(function() {
-				chnid = 1; 
-				getNewsList();
-			});
+//			mui.ready(function() {
+//				chnid = 1; 
+//				getNewsList();
+//			});
 			
 			//获取新闻列表
 			function getNewsList(){
@@ -100,9 +105,9 @@
 					cmd: 'news',//文章管理
 					type: 'findpage',//分页查找文章列表
 					pagesize:'10',//每页条数
-					pageindex:newsPage//页码
+					pageindex:newsPage，//页码
 //					topic:'',//模糊查找标题,可为空字符串查全部
-//					chnid:'',//某个栏目下的文章
+					chnid:chnid//某个栏目下的文章
 //					newsid:'',//文章ID
 //					stat:'',//状态
 //					recuser:''//作者
@@ -112,7 +117,7 @@
 						if(data.RspData.length > 0) {
 							//判断是刷新0，还是加载更多1
 							if (newsFlag == 0) {
-								news.items = data.RspData.dt;
+								news.items =data.RspData.dt;
 							} else{
 								news.items = news.items.concat(data.RspData.dt);
 							}

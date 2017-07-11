@@ -81,14 +81,16 @@
 			mui.init();
 			var newsPage = 1;//获取的新闻页码
 			var newsFlag = 0;//0刷新，1加载更多
+			var chnid;
 			var news = new Vue({
 				el: '#news',
 				data: {
 					items: [] //列表信息流数据
 				}
 			});
-
+			
 			mui.ready(function() {
+				chnid = 1; 
 				getNewsList();
 			});
 			

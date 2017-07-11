@@ -4,6 +4,8 @@ webConfig = {};
 webConfig.cname = '中文名';
 webConfig.ename = 'yingwenming';
 webConfig.corptel = '110';
+webConfig.logo = 'http://jqweui.com/dist/demos/images/pic_article.png';
+webConfig.banner = 'https://cn.vuejs.org/images/logo.png';
 webConfig.stat = 0;
 webConfig.isreply = 0;
 webConfig.isnewchk = 0;
@@ -73,12 +75,14 @@ Vue.component('skin-item', {
 	props: ['value'],
 	template: '<div>\
 					<div class="weui-cells__title">皮肤</div>\
-					<a class="weui-cell weui-cell_access"  @click="onclick(value);">\
-						<div class="weui-cell__bd">\
-							<p>{{value}}</p>\
-						</div>\
-						<div class="weui-cell__ft"></div>\
-					</a>\
+					<div class="weui-cells">\
+						<a class="weui-cell weui-cell_access"  @click="onclick(value);">\
+							<div class="weui-cell__bd">\
+								<p>{{value}}</p>\
+							</div>\
+							<div class="weui-cell__ft"></div>\
+						</a>\
+					</div>\
 				</div>',
 	methods: {
 		onclick: function(value) {
@@ -86,6 +90,33 @@ Vue.component('skin-item', {
 			utils.mOpenWithData("Skin.html", {
 				skinid: value
 			});
+		}
+	}
+});
+//图片组件
+Vue.component("image-item", {
+	props: ['value', 'index'],
+	template: '<div>\
+					<div class="weui-cells__title">{{value.title}}</div>\
+					<div class="weui-cells">\
+						<div class="weui-cell">\
+							<div class="weui-cell__bd">\
+								<div class="website-image" :style="{backgroundImage:\'url(\'+ value.imageurl+\')\'}" @click="showImage(index,true);"></div>\
+								<button class="weui-btn weui-btn_mini weui-btn_primary" @click="changeImage(index);">修改</button>\
+							</div>\
+						</div>\
+					</div>\
+					<div class="weui-gallery" v-if="value.showimage" @click="showImage(index,false);">\
+						<span class="weui-gallery__img" :style="{backgroundImage:\'url(\'+ value.imageurl+\')\'}"></span>\
+					</div>\
+				</div>',
+	methods: {
+		changeImage: function(index) {
+			console.log("changeImage:" + index);
+		},
+		showImage: function(index, type) {
+			console.log("showImage:" + index + " " + type);
+			vm_image.imageArray[index].showimage = type;
 		}
 	}
 });
@@ -149,6 +180,25 @@ var vm_skin = new Vue({
 		skinId: 0
 	}
 }); //皮肤选项
+
+var vm_image = new Vue({
+	el: "#image_list",
+	data: {
+		isShow: false,
+		imageArray: [{
+			callcol: "logo",
+			title: "logo",
+			imageurl: "",
+			showimage: false,
+		}, {
+			callcol: "banner",
+			title: "banner",
+			imageurl: "",
+			showimage: false,
+		}]
+	}
+}); //图片列表
+
 var vm_switch = new Vue({
 	el: '#switch_list',
 	data: {
@@ -209,7 +259,6 @@ function initData() {
 			initWebsiteConfig(webData.webCon);
 			if(webData.changeSkinId && webData.webCon.skinid != webData.changeSkinId) { //修改皮肤ID
 				console.log("changeSkinId:" + webData.changeSkinId);
-				loading.style.display = "block";
 				var data = {
 					type: 2,
 					index: 0,
@@ -233,13 +282,6 @@ function initData() {
 }
 
 /**
- * 获取jweixin权限
- */
-function getWXJSConfig(){
-
-}
-
-/**
  * 获取网站配置信息
  */
 function getWebsitConfig() {
@@ -248,16 +290,18 @@ function getWebsitConfig() {
 		type: 'find'
 	}
 	unitWebsitePro(tempData, function(data) {
-		loading.style.display = "none";
 		weui.alert('配置为:' + JSON.stringify(data));
 		if(data.RspCode == 0) {
 			if(data.RspData.length > 0) {
 				webConfig = data.RspData[0];
-
+				initWebsiteConfig(webConfig);
+				getWXJSConfig();
 			} else {
+				loading.style.display = "none";
 				weui.alert('没有获取到配置信息')
 			}
 		} else {
+			loading.style.display = "none";
 			weui.alert(data.RspTxt);
 		}
 	});
@@ -267,12 +311,16 @@ function getWebsitConfig() {
  * 保存并显示网站配置
  */
 function initWebsiteConfig(data) {
+	console.log("initWebsiteConfig:" + JSON.stringify(data));
 	//输入框
 	vm_input.inputArray[0].message = data.cname;
 	vm_input.inputArray[1].message = data.ename;
 	vm_input.inputArray[2].message = data.corptel;
 	//皮肤id
 	vm_skin.skinId = data.skinid;
+	//图片
+	vm_image.imageArray[0].imageurl = data.logo;
+	vm_image.imageArray[1].imageurl = data.banner;
 	//开关
 	vm_switch.switchArray[0].check = data.stat;
 	vm_switch.switchArray[1].check = data.isreply;
@@ -289,7 +337,7 @@ function initWebsiteConfig(data) {
 		open: 2,
 		webCon: data
 	}
-	storageutil.setSessionStorage(storageutil.WEBSITECONFIG, JSON.stringify(webData))
+	storageutil.setSessionStorage(storageutil.WEBSITECONFIG, JSON.stringify(webData));
 }
 /**
  * 显示列表
@@ -297,6 +345,7 @@ function initWebsiteConfig(data) {
 function showList() {
 	vm_input.isShow = true;
 	vm_skin.isShow = true;
+	vm_image.isShow = true;
 	vm_switch.isShow = true;
 }
 

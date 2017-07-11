@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<title>jQuery WeUI</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+		<link rel="stylesheet" href="//cdn.bootcss.com/weui/0.4.3/style/weui.min.css">
+		<link rel="stylesheet" href="//cdn.bootcss.com/jquery-weui/0.8.3/css/jquery-weui.min.css">
+
+	</head>
+
+	<body ontouchstart style="height: 100%;">
+
+		<!--<div class="weui_tab">
+			<div class="weui_navbar">
+				<a class="weui_navbar_item weui_bar_item_on">
+					选项一
+				</a>
+				<a class="weui_navbar_item">
+					选项二
+				</a>
+				<a class="weui_navbar_item">
+					选项三
+				</a>
+			</div>
+			<div class="weui_tab_bd">
+				<p>主体内容放这里</p>
+			</div>
+		</div>-->
+
+		<!--<div class="weui_tab">
+			<div class="weui_navbar header-classify">
+				<a href="#tab11" class="weui_navbar_item weui_bar_item_on"> 享美食 </a>
+				<a href="#tab12" class="weui_navbar_item"> 住酒店 </a>
+			</div>
+			<div class="weui_tab_bd">
+				<div id="tab11" class="weui_tab_bd_item weui_tab_bd_item_active">
+					<h1>页面1</h1>
+				</div>
+				<div id="tab12" class="weui_tab_bd_item">
+					<h1>页面2</h1>
+				</div>
+			</div>
+		</div>-->
+
+		<div class="weui_tab" style="height: 100%;">
+			<div class="weui_tab_bd">
+				<!--<div id="tab1" class="weui_tab_bd_item weui_tab_bd_item_active">
+					<h1 class="doc-head">微信</h1>
+				</div>-->
+				<div id="tab1" class="weui_tab_bd_item weui_tab_bd_item_active">
+					<div class="doc-head weui_navbar header-classify">
+						<a href="#tab11" class="weui_navbar_item weui_bar_item_on"> 享美食 </a>
+						<a href="#tab12" class="weui_navbar_item"> 住酒店 </a>
+					</div>
+					<div class="weui_tab_bd">
+						<div id="tab11" class="weui_tab_bd_item weui_tab_bd_item_active">
+							<h1>页面1</h1> 
+						</div>
+						<div id="tab12" class="weui_tab_bd_item">
+							<h1>页面2</h1>
+						</div>
+					</div>
+				</div>
+				<div id="tab2" class="weui_tab_bd_item">
+					<h1 class="doc-head">通讯录</h1>
+				</div>
+				<div id="tab3" class="weui_tab_bd_item">
+					<h1 class="doc-head">发现</h1>
+				</div>
+				<div id="tab4" class="weui_tab_bd_item">
+					<h1 class="doc-head">我的</h1>
+				</div>
+			</div>
+			<div class="weui_tabbar">
+				<a href="#tab1" class="weui_tabbar_item weui_bar_item_on">
+					<div class="weui_tabbar_icon">
+						<img src="/images/icon_nav_button.png" alt="">
+					</div>
+					<p class="weui_tabbar_label">微信</p>
+				</a>
+				<a href="#tab2" class="weui_tabbar_item">
+					<div class="weui_tabbar_icon">
+						<img src="/images/icon_nav_cell.png" alt="">
+					</div>
+					<p class="weui_tabbar_label">通讯录</p>
+				</a>
+				<a href="#tab3" class="weui_tabbar_item">
+					<div class="weui_tabbar_icon">
+						<img src="/images/icon_nav_toast.png" alt="">
+					</div>
+					<p class="weui_tabbar_label">发现</p>
+				</a>
+				<a href="#tab4" class="weui_tabbar_item">
+					<div class="weui_tabbar_icon">
+						<img src="/images/icon_nav_dialog.png" alt="">
+					</div>
+					<p class="weui_tabbar_label">我</p>
+				</a>
+			</div>
+		</div>
+
+		<!-- body 最后 -->
+		<script src="//cdn.bootcss.com/jquery/1.11.0/jquery.min.js"></script>
+		<script src="//cdn.bootcss.com/jquery-weui/0.8.3/js/jquery-weui.min.js"></script>
+		<!-- 如果使用了某些拓展插件还需要额外的JS -->
+		<script src="//cdn.bootcss.com/jquery-weui/0.8.3/js/swiper.min.js"></script>
+		<script src="//cdn.bootcss.com/jquery-weui/0.8.3/js/city-picker.min.js"></script>
+	</body>
+</html>

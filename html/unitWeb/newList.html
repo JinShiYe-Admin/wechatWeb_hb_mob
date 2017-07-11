@@ -114,7 +114,7 @@
 				}
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
-						if(data.RspData.length > 0) {
+						if(data.RspData.dt.length > 0) {
 							//判断是刷新0，还是加载更多1
 							if (newsFlag == 0) {
 								news.items =data.RspData.dt;

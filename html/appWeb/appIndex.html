@@ -21,10 +21,10 @@
 				<div id="tab11" class="weui_grids weui-tab__bd-item weui-tab__bd-item--active">
 					<a href="javascript:;" class="weui_grid js_grid" v-for="(item,index) in items" @click="clickCulumn(item)">
 						<div class="weui_grid_icon">
-							<img :src="item.tempImg" alt="">
+							<img :src="item.linkurl" alt="">
 						</div>
 						<p class="weui_grid_label">
-							{{item.tempName}}
+							{{item.cname}}
 						</p>
 					</a>
 				</div>
@@ -58,8 +58,7 @@
 		</script>
 		<script>
 			var newsColumn = []; //存储所有的栏目
-			window.onload = function() {
-				var column = new Vue({
+			var column = new Vue({
 					el: '#column',
 					data: {
 						items: [] //列表信息流数据
@@ -71,31 +70,41 @@
 						}
 					}
 				});
+			window.onload = function() {
+				
 				//获取所有的栏目
 				getSumColumn();
 			};
 			//获取所有的栏目
 			function getSumColumn() {
 				//				alert('开始发送获取栏目协议');
-				var tempData = {
-					cmd: 'chn', //网站栏目
-					type: 'findpage', //分页查找栏目列表
-					pagesize: 999, //每页条数
-					pageindex: 1 //页码
-				}
-				unitWebsitePro(tempData, function(data) {
-					if(data.RspCode == 0) {
-						//判断是刷新0，还是加载更多1
-						newsColumn = data.RspData.dt;
-						if(newsColumn.length > 0) {
-							column.items = data.RspData.dt;
-						} else { 
-							alert('暂时还没有栏目');
-						}
-					} else {
-						alert(data.RspTxt);
-					}
-				});
+				var dt = [{
+					cname:'111',
+					linkurl:'../../image/icon_tabbar.png'
+				},{
+					cname:'222',
+					linkurl:'../../image/icon_tabbar.png'
+				}];
+				column.items = dt;
+//				var tempData = {
+//					cmd: 'chn', //网站栏目
+//					type: 'findpage', //分页查找栏目列表
+//					pagesize: 999, //每页条数
+//					pageindex: 1 //页码
+//				}
+//				unitWebsitePro(tempData, function(data) {
+//					if(data.RspCode == 0) {
+//						//判断是刷新0，还是加载更多1
+//						newsColumn = data.RspData.dt;
+//						if(newsColumn.length > 0) {
+//							column.items = data.RspData.dt;
+//						} else { 
+//							alert('暂时还没有栏目');
+//						}
+//					} else {
+//						alert(data.RspTxt);
+//					}
+//				});
 			};
 		</script>
 

@@ -233,6 +233,13 @@ function initData() {
 }
 
 /**
+ * 获取jweixin权限
+ */
+function getWXJSConfig(){
+
+}
+
+/**
  * 获取网站配置信息
  */
 function getWebsitConfig() {

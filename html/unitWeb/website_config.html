@@ -33,6 +33,9 @@
 			<div id="skin">
 				<skin-item :value="skinId" :key="skinId" v-if="isShow"></skin-item>
 			</div>
+			<div id="image_list">
+				<image-item v-for="(value,index) in imageArray" :value="value" :key="index" :index="index" v-if="isShow"></image-item>
+			</div>
 			<div id="switch_list">
 				<switch-item v-for="(value,index) in switchArray" :value="value" :key="index" :index="index" v-if="isShow"></switch-item>
 			</div>

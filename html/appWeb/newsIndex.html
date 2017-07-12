@@ -9,20 +9,36 @@
 		<link rel="stylesheet" href="../../css/weui.css">
 		<link rel="stylesheet" href="../../css/jquery-weui.css">
 		<link rel="stylesheet" href="../../css/demos.css">
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
 	</head>
 
 	<body ontouchstart>
-		<div class="weui-tab">
-			<div class="weui-navbar" id="column">
-				<a class="weui-navbar__item weui-bar__item--on" v-for="(item,index) in items" @click="clickCulumn(item)" href="#item.chnid">
+		<div class="weui-tab" id="column">
+			<div class="weui-navbar">
+				<a class="weui-navbar__item" :class="{'weui-bar__item--on':item.active}" v-for="(item,index) in items" @click="clickCulumn(item)" :href="'#tab'+item.chnid">
 					{{item.cname}}
 				</a>
+
 			</div>
 			<div class="weui-tab__bd">
-				<div id="tab4" class="weui-tab__bd-item weui-tab__bd-item--active">
-					<h1>页面一</h1>
+				<div :id="'tab'+item.chnid" class="weui-tab__bd-item" :class="{'weui-tab__bd-item--active':item.active}" v-for="(item,index) in items">
+					<ul class="mui-table-view">
+					<li class="mui-table-view-cell mui-media" v-for="value in item.newsArray">
+						<a href="javascript:;" :data-guid="value.newsid">
+							<img class="mui-media-object mui-pull-left" :src="value.imgurl">
+							<div class="mui-media-body">
+								<div class="mui-ellipsis-2">{{value.topic}}</div>
+							</div>
+							<div class="meta-info">
+								<div class="author">{{value.rectname}}</div>
+								<div class="time">{{value.rectime}}</div>
+							</div>
+						</a>
+					</li>
+				</ul>
 				</div>
 			</div>
+
 			<div class="weui-tabbar">
 				<a href="" class="weui-tabbar__item weui-bar__item--on">
 					<!--<span class="weui-badge" style="position: absolute;top: -.4em;right: 1em;">8</span>-->
@@ -42,6 +58,7 @@
 
 		<script src="../../js/jquery.min.js"></script>
 		<script src="../../js/jquery-weui.js"></script>
+		<script src="../../js/mui.min.js"></script>
 		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			var newsColumn = []; //存储所有的栏目
@@ -53,6 +70,7 @@
 				methods: {
 					clickCulumn: function(model) {
 						alert('model:' + JSON.stringify(model));
+						//						model.active = true;
 					}
 				}
 			});
@@ -64,13 +82,15 @@
 			function getSumColumn() {
 				//				alert('开始发送获取栏目协议');
 				var dt = [{
+					active: true,
+					chnid: 1,
 					cname: '111',
 					linkurl: '../../image/icon_tabbar.png',
-					newsPage:1,//获取新闻的页码
-					newsFlag:0,//0刷新，1加载更多
+					newsPage: 1, //获取新闻的页码
+					newsFlag: 0, //0刷新，1加载更多
 					newsArray: [{
-						newsid: 1,//文章ID
-						chnid: 1,//栏目ID
+						newsid: 1, //文章ID
+						chnid: 1, //栏目ID
 						topic: '我的标题', //文章标题
 						subtopic: '我是副标题', //文章副标题
 						summas: '我是摘要', //摘要
@@ -85,9 +105,9 @@
 						isreply: 1, //是否允许评论
 						isenc: 1, //是否有附件
 						imgurl: '../../image/icon_tabbar.png' //缩略图url
-					},{
-						newsid: 2,//文章ID
-						chnid: 1,//栏目ID
+					}, {
+						newsid: 2, //文章ID
+						chnid: 1, //栏目ID
 						topic: '我的标题2', //文章标题
 						subtopic: '我是副标题2', //文章副标题
 						summas: '我是摘要2', //摘要
@@ -104,13 +124,15 @@
 						imgurl: '../../image/icon_tabbar.png' //缩略图url
 					}]
 				}, {
+					active: false,
+					chnid: 2,
 					cname: '222',
 					linkurl: '../../image/icon_tabbar.png',
-					newsPage:1,//获取新闻的页码
-					newsFlag:0,//0刷新，1加载更多
+					newsPage: 1, //获取新闻的页码
+					newsFlag: 0, //0刷新，1加载更多
 					newsArray: [{
-						newsid: 3,//文章ID
-						chnid: 2,//栏目ID
+						newsid: 3, //文章ID
+						chnid: 2, //栏目ID
 						topic: '我的标题3', //文章标题
 						subtopic: '我是副标题3', //文章副标题
 						summas: '我是摘要3', //摘要

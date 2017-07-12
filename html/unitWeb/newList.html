@@ -79,8 +79,8 @@
 		</script>
 		<script type="text/javascript">
 			mui.init();
-			var newsPage = 1;//获取的新闻页码
-			var newsFlag = 0;//0刷新，1加载更多
+			var newsPage = 1; //获取的新闻页码
+			var newsFlag = 0; //0刷新，1加载更多
 			var chnid;
 			var news = new Vue({
 				el: '#news',
@@ -89,41 +89,46 @@
 				}
 			});
 			window.onload = function() {
-					var detail = utils.getDataFromUrl(window.location.href);
-					chnid = detail.chnid; 
-					getNewsList();
-				}
-			
-//			mui.ready(function() {
-//				chnid = 1; 
-//				getNewsList();
-//			});
-			
+				var detail = utils.getDataFromUrl(window.location.href);
+				chnid = detail.chnid;
+				getNewsList();
+			}
+
+			window.addEventListener("popstate", function(e) {
+				alert("我监听到了浏览器的返回按钮事件啦");
+				window.history.back()
+			}, false);
+
+			//			mui.ready(function() {
+			//				chnid = 1; 
+			//				getNewsList();
+			//			});
+
 			//获取新闻列表
-			function getNewsList(){
+			function getNewsList() {
 				var tempData = {
-					cmd: 'news',//文章管理
-					type: 'findpage',//分页查找文章列表
-					pagesize:'10',//每页条数
-					pageindex:newsPage，//页码
-//					topic:'',//模糊查找标题,可为空字符串查全部
-					chnid:chnid//某个栏目下的文章
-//					newsid:'',//文章ID
-//					stat:'',//状态
-//					recuser:''//作者
+					cmd: 'news', //文章管理
+					type: 'findpage', //分页查找文章列表
+					pagesize: '10', //每页条数
+					pageindex: newsPage,//页码
+					//					topic:'',//模糊查找标题,可为空字符串查全部
+					chnid: chnid //某个栏目下的文章
+					//					newsid:'',//文章ID
+					//					stat:'',//状态
+					//					recuser:''//作者
 				}
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
 						if(data.RspData.dt.length > 0) {
 							//判断是刷新0，还是加载更多1
-							if (newsFlag == 0) {
-								news.items =data.RspData.dt;
-							} else{
+							if(newsFlag == 0) {
+								news.items = data.RspData.dt;
+							} else {
 								news.items = news.items.concat(data.RspData.dt);
 							}
 						}
 						newsPage++;
-					}else{
+					} else {
 						alert(data.RspTxt);
 					}
 				});
@@ -148,7 +153,7 @@
 						callback: function() {
 							console.log('down');
 							setTimeout(function() {
-								newsFlag = 0;//0刷新，1加载更多
+								newsFlag = 0; //0刷新，1加载更多
 								newsPage = 0;
 								getNewsList();
 								pullRefresh.endPullDownToRefresh(); //结束下拉刷新
@@ -159,7 +164,7 @@
 						callback: function() {
 							console.log('up');
 							setTimeout(function() {
-								newsFlag = 1;//0刷新，1加载更多
+								newsFlag = 1; //0刷新，1加载更多
 								getNewsList();
 								pullRefresh.endPullUpToRefresh();
 							}, 1000);

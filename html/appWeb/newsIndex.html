@@ -1,250 +1,96 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 
 	<head>
-		<meta charset="UTF-8">
-		<title></title>
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<link href="../../css/mui.min.css" rel="stylesheet" />
-		<link rel="stylesheet" type="text/css" href="../../css/utils/pullToRefresh.css" />
-		<style>
-			.mui-control-content.mui-active{
-				display: block !important;
-			}
-			.mui-control-content{
-				display: none !important;
-			}
-		</style>
+		<title>新闻</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+		<link rel="stylesheet" href="../../css/weui.css">
+		<link rel="stylesheet" href="../../css/jquery-weui.css">
+		<link rel="stylesheet" href="../../css/demos.css">
 	</head>
 
-	<body>
-		<div id="content" class="mui-content"></div>
-		<script src="../../js/mui.min.js"></script>
-		<script src="../../js/utils/mui.pullToRefresh.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../../js/utils/mui.pullToRefresh.material.js" type="text/javascript" charset="utf-8"></script>
-		<script type="text/javascript">
-			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
-		</script>
-		<script src="../../js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	<body ontouchstart>
+		<div class="weui-tab">
+			<div class="weui-navbar" id="column">
+				<a class="weui-navbar__item weui-bar__item--on" v-for="(item,index) in items" @click="clickCulumn(item)" href="#item.chnid">
+					{{item.cname}}
+				</a>
+			</div>
+			<div class="weui-tab__bd">
+				<div id="tab4" class="weui-tab__bd-item weui-tab__bd-item--active">
+					<h1>页面一</h1>
+				</div>
+			</div>
+			<div class="weui-tabbar">
+				<a href="" class="weui-tabbar__item weui-bar__item--on">
+					<!--<span class="weui-badge" style="position: absolute;top: -.4em;right: 1em;">8</span>-->
+					<div class="weui-tabbar__icon">
+						<img src="../../image/icon_tabbar.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">新闻</p>
+				</a>
+				<a href="mineIndex.html" class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
+						<img src="../../image/icon_tabbar.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">我的</p>
+				</a>
+			</div>
+		</div>
+
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/jquery-weui.js"></script>
+		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			var newsColumn = []; //存储所有的栏目
-			var chnIdIndex = ''; //记录显示的栏目索引
-			mui.init({
-
+			var column = new Vue({
+				el: '#column',
+				data: {
+					items: [] //列表信息流数据
+				},
+				methods: {
+					clickCulumn: function(model) {
+						alert('model:' + JSON.stringify(model));
+					}
+				}
 			});
-
-			mui.ready(function() {
-//				initbody();
-//				getSumColumn();
-			});
-
 			window.onload = function() {
-				initbody();
-				newsColumn = [{
-					chnid: 1,
-					cname: "a"
-				}, {
-					chnid: 2,
-					cname: "b"
-				}]
-				addCitiesSilders(newsColumn);
-				initPullRefresh();
-				setNewsList([{
-					chnid: 1,
-					topic: 'rrrr'
-				}, {
-					chnid: 2,
-					topic: 'bbbb'
-				}]);
-//				mui(".mui-slider-group .mui-scroll-wrapper").scroll({
-//					scrollY: true, //是否竖向滚动
-//					scrollX: true, //是否横向滚动
-//					indicators: true, //是否显示滚动条
-//					deceleration: 0.0006, //阻尼系数,系数越小滑动越灵敏
-//					bounce: true, //是否启用回弹
-//				});
-			}
-
+				//获取所有的栏目
+				getSumColumn();
+			};
 			//获取所有的栏目
 			function getSumColumn() {
-				alert('开始发送获取栏目协议');
-				var tempData = {
-					cmd: 'chn', //网站栏目
-					type: 'findpage', //分页查找栏目列表
-					pagesize: 999, //每页条数
-					pageindex: 1 //页码
-				}
-				unitWebsitePro(tempData, function(data) {
-					if(data.RspCode == 0) {
-						//判断是刷新0，还是加载更多1
-						newsColumn = data.RspData.dt;
-						if(newsColumn.length > 0) {
-							for(var item in newsColumn) {
-								item.page = 1; //获取的新闻页码
-								item.flag = 0; //0刷新，1加载更多
-								item.newsArray = []; //存放当前的所有新闻数据
-							}
-							chnIdIndex = 0;
-
-							//生成所有栏目框架
-							addCitiesSilders(newsColumn);
-							initPullRefresh();
-							getColumnNews(newsColumn[0]);
-						} else {
-							alert('暂时还没有lanm');
-						}
-					} else {
-						alert(data.RspTxt);
-					}
-				});
-			}
-
-			//获取栏目对应的新闻
-			function getColumnNews(column) {
-				var tempData = {
-					cmd: 'news', //3.文章管理
-					type: 'findpage', //分页查找文章列表
-					pagesize: 10, //每页条数
-					pageindex: column.page, //页码
-					chnid: column.chnid //某个栏目下的文章，栏目id
-				}
-				unitWebsitePro(tempData, function(data) {
-					if(data.RspCode == 0) {
-						if(data.RspData.dt.length > 0) {
-							//判断是刷新0，还是加载更多1
-							if(newsColumn[chnIdIndex].flag == 0) {
-								newsColumn[chnIdIndex].newsArray = data.RspData.dt;
-							} else {
-								newsColumn[chnIdIndex].newsArray = newsColumn[chnIdIndex].newsArray.concat(data.RspData.dt);
-							}
-							newsColumn[chnIdIndex].page++;
-							//显示界面
-							setNewsList(data.RspData.dt);
-						}
-					} else {
-						alert(data.RspTxt);
-					}
-				});
-			}
-
-			/**
-			 * 循环初始化所有下拉刷新，上拉加载。
-			 */
-			function initPullRefresh() {
-				//阻尼系数
-				var deceleration = mui.os.ios ? 0.003 : 0.0009;
-				mui('.mui-scroll-wrapper').scroll({
-					bounce: false,
-					indicators: true, //是否显示滚动条
-					deceleration: deceleration
-				});
-				//循环初始化所有下拉刷新，上拉加载。
-				mui.each(document.querySelectorAll('.mui-slider-group .mui-scroll'), function(index, pullRefreshEl) {
-					var refresh = mui(pullRefreshEl).pullToRefresh({
-						down: {
-							callback: function() {
-								var self = this;
-								newsColumn[chnIdIndex].flag = 0; //0刷新，1加载更多
-								getColumnNews(newsColumn[chnIdIndex]);
-								setTimeout(function() {
-									self.endPullDownToRefresh(); //结束下拉刷新
-								}, 1000);
-							}
-						},
-						up: {
-							contentinit: '',
-							contentnomore: '', //隐藏没有更多提示
-							callback: function() {
-								var self = this;
-								newsColumn[chnIdIndex].flag = 1; //0刷新，1加载更多
-								getColumnNews(newsColumn[chnIdIndex]);
-								setTimeout(function() {
-									self.endPullUpToRefresh(true); //结束下拉刷新
-								}, 1000);
-							}
-						}
-					});
-				});
-			}
-
-			function initbody() {
-				//生成滑动控件
-				document.getElementById("content").innerHTML = '\
-					<div id="slider" class="mui-slider mui-fullscreen">\
-						<div id="sliderSegmentedControl" class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">\
-							<div id="topList" class="mui-scroll">\
-							</div>\
-						</div>\
-						<div id="sliderGroup" class="mui-slider-group">\
-						</div>\
-					</div>';
-				//滑动底部列表
-				document.getElementById("slider").addEventListener('slide', function(event) {
-					console.log('slide ' + event.detail.slideNumber);
-					chnIdIndex = event.detail.slideNumber;
-					//发协议获取数据
-					if(newsColumn[chnIdIndex].newsArray == 0) {
-						newsColumn[chnIdIndex].flag = 0; //0刷新，1加载更多
-						getColumnNews(newsColumn[chnIdIndex]);
-					}
-				});
-				mui('#slider').on('tap','.mui-control-item',function(){
-				  console.log("mui-control-item");
-				}) 
-			}
-
-			/**
-			 * 顶部增加定制的城市和底部列表的框架
-			 * @param {Object} data 定制的城市
-			 */
-			function addCitiesSilders(data) {
-				var fragmentTop = document.createDocumentFragment();
-				var fragmentBot = document.createDocumentFragment();
-				for(var i = 0; i < data.length; i++) {
-					//顶部城市
-					var elementTop = document.createElement('a');
-					//底部列表
-					var elementBot = document.createElement('div');
-
-					if(i == 0) {
-						//选择的城市
-						chnIdIndex = 0;
-						elementTop.className = 'mui-control-item mui-active';
-						elementBot.className = 'mui-slider-item mui-control-content mui-active';
-					} else {
-						elementTop.className = 'mui-control-item';
-						elementBot.className = 'mui-slider-item mui-control-content';
-					}
-					//顶部城市
-					elementTop.id = 'top_' + data[i].chnid;
-					elementTop.href = '#bot_' + data[i].chnid;
-					elementTop.innerText = data[i].cname;
-					//底部列表
-					elementBot.id = 'bot_' + data[i].chnid;
-
-					elementBot.innerHTML = '<div id="bot_sw_' + data[i].chnid + '" class="mui-scroll-wrapper">\
-											<div id="bot_sc_' + data[i].chnid + '" class="mui-scroll">\
-												<ul id="bot_ul_' + data[i].chnid + '" class="mui-table-view">\
-												</ul>\
-											</div>\
-										</div>';
-					fragmentTop.appendChild(elementTop);
-					fragmentBot.appendChild(elementBot);
-				}
-				document.getElementById("topList").appendChild(fragmentTop);
-				document.getElementById("sliderGroup").appendChild(fragmentBot);
-			}
-
-			function setNewsList(data) {
-				for(var item in data) {
-					var tempP = document.createElement('li');
-					tempP.className = 'mui-table-view-cell';
-					tempP.innerHTML = data[item].topic;
-					document.getElementById("bot_ul_" + data[item].chnid).appendChild(tempP);
-				}
-
-			}
+				//				alert('开始发送获取栏目协议');
+				var dt = [{
+					cname: '111',
+					linkurl: '../../image/icon_tabbar.png'
+				}, {
+					cname: '222',
+					linkurl: '../../image/icon_tabbar.png'
+				}];
+				column.items = dt;
+				//				var tempData = {
+				//					cmd: 'chn', //网站栏目
+				//					type: 'findpage', //分页查找栏目列表
+				//					pagesize: 999, //每页条数
+				//					pageindex: 1 //页码
+				//				}
+				//				unitWebsitePro(tempData, function(data) {
+				//					if(data.RspCode == 0) {
+				//						//判断是刷新0，还是加载更多1
+				//						newsColumn = data.RspData.dt;
+				//						if(newsColumn.length > 0) {
+				//							column.items = data.RspData.dt;
+				//						} else {
+				//							alert('暂时还没有栏目');
+				//						}
+				//					} else {
+				//						alert(data.RspTxt);
+				//					}
+				//				});
+			};
 		</script>
 	</body>
-
 </html>

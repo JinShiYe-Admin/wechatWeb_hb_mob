@@ -1,19 +1,40 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 
 	<head>
-		<meta charset="UTF-8">
-		<title></title>
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<title>我的</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+		<link rel="stylesheet" href="../../css/weui.css">
+		<link rel="stylesheet" href="../../css/jquery-weui.css">
+		<link rel="stylesheet" href="../../css/demos.css">
+
 	</head>
 
-	<body>
-		<p>我的页</p>
-		<script src="../../js/mui.min.js"></script>
-		<script type="text/javascript">
-			mui.init()
-		</script>
+	<body ontouchstart>
+
+		<div class="weui-tab">
+			<p>我的主页</p>
+			<div class="weui-tabbar">
+				<a href="newsIndex0.html" class="weui-tabbar__item">
+					<!--<span class="weui-badge" style="position: absolute;top: -.4em;right: 1em;">8</span>-->
+					<div class="weui-tabbar__icon">
+						<img src="../../image/icon_tabbar.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">新闻</p>
+				</a>
+				<a href="mineIndex.html" class="weui-tabbar__item weui-bar__item--on">
+					<div class="weui-tabbar__icon">
+						<img src="../../image/icon_tabbar.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">我的</p>
+				</a>
+			</div>
+		</div>
+
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/jquery-weui.js"></script>
 	</body>
 
 </html>

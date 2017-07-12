@@ -102,7 +102,7 @@ Vue.component("image-item", {
 						<div class="weui-cell">\
 							<div class="weui-cell__bd">\
 								<div class="website-image" :style="{backgroundImage:\'url(\'+ value.imageurl+\')\'}" @click="showImage(index,true);"></div>\
-								<button class="weui-btn weui-btn_mini weui-btn_primary" @click="changeImage(index);">修改</button>\
+								<button class="weui-btn weui-btn_mini weui-btn_primary" :id="value.id">修改</button>\
 							</div>\
 						</div>\
 					</div>\
@@ -111,9 +111,6 @@ Vue.component("image-item", {
 					</div>\
 				</div>',
 	methods: {
-		changeImage: function(index) {
-			console.log("changeImage:" + index);
-		},
 		showImage: function(index, type) {
 			console.log("showImage:" + index + " " + type);
 			vm_image.imageArray[index].showimage = type;
@@ -190,11 +187,13 @@ var vm_image = new Vue({
 			title: "logo",
 			imageurl: "",
 			showimage: false,
+			id:"btn_logo"
 		}, {
 			callcol: "banner",
 			title: "banner",
 			imageurl: "",
 			showimage: false,
+			id:"btn_banner"
 		}]
 	}
 }); //图片列表

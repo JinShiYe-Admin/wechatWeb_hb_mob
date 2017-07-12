@@ -20,8 +20,16 @@ var storageutil = (function(mod) {
 		mod.QNGETDOWNLOADTOKEN = 'http://114.215.222.186:8005/Api/QiNiu/GetAccess'; //七牛获取下载token的url
 		mod.QNGETDELETETOKEN = 'http://114.215.222.186:8005/Api/QiNiu/Delete'; //获取批量删除七牛文件的token的url
 	}
+	//---七牛key值---start---
+	mod.QNPUBSPACE = "pb"; //七牛公开空间
+	mod.QNPRISPACE = "pv"; //七牛私有空间
+	mod.QNQYWXKID = 9; //企业微信id
+	mod.QNQYWXKEY = "jsy927@"; //企业微信密钥
+	mod.QNQYWXFN = "wechat"; //企业微信第一前缀名
+	mod.QNWEBSITECONFIG = "qnwebcon"; //网站配置第二前缀名
+	//---七牛key值---end---
 
-	mod.WEBSITECONFIG = 'websiteConfig' //网站配置
+	mod.WEBSITECONFIG = 'websiteconfig' //网站配置
 
 	/**
 	 * 在本地存永久数据

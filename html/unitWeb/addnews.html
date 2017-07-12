@@ -275,6 +275,32 @@
 					   isreply:PriIsReply
 				    };
                  }
+                 
+                 unitWebsitePro(comData, function(data) {
+					alert(data) 
+					if(data.RspCode == 0) {
+						//判断是刷新0，还是加载更多1
+						newsColumn = data.RspData.dt;
+				 		if(newsColumn.length > 0) {
+						 	for(var item in newsColumn) {
+								item.page = 1; //获取的新闻页码
+								item.flag = 0; //0刷新，1加载更多
+								item.newsArray = []; //存放当前的所有新闻数据
+							} 
+							chnIdIndex = 0;
+							//生成所有栏目框架
+							addCitiesSilders(newsColumn);
+							initPullRefresh();
+							getColumnNews(newsColumn[0]);
+						} else {
+							alert('暂时还没有lanm');
+						}
+					} else {
+						alert(data.RspTxt);
+					}
+				});
+                 
+                 
 				console.log('comData=========================:' + JSON.stringify(comData));
             });
 		</script>

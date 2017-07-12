@@ -14,13 +14,44 @@
 	<body ontouchstart>
 		<div class="weui-tab">
 			<div class="weui-navbar" id="column">
-				<a class="weui-navbar__item weui-bar__item--on" v-for="(item,index) in items" @click="clickCulumn(item)" href="#item.chnid">
+				<!--<a class="weui-navbar__item weui-bar__item--on" v-for="(item,index) in items" @click="clickCulumn(item)" href="#item.chnid">
 					{{item.cname}}
+				</a>-->
+				<a class="weui-navbar__item weui-bar__item--on" href="#tab4">
+					111
+				</a>
+				<a class="weui-navbar__item" href="#tab5">
+					222
 				</a>
 			</div>
 			<div class="weui-tab__bd">
-				<div id="tab4" class="weui-tab__bd-item weui-tab__bd-item--active">
-					<h1>页面一</h1>
+				<div id="tab4" class="weui-tab__bd-item weui-tab__bd-item--active weui-pull-to-refresh infinite">
+					<div class="weui-pull-to-refresh__layer">
+						<div class='weui-pull-to-refresh__arrow'></div>
+						<div class='weui-pull-to-refresh__preloader'></div>
+						<div class="down">下拉刷新</div>
+						<div class="up">释放刷新</div>
+						<div class="refresh">正在刷新</div>
+					</div>
+					<h1 id="page1">A great way to get introduced to AngularJS is to work through this tutorial, which walks you through the construction of an AngularJS web app. The app you will build is a catalog that displays a list of Android devices, lets you filter the list to see only devices that interest you, and then view details for any device.A great way to get introduced to AngularJS is to work through this tutorial, which walks you through the construction of an AngularJS web app. The app you will build is a catalog that displays a list of Android devices, lets you filter the list to see only devices that interest you, and then view details for any device.</h1>
+					<div class="weui-loadmore">
+						<i class="weui-loading"></i>
+						<span class="weui-loadmore__tips">正在加载</span>
+					</div>
+				</div>
+				<div id="tab5" class="weui-tab__bd-item weui-pull-to-refresh infinite">
+					<div class="weui-pull-to-refresh__layer">
+						<div class='weui-pull-to-refresh__arrow'></div>
+						<div class='weui-pull-to-refresh__preloader'></div>
+						<div class="down">下拉刷新</div>
+						<div class="up">释放刷新</div>
+						<div class="refresh">正在刷新</div>
+					</div>
+					<h1 id="page2">页面2</h1>
+					<div class="weui-loadmore">
+						<i class="weui-loading"></i>
+						<span class="weui-loadmore__tips">正在加载</span>
+					</div>
 				</div>
 			</div>
 			<div class="weui-tabbar">
@@ -44,7 +75,9 @@
 		<script src="../../js/jquery-weui.js"></script>
 		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			var newsColumn = []; //存储所有的栏目
+			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
+		</script>
+		<script type="text/javascript">
 			var column = new Vue({
 				el: '#column',
 				data: {
@@ -56,122 +89,198 @@
 					}
 				}
 			});
+			$('.weui-tab__bd-item').pullToRefresh().on('pull-to-refresh', function(done) {
+				var self = this;
+				setTimeout(function() {
+					$(self).find("#page1").text('jQuery API - jQuery is a fast, small, and feature-rich JavaScript library. It makes things like HTML document traversal and manipulation, event handling, animation, and Ajax much simpler with an easy-to-use API that works across a multitude of browsers. If youre new to jQuery, we recommend that you check out the jQuery Learning Center.');
+					$(self).pullToRefreshDone();
+				}, 2000)
+			});
+			$(".infinite").infinite().on("infinite", function() {
+				var self = this;
+				if(self.loading) return;
+				console.log(self)
+				self.loading = true;
+				console.log(self);
+				setTimeout(function() {
+//					$(self).find(".content-padded").append("<p>我是加载的新内容。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。。。</p>");
+$(self).find("#page1").text('《世界著名计算机教材精选·人工智能:一种现代的方法(第3版)》英文版有1100多页，教学内容非常丰富，不但涵盖了人工智能基础、问题求解、知识推理与规划等经典内容');
+					self.loading = false;
+				}, 2000); //模拟延迟
+			});
+			var loading = false;
+//			$('.weui-tab__bd-item').infinite().on("infinite", function() {
+//				if(loading) return;
+//				loading = true;
+//				setTimeout(function() {
+//					$(self).find("#page1").text('《世界著名计算机教材精选·人工智能:一种现代的方法(第3版)》英文版有1100多页，教学内容非常丰富，不但涵盖了人工智能基础、问题求解、知识推理与规划等经典内容');
+//					loading = false;
+//				}, 2000);
+//			});
 			window.onload = function() {
 				//获取所有的栏目
-				getSumColumn();
+				//				getSumColumn();
 			};
 			//获取所有的栏目
 			function getSumColumn() {
 				//				alert('开始发送获取栏目协议');
-				var dt = [{
-					cname: '111',
-					linkurl: '../../image/icon_tabbar.png',
-					newsPage:1,//获取新闻的页码
-					newsFlag:0,//0刷新，1加载更多
-					newsArray: [{
-						newsid: 1,//文章ID
-						chnid: 1,//栏目ID
-						topic: '我的标题', //文章标题
-						subtopic: '我是副标题', //文章副标题
-						summas: '我是摘要', //摘要
-						content: '我是正文', //正文
-						recuser: 2, //投稿者ID
-						rectname: '投稿者姓名', //投稿者姓名
-						rectime: '2017-07-12', //填写时间
-						stat: 1, //状态
-						clicked: 222, //点击率
-						isquo: 1, //是否为引用
-						quourl: 'www.baidu.com', //引用链接
-						isreply: 1, //是否允许评论
-						isenc: 1, //是否有附件
-						imgurl: '../../image/icon_tabbar.png' //缩略图url
-					},{
-						newsid: 2,//文章ID
-						chnid: 1,//栏目ID
-						topic: '我的标题2', //文章标题
-						subtopic: '我是副标题2', //文章副标题
-						summas: '我是摘要2', //摘要
-						content: '我是正文2', //正文
-						recuser: 2, //投稿者ID
-						rectname: '投稿者姓名2', //投稿者姓名
-						rectime: '2017-07-11', //填写时间
-						stat: 1, //状态
-						clicked: 222, //点击率
-						isquo: 1, //是否为引用
-						quourl: 'www.baidu.com', //引用链接
-						isreply: 1, //是否允许评论
-						isenc: 1, //是否有附件
-						imgurl: '../../image/icon_tabbar.png' //缩略图url
-					}]
-				}, {
-					cname: '222',
-					linkurl: '../../image/icon_tabbar.png',
-					newsPage:1,//获取新闻的页码
-					newsFlag:0,//0刷新，1加载更多
-					newsArray: [{
-						newsid: 3,//文章ID
-						chnid: 2,//栏目ID
-						topic: '我的标题3', //文章标题
-						subtopic: '我是副标题3', //文章副标题
-						summas: '我是摘要3', //摘要
-						content: '我是正文3', //正文
-						recuser: 2, //投稿者ID
-						rectname: '投稿者姓名', //投稿者姓名
-						rectime: '2017-07-12', //填写时间
-						stat: 1, //状态
-						clicked: 222, //点击率
-						isquo: 1, //是否为引用
-						quourl: 'www.baidu.com', //引用链接
-						isreply: 1, //是否允许评论
-						isenc: 1, //是否有附件
-						imgurl: '../../image/icon_tabbar.png' //缩略图url
-					}]
-				}];
-				column.items = dt;
-				//				var tempData = {
-				//					cmd: 'chn', //网站栏目
-				//					type: 'findpage', //分页查找栏目列表
-				//					pagesize: 999, //每页条数
-				//					pageindex: 1 //页码
-				//				}
-				//				unitWebsitePro(tempData, function(data) {
-				//					if(data.RspCode == 0) {
-				//						//判断是刷新0，还是加载更多1
-				//						newsColumn = data.RspData.dt;
-				//						if(newsColumn.length > 0) {
-				//							column.items = data.RspData.dt;
-				//						} else {
-				//							alert('暂时还没有栏目');
-				//						}
-				//					} else {
-				//						alert(data.RspTxt);
-				//					}
-				//				});
+				//				var dt = [{
+				//					cname: '111',
+				//					linkurl: '../../image/icon_tabbar.png',
+				//					newsPage: 1, //获取新闻的页码
+				//					newsFlag: 0, //0刷新，1加载更多
+				//					newsArray: [{
+				//						newsid: 1, //文章ID
+				//						chnid: 1, //栏目ID
+				//						topic: '我的标题', //文章标题
+				//						subtopic: '我是副标题', //文章副标题
+				//						summas: '我是摘要', //摘要
+				//						content: '我是正文', //正文
+				//						recuser: 2, //投稿者ID
+				//						rectname: '投稿者姓名', //投稿者姓名
+				//						rectime: '2017-07-12', //填写时间
+				//						stat: 1, //状态
+				//						clicked: 222, //点击率
+				//						isquo: 1, //是否为引用
+				//						quourl: 'www.baidu.com', //引用链接
+				//						isreply: 1, //是否允许评论
+				//						isenc: 1, //是否有附件
+				//						imgurl: '../../image/icon_tabbar.png' //缩略图url
+				//					}, {
+				//						newsid: 2, //文章ID
+				//						chnid: 1, //栏目ID
+				//						topic: '我的标题2', //文章标题
+				//						subtopic: '我是副标题2', //文章副标题
+				//						summas: '我是摘要2', //摘要
+				//						content: '我是正文2', //正文
+				//						recuser: 2, //投稿者ID
+				//						rectname: '投稿者姓名2', //投稿者姓名
+				//						rectime: '2017-07-11', //填写时间
+				//						stat: 1, //状态
+				//						clicked: 222, //点击率
+				//						isquo: 1, //是否为引用
+				//						quourl: 'www.baidu.com', //引用链接
+				//						isreply: 1, //是否允许评论
+				//						isenc: 1, //是否有附件
+				//						imgurl: '../../image/icon_tabbar.png' //缩略图url
+				//					}]
+				//				}, {
+				//					cname: '222',
+				//					linkurl: '../../image/icon_tabbar.png',
+				//					newsPage: 1, //获取新闻的页码
+				//					newsFlag: 0, //0刷新，1加载更多
+				//					newsArray: [{
+				//						newsid: 3, //文章ID
+				//						chnid: 2, //栏目ID
+				//						topic: '我的标题3', //文章标题
+				//						subtopic: '我是副标题3', //文章副标题
+				//						summas: '我是摘要3', //摘要
+				//						content: '我是正文3', //正文
+				//						recuser: 2, //投稿者ID
+				//						rectname: '投稿者姓名', //投稿者姓名
+				//						rectime: '2017-07-12', //填写时间
+				//						stat: 1, //状态
+				//						clicked: 222, //点击率
+				//						isquo: 1, //是否为引用
+				//						quourl: 'www.baidu.com', //引用链接
+				//						isreply: 1, //是否允许评论
+				//						isenc: 1, //是否有附件
+				//						imgurl: '../../image/icon_tabbar.png' //缩略图url
+				//					}]
+				//				}];
+				//				column.items = dt;
+				//				getNewsList(column.items[0]);
+				var tempData = {
+					cmd: 'chn', //网站栏目
+					type: 'findpage', //分页查找栏目列表
+					pagesize: 999, //每页条数
+					pageindex: 1 //页码
+				}
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						if(data.RspData.dt.length > 0) {
+							column.items = data.RspData.dt;
+							alert('获取到的栏目列表：' + JSON.stringify(column.items));
+							//塞入页码、加载状态等自定义参数
+							for(var tempItem in column.items) {
+								tempItem.newsPage = 1; //获取新闻的页码
+								tempItem.newsFlag = 0; //0刷新，1加载更多
+								tempItem.newsArray = []; //栏目对应的新闻列表
+							}
+							//获取索引为0的栏目新闻列表
+							getNewsList(column.items[0]);
+						} else {
+							alert('暂时还没有栏目');
+						}
+					} else {
+						alert(data.RspTxt);
+					}
+				});
 			};
 			//获取栏目对应的新闻
 			function getNewsList(columnModel) {
-				//				var tempData = {
-				//					cmd: 'news', //文章管理
-				//					type: 'findpage', //分页查找文章列表
-				//					pagesize: '10', //每页条数
-				//					pageindex: columnModel.newsPage,//页码
-				//					chnid: columnModel.chnid //某个栏目下的文章，栏目id
-				//				}
-				//				unitWebsitePro(tempData, function(data) {
-				//					if(data.RspCode == 0) {
-				//						if(data.RspData.dt.length > 0) {
-				//							//判断是刷新0，还是加载更多1
-				//							if(newsFlag == 0) {
-				//								news.items = data.RspData.dt;
-				//							} else {
-				//								news.items = news.items.concat(data.RspData.dt);
-				//							}
-				//						}
-				//						newsPage++;
-				//					} else {
-				//						alert(data.RspTxt);
-				//					}
-				//				});
+				//				var tempArray = [{
+				//						newsid: 1, //文章ID
+				//						chnid: 1, //栏目ID
+				//						topic: '我的标题4', //文章标题
+				//						subtopic: '我是副标题4', //文章副标题
+				//						summas: '我是摘要4', //摘要
+				//						content: '我是正文4', //正文
+				//						recuser: 2, //投稿者ID
+				//						rectname: '投稿者姓名4', //投稿者姓名
+				//						rectime: '2017-07-12', //填写时间
+				//						stat: 1, //状态
+				//						clicked: 222, //点击率
+				//						isquo: 1, //是否为引用
+				//						quourl: 'www.baidu.com', //引用链接
+				//						isreply: 1, //是否允许评论
+				//						isenc: 1, //是否有附件
+				//						imgurl: '../../image/icon_tabbar.png' //缩略图url
+				//					}, {
+				//						newsid: 2, //文章ID
+				//						chnid: 1, //栏目ID
+				//						topic: '我的标题12', //文章标题
+				//						subtopic: '我是副标题12', //文章副标题
+				//						summas: '我是摘要12', //摘要
+				//						content: '我是正文12', //正文
+				//						recuser: 2, //投稿者ID
+				//						rectname: '投稿者姓名12', //投稿者姓名
+				//						rectime: '2017-07-11', //填写时间
+				//						stat: 1, //状态
+				//						clicked: 222, //点击率
+				//						isquo: 1, //是否为引用
+				//						quourl: 'www.baidu.com', //引用链接
+				//						isreply: 1, //是否允许评论
+				//						isenc: 1, //是否有附件
+				//						imgurl: '../../image/icon_tabbar.png' //缩略图url
+				//					}];
+				//					columnModel.newsPage = 2;
+				//					columnModel.newsFlag = 1;
+				//					jQuery.merge(columnModel.newsArray,tempArray);
+				//					console.log('最终的数据为：'+JSON.stringify(column.items));
+				var tempData = {
+					cmd: 'news', //文章管理
+					type: 'findpage', //分页查找文章列表
+					pagesize: '10', //每页条数
+					pageindex: columnModel.newsPage, //页码
+					chnid: columnModel.chnid //某个栏目下的文章，栏目id
+				}
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						if(data.RspData.dt.length > 0) {
+							alert('获取到的新闻：' + JSON.stringify(data.RspData.dt));
+							//判断是刷新0，还是加载更多1
+							if(columnModel.newsFlag == 0) {
+								columnModel.newsArray = data.RspData.dt;
+							} else {
+								jQuery.merge(columnModel.newsArray, data.RspData.dt); //合并数组
+							}
+						}
+						columnModel.newsPage++;
+					} else {
+						alert(data.RspTxt);
+					}
+				});
 			}
 		</script>
 	</body>

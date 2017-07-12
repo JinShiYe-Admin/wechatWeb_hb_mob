@@ -1,4 +1,4 @@
-﻿{
+{
     "@platforms": ["android", "iPhone", "iPad"],
     "id": "H56473DE4",/*应用的标识，创建应用时自动生成，勿手动修改*/
     "name": "WeChatWeb",/*应用名称，程序桌面图标名称*/
@@ -199,5 +199,95 @@
                 }
             }
         }
-    }
+    },
+	"dependencies": {
+		"pages": {
+			"html/appWeb/newsIndex.html": {
+				"resources": [
+					"image/icon_tabbar.png",
+					"css/jquery-weui.css",
+					"js/jquery.min.js",
+					"js/utils/utils.js",
+					"js/PublicProtocol.js",
+					"js/vue.min.js",
+					"js/utils/storageutil.js",
+					"js/mui.min.js",
+					"css/demos.css",
+					"css/mui.min.css",
+					"js/jquery-weui.js",
+					"css/weui.css",
+					"js/importJS.js"
+				],
+				"refer": [],
+				"priority": 0
+			}
+		},
+		"idle": {
+			"resources": [
+				"image/config/sj.png",
+				"css/utils/pullToRefresh.css",
+				"js/utils/cryption.js",
+				"html/unitWeb/teacher_faculty.html",
+				"js/configuration/website_config.js",
+				"css/weui.min.css",
+				"js/lib/plupload/plupload.full.min.js",
+				"html/unitWeb/addnews.html",
+				"js/lib/plupload/plupload.dev.js",
+				"js/utils/cloudutil.js",
+				"js/lib/qiniu/qiniu.min.js",
+				"js/lib/plupload/plupload.js",
+				"html/appWeb/mineIndex.html",
+				"css/configuration/website_config.css",
+				"js/lib/plupload/plupload.min.js",
+				"js/lib/plupload/moxie.js",
+				"html/unitWeb/new-home.html",
+				"js/utils/mui.pullToRefresh.js",
+				"html/test222.html",
+				"fonts/mui.ttf",
+				"html/unitWeb/testnewwindow.html",
+				"js/lib/plupload/Moxie.swf",
+				"image/utils/loading.gif",
+				"js/fastclick.js",
+				"js/utils/mui.pullToRefresh.material.js",
+				"image/config/func_disc.jpg",
+				"html/unitWeb/newList.html",
+				"js/jweixin-1.2.0.js",
+				"image/config/loading.jpg",
+				"html/unitWeb/column.html",
+				"image/config/syl.png",
+				"image/config/lho.png",
+				"image/config/func_actssm.jpg",
+				"html/unitWeb/website_config.html",
+				"html/unitWeb/configIndex.html",
+				"js/lanren.js",
+				"html/index/index.html",
+				"image/config/js.png",
+				"js/lib/qiniu/qiniu.min.map",
+				"css/new-detail.css",
+				"html/unitWeb/testmuiscroll.html",
+				"js/weui.min.js",
+				"image/config/voice.png",
+				"html/unitWeb/column-home.html",
+				"js/jquery-weui.min.js",
+				"image/utils/default_personalimage.png",
+				"image/config/下载.png",
+				"html/unitWeb/Comment.html",
+				"js/jweixin.js",
+				"html/unitWeb/testmui.html",
+				"html/unitWeb/new-detail.html",
+				"css/style.css",
+				"image/config/func_worker.jpg",
+				"js/lib/plupload/moxie.min.js",
+				"image/config/zz (2).png",
+				"js/lib/qiniu/qiniu.js",
+				"image/config/func_chat.jpg",
+				"image/config/zz.png",
+				"html/unitWeb/School_Column.html",
+				"html/unitWeb/News_Comment.html",
+				"css/jquery-weui.min.css",
+				"html/unitWeb/testAAA.html",
+				"html/unitWeb/Skin.html"
+			]
+		}
+	}
 }

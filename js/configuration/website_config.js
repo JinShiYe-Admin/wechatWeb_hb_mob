@@ -187,13 +187,13 @@ var vm_image = new Vue({
 			title: "logo",
 			imageurl: "",
 			showimage: false,
-			id:"btn_logo"
+			id: "btn_logo"
 		}, {
 			callcol: "banner",
 			title: "banner",
 			imageurl: "",
 			showimage: false,
-			id:"btn_banner"
+			id: "btn_banner"
 		}]
 	}
 }); //图片列表
@@ -240,6 +240,27 @@ var vm_switch = new Vue({
 
 window.onload = function() {
 	initData();
+	var getTokenData = {
+		appId: storageutil.QNQYWXKID,
+		mainSpace: storageutil.QNPUBSPACE,
+		saveSpace: storageutil.QNSSPACEWEBCON,
+		qnCmdOption: {
+			type: 0
+		},
+		fileSplit: "\\",
+		fileArray: [{
+			filePath: "C:\\Users\\Vktuns\\Desktop\\上传.png",
+			qnFileName: "shangchuan.jpg",
+			qnCmdOption: {
+				type: 1,
+				width: 50
+			}
+		}]
+	}
+	cloudutil.getFileUpTokens(getTokenData, function(data) {
+		console.log("获取uptoken回调:" + JSON.stringify(data));
+	});
+	console.log("window.onload");
 };
 
 /**

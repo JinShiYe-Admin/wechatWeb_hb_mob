@@ -25,8 +25,9 @@ var storageutil = (function(mod) {
 	mod.QNPRISPACE = "pv"; //七牛私有空间
 	mod.QNQYWXKID = 9; //企业微信id
 	mod.QNQYWXKEY = "jsy927@"; //企业微信密钥
-	mod.QNQYWXFN = "wechat"; //企业微信第一前缀名
-	mod.QNWEBSITECONFIG = "qnwebcon"; //网站配置第二前缀名
+	mod.QNQYWXFN = "wechat/"; //企业微信第一前缀名
+	mod.QNTHUMB = "thumb/"; //缩略图的第三前缀
+	mod.QNSSPACEWEBCON = "webcon/"; //网站配置空间(第二前缀名)
 	//---七牛key值---end---
 
 	mod.WEBSITECONFIG = 'websiteconfig' //网站配置

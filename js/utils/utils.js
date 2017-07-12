@@ -71,5 +71,17 @@ var utils = (function(mod) {
 		});
 	}
 
+	/**
+	 * 判断数据是否是undefined，null,""
+	 * @param {Object} data
+	 */
+	mod.checkData = function(data) {
+		if(data !== undefined && data !== null && data !== "") {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	return mod;
 })(window.utils || {});

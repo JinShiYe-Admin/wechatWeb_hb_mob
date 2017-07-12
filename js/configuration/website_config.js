@@ -1,20 +1,20 @@
 var webConfig; //网站配置的数据
 //---假数据---start---
-//webConfig = {};
-//webConfig.cname = '中文名';
-//webConfig.ename = 'yingwenming';
-//webConfig.corptel = '110';
-//webConfig.logo = 'http://jqweui.com/dist/demos/images/pic_article.png';
-//webConfig.banner = 'https://cn.vuejs.org/images/logo.png';
-//webConfig.stat = 0;
-//webConfig.isreply = 0;
-//webConfig.isnewchk = 0;
-//webConfig.isnewreplychk = 0;
-//webConfig.isfileup = 0;
-//webConfig.isfiledown = 0;
-//webConfig.iswrite = 0;
-//webConfig.isass = 0;
-//webConfig.skinid = 0;
+webConfig = {};
+webConfig.cname = '中文名';
+webConfig.ename = 'yingwenming';
+webConfig.corptel = '110';
+webConfig.logo = 'http://jqweui.com/dist/demos/images/pic_article.png';
+webConfig.banner = 'https://cn.vuejs.org/images/logo.png';
+webConfig.stat = 0;
+webConfig.isreply = 0;
+webConfig.isnewchk = 0;
+webConfig.isnewreplychk = 0;
+webConfig.isfileup = 0;
+webConfig.isfiledown = 0;
+webConfig.iswrite = 0;
+webConfig.isass = 0;
+webConfig.skinid = 0;
 //---假数据---end---
 
 var loading = document.getElementById("loading"); //等待框
@@ -102,7 +102,7 @@ Vue.component("image-item", {
 						<div class="weui-cell">\
 							<div class="weui-cell__bd">\
 								<div class="website-image" :style="{backgroundImage:\'url(\'+ value.imageurl+\')\'}" @click="showImage(index,true);"></div>\
-								<button class="weui-btn weui-btn_mini weui-btn_primary" @click="changeImage(index);">修改</button>\
+								<button class="weui-btn weui-btn_mini weui-btn_primary" :id="value.id">修改</button>\
 							</div>\
 						</div>\
 					</div>\
@@ -111,9 +111,6 @@ Vue.component("image-item", {
 					</div>\
 				</div>',
 	methods: {
-		changeImage: function(index) {
-			console.log("changeImage:" + index);
-		},
 		showImage: function(index, type) {
 			console.log("showImage:" + index + " " + type);
 			vm_image.imageArray[index].showimage = type;
@@ -190,11 +187,13 @@ var vm_image = new Vue({
 			title: "logo",
 			imageurl: "",
 			showimage: false,
+			id:"btn_logo"
 		}, {
 			callcol: "banner",
 			title: "banner",
 			imageurl: "",
 			showimage: false,
+			id:"btn_banner"
 		}]
 	}
 }); //图片列表
@@ -275,8 +274,8 @@ function initData() {
 	if(getData) {
 		getWebsitConfig(); //获取配置
 		//---假数据---start---
-		//initWebsiteConfig(webConfig);
-		//loading.style.display = "none";
+		initWebsiteConfig(webConfig);
+		loading.style.display = "none";
 		//---假数据---end---
 	}
 }
@@ -383,18 +382,18 @@ function changeWebsiteConfig(change) {
 		}
 	});
 	//---假数据---start---
-	//	loading.style.display = "none";
-	//	if(1) { //成功
-	//		weui.toast("操作成功");
-	//		webConfig[commit.callcol] = commit.colv;
-	//		if(change.type == 2) { //皮肤id
-	//			vm_skin.skinId = commit.colv;
-	//		}
-	//	} else {
-	//		if(change.type == 1) { //开关
-	//			vm_switch.switchArray[change.index].check = !change.colv;
-	//		}
-	//		weui.alert("修改失败");
-	//	}
+	loading.style.display = "none";
+	if(1) { //成功
+		weui.toast("操作成功");
+		webConfig[commit.callcol] = commit.colv;
+		if(change.type == 2) { //皮肤id
+			vm_skin.skinId = commit.colv;
+		}
+	} else {
+		if(change.type == 1) { //开关
+			vm_switch.switchArray[change.index].check = !change.colv;
+		}
+		weui.alert("修改失败");
+	}
 	//---假数据---end---
 }

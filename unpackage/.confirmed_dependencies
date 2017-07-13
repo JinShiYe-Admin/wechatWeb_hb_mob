@@ -1,19 +1,19 @@
 {
-	"html/appWeb/newsIndex.html": {
-		"resources": [
-			"image/icon_tabbar.png",
-			"css/jquery-weui.css",
-			"js/jquery.min.js",
-			"js/utils/utils.js",
-			"js/PublicProtocol.js",
-			"js/vue.min.js",
-			"js/utils/storageutil.js",
-			"js/mui.min.js",
-			"css/demos.css",
-			"css/mui.min.css",
-			"js/jquery-weui.js",
-			"css/weui.css",
-			"js/importJS.js"
-		]
-	}
+  "html/appWeb/newsIndex.html": {
+    "resources": [
+      "image/icon_tabbar.png",
+      "css/jquery-weui.css",
+      "js/jquery.min.js",
+      "js/utils/utils.js",
+      "js/PublicProtocol.js",
+      "js/vue.min.js",
+      "js/utils/storageutil.js",
+      "js/mui.min.js",
+      "css/demos.css",
+      "css/mui.min.css",
+      "js/jquery-weui.js",
+      "css/weui.css",
+      "js/importJS.js"
+    ]
+  }
 }

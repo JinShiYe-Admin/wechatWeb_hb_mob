@@ -275,31 +275,26 @@
 					   isreply:PriIsReply
 				    };
                  }
-                 
-                 unitWebsitePro(comData, function(data) {
-					alert(data) 
+                 var tempData = {
+					cmd: 'chn', //网站栏目
+					type: 'findpage', //分页查找栏目列表
+					pagesize: 999, //每页条数
+					pageindex: 1 //页码
+				}
+				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
-						//判断是刷新0，还是加载更多1
-						newsColumn = data.RspData.dt;
-				 		if(newsColumn.length > 0) {
-						 	for(var item in newsColumn) {
-								item.page = 1; //获取的新闻页码
-								item.flag = 0; //0刷新，1加载更多
-								item.newsArray = []; //存放当前的所有新闻数据
-							} 
-							chnIdIndex = 0;
-							//生成所有栏目框架
-							addCitiesSilders(newsColumn);
-							initPullRefresh();
-							getColumnNews(newsColumn[0]);
+						if(data.RspData.dt.length > 0) {
+							column.items = data.RspData.dt;
 						} else {
-							alert('暂时还没有lanm');
+							alert('暂时还没有栏目');
 						}
 					} else {
 						alert(data.RspTxt);
 					}
 				});
-                 
+		 
+
+                
                  
 				console.log('comData=========================:' + JSON.stringify(comData));
             });

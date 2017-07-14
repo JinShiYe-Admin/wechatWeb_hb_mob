@@ -10,110 +10,155 @@
 		<link rel="stylesheet" href="../../css/weui.min.css" />
 		<link href="../../css/mui.min.css" rel="stylesheet" />
 		<style>
- 
-           .dropdown:before, .dropdown:after {
-             content: ''; 
-             position: absolute;
-             z-index: 20; top: 18px;
-             right: 10px; border: 4px dashed;
-             border-color: #888888 transparent;}
-
-           .dropdown:before {
-             border-bottom-style: solid;
-             border-top: none;}
-
-           .dropdown:after {
-             margin-top: 7px;
-             border-top-style: solid;
-             border-bottom: none;}
-
-           .dropdown-select:focus {
-             z-index: 6; width: 100%;
-             color: #394349;outline: 10px solid #49aff2;
-             outline: 2px solid -webkit-focus-ring-color;
-             outline-offset: -2px;}
-
-           .dropdown-select > option {
-             margin: 10px;
-             padding: 10px 50px;
-             text-shadow: none;
-             background:#FFFFFF;
-             border-radius: 200px;
-             cursor: pointer;}
-
-           .lt-ie9 .dropdown {z-index: 1;}
-           .lt-ie9 .dropdown-select { z-index: -1;}
-           .lt-ie9 .dropdown-select:focus {z-index: 3;}
-           @-moz-document url-prefix() {.dropdown-select {padding-left: 6px;}}
- 
-           .dropdown-dark {
-             background: #444;border-color: #111111 #0a0a0a black;
-             background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
-             background-image: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
-             background-image: -o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
-             background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.4));
-             -webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), 0 1px 1px rgba(0, 0, 0, 0.2);
-             box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), 0 1px 1px rgba(0, 0, 0, 0.2);}
-
-           .dropdown-dark:before {border-bottom-color: #aaa;}
-           .dropdown-dark:after {border-top-color: #aaa;}
-           .dropdown-dark .dropdown-select {color: #aaa;text-shadow: 0 1px black;
-             background: #444;  /* Fallback for IE 8 */}
-           .dropdown-dark .dropdown-select:focus {color: #ccc;}
-           .dropdown-dark .dropdown-select > option {background: #444;
-             text-shadow: 0 1px rgba(0, 0, 0, 0.4);}
-           .weui-cells { margin-top: 0px;}	
-		   .weui-cells__title {color: black;}
+			.dropdown:before,
+			.dropdown:after {
+				content: '';
+				position: absolute;
+				z-index: 20;
+				top: 18px;
+				right: 10px;
+				border: 4px dashed;
+				border-color: #888888 transparent;
+			}
+			
+			.dropdown:before {
+				border-bottom-style: solid;
+				border-top: none;
+			}
+			
+			.dropdown:after {
+				margin-top: 7px;
+				border-top-style: solid;
+				border-bottom: none;
+			}
+			
+			.dropdown-select:focus {
+				z-index: 6;
+				width: 100%;
+				color: #394349;
+				outline: 10px solid #49aff2;
+				outline: 2px solid -webkit-focus-ring-color;
+				outline-offset: -2px;
+			}
+			
+			.dropdown-select>option {
+				margin: 10px;
+				padding: 10px 50px;
+				text-shadow: none;
+				background: #FFFFFF;
+				border-radius: 200px;
+				cursor: pointer;
+			}
+			
+			.lt-ie9 .dropdown {
+				z-index: 1;
+			}
+			
+			.lt-ie9 .dropdown-select {
+				z-index: -1;
+			}
+			
+			.lt-ie9 .dropdown-select:focus {
+				z-index: 3;
+			}
+			
+			@-moz-document url-prefix() {
+				.dropdown-select {
+					padding-left: 6px;
+				}
+			}
+			
+			.dropdown-dark {
+				background: #444;
+				border-color: #111111 #0a0a0a black;
+				background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
+				background-image: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
+				background-image: -o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
+				background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.4));
+				-webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), 0 1px 1px rgba(0, 0, 0, 0.2);
+				box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), 0 1px 1px rgba(0, 0, 0, 0.2);
+			}
+			
+			.dropdown-dark:before {
+				border-bottom-color: #aaa;
+			}
+			
+			.dropdown-dark:after {
+				border-top-color: #aaa;
+			}
+			
+			.dropdown-dark .dropdown-select {
+				color: #aaa;
+				text-shadow: 0 1px black;
+				background: #444;
+				/* Fallback for IE 8 */
+			}
+			
+			.dropdown-dark .dropdown-select:focus {
+				color: #ccc;
+			}
+			
+			.dropdown-dark .dropdown-select>option {
+				background: #444;
+				text-shadow: 0 1px rgba(0, 0, 0, 0.4);
+			}
+			
+			.weui-cells {
+				margin-top: 0px;
+			}
+			
+			.weui-cells__title {
+				color: black;
+			}
 		</style>
 	</head>
 
 	<body>
 		<div id="conetent" class="weui-cells weui-cells_form">
 			<div id="input_list">
-			<div>
+				<div>
 					<div class="weui-cells__title">所属栏目</div>
 					<div class="weui-cells">
-					 <div>
-				<section class="container">
-                    <div class="dropdown">
-                      <select name="one"  id="chnid" class="dropdown-select" style="font-size: 17px;color: #929292;">
-                      <option value="" >请选择所属栏目....</option>
-                      <option  v-for="item in items">{{item.cname}}</option>
-                      </select>
-                    </div>
-                </section>
-			</div>
-			</div>
-		   </div>
-	 	 
-				
-			<!--输入列表-->
+						<div>
+							<section class="container">
+								<div class="dropdown">
+									<select name="one" id="chnid" class="dropdown-select" style="font-size: 17px;color: #929292;">
+										<option value="">请选择所属栏目....</option>
+										<option v-for="item in items">{{item.cname}}</option>
+									</select>
+								</div>
+							</section>
+						</div>
+					</div>
+				</div>
+
+				<!--输入列表-->
 				<div>
 					<div class="weui-cells__title">{{cname.title}}</div>
 					<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
-								<input id="cname" v-model.lazy="cname.message" class="weui-input" type="text" :placeholder="'请输入'+cname.title">
+								<input id="cname" v-model.lazy="cname.message" class="weui-input" type="text" :placeholder="'请输入'+cname.title" onchange="upperCase(this.id)">
 							</div>
 						</div>
 					</div>
 				</div>
-				
+
 				<div>
 					<div class="weui-cells__title">{{newscontent.title}}</div>
 					<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
-								
-								<textarea id="conten"  v-model.lazy="newscontent.message"  class="weui-input" placeholder="请输入新闻内容"  style="border-color: white;height: 10rem;"></textarea>
+
+								<textarea id="conten" v-model.lazy="newscontent.message" class="weui-input" placeholder="请输入新闻内容" onchange="upperCase(this.id)" style="border-color: white;height: 10rem;"></textarea>
 							</div>
 						</div>
 					</div>
 				</div>
-				
+
 				<div>
 					<div class="weui-cells__title">{{newszy.title}}</div>
-					  <div class="weui-cells">
+					<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
 								<input id="summas" v-model.lazy="newszy.message" class="weui-input" type="text" :placeholder="'请输入'+newszy.title">
@@ -124,7 +169,7 @@
 			</div>
 			<!--开关列表-->
 			<div id="switch_list">
-			    <div>
+				<div>
 					<div class="weui-cell weui-cell_switch">
 						<div class="weui-cell__bd">{{islink.title}}</div>
 						<div class="weui-cell__ft">
@@ -141,7 +186,7 @@
 						</div>
 					</div>
 				</div>
-                <div>
+				<div>
 					<div class="weui-cell weui-cell_switch">
 						<div class="weui-cell__bd">{{isReply.title}}</div>
 						<div class="weui-cell__ft">
@@ -149,7 +194,7 @@
 						</div>
 					</div>
 				</div>
-			  
+
 			</div>
 			<div class="weui-btn-area">
 				<button id="submit" v-on:click="submitClick" class="weui-btn weui-btn_primary">{{editName}}</button>
@@ -164,13 +209,13 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 		<script>
-		    //所属栏目下拉框
+			//所属栏目下拉框
 			var vue_input = new Vue({
 				el: '#chnid',
 				data: {
 					items: []
-                }
-            });
+				}
+			});
 			window.onload = function() {
 				var tempData = {
 					cmd: 'chn', //网站栏目
@@ -179,33 +224,29 @@
 					pageindex: 1 //页码
 				}
 				//假数据开始
-				vue_input.items={
-					cname: '学校新闻', //网站栏目
-					chnid: '11'
-				}
-			  
-//				unitWebsitePro(tempData, function(data) {
-//					alert(data.RspData.dt);
-//					if(data.RspCode == 0) {
-//						if(data.RspData.dt.length > 0) {
-//							vue_input.items = data.RspData.dt;
-//						} else {
-//							alert('暂时还没有栏目');
-//						}
-//					} else {
-//						alert(data.RspTxt);
-//					}
-//				});
+		     
+								unitWebsitePro(tempData, function(data) {
+									alert(data.RspData.dt);
+									if(data.RspCode == 0) {
+										if(data.RspData.dt.length > 0) {
+											vue_input.items = data.RspData.dt;
+										} else {
+											alert('暂时还没有栏目');
+										}
+									} else {
+										alert(data.RspTxt);
+									}
+								});
 				var detail = utils.getDataFromUrl(window.location.href);
-				vm.type = detail.type;
+				vm.type ='edit1';
 				if(vm.type == 'edit') {
-					vm.editName = '确认'
+					vm.editName = '删除';
 					vm.chnid = detail.chnid;
-					vm.cname.message = detail.cname;
-					vm.orderid.message = detail.orderid;
-					vm.linkurl.message = detail.linkurl;
-					vm.islink.check = detail.islink;
-					vm.iswrite.check = detail.iswrite;
+//					vm.cname.message = detail.cname;
+//					vm.orderid.message = detail.orderid;
+//					vm.linkurl.message = detail.linkurl;
+//					vm.islink.check = detail.islink;
+//					vm.iswrite.check = detail.iswrite;
 					for(var item in vm.$data) {
 						(function addwatch(key) {
 							vm.$watch(key + '.message', function(newVal, oldVal) {
@@ -217,7 +258,7 @@
 					vm.editName = '添加'
 				}
 			}
-			
+
 			var vm = new Vue({
 				el: '#conetent',
 				data: {
@@ -237,7 +278,7 @@
 					linkurl: {
 						title: "引用地址",
 						message: ""
-					}, 
+					},
 					islink: {
 						title: "是否为引用",
 						check: true
@@ -246,7 +287,7 @@
 						title: "是否允许回复",
 						check: true
 					},
-					 
+
 				},
 				computed: {
 					// a computed getter
@@ -255,46 +296,110 @@
 					}
 				},
 				methods: {
-					submitClick: function() { 
-					}  
+					submitClick: function() {}
 				}
 			})
-            //按钮监听
-            document.getElementById('submit').addEventListener('tap', function() {
-            	var PriIsquo='';
-            	var PriQuourl='';
-            	var comData='';
-            	var PriIsReply='';
-            	var PriTopic = document.getElementById("cname").value;
-            	var PriConten = document.getElementById("conten").value;
-            	var PriSummas = document.getElementById("summas").value;
-            	var Chnid = document.getElementById("chnid");
-            	var PriChnid = Chnid.selectedIndex; // 选中索引
-            	console.log('所属栏目=========================:' + PriChnid);
-                    PriIsquo = document.getElementById("islink").checked==true ? 1 : 0;
-            	    PriIsReply = document.getElementById("isReply").checked==true ? 1 : 0;
-                if(PriIsquo==1 ){ 
-                    PriQuourl = document.getElementById("quourl").value;
-                    comData = {
-					   topic: PriTopic,  
-					   content: PriConten, 
-					   summas: PriSummas,
-				   	   isquo:PriIsquo,
-					   quourl:PriQuourl,
-					   isreply:PriIsReply
-				    };
-                 }else{ 
-                  	comData = {
-					   topic: PriTopic,  
-					   content: PriConten, 
-					   summas: PriSummas,
-				   	   isquo:PriIsquo, 
-					   isreply:PriIsReply
-				    };
-                 }
-        
+			//按钮监听
+			document.getElementById('submit').addEventListener('tap', function() {
+				var PriIsquo = '';
+				var PriQuourl = '';
+				var comData = '';
+				var PriIsReply = '';
+				var PriTopic = document.getElementById("cname").value;
+				var PriConten = document.getElementById("conten").value;
+				var PriSummas = document.getElementById("summas").value;
+				var Chnid = document.getElementById("chnid");
+				var PriChnid = Chnid.selectedIndex; // 选中索引
+				console.log('所属栏目=========================:' + PriChnid);
+				PriIsquo = document.getElementById("islink").checked == true ? 1 : 0;
+				PriIsReply = document.getElementById("isReply").checked == true ? 1 : 0;
+				if(PriIsquo == 1) {
+					PriQuourl = document.getElementById("quourl").value;
+					comData = {
+						topic: PriTopic,
+						content: PriConten,
+						summas: PriSummas,
+						isquo: PriIsquo,
+						quourl: PriQuourl,
+						isreply: PriIsReply
+					};
+				} else {
+					comData = {
+						topic: PriTopic,
+						content: PriConten,
+						summas: PriSummas,
+						isquo: PriIsquo,
+						isreply: PriIsReply
+					};
+				}
+
 				console.log('comData=========================:' + JSON.stringify(comData));
-            });
+			});
+            //编辑发送协议
+			function upperCase(x) {
+				if(vm.type == 'edit') {
+					switch(x) {
+						case 'cname': //新闻标题
+							var y = document.getElementById(x).value;
+							console.log(y);
+							var data = {
+								type: 0,
+								index: 0,
+								callcol: "skinid",
+								colv: x
+							}
+							changeWebsiteConfig(data)
+							break;
+						case 'conten': //新闻内容
+							var y = document.getElementById(x).value;
+							console.log(y);
+							var data = {
+								type: 0,
+								index: 0,
+								callcol: "skinid",
+								colv: x
+							}
+							changeWebsiteConfig(data)
+							break;
+						default:
+							break;
+					}
+					document.getElementById(x).value = y.toUpperCase()
+				}
+			}
+
+			/**
+			 * 修改网站设置
+			 * @param {Object} change 修改的数据
+			 * @param {String} type 类型，0输入;1开关;2皮肤id
+			 * @param {String} index 第几个数据
+			 */
+			function changeWebsiteConfig(change) {
+				var commit = {
+					cmd: 'webcfg',
+					type: 'edit'
+				}
+				unitWebsitePro(commit, function(data) {
+					alert("1");
+					if(data.RspCode == 0) { //成功
+						weui.toast("操作成功");
+					} else {
+						weui.alert("修改失败:" + data.RspTxt);
+					}
+				});
+				if(1) { //成功
+					weui.toast("操作成功");
+					if(change.type == 2) { 
+						vm_skin.skinId = commit.colv;
+					}
+				} else {
+					if(change.type == 1) { //开关
+						vm_switch.switchArray[change.index].check = !change.colv;
+					}
+					weui.alert("修改失败");
+				}
+				//---假数据---end---
+			}
 		</script>
 	</body>
 

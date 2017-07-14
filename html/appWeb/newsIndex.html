@@ -70,7 +70,7 @@
 						<div class="up">释放刷新</div>
 						<div class="refresh">正在刷新</div>
 					</div>
-					
+
 					<!--<div class="weui-cells">-->
 					<a class="weui-cell weui-cell_access" href="javascript:;" v-for="newsModel in item.newsArray">
 						<div class="weui-cell__hd"><img src="../../image/icon_tabbar.png" alt="" style="width:20px;margin-right:5px;display:block"></div>
@@ -124,6 +124,7 @@
 					}
 				}
 			});
+			var newsFlag = 0;//获取当前界面栏目新闻的索引
 
 			//var myScroll = new IScroll('#wrapper');
 			//每个选项栏的高度重新调整
@@ -155,17 +156,17 @@
 					'left': (tabar_width - 30) * 50 / tabar_width + '%'
 				});
 			}, false);
-			
 
 			$(".infinite").infinite(0).on("infinite", function() {
 				var self = this;
+				newsFlag = self.getAttribute('id');
 				if(self.loading) return;
 				$(self).find(".weui-loadmore").show();
 				console.log(self)
 				self.loading = true;
 				console.log(self);
 				setTimeout(function() {
-					$(self).find(".content-padded").append("<p>我是加载的新内容。我是加载的新内容我是加载的新内容我是加载的新内容我是加载的新内容我是加载的新内容我是加载的新内容</p>");
+//					$(self).find(".content-padded").append("<p>我是加载的新内容。我是加载的新内容我是加载的新内容我是加载的新内容我是加载的新内容我是加载的新内容我是加载的新内容</p>");
 					$(self).find(".weui-loadmore").hide();
 					self.loading = false;
 				}, 1000); //模拟延迟
@@ -173,17 +174,27 @@
 			$(".weui-loadmore").hide();
 			$(".weui-pull-to-refresh").pullToRefresh().on("pull-to-refresh", function() {
 				var self = this;
+				newsFlag = self.getAttribute('id');
 				if(self.loading) return;
 				console.log(self)
 				self.loading = true;
 				console.log(self);
 				setTimeout(function() {
-					$(self).find(".content-padded").append("<p>下拉刷新......下拉刷新......下拉刷新......下拉刷新......下拉刷新......下拉刷新......下拉刷新......</p>");
+//					$(self).find(".content-padded").append("<p>下拉刷新......下拉刷新......下拉刷新......下拉刷新......下拉刷新......下拉刷新......下拉刷新......</p>");
 					self.loading = false;
 					$(".weui-pull-to-refresh").pullToRefreshDone();
 				}, 1000); //模拟延迟
 
 			});
+			//通过id，获取到当前的column，然后发送协议
+			function selectColumnSendPro() {
+				for (var item in columnData.items) {
+					var tempModel = columnData.items[item];
+					if (tempModel.chnid == newsFlag) {
+						getNewsList(tempModel);
+					}
+				}
+			}
 			window.onload = function() {
 				//获取所有的栏目
 				getSumColumn();
@@ -203,263 +214,37 @@
 			};
 			//获取所有的栏目
 			function getSumColumn() {
-				var tempArray = [{
-						active: true,
-						chnid: 1,
-						cname: '111111111111111',
-						linkurl: '../../image/icon_tabbar.png',
-						newsPage: 1, //获取新闻的页码
-						newsFlag: 0, //0刷新，1加载更多
-						newsArray: [{
-							newsid: 1, //文章ID
-							chnid: 1, //栏目ID
-							topic: '我的标题', //文章标题
-							subtopic: '我是副标题', //文章副标题
-							summas: '我是摘要', //摘要
-							content: '我是正文', //正文
-							recuser: 2, //投稿者ID
-							rectname: '投稿者姓名', //投稿者姓名
-							rectime: '2017-07-12', //填写时间
-							stat: 1, //状态
-							clicked: 222, //点击率
-							isquo: 1, //是否为引用
-							quourl: 'www.baidu.com', //引用链接
-							isreply: 1, //是否允许评论
-							isenc: 1, //是否有附件
-							imgurl: '../../image/icon_tabbar.png' //缩略图url
-						}, {
-							newsid: 2, //文章ID
-							chnid: 1, //栏目ID
-							topic: '我的标题2', //文章标题
-							subtopic: '我是副标题2', //文章副标题
-							summas: '我是摘要2', //摘要
-							content: '我是正文2', //正文
-							recuser: 2, //投稿者ID
-							rectname: '投稿者姓名2', //投稿者姓名
-							rectime: '2017-07-11', //填写时间
-							stat: 1, //状态
-							clicked: 222, //点击率
-							isquo: 1, //是否为引用
-							quourl: 'www.baidu.com', //引用链接
-							isreply: 1, //是否允许评论
-							isenc: 1, //是否有附件
-							imgurl: '../../image/icon_tabbar.png' //缩略图url
-						}]
-					},
-					{
-						active: false,
-						chnid: 2,
-						cname: '22222222222222222',
-						linkurl: '../../image/icon_tabbar.png',
-						newsPage: 1, //获取新闻的页码
-						newsFlag: 0, //0刷新，1加载更多
-						newsArray: [{
-							newsid: 3, //文章ID
-							chnid: 2, //栏目ID
-							topic: '我的标题3', //文章标题
-							subtopic: '我是副标题3', //文章副标题
-							summas: '我是摘要3', //摘要
-							content: '我是正文3', //正文
-							recuser: 2, //投稿者ID
-							rectname: '投稿者姓名', //投稿者姓名
-							rectime: '2017-07-12', //填写时间
-							stat: 1, //状态
-							clicked: 222, //点击率
-							isquo: 1, //是否为引用
-							quourl: 'www.baidu.com', //引用链接
-							isreply: 1, //是否允许评论
-							isenc: 1, //是否有附件
-							imgurl: '../../image/icon_tabbar.png' //缩略图url
-						}]
-					},
-					{
-						active: false,
-						chnid: 3,
-						cname: '223',
-						linkurl: '../../image/icon_tabbar.png',
-						newsPage: 1, //获取新闻的页码
-						newsFlag: 0, //0刷新，1加载更多
-						newsArray: [{
-							newsid: 3, //文章ID
-							chnid: 3, //栏目ID
-							topic: '我的标题3', //文章标题
-							subtopic: '我是副标题3', //文章副标题
-							summas: '我是摘要3', //摘要
-							content: '我是正文3', //正文
-							recuser: 2, //投稿者ID
-							rectname: '投稿者姓名', //投稿者姓名
-							rectime: '2017-07-12', //填写时间
-							stat: 1, //状态
-							clicked: 222, //点击率
-							isquo: 1, //是否为引用
-							quourl: 'www.baidu.com', //引用链接
-							isreply: 1, //是否允许评论
-							isenc: 1, //是否有附件
-							imgurl: '../../image/icon_tabbar.png' //缩略图url
-						}]
-					},
-					{
-						active: false,
-						chnid: 4,
-						cname: '224',
-						linkurl: '../../image/icon_tabbar.png',
-						newsPage: 1, //获取新闻的页码
-						newsFlag: 0, //0刷新，1加载更多
-						newsArray: [{
-							newsid: 3, //文章ID
-							chnid: 4, //栏目ID
-							topic: '我的标题3', //文章标题
-							subtopic: '我是副标题3', //文章副标题
-							summas: '我是摘要3', //摘要
-							content: '我是正文3', //正文
-							recuser: 2, //投稿者ID
-							rectname: '投稿者姓名', //投稿者姓名
-							rectime: '2017-07-12', //填写时间
-							stat: 1, //状态
-							clicked: 222, //点击率
-							isquo: 1, //是否为引用
-							quourl: 'www.baidu.com', //引用链接
-							isreply: 1, //是否允许评论
-							isenc: 1, //是否有附件
-							imgurl: '../../image/icon_tabbar.png' //缩略图url
-						}]
-					},
-					{
-						active: false,
-						chnid: 5,
-						cname: '225',
-						linkurl: '../../image/icon_tabbar.png',
-						newsPage: 1, //获取新闻的页码
-						newsFlag: 0, //0刷新，1加载更多
-						newsArray: [{
-							newsid: 3, //文章ID
-							chnid: 5, //栏目ID
-							topic: '我的标题3', //文章标题
-							subtopic: '我是副标题3', //文章副标题
-							summas: '我是摘要3', //摘要
-							content: '我是正文3', //正文
-							recuser: 2, //投稿者ID
-							rectname: '投稿者姓名', //投稿者姓名
-							rectime: '2017-07-12', //填写时间
-							stat: 1, //状态
-							clicked: 222, //点击率
-							isquo: 1, //是否为引用
-							quourl: 'www.baidu.com', //引用链接
-							isreply: 1, //是否允许评论
-							isenc: 1, //是否有附件
-							imgurl: '../../image/icon_tabbar.png' //缩略图url
-						}]
-					},
-					{
-						active: false,
-						chnid: 6,
-						cname: '226',
-						linkurl: '../../image/icon_tabbar.png',
-						newsPage: 1, //获取新闻的页码
-						newsFlag: 0, //0刷新，1加载更多
-						newsArray: [{
-							newsid: 3, //文章ID
-							chnid: 6, //栏目ID
-							topic: '我的标题3', //文章标题
-							subtopic: '我是副标题3', //文章副标题
-							summas: '我是摘要3', //摘要
-							content: '我是正文3', //正文
-							recuser: 2, //投稿者ID
-							rectname: '投稿者姓名', //投稿者姓名
-							rectime: '2017-07-12', //填写时间
-							stat: 1, //状态
-							clicked: 222, //点击率
-							isquo: 1, //是否为引用
-							quourl: 'www.baidu.com', //引用链接
-							isreply: 1, //是否允许评论
-							isenc: 1, //是否有附件
-							imgurl: '../../image/icon_tabbar.png' //缩略图url
-						}]
-					},
-					{
-						active: false,
-						chnid: 7,
-						cname: '227',
-						linkurl: '../../image/icon_tabbar.png',
-						newsPage: 1, //获取新闻的页码
-						newsFlag: 0, //0刷新，1加载更多
-						newsArray: [{
-							newsid: 3, //文章ID
-							chnid: 7, //栏目ID
-							topic: '我的标题3', //文章标题
-							subtopic: '我是副标题3', //文章副标题
-							summas: '我是摘要3', //摘要
-							content: '我是正文3', //正文
-							recuser: 2, //投稿者ID
-							rectname: '投稿者姓名', //投稿者姓名
-							rectime: '2017-07-12', //填写时间
-							stat: 1, //状态
-							clicked: 222, //点击率
-							isquo: 1, //是否为引用
-							quourl: 'www.baidu.com', //引用链接
-							isreply: 1, //是否允许评论
-							isenc: 1, //是否有附件
-							imgurl: '../../image/icon_tabbar.png' //缩略图url
-						}]
-					},
-					{
-						active: false,
-						chnid: 8,
-						cname: '228',
-						linkurl: '../../image/icon_tabbar.png',
-						newsPage: 1, //获取新闻的页码
-						newsFlag: 0, //0刷新，1加载更多
-						newsArray: [{
-							newsid: 3, //文章ID
-							chnid: 8, //栏目ID
-							topic: '我的标题3', //文章标题
-							subtopic: '我是副标题3', //文章副标题
-							summas: '我是摘要3', //摘要
-							content: '我是正文3', //正文
-							recuser: 2, //投稿者ID
-							rectname: '投稿者姓名', //投稿者姓名
-							rectime: '2017-07-12', //填写时间
-							stat: 1, //状态
-							clicked: 222, //点击率
-							isquo: 1, //是否为引用
-							quourl: 'www.baidu.com', //引用链接
-							isreply: 1, //是否允许评论
-							isenc: 1, //是否有附件
-							imgurl: '../../image/icon_tabbar.png' //缩略图url
-						}]
+				var tempData = {
+					cmd: 'chn', //网站栏目
+					type: 'findpage', //分页查找栏目列表
+					pagesize: 999, //每页条数
+					pageindex: 1 //页码
+				}
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						
+						if(data.RspData.dt.length > 0) {
+							//塞入页码、加载状态等自定义参数
+							for(var tempItem in data.RspData.dt) {
+								data.RspData.dt[tempItem].newsPage = 1; //获取新闻的页码
+								data.RspData.dt[tempItem].newsFlag = 0; //0刷新，1加载更多
+								data.RspData.dt[tempItem].newsArray = []; //栏目对应的新闻列表
+								if(tempItem == 0) {
+									data.RspData.dt[tempItem].active = true;
+								} else {
+									data.RspData.dt[tempItem].active = false;
+								}
+							}
+							columnData.items = data.RspData.dt;
+							//获取索引为0的栏目新闻列表
+							getNewsList(columnData.items[0]);
+						} else {
+							alert('暂时还没有栏目');
+						}
+					} else {
+						alert(data.RspTxt);
 					}
-				];
-				columnData.items = tempArray;
-				//				var tempData = {
-				//					cmd: 'chn', //网站栏目
-				//					type: 'findpage', //分页查找栏目列表
-				//					pagesize: 999, //每页条数
-				//					pageindex: 1 //页码
-				//				}
-				//				unitWebsitePro(tempData, function(data) {
-				//					if(data.RspCode == 0) {
-				//						if(data.RspData.dt.length > 0) {
-				//							//塞入页码、加载状态等自定义参数
-				//							for(var tempItem in data.RspData.dt) {
-				//								data.RspData.dt[tempItem].newsPage = 1; //获取新闻的页码
-				//								data.RspData.dt[tempItem].newsFlag = 0; //0刷新，1加载更多
-				//								data.RspData.dt[tempItem].newsArray = []; //栏目对应的新闻列表
-				//								if(tempItem == 0) {
-				//									data.RspData.dt[tempItem].active = true;
-				//								} else {
-				//									data.RspData.dt[tempItem].active = false;
-				//								}
-				//							}
-				//							columnData.items = data.RspData.dt;
-				//							//获取索引为0的栏目新闻列表
-				//							getNewsList(columnData.items[0]);
-				//						} else {
-				//							alert('暂时还没有栏目');
-				//						}
-				//					} else {
-				//						alert(data.RspTxt);
-				//					}
-				//				});
+				});
 			};
 			//获取栏目对应的新闻
 			function getNewsList(columnModel) {
@@ -473,7 +258,6 @@
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
 						if(data.RspData.dt.length > 0) {
-							//							alert('获取到的新闻：' + JSON.stringify(data.RspData.dt));
 							//判断是刷新0，还是加载更多1
 							if(columnModel.newsFlag == 0) {
 								columnModel.newsArray = data.RspData.dt;
@@ -482,7 +266,6 @@
 							}
 						}
 						columnModel.newsPage++;
-						//						alert('最终的数据为：' + JSON.stringify(columnData.items));
 					} else {
 						alert(data.RspTxt);
 					}

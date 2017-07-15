@@ -23,12 +23,13 @@
 				</li>
 				<li class="mui-table-view-cell" id="newsReview">
 					<a class="mui-navigate-right">
-						新闻审核
+						新闻
 					</a>
 				</li>
 			</ul>
 		</div>
 		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/demoCssJs/jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
@@ -56,7 +57,34 @@
 							utils.mOpenWithData("column-home.html");
 							break;
 						case 'newsReview':
-							//						utils.mOpenWithData("website_config.html?abc=" + Math.random(), "website_config.html" + Math.random());
+//							utils.mOpenWithData("addnews.html?abc=" + Math.random(), "addnews.html" + Math.random());
+							
+							var tempArr = ['标题1','标题2','标题3','标题4','标题5','标题6','标题7','标题8','标题9','标题10','标题11','标题12','标题13','标题14']
+							for (var item in tempArr) {
+								var tempModel0 = tempArr[item];
+								var tempModel = {
+								cmd:'news',
+								type:'add',
+								chnid:1,
+								topic:tempModel0,
+								subtopic:'副标题1',
+								summas:'摘要1',
+								content:'内容1',
+								isquo:0,
+//								quourl:'',
+								isreply:1,
+//								encs:'',
+								stat:1
+							}
+							unitWebsitePro(tempModel, function(data) {
+									if(data.RspCode == 0) {
+										
+									} else {
+										alert(data.RspTxt);
+									}
+								});
+							}
+							
 							break;
 						default:
 							break;

@@ -7,9 +7,11 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 		<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.">
+		<link rel="stylesheet" href="../../css/mui.min.css">
 		<link rel="stylesheet" href="../../js/demoCssJs/weui.min.css">
 		<link rel="stylesheet" href="../../js/demoCssJs/jquery-weui.css">
 		<link rel="stylesheet" href="../../js/demoCssJs/demos.css">
+		
 		<style>
 			.has-max {
 				max-width: 640px;
@@ -53,6 +55,9 @@
 				right: -7px;
 				top: -7px;
 			}
+			.weui-tabbar {
+				height: 50px;
+			}
 		</style>
 	</head>
 
@@ -72,13 +77,21 @@
 					</div>
 					
 					<!--<div class="weui-cells">-->
-					<a class="weui-cell weui-cell_access" href="javascript:;" v-for="newsModel in item.newsArray">
-						<div class="weui-cell__hd"><img src="../../image/icon_tabbar.png" alt="" style="width:20px;margin-right:5px;display:block"></div>
-						<div class="weui-cell__bd">
-							<p>{{newsModel.topic}}</p>
-						</div>
-						<div class="weui-cell__ft">说明文字</div>
-					</a>
+						<ul :id=" 'list'+item.chnid " class="mui-table-view ">
+						<li class="mui-table-view-cell mui-media " v-for="value in item.newsArray ">
+							<a href="javascript:; " :data-guid="value.newsid ">
+								<img class="mui-media-object mui-pull-left " :src="value.imgurl ">
+								<div class="mui-media-body ">
+									<div class="mui-ellipsis-2 ">{{value.topic}}</div>
+								</div>
+								<div class="meta-info ">
+									<div class="author ">{{value.rectname}}</div>
+									<div class="time ">{{value.rectime}}</div>
+								</div>
+							</a>
+						</li>
+					</ul>
+				
 					<div class="weui-loadmore">
 						<i class="weui-loading"></i>
 						<span class="weui-loadmore__tips">正在加载</span>
@@ -105,10 +118,12 @@
 				</a>
 			</div>
 		</div>
+		<script src="../../js/mui.min.js"></script>
 		<script src="../../js/demoCssJs/jquery-2.1.4.js"></script>
 		<script src="../../js/demoCssJs/iscroll.js"></script>
 		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/demoCssJs/jquery-weui.js"></script>
+		
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
@@ -116,7 +131,47 @@
 			var columnData = new Vue({
 				el: '#wrapper',
 				data: {
-					items: [{}] //列表信息流数据
+					items: [] //列表信息流数据
+				},
+				updated:function(){
+					var all_width = document.getElementsByClassName('category_nav')[0].scrollWidth
+					$('.category_nav').css({
+						'width': all_width + 'px'
+					})
+					var myscroll = new iScroll("wrapper", {
+						scrollX: true,
+						scrollY: false,
+						hScrollbar: false,
+						vScrollbar: true,
+						vScroll: false
+					});
+						$(".weui-pull-to-refresh").pullToRefresh().on("pull-to-refresh", function() {
+				var self = this;
+				if(self.loading) return;
+				console.log(self.getAttribute('id'))
+				self.loading = true;
+				console.log(self);
+				setTimeout(function() {
+					$(self).find(".content-padded").append("<p>下拉刷新......下拉刷新......下拉刷新......下拉刷新......下拉刷新......下拉刷新......下拉刷新......</p>");
+					self.loading = false;
+					$(".weui-pull-to-refresh").pullToRefreshDone();
+				}, 1000); //模拟延迟
+
+			});
+						$(".infinite").infinite(0).on("infinite", function() {
+				var self = this;
+				if(self.loading) return;
+				$(self).find(".weui-loadmore").show();
+				console.log(self)
+				self.loading = true;
+				console.log(self);
+				setTimeout(function() {
+					$(self).find(".content-padded").append("<p>我是加载的新内容。我是加载的新内容我是加载的新内容我是加载的新内容我是加载的新内容我是加载的新内容我是加载的新内容</p>");
+					$(self).find(".weui-loadmore").hide();
+					self.loading = false;
+				}, 1000); //模拟延迟
+			});
+				
 				},
 				methods: {
 					clickCulumn: function(model) {
@@ -157,49 +212,12 @@
 			}, false);
 			
 
-			$(".infinite").infinite(0).on("infinite", function() {
-				var self = this;
-				if(self.loading) return;
-				$(self).find(".weui-loadmore").show();
-				console.log(self)
-				self.loading = true;
-				console.log(self);
-				setTimeout(function() {
-					$(self).find(".content-padded").append("<p>我是加载的新内容。我是加载的新内容我是加载的新内容我是加载的新内容我是加载的新内容我是加载的新内容我是加载的新内容</p>");
-					$(self).find(".weui-loadmore").hide();
-					self.loading = false;
-				}, 1000); //模拟延迟
-			});
-			$(".weui-loadmore").hide();
-			$(".weui-pull-to-refresh").pullToRefresh().on("pull-to-refresh", function() {
-				var self = this;
-				if(self.loading) return;
-				console.log(self)
-				self.loading = true;
-				console.log(self);
-				setTimeout(function() {
-					$(self).find(".content-padded").append("<p>下拉刷新......下拉刷新......下拉刷新......下拉刷新......下拉刷新......下拉刷新......下拉刷新......</p>");
-					self.loading = false;
-					$(".weui-pull-to-refresh").pullToRefreshDone();
-				}, 1000); //模拟延迟
 
-			});
+//			$(".weui-loadmore").hide();
+		
 			window.onload = function() {
 				//获取所有的栏目
 				getSumColumn();
-				setTimeout(function() {
-					var all_width = document.getElementsByClassName('category_nav')[0].scrollWidth
-					$('.category_nav').css({
-						'width': all_width + 'px'
-					})
-					var myscroll = new iScroll("wrapper", {
-						scrollX: true,
-						scrollY: false,
-						hScrollbar: false,
-						vScrollbar: true,
-						vScroll: false
-					});
-				}, 1000); //模拟延迟
 			};
 			//获取所有的栏目
 			function getSumColumn() {

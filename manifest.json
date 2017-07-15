@@ -216,7 +216,29 @@
 					"css/mui.min.css",
 					"js/jquery-weui.js",
 					"css/weui.css",
-					"js/importJS.js"
+					"js/importJS.js",
+					"js/demoCssJs/jquery-weui.css",
+					"js/demoCssJs/jquery-2.1.4.js",
+					"js/demoCssJs/demos.css",
+					"js/demoCssJs/jquery-weui.js",
+					"js/demoCssJs/iscroll.js",
+					"js/demoCssJs/weui.min.css",
+					"html/appWeb/new-detail.html"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/appWeb/new-detail.html": {
+				"resources": [
+					"image/utils/default_personalimage.png",
+					"js/utils/utils.js",
+					"fonts/mui.ttf",
+					"css/new-detail.css",
+					"html/appWeb/newsIndex.html",
+					"css/mui.min.css",
+					"js/mui.min.js",
+					"js/vue.min.js",
+					"image/icon_tabbar.png"
 				],
 				"refer": [],
 				"priority": 0
@@ -243,7 +265,6 @@
 				"html/unitWeb/new-home.html",
 				"js/utils/mui.pullToRefresh.js",
 				"html/test222.html",
-				"fonts/mui.ttf",
 				"html/unitWeb/testnewwindow.html",
 				"js/lib/plupload/Moxie.swf",
 				"image/utils/loading.gif",
@@ -263,13 +284,11 @@
 				"html/index/index.html",
 				"image/config/js.png",
 				"js/lib/qiniu/qiniu.min.map",
-				"css/new-detail.css",
 				"html/unitWeb/testmuiscroll.html",
 				"js/weui.min.js",
 				"image/config/voice.png",
 				"html/unitWeb/column-home.html",
 				"js/jquery-weui.min.js",
-				"image/utils/default_personalimage.png",
 				"image/config/下载.png",
 				"html/unitWeb/Comment.html",
 				"js/jweixin.js",

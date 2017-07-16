@@ -66,7 +66,7 @@
 	<body ontouchstart>
 		<div class="weui-tab scrollgo" id="wrapper">
 			<div class="weui-navbar category_nav">
-				<a class="weui-navbar__item infinite" :class="{'weui-bar__item--on':item.active}" v-for="item in items" :href="item.chnid">{{item.cname}}</a>
+				<a class="weui-navbar__item" :class="{'weui-bar__item--on':item.active}" v-for="item in items" :href="'#'+item.chnid">{{item.cname}}</a>
 			</div>
 			<div class="weui-tab__bd">
 				<div :id="item.chnid" class="weui-tab__bd-item infinite weui-pull-to-refresh" :class="{'weui-tab__bd-item--active':item.active}" v-for="item in items" style="width: 100%;">
@@ -79,12 +79,13 @@
 					</div>
 
 					<div class="content-padded">
-						<a class="weui-cell weui-cell_access" href="javascript:;" v-for="newsModel in item.newsArray">
-							<div class="weui-cell__hd"><img src="../../image/icon_tabbar.png" alt="" style="width:20px;margin-right:5px;display:block"></div>
+						<a class="weui-cell weui-cell_access" href="javascript:;" v-for="newsModel in item.newsArray" @click="clickNews(newsModel)">
+							<div class="weui-cell__hd"><img src={{newsModel.islink}} alt="" style="width:40px;margin-right:5px;display:block"></div>
 							<div class="weui-cell__bd">
 								<p>{{newsModel.topic}}</p>
+								<p>{{newsModel.subtopic}}</p>
 							</div>
-							<div class="weui-cell__ft">说明文字</div>
+							<div class="weui-cell__ft"></div>
 						</a>
 					</div>
 					<div class="weui-loadmore">
@@ -127,8 +128,8 @@
 					items: [{}] //列表信息流数据
 				},
 				methods: {
-					clickCulumn: function(model) {
-						alert('model:' + JSON.stringify(model));
+					clickNews: function(model) {
+						console.log('点击的model:'+JSON.stringify(model));
 					}
 				}
 			});
@@ -178,10 +179,6 @@
 				console.log('我是加载的新内容');
 				newsFlag = self.getAttribute('id');
 				selectColumnSendPro(self, 1);
-				//				setTimeout(function() {
-				//					$(self).find(".weui-loadmore").hide();
-				//					self.loading = false;
-				//				}, 1000); //模拟延迟
 			});
 
 			$(".weui-pull-to-refresh").pullToRefresh().on("pull-to-refresh", function() {
@@ -207,6 +204,9 @@
 					var tempModel = columnData.items[i];
 					console.log('开始匹配id:' + tempModel.chnid + ',' + newsFlag + ',' + tempModel.cname);
 					if(tempModel.chnid == newsFlag) {
+						if(flag == 0) {
+							tempModel.newsPage = 1;
+						}
 						console.log('id匹配完成');
 						tempModel.newsFlag = flag;
 						getNewsList(self, tempModel);
@@ -271,30 +271,35 @@
 				var tempData = {
 					cmd: 'news', //文章管理
 					type: 'findpage', //分页查找文章列表
-					pagesize: '18', //每页条数
+					pagesize: '15', //每页条数
 					pageindex: columnModel.newsPage, //页码
 					chnid: columnModel.chnid //某个栏目下的文章，栏目id
 				}
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
 						if(data.RspData.dt.length > 0) {
-							console.log('columnModel.newsFlag:'+columnModel.newsFlag);
+							columnModel.newsPage++;
+							console.log('columnModel.newsFlag:' + columnModel.newsFlag);
 							//判断是刷新0，还是加载更多1
 							if(columnModel.newsFlag == 0) {
-								columnModel.newsArray = data.RspData.dt;
+								columnModel.newsArray = [].concat(data.RspData.dt);
 							} else {
-								columnModel.newsPage++;
-								jQuery.merge(columnModel.newsArray, data.RspData.dt); //合并数组
-								$(self).find(".weui-loadmore").hide();
-								self.loading = false;
+								setTimeout(function() {
+									columnModel.newsArray = columnModel.newsArray.concat(data.RspData.dt);
+									$(self).find(".weui-loadmore").hide();
+									self.loading = false;
+								}, 1000); //模拟延迟
 							}
-						}else{
+						} else {
 							//判断是刷新0，还是加载更多1
 							if(columnModel.newsFlag == 0) {
-								columnModel.newsArray = data.RspData.dt;
+								
 							} else {
-								$(self).find(".weui-loadmore").hide();
-								self.loading = false;
+//								$.toast('没有更多数据了');
+								setTimeout(function() {
+									$(self).find(".weui-loadmore").hide();
+									self.loading = false;
+								}, 2000); //模拟延迟
 							}
 						}
 					} else {

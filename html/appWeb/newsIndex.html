@@ -95,8 +95,7 @@
 				</div>
 			</div>
 			<div class="weui-tabbar">
-				<a href="#" class="weui-tabbar__item weui-bar__item--on">
-
+				<a href="newsIndex.html" class="weui-tabbar__item weui-bar__item--on">
 					<div class="wrap">
 						<img class="img" src="../../image/newsIndex.png" alt="">
 						<!--<div class="notice">8</div>-->
@@ -176,8 +175,8 @@
 			});
 			//var myScroll = new IScroll('#wrapper');
 			//每个选项栏的高度重新调整
-			var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
-			var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
+			var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight;
+			var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight;
 			$('.weui-tab__bd').css({
 				'height': (allheight - barheight) * 100 / allheight + '%'
 			});
@@ -185,13 +184,13 @@
 				'height': (allheight - barheight) * 100 / allheight + '%'
 			});
 			//有红点提示的宽度调整
-			var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
+			var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth;
 			$('.wrap').css({
 				'left': (tabar_width - 30) * 50 / tabar_width + '%'
 			});
 			window.addEventListener("resize", function() {
-				var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
-				var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
+				var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight;
+				var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight;
 				$('.weui-tab__bd').css({
 					'height': (allheight - barheight) * 100 / allheight + '%'
 				});
@@ -199,7 +198,7 @@
 					'height': (allheight - barheight) * 100 / allheight + '%'
 				});
 
-				var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
+				var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth;
 				$('.wrap').css({
 					'left': (tabar_width - 30) * 50 / tabar_width + '%'
 				});
@@ -348,6 +347,15 @@
 								}, 2000); //模拟延迟
 							}
 						}
+						//每个选项栏的高度重新调整
+						var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight;
+						var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight;
+						$('.weui-tab__bd').css({
+							'height': (allheight - barheight) * 100 / allheight + '%'
+						});
+						$('.weui-tab__bd-item').css({
+							'height': (allheight - barheight) * 100 / allheight + '%'
+						});
 					} else {
 						alert(data.RspTxt);
 					}

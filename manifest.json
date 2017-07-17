@@ -223,7 +223,9 @@
 					"js/demoCssJs/jquery-weui.js",
 					"js/demoCssJs/iscroll.js",
 					"js/demoCssJs/weui.min.css",
-					"html/appWeb/new-detail.html"
+					"html/appWeb/new-detail.html",
+					"js/demoCssJs/fastclick.js",
+					"html/appWeb/mineIndex.html"
 				],
 				"refer": [],
 				"priority": 0
@@ -239,6 +241,24 @@
 					"js/mui.min.js",
 					"js/vue.min.js",
 					"image/icon_tabbar.png"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/appWeb/mineIndex.html": {
+				"resources": [
+					"image/icon_tabbar.png",
+					"js/jquery.min.js",
+					"css/jquery-weui.css",
+					"js/utils/utils.js",
+					"css/demos.css",
+					"js/PublicProtocol.js",
+					"js/iscroll.js",
+					"html/appWeb/newsIndex.html",
+					"js/jquery-weui.js",
+					"js/utils/storageutil.js",
+					"js/importJS.js",
+					"css/weui.css"
 				],
 				"refer": [],
 				"priority": 0
@@ -258,7 +278,6 @@
 				"js/utils/cloudutil.js",
 				"js/lib/qiniu/qiniu.min.js",
 				"js/lib/plupload/plupload.js",
-				"html/appWeb/mineIndex.html",
 				"css/configuration/website_config.css",
 				"js/lib/plupload/plupload.min.js",
 				"js/lib/plupload/moxie.js",

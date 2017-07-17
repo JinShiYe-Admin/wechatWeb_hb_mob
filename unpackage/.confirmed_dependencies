@@ -15,10 +15,13 @@
 			"js/demoCssJs/iscroll.js",
 			"js/demoCssJs/weui.min.css",
 			"js/importJS.js",
-			"html/appWeb/new-detail.html"
+			"html/appWeb/new-detail.html",
+			"js/demoCssJs/fastclick.js",
+			"html/appWeb/mineIndex.html"
 		],
 		"refer": [
-			"html/appWeb/new-detail.html"
+			"html/appWeb/new-detail.html",
+			"html/appWeb/mineIndex.html"
 		]
 	},
 	"html/appWeb/new-detail.html": {
@@ -32,6 +35,25 @@
 			"js/mui.min.js",
 			"js/vue.min.js",
 			"image/icon_tabbar.png"
+		],
+		"refer": [
+			"html/appWeb/newsIndex.html"
+		]
+	},
+	"html/appWeb/mineIndex.html": {
+		"resources": [
+			"image/icon_tabbar.png",
+			"js/jquery.min.js",
+			"css/jquery-weui.css",
+			"js/utils/utils.js",
+			"css/demos.css",
+			"js/PublicProtocol.js",
+			"js/iscroll.js",
+			"html/appWeb/newsIndex.html",
+			"js/jquery-weui.js",
+			"js/utils/storageutil.js",
+			"js/importJS.js",
+			"css/weui.css"
 		],
 		"refer": [
 			"html/appWeb/newsIndex.html"

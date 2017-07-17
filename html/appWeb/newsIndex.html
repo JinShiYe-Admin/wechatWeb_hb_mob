@@ -130,6 +130,7 @@
 				methods: {
 					clickNews: function(model) {
 						console.log('点击的model:'+JSON.stringify(model));
+						utils.wOpenWithData("new-detail.html", model);
 					}
 				}
 			});

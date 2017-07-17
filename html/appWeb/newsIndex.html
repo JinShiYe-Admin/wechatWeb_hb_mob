@@ -2,7 +2,7 @@
 <html>
 
 	<head>
-		<title>jQuery WeUI</title>
+		<title>新闻</title>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
@@ -66,7 +66,7 @@
 	<body ontouchstart>
 		<div class="weui-tab scrollgo" id="wrapper">
 			<div class="weui-navbar category_nav">
-				<a class="weui-navbar__item" :class="{'weui-bar__item--on':item.active}" v-for="item in items" :href="'#'+item.chnid">{{item.cname}}</a>
+				<a class="weui-navbar__item" :class="{'weui-bar__item--on':item.active}" v-for="item in items" :href="'#'+item.chnid" @click="clickColumn(item)">{{item.cname}}</a>
 			</div>
 			<div class="weui-tab__bd">
 				<div :id="item.chnid" class="weui-tab__bd-item infinite weui-pull-to-refresh" :class="{'weui-tab__bd-item--active':item.active}" v-for="item in items" style="width: 100%;">
@@ -80,7 +80,7 @@
 
 					<div class="content-padded">
 						<a class="weui-cell weui-cell_access" href="javascript:;" v-for="newsModel in item.newsArray" @click="clickNews(newsModel)">
-							<div class="weui-cell__hd"><img src={{newsModel.islink}} alt="" style="width:40px;margin-right:5px;display:block"></div>
+							<div class="weui-cell__hd"><img :src=newsModel.islink alt="" style="width:40px;margin-right:5px;display:block"></div>
 							<div class="weui-cell__bd">
 								<p>{{newsModel.topic}}</p>
 								<p>{{newsModel.subtopic}}</p>
@@ -98,16 +98,15 @@
 				<a href="#" class="weui-tabbar__item weui-bar__item--on">
 
 					<div class="wrap">
-						<img class="img" src="./images/icon_nav_button.png" alt="">
-						<div class="notice">8</div>
+						<img class="img" src="../../image/newsIndex.png" alt="">
+						<!--<div class="notice">8</div>-->
 					</div>
-					<p class="weui-tabbar__label">微信</p>
-
+					<p class="weui-tabbar__label">新闻</p>
 				</a>
 				<a href="mineIndex.html" class="weui-tabbar__item">
 					<div class="wrap">
-						<img class="img" src="./images/icon_nav_msg.png" alt="">
-						<div class="notice">12</div>
+						<img class="img" src="../../image/mineIndex.png" alt="">
+						<!--<div class="notice">12</div>-->
 					</div>
 					<p class="weui-tabbar__label">我的</p>
 				</a>
@@ -127,14 +126,51 @@
 				data: {
 					items: [{}] //列表信息流数据
 				},
+				updated: function() {
+					$(".weui-loadmore").hide();
+					$(".infinite").infinite(0).on("infinite", function() {
+						var self = this;
+						if(loading) return;
+						$(self).find(".weui-loadmore").show();
+						console.log(self);
+						loading = true;
+						console.log(self);
+						console.log('我是加载的新内容');
+						selectColumnSendPro(1);
+					});
+
+					$(".weui-pull-to-refresh").pullToRefresh().on("pull-to-refresh", function() {
+						var self = this;
+						if(loading) return;
+						console.log(self);
+						loading = true;
+						console.log(self);
+						setTimeout(function() {
+							console.log('4444444');
+							selectColumnSendPro(0);
+							loading = false;
+							$(".weui-pull-to-refresh").pullToRefreshDone();
+						}, 1000); //模拟延迟
+					});
+				},
 				methods: {
 					clickNews: function(model) {
-						console.log('点击的model:'+JSON.stringify(model));
+						console.log('点击的model:' + JSON.stringify(model));
 						utils.wOpenWithData("new-detail.html", model);
+					},
+					clickColumn: function(model) {
+						console.log('点击栏目的model:' + JSON.stringify(model));
+						newsColumn = model;
+						if(newsColumn.newsArray.length == 0) {
+							$(".weui-loadmore").hide();
+							loading = false;
+							$(".weui-pull-to-refresh").pullToRefreshDone();
+							selectColumnSendPro(0);
+						}
 					}
 				}
 			});
-			var newsFlag = 0; //获取当前界面栏目新闻的索引
+			var newsColumn = {}; //获取当前的栏目model
 			$(function() {
 				FastClick.attach(document.body);
 			});
@@ -168,49 +204,46 @@
 					'left': (tabar_width - 30) * 50 / tabar_width + '%'
 				});
 			}, false);
-
+			var loading = false;
 			$(".weui-loadmore").hide();
 			$(".infinite").infinite(0).on("infinite", function() {
 				var self = this;
-				if(self.loading) return;
+				if(loading) return;
 				$(self).find(".weui-loadmore").show();
-				console.log(self)
-				self.loading = true;
+				console.log(self);
+				loading = true;
 				console.log(self);
 				console.log('我是加载的新内容');
-				newsFlag = self.getAttribute('id');
-				selectColumnSendPro(self, 1);
+				selectColumnSendPro(1);
 			});
 
 			$(".weui-pull-to-refresh").pullToRefresh().on("pull-to-refresh", function() {
 				var self = this;
-				newsFlag = self.getAttribute('id');
-				if(self.loading) return;
+				if(loading) return;
 				console.log(self);
-				self.loading = true;
+				loading = true;
 				console.log(self);
-
 				setTimeout(function() {
 					console.log('4444444');
-					selectColumnSendPro(self, 0);
-					self.loading = false;
+					selectColumnSendPro(0);
+					loading = false;
 					$(".weui-pull-to-refresh").pullToRefreshDone();
 				}, 1000); //模拟延迟
 			});
 			//通过id，获取到当前的column，然后发送协议
 			//flag=0刷新，=1加载更多
-			function selectColumnSendPro(self, flag) {
+			function selectColumnSendPro(flag) {
 				console.log('selectColumnSendPro');
 				for(var i = 0; i < columnData.items.length; i++) {
 					var tempModel = columnData.items[i];
-					console.log('开始匹配id:' + tempModel.chnid + ',' + newsFlag + ',' + tempModel.cname);
-					if(tempModel.chnid == newsFlag) {
+					console.log('开始匹配id:' + tempModel.chnid + ',' + newsColumn.chnid + ',' + tempModel.cname);
+					if(tempModel.chnid == newsColumn.chnid) {
 						if(flag == 0) {
 							tempModel.newsPage = 1;
 						}
 						console.log('id匹配完成');
 						tempModel.newsFlag = flag;
-						getNewsList(self, tempModel);
+						getNewsList(tempModel);
 						break;
 					}
 				}
@@ -219,7 +252,7 @@
 				//获取所有的栏目
 				getSumColumn();
 				setTimeout(function() {
-					var all_width = document.getElementsByClassName('category_nav')[0].scrollWidth
+					var all_width = document.getElementsByClassName('category_nav')[0].scrollWidth;
 					$('.category_nav').css({
 						'width': all_width + 'px'
 					})
@@ -256,8 +289,9 @@
 								}
 							}
 							columnData.items = data.RspData.dt;
+							newsColumn = columnData.items[0];
 							//获取索引为0的栏目新闻列表
-							getNewsList(null, columnData.items[0]);
+							getNewsList(columnData.items[0]);
 						} else {
 							alert('暂时还没有栏目');
 						}
@@ -267,7 +301,7 @@
 				});
 			};
 			//获取栏目对应的新闻
-			function getNewsList(self, columnModel) {
+			function getNewsList(columnModel) {
 				console.log('获取新闻列表');
 				var tempData = {
 					cmd: 'news', //文章管理
@@ -284,22 +318,33 @@
 							//判断是刷新0，还是加载更多1
 							if(columnModel.newsFlag == 0) {
 								columnModel.newsArray = [].concat(data.RspData.dt);
+								setTimeout(function() {
+									$(".weui-loadmore").hide();
+									loading = false;
+									$(".weui-pull-to-refresh").pullToRefreshDone();
+								}, 1000); //模拟延迟
 							} else {
 								setTimeout(function() {
 									columnModel.newsArray = columnModel.newsArray.concat(data.RspData.dt);
-									$(self).find(".weui-loadmore").hide();
-									self.loading = false;
+									$(".weui-loadmore").hide();
+									loading = false;
+									$(".weui-pull-to-refresh").pullToRefreshDone();
 								}, 1000); //模拟延迟
 							}
 						} else {
 							//判断是刷新0，还是加载更多1
 							if(columnModel.newsFlag == 0) {
-								
-							} else {
-//								$.toast('没有更多数据了');
 								setTimeout(function() {
-									$(self).find(".weui-loadmore").hide();
-									self.loading = false;
+									$(".weui-loadmore").hide();
+									loading = false;
+									$(".weui-pull-to-refresh").pullToRefreshDone();
+								}, 1000); //模拟延迟
+							} else {
+								$.toast('没有更多数据了');
+								setTimeout(function() {
+									$(".weui-loadmore").hide();
+									loading = false;
+									$(".weui-pull-to-refresh").pullToRefreshDone();
 								}, 2000); //模拟延迟
 							}
 						}

@@ -130,10 +130,11 @@ var cloudutil = (function(mod) {
 		}
 
 		mod.getUpTokenRequest(configure.options, function(tokenData) {
-			if(tokenData.code == 1 && tokenData.Status == 1) {
+			console.log("getFileUpTokens:tokenData:" + JSON.stringify(tokenData));
+			if(tokenData.code == 1 && tokenData.data.Status == 1) {
 				callBack({
 					code: 1,
-					data: data,
+					data: tokenData.data,
 					message: tokenData.message
 				});
 			} else {

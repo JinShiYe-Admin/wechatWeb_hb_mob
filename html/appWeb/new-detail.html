@@ -8,16 +8,23 @@
 		<link href="../../css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="../../css/new-detail.css" />
 		<style type="text/css">
+
 		</style>
 	</head>
 
 	<body>
-		<!--<header class="mui-bar mui-bar-nav">
+		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">新闻</h1>
-		</header>-->
+		</header>
 		<div class="mui-content">
-			<h3 style="text-align: center;padding: 5px;">{{newDetail.topic}}</h1>
+			<h3 style="padding: 10px 20px 0px 10px;">{{newDetail.topic}}</h3>
+			<!-- 文章作者、发布时间等信息 -->
+			<div class="kr-article-meta" style="margin-left: -10px;">
+				<div id="kr-article-author" class="kr-article-author">{{newDetail.rectime}}</div>
+				<div class="kr-article-text">|</div>
+				<div id="kr-article-time" class="kr-article-time" style="color: cadetblue;">{{newDetail.rectname}}</div>
+			</div>
 			<!--顶部banner图 开始-->
 			<div id="kr-article-banner" class="kr-article-banner">
 				<div id="kr-article-cover" class="kr-article-cover">
@@ -28,12 +35,7 @@
 			<!--顶部banner图 结束-->
 
 			<div class="kr-article-content">
-				<!-- 文章作者、发布时间等信息 -->
-				<div class="kr-article-meta">
-					<div id="kr-article-author" class="kr-article-author">{{newDetail.rectname}}</div>
-					<div class="kr-article-text">发表于</div>
-					<div id="kr-article-time" class="kr-article-time">{{newDetail.rectime}}</div>
-				</div>
+				<br/>
 				<!--文章详细内容-->
 				<div id="kr-article-article" class="kr-article-article" v-html="newDetail.content">{{newDetail.content}}}</div>
 			</div>
@@ -63,101 +65,164 @@
 			<script src="../../js/mui.min.js"></script>
 			<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 			<script src="../../js/utils/utils.js" type="text/javascript" charset="utf-8"></script>
+			<script src="../../js/jweixin.js" type="text/javascript" charset="utf-8"></script>
 			<script type="text/javascript">
+					var bool = false;
+					pushHistory();
+					setTimeout(function() {
+						bool = true;
+					}, 1500);
+					window.addEventListener("popstate", function(e) {
+						if(bool) {
+							alert("我监听到了浏览器的返回按钮事件啦"); //根据自己的需求实现自己的功能 
+							window.history.go(-1)
+						}
+						
+
+					}, false);
+				function pushHistory() {
+					var state = {
+						title: "title",
+						url:window.location.href
+					};
+					window.history.pushState(state, "title", window.location.href);
+				}
 				mui.init();
 				window.onload = function() {
 					var detail = utils.getDataFromUrl(window.location.href);
-					detail.imgurl ='https://pic.36krcnd.com/avatar/201707/04070536/rf5n3pp8fwka9iai.jpg!feature';
+					detail.imgurl = 'https://pic.36krcnd.com/avatar/201707/04070536/rf5n3pp8fwka9iai.jpg!feature';
+					detail.rectime = dateUtils.format(detail.rectime)
 					vm.newDetail = detail;
 				}
+
 				var vm = new Vue({
 					el: '.mui-content',
 					data: {
-						newDetail:{}
+						newDetail: {}
 					},
 					methods: {
 
 					}
 				});
-//				vm.comments = [{
-//					"CommentDate": "2017-07-05 10:17:55",
-//					"TabId": 2,
-//					"Replys": [{
-//						"CommentDate": "2017-07-05 10:18:22",
-//						"TabId": 3,
-//						"status": 1,
-//						"secID": 19,
-//						"ReplyId": 42,
-//						"CommentContent": " 你钱",
-//						"CommentType": 2,
-//						"UserId": 42,
-//						"UpperId": 2
-//					},{
-//						"CommentDate": "2017-07-05 10:18:22",
-//						"TabId": 3,
-//						"status": 1,
-//						"secID": 19,
-//						"ReplyId": 42,
-//						"CommentContent": " 你钱",
-//						"CommentType": 2,
-//						"UserId": 42,
-//						"UpperId": 2
-//					},{
-//						"CommentDate": "2017-07-05 10:18:22",
-//						"TabId": 3,
-//						"status": 1,
-//						"secID": 19,
-//						"ReplyId": 42,
-//						"CommentContent": " 你钱",
-//						"CommentType": 2,
-//						"UserId": 42,
-//						"UpperId": 2
-//					},],
-//					"ReplyId": 0,
-//					"CommentContent": "123",
-//					"UserId": 42,
-//					"LikeNum": 0,
-//					"IsLiked": 0,
-//					"UpperId": 0
-//				},{"CommentDate": "2017-07-05 10:17:55",
-//					"TabId": 2,
-//					"Replys": [{
-//						"CommentDate": "2017-07-05 10:18:22",
-//						"TabId": 3,
-//						"status": 1,
-//						"secID": 19,
-//						"ReplyId": 42,
-//						"CommentContent": " 你钱",
-//						"CommentType": 2,
-//						"UserId": 42,
-//						"UpperId": 2
-//					}],
-//					"ReplyId": 0,
-//					"CommentContent": "123",
-//					"UserId": 42,
-//					"LikeNum": 0,
-//					"IsLiked": 0,
-//					"UpperId": 0
-//				},{"CommentDate": "2017-07-05 10:17:55",
-//					"TabId": 2,
-//					"Replys": [{
-//						"CommentDate": "2017-07-05 10:18:22",
-//						"TabId": 3,
-//						"status": 1,
-//						"secID": 19,
-//						"ReplyId": 42,
-//						"CommentContent": " 你钱",
-//						"CommentType": 2,
-//						"UserId": 42,
-//						"UpperId": 2
-//					}],
-//					"ReplyId": 0,
-//					"CommentContent": "123",
-//					"UserId": 42,
-//					"LikeNum": 0,
-//					"IsLiked": 0,
-//					"UpperId": 0
-//				}]
+				/**
+				 * 格式化时间的辅助类，将一个时间转换成x小时前、y天前等
+				 */
+				var dateUtils = {
+					UNITS: {
+						'年': 31557600000,
+						'月': 2629800000,
+						'天': 86400000,
+						'小时': 3600000,
+						'分钟': 60000,
+						'秒': 1000
+					},
+					humanize: function(milliseconds) {
+						var humanize = '';
+						mui.each(this.UNITS, function(unit, value) {
+							if(milliseconds >= value) {
+								humanize = Math.floor(milliseconds / value) + unit + '前';
+								return false;
+							}
+							return true;
+						});
+						return humanize || '刚刚';
+					},
+					format: function(dateStr) {
+						var date = this.parse(dateStr)
+						var diff = Date.now() - date.getTime();
+						if(diff < this.UNITS['天']) {
+							return this.humanize(diff);
+						}
+
+						var _format = function(number) {
+							return(number < 10 ? ('0' + number) : number);
+						};
+						return date.getFullYear() + '/' + _format(date.getMonth() + 1) + '/' + _format(date.getDay()) + '-' + _format(date.getHours()) + ':' + _format(date.getMinutes());
+					},
+					parse: function(str) { //将"yyyy-mm-dd HH:MM:ss"格式的字符串，转化为一个Date对象
+						var a = str.split(/[^0-9]/);
+						return new Date(a[0], a[1] - 1, a[2], a[3], a[4], a[5]);
+					}
+				};
+				//				vm.comments = [{
+				//					"CommentDate": "2017-07-05 10:17:55",
+				//					"TabId": 2,
+				//					"Replys": [{
+				//						"CommentDate": "2017-07-05 10:18:22",
+				//						"TabId": 3,
+				//						"status": 1,
+				//						"secID": 19,
+				//						"ReplyId": 42,
+				//						"CommentContent": " 你钱",
+				//						"CommentType": 2,
+				//						"UserId": 42,
+				//						"UpperId": 2
+				//					},{
+				//						"CommentDate": "2017-07-05 10:18:22",
+				//						"TabId": 3,
+				//						"status": 1,
+				//						"secID": 19,
+				//						"ReplyId": 42,
+				//						"CommentContent": " 你钱",
+				//						"CommentType": 2,
+				//						"UserId": 42,
+				//						"UpperId": 2
+				//					},{
+				//						"CommentDate": "2017-07-05 10:18:22",
+				//						"TabId": 3,
+				//						"status": 1,
+				//						"secID": 19,
+				//						"ReplyId": 42,
+				//						"CommentContent": " 你钱",
+				//						"CommentType": 2,
+				//						"UserId": 42,
+				//						"UpperId": 2
+				//					},],
+				//					"ReplyId": 0,
+				//					"CommentContent": "123",
+				//					"UserId": 42,
+				//					"LikeNum": 0,
+				//					"IsLiked": 0,
+				//					"UpperId": 0
+				//				},{"CommentDate": "2017-07-05 10:17:55",
+				//					"TabId": 2,
+				//					"Replys": [{
+				//						"CommentDate": "2017-07-05 10:18:22",
+				//						"TabId": 3,
+				//						"status": 1,
+				//						"secID": 19,
+				//						"ReplyId": 42,
+				//						"CommentContent": " 你钱",
+				//						"CommentType": 2,
+				//						"UserId": 42,
+				//						"UpperId": 2
+				//					}],
+				//					"ReplyId": 0,
+				//					"CommentContent": "123",
+				//					"UserId": 42,
+				//					"LikeNum": 0,
+				//					"IsLiked": 0,
+				//					"UpperId": 0
+				//				},{"CommentDate": "2017-07-05 10:17:55",
+				//					"TabId": 2,
+				//					"Replys": [{
+				//						"CommentDate": "2017-07-05 10:18:22",
+				//						"TabId": 3,
+				//						"status": 1,
+				//						"secID": 19,
+				//						"ReplyId": 42,
+				//						"CommentContent": " 你钱",
+				//						"CommentType": 2,
+				//						"UserId": 42,
+				//						"UpperId": 2
+				//					}],
+				//					"ReplyId": 0,
+				//					"CommentContent": "123",
+				//					"UserId": 42,
+				//					"LikeNum": 0,
+				//					"IsLiked": 0,
+				//					"UpperId": 0
+				//				}]
 			</script>
 	</body>
 

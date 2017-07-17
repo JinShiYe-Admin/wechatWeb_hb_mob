@@ -28,16 +28,16 @@
 		</div>
 		<div class="weui-cells weui-cells_form">
 			<div id="input_list">
-				<input-item v-for="(value,index) in inputArray" :value="value" :key="index" :index="index" v-if="isShow"></input-item>
+				<input-item v-for="(value,index) in inputArray" :value="value" :key="index" :index="index" v-show="isShow"></input-item>
 			</div>
 			<div id="skin">
-				<skin-item :value="skinId" :key="skinId" v-if="isShow"></skin-item>
+				<skin-item :value="skinId" :key="skinId" v-show="isShow"></skin-item>
 			</div>
 			<div id="image_list">
-				<image-item v-for="(value,index) in imageArray" :value="value" :key="index" :index="index" v-if="isShow"></image-item>
+				<image-item v-for="(value,index) in imageArray" :value="value" :key="index" :index="index" v-show="isShow"></image-item>
 			</div>
 			<div id="switch_list">
-				<switch-item v-for="(value,index) in switchArray" :value="value" :key="index" :index="index" v-if="isShow"></switch-item>
+				<switch-item v-for="(value,index) in switchArray" :value="value" :key="index" :index="index" v-show="isShow"></switch-item>
 			</div>
 		</div>
 
@@ -48,8 +48,12 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/weui.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/vue.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/jweixin.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/lib/qiniu/qiniu.min.js?" + Math.random() + "'></s" + "cript>");
+						document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.min.js?" + Math.random() + "'></s" + "cript>");
+						document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
+						document.write("<s" + "cript type='text/javascript' src='../../js/lib/qiniu/qiniu.min.js?" + Math.random() + "'></s" + "cript>");
+//			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.js?" + Math.random() + "'></s" + "cript>");
+//			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.dev.js?" + Math.random() + "'></s" + "cript>");
+//			document.write("<s" + "cript type='text/javascript' src='../../js/lib/qiniu/qiniu.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cryption.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cloudutil.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/configuration/website_config.js?" + Math.random() + "'></s" + "cript>");

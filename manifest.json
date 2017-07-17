@@ -225,7 +225,9 @@
 					"js/demoCssJs/weui.min.css",
 					"html/appWeb/new-detail.html",
 					"js/demoCssJs/fastclick.js",
-					"html/appWeb/mineIndex.html"
+					"html/appWeb/mineIndex.html",
+					"image/newsIndex.png",
+					"image/mineIndex.png"
 				],
 				"refer": [],
 				"priority": 0
@@ -240,7 +242,9 @@
 					"css/mui.min.css",
 					"js/mui.min.js",
 					"js/vue.min.js",
-					"image/icon_tabbar.png"
+					"image/icon_tabbar.png",
+					"js/jquery.min.js",
+					"js/jweixin.js"
 				],
 				"refer": [],
 				"priority": 0
@@ -310,7 +314,6 @@
 				"js/jquery-weui.min.js",
 				"image/config/下载.png",
 				"html/unitWeb/Comment.html",
-				"js/jweixin.js",
 				"html/unitWeb/testmui.html",
 				"html/unitWeb/new-detail.html",
 				"css/style.css",

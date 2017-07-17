@@ -17,8 +17,6 @@ var webConfig; //网站配置的数据
 //webConfig.skinid = 0;
 //---假数据---end---
 
-var loading = document.getElementById("loading"); //等待框
-
 //输入框组件
 Vue.component('input-item', {
 	props: ['value', 'index'],
@@ -57,7 +55,7 @@ Vue.component('input-item', {
 					//为空
 					vm_input.inputArray[index].message = webConfig[vm_input.inputArray[index].callcol];
 				} else {
-					loading.style.display = "block";
+					vm_loading.isShow = true;
 					var data = {
 						type: 0,
 						index: index,
@@ -103,17 +101,36 @@ Vue.component("image-item", {
 							<div class="weui-cell__bd" :id="value.parid">\
 								<div class="website-image" :style="{backgroundImage:\'url(\'+ value.imageurl+\')\'}" @click="showImage(index,true);"></div>\
 								<button class="weui-btn weui-btn_mini weui-btn_primary" :id="value.id">修改</button>\
+								<div class="website-file-type">(jpg,png)</div>\
+								<div class="website-upload-image" v-show="value.showupload">\
+									<div class="website-image" :style="{backgroundImage:\'url(\'+ value.fbase+\')\'}" @click="showLocalImage(index,true);"></div>\
+									<div>文件:</div>\
+									<div>{{value.fname}}</div>\
+									<div>大小:</div>\
+									<div>{{value.fsize}}</div>\
+									<button class="weui-btn weui-btn_mini weui-btn_primary" @click="upLoadFile(index);">上传</button>\
+								</div>\
 							</div>\
 						</div>\
 					</div>\
 					<div class="weui-gallery" v-if="value.showimage" @click="showImage(index,false);">\
 						<span class="weui-gallery__img" :style="{backgroundImage:\'url(\'+ value.imageurl+\')\'}"></span>\
 					</div>\
+					<div class="weui-gallery" v-if="value.showlocalimage" @click="showLocalImage(index,false);">\
+						<span class="weui-gallery__img" :style="{backgroundImage:\'url(\'+ value.fbase+\')\'}"></span>\
+					</div>\
 				</div>',
 	methods: {
 		showImage: function(index, type) {
 			console.log("showImage:" + index + " " + type);
 			vm_image.imageArray[index].showimage = type;
+		},
+		showLocalImage: function(index, type) {
+			console.log("showLocalImage:" + index + " " + type);
+			vm_image.imageArray[index].showlocalimage = type;
+		},
+		upLoadFile: function(index) {
+			console.log("upLoadFile:" + index);
 		}
 	}
 });
@@ -133,7 +150,7 @@ Vue.component('switch-item', {
 		onchange: function(index) {
 			console.log("onchange " + index + " " + vm_switch.switchArray[index].check);
 			if(vm_switch.switchArray[index].check != webConfig[vm_switch.switchArray[index].callcol]) {
-				loading.style.display = "block";
+				vm_loading.isShow = true;
 				var data = {
 					type: 1,
 					index: index,
@@ -145,6 +162,14 @@ Vue.component('switch-item', {
 		}
 	}
 });
+
+var vm_loading = new Vue({
+	el: "#loading",
+	data: {
+		isShow: true
+	}
+})
+
 var vm_input = new Vue({
 	el: '#input_list',
 	data: {
@@ -189,14 +214,24 @@ var vm_image = new Vue({
 			imageurl: "",
 			showimage: false,
 			id: "btn_logo",
-			parid: "cell_logo"
+			parid: "cell_logo",
+			showupload: false,
+			showlocalimage: false,
+			fbase: "",
+			fname: "",
+			fsize: ""
 		}, {
 			callcol: "banner",
 			title: "banner",
 			imageurl: "",
 			showimage: false,
 			id: "btn_banner",
-			parid: "cell_banner"
+			parid: "cell_banner",
+			showupload: false,
+			showlocalimage: false,
+			fbase: "",
+			fname: "",
+			fsize: ""
 		}]
 	}
 }); //图片列表
@@ -258,7 +293,7 @@ function initQNUpLoader() {
 	console.log("initQNUpLoader:" + document.getElementById("btn_banner"));
 
 	var qnUpOption = {
-		disable_statistics_report: false, // 禁止自动发送上传统计信息到七牛，默认允许发送
+		disable_statistics_report: true, // 禁止自动发送上传统计信息到七牛，默认允许发送
 		runtimes: 'html5,flash,html4', // 上传模式,依次退化
 		browse_button: "", // 上传选择的点选按钮，**必需**
 		// 在初始化时，uptoken, uptoken_url, uptoken_func 三个参数中必须有一个被设置
@@ -298,12 +333,37 @@ function initQNUpLoader() {
 		//        return size;
 		//    }
 		//},
+		filters: {
+			mime_types: [ //只允许上传图片和zip文件
+				{
+					title: "Image files",
+					extensions: "jpg,png"
+				}
+			]
+		},
 		init: {
 			'FilesAdded': function(up, files) {
 				plupload.each(files, function(file) {
 					// 文件添加进队列后,处理相关的事情
-					console.log("FilesAdded:" + up);
+					console.dir("FilesAdded:" + up.id);
 					console.log("FilesAdded:" + JSON.stringify(file));
+					var index = 0;
+					if(up.id == bannerUploader.id) {
+						index = 1;
+					}
+					vm_image.imageArray[index].showupload = true;
+					vm_image.imageArray[index].fname = file.name;
+					vm_image.imageArray[index].fsize = cloudutil.transformSize(file.origSize);
+					vm_image.imageArray[index].fbase = "";
+					//显示文件
+					var preloader = new mOxie.Image();
+					preloader.onload = function() {
+						//preloader.downsize(550, 400);//先压缩一下要预览的图片,宽300，高300
+						vm_image.imageArray[index].fbase = preloader.getAsDataURL(); //得到图片src,实质为一个base64编码的数据
+						preloader.destroy();
+						preloader = null;
+					};
+					preloader.load(file.getSource());
 				});
 			},
 			'BeforeUpload': function(up, file) {
@@ -335,7 +395,7 @@ function initQNUpLoader() {
 			'Error': function(up, err, errTip) {
 				//上传出错时,处理相关的事情
 				console.log("Error:" + up);
-				console.log("Error:" + err);
+				console.log("Error:" + JSON.stringify(err));
 				console.log("Error:" + errTip);
 			},
 			'UploadComplete': function() {
@@ -388,7 +448,7 @@ function initData() {
 				}
 				changeWebsiteConfig(data);
 			} else {
-				loading.style.display = "none";
+				vm_loading.isShow = false;
 			}
 		}
 	}
@@ -397,7 +457,7 @@ function initData() {
 		getWebsitConfig(); //获取配置
 		//---假数据---start---
 		//initWebsiteConfig(webConfig);
-		//loading.style.display = "none";
+		//vm_loading.isShow = false;
 		//---假数据---end---
 	}
 }
@@ -418,11 +478,11 @@ function getWebsitConfig() {
 				initWebsiteConfig(webConfig);
 				getWXJSConfig();
 			} else {
-				loading.style.display = "none";
+				vm_loading.isShow = false;
 				weui.alert('没有获取到配置信息')
 			}
 		} else {
-			loading.style.display = "none";
+			vm_loading.isShow = false;
 			weui.alert(data.RspTxt);
 		}
 	});
@@ -486,9 +546,9 @@ function changeWebsiteConfig(change) {
 		colv: change.colv
 	}
 	console.log("changeWebsiteConfig:" + JSON.stringify(commit));
-	//loading.style.display = "none";
+	//vm_loading.isShow = false;
 	unitWebsitePro(commit, function(data) {
-		loading.style.display = "none";
+		vm_loading.isShow = false;
 		weui.alert('修改网站设置:' + JSON.stringify(data));
 		if(data.RspCode == 0) { //成功
 			weui.toast("操作成功");
@@ -504,7 +564,7 @@ function changeWebsiteConfig(change) {
 		}
 	});
 	//---假数据---start---
-	//	loading.style.display = "none";
+	//	vm_loading.isShow = false;
 	//	if(1) { //成功
 	//		weui.toast("操作成功");
 	//		webConfig[commit.callcol] = commit.colv;

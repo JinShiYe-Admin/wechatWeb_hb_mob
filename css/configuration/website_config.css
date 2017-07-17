@@ -1,5 +1,9 @@
 /*网站配置*/
 
+body {
+	word-wrap: break-word;
+}
+
 .weui-cells__title {
 	color: black;
 }
@@ -27,4 +31,12 @@
 
 .weui-gallery__img {
 	top: 60px;
+}
+
+.website-file-type {
+	display: inline;
+}
+
+.website-upload-image .website-image {
+	margin: 10px 0px;
 }

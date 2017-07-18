@@ -117,25 +117,24 @@
 		<div>
 			<div class="weui-cells weui-cells_form">
 				<div class="weui-cells__title">所属栏目</div>
-				<div class="weui-cells"  id="chnid">
+				<div class="weui-cells" id="chnid">
 					<div>
 						<section class="container">
 							<div class="dropdown">
 								<select id="Prixlk" name="one" class="dropdown-select" style="font-size: 17px;color: #929292;">
-
-									<option :href="'#'+item.chnid" id="selectDropdown" value="{{item.chnid}}" selected v-for="item in items">{{item.cname}}</option>
+									<option id="selectDropdown" :value='item.chnid' selected v-for="item in items">{{item.cname}}</option>
 								</select>
 							</div>
-						</section> 
+						</section>
 					</div>
 				</div>
- 
+
 				<div class="weui-tab__bd" id="newsData">
-					<div :id="item.chnid" class="weui-tab__bd-item infinite weui-pull-to-refresh" v-for="(newsModel,index) in items" style="width: 100%;">
+					<div class="weui-tab__bd-item infinite weui-pull-to-refresh" v-for="(newsModel,index) in item.newsArray" style="width: 100%;">
 						<div class="content-padded">
 							<a class="weui-cell weui-cell_access" href="javascript:;">
 								<div class="weui-cell__bd">
-									<span hidden="hidden">ID：{{newsModel.newsid}}</span>
+									<span>ID：{{newsModel.newsid}}</span>
 									<span>标题：{{newsModel.topic}}</span><button style="float:right" class="mui-btn mui-btn-primary">通过</button>
 									<p>副标题：{{newsModel.subtopic}}</p><button id="Pride" style="float:right" class="mui-btn mui-btn-negative" @click="clickDel(newsModel,index)">删除</button>
 									<p>内容：{{newsModel.content}}</p>
@@ -144,7 +143,6 @@
 
 							</a>
 						</div>
-
 					</div>
 				</div>
 			</div>
@@ -154,10 +152,10 @@
 			<span class="weui-loadmore__tips">正在加载</span>
 		</div>
 
-		<script type="text/javascript" src="../../js/weui.min.js"></script>
-		<script type="text/javascript" src="../../js/vue.min.js"></script>
-		<script type="text/javascript" src="../../js/jweixin.js"></script>
-		<script type="text/javascript" src="../../js/jquery.min.js"></script>
+		<script src="../../js/demoCssJs/jquery-2.1.4.js"></script>
+		<script src="../../js/demoCssJs/iscroll.js"></script>
+		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/demoCssJs/jquery-weui.js"></script>
 		<script src="../../js/mui.min.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
@@ -168,6 +166,19 @@
 				el: '#chnid',
 				data: {
 					items: []
+				},
+				methods: {
+
+				}
+			});
+			var newsData = new Vue({
+				el: '#newsData',
+				data: {
+					item: {} //列表信息流数据
+				},
+				updated: function() {
+					var tempVVV = document.getElementById("newsData");
+					console.log('tempVVV:' + tempVVV.innerHTML);
 				},
 				methods: {
 					clickDel: function(model, index) {
@@ -184,10 +195,10 @@
 									colid: colid
 								}
 								unitWebsitePro(tempData, function(data) {
-									console.log('index0:' + index + ',' + JSON.stringify(vue_input.items));
-									vue_input.items.newsArray.splice(index, 1);
-									weui.toast("操作成功");
-									console.log('index1:' + index + ',' + JSON.stringify(vue_input.items));
+									//									console.log('index0:' + index + ',' + JSON.stringify(vue_input.items));
+									//									vue_input.items.newsArray.splice(index, 1);
+									//									weui.toast("操作成功");
+									//									console.log('index1:' + index + ',' + JSON.stringify(vue_input.items));
 								});
 							} else {
 								//不确定删除 
@@ -197,17 +208,63 @@
 					}
 				}
 			});
-			var newsData = new Vue({
-				el: '#newsData',
-				data: {
-					items: [{}] //列表信息流数据
-				},
-				methods: {
-					clickNews: function(model) {
-						
+			
+			var loading = false;
+			$(".weui-loadmore").hide();
+			$(".infinite").infinite(0).on("infinite", function() {
+				var self = this;
+				if(document.getElementById("noMore")) {
+					return;
+				}
+				if(loading) return;
+				$(self).find(".weui-loadmore").show();
+				console.log(self);
+				loading = true;
+				console.log(self);
+				console.log('我是加载的新内容');
+				selectColumnSendPro(1);
+			});
+
+			$(".weui-pull-to-refresh").pullToRefresh().on("pull-to-refresh", function() {
+				var self = this;
+				if(loading) return;
+				console.log(self);
+				loading = true;
+				console.log(self);
+				setTimeout(function() {
+					console.log('4444444');
+					selectColumnSendPro(0);
+					loading = false;
+					$(".weui-pull-to-refresh").pullToRefreshDone();
+				}, 1000); //模拟延迟
+			});
+
+			function delNoMore() {
+				if(document.getElementById("noMore")) {
+					$("#noMore").remove();
+					if(document.getElementById("noMore")) {
+						delNoMore();
 					}
 				}
-			});
+			}
+			//通过id，获取到当前的column，然后发送协议
+			//flag=0刷新，=1加载更多
+			function selectColumnSendPro(flag) {
+				console.log('selectColumnSendPro');
+				for(var i = 0; i < columnData.items.length; i++) {
+					var tempModel = columnData.items[i];
+					console.log('开始匹配id:' + tempModel.chnid + ',' + newsColumn.chnid + ',' + tempModel.cname);
+					if(tempModel.chnid == newsColumn.chnid) {
+						if(flag == 0) {
+							tempModel.newsPage = 1;
+						}
+						console.log('id匹配完成');
+						tempModel.newsFlag = flag;
+						getNewsList(tempModel);
+						break;
+					}
+				}
+			}
 			window.onload = function() {
 				var tempData = {
 					cmd: 'chn', //网站栏目
@@ -216,7 +273,7 @@
 					pageindex: 1 //页码
 				}
 				unitWebsitePro(tempData, function(data) {
-					alert(JSON.stringify(data.RspData.dt));
+					console.log(JSON.stringify(data.RspData.dt));
 					//塞入页码、加载状态等自定义参数
 					for(var tempItem in data.RspData.dt) {
 						data.RspData.dt[tempItem].newsPage = 1; //获取新闻的页码
@@ -230,32 +287,37 @@
 					}
 					if(data.RspCode == 0) {
 						if(data.RspData.dt.length > 0) {
+							newsData.item = data.RspData.dt[0];
 							vue_input.items = data.RspData.dt;
-
+							getNewsList(newsData.item);
 						} else {
 							alert('暂时还没有栏目');
 						}
 					} else {
 						alert(data.RspTxt);
 					}
-				}); 
+				});
 
 			}
-			$("#Prixlk").change(function(){
-                var Chnid = document.getElementById("Prixlk");
+			$("#Prixlk").change(function() {
+				var Chnid = document.getElementById("Prixlk");
 				var PriChnid = Chnid.selectedIndex; // 选中索引
 				console.log(PriChnid);
-				getNewsList(vue_input.items[PriChnid],PriChnid)
+				newsData.item = vue_input.items[PriChnid];
+				newsData.item.newsPage = 1; //获取新闻的页码
+				newsData.item.newsFlag = 0; //0刷新，1加载更多
+				newsData.item.newsArray = []; //栏目对应的新闻列表
+				getNewsList(newsData.item);
 			})
 			//获取栏目对应的新闻
-			function getNewsList(columnModel,PriChnid) {
+			function getNewsList(columnModel) {
 				console.log('获取新闻列表');
 				var tempData = {
 					cmd: 'news', //文章管理
 					type: 'findpage', //分页查找文章列表
 					pagesize: '15', //每页条数
 					pageindex: columnModel.newsPage, //页码
-					chnid: PriChnid //某个栏目下的文章，栏目id
+					chnid: columnModel.chnid //某个栏目下的文章，栏目id
 				}
 				//alert(columnModel.chnid);
 				unitWebsitePro(tempData, function(data) {
@@ -266,25 +328,46 @@
 							//判断是刷新0，还是加载更多1
 							if(columnModel.newsFlag == 0) {
 								columnModel.newsArray = [].concat(data.RspData.dt);
-								newsData.items = [].concat(data.RspData.dt);
-							} else {
 								setTimeout(function() {
-									columnModel.newsArray = columnModel.newsArray.concat(data.RspData.dt);
-									newsData.items = newsData.items.concat(data.RspData.dt);
+									$(".weui-loadmore").hide();
+									loading = false;
+									$(".weui-pull-to-refresh").pullToRefreshDone();
+									delNoMore();
+									if(data.RspData.dt.length < 15) {
+										$(".content-padded").append('<p id="noMore" style="text-align: center;color: darkgray;">--------暂无更多数据--------</p>');
+									}
+								}, 1000); //模拟延迟
+							} else {
+								newsData.item.newsArray = newsData.item.newsArray.concat(data.RspData.dt);
+								setTimeout(function() {
+									$(".weui-loadmore").hide();
+									loading = false;
+									$(".weui-pull-to-refresh").pullToRefreshDone();
+									delNoMore();
+									if(data.RspData.dt.length < 15) {
+										$(".content-padded").append('<p id="noMore" style="text-align: center;color: darkgray;">--------暂无更多数据--------</p>');
+									}
 								}, 1000); //模拟延迟
 							}
 						} else {
 							//判断是刷新0，还是加载更多1
 							if(columnModel.newsFlag == 0) {
-
-							} else {
-								//								$.toast('没有更多数据了');
 								setTimeout(function() {
-									$(self).find(".weui-loadmore").hide();
-									self.loading = false;
+									$(".weui-loadmore").hide();
+									loading = false;
+									$(".weui-pull-to-refresh").pullToRefreshDone();
+								}, 1000); //模拟延迟
+							} else {
+								setTimeout(function() {
+									$(".weui-loadmore").hide();
+									loading = false;
+									$(".weui-pull-to-refresh").pullToRefreshDone();
 								}, 2000); //模拟延迟
 							}
+							delNoMore();
+							$(".content-padded").append('<p id="noMore" style="text-align: center;color: darkgray;">--------暂无更多数据--------</p>');
 						}
+						console.log('最终数据:' + JSON.stringify(newsData.item));
 					} else {
 						alert(data.RspTxt);
 					}

@@ -52,7 +52,7 @@ var cloudutil = (function(mod) {
 			default:
 				break;
 		}
-		console.log("returnData.ops:" + returnData.ops);
+		console.log("returnData:" + JSON.stringify(returnData));
 		return returnData;
 	}
 
@@ -62,10 +62,10 @@ var cloudutil = (function(mod) {
 	 * @param {Object.appId} data.appId 必填 项目id
 	 * @param {Object.mainSpace} data.mainSpace 必填 文件存放在私有空间或公有空间
 	 * @param {Object.saveSpace} data.saveSpace 必填 文件存放的空间(第二前缀名)
-	 * @param {Object.qnCmdOption} data.qnCmdOption 必填 七牛的持久化命令类型
-	 * @param {Object.fileSplit} data.fileSplit 必填 文件路径分割类型
+	 * @param {Object.qnCmdOption} data.qnCmdOption 选填 七牛的持久化命令类型，默认0传原文件
+	 * @param {Object.fileSplit} data.fileSplit 选填 文件路径分割类型，默认/
 	 * @param {Object.fileArray} data.fileArray 必填 文件数组
-	 * @param {Object.fileArray.filePath} data.fileArray.filePath 必填 文件路径
+	 * @param {Object.fileArray.filePath} data.fileArray.filePath 必填(选填 如果使用自定义的文件名) 文件路径
 	 * @param {Object.fileArray.qnFileName} data.fileArray.qnFileName 选填 自定义七牛的文件名，默认使用文件路径中的文件名
 	 * @param {Object.fileArray.qnCmdType} data.fileArray.qnCmdType 选填 自定义文件处理命令类型，默认使用data.qnCmdType的命令类型
 	 * @param {Object} callback 必填 回调
@@ -76,8 +76,15 @@ var cloudutil = (function(mod) {
 		var desKey = mod.getAppKey(data.appId); //项目名称
 		var mainSpace = data.mainSpace; //文件存放在私有空间或公有空间
 		var saveSpace = data.saveSpace; //文件存放的空间(第二前缀名)
-		var qnCmdOption = data.qnCmdOption; //七牛的持久化命令类型
-		var fileSplit = data.fileSplit; //文件路径分割类型
+
+		var qnCmdOption = 0; //七牛的持久化命令类型
+		if(data.qnCmdOption != undefined) {
+			qnCmdOption = data.qnCmdOption;
+		}
+		var fileSplit = "/"; //文件路径分割类型
+		if(data.fileSplit != undefined) {
+			fileSplit = data.fileSplit;
+		}
 
 		var configure = {}; //配置的数据
 		configure.thumbKey = []; //持久化命令

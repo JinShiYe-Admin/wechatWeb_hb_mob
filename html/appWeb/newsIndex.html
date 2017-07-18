@@ -117,7 +117,7 @@
 		<script src="../../js/demoCssJs/iscroll.js"></script>
 		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/demoCssJs/jquery-weui.js"></script>
-		<script src="../../js/demoCssJs/fastclick.js"></script>
+		<!--<script src="../../js/demoCssJs/fastclick.js"></script>-->
 		<script src="../../js/mui.min.js"></script>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
@@ -146,9 +146,6 @@
 
 					$(".weui-pull-to-refresh").pullToRefresh().on("pull-to-refresh", function() {
 						var self = this;
-						if(document.getElementById("noMore")) {
-							return;
-						}
 						if(loading) return;
 						console.log(self);
 						loading = true;
@@ -182,9 +179,9 @@
 			});
 			var newsColumn = {}; //获取当前的栏目model
 			var newsFalg = 0; //判断是否第一次获取协议，防止多次刷新
-			$(function() {
-				FastClick.attach(document.body);
-			});
+//			$(function() {
+//				FastClick.attach(document.body);
+//			});
 			//var myScroll = new IScroll('#wrapper');
 			//每个选项栏的高度重新调整
 			var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight;
@@ -233,9 +230,6 @@
 
 			$(".weui-pull-to-refresh").pullToRefresh().on("pull-to-refresh", function() {
 				var self = this;
-				if(document.getElementById("noMore")) {
-					return;
-				}
 				if(loading) return;
 				console.log(self);
 				loading = true;
@@ -338,16 +332,24 @@
 									$(".weui-loadmore").hide();
 									loading = false;
 									$(".weui-pull-to-refresh").pullToRefreshDone();
+									delNoMore();
+									if(data.RspData.dt.length < 15) {
+										$(".content-padded").append('<p id="noMore" style="text-align: center;color: darkgray;">--------暂无更多数据--------</p>');
+									}
 								}, 1000); //模拟延迟
 							} else {
+								columnModel.newsArray = columnModel.newsArray.concat(data.RspData.dt);
 								setTimeout(function() {
-									columnModel.newsArray = columnModel.newsArray.concat(data.RspData.dt);
 									$(".weui-loadmore").hide();
 									loading = false;
 									$(".weui-pull-to-refresh").pullToRefreshDone();
+									delNoMore();
+									if(data.RspData.dt.length < 15) {
+										$(".content-padded").append('<p id="noMore" style="text-align: center;color: darkgray;">--------暂无更多数据--------</p>');
+									}
 								}, 1000); //模拟延迟
 							}
-							delNoMore();
+
 						} else {
 							console.log('111111');
 							//判断是刷新0，还是加载更多1

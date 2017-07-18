@@ -177,5 +177,25 @@ var cloudutil = (function(mod) {
 		});
 	}
 
+	/**
+	 * 转换数据格式
+	 * @param {int} size
+	 */
+	mod.transformSize = function(size) {
+		var sizeString = "";
+		if(size == 0) {
+			sizeString = "0B";
+		} else if(size < 1024) {
+			sizeString = size + "B";
+		} else if(size < 1048576) {
+			sizeString = (size / 1024).toFixed(2) + "KB";
+		} else if(size < 1073741824) {
+			sizeString = (size / 1048576).toFixed(2) + "MB";
+		} else {
+			sizeString = (size / 1073741824).toFixed(2) + "GB";
+		}
+		return sizeString;
+	}
+
 	return mod;
 })(window.cloudutil || {});

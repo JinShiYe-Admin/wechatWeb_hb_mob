@@ -19,7 +19,7 @@
 	</head>
 
 	<body>
-		<div id="loading">
+		<div id="loading" v-show="isShow">
 			<div class="weui-mask_transparent"></div>
 			<div class="weui-toast">
 				<i class="weui-loading weui-icon_toast"></i>
@@ -48,12 +48,12 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/weui.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/vue.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/jweixin.js?" + Math.random() + "'></s" + "cript>");
-						document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.min.js?" + Math.random() + "'></s" + "cript>");
-						document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
-						document.write("<s" + "cript type='text/javascript' src='../../js/lib/qiniu/qiniu.min.js?" + Math.random() + "'></s" + "cript>");
-//			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.js?" + Math.random() + "'></s" + "cript>");
-//			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.dev.js?" + Math.random() + "'></s" + "cript>");
-//			document.write("<s" + "cript type='text/javascript' src='../../js/lib/qiniu/qiniu.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/qiniu/qiniu.min.js?" + Math.random() + "'></s" + "cript>");
+			//			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.js?" + Math.random() + "'></s" + "cript>");
+			//			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.dev.js?" + Math.random() + "'></s" + "cript>");
+			//			document.write("<s" + "cript type='text/javascript' src='../../js/lib/qiniu/qiniu.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cryption.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cloudutil.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/configuration/website_config.js?" + Math.random() + "'></s" + "cript>");

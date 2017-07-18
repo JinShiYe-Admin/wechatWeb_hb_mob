@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>新闻列表</title>
+		<link rel="stylesheet" href="../../css/weui.min.css" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<style>
+			.dropdown:before,
+			.dropdown:after {
+				content: '';
+				position: absolute;
+				z-index: 20;
+				top: 18px;
+				right: 10px;
+				border: 4px dashed;
+				border-color: #888888 transparent;
+			}
+			
+			.dropdown:before {
+				border-bottom-style: solid;
+				border-top: none;
+			}
+			
+			.dropdown:after {
+				margin-top: 7px;
+				border-top-style: solid;
+				border-bottom: none;
+			}
+			
+			.dropdown-select:focus {
+				z-index: 6;
+				width: 100%;
+				color: #394349;
+				outline: 10px solid #49aff2;
+				outline: 2px solid -webkit-focus-ring-color;
+				outline-offset: -2px;
+			}
+			
+			.dropdown-select>option {
+				margin: 10px;
+				padding: 10px 50px;
+				text-shadow: none;
+				background: #FFFFFF;
+				border-radius: 200px;
+				cursor: pointer;
+			}
+			
+			.lt-ie9 .dropdown {
+				z-index: 1;
+			}
+			
+			.lt-ie9 .dropdown-select {
+				z-index: -1;
+			}
+			
+			.lt-ie9 .dropdown-select:focus {
+				z-index: 3;
+			}
+			
+			@-moz-document url-prefix() {
+				.dropdown-select {
+					padding-left: 6px;
+				}
+			}
+			
+			.dropdown-dark {
+				background: #444;
+				border-color: #111111 #0a0a0a black;
+				background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
+				background-image: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
+				background-image: -o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
+				background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.4));
+				-webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), 0 1px 1px rgba(0, 0, 0, 0.2);
+				box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), 0 1px 1px rgba(0, 0, 0, 0.2);
+			}
+			
+			.dropdown-dark:before {
+				border-bottom-color: #aaa;
+			}
+			
+			.dropdown-dark:after {
+				border-top-color: #aaa;
+			}
+			
+			.dropdown-dark .dropdown-select {
+				color: #aaa;
+				text-shadow: 0 1px black;
+				background: #444;
+				/* Fallback for IE 8 */
+			}
+			
+			.dropdown-dark .dropdown-select:focus {
+				color: #ccc;
+			}
+			
+			.dropdown-dark .dropdown-select>option {
+				background: #444;
+				text-shadow: 0 1px rgba(0, 0, 0, 0.4);
+			}
+			
+			.weui-cells {
+				margin-top: 0px;
+			}
+			
+			.weui-cells__title {
+				color: black;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div>
+			<div class="weui-cells weui-cells_form">
+				<div class="weui-cells__title">所属栏目</div>
+				<div class="weui-cells"  id="chnid">
+					<div>
+						<section class="container">
+							<div class="dropdown">
+								<select id="Prixlk" name="one" class="dropdown-select" style="font-size: 17px;color: #929292;">
+
+									<option :href="'#'+item.chnid" id="selectDropdown" value="{{item.chnid}}" selected v-for="item in items">{{item.cname}}</option>
+								</select>
+							</div>
+						</section> 
+					</div>
+				</div>
+ 
+				<div class="weui-tab__bd" id="newsData">
+					<div :id="item.chnid" class="weui-tab__bd-item infinite weui-pull-to-refresh" v-for="(newsModel,index) in items" style="width: 100%;">
+						<div class="content-padded">
+							<a class="weui-cell weui-cell_access" href="javascript:;">
+								<div class="weui-cell__bd">
+									<span hidden="hidden">ID：{{newsModel.newsid}}</span>
+									<span>标题：{{newsModel.topic}}</span><button style="float:right" class="mui-btn mui-btn-primary">通过</button>
+									<p>副标题：{{newsModel.subtopic}}</p><button id="Pride" style="float:right" class="mui-btn mui-btn-negative" @click="clickDel(newsModel,index)">删除</button>
+									<p>内容：{{newsModel.content}}</p>
+									<br />
+								</div>
+
+							</a>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="weui-loadmore">
+			<i class="weui-loading"></i>
+			<span class="weui-loadmore__tips">正在加载</span>
+		</div>
+
+		<script type="text/javascript" src="../../js/weui.min.js"></script>
+		<script type="text/javascript" src="../../js/vue.min.js"></script>
+		<script type="text/javascript" src="../../js/jweixin.js"></script>
+		<script type="text/javascript" src="../../js/jquery.min.js"></script>
+		<script src="../../js/mui.min.js" type="text/javascript"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
+		</script>
+		<script>
+			//所属栏目下拉框
+			var vue_input = new Vue({
+				el: '#chnid',
+				data: {
+					items: []
+				},
+				methods: {
+					clickDel: function(model, index) {
+						var colid = model.newsid; //新闻id
+						//确认框confirm	  
+						mui.confirm('确定要删除吗？', function(e) {
+							if(e.index == 1) {
+								//确定删除
+								var tempData = {
+									cmd: 'news', //文章管理
+									type: 'del', //分页查找文章列表
+									pagesize: '15', //每页条数
+									pageindex: '15', //页码
+									colid: colid
+								}
+								unitWebsitePro(tempData, function(data) {
+									console.log('index0:' + index + ',' + JSON.stringify(vue_input.items));
+									vue_input.items.newsArray.splice(index, 1);
+									weui.toast("操作成功");
+									console.log('index1:' + index + ',' + JSON.stringify(vue_input.items));
+								});
+							} else {
+								//不确定删除 
+								return;
+							}
+						})
+					}
+				}
+			});
+			var newsData = new Vue({
+				el: '#newsData',
+				data: {
+					items: [{}] //列表信息流数据
+				},
+				methods: {
+					clickNews: function(model) {
+						
+					}
+				}
+			});
+			window.onload = function() {
+				var tempData = {
+					cmd: 'chn', //网站栏目
+					type: 'findpage', //分页查找栏目列表
+					pagesize: 999, //每页条数
+					pageindex: 1 //页码
+				}
+				unitWebsitePro(tempData, function(data) {
+					alert(JSON.stringify(data.RspData.dt));
+					//塞入页码、加载状态等自定义参数
+					for(var tempItem in data.RspData.dt) {
+						data.RspData.dt[tempItem].newsPage = 1; //获取新闻的页码
+						data.RspData.dt[tempItem].newsFlag = 0; //0刷新，1加载更多
+						data.RspData.dt[tempItem].newsArray = []; //栏目对应的新闻列表
+						if(tempItem == 0) {
+							data.RspData.dt[tempItem].active = true;
+						} else {
+							data.RspData.dt[tempItem].active = false;
+						}
+					}
+					if(data.RspCode == 0) {
+						if(data.RspData.dt.length > 0) {
+							vue_input.items = data.RspData.dt;
+
+						} else {
+							alert('暂时还没有栏目');
+						}
+					} else {
+						alert(data.RspTxt);
+					}
+				}); 
+
+			}
+			$("#Prixlk").change(function(){
+                var Chnid = document.getElementById("Prixlk");
+				var PriChnid = Chnid.selectedIndex; // 选中索引
+				console.log(PriChnid);
+				getNewsList(vue_input.items[PriChnid],PriChnid)
+			})
+			//获取栏目对应的新闻
+			function getNewsList(columnModel,PriChnid) {
+				console.log('获取新闻列表');
+				var tempData = {
+					cmd: 'news', //文章管理
+					type: 'findpage', //分页查找文章列表
+					pagesize: '15', //每页条数
+					pageindex: columnModel.newsPage, //页码
+					chnid: PriChnid //某个栏目下的文章，栏目id
+				}
+				//alert(columnModel.chnid);
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						if(data.RspData.dt.length > 0) {
+							columnModel.newsPage++;
+							console.log('columnModel.newsFlag:' + columnModel.newsFlag);
+							//判断是刷新0，还是加载更多1
+							if(columnModel.newsFlag == 0) {
+								columnModel.newsArray = [].concat(data.RspData.dt);
+								newsData.items = [].concat(data.RspData.dt);
+							} else {
+								setTimeout(function() {
+									columnModel.newsArray = columnModel.newsArray.concat(data.RspData.dt);
+									newsData.items = newsData.items.concat(data.RspData.dt);
+								}, 1000); //模拟延迟
+							}
+						} else {
+							//判断是刷新0，还是加载更多1
+							if(columnModel.newsFlag == 0) {
+
+							} else {
+								//								$.toast('没有更多数据了');
+								setTimeout(function() {
+									$(self).find(".weui-loadmore").hide();
+									self.loading = false;
+								}, 2000); //模拟延迟
+							}
+						}
+					} else {
+						alert(data.RspTxt);
+					}
+				});
+			}
+		</script>
+	</body>
+
+</html>

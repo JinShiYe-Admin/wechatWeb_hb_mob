@@ -313,7 +313,7 @@ function initQNUpLoader() {
 		// save_key: true,                  // 默认 false。若在服务端生成 uptoken 的上传策略中指定了 `save_key`，则开启，SDK在前端将不对key进行任何处理
 		domain: storageutil.QNPBDOMAIN, // bucket 域名，下载资源时用到，如：'http://xxx.bkt.clouddn.com/' **必需**
 		container: "", // 上传区域 DOM ID，默认是 browser_button 的父元素，
-		max_file_size: '100mb', // 最大文件体积限制
+		max_file_size: '1mb', // 最大文件体积限制
 		flash_swf_url: '../../js/lib/plupload/Moxie.swf', //引入 flash,相对路径
 		max_retries: 3, // 上传失败最大重试次数
 		dragdrop: false, // 开启可拖曳上传
@@ -397,6 +397,20 @@ function initQNUpLoader() {
 				console.log("Error:" + up);
 				console.log("Error:" + JSON.stringify(err));
 				console.log("Error:" + errTip);
+				if(err.code == -601) {
+					var dialog = weui.dialog({
+						title: '文件选取失败',
+						content: '只能选取后缀为jpg,png的图片',
+						className: 'custom-classname',
+						buttons: [{
+							label: '确定',
+							type: 'primary',
+							onClick: function() {
+								dialog.hide();
+							}
+						}]
+					});
+				}
 			},
 			'UploadComplete': function() {
 				//队列文件处理完毕后,处理相关的事情
@@ -546,7 +560,6 @@ function changeWebsiteConfig(change) {
 		colv: change.colv
 	}
 	console.log("changeWebsiteConfig:" + JSON.stringify(commit));
-	//vm_loading.isShow = false;
 	unitWebsitePro(commit, function(data) {
 		vm_loading.isShow = false;
 		weui.alert('修改网站设置:' + JSON.stringify(data));

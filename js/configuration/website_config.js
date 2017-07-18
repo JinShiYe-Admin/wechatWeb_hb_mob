@@ -157,7 +157,7 @@ var webConfig; //网站配置的数据
 //webConfig.cname = '中文名';
 //webConfig.ename = 'yingwenming';
 //webConfig.corptel = '110';
-//webConfig.logo = 'http://jqweui.com/dist/demos/images/pic_article.png';
+//webConfig.logo = 'http://ojhtju24r.bkt.clouddn.com/wechat/webcon/1500367775004956.png';
 //webConfig.banner = 'https://cn.vuejs.org/images/logo.png';
 //webConfig.stat = 0;
 //webConfig.isreply = 0;
@@ -592,49 +592,58 @@ function changeWebsiteConfig(change) {
 	}
 	console.log("changeWebsiteConfig:" + JSON.stringify(commit));
 	unitWebsitePro(commit, function(data) {
-		vm_loading.isShow = false;
 		console.log('修改网站设置:' + JSON.stringify(data));
 		if(data.RspCode == 0) { //成功
-			weui.toast("操作成功");
-			webConfig[commit.callcol] = commit.colv;
 			if(change.type == 2) { //皮肤id
 				vm_skin.skinId = commit.colv;
 			}
-			if(change.type == 3) {//图片
+			if(change.type == 3) { //图片
 				vm_image.imageArray[change.index].imageurl = commit.colv;
 				vm_image.imageArray[change.index].showupload = false;
 				vm_image.imageArray[change.index].fname = "";
 				vm_image.imageArray[change.index].fsize = "";
 				vm_image.imageArray[change.index].fbase = "";
+				delImage({
+					appId: storageutil.QNQYWXKID,
+					urls: [webConfig[commit.callcol]]
+				});
 			}
+			vm_loading.isShow = false;
+			weui.toast("操作成功");
+			webConfig[commit.callcol] = commit.colv;
 		} else {
 			if(change.type == 1) { //开关
 				vm_switch.switchArray[change.index].check = !change.colv;
 			}
+			vm_loading.isShow = false;
 			weui.alert("修改失败:" + data.RspTxt);
 		}
 	});
 	//---假数据---start---
 //	if(1) { //成功
-//		weui.toast("操作成功");
-//		webConfig[commit.callcol] = commit.colv;
 //		if(change.type == 2) { //皮肤id
 //			vm_skin.skinId = commit.colv;
 //		}
-//		if(change.type == 3) {
+//		if(change.type == 3) { //图片
 //			vm_image.imageArray[change.index].imageurl = commit.colv;
 //			vm_image.imageArray[change.index].showupload = false;
 //			vm_image.imageArray[change.index].fname = "";
 //			vm_image.imageArray[change.index].fsize = "";
 //			vm_image.imageArray[change.index].fbase = "";
+//			delImage({
+//				appId: storageutil.QNQYWXKID,
+//				urls: [webConfig[commit.callcol]]
+//			});
 //		}
+//		vm_loading.isShow = false;
+//		weui.toast("操作成功");
+//		webConfig[commit.callcol] = commit.colv;
 //	} else {
 //		if(change.type == 1) { //开关
 //			vm_switch.switchArray[change.index].check = !change.colv;
 //		}
-//		weui.alert("修改失败");
+//		weui.alert("修改失败:" + data.RspTxt);
 //	}
-//	vm_loading.isShow = false;
 	//---假数据---end---
 }
 
@@ -659,4 +668,14 @@ function getQNUpToken(file) {
 		upToken = data;
 	});
 	return upToken;
+}
+
+/**
+ * 删除七牛的文件
+ * @param {Object} imagesData
+ */
+function delImage(imagesData) {
+	cloudutil.delCloudFiles(imagesData, function(data) {
+		return data;
+	});
 }

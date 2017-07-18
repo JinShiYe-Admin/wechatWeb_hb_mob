@@ -204,5 +204,46 @@ var cloudutil = (function(mod) {
 		return sizeString;
 	}
 
+	/**
+	 * 批量删除七牛的文件
+	 * @param {Object} data 数据对象
+	 * @param {Object.appId} data.appId 必填 项目id
+	 * @param {Object.urls} data.urls 必填 路径数组
+	 * @param {Object} callBack 回调
+	 */
+	mod.delCloudFiles = function(data, callBack) {
+		console.log('delCloudFiles:' + JSON.stringify(data));
+		var appId = data.appId; //项目id
+		var desKey = mod.getAppKey(data.appId); //项目名称
+		var configure = {}; //配置的数据
+		configure.options = {
+			AppID: appId,
+			Param: encryptByDES(desKey, JSON.stringify(data.urls))
+		}
+		jQuery.ajax({
+			url: storageutil.QNGETDELETEFILES,
+			type: "POST",
+			data: configure.options,
+			timeout: 30000,
+			dataType: "json",
+			async: false,
+			success: function(data) { //请求成功的回调
+				console.log("delCloudFiles:success:" + JSON.stringify(data));
+				callBack({
+					code: 1,
+					data: data,
+					message: data.Message
+				});
+			},
+			error: function(xhr, type, errorThrown) {
+				console.log("delCloudFiles:error:" + type);
+				callBack({
+					code: 0,
+					message: type
+				});
+			}
+		});
+	}
+
 	return mod;
 })(window.cloudutil || {});

@@ -78,7 +78,7 @@
 						<div class="refresh">正在刷新</div>
 					</div>
 
-					<div class="content-padded">
+					<div id="contentCell" class="content-padded">
 						<a class="weui-cell weui-cell_access" href="javascript:;" v-for="newsModel in item.newsArray" @click="clickNews(newsModel)">
 							<div class="weui-cell__hd"><img :src=newsModel.islink alt="" style="width:40px;margin-right:5px;display:block"></div>
 							<div class="weui-cell__bd">
@@ -88,9 +88,11 @@
 							<div class="weui-cell__ft"></div>
 						</a>
 					</div>
-					<div class="weui-loadmore">
-						<i class="weui-loading"></i>
-						<span class="weui-loadmore__tips">正在加载</span>
+					<div id="loadMoreDiv">
+						<div class="weui-loadmore">
+							<i class="weui-loading"></i>
+							<span class="weui-loadmore__tips">正在加载</span>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -116,6 +118,7 @@
 		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/demoCssJs/jquery-weui.js"></script>
 		<script src="../../js/demoCssJs/fastclick.js"></script>
+		<script src="../../js/mui.min.js"></script>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
@@ -123,29 +126,35 @@
 			var columnData = new Vue({
 				el: '#wrapper',
 				data: {
-					items: [{}] //列表信息流数据
+					items: [] //列表信息流数据
 				},
 				updated: function() {
 					$(".weui-loadmore").hide();
 					$(".infinite").infinite(0).on("infinite", function() {
 						var self = this;
+						if(document.getElementById("noMore")) {
+							return;
+						}
 						if(loading) return;
 						$(self).find(".weui-loadmore").show();
 						console.log(self);
 						loading = true;
 						console.log(self);
-						console.log('我是加载的新内容');
+						console.log('我是加载的新内容111111');
 						selectColumnSendPro(1);
 					});
 
 					$(".weui-pull-to-refresh").pullToRefresh().on("pull-to-refresh", function() {
 						var self = this;
+						if(document.getElementById("noMore")) {
+							return;
+						}
 						if(loading) return;
 						console.log(self);
 						loading = true;
 						console.log(self);
 						setTimeout(function() {
-							console.log('4444444');
+							console.log('444444411111111');
 							selectColumnSendPro(0);
 							loading = false;
 							$(".weui-pull-to-refresh").pullToRefreshDone();
@@ -155,10 +164,11 @@
 				methods: {
 					clickNews: function(model) {
 						console.log('点击的model:' + JSON.stringify(model));
-						utils.wOpenWithData("new-detail.html", model);
+						utils.mOpenWithData("new-detail.html", model);
 					},
 					clickColumn: function(model) {
 						console.log('点击栏目的model:' + JSON.stringify(model));
+						$(".weui-loadmore").hide();
 						newsColumn = model;
 						if(newsColumn.newsArray.length == 0) {
 							$(".weui-loadmore").hide();
@@ -166,10 +176,12 @@
 							$(".weui-pull-to-refresh").pullToRefreshDone();
 							selectColumnSendPro(0);
 						}
+						delNoMore();
 					}
 				}
 			});
 			var newsColumn = {}; //获取当前的栏目model
+			var newsFalg = 0; //判断是否第一次获取协议，防止多次刷新
 			$(function() {
 				FastClick.attach(document.body);
 			});
@@ -207,6 +219,9 @@
 			$(".weui-loadmore").hide();
 			$(".infinite").infinite(0).on("infinite", function() {
 				var self = this;
+				if(document.getElementById("noMore")) {
+					return;
+				}
 				if(loading) return;
 				$(self).find(".weui-loadmore").show();
 				console.log(self);
@@ -218,6 +233,9 @@
 
 			$(".weui-pull-to-refresh").pullToRefresh().on("pull-to-refresh", function() {
 				var self = this;
+				if(document.getElementById("noMore")) {
+					return;
+				}
 				if(loading) return;
 				console.log(self);
 				loading = true;
@@ -250,19 +268,6 @@
 			window.onload = function() {
 				//获取所有的栏目
 				getSumColumn();
-				setTimeout(function() {
-					var all_width = document.getElementsByClassName('category_nav')[0].scrollWidth;
-					$('.category_nav').css({
-						'width': all_width + 'px'
-					})
-					var myscroll = new iScroll("wrapper", {
-						scrollX: true,
-						scrollY: false,
-						hScrollbar: false,
-						vScrollbar: true,
-						vScroll: false
-					});
-				}, 1000); //模拟延迟
 			};
 			//获取所有的栏目
 			function getSumColumn() {
@@ -299,6 +304,15 @@
 					}
 				});
 			};
+
+			function delNoMore() {
+				if(document.getElementById("noMore")) {
+					$("#noMore").remove();
+					if(document.getElementById("noMore")) {
+						delNoMore();
+					}
+				}
+			}
 			//获取栏目对应的新闻
 			function getNewsList(columnModel) {
 				console.log('获取新闻列表');
@@ -310,8 +324,11 @@
 					chnid: columnModel.chnid //某个栏目下的文章，栏目id
 				}
 				unitWebsitePro(tempData, function(data) {
+					console.log('data000000');
+					delNoMore();
 					if(data.RspCode == 0) {
 						if(data.RspData.dt.length > 0) {
+							console.log('00000000');
 							columnModel.newsPage++;
 							console.log('columnModel.newsFlag:' + columnModel.newsFlag);
 							//判断是刷新0，还是加载更多1
@@ -330,7 +347,9 @@
 									$(".weui-pull-to-refresh").pullToRefreshDone();
 								}, 1000); //模拟延迟
 							}
+							delNoMore();
 						} else {
+							console.log('111111');
 							//判断是刷新0，还是加载更多1
 							if(columnModel.newsFlag == 0) {
 								setTimeout(function() {
@@ -339,13 +358,14 @@
 									$(".weui-pull-to-refresh").pullToRefreshDone();
 								}, 1000); //模拟延迟
 							} else {
-								$.toast('没有更多数据了');
 								setTimeout(function() {
 									$(".weui-loadmore").hide();
 									loading = false;
 									$(".weui-pull-to-refresh").pullToRefreshDone();
 								}, 2000); //模拟延迟
 							}
+							delNoMore();
+							$(".content-padded").append('<p id="noMore" style="text-align: center;color: darkgray;">--------暂无更多数据--------</p>');
 						}
 						//每个选项栏的高度重新调整
 						var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight;
@@ -356,6 +376,21 @@
 						$('.weui-tab__bd-item').css({
 							'height': (allheight - barheight) * 100 / allheight + '%'
 						});
+						//将数据都获取到后，计算nav宽度，避免界面刷新
+						if(newsFalg == 0) {
+							newsFalg = 1;
+							var all_width = document.getElementsByClassName('category_nav')[0].scrollWidth;
+							$('.category_nav').css({
+								'width': all_width + 'px'
+							})
+							var myscroll = new iScroll("wrapper", {
+								scrollX: true,
+								scrollY: false,
+								hScrollbar: false,
+								vScrollbar: true,
+								vScroll: false
+							});
+						}
 					} else {
 						alert(data.RspTxt);
 					}

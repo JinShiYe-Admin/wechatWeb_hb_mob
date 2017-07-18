@@ -151,7 +151,7 @@ Vue.component('switch-item', {
 	}
 });
 
-var webConfig; //网站配置的数据
+var webConfig = {}; //网站配置的数据
 //---假数据---start---
 //webConfig = {};
 //webConfig.cname = '中文名';
@@ -483,6 +483,7 @@ function initData() {
 	} else if(webData && webData.open == 2) {
 		if(webData.webCon) { //保存有本地数据
 			getData = false;
+			webConfig = webData.webCon;
 			initWebsiteConfig(webData.webCon);
 			if(webData.changeSkinId && webData.webCon.skinid != webData.changeSkinId) { //修改皮肤ID
 				console.log("changeSkinId:" + webData.changeSkinId);
@@ -518,16 +519,16 @@ function getWebsitConfig() {
 	}
 	unitWebsitePro(tempData, function(data) {
 		weui.alert('配置为:' + JSON.stringify(data));
+		vm_loading.isShow = false;
 		if(data.RspCode == 0) {
 			if(data.RspData.length > 0) {
 				webConfig = data.RspData[0];
+				setWebConSes(webConfig);
 				initWebsiteConfig(webConfig);
 			} else {
-				vm_loading.isShow = false;
 				weui.alert('没有获取到配置信息')
 			}
 		} else {
-			vm_loading.isShow = false;
 			weui.alert(data.RspTxt);
 		}
 	});
@@ -558,6 +559,13 @@ function initWebsiteConfig(data) {
 	vm_switch.switchArray[7].check = data.isass;
 	//显示列表
 	showList();
+}
+
+/**
+ * 保存网站配置临时数据
+ * @param {Object} data
+ */
+function setWebConSes(data) {
 	//将数据保存到本地
 	var webData = {
 		open: 2,
@@ -565,6 +573,7 @@ function initWebsiteConfig(data) {
 	}
 	storageutil.setSessionStorage(storageutil.WEBSITECONFIG, JSON.stringify(webData));
 }
+
 /**
  * 显示列表
  */
@@ -611,6 +620,7 @@ function changeWebsiteConfig(change) {
 			vm_loading.isShow = false;
 			weui.toast("操作成功");
 			webConfig[commit.callcol] = commit.colv;
+			setWebConSes(webConfig);
 		} else {
 			if(change.type == 1) { //开关
 				vm_switch.switchArray[change.index].check = !change.colv;
@@ -620,30 +630,31 @@ function changeWebsiteConfig(change) {
 		}
 	});
 	//---假数据---start---
-//	if(1) { //成功
-//		if(change.type == 2) { //皮肤id
-//			vm_skin.skinId = commit.colv;
-//		}
-//		if(change.type == 3) { //图片
-//			vm_image.imageArray[change.index].imageurl = commit.colv;
-//			vm_image.imageArray[change.index].showupload = false;
-//			vm_image.imageArray[change.index].fname = "";
-//			vm_image.imageArray[change.index].fsize = "";
-//			vm_image.imageArray[change.index].fbase = "";
-//			delImage({
-//				appId: storageutil.QNQYWXKID,
-//				urls: [webConfig[commit.callcol]]
-//			});
-//		}
-//		vm_loading.isShow = false;
-//		weui.toast("操作成功");
-//		webConfig[commit.callcol] = commit.colv;
-//	} else {
-//		if(change.type == 1) { //开关
-//			vm_switch.switchArray[change.index].check = !change.colv;
-//		}
-//		weui.alert("修改失败:" + data.RspTxt);
-//	}
+	//	if(1) { //成功
+	//		if(change.type == 2) { //皮肤id
+	//			vm_skin.skinId = commit.colv;
+	//		}
+	//		if(change.type == 3) { //图片
+	//			vm_image.imageArray[change.index].imageurl = commit.colv;
+	//			vm_image.imageArray[change.index].showupload = false;
+	//			vm_image.imageArray[change.index].fname = "";
+	//			vm_image.imageArray[change.index].fsize = "";
+	//			vm_image.imageArray[change.index].fbase = "";
+	//			delImage({
+	//				appId: storageutil.QNQYWXKID,
+	//				urls: [webConfig[commit.callcol]]
+	//			});
+	//		}
+	//		vm_loading.isShow = false;
+	//		weui.toast("操作成功");
+	//		webConfig[commit.callcol] = commit.colv;
+	//		setWebConSes(webConfig);
+	//	} else {
+	//		if(change.type == 1) { //开关
+	//			vm_switch.switchArray[change.index].check = !change.colv;
+	//		}
+	//		weui.alert("修改失败:" + data.RspTxt);
+	//	}
 	//---假数据---end---
 }
 

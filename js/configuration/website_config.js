@@ -66,9 +66,21 @@ Vue.component('skin-item', {
 	methods: {
 		onclick: function(value) {
 			console.log("skin " + value);
-			utils.mOpenWithData("Skin.html", {
-				skinid: value
+			var dialog = weui.dialog({
+				title: "操作失败",
+				content: "修改皮肤功能暂未开放",
+				className: "custom-classname",
+				buttons: [{
+					label: "确定",
+					type: "primary",
+					onClick: function() {
+						dialog.hide();
+					}
+				}]
 			});
+			//			utils.mOpenWithData("Skin.html", {
+			//				skinid: value
+			//			});
 		}
 	}
 });
@@ -158,7 +170,7 @@ var webConfig = {}; //网站配置的数据
 //webConfig.ename = 'yingwenming';
 //webConfig.corptel = '110';
 //webConfig.logo = 'http://ojhtju24r.bkt.clouddn.com/wechat/webcon/1500367775004956.png';
-//webConfig.banner = 'https://cn.vuejs.org/images/logo.png';
+//webConfig.banner = 'http://qn-kfpb.jiaobaowang.net/wechat/webcon/1500425642862254.PNG';
 //webConfig.stat = 0;
 //webConfig.isreply = 0;
 //webConfig.isnewchk = 0;
@@ -482,11 +494,12 @@ function initData() {
 		storageutil.setSessionStorage(storageutil.WEBSITECONFIG, JSON.stringify(webData));
 	} else if(webData && webData.open == 2) {
 		if(webData.webCon) { //保存有本地数据
-			getData = false;
-			webConfig = webData.webCon;
-			initWebsiteConfig(webData.webCon);
 			if(webData.changeSkinId && webData.webCon.skinid != webData.changeSkinId) { //修改皮肤ID
+				//修改皮肤id
 				console.log("changeSkinId:" + webData.changeSkinId);
+				getData = false;
+				webConfig = webData.webCon;
+				initWebsiteConfig(webData.webCon);
 				var data = {
 					type: 2,
 					index: 0,
@@ -494,8 +507,6 @@ function initData() {
 					colv: webData.changeSkinId
 				}
 				changeWebsiteConfig(data);
-			} else {
-				vm_loading.isShow = false;
 			}
 		}
 	}
@@ -544,7 +555,7 @@ function initWebsiteConfig(data) {
 	vm_input.inputArray[1].message = data.ename;
 	vm_input.inputArray[2].message = data.corptel;
 	//皮肤id
-	vm_skin.skinId = data.skinid;
+	//vm_skin.skinId = data.skinid;
 	//图片
 	vm_image.imageArray[0].imageurl = data.logo;
 	vm_image.imageArray[1].imageurl = data.banner;

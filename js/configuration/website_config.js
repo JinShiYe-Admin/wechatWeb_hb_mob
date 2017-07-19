@@ -1,22 +1,3 @@
-var webConfig; //网站配置的数据
-//---假数据---start---
-//webConfig = {};
-//webConfig.cname = '中文名';
-//webConfig.ename = 'yingwenming';
-//webConfig.corptel = '110';
-//webConfig.logo = 'http://jqweui.com/dist/demos/images/pic_article.png';
-//webConfig.banner = 'https://cn.vuejs.org/images/logo.png';
-//webConfig.stat = 0;
-//webConfig.isreply = 0;
-//webConfig.isnewchk = 0;
-//webConfig.isnewreplychk = 0;
-//webConfig.isfileup = 0;
-//webConfig.isfiledown = 0;
-//webConfig.iswrite = 0;
-//webConfig.isass = 0;
-//webConfig.skinid = 0;
-//---假数据---end---
-
 //输入框组件
 Vue.component('input-item', {
 	props: ['value', 'index'],
@@ -101,7 +82,7 @@ Vue.component("image-item", {
 							<div class="weui-cell__bd" :id="value.parid">\
 								<div class="website-image" :style="{backgroundImage:\'url(\'+ value.imageurl+\')\'}" @click="showImage(index,true);"></div>\
 								<button class="weui-btn weui-btn_mini weui-btn_primary" :id="value.id">修改</button>\
-								<div class="website-file-type">(jpg,png)</div>\
+								<div class="website-file-type">(JPG,PNG|10M)</div>\
 								<div class="website-upload-image" v-show="value.showupload">\
 									<div class="website-image" :style="{backgroundImage:\'url(\'+ value.fbase+\')\'}" @click="showLocalImage(index,true);"></div>\
 									<div>文件:</div>\
@@ -131,6 +112,13 @@ Vue.component("image-item", {
 		},
 		upLoadFile: function(index) {
 			console.log("upLoadFile:" + index);
+			vm_loading.content = "上传中 0%";
+			vm_loading.isShow = true;
+			if(index == 0) {
+				logoUploader.start();
+			} else {
+				bannerUploader.start();
+			}
 		}
 	}
 });
@@ -163,176 +151,211 @@ Vue.component('switch-item', {
 	}
 });
 
-var vm_loading = new Vue({
-	el: "#loading",
-	data: {
-		isShow: true
-	}
-})
+var webConfig = {}; //网站配置的数据
+//---假数据---start---
+//webConfig = {};
+//webConfig.cname = '中文名';
+//webConfig.ename = 'yingwenming';
+//webConfig.corptel = '110';
+//webConfig.logo = 'http://ojhtju24r.bkt.clouddn.com/wechat/webcon/1500367775004956.png';
+//webConfig.banner = 'https://cn.vuejs.org/images/logo.png';
+//webConfig.stat = 0;
+//webConfig.isreply = 0;
+//webConfig.isnewchk = 0;
+//webConfig.isnewreplychk = 0;
+//webConfig.isfileup = 0;
+//webConfig.isfiledown = 0;
+//webConfig.iswrite = 0;
+//webConfig.isass = 0;
+//webConfig.skinid = 0;
+//---假数据---end---
 
-var vm_input = new Vue({
-	el: '#input_list',
-	data: {
-		isShow: false,
-		inputArray: [{
-			callcol: "cname",
-			title: "中文名",
-			message: "",
-			type: "text",
-			maxlength: 25,
-		}, {
-			callcol: "ename",
-			title: "英文名",
-			message: "",
-			type: "text",
-			maxlength: 25,
-		}, {
-			callcol: "corptel",
-			title: "单位联系方式",
-			message: "",
-			type: "tel",
-			maxlength: 25,
-		}]
-	}
-}); //输入框
-var vm_skin = new Vue({
-	el: '#skin',
-	data: {
-		isShow: false,
-		callcol: "skinid",
-		skinId: 0
-	}
-}); //皮肤选项
-
-var vm_image = new Vue({
-	el: "#image_list",
-	data: {
-		isShow: false,
-		imageArray: [{
-			callcol: "logo",
-			title: "logo",
-			imageurl: "",
-			showimage: false,
-			id: "btn_logo",
-			parid: "cell_logo",
-			showupload: false,
-			showlocalimage: false,
-			fbase: "",
-			fname: "",
-			fsize: ""
-		}, {
-			callcol: "banner",
-			title: "banner",
-			imageurl: "",
-			showimage: false,
-			id: "btn_banner",
-			parid: "cell_banner",
-			showupload: false,
-			showlocalimage: false,
-			fbase: "",
-			fname: "",
-			fsize: ""
-		}]
-	}
-}); //图片列表
-
-var vm_switch = new Vue({
-	el: '#switch_list',
-	data: {
-		isShow: false,
-		switchArray: [{
-			callcol: "stat",
-			title: "网站开启",
-			check: 0
-		}, {
-			callcol: "isreply",
-			title: "整站新闻允许回复",
-			check: 0
-		}, {
-			callcol: "isnewchk",
-			title: "允许新闻先发后审",
-			check: 0
-		}, {
-			callcol: "isnewreplychk",
-			title: "允许回复先发后审",
-			check: 0
-		}, {
-			callcol: "isfileup",
-			title: "允许新闻上传附件",
-			check: 0
-		}, {
-			callcol: "isfiledown",
-			title: "允许附件被下载",
-			check: 0
-		}, {
-			callcol: "iswrite",
-			title: "允许新闻普通人员投稿",
-			check: 0
-		}, {
-			callcol: "isass",
-			title: "允许评论被评价",
-			check: 0
-		}]
-	}
-}); //开关
-
+var vm_loading; //等待框
+var vm_input; //输入框
+var vm_skin; //皮肤选项
+var vm_image; //图片列表
+var vm_switch; //开关
 var logoUploader; //上传logo七牛对象
 var bannerUploader; //上传banner七牛对象
+var uptokenData; //上传的token
 
 window.onload = function() {
-	console.log("window.onload");
+	console.log("window.onload:");
+	initVueVM();
 	initQNUpLoader();
 	initData();
 };
 
 /**
+ * 初始化Vue的vm
+ */
+function initVueVM() {
+	//等待框
+	vm_loading = new Vue({
+		el: "#loading",
+		data: {
+			isShow: true,
+			content: "数据加载中"
+		}
+	});
+
+	//输入框
+	vm_input = new Vue({
+		el: '#input_list',
+		data: {
+			isShow: false,
+			inputArray: [{
+				callcol: "cname",
+				title: "中文名",
+				message: "",
+				type: "text",
+				maxlength: 25,
+			}, {
+				callcol: "ename",
+				title: "英文名",
+				message: "",
+				type: "text",
+				maxlength: 25,
+			}, {
+				callcol: "corptel",
+				title: "单位联系方式",
+				message: "",
+				type: "tel",
+				maxlength: 25,
+			}]
+		}
+	});
+	//皮肤选项
+	vm_skin = new Vue({
+		el: '#skin',
+		data: {
+			isShow: false,
+			callcol: "skinid",
+			skinId: 0
+		}
+	});
+	//图片列表
+	vm_image = new Vue({
+		el: "#image_list",
+		data: {
+			isShow: false,
+			imageArray: [{
+				callcol: "logo",
+				title: "logo",
+				imageurl: "",
+				showimage: false,
+				id: "btn_logo",
+				parid: "cell_logo",
+				showupload: false,
+				showlocalimage: false,
+				fbase: "",
+				fname: "",
+				fsize: ""
+			}, {
+				callcol: "banner",
+				title: "banner",
+				imageurl: "",
+				showimage: false,
+				id: "btn_banner",
+				parid: "cell_banner",
+				showupload: false,
+				showlocalimage: false,
+				fbase: "",
+				fname: "",
+				fsize: ""
+			}]
+		}
+	});
+	//开关
+	vm_switch = new Vue({
+		el: '#switch_list',
+		data: {
+			isShow: false,
+			switchArray: [{
+				callcol: "stat",
+				title: "网站开启",
+				check: 0
+			}, {
+				callcol: "isreply",
+				title: "整站新闻允许回复",
+				check: 0
+			}, {
+				callcol: "isnewchk",
+				title: "允许新闻先发后审",
+				check: 0
+			}, {
+				callcol: "isnewreplychk",
+				title: "允许回复先发后审",
+				check: 0
+			}, {
+				callcol: "isfileup",
+				title: "允许新闻上传附件",
+				check: 0
+			}, {
+				callcol: "isfiledown",
+				title: "允许附件被下载",
+				check: 0
+			}, {
+				callcol: "iswrite",
+				title: "允许新闻普通人员投稿",
+				check: 0
+			}, {
+				callcol: "isass",
+				title: "允许评论被评价",
+				check: 0
+			}]
+		}
+	});
+}
+
+/**
  * 初始化七牛上传控件
  */
 function initQNUpLoader() {
-	console.log("initQNUpLoader:" + document.getElementById("btn_logo"));
-	console.log("initQNUpLoader:" + document.getElementById("btn_banner"));
+	//console.log("initQNUpLoader:" + document.getElementById("btn_logo"));
+	//console.log("initQNUpLoader:" + document.getElementById("btn_banner"));
 
 	var qnUpOption = {
 		disable_statistics_report: true, // 禁止自动发送上传统计信息到七牛，默认允许发送
 		runtimes: 'html5,flash,html4', // 上传模式,依次退化
 		browse_button: "", // 上传选择的点选按钮，**必需**
-		// 在初始化时，uptoken, uptoken_url, uptoken_func 三个参数中必须有一个被设置
-		// 切如果提供了多个，其优先级为 uptoken > uptoken_url > uptoken_func
-		// 其中 uptoken 是直接提供上传凭证，uptoken_url 是提供了获取上传凭证的地址，如果需要定制获取 uptoken 的过程则可以设置 uptoken_func
-		// uptoken : '<Your upload token>', // uptoken 是上传凭证，由其他程序生成
-		// uptoken_url: '/uptoken',         // Ajax 请求 uptoken 的 Url，**强烈建议设置**（服务端提供）
 		uptoken_func: function(file) { // 在需要获取 uptoken 时，该方法会被调用
-			// do something
-			console.log("uptoken_func:" + file);
-			return uptoken;
+			console.log("uptoken_func:" + JSON.stringify(file));
+			uptokenData = getQNUpToken(file);
+			console.log("获取uptoken回调:" + JSON.stringify(uptokenData));
+			if(uptokenData.code) { //成功
+				return uptokenData.data.Data[0].Token;
+			} else {
+				vm_loading.isShow = false;
+				vm_loading.content = "数据加载中";
+				logoUploader.stop();
+				bannerUploader.stop();
+				var dialog = weui.dialog({
+					title: "上传失败",
+					content: uptokenData.message,
+					className: "custom-classname",
+					buttons: [{
+						label: "确定",
+						type: "primary",
+						onClick: function() {
+							dialog.hide();
+						}
+					}]
+				});
+			}
 		},
+		unique_names: false, // 默认 false，key 为文件名。若开启该选项，JS-SDK 会为每个文件自动生成key（文件名）
+		save_key: false, // 默认 false。若在服务端生成 uptoken 的上传策略中指定了 `save_key`，则开启，SDK在前端将不对key进行任何处理
 		get_new_uptoken: true, // 设置上传文件的时候是否每次都重新获取新的 uptoken
-		// downtoken_url: '/downtoken',
-		// Ajax请求downToken的Url，私有空间时使用,JS-SDK 将向该地址POST文件的key和domain,服务端返回的JSON必须包含`url`字段，`url`值为该文件的下载地址
-		// unique_names: true,              // 默认 false，key 为文件名。若开启该选项，JS-SDK 会为每个文件自动生成key（文件名）
-		// save_key: true,                  // 默认 false。若在服务端生成 uptoken 的上传策略中指定了 `save_key`，则开启，SDK在前端将不对key进行任何处理
 		domain: storageutil.QNPBDOMAIN, // bucket 域名，下载资源时用到，如：'http://xxx.bkt.clouddn.com/' **必需**
 		container: "", // 上传区域 DOM ID，默认是 browser_button 的父元素，
-		max_file_size: '1mb', // 最大文件体积限制
+		max_file_size: '10mb', // 最大文件体积限制
 		flash_swf_url: '../../js/lib/plupload/Moxie.swf', //引入 flash,相对路径
-		max_retries: 3, // 上传失败最大重试次数
+		max_retries: 0, // 上传失败最大重试次数
 		dragdrop: false, // 开启可拖曳上传
 		drop_element: vm_image.imageArray[0].parid, // 拖曳上传区域元素的 ID，拖曳文件或文件夹后可触发上传
 		chunk_size: '4mb', // 分块上传时，每块的体积
 		auto_start: false, // 选择文件后自动上传，若关闭需要自己绑定事件触发上传,
-		//x_vars : {
-		//    自定义变量，参考http://developer.qiniu.com/docs/v6/api/overview/up/response/vars.html
-		//    'time' : function(up,file) {
-		//        var time = (new Date()).getTime();
-		// do something with 'time'
-		//        return time;
-		//    },
-		//    'size' : function(up,file) {
-		//        var size = file.size;
-		// do something with 'size'
-		//        return size;
-		//    }
-		//},
 		filters: {
 			mime_types: [ //只允许上传图片和zip文件
 				{
@@ -366,45 +389,39 @@ function initQNUpLoader() {
 					preloader.load(file.getSource());
 				});
 			},
-			'BeforeUpload': function(up, file) {
-				// 每个文件上传前,处理相关的事情
-				console.log("BeforeUpload:" + up);
-				console.log("BeforeUpload:" + file);
-			},
 			'UploadProgress': function(up, file) {
 				// 每个文件上传时,处理相关的事情
-				console.log("UploadProgress:" + up);
-				console.log("UploadProgress:" + file);
+				console.log("UploadProgress:up:" + up.id);
+				console.log("UploadProgress:file:" + JSON.stringify(file));
+				vm_loading.content = "上传中 " + file.percent + "%";
 			},
 			'FileUploaded': function(up, file, info) {
 				// 每个文件上传成功后,处理相关的事情
-				// 其中 info 是文件上传成功后，服务端返回的json，形式如
-				// {
-				//    "hash": "Fh8xVqod2MQ1mocfI4S4KpRL6D98",
-				//    "key": "gogopher.jpg"
-				//  }
-				// 参考http://developer.qiniu.com/docs/v6/api/overview/up/response/simple-response.html
-
-				// var domain = up.getOption('domain');
-				// var res = parseJSON(info);
-				// var sourceLink = domain + res.key; 获取上传成功后的文件的Url
-				console.log("FileUploaded:" + up);
-				console.log("FileUploaded:" + file);
-				console.log("FileUploaded:" + info);
-			},
-			'Error': function(up, err, errTip) {
-				//上传出错时,处理相关的事情
-				console.log("Error:" + up);
-				console.log("Error:" + JSON.stringify(err));
-				console.log("Error:" + errTip);
-				if(err.code == -601) {
+				console.log("FileUploaded:up:" + up.id);
+				console.log("FileUploaded:file:" + JSON.stringify(file));
+				console.log("FileUploaded:info:" + JSON.stringify(info));
+				if(info.status == 200) {
+					//成功
+					var index = 0;
+					if(up.id == bannerUploader.id) {
+						index = 1;
+					}
+					vm_loading.content = "数据加载中";
+					var data = {
+						type: 3,
+						index: index,
+						callcol: vm_image.imageArray[index].callcol,
+						colv: storageutil.QNPBDOMAIN + JSON.parse(info["response"]).key
+					}
+					changeWebsiteConfig(data);
+				} else {
 					var dialog = weui.dialog({
-						title: '文件选取失败',
-						content: '只能选取后缀为jpg,png的图片',
-						className: 'custom-classname',
+						title: "上传失败",
+						content: JSON.stringify(info),
+						className: "custom-classname",
 						buttons: [{
-							label: '确定',
-							type: 'primary',
+							label: "确定",
+							type: "primary",
 							onClick: function() {
 								dialog.hide();
 							}
@@ -412,19 +429,34 @@ function initQNUpLoader() {
 					});
 				}
 			},
+			'Error': function(up, err, errTip) {
+				//上传出错时,处理相关的事情
+				console.log("Error:" + up);
+				console.log("Error:" + JSON.stringify(err));
+				console.log("Error:" + errTip);
+				vm_loading.isShow = false;
+				vm_loading.content = "数据加载中";
+				var dialog = weui.dialog({
+					title: "操作失败",
+					content: pluploadutil.errMes(err.code, errTip),
+					className: "custom-classname",
+					buttons: [{
+						label: "确定",
+						type: "primary",
+						onClick: function() {
+							dialog.hide();
+						}
+					}]
+				});
+			},
 			'UploadComplete': function() {
 				//队列文件处理完毕后,处理相关的事情
-				console.log("UploadComplete:");
+				console.log("UploadComplete");
 			},
 			'Key': function(up, file) {
 				// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
 				// 该配置必须要在 unique_names: false , save_key: false 时才生效
-
-				//			var key = "";
-				//			// do something with key here
-				//			return key
-				console.log("Key:" + up);
-				console.log("Key:" + file);
+				return uptokenData.data.Data[0].Key;
 			}
 		}
 	}
@@ -451,6 +483,7 @@ function initData() {
 	} else if(webData && webData.open == 2) {
 		if(webData.webCon) { //保存有本地数据
 			getData = false;
+			webConfig = webData.webCon;
 			initWebsiteConfig(webData.webCon);
 			if(webData.changeSkinId && webData.webCon.skinid != webData.changeSkinId) { //修改皮肤ID
 				console.log("changeSkinId:" + webData.changeSkinId);
@@ -486,17 +519,16 @@ function getWebsitConfig() {
 	}
 	unitWebsitePro(tempData, function(data) {
 		weui.alert('配置为:' + JSON.stringify(data));
+		vm_loading.isShow = false;
 		if(data.RspCode == 0) {
 			if(data.RspData.length > 0) {
 				webConfig = data.RspData[0];
+				setWebConSes(webConfig);
 				initWebsiteConfig(webConfig);
-				getWXJSConfig();
 			} else {
-				vm_loading.isShow = false;
 				weui.alert('没有获取到配置信息')
 			}
 		} else {
-			vm_loading.isShow = false;
 			weui.alert(data.RspTxt);
 		}
 	});
@@ -527,6 +559,13 @@ function initWebsiteConfig(data) {
 	vm_switch.switchArray[7].check = data.isass;
 	//显示列表
 	showList();
+}
+
+/**
+ * 保存网站配置临时数据
+ * @param {Object} data
+ */
+function setWebConSes(data) {
 	//将数据保存到本地
 	var webData = {
 		open: 2,
@@ -534,6 +573,7 @@ function initWebsiteConfig(data) {
 	}
 	storageutil.setSessionStorage(storageutil.WEBSITECONFIG, JSON.stringify(webData));
 }
+
 /**
  * 显示列表
  */
@@ -547,7 +587,7 @@ function showList() {
 /**
  * 修改网站设置
  * @param {Object} change 修改的数据
- * @param {String} type 类型，0输入;1开关;2皮肤id
+ * @param {String} type 类型，0输入;1开关;2皮肤id;3图片
  * @param {String} index 第几个数据
  * @param {String} key 属性
  * @param {String} value 值
@@ -561,34 +601,59 @@ function changeWebsiteConfig(change) {
 	}
 	console.log("changeWebsiteConfig:" + JSON.stringify(commit));
 	unitWebsitePro(commit, function(data) {
-		vm_loading.isShow = false;
-		weui.alert('修改网站设置:' + JSON.stringify(data));
+		console.log('修改网站设置:' + JSON.stringify(data));
 		if(data.RspCode == 0) { //成功
-			weui.toast("操作成功");
-			webConfig[commit.callcol] = commit.colv;
 			if(change.type == 2) { //皮肤id
 				vm_skin.skinId = commit.colv;
 			}
+			if(change.type == 3) { //图片
+				vm_image.imageArray[change.index].imageurl = commit.colv;
+				vm_image.imageArray[change.index].showupload = false;
+				vm_image.imageArray[change.index].fname = "";
+				vm_image.imageArray[change.index].fsize = "";
+				vm_image.imageArray[change.index].fbase = "";
+				delImage({
+					appId: storageutil.QNQYWXKID,
+					urls: [webConfig[commit.callcol]]
+				});
+			}
+			vm_loading.isShow = false;
+			weui.toast("操作成功");
+			webConfig[commit.callcol] = commit.colv;
+			setWebConSes(webConfig);
 		} else {
 			if(change.type == 1) { //开关
 				vm_switch.switchArray[change.index].check = !change.colv;
 			}
+			vm_loading.isShow = false;
 			weui.alert("修改失败:" + data.RspTxt);
 		}
 	});
 	//---假数据---start---
-	//	vm_loading.isShow = false;
 	//	if(1) { //成功
-	//		weui.toast("操作成功");
-	//		webConfig[commit.callcol] = commit.colv;
 	//		if(change.type == 2) { //皮肤id
 	//			vm_skin.skinId = commit.colv;
 	//		}
+	//		if(change.type == 3) { //图片
+	//			vm_image.imageArray[change.index].imageurl = commit.colv;
+	//			vm_image.imageArray[change.index].showupload = false;
+	//			vm_image.imageArray[change.index].fname = "";
+	//			vm_image.imageArray[change.index].fsize = "";
+	//			vm_image.imageArray[change.index].fbase = "";
+	//			delImage({
+	//				appId: storageutil.QNQYWXKID,
+	//				urls: [webConfig[commit.callcol]]
+	//			});
+	//		}
+	//		vm_loading.isShow = false;
+	//		weui.toast("操作成功");
+	//		webConfig[commit.callcol] = commit.colv;
+	//		setWebConSes(webConfig);
 	//	} else {
 	//		if(change.type == 1) { //开关
 	//			vm_switch.switchArray[change.index].check = !change.colv;
 	//		}
-	//		weui.alert("修改失败");
+	//		weui.alert("修改失败:" + data.RspTxt);
 	//	}
 	//---假数据---end---
 }
@@ -596,25 +661,32 @@ function changeWebsiteConfig(change) {
 /**
  * 获取七牛上传token
  */
-function getQNUpToken() {
+function getQNUpToken(file) {
+	var myDate = new Date();
+	var fileName = myDate.getTime() + "" + parseInt(Math.random() * 1000);
+	var types = file.name.split(".");
+	fileName = fileName + "." + types[types.length - 1];
 	var getTokenData = {
 		appId: storageutil.QNQYWXKID,
 		mainSpace: storageutil.QNPUBSPACE,
 		saveSpace: storageutil.QNSSPACEWEBCON,
-		qnCmdOption: {
-			type: 0
-		},
-		fileSplit: "\\",
 		fileArray: [{
-			filePath: "C:\\Users\\Vktuns\\Desktop\\上传.png",
-			qnFileName: "shangchuan.jpg",
-			qnCmdOption: {
-				type: 1,
-				width: 50
-			}
+			qnFileName: fileName,
 		}]
 	}
+	var upToken;
 	cloudutil.getFileUpTokens(getTokenData, function(data) {
-		console.log("获取uptoken回调:" + JSON.stringify(data));
+		upToken = data;
+	});
+	return upToken;
+}
+
+/**
+ * 删除七牛的文件
+ * @param {Object} imagesData
+ */
+function delImage(imagesData) {
+	cloudutil.delCloudFiles(imagesData, function(data) {
+		return data;
 	});
 }

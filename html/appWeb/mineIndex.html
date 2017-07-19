@@ -15,35 +15,11 @@
 	<body ontouchstart>
 
 		<div class="weui-tab" id="wrapper">
-			<!--<div class="weui-navbar category_nav" style="width: 800px;">
-				<a class="weui-navbar__item" href="#tab1">首页
-				</a>
-				<a class="weui-navbar__item" href="#tab2">校园新闻
-				</a>
-				<a class="weui-navbar__item" href="#tab3">课程表
-				</a>
-				<a class="weui-navbar__item" href="#tab4">课程宣
-				</a>
-				<a class="weui-navbar__item" href="#tab5">政策方针
-				</a>
-				<a class="weui-navbar__item" href="#tab6">我的课堂
-				</a>
-				<a class="weui-navbar__item" href="#tab7">学校简介
-				</a>
-				<a class="weui-navbar__item" href="#tab8">学校荣誉
-				</a>
-				<a class="weui-navbar__item" href="#tab9">课外选集
-				</a>
-				<a class="weui-navbar__item" href="#tab10">学生作品
-				</a>
-				<a class="weui-navbar__item" href="#tab11">教师作品
-				</a>
-			</div>-->
 			<section class="container">
 				<div class="dropdown">
 					<select name="one" id="chnid" class="dropdown-select" style="font-size: 17px;color: #929292;">
 						<option value="">请选择所属栏目....</option>
-						<option value="{{value.chnid}}" v-for="(value,index) in inputArray">{{value.cname}}</option>
+						<option value="{{value.chnid}}" v-for="(value,index) in inputArray" @click="clickOption()">{{value.cname}}</option>
 					</select>
 				</div>
 			</section>
@@ -56,29 +32,9 @@
 					</div>
 					<div class="weui-cell__ft">说明文字</div>
 				</a>
-				<a class="weui-cell weui-cell_access" href="javascript:;">
-					<div class="weui-cell__hd"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAVFBMVEXx8fHMzMzr6+vn5+fv7+/t7e3d3d2+vr7W1tbHx8eysrKdnZ3p6enk5OTR0dG7u7u3t7ejo6PY2Njh4eHf39/T09PExMSvr6+goKCqqqqnp6e4uLgcLY/OAAAAnklEQVRIx+3RSRLDIAxE0QYhAbGZPNu5/z0zrXHiqiz5W72FqhqtVuuXAl3iOV7iPV/iSsAqZa9BS7YOmMXnNNX4TWGxRMn3R6SxRNgy0bzXOW8EBO8SAClsPdB3psqlvG+Lw7ONXg/pTld52BjgSSkA3PV2OOemjIDcZQWgVvONw60q7sIpR38EnHPSMDQ4MjDjLPozhAkGrVbr/z0ANjAF4AcbXmYAAAAASUVORK5CYII=" alt="" style="width:20px;margin-right:5px;display:block"></div>
-					<div class="weui-cell__bd">
-						<p>cell standard</p>
-					</div>
-					<!--<div id="" class="weui-cell_access">
-						111111
-					</div>-->
-					<!--<div id="" class="weui-cell_link">
-						www.baidu.com
-					</div>-->
-					<div id="" class="weui-cells__title">
-						2222
-					</div>
-					<div id="" class="weui-cel">
-
-					</div>
-					<div class="weui-cell__ft">说明文字</div>
-				</a>
 			</div>
 			<div class="weui-tabbar">
 				<a href="newsIndex.html" class="weui-tabbar__item">
-					<!--<span class="weui-badge" style="position: absolute;top: -.4em;right: 1em;">8</span>-->
 					<div class="weui-tabbar__icon">
 						<img src="../../image/newsIndex.png" alt="">
 					</div>
@@ -136,6 +92,11 @@
 				el: '#chnid',
 				data: {
 					inputArray: []
+				},
+				methods: {
+					clickOption: function() {
+						console.log('点击的model:');
+					}
 				}
 			});
 			window.onload = function() {

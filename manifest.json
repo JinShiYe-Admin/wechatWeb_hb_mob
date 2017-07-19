@@ -229,7 +229,10 @@
 					"image/newsIndex.png",
 					"image/mineIndex.png"
 				],
-				"refer": [],
+				"refer": [
+					"html/unitWeb/column.html",
+					"html/unitWeb/column-home.html"
+				],
 				"priority": 0
 			},
 			"html/appWeb/new-detail.html": {
@@ -266,6 +269,37 @@
 				],
 				"refer": [],
 				"priority": 0
+			},
+			"html/unitWeb/column.html": {
+				"resources": [
+					"js/jquery.min.js",
+					"js/utils/utils.js",
+					"js/PublicProtocol.js",
+					"css/weui.min.css",
+					"js/weui.min.js",
+					"js/utils/storageutil.js",
+					"js/importJS.js",
+					"css/mui.min.css",
+					"html/unitWeb/column-home.html"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/unitWeb/column-home.html": {
+				"resources": [
+					"js/utils/utils.js",
+					"js/PublicProtocol.js",
+					"css/mui.min.css",
+					"css/weui.min.css",
+					"js/utils/storageutil.js",
+					"js/importJS.js",
+					"html/unitWeb/column.html",
+					"js/jquery.min.js",
+					"js/jweixin.js",
+					"js/weui.min.js"
+				],
+				"refer": [],
+				"priority": 0
 			}
 		},
 		"idle": {
@@ -275,7 +309,6 @@
 				"js/utils/cryption.js",
 				"html/unitWeb/teacher_faculty.html",
 				"js/configuration/website_config.js",
-				"css/weui.min.css",
 				"js/lib/plupload/plupload.full.min.js",
 				"html/unitWeb/addnews.html",
 				"js/lib/plupload/plupload.dev.js",
@@ -297,7 +330,6 @@
 				"html/unitWeb/newList.html",
 				"js/jweixin-1.2.0.js",
 				"image/config/loading.jpg",
-				"html/unitWeb/column.html",
 				"image/config/syl.png",
 				"image/config/lho.png",
 				"image/config/func_actssm.jpg",
@@ -308,9 +340,7 @@
 				"image/config/js.png",
 				"js/lib/qiniu/qiniu.min.map",
 				"html/unitWeb/testmuiscroll.html",
-				"js/weui.min.js",
 				"image/config/voice.png",
-				"html/unitWeb/column-home.html",
 				"js/jquery-weui.min.js",
 				"image/config/下载.png",
 				"html/unitWeb/Comment.html",

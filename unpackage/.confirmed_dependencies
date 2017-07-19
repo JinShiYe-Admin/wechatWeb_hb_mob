@@ -23,7 +23,9 @@
 		],
 		"refer": [
 			"html/appWeb/new-detail.html",
-			"html/appWeb/mineIndex.html"
+			"html/appWeb/mineIndex.html",
+			"html/unitWeb/column.html",
+			"html/unitWeb/column-home.html"
 		]
 	},
 	"html/appWeb/new-detail.html": {
@@ -61,6 +63,39 @@
 		],
 		"refer": [
 			"html/appWeb/newsIndex.html"
+		]
+	},
+	"html/unitWeb/column.html": {
+		"resources": [
+			"js/jquery.min.js",
+			"js/utils/utils.js",
+			"js/PublicProtocol.js",
+			"css/weui.min.css",
+			"js/weui.min.js",
+			"js/utils/storageutil.js",
+			"js/importJS.js",
+			"css/mui.min.css",
+			"html/unitWeb/column-home.html"
+		],
+		"refer": [
+			"html/unitWeb/column-home.html"
+		]
+	},
+	"html/unitWeb/column-home.html": {
+		"resources": [
+			"js/utils/utils.js",
+			"js/PublicProtocol.js",
+			"css/mui.min.css",
+			"css/weui.min.css",
+			"js/utils/storageutil.js",
+			"js/importJS.js",
+			"html/unitWeb/column.html",
+			"js/jquery.min.js",
+			"js/jweixin.js",
+			"js/weui.min.js"
+		],
+		"refer": [
+			"html/unitWeb/column.html"
 		]
 	}
 }

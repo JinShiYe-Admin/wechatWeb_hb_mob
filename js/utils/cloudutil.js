@@ -162,9 +162,10 @@ var cloudutil = (function(mod) {
 		jQuery.ajax({
 			url: storageutil.QNGETUPLOADTOKEN,
 			type: "POST",
-			data: requestData,
+			data: requestData, //JSON.stringify(requestData),
 			timeout: 30000,
 			dataType: "json",
+			//contentType: "application/json; charset=utf-8",
 			async: false,
 			success: function(data) { //请求成功的回调
 				console.log("getUpTokenRequest:success:" + JSON.stringify(data));
@@ -186,7 +187,7 @@ var cloudutil = (function(mod) {
 
 	/**
 	 * 转换数据格式
-	 * @param {int} size
+	 * @param {Number} size
 	 */
 	mod.transformSize = function(size) {
 		var sizeString = "";

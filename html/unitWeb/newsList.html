@@ -18,11 +18,11 @@
 				top: 18px;
 				right: 10px;
 				border: 4px dashed;
-				border-color: #888888 transparent;
+				border-color: #888888 transparent; 
 			}
-			
+			  
 			.dropdown:before {
-				border-bottom-style: solid;
+				border-bottom-style: solid; 
 				border-top: none;
 			}
 			
@@ -135,8 +135,8 @@
 							<a class="weui-cell weui-cell_access" href="javascript:;">
 								<div class="weui-cell__bd">
 									<span>ID：{{newsModel.newsid}}</span>
-									<span>标题：{{newsModel.topic}}</span><button style="float:right" class="mui-btn mui-btn-primary">通过</button>
-									<p>副标题：{{newsModel.subtopic}}</p><button id="Pride" style="float:right" class="mui-btn mui-btn-negative" @click="clickDel(newsModel,index)">删除</button>
+									<span>标题：{{newsModel.topic}}</span> <button style="float:right" class="weui-btn weui-btn_mini weui-btn_primary">通过</button>
+									<p>副标题：{{newsModel.subtopic}}</p><button id="Pride" style="float:right" class="weui-btn weui-btn_mini weui-btn_warn" @click="clickDel(newsModel,index)">删除</button>
 									<p>内容：{{newsModel.content}}</p>
 									<br />
 								</div>
@@ -156,11 +156,13 @@
 		<script src="../../js/demoCssJs/iscroll.js"></script>
 		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/demoCssJs/jquery-weui.js"></script>
-		<script src="../../js/mui.min.js" type="text/javascript"></script>
+		<!--<script src="../../js/mui.min.js" type="text/javascript"></script>-->
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 		<script>
+	 
+
 			//所属栏目下拉框
 			var vue_input = new Vue({
 				el: '#chnid',
@@ -184,8 +186,8 @@
 					clickDel: function(model, index) {
 						var colid = model.newsid; //新闻id
 						//确认框confirm	  
-						mui.confirm('确定要删除吗？', function(e) {
-							if(e.index == 1) {
+
+						$.confirm("确定要删除吗？", function() {
 								//确定删除
 								var tempData = {
 									cmd: 'news', //文章管理
@@ -194,21 +196,23 @@
 									pageindex: '15', //页码
 									colid: colid
 								}
-								unitWebsitePro(tempData, function(data) {
-									//									console.log('index0:' + index + ',' + JSON.stringify(vue_input.items));
-									//									vue_input.items.newsArray.splice(index, 1);
-									//									weui.toast("操作成功");
-									//									console.log('index1:' + index + ',' + JSON.stringify(vue_input.items));
-								});
-							} else {
-								//不确定删除 
-								return;
-							}
-						})
+//								unitWebsitePro(tempData, function(data) {
+//									console.log('index0:' + index + ',' + JSON.stringify(vue_input.items));
+//									vue_input.items.newsArray.splice(index, 1);
+//									weui.toast("操作成功");
+//									console.log('index1:' + index + ',' + JSON.stringify(vue_input.items));
+//								});
+						}, function() {
+							//点击取消后的回调函数
+							// $(this).clone(); 
+							 
+						});
+
+					 
 					}
 				}
 			});
-			
+
 			var loading = false;
 			$(".weui-loadmore").hide();
 			$(".infinite").infinite(0).on("infinite", function() {

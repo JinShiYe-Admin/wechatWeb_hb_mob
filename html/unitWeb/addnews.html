@@ -18,7 +18,7 @@
 				top: 18px;
 				right: 10px;
 				border: 4px dashed;
-				border-color: #888888 transparent;
+				border-color: #888888 transparent; 
 			}
 			
 			.dropdown:before {
@@ -114,23 +114,24 @@
 	</head>
 
 	<body>
+		<div class="weui-cells weui-cells_form">
+			<div class="weui-cells__title">所属栏目</div>
+			<div class="weui-cells">
+				<div>
+					<section class="container">
+						<div class="dropdown">
+							<select name="one" id="chnid" class="dropdown-select" style="font-size: 17px;color: #929292;">
+								<option value="">请选择所属栏目....</option>
+								<option v-for="item in items">{{item.cname}}</option>
+							</select>
+						</div>
+					</section>
+				</div>
+			</div>
+		</div>
+
 		<div id="conetent" class="weui-cells weui-cells_form">
 			<div id="input_list">
-				<div>
-					<div class="weui-cells__title">所属栏目</div>
-					<div class="weui-cells">
-						<div>
-							<section class="container">
-								<div class="dropdown">
-									<select name="one" id="chnid" class="dropdown-select" style="font-size: 17px;color: #929292;">
-										<option value="">请选择所属栏目....</option>
-										<option v-for="item in items">{{item.cname}}</option>
-									</select>
-								</div>
-							</section>
-						</div>
-					</div>
-				</div>
 
 				<!--输入列表-->
 				<div>
@@ -217,36 +218,36 @@
 				}
 			});
 			window.onload = function() {
+
 				var tempData = {
 					cmd: 'chn', //网站栏目
 					type: 'findpage', //分页查找栏目列表
 					pagesize: 999, //每页条数
 					pageindex: 1 //页码
 				}
-				//假数据开始
-		     
-								unitWebsitePro(tempData, function(data) {
-									alert(data.RspData.dt);
-									if(data.RspCode == 0) {
-										if(data.RspData.dt.length > 0) {
-											vue_input.items = data.RspData.dt;
-										} else {
-											alert('暂时还没有栏目');
-										}
-									} else {
-										alert(data.RspTxt);
-									}
-								});
+
+				unitWebsitePro(tempData, function(data) {
+					alert(JSON.stringify(data.RspData.dt));
+					if(data.RspCode == 0) {
+						if(data.RspData.dt.length > 0) {
+							vue_input.items = data.RspData.dt;
+						} else {
+							alert('暂时还没有栏目');
+						}
+					} else {
+						alert(data.RspTxt);
+					}
+				});
 				var detail = utils.getDataFromUrl(window.location.href);
-				vm.type ='edit1';
+				vm.type = 'edit1';
 				if(vm.type == 'edit') {
 					vm.editName = '删除';
 					vm.chnid = detail.chnid;
-//					vm.cname.message = detail.cname;
-//					vm.orderid.message = detail.orderid;
-//					vm.linkurl.message = detail.linkurl;
-//					vm.islink.check = detail.islink;
-//					vm.iswrite.check = detail.iswrite;
+					vm.cname.message = detail.cname;
+					vm.orderid.message = detail.orderid;
+					vm.linkurl.message = detail.linkurl;
+					vm.islink.check = detail.islink;
+					vm.iswrite.check = detail.iswrite;
 					for(var item in vm.$data) {
 						(function addwatch(key) {
 							vm.$watch(key + '.message', function(newVal, oldVal) {
@@ -257,9 +258,9 @@
 				} else {
 					vm.editName = '添加'
 				}
-			} 
+			}
 
-			var vm = new Vue({ 
+			var vm = new Vue({
 				el: '#conetent',
 				data: {
 					editName: '',
@@ -305,10 +306,10 @@
 				var PriQuourl = '';
 				var comData = '';
 				var PriIsReply = '';
-				var PriTopic = document.getElementById("cname").value;
-				var PriConten = document.getElementById("conten").value;
-				var PriSummas = document.getElementById("summas").value;
-				var Chnid = document.getElementById("chnid");
+				var PriTopic = document.getElementById("cname").value;//新闻标题
+				var PriConten = document.getElementById("conten").value;//新闻内容
+				var PriSummas = document.getElementById("summas").value;//新闻摘要
+				var Chnid = document.getElementById("chnid");//栏目id
 				var PriChnid = Chnid.selectedIndex; // 选中索引
 				console.log('所属栏目=========================:' + PriChnid);
 				PriIsquo = document.getElementById("islink").checked == true ? 1 : 0;
@@ -316,6 +317,7 @@
 				if(PriIsquo == 1) {
 					PriQuourl = document.getElementById("quourl").value;
 					comData = {
+						chnid:PriChnid,
 						topic: PriTopic,
 						content: PriConten,
 						summas: PriSummas,
@@ -325,6 +327,7 @@
 					};
 				} else {
 					comData = {
+						chnid:PriChnid,
 						topic: PriTopic,
 						content: PriConten,
 						summas: PriSummas,
@@ -332,17 +335,30 @@
 						isreply: PriIsReply
 					};
 				}
-
+                unitWebsitePro(comData, function(data) {
+					if(data.RspCode == 0) {
+						weui.toast("添加成功");
+						//清空数据 
+						 document.getElementById("cname").value="";//新闻标题
+						 document.getElementById("conten").value="";//新闻内容
+						 document.getElementById("summas").value="";//新闻摘要
+						 document.getElementById("chnid").selectedIndex=0;//栏目id
+						 document.getElementById("quourl").valu="";//引用地址
+						 
+					} else { 
+						alert(data.RspTxt); 
+					}
+				});
 				console.log('comData=========================:' + JSON.stringify(comData));
 			});
-            //编辑发送协议
+			//编辑发送协议
 			function upperCase(x) {
 				if(vm.type == 'edit') {
 					switch(x) {
 						case 'cname': //新闻标题
 							var y = document.getElementById(x).value;
 							console.log(y);
-							var data = {
+							var data = { 
 								type: 0,
 								index: 0,
 								callcol: "skinid",
@@ -389,7 +405,7 @@
 				});
 				if(1) { //成功
 					weui.toast("操作成功");
-					if(change.type == 2) { 
+					if(change.type == 2) {
 						vm_skin.skinId = commit.colv;
 					}
 				} else {

@@ -296,9 +296,26 @@
 					"html/unitWeb/column.html",
 					"js/jquery.min.js",
 					"js/jweixin.js",
-					"js/weui.min.js"
+					"js/weui.min.js",
+					"js/vue.min.js"
 				],
 				"refer": [],
+				"priority": 0
+			},
+			"html/unitWeb/configIndex.html": {
+				"resources": [
+					"js/mui.min.js",
+					"js/utils/utils.js",
+					"js/demoCssJs/jquery-2.1.4.js",
+					"js/PublicProtocol.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/utils/storageutil.js",
+					"js/importJS.js"
+				],
+				"refer": [
+					"html/unitWeb/column-home.html"
+				],
 				"priority": 0
 			}
 		},
@@ -334,7 +351,6 @@
 				"image/config/lho.png",
 				"image/config/func_actssm.jpg",
 				"html/unitWeb/website_config.html",
-				"html/unitWeb/configIndex.html",
 				"js/lanren.js",
 				"html/index/index.html",
 				"image/config/js.png",

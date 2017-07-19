@@ -169,8 +169,8 @@ var webConfig = {}; //网站配置的数据
 //webConfig.cname = '中文名';
 //webConfig.ename = 'yingwenming';
 //webConfig.corptel = '110';
-//webConfig.logo = 'http://ojhtju24r.bkt.clouddn.com/wechat/webcon/1500367775004956.png';
-//webConfig.banner = 'http://qn-kfpb.jiaobaowang.net/wechat/webcon/1500425642862254.PNG';
+//webConfig.logourl = 'http://ojhtju24r.bkt.clouddn.com/wechat/webcon/1500367775004956.png';
+//webConfig.bannerurl = 'http://qn-kfpb.jiaobaowang.net/wechat/webcon/1500425642862254.PNG';
 //webConfig.stat = 0;
 //webConfig.isreply = 0;
 //webConfig.isnewchk = 0;
@@ -195,7 +195,12 @@ window.onload = function() {
 	console.log("window.onload:");
 	initVueVM();
 	initQNUpLoader();
-	initData();
+	//initData();
+	getWebsitConfig(); //获取配置
+
+	//initWebsiteConfig(webConfig);
+	//vm_loading.isShow = false;
+
 };
 
 /**
@@ -285,35 +290,35 @@ function initVueVM() {
 			isShow: false,
 			switchArray: [{
 				callcol: "stat",
-				title: "网站开启",
+				title: "网站是否启用",
 				check: 0
 			}, {
 				callcol: "isreply",
-				title: "整站新闻允许回复",
+				title: "整站文章是否允许回复",
 				check: 0
 			}, {
 				callcol: "isnewchk",
-				title: "允许新闻先发后审",
+				title: "是否允许文章先发后审",
 				check: 0
 			}, {
 				callcol: "isnewreplychk",
-				title: "允许回复先发后审",
+				title: "是否允许回复先发后审",
 				check: 0
 			}, {
 				callcol: "isfileup",
-				title: "允许新闻上传附件",
+				title: "是否允许文章上传附件",
 				check: 0
 			}, {
 				callcol: "isfiledown",
-				title: "允许附件被下载",
+				title: "是否允许附件被下载",
 				check: 0
 			}, {
 				callcol: "iswrite",
-				title: "允许新闻普通人员投稿",
+				title: "是否允许文章普通人员投稿",
 				check: 0
 			}, {
 				callcol: "isass",
-				title: "允许评论被评价",
+				title: "是否允许评论被评价",
 				check: 0
 			}]
 		}
@@ -333,9 +338,10 @@ function initQNUpLoader() {
 		browse_button: "", // 上传选择的点选按钮，**必需**
 		uptoken_func: function(file) { // 在需要获取 uptoken 时，该方法会被调用
 			console.log("uptoken_func:" + JSON.stringify(file));
+			uptokenData = null;
 			uptokenData = getQNUpToken(file);
 			console.log("获取uptoken回调:" + JSON.stringify(uptokenData));
-			if(uptokenData.code) { //成功
+			if(uptokenData && uptokenData.code) { //成功
 				return uptokenData.data.Data[0].Token;
 			} else {
 				vm_loading.isShow = false;
@@ -468,7 +474,9 @@ function initQNUpLoader() {
 			'Key': function(up, file) {
 				// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
 				// 该配置必须要在 unique_names: false , save_key: false 时才生效
-				return uptokenData.data.Data[0].Key;
+				if(uptokenData && uptokenData.code) { //成功
+					return uptokenData.data.Data[0].Key;
+				}
 			}
 		}
 	}
@@ -510,13 +518,13 @@ function initData() {
 			}
 		}
 	}
-	console.log("getWebsitConfig:" + getData)
+	console.log("getWebsitConfig:" + getData);
 	if(getData) {
 		getWebsitConfig(); //获取配置
-		//---假数据---start---
-		//initWebsiteConfig(webConfig);
-		//vm_loading.isShow = false;
-		//---假数据---end---
+		//-- - 假数据-- - start-- -
+		initWebsiteConfig(webConfig);
+		vm_loading.isShow = false;
+		//-- - 假数据-- - end-- -
 	}
 }
 
@@ -529,12 +537,12 @@ function getWebsitConfig() {
 		type: 'find'
 	}
 	unitWebsitePro(tempData, function(data) {
-		weui.alert('配置为:' + JSON.stringify(data));
+		console.log('配置为:' + JSON.stringify(data));
 		vm_loading.isShow = false;
 		if(data.RspCode == 0) {
 			if(data.RspData.length > 0) {
 				webConfig = data.RspData[0];
-				setWebConSes(webConfig);
+				//setWebConSes(webConfig);
 				initWebsiteConfig(webConfig);
 			} else {
 				weui.alert('没有获取到配置信息')
@@ -557,8 +565,8 @@ function initWebsiteConfig(data) {
 	//皮肤id
 	//vm_skin.skinId = data.skinid;
 	//图片
-	vm_image.imageArray[0].imageurl = data.logo;
-	vm_image.imageArray[1].imageurl = data.banner;
+	vm_image.imageArray[0].imageurl = data.logourl;
+	vm_image.imageArray[1].imageurl = data.bannerurl;
 	//开关
 	vm_switch.switchArray[0].check = data.stat;
 	vm_switch.switchArray[1].check = data.isreply;
@@ -631,7 +639,7 @@ function changeWebsiteConfig(change) {
 			vm_loading.isShow = false;
 			weui.toast("操作成功");
 			webConfig[commit.callcol] = commit.colv;
-			setWebConSes(webConfig);
+			//setWebConSes(webConfig);
 		} else {
 			if(change.type == 1) { //开关
 				vm_switch.switchArray[change.index].check = !change.colv;

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>测试weui的scroll</title>
+		<link rel="stylesheet" href="../../css/weui.min.css" />
+		<link rel="stylesheet" href="../../css/jquery-weui.min.css" />
+		<style>
+			.weui-cells {
+				margin-top: 0px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="weui-pull-to-refresh__layer">
+			<div class='weui-pull-to-refresh__arrow'></div>
+			<div class='weui-pull-to-refresh__preloader'></div>
+			<div class="down">下拉刷新</div>
+			<div class="up">释放刷新</div>
+			<div class="refresh">正在刷新</div>
+		</div>
+		<div id="scroll_cell" class="weui-cells">
+			<cell-item v-for="(value,index) in cells" :value="value" :key="index" :index="index"></cell-item>
+		</div>
+		<div class="weui-loadmore">
+			<i class="weui-loading"></i>
+			<span class="weui-loadmore__tips">正在加载</span>
+		</div>
+		<script type="text/javascript" src="../../js/weui.min.js"></script>
+		<script type="text/javascript" src="../../js/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/jquery-weui.min.js"></script>
+		<script type="text/javascript" src="../../js/vue.min.js"></script>
+		<script>
+			Vue.component("cell-item", {
+				props: ['value'],
+				template: '\
+				<div class="weui-cell">\
+					<div class="weui-cell__bd">\
+						<p>item {{value}}</p>\
+					</div>\
+				</div>'
+			});
+			var vm_scroll = new Vue({
+				el: "#scroll_cell",
+				data: {
+					cells: []
+				}
+			});
+
+			var num = 0;
+
+			function addTenCells() {
+				for(var i = 0; i < 10; i++) {
+					vm_scroll.cells.push(num);
+					num++;
+				}
+			}
+
+			function downInitScroll() {
+				vm_scroll.cells = [];
+				addTenCells();
+			}
+			window.onload = function() {
+				$(document.body).pullToRefresh();
+				$(document.body).infinite();
+				addTenCells();
+				$(document.body).on("pull-to-refresh", function() {
+					console.log("下拉刷新");
+					setTimeout(function() {
+						downInitScroll();
+						$(document.body).pullToRefreshDone();
+					}, 2000);
+				});
+				var loading = false; //状态标记
+				$(document.body).infinite().on("infinite", function() {
+					console.log("上拉加载更多");
+					if(loading) {
+						return false;
+					}
+					loading = true;
+					setTimeout(function() {
+						addTenCells();
+						loading = false;
+						$(document.body).destroyInfinite();
+					}, 1500); //模拟延迟
+				});
+			}
+		</script>
+	</body>
+
+</html>

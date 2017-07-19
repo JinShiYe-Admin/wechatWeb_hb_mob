@@ -285,35 +285,35 @@ function initVueVM() {
 			isShow: false,
 			switchArray: [{
 				callcol: "stat",
-				title: "网站开启",
+				title: "网站是否启用",
 				check: 0
 			}, {
 				callcol: "isreply",
-				title: "整站新闻允许回复",
+				title: "整站文章是否允许回复",
 				check: 0
 			}, {
 				callcol: "isnewchk",
-				title: "允许新闻先发后审",
+				title: "是否允许文章先发后审",
 				check: 0
 			}, {
 				callcol: "isnewreplychk",
-				title: "允许回复先发后审",
+				title: "是否允许回复先发后审",
 				check: 0
 			}, {
 				callcol: "isfileup",
-				title: "允许新闻上传附件",
+				title: "是否允许文章上传附件",
 				check: 0
 			}, {
 				callcol: "isfiledown",
-				title: "允许附件被下载",
+				title: "是否允许附件被下载",
 				check: 0
 			}, {
 				callcol: "iswrite",
-				title: "允许新闻普通人员投稿",
+				title: "是否允许文章普通人员投稿",
 				check: 0
 			}, {
 				callcol: "isass",
-				title: "允许评论被评价",
+				title: "是否允许评论被评价",
 				check: 0
 			}]
 		}

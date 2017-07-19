@@ -169,8 +169,8 @@ var webConfig = {}; //网站配置的数据
 //webConfig.cname = '中文名';
 //webConfig.ename = 'yingwenming';
 //webConfig.corptel = '110';
-//webConfig.logo = 'http://ojhtju24r.bkt.clouddn.com/wechat/webcon/1500367775004956.png';
-//webConfig.banner = 'http://qn-kfpb.jiaobaowang.net/wechat/webcon/1500425642862254.PNG';
+//webConfig.logourl = 'http://ojhtju24r.bkt.clouddn.com/wechat/webcon/1500367775004956.png';
+//webConfig.bannerurl = 'http://qn-kfpb.jiaobaowang.net/wechat/webcon/1500425642862254.PNG';
 //webConfig.stat = 0;
 //webConfig.isreply = 0;
 //webConfig.isnewchk = 0;
@@ -565,8 +565,8 @@ function initWebsiteConfig(data) {
 	//皮肤id
 	//vm_skin.skinId = data.skinid;
 	//图片
-	vm_image.imageArray[0].imageurl = data.logo;
-	vm_image.imageArray[1].imageurl = data.banner;
+	vm_image.imageArray[0].imageurl = data.logourl;
+	vm_image.imageArray[1].imageurl = data.bannerurl;
 	//开关
 	vm_switch.switchArray[0].check = data.stat;
 	vm_switch.switchArray[1].check = data.isreply;

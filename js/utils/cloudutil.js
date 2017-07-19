@@ -176,7 +176,9 @@ var cloudutil = (function(mod) {
 				});
 			},
 			error: function(xhr, type, errorThrown) {
-				console.log("getUpTokenRequest:error:" + type);
+				console.log("getUpTokenRequest:error:xhr:" + JSON.stringify(xhr));
+				console.log("getUpTokenRequest:error:type:" + type);
+				console.log("getUpTokenRequest:error:errorThrown:" + JSON.stringify(errorThrown));
 				callBack({
 					code: 0,
 					message: type

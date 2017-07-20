@@ -9,6 +9,7 @@
 		<title>测试weui的scroll</title>
 		<link rel="stylesheet" href="../../css/weui.min.css" />
 		<link rel="stylesheet" href="../../css/jquery-weui.min.css" />
+
 		<style>
 			.weui-cells {
 				margin-top: 0px;
@@ -17,33 +18,43 @@
 	</head>
 
 	<body>
-		<div class="weui-pull-to-refresh__layer">
-			<div class='weui-pull-to-refresh__arrow'></div>
-			<div class='weui-pull-to-refresh__preloader'></div>
-			<div class="down">下拉刷新</div>
-			<div class="up">释放刷新</div>
-			<div class="refresh">正在刷新</div>
-		</div>
 		<div id="scroll_cell" class="weui-cells">
+			<div class="weui-pull-to-refresh__layer">
+				<div class='weui-pull-to-refresh__arrow'></div>
+				<div class='weui-pull-to-refresh__preloader'></div>
+				<div class="down">下拉刷新</div>
+				<div class="up">释放刷新</div>
+				<div class="refresh">正在刷新</div>
+			</div>
 			<cell-item v-for="(value,index) in cells" :value="value" :key="index" :index="index"></cell-item>
-		</div>
-		<div class="weui-loadmore">
-			<i class="weui-loading"></i>
-			<span class="weui-loadmore__tips">正在加载</span>
+			<div class="weui-loadmore">
+				<i class="weui-loading"></i>
+				<span class="weui-loadmore__tips">正在加载</span>
+			</div>
 		</div>
 		<script type="text/javascript" src="../../js/weui.min.js"></script>
 		<script type="text/javascript" src="../../js/jquery.min.js"></script>
 		<script type="text/javascript" src="../../js/jquery-weui.min.js"></script>
 		<script type="text/javascript" src="../../js/vue.min.js"></script>
+
 		<script>
 			Vue.component("cell-item", {
 				props: ['value'],
 				template: '\
-				<div class="weui-cell">\
+				<div class="weui-cell" @click="onclick();">\
 					<div class="weui-cell__bd">\
 						<p>item {{value}}</p>\
 					</div>\
-				</div>'
+				</div>',
+				methods: {
+					onclick: function() {
+						console.log("onclick");
+						//						$.alert({
+						//							title: '标题',
+						//							text: '内容文案',
+						//						});
+					}
+				}
 			});
 			var vm_scroll = new Vue({
 				el: "#scroll_cell",
@@ -55,7 +66,7 @@
 			var num = 0;
 
 			function addTenCells() {
-				for(var i = 0; i < 10; i++) {
+				for(var i = 0; i < 7; i++) {
 					vm_scroll.cells.push(num);
 					num++;
 				}
@@ -86,7 +97,6 @@
 					setTimeout(function() {
 						addTenCells();
 						loading = false;
-						$(document.body).destroyInfinite();
 					}, 1500); //模拟延迟
 				});
 			}

@@ -170,7 +170,7 @@ var webConfig = {}; //网站配置的数据
 //webConfig.ename = 'yingwenming';
 //webConfig.corptel = '110';
 //webConfig.logourl = 'http://ojhtju24r.bkt.clouddn.com/wechat/webcon/1500367775004956.png';
-//webConfig.bannerurl = 'http://qn-kfpb.jiaobaowang.net/wechat/webcon/1500425642862254.PNG';
+//webConfig.bannerurl = '';
 //webConfig.stat = 0;
 //webConfig.isreply = 0;
 //webConfig.isnewchk = 0;
@@ -198,8 +198,8 @@ window.onload = function() {
 	//initData();
 	getWebsitConfig(); //获取配置
 
-	//initWebsiteConfig(webConfig);
-	//vm_loading.isShow = false;
+	initWebsiteConfig(webConfig);
+	vm_loading.isShow = false;
 
 };
 
@@ -331,11 +331,24 @@ function initVueVM() {
 function initQNUpLoader() {
 	//console.log("initQNUpLoader:" + document.getElementById("btn_logo"));
 	//console.log("initQNUpLoader:" + document.getElementById("btn_banner"));
+	var logoOption = setQNOption(vm_image.imageArray[0].id, vm_image.imageArray[0].parid);
+	logoUploader = Qiniu.uploader(logoOption);
 
+	var Qiniu2 = new QiniuJsSDK();
+	var banOption = setQNOption(vm_image.imageArray[1].id, vm_image.imageArray[1].parid);
+	bannerUploader = Qiniu2.uploader(banOption);
+}
+
+/**
+ * 设置七牛上传配置
+ * @param {Object} browse_button
+ * @param {Object} container
+ */
+function setQNOption(browse_button, container) {
 	var qnUpOption = {
 		disable_statistics_report: true, // 禁止自动发送上传统计信息到七牛，默认允许发送
 		runtimes: 'html5,flash,html4', // 上传模式,依次退化
-		browse_button: "", // 上传选择的点选按钮，**必需**
+		browse_button: browse_button, // 上传选择的点选按钮，**必需**
 		uptoken_func: function(file) { // 在需要获取 uptoken 时，该方法会被调用
 			console.log("uptoken_func:" + JSON.stringify(file));
 			uptokenData = null;
@@ -366,7 +379,7 @@ function initQNUpLoader() {
 		save_key: false, // 默认 false。若在服务端生成 uptoken 的上传策略中指定了 `save_key`，则开启，SDK在前端将不对key进行任何处理
 		get_new_uptoken: true, // 设置上传文件的时候是否每次都重新获取新的 uptoken
 		domain: storageutil.QNPBDOMAIN, // bucket 域名，下载资源时用到，如：'http://xxx.bkt.clouddn.com/' **必需**
-		container: "", // 上传区域 DOM ID，默认是 browser_button 的父元素，
+		container: container, // 上传区域 DOM ID，默认是 browser_button 的父元素，
 		max_file_size: '10mb', // 最大文件体积限制
 		flash_swf_url: '../../js/lib/plupload/Moxie.swf', //引入 flash,相对路径
 		max_retries: 0, // 上传失败最大重试次数
@@ -480,14 +493,8 @@ function initQNUpLoader() {
 			}
 		}
 	}
-	qnUpOption.browse_button = vm_image.imageArray[0].id;
-	qnUpOption.container = vm_image.imageArray[0].parid;
-	logoUploader = Qiniu.uploader(qnUpOption);
 
-	var Qiniu2 = new QiniuJsSDK();
-	qnUpOption.browse_button = vm_image.imageArray[1].id;
-	qnUpOption.container = vm_image.imageArray[1].parid;
-	bannerUploader = Qiniu2.uploader(qnUpOption);
+	return qnUpOption;
 }
 
 /**
@@ -522,8 +529,8 @@ function initData() {
 	if(getData) {
 		getWebsitConfig(); //获取配置
 		//-- - 假数据-- - start-- -
-		initWebsiteConfig(webConfig);
-		vm_loading.isShow = false;
+		//initWebsiteConfig(webConfig);
+		//vm_loading.isShow = false;
 		//-- - 假数据-- - end-- -
 	}
 }
@@ -649,31 +656,31 @@ function changeWebsiteConfig(change) {
 		}
 	});
 	//---假数据---start---
-	//	if(1) { //成功
-	//		if(change.type == 2) { //皮肤id
-	//			vm_skin.skinId = commit.colv;
-	//		}
-	//		if(change.type == 3) { //图片
-	//			vm_image.imageArray[change.index].imageurl = commit.colv;
-	//			vm_image.imageArray[change.index].showupload = false;
-	//			vm_image.imageArray[change.index].fname = "";
-	//			vm_image.imageArray[change.index].fsize = "";
-	//			vm_image.imageArray[change.index].fbase = "";
-	//			delImage({
-	//				appId: storageutil.QNQYWXKID,
-	//				urls: [webConfig[commit.callcol]]
-	//			});
-	//		}
-	//		vm_loading.isShow = false;
-	//		weui.toast("操作成功");
-	//		webConfig[commit.callcol] = commit.colv;
-	//		setWebConSes(webConfig);
-	//	} else {
-	//		if(change.type == 1) { //开关
-	//			vm_switch.switchArray[change.index].check = !change.colv;
-	//		}
-	//		weui.alert("修改失败:" + data.RspTxt);
-	//	}
+//	if(1) { //成功
+//		if(change.type == 2) { //皮肤id
+//			vm_skin.skinId = commit.colv;
+//		}
+//		if(change.type == 3) { //图片
+//			vm_image.imageArray[change.index].imageurl = commit.colv;
+//			vm_image.imageArray[change.index].showupload = false;
+//			vm_image.imageArray[change.index].fname = "";
+//			vm_image.imageArray[change.index].fsize = "";
+//			vm_image.imageArray[change.index].fbase = "";
+//			delImage({
+//				appId: storageutil.QNQYWXKID,
+//				urls: [webConfig[commit.callcol]]
+//			});
+//		}
+//		vm_loading.isShow = false;
+//		weui.toast("操作成功");
+//		webConfig[commit.callcol] = commit.colv;
+//		setWebConSes(webConfig);
+//	} else {
+//		if(change.type == 1) { //开关
+//			vm_switch.switchArray[change.index].check = !change.colv;
+//		}
+//		weui.alert("修改失败:" + data.RspTxt);
+//	}
 	//---假数据---end---
 }
 

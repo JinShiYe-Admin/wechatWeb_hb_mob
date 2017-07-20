@@ -198,8 +198,8 @@ window.onload = function() {
 	//initData();
 	getWebsitConfig(); //获取配置
 
-	initWebsiteConfig(webConfig);
-	vm_loading.isShow = false;
+	//initWebsiteConfig(webConfig);
+	//vm_loading.isShow = false;
 
 };
 

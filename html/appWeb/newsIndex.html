@@ -2,219 +2,138 @@
 <html>
 
 	<head>
-		<title>新闻</title>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-		<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.">
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>新闻列表</title>
+		<!--<link rel="stylesheet" href="../../css/weui.min.css" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />-->
 		<link rel="stylesheet" href="../../js/demoCssJs/weui.min.css">
 		<link rel="stylesheet" href="../../js/demoCssJs/jquery-weui.css">
 		<link rel="stylesheet" href="../../js/demoCssJs/demos.css">
 		<style>
-			.has-max {
-				max-width: 640px;
+			.weui-navbar {
+				top: 20px;
 			}
 			
-			.category_nav {
-				white-space: nowrap;
-				display: inline-block;
-			}
-			
-			.category_nav a {
-				display: inline-block;
-				position: relative;
-			}
-			
-			.category_nav li a {
-				display: inline-block;
-				padding: 0 .5rem;
-			}
-			
-			.wrap {
-				width: 30px;
-				position: relative;
-			}
-			
-			.img {
-				width: 27px;
-				height: 27px;
-			}
-			
-			.notice {
-				width: 15px;
-				height: 15px;
-				line-height: 15px;
-				font-size: 10px;
-				color: #fff;
-				text-align: center;
-				background-color: #f00;
-				border-radius: 50%;
-				position: absolute;
-				right: -7px;
-				top: -7px;
-			}
-			
-			.scrollgo {
-				overflow: auto;
-				-webkit-overflow-scrolling: touch;
-				width: 100%;
-				height: 100%;
+			.weui-navbar+.weui-tab__bd {
+				padding-top: 60px;
 			}
 		</style>
 	</head>
 
-	<body ontouchstart>
-		<div class="weui-tab scrollgo" id="wrapper">
-			<div class="weui-navbar category_nav">
-				<a class="weui-navbar__item" :class="{'weui-bar__item--on':item.active}" v-for="item in items" :href="'#'+item.chnid" @click="clickColumn(item)">{{item.cname}}</a>
-			</div>
-			<div class="weui-tab__bd">
-				<div :id="item.chnid" class="weui-tab__bd-item infinite weui-pull-to-refresh" :class="{'weui-tab__bd-item--active':item.active}" v-for="item in items" style="width: 100%;">
-					<div class="weui-pull-to-refresh__layer">
-						<div class='weui-pull-to-refresh__arrow'></div>
-						<div class='weui-pull-to-refresh__preloader'></div>
-						<div class="down">下拉刷新</div>
-						<div class="up">释放刷新</div>
-						<div class="refresh">正在刷新</div>
-					</div>
+	<body>
+		<div class="weui-pull-to-refresh__layer">
+			<div class='weui-pull-to-refresh__arrow'></div>
+			<div class='weui-pull-to-refresh__preloader'></div>
+			<div class="down">下拉刷新</div>
+			<div class="up">释放刷新</div>
+			<div class="refresh">正在刷新</div>
+		</div>
 
-					<div id="contentCell" class="content-padded">
-						<a class="weui-cell weui-cell_access" href="javascript:;" v-for="newsModel in item.newsArray" @click="clickNews(newsModel)">
-							<div class="weui-cell__hd"><img :src=newsModel.islink alt="" style="width:40px;margin-right:5px;display:block"></div>
-							<div class="weui-cell__bd">
-								<p>{{newsModel.topic}}</p>
-								<p>{{newsModel.subtopic}}</p>
+		<div class="weui-tab">
+			<div class="weui-navbar category_nav">
+				<div class="weui-cells__title">所属栏目</div>
+				<div class="weui-cells" id="chnid">
+					<div>
+						<section class="container">
+							<div class="dropdown">
+								<select id="Prixlk" name="one" class="dropdown-select" style="font-size: 17px;color: #929292;">
+									<option id="selectDropdown" :value='item.chnid' v-for="item in items">{{item.cname}}</option>
+								</select>
 							</div>
-							<div class="weui-cell__ft"></div>
-						</a>
-					</div>
-					<div id="loadMoreDiv">
-						<div class="weui-loadmore">
-							<i class="weui-loading"></i>
-							<span class="weui-loadmore__tips">正在加载</span>
-						</div>
+						</section>
 					</div>
 				</div>
-			</div>
-			<div class="weui-tabbar">
-				<a href="newsIndex.html" class="weui-tabbar__item weui-bar__item--on">
-					<div class="wrap">
-						<img class="img" src="../../image/newsIndex.png" alt="">
-						<!--<div class="notice">8</div>-->
-					</div>
-					<p class="weui-tabbar__label">新闻</p>
-				</a>
-				<a href="mineIndex.html" class="weui-tabbar__item">
-					<div class="wrap">
-						<img class="img" src="../../image/mineIndex.png" alt="">
-						<!--<div class="notice">12</div>-->
-					</div>
-					<p class="weui-tabbar__label">我的</p>
-				</a>
+			</div> 
+			<div class="weui-tab__bd" id="newsData">
+				<div id="contentCell" class="content-padded">
+					<a class="weui-cell weui-cell_access" href="javascript:;" v-for="(newsModel,index) in item.newsArray">
+						<div class="weui-cell__bd"> 
+							<span style="width: 10px;" class="Prizs">标题：{{newsModel.topic}}</span> 
+							<button id="Priqy" style="float:right" class="weui-btn weui-btn_mini weui-btn_primary" @click="clickDel(newsModel,1)">通过</button>
+							<p style='width:350px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;'>副标题：{{newsModel.subtopic}}</p>
+							<button style="float:right" class="weui-btn weui-btn_mini weui-btn_warn" @click="clickDel(newsModel,0)">删除</button>
+							<p style='width:350px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;'>内容：{{newsModel.content}}</p>
+						</div>
+					</a>
+				</div> 
+			</div>  
+		</div> 
+		<div id="loadMoreDiv">
+			<div class="weui-loadmore">
+				<i class="weui-loading"></i>
+				<span class="weui-loadmore__tips">正在加载</span>
 			</div>
 		</div>
+
 		<script src="../../js/demoCssJs/jquery-2.1.4.js"></script>
 		<script src="../../js/demoCssJs/iscroll.js"></script>
 		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/demoCssJs/jquery-weui.js"></script>
-		<!--<script src="../../js/demoCssJs/fastclick.js"></script>-->
-		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/mui.min.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 		<script>
-			var columnData = new Vue({
-				el: '#wrapper',
+	 
+		
+			var newsFlag = 0; //0刷新，1加载更多
+			var newsPage = 1; //加载当当前新闻的页码
+			//所属栏目下拉框
+			var vue_input = new Vue({
+				el: '#chnid',
 				data: {
-					items: [] //列表信息流数据
+					items: []
+				},
+				methods: {}
+			});
+			var newsData = new Vue({
+				el: '#newsData',
+				data: {
+					item: {} //列表信息流数据
 				},
 				updated: function() {
-					$(".weui-loadmore").hide();
-					$(".infinite").infinite(0).on("infinite", function() {
-						var self = this;
-						if(document.getElementById("noMore")) {
-							return;
-						}
-						if(loading) return;
-						$(self).find(".weui-loadmore").show();
-						console.log(self);
-						loading = true;
-						console.log(self);
-						console.log('我是加载的新内容111111');
-						selectColumnSendPro(1);
-					});
-
-					$(".weui-pull-to-refresh").pullToRefresh().on("pull-to-refresh", function() {
-						var self = this;
-						if(loading) return;
-						console.log(self);
-						loading = true;
-						console.log(self);
-						setTimeout(function() {
-							console.log('444444411111111');
-							selectColumnSendPro(0);
-							loading = false;
-							$(".weui-pull-to-refresh").pullToRefreshDone();
-						}, 1000); //模拟延迟
-					});
+					var tempVVV = document.getElementById("newsData");
+					console.log('tempVVV:' + tempVVV.innerHTML);
 				},
 				methods: {
-					clickNews: function(model) {
-						console.log('点击的model:' + JSON.stringify(model));
-						utils.mOpenWithData("new-detail.html", model);
-					},
-					clickColumn: function(model) {
-						console.log('点击栏目的model:' + JSON.stringify(model));
-						$(".weui-loadmore").hide();
-						newsColumn = model;
-						if(newsColumn.newsArray.length == 0) {
-							$(".weui-loadmore").hide();
-							loading = false;
-							$(".weui-pull-to-refresh").pullToRefreshDone();
-							selectColumnSendPro(0);
+					clickDel: function(model, Pribs) {
+						var colid = model.newsid; //新闻id
+						//确认框confirm	  
+						if(Pribs == 0) {
+							$.confirm("确定要删除吗？", function() {
+								//确定删除
+								var tempData = {
+									cmd: 'news', //文章管理
+									type: 'del', //分页查找文章列表
+									colid: colid
+								}
+								unitWebsitePro(tempData, function(data) {
+                                    console.log(JSON.stringify(data));
+								});
+							}, function() {});
+						}else if(Pribs==1){  
+							if(model.stat==1){
+							  var button1 = document.getElementById("Priqy"); 
+							  button1.innerText = "不通过"; 
+							  button1.style.backgroundColor="#DDDDDD ";
+							  model.stat=0;
+							 }else if(model.stat==0){
+							  var button1 = document.getElementById("Priqy"); 
+							  button1.innerText = "通过";  
+							  button1.style.backgroundColor="#00AA00 ";
+							  model.stat=1;
+							 }
 						}
-						delNoMore();
 					}
 				}
 			});
-			var newsColumn = {}; //获取当前的栏目model
-			var newsFalg = 0; //判断是否第一次获取协议，防止多次刷新
-//			$(function() {
-//				FastClick.attach(document.body);
-//			});
-			//var myScroll = new IScroll('#wrapper');
-			//每个选项栏的高度重新调整
-			var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight;
-			var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight;
-			$('.weui-tab__bd').css({
-				'height': (allheight - barheight) * 100 / allheight + '%'
-			});
-			$('.weui-tab__bd-item').css({
-				'height': (allheight - barheight) * 100 / allheight + '%'
-			});
-			//有红点提示的宽度调整
-			var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth;
-			$('.wrap').css({
-				'left': (tabar_width - 30) * 50 / tabar_width + '%'
-			});
-			window.addEventListener("resize", function() {
-				var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight;
-				var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight;
-				$('.weui-tab__bd').css({
-					'height': (allheight - barheight) * 100 / allheight + '%'
-				});
-				$('.weui-tab__bd-item').css({
-					'height': (allheight - barheight) * 100 / allheight + '%'
-				});
-
-				var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth;
-				$('.wrap').css({
-					'left': (tabar_width - 30) * 50 / tabar_width + '%'
-				});
-			}, false);
+   
 			var loading = false;
 			$(".weui-loadmore").hide();
-			$(".infinite").infinite(0).on("infinite", function() {
+			$("body").infinite(0).on("infinite", function() {
 				var self = this;
 				if(document.getElementById("noMore")) {
 					return;
@@ -225,10 +144,11 @@
 				loading = true;
 				console.log(self);
 				console.log('我是加载的新内容');
-				selectColumnSendPro(1);
+				newsData.item.newsFlag = 1; //0刷新，1加载更多
+				getNewsList(newsData.item);
 			});
 
-			$(".weui-pull-to-refresh").pullToRefresh().on("pull-to-refresh", function() {
+			$("body").pullToRefresh().on("pull-to-refresh", function() {
 				var self = this;
 				if(loading) return;
 				console.log(self);
@@ -236,68 +156,14 @@
 				console.log(self);
 				setTimeout(function() {
 					console.log('4444444');
-					selectColumnSendPro(0);
+					newsData.item.newsPage = 1; //获取新闻的页码
+					newsData.item.newsFlag = 0; //0刷新，1加载更多
+					newsData.item.newsArray = []; //栏目对应的新闻列表
+					getNewsList(newsData.item);
 					loading = false;
 					$(".weui-pull-to-refresh").pullToRefreshDone();
 				}, 1000); //模拟延迟
 			});
-			//通过id，获取到当前的column，然后发送协议
-			//flag=0刷新，=1加载更多
-			function selectColumnSendPro(flag) {
-				console.log('selectColumnSendPro');
-				for(var i = 0; i < columnData.items.length; i++) {
-					var tempModel = columnData.items[i];
-					console.log('开始匹配id:' + tempModel.chnid + ',' + newsColumn.chnid + ',' + tempModel.cname);
-					if(tempModel.chnid == newsColumn.chnid) {
-						if(flag == 0) {
-							tempModel.newsPage = 1;
-						}
-						console.log('id匹配完成');
-						tempModel.newsFlag = flag;
-						getNewsList(tempModel);
-						break;
-					}
-				}
-			}
-			window.onload = function() {
-				//获取所有的栏目
-				getSumColumn();
-			};
-			//获取所有的栏目
-			function getSumColumn() {
-				var tempData = {
-					cmd: 'chn', //网站栏目
-					type: 'findpage', //分页查找栏目列表
-					pagesize: 999, //每页条数
-					pageindex: 1 //页码
-				}
-				unitWebsitePro(tempData, function(data) {
-					if(data.RspCode == 0) {
-
-						if(data.RspData.dt.length > 0) {
-							//塞入页码、加载状态等自定义参数
-							for(var tempItem in data.RspData.dt) {
-								data.RspData.dt[tempItem].newsPage = 1; //获取新闻的页码
-								data.RspData.dt[tempItem].newsFlag = 0; //0刷新，1加载更多
-								data.RspData.dt[tempItem].newsArray = []; //栏目对应的新闻列表
-								if(tempItem == 0) {
-									data.RspData.dt[tempItem].active = true;
-								} else {
-									data.RspData.dt[tempItem].active = false;
-								}
-							}
-							columnData.items = data.RspData.dt;
-							newsColumn = columnData.items[0];
-							//获取索引为0的栏目新闻列表
-							getNewsList(columnData.items[0]);
-						} else {
-							alert('暂时还没有栏目');
-						}
-					} else {
-						alert(data.RspTxt);
-					}
-				});
-			};
 
 			function delNoMore() {
 				if(document.getElementById("noMore")) {
@@ -307,6 +173,59 @@
 					}
 				}
 			}
+
+			window.onload = function() {
+				
+				
+				
+				$(document.body).pullToRefresh();
+				var tempData = {
+					cmd: 'chn', //网站栏目
+					type: 'findpage', //分页查找栏目列表
+					pagesize: 999, //每页条数
+					pageindex: 1 //页码
+				}
+				unitWebsitePro(tempData, function(data) {
+					console.log(JSON.stringify(data.RspData.dt));
+					//塞入页码、加载状态等自定义参数
+					for(var tempItem in data.RspData.dt) {
+						data.RspData.dt[tempItem].newsPage = 1; //获取新闻的页码
+						data.RspData.dt[tempItem].newsFlag = 0; //0刷新，1加载更多
+						data.RspData.dt[tempItem].newsArray = []; //栏目对应的新闻列表
+						if(tempItem == 0) {
+							data.RspData.dt[tempItem].active = true;
+						} else {
+							data.RspData.dt[tempItem].active = false;
+						}
+					}
+					if(data.RspCode == 0) {
+						if(data.RspData.dt.length > 0) {
+							newsData.item = data.RspData.dt[0];
+							vue_input.items = data.RspData.dt;
+							getNewsList(newsData.item);
+						} else {
+							alert('暂时还没有栏目');
+						}
+					} else {
+						alert(data.RspTxt);
+					}
+				});
+
+			}
+			$("#Prixlk").change(function() {
+				var Chnid = document.getElementById("Prixlk");
+				var PriChnid = Chnid.selectedIndex; // 选中索引
+				console.log(PriChnid);
+				newsData.item = vue_input.items[PriChnid];
+				newsData.item.newsPage = 1; //获取新闻的页码
+				newsData.item.newsFlag = 0; //0刷新，1加载更多
+				newsData.item.newsArray = []; //栏目对应的新闻列表
+				getNewsList(newsData.item);
+				$(".weui-loadmore").hide();
+				$(".weui-loadmore").hide();
+				loading = false;
+				$(".weui-pull-to-refresh").pullToRefreshDone();
+			})
 			//获取栏目对应的新闻
 			function getNewsList(columnModel) {
 				console.log('获取新闻列表');
@@ -317,82 +236,37 @@
 					pageindex: columnModel.newsPage, //页码
 					chnid: columnModel.chnid //某个栏目下的文章，栏目id
 				}
+				//alert(columnModel.chnid);
 				unitWebsitePro(tempData, function(data) {
-					console.log('data000000');
-					delNoMore();
 					if(data.RspCode == 0) {
 						if(data.RspData.dt.length > 0) {
-							console.log('00000000');
 							columnModel.newsPage++;
 							console.log('columnModel.newsFlag:' + columnModel.newsFlag);
 							//判断是刷新0，还是加载更多1
 							if(columnModel.newsFlag == 0) {
 								columnModel.newsArray = [].concat(data.RspData.dt);
-								setTimeout(function() {
-									$(".weui-loadmore").hide();
-									loading = false;
-									$(".weui-pull-to-refresh").pullToRefreshDone();
-									delNoMore();
-									if(data.RspData.dt.length < 15) {
-										$(".content-padded").append('<p id="noMore" style="text-align: center;color: darkgray;">--------暂无更多数据--------</p>');
-									}
-								}, 1000); //模拟延迟
 							} else {
-								columnModel.newsArray = columnModel.newsArray.concat(data.RspData.dt);
-								setTimeout(function() {
-									$(".weui-loadmore").hide();
-									loading = false;
-									$(".weui-pull-to-refresh").pullToRefreshDone();
-									delNoMore();
-									if(data.RspData.dt.length < 15) {
-										$(".content-padded").append('<p id="noMore" style="text-align: center;color: darkgray;">--------暂无更多数据--------</p>');
-									}
-								}, 1000); //模拟延迟
+								newsData.item.newsArray = newsData.item.newsArray.concat(data.RspData.dt);
 							}
-
+							setTimeout(function() {
+								$(".weui-loadmore").hide();
+								loading = false;
+								$(".weui-pull-to-refresh").pullToRefreshDone();
+								delNoMore();
+								if(data.RspData.dt.length < 15) {
+									$(".content-padded").append('<p id="noMore" style="text-align: center;color: darkgray;">--------暂无更多数据--------</p>');
+								}
+							}, 1000); //模拟延迟
 						} else {
-							console.log('111111');
-							//判断是刷新0，还是加载更多1
-							if(columnModel.newsFlag == 0) {
-								setTimeout(function() {
-									$(".weui-loadmore").hide();
-									loading = false;
-									$(".weui-pull-to-refresh").pullToRefreshDone();
-								}, 1000); //模拟延迟
-							} else {
-								setTimeout(function() {
-									$(".weui-loadmore").hide();
-									loading = false;
-									$(".weui-pull-to-refresh").pullToRefreshDone();
-								}, 2000); //模拟延迟
-							}
+							setTimeout(function() {
+								$(".weui-loadmore").hide();
+								loading = false;
+								$(".weui-pull-to-refresh").pullToRefreshDone();
+							}, 1000); //模拟延迟
 							delNoMore();
 							$(".content-padded").append('<p id="noMore" style="text-align: center;color: darkgray;">--------暂无更多数据--------</p>');
 						}
-						//每个选项栏的高度重新调整
-						var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight;
-						var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight;
-						$('.weui-tab__bd').css({
-							'height': (allheight - barheight) * 100 / allheight + '%'
-						});
-						$('.weui-tab__bd-item').css({
-							'height': (allheight - barheight) * 100 / allheight + '%'
-						});
-						//将数据都获取到后，计算nav宽度，避免界面刷新
-						if(newsFalg == 0) {
-							newsFalg = 1;
-							var all_width = document.getElementsByClassName('category_nav')[0].scrollWidth;
-							$('.category_nav').css({
-								'width': all_width + 'px'
-							})
-							var myscroll = new iScroll("wrapper", {
-								scrollX: true,
-								scrollY: false,
-								hScrollbar: false,
-								vScrollbar: true,
-								vScroll: false
-							});
-						}
+						console.log('最终数据:' + JSON.stringify(newsData.item));
 					} else {
 						alert(data.RspTxt);
 					}

@@ -20,11 +20,10 @@
 			.weui-navbar+.weui-tab__bd {
 				padding-top: 60px;
 			}
-		</style>    
-	</head>   
+		</style>
+	</head>
 
 	<body>
-	<body>1
 		<div class="weui-pull-to-refresh__layer">
 			<div class='weui-pull-to-refresh__arrow'></div>
 			<div class='weui-pull-to-refresh__preloader'></div>
@@ -32,7 +31,6 @@
 			<div class="up">释放刷新</div>
 			<div class="refresh">正在刷新</div>
 		</div>
-
 		<div class="weui-tab">
 			<div class="weui-navbar category_nav">
 				<div class="weui-cells__title">所属栏目</div>
@@ -41,7 +39,7 @@
 						<section class="container">
 							<div class="dropdown">
 								<select id="Prixlk" name="one" class="dropdown-select" style="font-size: 17px;color: #929292;">
-									<option id="selectDropdown" :value='item.chnid' selected v-for="item in items">{{item.cname}}</option>
+									<option id="selectDropdown" :value='item.chnid' v-for="item in items">{{item.cname}}</option>
 								</select>
 							</div>
 						</section>
@@ -52,14 +50,15 @@
 				<div id="contentCell" class="content-padded">
 					<a class="weui-cell weui-cell_access" href="javascript:;" v-for="(newsModel,index) in item.newsArray">
 						<div class="weui-cell__bd">
-							<span>ID：{{newsModel.newsid}}</span>
-							<span>标题：{{newsModel.topic}}</span> <button style="float:right" class="weui-btn weui-btn_mini weui-btn_primary">通过</button>
-							<p>副标题：{{newsModel.subtopic}}</p><button id="Pride" style="float:right" class="weui-btn weui-btn_mini weui-btn_warn" @click="clickDel(newsModel,index)">删除</button>
-							<p>内容：{{newsModel.content}}</p>
+							<span class="Prizs">标题：{{newsModel.topic}}</span>
+							<button id="{{newsModel.newsid}}" style="float:right" class="weui-btn weui-btn_mini weui-btn_primary" @click="clickDel(newsModel,1)">{{newsModel.Prizt}}</button>
+
+							<p style='width:350px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;'>副标题：{{newsModel.subtopic}}</p>
+							<button style="float:right" class="weui-btn weui-btn_mini weui-btn_warn" @click="clickDel(newsModel,0)">删除</button>
+							<p style='width:350px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;'>内容：{{newsModel.content}}</p>
 						</div>
 					</a>
 				</div>
-
 			</div>
 		</div>
 		<div id="loadMoreDiv">
@@ -78,17 +77,15 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 		<script>
-			var newsFlag = 0;//0刷新，1加载更多
-			var newsPage = 1;//加载当当前新闻的页码
+			var newsFlag = 0; //0刷新，1加载更多
+			var newsPage = 1; //加载当当前新闻的页码
 			//所属栏目下拉框
 			var vue_input = new Vue({
 				el: '#chnid',
 				data: {
 					items: []
 				},
-				methods: {
-
-				}
+				methods: {}
 			});
 			var newsData = new Vue({
 				el: '#newsData',
@@ -100,34 +97,62 @@
 					console.log('tempVVV:' + tempVVV.innerHTML);
 				},
 				methods: {
-					clickDel: function() {
-						//						var colid = model.newsid; //新闻id
+					clickDel: function(model, Pribs) {
+						var colid = model.newsid; //新闻id
 						//确认框confirm	  
-
-						$.confirm("确定要删除吗？", function() {
-							//确定删除测试
-							//							var tempData = {
-							//								cmd: 'news', //文章管理
-							//								type: 'del', //分页查找文章列表
-							//								pagesize: '15', //每页条数
-							//								pageindex: '15', //页码
-							//								colid: colid
-							//							}
-							//								unitWebsitePro(tempData, function(data) {
-							//									console.log('index0:' + index + ',' + JSON.stringify(vue_input.items));
-							//									vue_input.items.newsArray.splice(index, 1);
-							//									weui.toast("操作成功");
-							//									console.log('index1:' + index + ',' + JSON.stringify(vue_input.items));
-							//								});
-						}, function() {
-							//点击取消后的回调函数
-							// $(this).clone(); 
-
-						});
-
+						if(Pribs == 0) {
+							$.confirm("确定要删除吗？", function() {
+								//确定删除
+								var tempData = {
+									cmd: 'news', //文章管理
+									type: 'del', //分页查找文章列表
+									colid: colid
+								}
+								alert(colid)
+								unitWebsitePro(tempData, function(data) {
+									console.log(JSON.stringify(data));
+									if(data.RspCode == 0000) { 
+										for(var temp = 0; temp < newsData.item.newsArray.length; temp++) {
+											alert(newsData.item.newsArray[temp].newsid)
+											if(newsData.item.newsArray[temp].newsid == colid) {
+												newsData.item.newsArray.remove(newsData.item.newsArray[temp]);
+											}
+										}
+									}
+								}); 
+							}, function() {});
+						} else if(Pribs == 1) { 
+							SetStat(model, colid); 
+						}
 					}
 				}
 			});
+			//修改审核状态
+			function SetStat(model, colid) {
+				var stat = "";
+				if(model.stat == 0)
+					stat = 1;
+				if(model.stat == 1)
+					stat = 0;
+				var tempData = {
+					cmd: 'news', //文章管理
+					type: 'edit',
+					callcol: 'chk',
+					colid: colid,
+					colv: stat //状态
+				}
+				unitWebsitePro(tempData, function(data) {
+					console.log(JSON.stringify(data));
+					if(data.RspCode == 0000 && stat == 1) {
+						model.Prizt = '不通过';
+						model.stat = 1;
+					} else if(data.RspCode == 0000 && stat == 0) {
+						model.Prizt = '通过';
+						model.stat = 0;
+					}
+				})
+
+			}
 			var loading = false;
 			$(".weui-loadmore").hide();
 			$("body").infinite(0).on("infinite", function() {
@@ -172,6 +197,7 @@
 			}
 
 			window.onload = function() {
+
 				$(document.body).pullToRefresh();
 				var tempData = {
 					cmd: 'chn', //网站栏目
@@ -221,6 +247,7 @@
 				$(".weui-pull-to-refresh").pullToRefreshDone();
 			})
 			//获取栏目对应的新闻
+
 			function getNewsList(columnModel) {
 				console.log('获取新闻列表');
 				var tempData = {
@@ -236,6 +263,17 @@
 						if(data.RspData.dt.length > 0) {
 							columnModel.newsPage++;
 							console.log('columnModel.newsFlag:' + columnModel.newsFlag);
+							//循环审核状态
+							for(var i = 0; i < data.RspData.dt.length; i++) {
+								var tempModel = data.RspData.dt[i];
+								if(tempModel.stat == 1)
+									//data.RspData.dt[i]["stat"]=Prizt = "是"; 
+									tempModel.Prizt = "不通过";
+								if(tempModel.stat == 0)
+									//data.RspData.dt[i]["stat"]=Prizt = "否"; 
+									tempModel.Prizt = "通过";
+
+							}
 							//判断是刷新0，还是加载更多1
 							if(columnModel.newsFlag == 0) {
 								columnModel.newsArray = [].concat(data.RspData.dt);

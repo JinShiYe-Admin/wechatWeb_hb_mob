@@ -7,77 +7,84 @@
 		<link href="../../css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" href="../../css/weui.min.css" />
 		<link href="../../css/style.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="../../css/Skin/zzsc.css" />
+ 
+ 
 	</head>
 
 	<body>
-		<div id="Priid">
-			<ul class="mui-table-view">
-				<li class="mui-table-view-cell mui-media" v-for="(value,index) in inputArray">
-					<img class="mui-media-object mui-pull-left" style="width:150px; height: 50px;" src="../../image/config/lho.png">
-					<div class="mui-media-body">{{value.title}}</div>
-					<p class='mui-ellipsis'>
-						<button id="Priid" name="Priqy" class="mui-btn mui-btn-primary mui-pull-right" onclick="change()">启用</button><span><img src="../../image/config/zz (2).png" width="14px" height="14px" /> {{value.username}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<span><img src="../../image/config/sj.png" width="14px" height="14px" /> {{value.time}}</span>
-					</p>
-					<!-- 代码部分begin -->
-					<div class="page_guide_slider" id="aaa">
-						<div class="page_guide_balloon">
-							<div class="page_guide_pointer">
-								<div class="page_guide_point"></div>
-							</div>
-							<div class="page_guide_bar">
-								<div class="page_guide_progress">
-									<div></div>
-									<div></div>
-									<div></div>
-								</div>
-							</div>
-						</div>
-						<div class="page_guide_container" onMouseDown="pageGuideMousedown(this,event)" onMouseMove="pageGuideMousemove(this,event)" onMouseUp="pageGuideMouseup(this,event)" onMouseOut="pageGuideMouseout(this,event)" ontouchstart="pageGuideTouchstart(this,event)" ontouchmove="pageGuideTouchmove(this,event)" ontouchend="pageGuideTouchend(this,event)">
-							<div class="page_guide_items">
-								<div id="3_4" class="page_guide_item">
-									<div class="page_guide_item_text">
-									</div>
-									<div class="page_guide_item_image">
-										<img img_src="../../image/utils/loading.gif" src="../../image/config/func_actssm.jpg" />
-										<img img_src="../../image/utils/loading.gif" src="../../image/config/func_chat.jpg" />
-										<img img_src="../../image/utils/loading.gif" src="../../image/config/func_actssm.jpg" />
-										<img img_src="../../image/utils/loading.gif" src="../../image/config/func_disc.jpg" />
-										<img img_src="../../image/utils/loading.gif" src="../../image/config/func_worker.jpg" />
-									</div>
-								</div>
-							</div>
-						</div>
+
+		<div class="weui-panel weui-panel_access" id="Priid">
+			<div class="weui-panel__bd" v-for="value in inputArray">
+				<a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+					<div class="weui-media-box__hd">
+						<img class="weui-media-box__thumb" src="../../image/config/sj.png">
 					</div>
-					<div>
-						<div class="mui-media-body">&nbsp;皮肤介绍：</div>
-						<p>&nbsp;&nbsp;&nbsp;&nbsp;{{value.content}}</p>
+					<div class="weui-media-box__bd">
+						<h4 class="weui-media-box__title">{{value.title}}</h4>
+						<br />
+						<span style="color: #B6B6B6; font-size: 14px;"><img src="../../image/config/sj.png" width="12px" height="12px" />&nbsp;{{value.time}} &nbsp;&nbsp;|&nbsp;&nbsp;</span>
+						<span style="color: #B6B6B6; font-size: 14px;"><img src="../../image/config/zz (2).png" width="14px" height="14px" />&nbsp;{{value.username}}</span>
+						<button id="Priid" onclick="change(value.Isqy)" style="float:right" class="weui-btn weui-btn_mini weui-btn_primary">启用</button>
 					</div>
-					<br />
-				</li>
-			</ul>
+
+				</a>
+				 <div id="animation-effect" class="iSlider-effect"></div>
+				<!--<div class="weui-media-box__bd">
+					<h4 class="weui-media-box__title">皮肤介绍</h4>
+					<p class="sc-content">&nbsp;&nbsp;{{value.content}}</p>
+				</div>-->
+				<br />
+				<hr align="center"   color="#D5D5D6" />
+			</div>
+			
 		</div>
 
-		<script src="../../js/mui.min.js"></script>
-		<script src="../../js/lanren.js"></script>
-		<script src="../../js/jquery.min.js"></script>
-		<script type="text/javascript" src="../../js/weui.min.js"></script>
-		<script type="text/javascript" src="../../js/vue.min.js"></script>
-		<script type="text/javascript" src="../../js/jweixin.js"></script>
-		<script type="text/javascript" src="../../js/utils/utils.js"></script>
-		<script type="text/javascript" src="../../js/utils/storageutil.js"></script>
+		 
+        <script src="../../js/Skin/islider.js"></script>
+        <script src="../../js/Skin/plugins/islider_desktop.js"></script>
+		<script src="../../js/demoCssJs/jquery-2.1.4.js"></script>
+		<script src="../../js/demoCssJs/iscroll.js"></script>
+		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/demoCssJs/jquery-weui.js"></script>
 		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
+		</script>
+		<script type="text/javascript">
+			var picList = [
+                 {
+                    width: 150,
+                    height: 207,
+                    content: "../../image/config/func_actssm.jpg",
+                 },
+                 {
+                    width: 150,
+                    height: 207,
+                    content: "../../image/config/func_chat.jpg",
+                 },
+                 {
+                    width: 150,
+                    height: 207,
+                    content: "../../image/config/func_disc.jpg",
+                 },
+                 {
+                    width: 150,
+                    height: 207,
+                    content:"../../image/config/func_worker.jpg"
+                 } 
+            ];
+        
 			var vue_input = new Vue({
 				el: '#Priid',
 				data: {
 					inputArray: [{
-						title: "皮肤标题111",
+						title: "皮肤标题一",
 						time: "2017-05-06",
 						username: "张三",
 						Isqy: "0",
 						content: "将软件嵌套到导航里，二者融为一体，能让用户一目了然，寻找需求，方便下载。其中包括：应用软件，手机软件，系统软件等"
 					}, {
-						title: "皮肤标题222",
+						title: "皮肤标题二",
 						time: "2017-05-28",
 						username: "李四",
 						Isqy: "1",
@@ -85,18 +92,59 @@
 					}]
 				}
 			});
+			window.onload = function() {
+				
+				var islider1 = new iSlider({
+                    data: picList,
+                    dom: document.getElementById("animation-effect") });
+                    islider1.bindMouse();
+				var tempData = {
+					cmd: 'skins', //网站栏目
+					type: 'findpage', //分页查找栏目列表
+					pagesize: 999, //每页条数
+					pageindex: 1 //页码
+				}
+				unitWebsitePro(tempData, function(data) {
+					console.log(JSON.stringify(data));
+					//塞入页码、加载状态等自定义参数
+					//					for(var tempItem in data.RspData.dt) {
+					//						data.RspData.dt[tempItem].newsPage = 1; //获取新闻的页码
+					//						data.RspData.dt[tempItem].newsFlag = 0; //0刷新，1加载更多
+					//						data.RspData.dt[tempItem].newsArray = []; //栏目对应的新闻列表
+					//						if(tempItem == 0) {
+					//							data.RspData.dt[tempItem].active = true;
+					//						} else {
+					//							data.RspData.dt[tempItem].active = false;
+					//						}
+					//					}
+					if(data.RspCode == 0) {
+						if(data.RspData.dt.length > 0) {
+							newsData.item = data.RspData.dt[0];
+							vue_input.items = data.RspData.dt;
+							getNewsList(newsData.item);
+						} else {
+							alert('暂时还没有栏目');
+						}
+					} else {
+						alert(data.RspTxt);
+					} 
+				});
+
+			}
+
 			//  启用取消按钮
 			var count = 0;
 
-			function change() {
+			function change(model) {
+				alert(model);
 				if(count == 0) {
 
 					//document.getElementById('Priqy').style.backgroundColor = 'blue';
 					//document.getElementById('Priqy').style.color = "#FFFFFF";
-					var button = document.getElementById("Priqy");
-					var o = document.getElementsByName("Priqy");
-					alert(o);
-					o.innerText = "启用111";
+					var button1 = document.getElementById("Priqy");
+					 
+					 
+					button1.innerText = "启用111";
 					count++;
 				} else {
 					document.getElementById('Priqy').style.backgroundColor = "#CCCCCC";

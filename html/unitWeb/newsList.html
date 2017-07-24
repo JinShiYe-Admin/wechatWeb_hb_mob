@@ -108,14 +108,13 @@
 									type: 'del', //分页查找文章列表
 									colid: colid
 								}
-								alert(colid)
+								 
 								unitWebsitePro(tempData, function(data) {
 									console.log(JSON.stringify(data));
 									if(data.RspCode == 0000) { 
-										for(var temp = 0; temp < newsData.item.newsArray.length; temp++) {
-											alert(newsData.item.newsArray[temp].newsid)
+										for(var temp = 0; temp < newsData.item.newsArray.length; temp++) { 
 											if(newsData.item.newsArray[temp].newsid == colid) {
-												newsData.item.newsArray.remove(newsData.item.newsArray[temp]);
+												newsData.item.newsArray.splice(temp,1);
 											}
 										}
 									}

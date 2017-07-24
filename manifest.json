@@ -10,7 +10,7 @@
     "icons": {
         "72": "icon.png"
     },
-    "launch_path": "html/unitWeb/configIndex.html",/*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
+    "launch_path": "html/unitWeb/newsList.html",/*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
     "developer": {
         "name": "",/*开发者名称*/
         "email": "",/*开发者邮箱地址*/
@@ -316,6 +316,24 @@
 				"refer": [
 					"html/unitWeb/column-home.html"
 				],
+				"priority": 0
+			},
+			"html/unitWeb/newsList.html": {
+				"resources": [
+					"js/demoCssJs/jquery-weui.css",
+					"js/mui.min.js",
+					"js/utils/utils.js",
+					"js/demoCssJs/jquery-2.1.4.js",
+					"js/demoCssJs/demos.css",
+					"js/PublicProtocol.js",
+					"js/demoCssJs/jquery-weui.js",
+					"js/vue.min.js",
+					"js/demoCssJs/iscroll.js",
+					"js/demoCssJs/weui.min.css",
+					"js/utils/storageutil.js",
+					"js/importJS.js"
+				],
+				"refer": [],
 				"priority": 0
 			}
 		},

@@ -124,6 +124,20 @@
       "js/demoCssJs/weui.min.css",
       "js/utils/storageutil.js",
       "js/importJS.js"
+    ],
+    "refer": []
+  },
+  "html/index/index.html": {
+    "resources": [
+      "js/jquery.min.js",
+      "js/mui.min.js",
+      "js/utils/utils.js",
+      "js/jweixin.js",
+      "fonts/mui.ttf",
+      "js/PublicProtocol.js",
+      "css/mui.min.css",
+      "js/utils/storageutil.js",
+      "js/importJS.js"
     ]
   }
 }

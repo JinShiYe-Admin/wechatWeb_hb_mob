@@ -50,7 +50,7 @@
 				<div id="contentCell" class="content-padded">
 					<a class="weui-cell weui-cell_access" href="javascript:;" v-for="(newsModel,index) in item.newsArray">
 						<div class="weui-cell__bd">
-							<span class="Prizs">标题：{{newsModel.topic}}</span>
+							<span style='width:350px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;' class="Prizs">标题：{{newsModel.topic}}</span>
 							<button id="{{newsModel.newsid}}" style="float:right" class="weui-btn weui-btn_mini weui-btn_primary" @click="clickDel(newsModel,1)">{{newsModel.Prizt}}</button>
 
 							<p style='width:350px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;'>副标题：{{newsModel.subtopic}}</p>

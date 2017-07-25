@@ -10,7 +10,7 @@
     "icons": {
         "72": "icon.png"
     },
-    "launch_path": "html/unitWeb/newsList.html",/*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
+    "launch_path": "html/appWeb/newsIndex.html",/*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
     "developer": {
         "name": "",/*开发者名称*/
         "email": "",/*开发者邮箱地址*/
@@ -234,18 +234,82 @@
 				],
 				"refer": [],
 				"priority": 0
+			},
+			"html/appWeb/noticeIndex.html": {
+				"resources": [
+					"js/demoCssJs/jquery-weui.css",
+					"js/utils/utils.js",
+					"js/demoCssJs/demos.css",
+					"js/PublicProtocol.js",
+					"js/demoCssJs/weui.min.css",
+					"js/utils/storageutil.js",
+					"js/importJS.js",
+					"html/appWeb/contacts.html"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/appWeb/newsIndex.html": {
+				"resources": [
+					"js/demoCssJs/jquery-weui.css",
+					"js/utils/utils.js",
+					"js/demoCssJs/jquery-2.1.4.js",
+					"js/PublicProtocol.js",
+					"html/appWeb/noticeIndex.html",
+					"image/newsIndex.png",
+					"js/vue.min.js",
+					"js/utils/storageutil.js",
+					"js/mui.min.js",
+					"js/demoCssJs/demos.css",
+					"image/mineIndex.png",
+					"js/demoCssJs/jquery-weui.js",
+					"js/demoCssJs/iscroll.js",
+					"js/demoCssJs/weui.min.css",
+					"js/importJS.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/appWeb/contacts.html": {
+				"resources": [
+					"js/utils/mui.pullToRefresh.material.js",
+					"js/utils/mui.pullToRefresh.js",
+					"css/utils/pullToRefresh.css",
+					"js/jquery.min.js",
+					"js/utils/utils.js",
+					"js/PublicProtocol.js",
+					"css/mui.min.css",
+					"js/utils/storageutil.js",
+					"js/importJS.js",
+					"image/utils/default_personalimage.png",
+					"html/appWeb/new-detail.html",
+					"html/appWeb/contacts.html",
+					"image/newsIndex.png",
+					"fonts/mui.ttf"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/appWeb/new-detail.html": {
+				"resources": [
+					"js/jweixin.js",
+					"js/utils/utils.js",
+					"fonts/mui.ttf",
+					"css/new-detail.css",
+					"html/appWeb/contacts.html"
+				],
+				"refer": [],
+				"priority": 0
 			}
 		},
 		"idle": {
 			"resources": [
 				"image/config/sj.png",
 				"image/icon_tabbar.png",
-				"css/utils/pullToRefresh.css",
 				"js/utils/cryption.js",
 				"html/unitWeb/teacher_faculty.html",
 				"js/configuration/website_config.js",
 				"css/weui.min.css",
-				"html/appWeb/newsIndex.html",
 				"js/lib/plupload/plupload.full.min.js",
 				"js/lib/plupload/plupload.dev.js",
 				"html/unitWeb/addnews.html",
@@ -264,16 +328,13 @@
 				"js/lib/plupload/plupload.min.js",
 				"js/demoCssJs/weui.css",
 				"html/unitWeb/new-home.html",
-				"js/utils/mui.pullToRefresh.js",
 				"css/jquery-weui.css",
 				"js/lib/plupload/Moxie.swf",
 				"html/unitWeb/testnewwindow.html",
 				"js/demoCssJs/jquery-weui.min.js",
 				"image/utils/loading.gif",
-				"html/appWeb/new-detail.html",
 				"js/demoCssJs/city-picker.min.js",
 				"js/fastclick.js",
-				"js/utils/mui.pullToRefresh.material.js",
 				"image/config/func_disc.jpg",
 				"html/unitWeb/newList.html",
 				"js/jweixin-1.2.0.js",
@@ -288,22 +349,18 @@
 				"html/unitWeb/website_config.html",
 				"js/demoCssJs/jquery-weui.min.css",
 				"js/demoCssJs/swiper.min.js",
-				"image/newsIndex.png",
 				"js/lanren.js",
 				"html/unitWeb/configIndex.html",
 				"image/config/js.png",
 				"js/Skin/islider.js",
-				"image/mineIndex.png",
 				"js/lib/qiniu/qiniu.min.map",
 				"js/utils/pluploadutil.js",
-				"css/new-detail.css",
 				"js/jquery-weui.js",
 				"html/unitWeb/testmuiscroll.html",
 				"js/weui.min.js",
 				"image/config/voice.png",
 				"html/unitWeb/column-home.html",
 				"js/jquery-weui.min.js",
-				"image/utils/default_personalimage.png",
 				"css/Skin/zzsc.css",
 				"image/config/下载.png",
 				"html/unitWeb/Comment.html",

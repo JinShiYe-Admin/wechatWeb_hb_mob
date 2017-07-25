@@ -16,21 +16,14 @@
 	</head>
 
 	<body ontouchstart>
-		<div class="weui-tab">
+		<div class="weui-tab" id="noticeData">
 			<div class="weui-cells">
-				<div class="weui-cell weui-cell_access">
+				<div class="weui-cell weui-cell_access" v-for="item in noticeList" @click="clickNotice(item)">
 					<div class="weui-cell__hd"><img src="../../image/newsIndex.png" alt="" style="width:20px;margin-right:5px;display:block"></div>
 					<div class="weui-cell__bd">
-						<p>单发通知</p>
+						<p>{{item.title}}</p>
 					</div>
-					<div class="weui-cell__ft">可多选人员</div>
-				</div>
-				<div class="weui-cell weui-cell_access">
-					<div class="weui-cell__hd"><img src="../../image/newsIndex.png" alt="" style="width:20px;margin-right:5px;display:block"></div>
-					<div class="weui-cell__bd">
-						<p>群发通知</p>
-					</div>
-					<div class="weui-cell__ft">只可选部门</div>
+					<div class="weui-cell__ft"></div>
 				</div>
 			</div>
 			<div class="weui-tabbar">
@@ -64,6 +57,24 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 		<script>
+			var noticeData = new Vue({
+				el:'#noticeData',
+				data:{
+					noticeList:[{
+						title:'单发通知',
+						id:0
+					},{
+						title:'群发通知',
+						id:1
+					}]
+				},
+				methods: {
+					clickNotice: function(model) {
+						console.log('点击的model:' + JSON.stringify(model));
+//						utils.mOpenWithData("new-detail.html", model);
+					}
+				}
+			});
 		</script>
 	</body>
 

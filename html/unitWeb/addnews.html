@@ -387,8 +387,7 @@ document.getElementById("blogrollimagename").value=basicfile.value;
 				var PriChnid = Chnid.selectedIndex; // 选中索引
 				console.log('所属栏目=========================:' + PriChnid);
 				PriIsquo = document.getElementById("islink").checked == true ? 1 : 0;
-				PriIsReply = document.getElementById("isReply").checked == true ? 1 : 0;
-				if(PriIsquo == 1) {
+				PriIsReply = document.getElementById("isReply").checked == true ? 1 : 0; 
 					PriQuourl = document.getElementById("quourl").value;
 					comData = {
 						cmd: 'news', //文章管理
@@ -402,21 +401,7 @@ document.getElementById("blogrollimagename").value=basicfile.value;
 						quourl: PriQuourl,
 						isreply: PriIsReply,
 						stat: webConfig.isnewchk
-					};
-				} else {
-					comData = {
-						cmd: 'news', //文章管理
-						type: 'add',
-						chnid: PriChnid,
-						subtopic: Prisubtopic,
-						topic: PriTopic,
-						content: PriConten,
-						summas: PriSummas,
-						isquo: PriIsquo,
-						isreply: PriIsReply,
-						stat: webConfig.isnewchk
-					};
-				}
+					}; 
 				unitWebsitePro(comData, function(data) {
 					if(data.RspCode == 0) {
 						weui.toast("添加成功");

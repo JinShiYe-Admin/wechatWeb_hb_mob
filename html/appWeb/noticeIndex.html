@@ -2,7 +2,7 @@
 <html>
 
 	<head>
-		<title>新闻</title>
+		<title>通知</title>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
@@ -11,12 +11,17 @@
 		<link rel="stylesheet" href="../../js/demoCssJs/jquery-weui.css">
 		<link rel="stylesheet" href="../../js/demoCssJs/demos.css">
 		<style type="text/css">
-
+			.scrollgo {
+				overflow: auto;
+				-webkit-overflow-scrolling: touch;
+				width: 100%;
+				height: 100%;
+			}
 		</style>
 	</head>
 
 	<body ontouchstart>
-		<div class="weui-tab" id="noticeData">
+		<div class="weui-tab scrollgo" id="noticeData">
 			<div class="weui-cells">
 				<div class="weui-cell weui-cell_access" v-for="item in noticeList" @click="clickNotice(item)">
 					<div class="weui-cell__hd"><img src="../../image/newsIndex.png" alt="" style="width:20px;margin-right:5px;display:block"></div>
@@ -26,6 +31,7 @@
 					<div class="weui-cell__ft"></div>
 				</div>
 			</div>
+			
 			<div class="weui-tabbar">
 				<a href="newsIndex.html" class="weui-tabbar__item">
 					<div class="weui-tabbar__icon">
@@ -48,11 +54,9 @@
 			</div>
 		</div>
 		<script src="../../js/demoCssJs/jquery-2.1.4.js"></script>
-		<script src="../../js/demoCssJs/iscroll.js"></script>
 		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/demoCssJs/jquery-weui.js"></script>
-		<!--<script src="../../js/demoCssJs/fastclick.js"></script>-->
-		<script src="../../js/mui.min.js"></script>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
@@ -71,11 +75,10 @@
 				methods: {
 					clickNotice: function(model) {
 						console.log('点击的model:' + JSON.stringify(model));
-//						utils.mOpenWithData("new-detail.html", model);
+						utils.mOpenWithData("contacts.html", model);
 					}
 				}
 			});
 		</script>
 	</body>
-
 </html>

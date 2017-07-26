@@ -9,29 +9,27 @@
 		<link rel="stylesheet" href="../../css/weui.css">
 		<link rel="stylesheet" href="../../css/jquery-weui.css">
 		<link rel="stylesheet" href="../../css/demos.css">
-
+		<style type="text/css">
+			.scrollgo {
+				overflow: auto;
+				-webkit-overflow-scrolling: touch;
+				width: 100%;
+				height: 100%;
+			}
+		</style>
 	</head>
 
 	<body ontouchstart>
 
-		<div class="weui-tab" id="wrapper">
-			<section class="container">
-				<div class="dropdown">
-					<select name="one" id="chnid" class="dropdown-select" style="font-size: 17px;color: #929292;">
-						<option value="">请选择所属栏目....</option>
-						<option value="{{value.chnid}}" v-for="(value,index) in inputArray" @click="clickOption()">{{value.cname}}</option>
-					</select>
-				</div>
-			</section>
+		<div class="weui-tab scrollgo" id="mineData">
 			<div class="weui-cells">
-
-				<a class="weui-cell weui-cell_access" href="javascript:;">
-					<div class="weui-cell__hd"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAVFBMVEXx8fHMzMzr6+vn5+fv7+/t7e3d3d2+vr7W1tbHx8eysrKdnZ3p6enk5OTR0dG7u7u3t7ejo6PY2Njh4eHf39/T09PExMSvr6+goKCqqqqnp6e4uLgcLY/OAAAAnklEQVRIx+3RSRLDIAxE0QYhAbGZPNu5/z0zrXHiqiz5W72FqhqtVuuXAl3iOV7iPV/iSsAqZa9BS7YOmMXnNNX4TWGxRMn3R6SxRNgy0bzXOW8EBO8SAClsPdB3psqlvG+Lw7ONXg/pTld52BjgSSkA3PV2OOemjIDcZQWgVvONw60q7sIpR38EnHPSMDQ4MjDjLPozhAkGrVbr/z0ANjAF4AcbXmYAAAAASUVORK5CYII=" alt="" style="width:20px;margin-right:5px;display:block"></div>
+				<div class="weui-cell weui-cell_access" v-for="item in noticeList" @click="clickMineCell(item)">
+					<div class="weui-cell__hd"><img src="../../image/newsIndex.png" alt="" style="width:20px;margin-right:5px;display:block"></div>
 					<div class="weui-cell__bd">
-						<p>cell standard</p>
+						<p>{{item.title}}</p>
 					</div>
-					<div class="weui-cell__ft">说明文字</div>
-				</a>
+					<div class="weui-cell__ft"></div>
+				</div>
 			</div>
 			<div class="weui-tabbar">
 				<a href="newsIndex.html" class="weui-tabbar__item">
@@ -58,74 +56,27 @@
 		<script src="../../js/jquery.min.js"></script>
 		<script src="../../js/jquery-weui.js"></script>
 		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 		<script src="../../js/iscroll.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-//			var all_width = document.getElementsByClassName('category_nav')[0].scrollWidth
-//			$('.category_nav').css({
-//				'width': all_width + 'px'
-//			})
-//			var myscroll = new iScroll("wrapper", {
-//				scrollX: true,
-//				scrollY: false,
-//				hScrollbar: false,
-//				vScrollbar: false,
-//				vScroll: false
-//			});
-//
-//			var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
-//			var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
-//			$('.weui-tab__bd').css({
-//				'height': (allheight - barheight) * 100 / allheight + '%'
-//			});
-//			$('.weui-tab__bd-item').css({
-//				'height': (allheight - barheight) * 100 / allheight + '%'
-//			});
-//			window.addEventListener("resize", function() {
-//				alert('resize');
-//				var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
-//				var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
-//				$('.weui-tab__bd').css({
-//					'height': (allheight - barheight) * 100 / allheight + '%'
-//				});
-//				$('.weui-tab__bd-item').css({
-//					'height': (allheight - barheight) * 100 / allheight + '%'
-//				});
-//			}, false);
-			var vue_input = new Vue({
-				el: '#chnid',
-				data: {
-					inputArray: []
+			var mineData = new Vue({
+				el:'#mineData',
+				data:{
+					noticeList:[{
+						title:'发布文章',
+						id:0
+					}]
 				},
 				methods: {
-					clickOption: function() {
-						console.log('点击的model:');
+					clickMineCell: function(model) {
+						console.log('点击的model:' + JSON.stringify(model));
+						utils.mOpenWithData("../../html/unitWeb/addnews.html", model);
 					}
 				}
 			});
-			window.onload = function() {
-				//获取所有的栏目
-				getSumColumn();
-			};
-			//获取所有的栏目
-			function getSumColumn() {
-				var tempArray = [{
-					chnid: 1,
-					cname: '111',
-					linkurl: '../../image/icon_tabbar.png'
-				}, {
-					chnid: 2,
-					cname: '222',
-					linkurl: '../../image/icon_tabbar.png'
-				}, {
-					chnid: 3,
-					cname: '333',
-					linkurl: '../../image/icon_tabbar.png'
-				}];
-				vue_input.inputArray = Object.assign({}, vue_input.inputArray, tempArray);
-			};
 		</script>
 	</body>
 

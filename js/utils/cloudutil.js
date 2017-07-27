@@ -29,7 +29,7 @@ var cloudutil = (function(mod) {
 	 * @param {Object.qnFileName} data.qnFileName 必填 文件名
 	 */
 	mod.setQNCmd = function(data) {
-		console.log("setQNCmd:" + JSON.stringify(data));
+		//console.log("setQNCmd:" + JSON.stringify(data));
 		var returnData = {};
 		switch(data.option.type) {
 			case 0: //只传原文件，不执行七牛的持久化命令
@@ -52,7 +52,7 @@ var cloudutil = (function(mod) {
 			default:
 				break;
 		}
-		console.log("returnData:" + JSON.stringify(returnData));
+		//console.log("returnData:" + JSON.stringify(returnData));
 		return returnData;
 	}
 
@@ -71,7 +71,7 @@ var cloudutil = (function(mod) {
 	 * @param {Object} callback 必填 回调
 	 */
 	mod.getFileUpTokens = function(data, callBack) {
-		console.log("getFileUpToken:" + JSON.stringify(data));
+		//console.log("getFileUpToken:" + JSON.stringify(data));
 		var appId = data.appId; //项目id
 		var desKey = mod.getAppKey(data.appId); //项目名称
 		var mainSpace = data.mainSpace; //文件存放在私有空间或公有空间
@@ -137,7 +137,7 @@ var cloudutil = (function(mod) {
 		}
 
 		mod.getUpTokenRequest(configure.options, function(tokenData) {
-			console.log("getFileUpTokens:tokenData:" + JSON.stringify(tokenData));
+			//console.log("getFileUpTokens:tokenData:" + JSON.stringify(tokenData));
 			if(tokenData.code == 1 && tokenData.data.Status == 1) {
 				callBack({
 					code: 1,
@@ -168,7 +168,7 @@ var cloudutil = (function(mod) {
 			//contentType: "application/json; charset=utf-8",
 			async: false,
 			success: function(data) { //请求成功的回调
-				console.log("getUpTokenRequest:success:" + JSON.stringify(data));
+				//console.log("getUpTokenRequest:success:" + JSON.stringify(data));
 				callBack({
 					code: 1,
 					data: data,
@@ -176,9 +176,9 @@ var cloudutil = (function(mod) {
 				});
 			},
 			error: function(xhr, type, errorThrown) {
-				console.log("getUpTokenRequest:error:xhr:" + JSON.stringify(xhr));
-				console.log("getUpTokenRequest:error:type:" + type);
-				console.log("getUpTokenRequest:error:errorThrown:" + JSON.stringify(errorThrown));
+				//console.log("getUpTokenRequest:error:xhr:" + JSON.stringify(xhr));
+				//console.log("getUpTokenRequest:error:type:" + type);
+				//console.log("getUpTokenRequest:error:errorThrown:" + JSON.stringify(errorThrown));
 				callBack({
 					code: 0,
 					message: type
@@ -215,7 +215,7 @@ var cloudutil = (function(mod) {
 	 * @param {Object} callBack 回调
 	 */
 	mod.delCloudFiles = function(data, callBack) {
-		console.log('delCloudFiles:' + JSON.stringify(data));
+		//console.log('delCloudFiles:' + JSON.stringify(data));
 		var appId = data.appId; //项目id
 		var desKey = mod.getAppKey(data.appId); //项目名称
 		var configure = {}; //配置的数据
@@ -231,7 +231,7 @@ var cloudutil = (function(mod) {
 			dataType: "json",
 			async: false,
 			success: function(data) { //请求成功的回调
-				console.log("delCloudFiles:success:" + JSON.stringify(data));
+				//console.log("delCloudFiles:success:" + JSON.stringify(data));
 				callBack({
 					code: 1,
 					data: data,
@@ -239,7 +239,7 @@ var cloudutil = (function(mod) {
 				});
 			},
 			error: function(xhr, type, errorThrown) {
-				console.log("delCloudFiles:error:" + type);
+				//console.log("delCloudFiles:error:" + type);
 				callBack({
 					code: 0,
 					message: type

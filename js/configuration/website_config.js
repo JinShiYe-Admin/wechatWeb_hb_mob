@@ -13,13 +13,13 @@ Vue.component('input-item', {
 				</div>',
 	methods: {
 		oninput: function(index) { //输入时的监听，0中文名，1英文名，2单位联系方式
-			console.log("oninput " + index + " " + vm_input.inputArray[index].message);
+			//console.log("oninput " + index + " " + vm_input.inputArray[index].message);
 			switch(index) {
 				case 0: //中文名
 					vm_input.inputArray[index].message = vm_input.inputArray[index].message.replace(/[^\u4E00-\u9FA5| ]/g, "").replace(/(^\s*)|(\s*$)/g, "");
 					break;
 				case 1: //英文名
-					vm_input.inputArray[index].message = vm_input.inputArray[index].message.replace(/[^\/a-z|A-Z| ]/g, "").replace(/(^\s*)|(\s*$)/g, "");
+					vm_input.inputArray[index].message = vm_input.inputArray[index].message.replace(/[^a-zA-Z| ]/g, "").replace(/(^\s*)|(\s*$)/g, "");
 					break;
 				case 2: //单位联系方式
 					vm_input.inputArray[index].message = vm_input.inputArray[index].message.replace(/[^\d]/g, "")
@@ -29,7 +29,7 @@ Vue.component('input-item', {
 			}
 		},
 		onblur: function(index) { //失去焦点时的监听，0中文名，1英文名，2单位联系方式
-			console.log("onblur " + index);
+			//console.log("onblur " + index);
 			if(vm_input.inputArray[index].message != webConfig[vm_input.inputArray[index].callcol]) {
 				//有改变
 				if(vm_input.inputArray[index].message == "") {
@@ -65,7 +65,7 @@ Vue.component('skin-item', {
 				</div>',
 	methods: {
 		onclick: function(value) {
-			console.log("skin " + value);
+			//console.log("skin " + value);
 			var dialog = weui.dialog({
 				title: "操作失败",
 				content: "修改皮肤功能暂未开放",
@@ -115,15 +115,15 @@ Vue.component("image-item", {
 				</div>',
 	methods: {
 		showImage: function(index, type) {
-			console.log("showImage:" + index + " " + type);
+			//console.log("showImage:" + index + " " + type);
 			vm_image.imageArray[index].showimage = type;
 		},
 		showLocalImage: function(index, type) {
-			console.log("showLocalImage:" + index + " " + type);
+			//console.log("showLocalImage:" + index + " " + type);
 			vm_image.imageArray[index].showlocalimage = type;
 		},
 		upLoadFile: function(index) {
-			console.log("upLoadFile:" + index);
+			//console.log("upLoadFile:" + index);
 			vm_loading.content = "上传中 0%";
 			vm_loading.isShow = true;
 			if(index == 0) {
@@ -148,7 +148,7 @@ Vue.component('switch-item', {
 				</div>',
 	methods: {
 		onchange: function(index) {
-			console.log("onchange " + index + " " + vm_switch.switchArray[index].check);
+			//console.log("onchange " + index + " " + vm_switch.switchArray[index].check);
 			if(vm_switch.switchArray[index].check != webConfig[vm_switch.switchArray[index].callcol]) {
 				vm_loading.isShow = true;
 				var data = {
@@ -192,9 +192,9 @@ var bannerUploader; //上传banner七牛对象
 var uptokenData; //上传的token
 
 window.onload = function() {
-	console.log("window.onload:");
 	initVueVM();
-	initQNUpLoader();
+	//initQNUpLoader();
+	initUploader();
 	//initData();
 	getWebsitConfig(); //获取配置
 
@@ -328,39 +328,35 @@ function initVueVM() {
 /**
  * 初始化七牛上传控件
  */
-function initQNUpLoader() {
-	//console.log("initQNUpLoader:" + document.getElementById("btn_logo"));
-	//console.log("initQNUpLoader:" + document.getElementById("btn_banner"));
-	var logoOption = setQNOption(vm_image.imageArray[0].id, vm_image.imageArray[0].parid);
-	logoUploader = Qiniu.uploader(logoOption);
-
-	var Qiniu2 = new QiniuJsSDK();
-	var banOption = setQNOption(vm_image.imageArray[1].id, vm_image.imageArray[1].parid);
-	bannerUploader = Qiniu2.uploader(banOption);
-}
+//function initQNUpLoader() {
+//
+//	var logoOption = setQNOption(vm_image.imageArray[0].id, vm_image.imageArray[0].parid);
+//	logoUploader = Qiniu.uploader(logoOption);
+//
+//	var Qiniu2 = new QiniuJsSDK();
+//	var banOption = setQNOption(vm_image.imageArray[1].id, vm_image.imageArray[1].parid);
+//	bannerUploader = Qiniu2.uploader(banOption);
+//}
 
 /**
- * 设置七牛上传配置
- * @param {Object} browse_button
- * @param {Object} container
+ * 初始化logo上传
  */
-function setQNOption(browse_button, container) {
-	var qnUpOption = {
+function initUploader(){
+	var logoOption = {
 		disable_statistics_report: true, // 禁止自动发送上传统计信息到七牛，默认允许发送
 		runtimes: 'html5,flash,html4', // 上传模式,依次退化
-		browse_button: browse_button, // 上传选择的点选按钮，**必需**
+		browse_button: vm_image.imageArray[0].id, // 上传选择的点选按钮，**必需**
 		uptoken_func: function(file) { // 在需要获取 uptoken 时，该方法会被调用
-			console.log("uptoken_func:" + JSON.stringify(file));
+			//console.log("uptoken_func:" + JSON.stringify(file));
 			uptokenData = null;
 			uptokenData = getQNUpToken(file);
-			console.log("获取uptoken回调:" + JSON.stringify(uptokenData));
+			//console.log("获取uptoken回调:" + JSON.stringify(uptokenData));
 			if(uptokenData && uptokenData.code) { //成功
 				return uptokenData.data.Data[0].Token;
 			} else {
 				vm_loading.isShow = false;
 				vm_loading.content = "数据加载中";
 				logoUploader.stop();
-				bannerUploader.stop();
 				var dialog = weui.dialog({
 					title: "上传失败",
 					content: uptokenData.message,
@@ -379,12 +375,10 @@ function setQNOption(browse_button, container) {
 		save_key: false, // 默认 false。若在服务端生成 uptoken 的上传策略中指定了 `save_key`，则开启，SDK在前端将不对key进行任何处理
 		get_new_uptoken: true, // 设置上传文件的时候是否每次都重新获取新的 uptoken
 		domain: storageutil.QNPBDOMAIN, // bucket 域名，下载资源时用到，如：'http://xxx.bkt.clouddn.com/' **必需**
-		container: container, // 上传区域 DOM ID，默认是 browser_button 的父元素，
 		max_file_size: '10mb', // 最大文件体积限制
 		flash_swf_url: '../../js/lib/plupload/Moxie.swf', //引入 flash,相对路径
 		max_retries: 0, // 上传失败最大重试次数
 		dragdrop: false, // 开启可拖曳上传
-		drop_element: vm_image.imageArray[0].parid, // 拖曳上传区域元素的 ID，拖曳文件或文件夹后可触发上传
 		chunk_size: '4mb', // 分块上传时，每块的体积
 		auto_start: false, // 选择文件后自动上传，若关闭需要自己绑定事件触发上传,
 		filters: {
@@ -399,21 +393,15 @@ function setQNOption(browse_button, container) {
 			'FilesAdded': function(up, files) {
 				plupload.each(files, function(file) {
 					// 文件添加进队列后,处理相关的事情
-					console.dir("FilesAdded:" + up.id);
-					console.log("FilesAdded:" + JSON.stringify(file));
-					var index = 0;
-					if(up.id == bannerUploader.id) {
-						index = 1;
-					}
-					vm_image.imageArray[index].showupload = true;
-					vm_image.imageArray[index].fname = file.name;
-					vm_image.imageArray[index].fsize = cloudutil.transformSize(file.origSize);
-					vm_image.imageArray[index].fbase = "";
+					//console.log("FilesAdded:" + JSON.stringify(file));
+					vm_image.imageArray[0].showupload = true;
+					vm_image.imageArray[0].fname = file.name;
+					vm_image.imageArray[0].fsize = cloudutil.transformSize(file.origSize);
+					vm_image.imageArray[0].fbase = "";
 					//显示文件
 					var preloader = new mOxie.Image();
 					preloader.onload = function() {
-						//preloader.downsize(550, 400);//先压缩一下要预览的图片,宽300，高300
-						vm_image.imageArray[index].fbase = preloader.getAsDataURL(); //得到图片src,实质为一个base64编码的数据
+						vm_image.imageArray[0].fbase = preloader.getAsDataURL(); //得到图片src,实质为一个base64编码的数据
 						preloader.destroy();
 						preloader = null;
 					};
@@ -422,26 +410,22 @@ function setQNOption(browse_button, container) {
 			},
 			'UploadProgress': function(up, file) {
 				// 每个文件上传时,处理相关的事情
-				console.log("UploadProgress:up:" + up.id);
-				console.log("UploadProgress:file:" + JSON.stringify(file));
+				//console.log("UploadProgress:up:" + up.id);
+				//console.log("UploadProgress:file:" + JSON.stringify(file));
 				vm_loading.content = "上传中 " + file.percent + "%";
 			},
 			'FileUploaded': function(up, file, info) {
 				// 每个文件上传成功后,处理相关的事情
-				console.log("FileUploaded:up:" + up.id);
-				console.log("FileUploaded:file:" + JSON.stringify(file));
-				console.log("FileUploaded:info:" + JSON.stringify(info));
+				//console.log("FileUploaded:up:" + up.id);
+				//console.log("FileUploaded:file:" + JSON.stringify(file));
+				//console.log("FileUploaded:info:" + JSON.stringify(info));
 				if(info.status == 200) {
 					//成功
-					var index = 0;
-					if(up.id == bannerUploader.id) {
-						index = 1;
-					}
 					vm_loading.content = "数据加载中";
 					var data = {
 						type: 3,
-						index: index,
-						callcol: vm_image.imageArray[index].callcol,
+						index: 0,
+						callcol: vm_image.imageArray[0].callcol,
 						colv: storageutil.QNPBDOMAIN + JSON.parse(info["response"]).key
 					}
 					changeWebsiteConfig(data);
@@ -462,9 +446,9 @@ function setQNOption(browse_button, container) {
 			},
 			'Error': function(up, err, errTip) {
 				//上传出错时,处理相关的事情
-				console.log("Error:" + up);
-				console.log("Error:" + JSON.stringify(err));
-				console.log("Error:" + errTip);
+				//console.log("Error:" + up);
+				//console.log("Error:" + JSON.stringify(err));
+				//console.log("Error:" + errTip);
 				vm_loading.isShow = false;
 				vm_loading.content = "数据加载中";
 				var dialog = weui.dialog({
@@ -482,7 +466,7 @@ function setQNOption(browse_button, container) {
 			},
 			'UploadComplete': function() {
 				//队列文件处理完毕后,处理相关的事情
-				console.log("UploadComplete");
+				//console.log("UploadComplete");
 			},
 			'Key': function(up, file) {
 				// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
@@ -493,47 +477,183 @@ function setQNOption(browse_button, container) {
 			}
 		}
 	}
+	logoUploader = Qiniu.uploader(logoOption);
 
-	return qnUpOption;
+	var bannerOption = {
+		disable_statistics_report: true, // 禁止自动发送上传统计信息到七牛，默认允许发送
+		runtimes: 'html5,flash,html4', // 上传模式,依次退化
+		browse_button: vm_image.imageArray[1].id, // 上传选择的点选按钮，**必需**
+		uptoken_func: function(file) { // 在需要获取 uptoken 时，该方法会被调用
+			//console.log("uptoken_func:" + JSON.stringify(file));
+			uptokenData = null;
+			uptokenData = getQNUpToken(file);
+			//console.log("获取uptoken回调:" + JSON.stringify(uptokenData));
+			if(uptokenData && uptokenData.code) { //成功
+				return uptokenData.data.Data[0].Token;
+			} else {
+				vm_loading.isShow = false;
+				vm_loading.content = "数据加载中";
+				bannerUploader.stop();
+				var dialog = weui.dialog({
+					title: "上传失败",
+					content: uptokenData.message,
+					className: "custom-classname",
+					buttons: [{
+						label: "确定",
+						type: "primary",
+						onClick: function() {
+							dialog.hide();
+						}
+					}]
+				});
+			}
+		},
+		unique_names: false, // 默认 false，key 为文件名。若开启该选项，JS-SDK 会为每个文件自动生成key（文件名）
+		save_key: false, // 默认 false。若在服务端生成 uptoken 的上传策略中指定了 `save_key`，则开启，SDK在前端将不对key进行任何处理
+		get_new_uptoken: true, // 设置上传文件的时候是否每次都重新获取新的 uptoken
+		domain: storageutil.QNPBDOMAIN, // bucket 域名，下载资源时用到，如：'http://xxx.bkt.clouddn.com/' **必需**
+		max_file_size: '10mb', // 最大文件体积限制
+		flash_swf_url: '../../js/lib/plupload/Moxie.swf', //引入 flash,相对路径
+		max_retries: 0, // 上传失败最大重试次数
+		dragdrop: false, // 开启可拖曳上传
+		chunk_size: '4mb', // 分块上传时，每块的体积
+		auto_start: false, // 选择文件后自动上传，若关闭需要自己绑定事件触发上传,
+		filters: {
+			mime_types: [ //只允许上传图片和zip文件
+				{
+					title: "Image files",
+					extensions: "jpg,png"
+				}
+			]
+		},
+		init: {
+			'FilesAdded': function(up, files) {
+				plupload.each(files, function(file) {
+					// 文件添加进队列后,处理相关的事情
+					//console.log("FilesAdded:" + JSON.stringify(file));
+					vm_image.imageArray[1].showupload = true;
+					vm_image.imageArray[1].fname = file.name;
+					vm_image.imageArray[1].fsize = cloudutil.transformSize(file.origSize);
+					vm_image.imageArray[1].fbase = "";
+					//显示文件
+					var preloader = new mOxie.Image();
+					preloader.onload = function() {
+						vm_image.imageArray[1].fbase = preloader.getAsDataURL(); //得到图片src,实质为一个base64编码的数据
+						preloader.destroy();
+						preloader = null;
+					};
+					preloader.load(file.getSource());
+				});
+			},
+			'UploadProgress': function(up, file) {
+				// 每个文件上传时,处理相关的事情
+				//console.log("UploadProgress:up:" + up.id);
+				//console.log("UploadProgress:file:" + JSON.stringify(file));
+				vm_loading.content = "上传中 " + file.percent + "%";
+			},
+			'FileUploaded': function(up, file, info) {
+				// 每个文件上传成功后,处理相关的事情
+				//console.log("FileUploaded:up:" + up.id);
+				//console.log("FileUploaded:file:" + JSON.stringify(file));
+				//console.log("FileUploaded:info:" + JSON.stringify(info));
+				if(info.status == 200) {
+					//成功
+					vm_loading.content = "数据加载中";
+					var data = {
+						type: 3,
+						index: 1,
+						callcol: vm_image.imageArray[1].callcol,
+						colv: storageutil.QNPBDOMAIN + JSON.parse(info["response"]).key
+					}
+					changeWebsiteConfig(data);
+				} else {
+					var dialog = weui.dialog({
+						title: "上传失败",
+						content: JSON.stringify(info),
+						className: "custom-classname",
+						buttons: [{
+							label: "确定",
+							type: "primary",
+							onClick: function() {
+								dialog.hide();
+							}
+						}]
+					});
+				}
+			},
+			'Error': function(up, err, errTip) {
+				//上传出错时,处理相关的事情
+				//console.log("Error:" + up);
+				//console.log("Error:" + JSON.stringify(err));
+				//console.log("Error:" + errTip);
+				vm_loading.isShow = false;
+				vm_loading.content = "数据加载中";
+				var dialog = weui.dialog({
+					title: "操作失败",
+					content: pluploadutil.errMes(err.code, errTip),
+					className: "custom-classname",
+					buttons: [{
+						label: "确定",
+						type: "primary",
+						onClick: function() {
+							dialog.hide();
+						}
+					}]
+				});
+			},
+			'UploadComplete': function() {
+				//队列文件处理完毕后,处理相关的事情
+				//console.log("UploadComplete");
+			},
+			'Key': function(up, file) {
+				// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
+				// 该配置必须要在 unique_names: false , save_key: false 时才生效
+				if(uptokenData && uptokenData.code) { //成功
+					return uptokenData.data.Data[0].Key;
+				}
+			}
+		}
+	}
+	bannerUploader = Qiniu.uploader(bannerOption);
 }
 
 /**
  * 初始化数据
  */
-function initData() {
-	var webData = JSON.parse(storageutil.getSessionStorage(storageutil.WEBSITECONFIG));
-	console.log("webData:" + JSON.stringify(webData));
-	var getData = true; //获取网站配置
-	if(webData && webData.open == 0) {
-		webData.open = 1; //进入了网站配置页面
-		storageutil.setSessionStorage(storageutil.WEBSITECONFIG, JSON.stringify(webData));
-	} else if(webData && webData.open == 2) {
-		if(webData.webCon) { //保存有本地数据
-			if(webData.changeSkinId && webData.webCon.skinid != webData.changeSkinId) { //修改皮肤ID
-				//修改皮肤id
-				console.log("changeSkinId:" + webData.changeSkinId);
-				getData = false;
-				webConfig = webData.webCon;
-				initWebsiteConfig(webData.webCon);
-				var data = {
-					type: 2,
-					index: 0,
-					callcol: "skinid",
-					colv: webData.changeSkinId
-				}
-				changeWebsiteConfig(data);
-			}
-		}
-	}
-	console.log("getWebsitConfig:" + getData);
-	if(getData) {
-		getWebsitConfig(); //获取配置
-		//-- - 假数据-- - start-- -
-		//initWebsiteConfig(webConfig);
-		//vm_loading.isShow = false;
-		//-- - 假数据-- - end-- -
-	}
-}
+//function initData() {
+//	var webData = JSON.parse(storageutil.getSessionStorage(storageutil.WEBSITECONFIG));
+//	//console.log("webData:" + JSON.stringify(webData));
+//	var getData = true; //获取网站配置
+//	if(webData && webData.open == 0) {
+//		webData.open = 1; //进入了网站配置页面
+//		storageutil.setSessionStorage(storageutil.WEBSITECONFIG, JSON.stringify(webData));
+//	} else if(webData && webData.open == 2) {
+//		if(webData.webCon) { //保存有本地数据
+//			if(webData.changeSkinId && webData.webCon.skinid != webData.changeSkinId) { //修改皮肤ID
+//				//修改皮肤id
+//				//console.log("changeSkinId:" + webData.changeSkinId);
+//				getData = false;
+//				webConfig = webData.webCon;
+//				initWebsiteConfig(webData.webCon);
+//				var data = {
+//					type: 2,
+//					index: 0,
+//					callcol: "skinid",
+//					colv: webData.changeSkinId
+//				}
+//				changeWebsiteConfig(data);
+//			}
+//		}
+//	}
+//	//console.log("getWebsitConfig:" + getData);
+//	if(getData) {
+//		getWebsitConfig(); //获取配置
+//		//-- - 假数据-- - start-- -
+//		//initWebsiteConfig(webConfig);
+//		//vm_loading.isShow = false;
+//		//-- - 假数据-- - end-- -
+//	}
+//}
 
 /**
  * 获取网站配置信息
@@ -544,7 +664,7 @@ function getWebsitConfig() {
 		type: 'find'
 	}
 	unitWebsitePro(tempData, function(data) {
-		console.log('配置为:' + JSON.stringify(data));
+		//console.log('配置为:' + JSON.stringify(data));
 		vm_loading.isShow = false;
 		if(data.RspCode == 0) {
 			if(data.RspData.length > 0) {
@@ -564,7 +684,7 @@ function getWebsitConfig() {
  * 保存并显示网站配置
  */
 function initWebsiteConfig(data) {
-	console.log("initWebsiteConfig:" + JSON.stringify(data));
+	//console.log("initWebsiteConfig:" + JSON.stringify(data));
 	//输入框
 	vm_input.inputArray[0].message = data.cname;
 	vm_input.inputArray[1].message = data.ename;
@@ -625,9 +745,9 @@ function changeWebsiteConfig(change) {
 		callcol: change.callcol,
 		colv: change.colv
 	}
-	console.log("changeWebsiteConfig:" + JSON.stringify(commit));
+	//console.log("changeWebsiteConfig:" + JSON.stringify(commit));
 	unitWebsitePro(commit, function(data) {
-		console.log('修改网站设置:' + JSON.stringify(data));
+		//console.log('修改网站设置:' + JSON.stringify(data));
 		if(data.RspCode == 0) { //成功
 			if(change.type == 2) { //皮肤id
 				vm_skin.skinId = commit.colv;

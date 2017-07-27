@@ -47,23 +47,32 @@
 	</head>
 
 	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		</header>
+		<!--<nav id="alertBar" class="mui-bar mui-bar-tab" style="height: 60px;">
+			<hr style="margin-top: -1px; height:1px;border:none;border-top:1px solid #ededed;" />
+			<div align="center" style="margin-top: 5px;">
+				<button id="alertAll" type="button" class="mui-btn mui-btn-blue mui-pull-right " style="border-radius: 2px;width: 20%;background-color: #00a5e0;border-color:#00a5e0 ;height: 30px;font-size:16px;letter-spacing: 1px;">确定</button>
+			</div>
+		</nav>-->
 		<div class="mui-content mui-scroll-wrapper" style="z-index: 1;" id="contacts">
 			<div class="mui-scroll">
 				<!--列表信息流 开始-->
 				<ul id="list" class="mui-table-view">
-					<li class="mui-table-view-cell mui-media" >
-							<img class="mui-media-object mui-pull-left" src="../../image/utils/default_personalimage.png"  style="width: 50px;height: 50px;">
-							<div class="mui-media-body" style="margin-top: 10px;">
-								新建联系人
-							</div>
+					<li class="mui-table-view-cell mui-media">
+						<img class="mui-media-object mui-pull-left" src="../../image/utils/default_personalimage.png" style="width: 50px;height: 50px;">
+						<div class="mui-media-body" style="margin-top: 10px;">
+							新建联系人
+						</div>
 					</li>
 					<li class="mui-table-view-divider">企业通讯录</li>
-					<li class="mui-table-view-cell mui-media  mui-checkbox mui-right" v-for="item in items" :data-deptId='item.deptId?"item.deptId":"item.contactId"'>
-							<img class="mui-media-object mui-pull-left" :src="item.imgurl"  style="width: 50px;height: 50px;">
-							<div class="mui-media-body" style="margin-top: 10px;">
-								{{item.name}}
-							</div>
-							<input name="checkbox" type="checkbox" style="margin-top: 10px;" v-if="item.contactId">
+					<li class="mui-table-view-cell mui-media  mui-checkbox mui-left" v-for="item in items" :data-id='item.id?item.id:item.userid'>
+						<img class="mui-media-object mui-pull-left" :src="item.imgurl" style="width: 50px;height: 50px;">
+						<div class="mui-media-body" style="margin-top: 10px;">
+							{{item.name}}
+						</div>
+						<input name="checkbox" type="checkbox" style="margin-top: 10px;">
 					</li>
 				</ul>
 				<!--列表信息流 结束-->
@@ -88,57 +97,92 @@
 			});
 			window.onload = function() {
 				var detail = utils.getDataFromUrl(window.location.href);
-				if(detail.deptId){
-					vm_contacts.items=[{
-						contactId:1,
-						name:'宋艳明',
-						imgurl:'../../image/utils/default_personalimage.png'
-					},{
-						contactId:2,
-						name:'赵启旺',
-						imgurl:'../../image/utils/default_personalimage.png'
-					},{
-						contactId:3,
-						name:'安琪',
-						imgurl:'../../image/utils/default_personalimage.png'
-					},{
-						contactId:4,
-						name:'莫尚林',
-						imgurl:'../../image/utils/default_personalimage.png'
-					}]
-				}else{
-					vm_contacts.items = [{
-						deptId:1,
-						name:'开发部',
-						imgurl:'../../image/newsIndex.png'
-					},{
-						deptId:2,
-						name:'财务部',
-						imgurl:'../../image/newsIndex.png'
-					},{
-						deptId:3,
-						name:'行政部',
-						imgurl:'../../image/newsIndex.png'
-					},{
-						deptId:4,
-						name:'支撑中心',
-						imgurl:'../../image/newsIndex.png'
-					}]
+				if(detail.id) {
+					var data = {
+						access_token: detail.access_token,
+						department_id: detail.id,
+					}
+				console.log(JSON.stringify(data))
+					jQuery.getJSON("https://qyapi.weixin.qq.com/cgi-bin/user/simplelist", data, function(rsp) {
+						alert(JSON.stringify(rsp))
+						console.log(JSON.stringify(rsp))
+						vm_contacts.items = rsp.userlist
+
+					});
+					return;
 				}
+				var data = {
+					corpid: 'wx6c4528c675d4a9c9',
+					corpsecret: 'K9TuOUac2CjcxsDQm40FiuTubSFWgYAx1v9HZyYfMRZ-P0LCBQmEUmfWUhjl9kY6'
+				}
+				jQuery.getJSON("https://qyapi.weixin.qq.com/cgi-bin/gettoken", data, function(rsp) {
+					alert(JSON.stringify(rsp))
+					vm_contacts.access_token = rsp.access_token;
+					userdata = {
+						access_token: rsp.access_token,
+						id: ''
+					}
+					jQuery.getJSON("https://qyapi.weixin.qq.com/cgi-bin/department/list", userdata, function(rsp) {
+						alert(JSON.stringify(rsp))
+						vm_contacts.items = rsp.department
+
+					});
+				});
 			}
+
 			//点击列表，打开详情
 			//TODO 后续应该封装一个v-tap指令，实现tap监听
-			mui('.mui-content').on('tap', '[data-deptId]', function() {
+			mui('.mui-content').on('tap', '[data-id]', function() {
 				var data = {
-					deptId: this.getAttribute('data-deptId'),
+					id: this.getAttribute('data-id'),
+					access_token: vm_contacts.access_token
 				}
-				if(vm_contacts.items[0].contactId){
+				if(vm_contacts.items[0].userid) {
 					return;
 				}
 				utils.wOpenWithData("contacts.html", data);
 
 			});
 
+			function getDefaultData() {
+				if(detail.deptId) {
+					vm_contacts.items = [{
+						contactId: 1,
+						name: '宋艳明',
+						imgurl: '../../image/utils/default_personalimage.png'
+					}, {
+						contactId: 2,
+						name: '赵启旺',
+						imgurl: '../../image/utils/default_personalimage.png'
+					}, {
+						contactId: 3,
+						name: '安琪',
+						imgurl: '../../image/utils/default_personalimage.png'
+					}, {
+						contactId: 4,
+						name: '莫尚林',
+						imgurl: '../../image/utils/default_personalimage.png'
+					}]
+				} else {
+					vm_contacts.items = [{
+						deptId: 1,
+						name: '开发部',
+						imgurl: '../../image/newsIndex.png'
+					}, {
+						deptId: 2,
+						name: '财务部',
+						imgurl: '../../image/newsIndex.png'
+					}, {
+						deptId: 3,
+						name: '行政部',
+						imgurl: '../../image/newsIndex.png'
+					}, {
+						deptId: 4,
+						name: '支撑中心',
+						imgurl: '../../image/newsIndex.png'
+					}]
+				}
+			}
 		</script>
 	</body>
 

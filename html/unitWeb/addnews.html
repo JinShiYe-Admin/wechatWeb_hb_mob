@@ -1,9 +1,3 @@
-<!--
-	作者：刘洋
-	时间：2017-07-20
-	描述：添加文章
--->
-<!DOCTYPE html>
 <html>
 
 	<head>
@@ -14,111 +8,17 @@
 		<title>新闻添加</title>
 		<link rel="stylesheet" href="../../css/weui.min.css" />
 		<link href="../../css/mui.min.css" rel="stylesheet" />
-		<style>
-			.dropdown:before,
-			.dropdown:after {
-				content: '';
-				position: absolute;
-				z-index: 20;
-				top: 18px;
-				right: 10px;
-				border: 4px dashed;
-				border-color: #888888 transparent;
-			}
-			
-			.dropdown:before {
-				border-bottom-style: solid;
-				border-top: none;
-			}
-			
-			.dropdown:after {
-				margin-top: 7px;
-				border-top-style: solid;
-				border-bottom: none;
-			}
-			
-			.dropdown-select:focus {
-				z-index: 6;
-				width: 100%;
-				color: #394349;
-				outline: 10px solid #49aff2;
-				outline: 2px solid -webkit-focus-ring-color;
-				outline-offset: -2px;
-			}
-			
-			.dropdown-select>option {
-				margin: 10px;
-				padding: 10px 50px;
-				text-shadow: none;
-				background: #FFFFFF;
-				border-radius: 200px;
-				cursor: pointer;
-			}
-			
-			.lt-ie9 .dropdown {
-				z-index: 1;
-			}
-			
-			.lt-ie9 .dropdown-select {
-				z-index: -1;
-			}
-			
-			.lt-ie9 .dropdown-select:focus {
-				z-index: 3;
-			}
-			
-			@-moz-document url-prefix() {
-				.dropdown-select {
-					padding-left: 6px;
-				}
-			}
-			
-			.dropdown-dark {
-				background: #444;
-				border-color: #111111 #0a0a0a black;
-				background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
-				background-image: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
-				background-image: -o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
-				background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.4));
-				-webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), 0 1px 1px rgba(0, 0, 0, 0.2);
-				box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), 0 1px 1px rgba(0, 0, 0, 0.2);
-			}
-			
-			.dropdown-dark:before {
-				border-bottom-color: #aaa;
-			}
-			
-			.dropdown-dark:after {
-				border-top-color: #aaa;
-			}
-			
-			.dropdown-dark .dropdown-select {
-				color: #aaa;
-				text-shadow: 0 1px black;
-				background: #444;
-				/* Fallback for IE 8 */
-			}
-			
-			.dropdown-dark .dropdown-select:focus {
-				color: #ccc;
-			}
-			
-			.dropdown-dark .dropdown-select>option {
-				background: #444;
-				text-shadow: 0 1px rgba(0, 0, 0, 0.4);
-			}
-			
-			.weui-cells {
-				margin-top: 0px;
-			}
-			
-			.weui-cells__title {
-				color: black;
-			}
-		</style>
+		<!--<link href="../../css/index.css" rel="stylesheet" type="text/css" />-->
 	</head>
 
 	<body>
+		<div id="loading" v-show="isShow" style="display: none;">
+			<div class="weui-mask_transparent"></div>
+			<div class="weui-toast">
+				<i class="weui-loading weui-icon_toast"></i>
+				<p class="weui-toast__content">{{content}}</p>
+			</div>
+		</div>
 		<div class="weui-cells weui-cells_form">
 			<div class="weui-cells__title">所属栏目</div>
 			<div class="weui-cells">
@@ -134,7 +34,6 @@
 				</div>
 			</div>
 		</div>
-
 		<div id="conetent" class="weui-cells weui-cells_form">
 			<div id="input_list">
 
@@ -175,19 +74,29 @@
 				<!--<div id="image_list">
 					<todo-item></todo-item>
 				</div>-->
+				<div class="container">
+					<div class="weui-cells__title">附件上传</div>
+					<div class="weui-cells">
+						<div class="weui-cell">
+							<div class="upload-input margin-auto ">
+								<div>
+									<p>文件名称: {{ name }}</p>
+								</div>
+								<div class="upload-group" id="PriImg">
+									<input id="upload" type="file" class="file">
+									<p></p>
+									<p></p>
+									<img id="onisImg" src="http://qn-kfpb.jiaobaowang.net/wechat/webcon/150149001333390.jpg" width="200px" height="150px" />
+									<br />
+									<button onclick="uploadFile()">附件上传</button>
 
-			<div id="onisfileup">
-					<div class="weui-cells__title">文件上传</div>
-					    <div class="weui-cells">
-					    	<div class="weui-cell">
-					    		<div class="weui-cell__bd">
-                                     <input id="blogrollimagename" type="file"style=" height: 30px;" onchange="setBlogrollImageName(this)"   name="fileUpload" />
-                                </div>
-                             </div>
-                        </div>    
-                        
+									<!--<   @click="clickSc();" type="button" class="file-btn"  value="附件上传" />-->
+								</div>
+							</div>
+							<div class="result margin-auto " id="result-show"></div>
+						</div>
+					</div>
 				</div>
-
 				<div>
 					<div class="weui-cells__title">{{newszy.title}}</div>
 					<div class="weui-cells">
@@ -239,27 +148,44 @@
 		<script type="text/javascript" src="../../js/jquery.min.js"></script>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
+
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/qiniu/qiniu.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cloudutil.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cryption.js?" + Math.random() + "'></s" + "cript>");
+
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/pluploadutil.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 		<script type="text/javascript">
-//			//图片组件
-//			Vue.component('todo-item', {
-//				template: '<div class="weui-cells__title">文件上传</div><div class="weui-cells"><div class="weui-cell"><div class="weui-cell__bd"><input type="file"style=" height: 30px;" name="fileUpload" /></div></div></div>',
-//			})
+			var vm_loading; //等待框
+			var fileUploader; //上传logo七牛对象
+			var bannerUploader; //上传banner七牛对象
+			var uptokenData; //上传的token
+			var imgurl = ""; //圖片地址 
 
-           function setBlogrollImageName(basicfile){
-document.getElementById("blogrollimagename").value=basicfile.value;
-}
-
-
-			//所属栏目下拉框
-			var vue_input = new Vue({
-				el: '#chnid',
+			var vue_img = new Vue({
+				el: '#PriImg',
 				data: {
-					items: []
+					imgurl: imgurl
 				}
 			});
 			window.onload = function() {
+				if(imgurl == "") {
+					document.getElementById('onisImg').style.display = "none";
+				}
 
+				initUploader();
+				//等待框
+				vm_loading = new Vue({
+					el: "#loading",
+					data: {
+						isShow: true,
+						content: "数据加载中"
+					}
+				});
+				vm_loading.isShow = false;
 				/**
 				 * 获取网站配置信息
 				 */
@@ -290,6 +216,7 @@ document.getElementById("blogrollimagename").value=basicfile.value;
 				var tempData = {
 					cmd: 'chn', //网站栏目
 					type: 'findpage', //分页查找栏目列表
+					iswrite: '1',
 					pagesize: 999, //每页条数
 					pageindex: 1 //页码
 				}
@@ -305,7 +232,7 @@ document.getElementById("blogrollimagename").value=basicfile.value;
 						alert(data.RspTxt);
 					}
 				});
-
+				//
 				var detail = utils.getDataFromUrl(window.location.href);
 				vm.type = 'edit1';
 				if(vm.type == 'edit') {
@@ -327,7 +254,13 @@ document.getElementById("blogrollimagename").value=basicfile.value;
 					vm.editName = '添加'
 				}
 			}
-
+			var vue_input = new Vue({
+				el: '#chnid',
+				data: {
+					items: []
+				},
+				methods: {}
+			});
 			var vm = new Vue({
 				el: '#conetent',
 				data: {
@@ -387,21 +320,21 @@ document.getElementById("blogrollimagename").value=basicfile.value;
 				var PriChnid = Chnid.selectedIndex; // 选中索引
 				console.log('所属栏目=========================:' + PriChnid);
 				PriIsquo = document.getElementById("islink").checked == true ? 1 : 0;
-				PriIsReply = document.getElementById("isReply").checked == true ? 1 : 0; 
-					PriQuourl = document.getElementById("quourl").value;
-					comData = {
-						cmd: 'news', //文章管理
-						type: 'add',
-						chnid: PriChnid,
-						subtopic: Prisubtopic,
-						topic: PriTopic,
-						content: PriConten,
-						summas: PriSummas,
-						isquo: PriIsquo,
-						quourl: PriQuourl,
-						isreply: PriIsReply,
-						stat: webConfig.isnewchk
-					}; 
+				PriIsReply = document.getElementById("isReply").checked == true ? 1 : 0;
+				PriQuourl = document.getElementById("quourl").value;
+				comData = {
+					cmd: 'news', //文章管理
+					type: 'add',
+					chnid: PriChnid,
+					subtopic: Prisubtopic,
+					topic: PriTopic,
+					content: PriConten,
+					summas: PriSummas,
+					isquo: PriIsquo,
+					quourl: PriQuourl,
+					isreply: PriIsReply,
+					stat: webConfig.isnewchk
+				};
 				unitWebsitePro(comData, function(data) {
 					if(data.RspCode == 0) {
 						weui.toast("添加成功");
@@ -420,69 +353,200 @@ document.getElementById("blogrollimagename").value=basicfile.value;
 				console.log('comData=========================:' + JSON.stringify(comData));
 			});
 			//编辑发送协议
-			function upperCase(x) {
-				if(vm.type == 'edit') {
-					switch(x) {
-						case 'cname': //新闻标题
-							var y = document.getElementById(x).value;
-							console.log(y);
-							var data = {
-								type: 0,
-								index: 0,
-								callcol: "skinid",
-								colv: x
-							}
-							changeWebsiteConfig(data)
-							break;
-						case 'conten': //新闻内容
-							var y = document.getElementById(x).value;
-							console.log(y);
-							var data = {
-								type: 0,
-								index: 0,
-								callcol: "skinid",
-								colv: x
-							}
-							changeWebsiteConfig(data)
-							break;
-						default:
-							break;
-					}
-					document.getElementById(x).value = y.toUpperCase()
-				}
-			}
+			//			function upperCase(x) {
+			//				if(vm.type == 'edit') {
+			//					switch(x) {
+			//						case 'cname': //新闻标题
+			//							var y = document.getElementById(x).value;
+			//							console.log(y);
+			//							var data = {
+			//								type: 0,
+			//								index: 0,
+			//								callcol: "skinid",
+			//								colv: x
+			//							}
+			//							changeWebsiteConfig(data)
+			//							break;
+			//						case 'conten': //新闻内容
+			//							var y = document.getElementById(x).value;
+			//							console.log(y);
+			//							var data = {
+			//								type: 0,
+			//								index: 0,
+			//								callcol: "skinid",
+			//								colv: x
+			//							}
+			//							changeWebsiteConfig(data)
+			//							break;
+			//						default:
+			//							break;
+			//					}
+			//					document.getElementById(x).value = y.toUpperCase()
+			//				}
+			//			}
 
 			/**
-			 * 修改网站设置
-			 * @param {Object} change 修改的数据
-			 * @param {String} type 类型，0输入;1开关;2皮肤id
-			 * @param {String} index 第几个数据
+			 * 初始化上传
 			 */
-			function changeWebsiteConfig(change) {
-				var commit = {
-					cmd: 'webcfg',
-					type: 'edit'
-				}
-				unitWebsitePro(commit, function(data) {
-					alert("1");
-					if(data.RspCode == 0) { //成功
-						weui.toast("操作成功");
-					} else {
-						weui.alert("修改失败:" + data.RspTxt);
+			function initUploader() {
+				var bannerOption = {
+					disable_statistics_report: true, // 禁止自动发送上传统计信息到七牛，默认允许发送
+					runtimes: 'html5,flash,html4', // 上传模式,依次退化
+					browse_button: 'upload', // 上传选择的点选按钮，**必需**
+					uptoken_func: function(file) { // 在需要获取 uptoken 时，该方法会被调用
+						console.log("uptoken_func:" + JSON.stringify(file));
+						uptokenData = null;
+						uptokenData = getQNUpToken(file);
+						console.log("获取uptoken回调:" + JSON.stringify(uptokenData));
+						if(uptokenData && uptokenData.code) { //成功   
+							return uptokenData.data.Data[0].Token;
+						} else {
+							vm_loading.isShow = false;
+							vm_loading.content = "数据加载中";
+							bannerUploader.stop();
+							var dialog = weui.dialog({
+								title: "上传失败",
+								content: uptokenData.message,
+								className: "custom-classname",
+								buttons: [{
+									label: "确定",
+									type: "primary",
+									onClick: function() {
+										dialog.hide();
+									}
+								}]
+							});
+						}
+					},
+					unique_names: false, // 默认 false，key 为文件名。若开启该选项，JS-SDK 会为每个文件自动生成key（文件名）
+					save_key: false, // 默认 false。若在服务端生成 uptoken 的上传策略中指定了 `save_key`，则开启，SDK在前端将不对key进行任何处理
+					get_new_uptoken: true, // 设置上传文件的时候是否每次都重新获取新的 uptoken
+					domain: storageutil.QNPBDOMAIN, // bucket 域名，下载资源时用到，如：'http://xxx.bkt.clouddn.com/' **必需**
+					max_file_size: '10mb', // 最大文件体积限制
+					flash_swf_url: '../../js/lib/plupload/Moxie.swf', //引入 flash,相对路径
+					max_retries: 0, // 上传失败最大重试次数
+					dragdrop: false, // 开启可拖曳上传
+					chunk_size: '4mb', // 分块上传时，每块的体积
+					auto_start: false, // 选择文件后自动上传，若关闭需要自己绑定事件触发上传,
+					filters: {
+						mime_types: [ //只允许上传图片和zip文件
+							{
+								title: "Image files",
+								extensions: "jpg,png"
+							}
+						]
+					},
+					init: {
+						'FilesAdded': function(up, files) {
+							plupload.each(files, function(file) {
+								// 文件添加进队列后,处理相关的事情
+								console.log("FilesAdded:" + JSON.stringify(file));
+							});
+						},
+						'UploadProgress': function(up, file) {
+							// 每个文件上传时,处理相关的事情 
+							vm_loading.content = "上传中 " + file.percent + "%";
+						},
+						'FileUploaded': function(up, file, info) {
+							// 每个文件上传成功后,处理相关的事情 
+							console.log("文件:info:" + JSON.stringify(info));
+							if(info.status == 200) {
+								vm_loading.isShow = false;
+								var cc = eval("(" + info.response + ")");
+								imgurl = 'http://qn-kfpb.jiaobaowang.net/' + cc.key; 
+					            document.getElementById('onisImg').style.display = "block "; 
+								/**
+								 * 文章附件管理添加
+								 */
+								var tempData = {
+									cmd: 'newsenc', //文章附件管理
+									type: 'add', //添加文章附件  
+									saveurl: imgurl, //图片地址
+									oldname: file.name, //原名称
+									newname: cc.key, //新名称
+									filesize: file.size, //文件大小
+									colv: 1 //是否通过
+								}
+								unitWebsitePro(tempData, function(data) {
+									if(data.RspCode == 0)
+										weui.toast("上传成功");
+								});
+							} else {
+								var dialog = weui.dialog({
+									title: "上传失败",
+									content: JSON.stringify(info),
+									className: "custom-classname",
+									buttons: [{
+										label: "确定",
+										type: "primary",
+										onClick: function() {
+											dialog.hide();
+										}
+									}]
+								});
+							}
+						},
+						'Error': function(up, err, errTip) {
+							//上传出错时,处理相关的事情
+							//console.log("Error:" + up);
+							//console.log("Error:" + JSON.stringify(err));
+							//console.log("Error:" + errTip);
+							vm_loading.isShow = false;
+							vm_loading.content = "数据加载中";
+							var dialog = weui.dialog({
+								title: "操作失败",
+								content: pluploadutil.errMes(err.code, errTip),
+								className: "custom-classname",
+								buttons: [{
+									label: "确定",
+									type: "primary",
+									onClick: function() {
+										dialog.hide();
+									}
+								}]
+							});
+						},
+						'UploadComplete': function() {
+							//队列文件处理完毕后,处理相关的事情
+							//console.log("UploadComplete");
+						},
+						'Key': function(up, file) {
+							// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
+							// 该配置必须要在 unique_names: false , save_key: false 时才生效
+							if(uptokenData && uptokenData.code) { //成功
+								return uptokenData.data.Data[0].Key;
+							}
+						}
 					}
+				}
+				bannerUploader = Qiniu.uploader(bannerOption);
+			}
+			/**
+			 * 获取七牛上传token
+			 */
+			function getQNUpToken(file) {
+				var myDate = new Date();
+				var fileName = myDate.getTime() + "" + parseInt(Math.random() * 1000);
+				var types = file.name.split(".");
+				fileName = fileName + "." + types[types.length - 1];
+				var getTokenData = {
+					appId: storageutil.QNQYWXKID,
+					mainSpace: storageutil.QNPUBSPACE,
+					saveSpace: storageutil.QNSSPACEWEBCON,
+					fileArray: [{
+						qnFileName: fileName,
+					}]
+				}
+				var upToken;
+				cloudutil.getFileUpTokens(getTokenData, function(data) {
+					upToken = data;
 				});
-				if(1) { //成功
-					weui.toast("操作成功");
-					if(change.type == 2) {
-						vm_skin.skinId = commit.colv;
-					}
-				} else {
-					if(change.type == 1) { //开关
-						vm_switch.switchArray[change.index].check = !change.colv;
-					}
-					weui.alert("修改失败");
-				}
-				//---假数据---end---
+				console.log("gettokendata" + JSON.stringify(getTokenData))
+				return upToken;
+			}
+
+			function uploadFile() {
+				bannerUploader.start();
 			}
 		</script>
 	</body>

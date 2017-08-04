@@ -1,0 +1,74 @@
+<!--
+	作者：444811716@qq.com
+	时间：2017-08-04
+	描述：课程表
+-->
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>课程表</title>
+		<script type="text/javascript">
+			document.write('<link rel="stylesheet" href="../../js/demoCssJs/weui.min.css?' + Math.random() + '" />');
+			document.write('<link rel="stylesheet" href="../../js/demoCssJs/jquery-weui.css?' + Math.random() + '" />');
+		</script>
+		<style>
+			body {
+				word-break: break-word;
+			}
+
+			.weui-flex {
+				text-align: center;
+			}
+
+			.time-table-content {
+				padding: 15px;
+			}
+
+			.time-table {
+				margin: 5px 0;
+			}
+
+			.time-table .weui-flex__item {
+				border-top: 1px solid black;
+				border-left: 1px solid black;
+			}
+
+			.time-table .weui-flex .weui-flex__item {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+			}
+
+			.time-table .weui-flex .weui-flex__item:last-child {
+				border-right: 1px solid black;
+			}
+
+			.time-table .weui-flex:last-child {
+				border-bottom: 1px solid black;
+			}
+			.time-table-item-del{
+				color: red;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="time_table" class="time-table-content">
+			<time-table :title="title" :subtitle="subtitle" :items_array="items_array" :items="items":show_add="show_add"></time-table>
+		</div>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-2.1.4.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-weui.js?" + Math.random() + "'></s" + "cript>");
+//			document.write("<s" + "cript type='text/javascript' src='../../js/weui.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/vue.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/appweb/subject_timetable.js?" + Math.random() + "'></s" + "cript>");
+		</script>
+	</body>
+
+</html>

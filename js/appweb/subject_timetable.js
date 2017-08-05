@@ -1,5 +1,5 @@
 Vue.component("time-table", {
-	props: ["title", "subtitle", "items_array", "items", "show_add"],
+	props: ["title", "subtitle", "items_array", "show_add"],
 	template: '\
 	<div>\
 		<div class="weui-flex">\
@@ -27,15 +27,48 @@ Vue.component("time-table", {
 					<div>{{item_value.content}}</div>\
 				</div>\
 				<div class="weui-flex__item time-table-item-del">\
-					<div @click="delItem(index)">删除</div>\
+					<div @click="clickItemDel(index)">删除</div>\
 				</div>\
 			</div>\
 		</div>\
-		<button v-if="show_add" @click="addTableItem()" class="weui-btn weui-btn_mini weui-btn_primary">添加</button>\
+		<button v-if="show_add" @click="clickAddButton" class="weui-btn weui-btn_mini weui-btn_primary">添加</button>\
 	</div>',
 	methods: {
 		/**
-		 * 添加一行
+		 * 点击底部的添加按钮
+		 */
+		clickAddButton: function() {
+			this.$emit("click-add-button");
+		},
+		/**
+		 * 点击每一个item
+		 * @param {Object} index 第几行
+		 * @param {Object} item_index 第几列
+		 */
+		clickItem: function(index, item_index) {
+			this.$emit("click-item", index, item_index);
+		},
+		/**
+		 * 删除某一行
+		 * @param {Object} index 第几行
+		 */
+		clickItemDel: function(index) {
+			this.$emit("click-item-del", index);
+
+		}
+	}
+});
+//课程表
+var vm_time_table = new Vue({
+	el: "#time_table",
+	data: {
+		title: "2017秋季课程表",
+		subtitle: "开发部 2017/8/1 0:00:00时效:201709至201802",
+		items_array: []
+	},
+	methods: {
+		/**
+		 * 点击底部的添加按钮
 		 */
 		addTableItem: function() {
 			var item = [];
@@ -54,15 +87,16 @@ Vue.component("time-table", {
 		 * @param {Object} index 第几行
 		 * @param {Object} item_index 第几列
 		 */
-		clickItem: function(index, item_index) {
+		changeItem: function(index, item_index) {
 			var itemData = vm_time_table.items_array[index][item_index];
-			vm_time_table.items_array[index][item_index].title = "click";
+			vm_time_table.items_array[index][item_index].title = "title";
+			vm_time_table.items_array[index][item_index].content = "content";
 		},
 		/**
 		 * 删除某一行
 		 * @param {Object} index 第几行
 		 */
-		delItem: function(index) {
+		delTableItem: function(index) {
 			$.confirm({
 				title: '提示',
 				text: '确认删除?',
@@ -72,15 +106,6 @@ Vue.component("time-table", {
 				}
 			});
 		}
-	}
-});
-var vm_time_table = new Vue({
-	el: "#time_table",
-	data: {
-		items: "items",
-		title: "2017秋季课程表",
-		subtitle: "开发部 2017/8/1 0:00:00时效:201709至201802",
-		items_array: []
 	},
 	computed: {
 		show_add: function() {

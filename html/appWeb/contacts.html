@@ -50,35 +50,25 @@
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 		</header>
-		<!--<nav id="alertBar" class="mui-bar mui-bar-tab" style="height: 60px;">
-			<hr style="margin-top: -1px; height:1px;border:none;border-top:1px solid #ededed;" />
-			<div align="center" style="margin-top: 5px;">
-				<button id="alertAll" type="button" class="mui-btn mui-btn-blue mui-pull-right " style="border-radius: 2px;width: 20%;background-color: #00a5e0;border-color:#00a5e0 ;height: 30px;font-size:16px;letter-spacing: 1px;">确定</button>
-			</div>
-		</nav>-->
+
 		<div class="mui-content mui-scroll-wrapper" style="z-index: 1;" id="contacts">
 			<div class="mui-scroll">
-				<!--列表信息流 开始-->
-				<ul id="list" class="mui-table-view">
-					<li class="mui-table-view-cell mui-media">
-						<img class="mui-media-object mui-pull-left" src="../../image/utils/default_personalimage.png" style="width: 50px;height: 50px;">
-						<div class="mui-media-body" style="margin-top: 10px;">
-							新建联系人
-						</div>
-					</li>
-					<li class="mui-table-view-divider">企业通讯录</li>
-					<li class="mui-table-view-cell mui-media  mui-checkbox mui-left" v-for="item in items" :data-id='item.id?item.id:item.userid'>
-						<img class="mui-media-object mui-pull-left" :src="item.imgurl" style="width: 50px;height: 50px;">
-						<div class="mui-media-body" style="margin-top: 10px;">
-							{{item.name}}
-						</div>
-						<input name="checkbox" type="checkbox" style="margin-top: 10px;">
-					</li>
-				</ul>
+				<items :model='model' v-for='model in data'></items>
 				<!--列表信息流 结束-->
 			</div>
 		</div>
-
+		<template>
+			<li>
+				<div @click='toggle'>
+					<i v-if='isFolder' class="fa " :class="[open?'fa-folder-open':'fa-folder']"></i>
+					<!--isFolder判断是否存在子级改变图标-->
+					<i v-if='!isFolder' class="fa fa-file-text"></i> {{model.data.menuName}}
+				</div>
+				<ul v-show="open" v-if='isFolder'>
+					<items v-for='cel in model.childTreeNode' :model='cel'></items>
+				</ul>
+			</li>
+		</template>
 		<script src="../../js/mui.min.js"></script>
 		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
@@ -88,47 +78,132 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 		<script type="text/javascript">
-			mui.init();
-			var vm_contacts = new Vue({
+			var data = [{
+				"id": "1",
+				"data": {
+					"menuName": "项目管理",
+					"menuCode": "",
+				},
+				"childTreeNode": [{
+					"data": {
+						"menuName": "项目",
+						"menuCode": "BusProject",
+					},
+					"childTreeNode": []
+				}, {
+					"data": {
+						"menuName": "我的任务",
+						"menuCode": "BusProject",
+					},
+					"childTreeNode": []
+				}, {
+					"data": {
+						"menuName": "人员周报",
+						"menuCode": "BusProject",
+					},
+					"childTreeNode": []
+				}]
+			}, {
+				"id": "2",
+				"data": {
+					"menuName": "数据统计",
+					"menuCode": "BusClock",
+				},
+				"childTreeNode": []
+			}, {
+				"id": "3",
+				"data": {
+					"menuName": "人事管理",
+					"menuCode": "",
+				},
+				"childTreeNode": []
+			}, {
+				"id": "4",
+				"data": {
+					"menuName": "基础管理",
+					"menuCode": "",
+				},
+				"childTreeNode": []
+			}]
+			var contacts = new Vue({
 				el: '#contacts',
-				data: {
-					items: [] //列表信息流数据
-				}
+				data: data
+
 			});
-			window.onload = function() {
-				var detail = utils.getDataFromUrl(window.location.href);
-				if(detail.id) {
-					var data = {
-						access_token: detail.access_token,
-						department_id: detail.id,
-					}
-				console.log(JSON.stringify(data))
-					jQuery.getJSON("https://qyapi.weixin.qq.com/cgi-bin/user/simplelist", data, function(rsp) {
-						alert(JSON.stringify(rsp))
-						console.log(JSON.stringify(rsp))
-						vm_contacts.items = rsp.userlist
 
-					});
-					return;
-				}
-				var data = {
-					corpid: 'wx6c4528c675d4a9c9',
-					corpsecret: 'K9TuOUac2CjcxsDQm40FiuTubSFWgYAx1v9HZyYfMRZ-P0LCBQmEUmfWUhjl9kY6'
-				}
-				jQuery.getJSON("https://qyapi.weixin.qq.com/cgi-bin/gettoken", data, function(rsp) {
-					alert(JSON.stringify(rsp))
-					vm_contacts.access_token = rsp.access_token;
-					userdata = {
-						access_token: rsp.access_token,
-						id: ''
+			export default {
+				name: 'items',
+				props: ['model'],
+				components: {},
+				data() {
+					return {
+						open: false,
+						isFolder: true
 					}
-					jQuery.getJSON("https://qyapi.weixin.qq.com/cgi-bin/department/list", userdata, function(rsp) {
-						alert(JSON.stringify(rsp))
-						vm_contacts.items = rsp.department
-
-					});
-				});
+				},
+				computed: {
+					isFolder: function() {
+						return this.model.childTreeNode && this.model.childTreeNode.length
+					}
+				},
+				methods: {
+					toggle: function() {
+						if(this.isFolder) {
+							this.open = !this.open
+						}
+					},
+				}
 			}
+		</script>
+		<!--<nav id="alertBar" class="mui-bar mui-bar-tab" style="height: 60px;">
+			<hr style="margin-top: -1px; height:1px;border:none;border-top:1px solid #ededed;" />
+			<div align="center" style="margin-top: 5px;">
+				<button id="alertAll" type="button" class="mui-btn mui-btn-blue mui-pull-right " style="border-radius: 2px;width: 20%;background-color: #00a5e0;border-color:#00a5e0 ;height: 30px;font-size:16px;letter-spacing: 1px;">确定</button>
+			</div>
+		</nav>-->
+
+		<script type="text/javascript">
+			//			mui.init();
+			//			var vm_contacts = new Vue({
+			//				el: '#contacts',
+			//				data: {
+			//					items: [] //列表信息流数据
+			//				}
+			//			});
+			//			window.onload = function() {
+			//				var detail = utils.getDataFromUrl(window.location.href);
+			//				if(detail.id) {
+			//					var data = {
+			//						access_token: detail.access_token,
+			//						department_id: detail.id,
+			//					}
+			//					console.log(JSON.stringify(data))
+			//					jQuery.getJSON("https://qyapi.weixin.qq.com/cgi-bin/user/simplelist", data, function(rsp) {
+			//						alert(JSON.stringify(rsp))
+			//						console.log(JSON.stringify(rsp))
+			//						vm_contacts.items = rsp.userlist
+			//
+			//					});
+			//					return;
+			//				}
+			//				var data = {
+			//					corpid: 'wx6c4528c675d4a9c9',
+			//					corpsecret: 'K9TuOUac2CjcxsDQm40FiuTubSFWgYAx1v9HZyYfMRZ-P0LCBQmEUmfWUhjl9kY6'
+			//				}
+			//				jQuery.getJSON("https://qyapi.weixin.qq.com/cgi-bin/gettoken", data, function(rsp) {
+			//					alert(JSON.stringify(rsp))
+			//					vm_contacts.access_token = rsp.access_token;
+			//					userdata = {
+			//						access_token: rsp.access_token,
+			//						id: ''
+			//					}
+			//					jQuery.getJSON("https://qyapi.weixin.qq.com/cgi-bin/department/list", userdata, function(rsp) {
+			//						alert(JSON.stringify(rsp))
+			//						vm_contacts.items = rsp.department
+			//
+			//					});
+			//				});
+			//			}
 
 			//点击列表，打开详情
 			//TODO 后续应该封装一个v-tap指令，实现tap监听

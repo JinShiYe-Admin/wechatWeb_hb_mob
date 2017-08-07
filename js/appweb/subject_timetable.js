@@ -21,8 +21,8 @@ Vue.component("time-table", {
 				<div class="weui-flex__item">周日</div>\
 				<div class="weui-flex__item">操作</div>\
 			</div>\
-			<div class="weui-flex"v-for="(item,index) in items_array">\
-				<div @click="clickItem(index,item_index)" class="weui-flex__item" v-for="(item_value,item_index) in item">\
+			<div class="weui-flex" v-for="(item,index) in items_array">\
+				<div :id="index+\'-\'+item_index"  class="weui-flex__item" :class="{\'first\':item_index==0,\'second\':item_index==1,\'other\':item_index!=0&&item_index!=1}" v-for="(item_value,item_index) in item">\
 					<div>{{item_value.title}}</div>\
 					<div>{{item_value.content}}</div>\
 				</div>\
@@ -88,9 +88,10 @@ var vm_time_table = new Vue({
 		 * @param {Object} item_index 第几列
 		 */
 		changeItem: function(index, item_index) {
-			var itemData = vm_time_table.items_array[index][item_index];
-			vm_time_table.items_array[index][item_index].title = "title";
-			vm_time_table.items_array[index][item_index].content = "content";
+
+			//			var itemData = vm_time_table.items_array[index][item_index];
+			//			vm_time_table.items_array[index][item_index].title = "title";
+			//			vm_time_table.items_array[index][item_index].content = "content";
 		},
 		/**
 		 * 删除某一行
@@ -115,5 +116,151 @@ var vm_time_table = new Vue({
 			}
 			return show;
 		}
+	},
+	updated: function() {
+		console.log('刷新数据:' + JSON.stringify(vm_time_table.items_array))
+		var div = document.getElementById("time_table");
+		console.log(div.innerHTML)
+
+		// 时间选择器
+		mui('.time-table-content').on('tap', '.first', function() {
+			var self = this;
+			// 多列选择器
+			weui.picker([{
+				label: "上午",
+				value: "上午"
+			}, {
+				label: "下午",
+				value: "下午"
+			}], {
+				defaultValue: ['上午'],
+				onChange: function onChange(result) {
+					console.log(result);
+				},
+				onConfirm: function onConfirm(result) {
+					console.log(result);
+					var tempArr = self.id.split('-');
+					var index = tempArr[0];
+					var item_index = tempArr[1];
+					var model = vm_time_table.items_array[index][item_index]
+					model.title = result[0].label;
+				},
+				id: 'picker'
+			});
+
+		})
+
+		// 时间选择器
+		mui('.time-table-content').on('tap', '.second', function() {
+			var self = this;
+			var hours = [];
+			for(var i = 0; i < 24; i++) {
+				var obj = {};
+				obj.label = obj.value = i > 9 ? i : '0' + i;
+				hours.push(obj)
+			}
+			var minutes = [];
+			for(var i = 0; i < 59; i++) {
+				var obj = {};
+				obj.label = obj.value = i > 9 ? i : '0' + i;
+				minutes.push(obj)
+			}
+			// 多列选择器
+			weui.picker(hours, [{
+				label: ":",
+				value: ":"
+			}], minutes, [{
+				label: "到",
+				value: "-"
+			}], hours, [{
+				label: ":",
+				value: ":"
+			}], minutes, {
+				defaultValue: ['08', ":", '00', "到", "08", ":", "00"],
+				onChange: function onChange(result) {
+					console.log(result);
+				},
+				onConfirm: function onConfirm(result) {
+					console.log(JSON.stringify(result));
+					var tempArr = self.id.split('-');
+					var index = tempArr[0];
+					var item_index = tempArr[1];
+					var model = vm_time_table.items_array[index][item_index]
+					model.title = result[0].label + ":" + result[2].label + "-" + result[4].label + ":" + result[6].label;
+				},
+				id: 'multiPickerBtn'
+			});
+
+		})
+		// 时间选择器
+		mui('.time-table-content').on('tap', '.other', function() {
+			var self = this;
+			// 多列选择器
+			weui.picker([{
+				label: '开发部',
+				value: 0,
+				children: [{
+					label: '赵启旺',
+					value: 0,
+					children: [{
+						label: 'ios',
+						value: 0
+					}, {
+						label: 'js',
+						value: 1
+					}]
+				}, {
+					label: '安琪',
+					value: 1,
+					children: [{
+						label: 'android',
+						value: 0
+					}, {
+						label: 'js',
+						value: 1
+					}]
+				}]
+			}, {
+				label: '其他部门',
+				value: 1,
+				children: [{
+					label: '张三',
+					value: 0,
+					children: [{
+						label: '数学',
+						value: 0
+					}, {
+						label: '语文',
+						value: 1
+					}]
+				}, {
+					label: '李四',
+					value: 1,
+					children: [{
+						label: '英语',
+						value: 0
+					}, {
+						label: '物理',
+						value: 1
+					}]
+				}]
+			}], {
+				depth: 3,
+				defaultValue: [0, 1, 1],
+				onChange: function onChange(result) {
+//					console.log(result);
+				},
+				onConfirm: function onConfirm(result) {
+					console.log(JSON.stringify(result));
+					var tempArr = self.id.split('-');
+					var index = tempArr[0];
+					var item_index = tempArr[1];
+					var model = vm_time_table.items_array[index][item_index]
+					model.title = result[0].label + result[1].label + result[2].label;
+				},
+				id: 'cascadePicker'
+			});
+
+		})
 	}
 });

@@ -64,7 +64,10 @@ var vm_time_table = new Vue({
 	data: {
 		title: "2017秋季课程表",
 		subtitle: "开发部 2017/8/1 0:00:00时效:201709至201802",
-		items_array: []
+		items_array: [],
+		departs_array: [],
+		sub_array: []
+
 	},
 	methods: {
 		/**
@@ -132,6 +135,9 @@ var vm_time_table = new Vue({
 			}, {
 				label: "下午",
 				value: "下午"
+			}, {
+				label: "晚上",
+				value: "晚上"
 			}], {
 				defaultValue: ['上午'],
 				onChange: function onChange(result) {
@@ -195,60 +201,21 @@ var vm_time_table = new Vue({
 		// 时间选择器
 		mui('.time-table-content').on('tap', '.other', function() {
 			var self = this;
+			for(var i = 0; i < vm_time_table.departs_array.length; i++) {
+				var departs = vm_time_table.departs_array[i]
+				for(var j = 0; j < departs.children.length; j++) {
+					var kemu = departs.children[j];
+					kemu.children = vm_time_table.sub_array;
+				}
+			}
+			console.log("部门数组:" + JSON.stringify(vm_time_table.departs_array))
+
 			// 多列选择器
-			weui.picker([{
-				label: '开发部',
-				value: 0,
-				children: [{
-					label: '赵启旺',
-					value: 0,
-					children: [{
-						label: 'ios',
-						value: 0
-					}, {
-						label: 'js',
-						value: 1
-					}]
-				}, {
-					label: '安琪',
-					value: 1,
-					children: [{
-						label: 'android',
-						value: 0
-					}, {
-						label: 'js',
-						value: 1
-					}]
-				}]
-			}, {
-				label: '其他部门',
-				value: 1,
-				children: [{
-					label: '张三',
-					value: 0,
-					children: [{
-						label: '数学',
-						value: 0
-					}, {
-						label: '语文',
-						value: 1
-					}]
-				}, {
-					label: '李四',
-					value: 1,
-					children: [{
-						label: '英语',
-						value: 0
-					}, {
-						label: '物理',
-						value: 1
-					}]
-				}]
-			}], {
+			weui.picker(vm_time_table.departs_array, {
 				depth: 3,
-				defaultValue: [0, 1, 1],
+				defaultValue: [1, "like", 4],
 				onChange: function onChange(result) {
-//					console.log(result);
+					//										console.log(result);
 				},
 				onConfirm: function onConfirm(result) {
 					console.log(JSON.stringify(result));
@@ -264,3 +231,80 @@ var vm_time_table = new Vue({
 		})
 	}
 });
+getPersondeparts();
+getSub();
+
+function getPersondeparts() {
+	var tempData = {
+		cmd: 'persondeparts',
+		type: 'findpage'
+	}
+	unitWebsitePro(tempData, function(data) {
+		console.log('部门:' + JSON.stringify(data));
+		alert('部门:' + JSON.stringify(data));
+		if(data.RspCode == 0) {
+			vm_time_table.departs_array = data.RspData;
+			if(data.RspData == "11") {
+				vm_time_table.departs_array = [{
+					value: 11,
+					title: "开发部"
+				}];
+			}
+
+			for(var i = 0; i < vm_time_table.departs_array.length; i++) {
+				var model = vm_time_table.departs_array[i]
+				model.label = model.title;
+				getDepartpersons(model.value, i)
+			}
+		} else {
+			mui.toast(data.RspTxt)
+		}
+	})
+}
+
+function getDepartpersons(id, index) {
+	var tempData = {
+		cmd: 'departpersons',
+		type: 'findpage',
+		colid: 11
+	}
+	unitWebsitePro(tempData, function(data) {
+		console.log('人员:' + JSON.stringify(data));
+		if(data.RspCode == 0) {
+			var tempArr = vm_time_table.departs_array;
+			for(var i = 0; i < data.RspData.length; i++) {
+				var model = data.RspData[i];
+				model.value = model.userid;
+				model.label = model.name;
+
+			}
+			tempArr[index].children = data.RspData;
+			console.log(JSON.stringify(vm_time_table.departs_array));
+		} else {
+			mui.toast(data.RspTxt)
+		}
+	})
+}
+
+function getSub() {
+	var tempData = {
+		cmd: 'sub',
+		type: 'findpage',
+		pagesize: 10,
+		pageindex: 1,
+		stat: '1'
+	}
+	unitWebsitePro(tempData, function(data) {
+		console.log('科目:' + JSON.stringify(data));
+		if(data.RspCode == 0) {
+			vm_time_table.sub_array = data.RspData.dt;
+			for(var i = 0; i < vm_time_table.sub_array.length; i++) {
+				var model = vm_time_table.sub_array[i];
+				model.value = model.subid;
+				model.label = model.cname;
+			}
+		} else {
+			mui.toast(data.RspTxt)
+		}
+	})
+}

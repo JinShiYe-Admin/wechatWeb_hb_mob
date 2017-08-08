@@ -1,0 +1,218 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../js/demoCssJs/weui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/demoCssJs/jquery-weui.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/demoCssJs/demos.css" />
+	</head>
+
+	<body>
+		<div id="courseData">
+			<input v-model="newCourse" type="text" style="margin: 10px 0px 10px 10px; width: 75%;" placeholder="请输入要添加的课程" />
+			<button @click="addCourse()" style="margin: 13px auto auto 5px;">添加</button>
+			<p style="margin: 10px auto auto 15px;font-size: 15px;">现有课程:</p>
+			<ul class="mui-table-view" style="margin-top: 5px;">
+				<li class="mui-table-view-cell" v-for='(course,index) in courseArray' @click="clickLI(course,index)">
+					{{course.cname}}
+					<button class="mui-pull-right" @click.stop="removeCourse(course,index)">删除</button>
+				</li>
+			</ul>
+		</div>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/demoCssJs/jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/demoCssJs/jquery-weui.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
+		</script>
+		<script type="text/javascript">
+			mui.init({
+				pullRefresh: {
+					container: '#courseData',
+					down: {
+						style: 'circle',
+						callback: pulldownRefresh
+					},
+					up: {
+						contentrefresh: '正在加载...',
+						callback: pullupRefresh
+					}
+				}
+			});
+			window.onload = function() {
+				//获取科目列表
+				getSubArray();
+			};
+			var courseData = new Vue({
+				el: "#courseData",
+				data: {
+					newCourse: '',
+					subFlag: 0, //0刷新，1加载更多
+					subIndex: 1, //获取第几页数据
+					courseArray: []
+				},
+				methods: {
+					clickLI: function(model, index) {
+						//如果参数过多，建议通过 object 方式传入
+						$.prompt({
+							title: '修改课程名称',
+							text: '',
+							input: model.cname,
+							empty: false, // 是否允许为空
+							onOK: function(input) {
+								//如果输入之后的值，和之前的值一样，不执行任何操作
+								if(input == model.cname) {
+
+								} else {
+									//重新编辑课程时，判断是否输入了值，有没有重复
+									if(checkInput(input)) {
+										editSub(model, input);
+									}
+								}
+							},
+							onCancel: function() {
+								//点击取消
+							}
+						});
+					},
+					addCourse: function() {
+						//添加课程时，判断是否输入了值，有没有重复
+						if(checkInput(courseData.newCourse)) {
+							//发送添加协议
+							addSub(courseData.newCourse);
+						}
+					},
+					removeCourse: function(model, index) {
+						$.confirm("确定删除此课程？", function() {
+							//点击确认后的回调函数
+							delSub(model, index);
+						}, function() {
+							//点击取消后的回调函数
+						});
+					}
+				}
+			});
+			//获取科目列表
+			var getSubArray = function() {
+				var tempData = {
+					cmd: 'sub',
+					type: 'findpage',
+					pagesize: 20,
+					pageindex: courseData.subIndex
+				}
+				console.log('tempData:' + JSON.stringify(tempData));
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						if(data.RspData.dt.length > 0) {
+							if(courseData.subFlag == 0) { //刷新
+								courseData.courseArray = [].concat(data.RspData.dt);
+							} else { //加载更多
+								courseData.courseArray = courseData.courseArray.concat(data.RspData.dt);
+							}
+							courseData.subIndex++;
+						}
+					} else {
+						alert(data.RspTxt);
+					}
+					mui('#courseData').pullRefresh().endPullup(true); //参数为true代表没有更多数据了。
+					mui('#courseData').pullRefresh().endPulldown();
+				});
+			};
+			//添加课程
+			var addSub = function(subName) {
+				var tempData = {
+					cmd: 'sub',
+					type: 'add',
+					cname: subName
+				}
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						courseData.subIndex = 1;
+						courseData.subFlag = 0;
+						//获取科目列表
+						getSubArray();
+					} else {
+						alert(data.RspTxt);
+					}
+				});
+			};
+			//重新编辑课程名称
+			var editSub = function(model, newName) {
+				var tempData = {
+					cmd: 'sub',
+					type: 'edit',
+					callcol: 'cname',
+					colid: model.subid,
+					colv: newName
+				}
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						//						model.cname = newName;
+						courseData.subIndex = 1;
+						courseData.subFlag = 0;
+						//获取科目列表
+						getSubArray();
+					} else {
+						alert(data.RspTxt);
+					}
+				});
+			};
+			//删除课程
+			var delSub = function(model, index) {
+				var tempData = {
+					cmd: 'sub',
+					type: 'del',
+					colid: model.subid
+				}
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						courseData.courseArray.splice(index, 1)
+					} else {
+						alert(data.RspTxt);
+					}
+				});
+			};
+			//添加课程时，判断是否输入了值，有没有重复
+			var checkInput = function(text) {
+				if(text.length == 0) {
+					alert('不能加入空数据');
+					return false;
+				}
+				var tempFlag = 0;
+				for(var i = 0; i < courseData.courseArray.length; i++) {
+					var tempModel = courseData.courseArray[i];
+					if(tempModel.text == text) {
+						tempFlag++;
+					}
+				}
+				if(tempFlag == 0) {
+					return true;
+				} else {
+					alert('不能添加重复课程');
+					return false;
+				}
+			}
+
+			function pullupRefresh() {
+				courseData.subFlag = 1;
+				//获取科目列表
+				getSubArray();
+			}
+			/**
+			 * 下拉刷新具体业务实现
+			 */
+			function pulldownRefresh() {
+				courseData.subIndex = 1;
+				courseData.subFlag = 0;
+				//获取科目列表
+				getSubArray();
+			}
+		</script>
+	</body>
+
+</html>

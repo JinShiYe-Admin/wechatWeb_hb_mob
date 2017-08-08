@@ -31,6 +31,16 @@
 						新闻审核
 					</a>
 				</li>
+				<li class="mui-table-view-cell" id="manageSub">
+					<a class="mui-navigate-right">
+						科目管理
+					</a>
+				</li>
+				<li class="mui-table-view-cell" id="manageSubject">
+					<a class="mui-navigate-right">
+						课程表管理
+					</a>
+				</li>
 			</ul>
 		</div>
 		<script src="../../js/mui.min.js"></script>
@@ -47,9 +57,9 @@
 					var id = this.getAttribute("id");
 					switch(id) {
 						case 'modifyConfig':
-//							storageutil.setSessionStorage(storageutil.WEBSITECONFIG, JSON.stringify({
-//								open: 0 //从配置主页进入
-//							}))
+							//							storageutil.setSessionStorage(storageutil.WEBSITECONFIG, JSON.stringify({
+							//								open: 0 //从配置主页进入
+							//							}))
 							utils.mOpenWithData("website_config.html");
 							break;
 						case 'addColumn':
@@ -66,6 +76,12 @@
 							break;
 						case 'newsAdd':
 							utils.mOpenWithData("addnews.html", "addnews.html");
+							break;
+						case 'manageSub':
+							utils.mOpenWithData("addCourse.html", "addCourse.html");
+							break;
+						case 'manageSubject':
+							utils.mOpenWithData("../../html/appWeb/subject_timetable.html", "subject_timetable.html");
 							break;
 						default:
 							break;

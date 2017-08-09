@@ -20,39 +20,39 @@
 			body {
 				word-break: break-word;
 			}
-			
+
 			.weui-flex {
 				text-align: center;
 			}
-			
+
 			.time-table-content {
 				padding: 15px;
 			}
-			
+
 			.time-table {
 				margin: 5px 0;
 			}
-			
+
 			.time-table .weui-flex__item {
 				border-top: 1px solid black;
 				border-left: 1px solid black;
 			}
-			
+
 			.time-table .weui-flex .weui-flex__item {
 				display: flex;
 				align-items: center;
 				justify-content: center;
 				flex-direction: column;
 			}
-			
+
 			.time-table .weui-flex .weui-flex__item:last-child {
 				border-right: 1px solid black;
 			}
-			
+
 			.time-table .weui-flex:last-child {
 				border-bottom: 1px solid black;
 			}
-			
+
 			.time-table-item-del {
 				color: red;
 			}
@@ -69,7 +69,7 @@
 					<div class="weui-flex__item title">{{subtitle}}</div>
 				</div>
 				<div class="time-table">
-					<div class="weui-flex">
+					<div class="weui-flex" v-once>
 						<div class="weui-flex__item">类型</div>
 						<div class="weui-flex__item">时间段</div>
 						<div class="weui-flex__item">周一</div>
@@ -82,20 +82,28 @@
 						<div class="weui-flex__item">操作</div>
 					</div>
 					<div class="weui-flex" v-for="(item,index) in items_array">
-						<div :id="index+'-'+item_index" class="weui-flex__item" :class="{'first':item_index==0,'second':item_index==1,'other':item_index!=0&&item_index!=1}" v-for="(item_value,item_index) in item">
-							<div>{{item_value.title}}</div>
-							<div>{{item_value.content}}</div>
+						<div class="weui-flex__item" v-for="(list_value,list_item) in list_array" @click="clickItem(index,list_value)">
+							<div v-if="list_value == 'daytype'">{{item.daytype}}</div>
+							<div v-else-if="list_value == 'timespan'">{{item.timespan}}</div>
+							<template v-else>
+								<div>{{item[list_value + 'subname']}}</div>
+								<div>{{item[list_value + 'uname']}}</div>
+							</template>
 						</div>
 						<div class="weui-flex__item time-table-item-del">
-							<div @click="clickItemDel(index)">删除</div>
+							<div @click="clickItem(index,'del')">删除</div>
 						</div>
+						<!--<div :id="index+'-'+item_index" class="weui-flex__item" :class="{'first':item_index==0,'second':item_index==1,'other':item_index!=0&&item_index!=1}" v-for="(item_value,item_index) in item">
+							<div>{{item_value.title}}</div>
+							<div>{{item_value.content}}</div>
+						</div>-->
 					</div>
 				</div>
 				<button v-if="show_add" @click="clickAddButton" class="weui-btn weui-btn_mini weui-btn_primary">添加</button>
 			</div>
 		</template>
 		<div id="time_table" class="time-table-content">
-			<time-table @click-add-button="addTableItem" @click-item="changeItem" @click-item-del="delTableItem" :title="title" :subtitle="subtitle" :items_array="items_array" :show_add="show_add"></time-table>
+			<time-table @click-add-button="addTableItem" @click-item="clickItem" :title="title" :subtitle="subtitle" :items_array="items_array" :show_add="show_add"></time-table>
 		</div>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");

@@ -1,6 +1,11 @@
 Vue.component("time-table", {
 	props: ["title", "subtitle", "items_array", "show_add"],
 	template: '#time-table',
+	data: function() {
+		return {
+			list_array: ["daytype", "timespan", "mon", "tues", "wed", "thur", "fri", "sat", "sun"]
+		}
+	},
 	methods: {
 		/**
 		 * 点击底部的添加按钮
@@ -9,20 +14,12 @@ Vue.component("time-table", {
 			this.$emit("click-add-button");
 		},
 		/**
-		 * 点击每一个item
+		 * 点击某一个item
 		 * @param {Object} index 第几行
-		 * @param {Object} item_index 第几列
+		 * @param {Object} callcol 对应的操作
 		 */
-		clickItem: function(index, item_index) {
-			this.$emit("click-item", index, item_index);
-		},
-		/**
-		 * 删除某一行
-		 * @param {Object} index 第几行
-		 */
-		clickItemDel: function(index) {
-			this.$emit("click-item-del", index);
-
+		clickItem: function(index, callcol) {
+			this.$emit("click-item", index, callcol);
 		}
 	}
 });
@@ -35,48 +32,60 @@ var vm_time_table = new Vue({
 		items_array: [],
 		departs_array: [],
 		sub_array: []
-
 	},
 	methods: {
 		/**
 		 * 点击底部的添加按钮
 		 */
 		addTableItem: function() {
-			var item = [];
-			for(var i = 0; i < 9; i++) {
-				item[i] = {
-					title: "",
-					content: ""
-				}
-			}
-			item[0].title = "上午";
-			item[1].title = "8:00-9:00";
+			var item = {
+				daytype: "上午",
+				timespan: "8:00-9:00",
+				monsubname: "",
+				monuname: "",
+				tuessubname: "",
+				tuesuname: "",
+				wedsubname: "",
+				weduname: "",
+				thursubname: "",
+				thuruname: "",
+				frisubname: "",
+				friuname: "",
+				satsubname: "",
+				satuname: "",
+				sunsubname: "",
+				sununame: ""
+			};
 			vm_time_table.items_array.push(item);
 		},
 		/**
-		 * 点击每一个item
+		 * 点击某一个item
 		 * @param {Object} index 第几行
-		 * @param {Object} item_index 第几列
+		 * @param {Object} callcol 对应的操作
 		 */
-		changeItem: function(index, item_index) {
-
-			//			var itemData = vm_time_table.items_array[index][item_index];
-			//			vm_time_table.items_array[index][item_index].title = "title";
-			//			vm_time_table.items_array[index][item_index].content = "content";
-		},
-		/**
-		 * 删除某一行
-		 * @param {Object} index 第几行
-		 */
-		delTableItem: function(index) {
-			$.confirm({
-				title: '提示',
-				text: '确认删除?',
-				onOK: function() {
-					vm_time_table.items_array.splice(index, 1);
-					$.toast("操作成功");
-				}
-			});
+		clickItem: function(index, callcol) {
+			//console.log("clickItem:" + index + " " + callcol);
+			if(callcol == "del") {
+				//删除某一行
+				$.confirm({
+					title: '提示',
+					text: '确认删除?',
+					onOK: function() {
+						vm_time_table.items_array.splice(index, 1);
+						$.toast("操作成功");
+					}
+				});
+			} else if(callcol == "daytype") {
+				//点击类型
+				vm_time_table.items_array[index][callcol] = callcol;
+			} else if(callcol == "timespan") {
+				//点击时间段
+				vm_time_table.items_array[index][callcol] = callcol;
+			} else {
+				//点击具体星期
+				vm_time_table.items_array[index][callcol + "subname"] = callcol + "subname";
+				vm_time_table.items_array[index][callcol + "uname"] = callcol + "uname";
+			}
 		}
 	},
 	computed: {

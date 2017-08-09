@@ -12,10 +12,20 @@ Vue.component("person-list", {
 	},
 	computed: {
 		getListData: function() {
-			this.listData = [];
+			request.getDepartList(function(list) {
+				this.listData = list;
+				console.log("获取的部门信息：" + JSON.stringify(list));
+			}, this.id)
 		}
 	},
-	methods: function() {
-
+	methods: {
+		changeId: function(item) {
+			router.push({
+				name: 'choose-person',
+				params: {
+					id: item.id
+				}
+			});
+		}
 	}
 })

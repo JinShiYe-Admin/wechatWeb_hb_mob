@@ -19,14 +19,15 @@
 		<script src="../../js/utils/request.js"></script>
 		<script src="../../js/vue.js"></script>
 		<script src="../../js/vue-router.js"></script>
-		<script src="../../js/choose-person.js"></script>
+		<script src="../../js/appWeb/choose-person.js"></script>
 		<script src="../../js/demoCssJs/jquery-weui.js"></script>
 		
 		<script type="text/javascript">
 			const choosePerson={
-				template:'<person-list></person-list>'
+				template:'<person-list id="$route.params.id"></person-list>'
 			}
 			const router=new VueRouter({
+				mod:'history',
 				routes:[{
 					path:'/choose-person/:id',
 					component:choosePerson

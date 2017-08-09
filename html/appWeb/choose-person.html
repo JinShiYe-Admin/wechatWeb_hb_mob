@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>人员选择</title>
+	</head>
+
+	<body>
+		<router-view></router-view>
+		<div>
+			<div>
+			</div>
+			<button></button>
+		</div>
+		<script src="../../js/utils/consts.js"></script>
+		<script src="../../js/demoCssJs/jquery-2.1.4.js"></script>
+		<script src="../../js/utils/request.js"></script>
+		<script src="../../js/vue.js"></script>
+		<script src="../../js/vue-router.js"></script>
+		<script src="../../js/choose-person.js"></script>
+		<script src="../../js/demoCssJs/jquery-weui.js"></script>
+		
+		<script type="text/javascript">
+			const choosePerson={
+				template:'<person-list></person-list>'
+			}
+			const router=new VueRouter({
+				routes:[{
+					path:'/choose-person/:id',
+					component:choosePerson
+				}]
+			})
+
+			
+		</script>
+	</body>
+
+</html>

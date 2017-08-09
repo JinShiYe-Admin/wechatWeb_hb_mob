@@ -1,38 +1,6 @@
 Vue.component("time-table", {
 	props: ["title", "subtitle", "items_array", "show_add"],
-	template: '\
-	<div>\
-		<div class="weui-flex">\
-			<div class="weui-flex__item title">{{title}}</div>\
-		</div>\
-		<div class="weui-flex">\
-			<div class="weui-flex__item title">{{subtitle}}</div>\
-		</div>\
-		<div class="time-table">\
-			<div class="weui-flex">\
-				<div class="weui-flex__item">类型</div>\
-				<div class="weui-flex__item">时间段</div>\
-				<div class="weui-flex__item">周一</div>\
-				<div class="weui-flex__item">周二</div>\
-				<div class="weui-flex__item">周三</div>\
-				<div class="weui-flex__item">周四</div>\
-				<div class="weui-flex__item">周五</div>\
-				<div class="weui-flex__item">周六</div>\
-				<div class="weui-flex__item">周日</div>\
-				<div class="weui-flex__item">操作</div>\
-			</div>\
-			<div class="weui-flex" v-for="(item,index) in items_array">\
-				<div :id="index+\'-\'+item_index"  class="weui-flex__item" :class="{\'first\':item_index==0,\'second\':item_index==1,\'other\':item_index!=0&&item_index!=1}" v-for="(item_value,item_index) in item">\
-					<div>{{item_value.title}}</div>\
-					<div>{{item_value.content}}</div>\
-				</div>\
-				<div class="weui-flex__item time-table-item-del">\
-					<div @click="clickItemDel(index)">删除</div>\
-				</div>\
-			</div>\
-		</div>\
-		<button v-if="show_add" @click="clickAddButton" class="weui-btn weui-btn_mini weui-btn_primary">添加</button>\
-	</div>',
+	template: '#time-table',
 	methods: {
 		/**
 		 * 点击底部的添加按钮

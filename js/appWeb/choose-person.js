@@ -10,6 +10,11 @@ Vue.component("person-list", {
 			loading: false
 		}
 	},
+	watch:{
+		id:function(val,old){
+			this.getListData();
+		}
+	},
 	computed: {
 		getListData: function() {
 			request.getDepartList(function(list) {
@@ -19,6 +24,7 @@ Vue.component("person-list", {
 		}
 	},
 	methods: {
+		//通过部门id 更新界面
 		changeId: function(item) {
 			router.push({
 				name: 'choose-person',
@@ -26,6 +32,10 @@ Vue.component("person-list", {
 					id: item.id
 				}
 			});
+		},
+		//返回上个页面
+		goForword:function(){
+			router.go(-1);
 		}
 	}
 })

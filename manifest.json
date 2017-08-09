@@ -10,7 +10,7 @@
     "icons": {
         "72": "icon.png"
     },
-    "launch_path": "html/unitWeb/configIndex.html",/*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
+    "launch_path": "html/appWeb/noticeIndex.html",/*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
     "developer": {
         "name": "",/*开发者名称*/
         "email": "",/*开发者邮箱地址*/
@@ -244,7 +244,13 @@
 					"js/demoCssJs/weui.min.css",
 					"js/utils/storageutil.js",
 					"js/importJS.js",
-					"html/appWeb/contacts.html"
+					"html/appWeb/contacts.html",
+					"js/demoCssJs/jquery-2.1.4.js",
+					"image/newsIndex.png",
+					"js/vue.min.js",
+					"js/mui.min.js",
+					"image/mineIndex.png",
+					"js/demoCssJs/jquery-weui.js"
 				],
 				"refer": [],
 				"priority": 0
@@ -285,7 +291,9 @@
 					"html/appWeb/new-detail.html",
 					"html/appWeb/contacts.html",
 					"image/newsIndex.png",
-					"fonts/mui.ttf"
+					"fonts/mui.ttf",
+					"js/mui.min.js",
+					"js/vue.min.js"
 				],
 				"refer": [],
 				"priority": 0
@@ -297,6 +305,40 @@
 					"fonts/mui.ttf",
 					"css/new-detail.css",
 					"html/appWeb/contacts.html"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/unitWeb/configIndex.html": {
+				"resources": [
+					"js/mui.min.js",
+					"js/utils/utils.js",
+					"js/demoCssJs/jquery-2.1.4.js",
+					"js/PublicProtocol.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/utils/storageutil.js",
+					"js/importJS.js"
+				],
+				"refer": [
+					"html/appWeb/subject_timetable.html"
+				],
+				"priority": 0
+			},
+			"html/appWeb/subject_timetable.html": {
+				"resources": [
+					"js/appweb/subject_timetable.js",
+					"js/vue.js",
+					"js/demoCssJs/jquery-weui.css",
+					"js/mui.min.js",
+					"js/utils/utils.js",
+					"js/demoCssJs/jquery-2.1.4.js",
+					"js/PublicProtocol.js",
+					"js/demoCssJs/jquery-weui.js",
+					"js/weui.min.js",
+					"js/demoCssJs/weui.min.css",
+					"js/utils/storageutil.js",
+					"js/importJS.js"
 				],
 				"refer": [],
 				"priority": 0
@@ -350,14 +392,12 @@
 				"js/demoCssJs/jquery-weui.min.css",
 				"js/demoCssJs/swiper.min.js",
 				"js/lanren.js",
-				"html/unitWeb/configIndex.html",
 				"image/config/js.png",
 				"js/Skin/islider.js",
 				"js/lib/qiniu/qiniu.min.map",
 				"js/utils/pluploadutil.js",
 				"js/jquery-weui.js",
 				"html/unitWeb/testmuiscroll.html",
-				"js/weui.min.js",
 				"image/config/voice.png",
 				"html/unitWeb/column-home.html",
 				"js/jquery-weui.min.js",

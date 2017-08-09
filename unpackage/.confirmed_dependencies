@@ -79,7 +79,8 @@
       "js/importJS.js"
     ],
     "refer": [
-      "html/unitWeb/column-home.html"
+      "html/unitWeb/column-home.html",
+      "html/appWeb/subject_timetable.html"
     ]
   },
   "html/unitWeb/column-home.html": {
@@ -154,7 +155,13 @@
       "js/demoCssJs/weui.min.css",
       "js/utils/storageutil.js",
       "js/importJS.js",
-      "html/appWeb/contacts.html"
+      "html/appWeb/contacts.html",
+      "js/demoCssJs/jquery-2.1.4.js",
+      "image/newsIndex.png",
+      "js/vue.min.js",
+      "js/mui.min.js",
+      "image/mineIndex.png",
+      "js/demoCssJs/jquery-weui.js"
     ],
     "refer": [
       "html/appWeb/contacts.html"
@@ -175,11 +182,30 @@
       "html/appWeb/new-detail.html",
       "html/appWeb/contacts.html",
       "image/newsIndex.png",
-      "fonts/mui.ttf"
+      "fonts/mui.ttf",
+      "js/mui.min.js",
+      "js/vue.min.js"
     ],
     "refer": [
       "html/appWeb/new-detail.html",
       "html/appWeb/contacts.html"
     ]
+  },
+  "html/appWeb/subject_timetable.html": {
+    "resources": [
+      "js/appweb/subject_timetable.js",
+      "js/vue.js",
+      "js/demoCssJs/jquery-weui.css",
+      "js/mui.min.js",
+      "js/utils/utils.js",
+      "js/demoCssJs/jquery-2.1.4.js",
+      "js/PublicProtocol.js",
+      "js/demoCssJs/jquery-weui.js",
+      "js/weui.min.js",
+      "js/demoCssJs/weui.min.css",
+      "js/utils/storageutil.js",
+      "js/importJS.js"
+    ],
+    "refer": []
   }
 }

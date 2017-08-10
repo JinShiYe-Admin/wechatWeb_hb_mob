@@ -75,7 +75,11 @@
 				methods: {
 					clickNotice: function(model) {
 						console.log('点击的model:' + JSON.stringify(model));
-						utils.mOpenWithData("contacts.html", model);
+						if (model.id == 0) {
+//							utils.mOpenWithData("contacts.html", model);
+						} else{
+							utils.mOpenWithData("choose-person.html", model);
+						}
 					}
 				}
 			});

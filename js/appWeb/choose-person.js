@@ -37,7 +37,7 @@ Vue.component("person-list", {
 				console.log("获取的部门列表：" + JSON.stringify(data));
 				com.listData = data;
 				com.isLoading = false;
-				com.getPesonList(data[0].value);
+				com.getPersonList(data[0].value);
 			});
 		},
 		getPersonList: function(id) {

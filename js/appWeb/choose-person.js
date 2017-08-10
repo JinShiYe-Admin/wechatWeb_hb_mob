@@ -7,11 +7,11 @@ Vue.component("person-list", {
 	},
 	template: '<div v-if="loading">loading</div>' +
 		'<ul v-else v-show="listData.length>0">' +
-		'<li v-for="(item,index) of listData"><p>{{item.name}}</p></li>' +
+		'<li v-for="(item,index) of listData" v-on:click="routerTo(item)" ><p>{{item.title}}</p></li>' +
 		'</ul>',
 	watch: {
 		depart_id: function(newVal, oldVal) {
-			console.log('获取的新值：' + newVal)
+			console.log('获取的新值：' + newVal);
 		}
 	},
 	ready: function() {
@@ -20,6 +20,7 @@ Vue.component("person-list", {
 	data: function() {
 		return {
 			listData: [],
+			personList: [],
 			loading: false,
 			id: this.depart_id
 		}
@@ -28,29 +29,27 @@ Vue.component("person-list", {
 		console.log("获取的的id" + this.$route.params.id)
 		this.getListData();
 	},
-
 	methods: {
 		getListData: function() {
-			var thisC = this;
-			var id;
-			if(thisC.id === -1) {
-				id = undefined;
-			} else {
-				id = thisC.id;
-			}
-			thisC.loading = true;
-			request.getDepartList(function(list) {
-				thisC.listData = list;
-				console.log("获取的部门信息：" + JSON.stringify(list));
-				thisC.loading = false;
-			}, id);
+			this.isLoading = true;
+			request.getDepartList(function(data) {
+				console.log("获取的部门列表：" + JSON.stringify(data));
+				this.listData = data;
+				this.isLoading = false;
+				this.getPesonList(data[0].value);
+			});
+		},
+		getPersonList: function(id) {
+			request.getDepartPersons(id, function(data) {
+				console.log("获取的部门人员列表:" + JSON.stringify(data));
+			})
 		},
 		//通过部门id 更新界面
-		changeId: function(item) {
+		routerTo: function(item) {
 			router.push({
 				name: 'choose-person',
 				params: {
-					id: item.id
+					id: item.value
 				}
 			});
 		},

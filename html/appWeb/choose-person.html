@@ -8,11 +8,11 @@
 	</head>
 
 	<body>
-		<router-view></router-view>
-		<div>
+		<div id="page-router">
+			<router-view></router-view>
 			<div>
+				<button>button</button>
 			</div>
-			<button></button>
 		</div>
 		<script src="../../js/utils/consts.js"></script>
 		<script src="../../js/demoCssJs/jquery-2.1.4.js"></script>
@@ -21,20 +21,45 @@
 		<script src="../../js/vue-router.js"></script>
 		<script src="../../js/appWeb/choose-person.js"></script>
 		<script src="../../js/demoCssJs/jquery-weui.js"></script>
-		
+
 		<script type="text/javascript">
-			const choosePerson={
-				template:'<person-list id="$route.params.id"></person-list>'
+			const choosePerson = {
+				template: '<div>User {{ $route.params.id }}</div>'
 			}
-			const router=new VueRouter({
-				mod:'history',
-				routes:[{
-					path:'/choose-person/:id',
-					component:choosePerson
+			const router = new VueRouter({
+				mod: 'history',
+				routes: [{
+					path: '/choose-person/:id',
+					name: 'choose-person',
+					component: choosePerson
 				}]
 			})
+			const choosePerson = new Vue({
+				router: router
+			}).$mount('#page-router');
 
-			
+			router.push({
+				name: 'choose-person',
+				params: {
+					id: 1
+				}
+			})
+			setTimeout(function() {
+				router.push({
+					name: 'choose-person',
+					params: {
+						id: 3
+					}
+				})
+			}, 2000)
+			setTimeout(function() {
+				router.push({
+					name: 'choose-person',
+					params: {
+						id: 5
+					}
+				})
+			}, 4000);
 		</script>
 	</body>
 

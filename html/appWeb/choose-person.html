@@ -26,8 +26,7 @@
 		<script type="text/javascript">
 			const choosePerson = {
 				template: '<person-list v-bind:depart_id="parseInt($route.params.id)"></person-list>'
-			}
-			
+			}		
 			const router = new VueRouter({
 				mod: 'history',
 				routes: [{
@@ -39,11 +38,11 @@
 			const chosePerson = new Vue({
 				router: router
 			}).$mount('#page-router');
-			
+
 			router.push({
 				name: 'choose-person',
 				params: {
-					id: -1//全部
+					id: -1 //全部
 				}
 			})
 		</script>

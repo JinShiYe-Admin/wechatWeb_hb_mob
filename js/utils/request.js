@@ -7,7 +7,7 @@ var request = (function(mod) {
 		jQuery.getJSON(url, data, callback);
 	}
 	mod.postData = function(url, data, callback) {
-		jQuery.post(url, data, callback, 'json');
+		jQuery.post(url, data, callback);
 	}
 	mod.getDepartList = function(data, callback) {
 		mod.postData(consts.MAINURL, JSON.stringify({

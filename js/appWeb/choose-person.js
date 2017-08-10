@@ -35,9 +35,9 @@ Vue.component("person-list", {
 			this.isLoading = true;
 			request.getDepartList(function(data) {
 				console.log("获取的部门列表：" + JSON.stringify(data));
-				com.listData = data;
+				com.listData = com.rechargeList(JSON.parse(data));
 				com.isLoading = false;
-				com.getPersonList(data[0].value);
+				com.getPersonList(-1);
 			});
 		},
 		getPersonList: function(id) {
@@ -57,6 +57,22 @@ Vue.component("person-list", {
 		//返回上个页面
 		goForword: function() {
 			router.go(-1);
+		},
+		rechargeList: function(nodes) {
+			var map = {},
+				node, roots = [];
+			for(var i = 0; i < nodes.length; i++) {
+				node = nodes[i];
+				node.children = [];
+				map[node.value] = i; // use map to look-up the parents
+				if(node.parentvalue > 1) {
+					nodes[map[node.parentvalue]].children.push(node);
+				} else if(node.parentvalue === 1) {
+					roots.push(node);
+				}
+			}
+			console.log("重拍数组后的数据：" + JSON.stringify(roots))
+			return roots;
 		}
 	}
 })

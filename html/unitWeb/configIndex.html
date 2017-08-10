@@ -41,6 +41,11 @@
 						课程表管理
 					</a>
 				</li>
+				<li class="mui-table-view-cell" id="sendMsg">
+					<a class="mui-navigate-right">
+						群发消息
+					</a>
+				</li>
 			</ul>
 		</div>
 		<script src="../../js/mui.min.js"></script>
@@ -82,6 +87,9 @@
 							break;
 						case 'manageSubject':
 							utils.mOpenWithData("../../html/appWeb/subject_timetable.html", "subject_timetable.html");
+							break;
+						case 'sendMsg':
+							utils.mOpenWithData("choose-person.html", "choose-person.html");
 							break;
 						default:
 							break;

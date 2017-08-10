@@ -10,8 +10,9 @@
 	<body>
 		<div id="page-router">
 			<router-view></router-view>
-			<div>
-				<button>button</button>
+			<div style="position: fixed;bottom: 0;height: 50px;width: 100%;">
+				<div></div>
+				<button class="" style="float: right;">button</button>
 			</div>
 		</div>
 		<script src="../../js/utils/consts.js"></script>
@@ -24,8 +25,9 @@
 
 		<script type="text/javascript">
 			const choosePerson = {
-				template: '<div>User {{ $route.params.id }}</div>'
+				template: '<person-list v-bind:depart_id="parseInt($route.params.id)"></person-list>'
 			}
+			
 			const router = new VueRouter({
 				mod: 'history',
 				routes: [{
@@ -33,33 +35,17 @@
 					name: 'choose-person',
 					component: choosePerson
 				}]
-			})
-			const choosePerson = new Vue({
+			});
+			const chosePerson = new Vue({
 				router: router
 			}).$mount('#page-router');
-
+			
 			router.push({
 				name: 'choose-person',
 				params: {
-					id: 1
+					id: -1//全部
 				}
 			})
-			setTimeout(function() {
-				router.push({
-					name: 'choose-person',
-					params: {
-						id: 3
-					}
-				})
-			}, 2000)
-			setTimeout(function() {
-				router.push({
-					name: 'choose-person',
-					params: {
-						id: 5
-					}
-				})
-			}, 4000);
 		</script>
 	</body>
 

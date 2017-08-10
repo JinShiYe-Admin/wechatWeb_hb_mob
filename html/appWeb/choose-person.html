@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>人员选择</title>
+	</head>
+
+	<body>
+		<div id="page-router">
+			<router-view></router-view>
+			<div>
+				<button>button</button>
+			</div>
+		</div>
+		<script src="../../js/utils/consts.js"></script>
+		<script src="../../js/demoCssJs/jquery-2.1.4.js"></script>
+		<script src="../../js/utils/request.js"></script>
+		<script src="../../js/vue.js"></script>
+		<script src="../../js/vue-router.js"></script>
+		<script src="../../js/appWeb/choose-person.js"></script>
+		<script src="../../js/demoCssJs/jquery-weui.js"></script>
+
+		<script type="text/javascript">
+			const choosePerson = {
+				template: '<div>User {{ $route.params.id }}</div>'
+			}
+			const router = new VueRouter({
+				mod: 'history',
+				routes: [{
+					path: '/choose-person/:id',
+					name: 'choose-person',
+					component: choosePerson
+				}]
+			})
+			const choosePerson = new Vue({
+				router: router
+			}).$mount('#page-router');
+
+			router.push({
+				name: 'choose-person',
+				params: {
+					id: 1
+				}
+			})
+			setTimeout(function() {
+				router.push({
+					name: 'choose-person',
+					params: {
+						id: 3
+					}
+				})
+			}, 2000)
+			setTimeout(function() {
+				router.push({
+					name: 'choose-person',
+					params: {
+						id: 5
+					}
+				})
+			}, 4000);
+		</script>
+	</body>
+
+</html>

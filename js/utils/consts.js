@@ -5,5 +5,6 @@ var consts=(function(mod){
 	mod.ACCESS_TOKEN_URL='https://qyapi.weixin.qq.com/cgi-bin/gettoken';//获取的token的url
 	mod.DEPARTMENT_LIST_URL='https://qyapi.weixin.qq.com/cgi-bin/department/list';//获取部门列表的url
 	mod.DEPART_USERLIST_URL='https://qyapi.weixin.qq.com/cgi-bin/user/list';//
+	mod.MAINURL='https://jsypay.jiaobaowang.net/wxth/appschweb/schwebapi.aspx';
 	return mod;
 })(consts||{})

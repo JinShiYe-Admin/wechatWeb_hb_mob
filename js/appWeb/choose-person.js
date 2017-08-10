@@ -2,21 +2,13 @@ Vue.component("person-list", {
 	props: {
 		depart_id: {
 			type: Number,
-			default: -3
+			default: -2
 		}
 	},
 	template: '<div v-if="loading">loading</div>' +
 		'<ul v-else v-show="listData.length>0">' +
 		'<li v-for="(item,index) of listData" v-on:click="routerTo(item)" ><p>{{item.title}}</p></li>' +
 		'</ul>',
-	watch: {
-		depart_id: function(newVal, oldVal) {
-			console.log('获取的新值：' + newVal);
-		}
-	},
-	ready: function() {
-		console.log("当前id值：" + this.depart_id);
-	},
 	data: function() {
 		return {
 			listData: [],

@@ -23,6 +23,7 @@ Vue.component("time-table", {
 		}
 	}
 });
+
 //课程表
 var vm_time_table = new Vue({
 	el: "#time_table",
@@ -64,7 +65,7 @@ var vm_time_table = new Vue({
 		 * @param {Object} callcol 对应的操作
 		 */
 		clickItem: function(index, callcol) {
-			//console.log("clickItem:" + index + " " + callcol);
+			console.log("clickItem:" + index + " " + callcol);
 			if(callcol == "del") {
 				//删除某一行
 				$.confirm({
@@ -124,9 +125,12 @@ var vm_time_table = new Vue({
 					console.log(result);
 					var tempArr = self.id.split('-');
 					var index = tempArr[0];
-					var item_index = tempArr[1];
-					var model = vm_time_table.items_array[index][item_index]
-					model.title = result[0].label;
+					var model = vm_time_table.items_array[index]
+					model.daytype = result[0].label;
+					var callcol = "daytype";
+					var colv = result[0].label
+					var colid = model.weekrowid
+					editEduleweek(colv, callcol, colid);
 				},
 				id: 'picker'
 			});
@@ -167,9 +171,12 @@ var vm_time_table = new Vue({
 					console.log(JSON.stringify(result));
 					var tempArr = self.id.split('-');
 					var index = tempArr[0];
-					var item_index = tempArr[1];
-					var model = vm_time_table.items_array[index][item_index]
-					model.title = result[0].label + ":" + result[2].label + "-" + result[4].label + ":" + result[6].label;
+					var model = vm_time_table.items_array[index]
+					model.timespan = result[0].label + ":" + result[2].label + "-" + result[4].label + ":" + result[6].label;
+					var callcol = "timespan";
+					var colv = model.timespan
+					var colid = model.weekrowid
+					editEduleweek(colv, callcol, colid);
 				},
 				id: 'multiPickerBtn'
 			});
@@ -198,9 +205,14 @@ var vm_time_table = new Vue({
 					console.log(JSON.stringify(result));
 					var tempArr = self.id.split('-');
 					var index = tempArr[0];
-					var item_index = tempArr[1];
-					var model = vm_time_table.items_array[index][item_index]
-					model.title = result[0].label + result[1].label + result[2].label;
+					var list_value = tempArr[1]
+					var model = vm_time_table.items_array[index]
+					model[list_value + "subname"] = result[2].label;
+					model[list_value + "uname"] = result[1].label;
+					var callcol = list_value;
+					var colv = result[2].value + "|" + result[2].label + "|" + result[1].value + "|" + result[1].label
+					var colid = model.weekrowid
+					editEduleweek(colv, callcol, colid);
 				},
 				id: 'cascadePicker'
 			});
@@ -208,8 +220,19 @@ var vm_time_table = new Vue({
 		})
 	}
 });
-getPersondeparts();
-getSub();
+window.onload = function() {
+	var detail = utils.getDataFromUrl(window.location.href);
+	if(detail.flag == 0) {
+
+	} else {
+		vm_time_table.title = detail.edulename;
+		vm_time_table.subtitle = detail.departname + detail.timespanb + "到" + detail.timespane;
+		getEduleweek(detail.eduleid);
+		getPersondeparts();
+		getSub();
+	}
+
+}
 
 function getPersondeparts() {
 	var tempData = {
@@ -218,7 +241,7 @@ function getPersondeparts() {
 	}
 	unitWebsitePro(tempData, function(data) {
 		console.log('部门:' + JSON.stringify(data));
-		alert('部门:' + JSON.stringify(data));
+		//		alert('部门:' + JSON.stringify(data));
 		if(data.RspCode == 0) {
 			vm_time_table.departs_array = data.RspData;
 			if(data.RspData == "11") {
@@ -284,4 +307,41 @@ function getSub() {
 			mui.toast(data.RspTxt)
 		}
 	})
+}
+
+function getEduleweek(pid) {
+	var tempData = {
+		cmd: 'eduleweek',
+		type: 'findpage',
+		pagesize: 10,
+		pageindex: 1,
+		pid: pid
+	}
+	unitWebsitePro(tempData, function(data) {
+		console.log('获取课程表明细:' + JSON.stringify(data));
+		if(data.RspCode == 0) {
+			vm_time_table.items_array = data.RspData
+		} else {
+			mui.toast(data.RspTxt)
+		}
+	})
+
+}
+
+function editEduleweek(colv, callcol, colid) {
+	var tempData = {
+		cmd: 'eduleweek',
+		type: 'edit',
+		colv: colv,
+		callcol: callcol,
+		colid: colid
+	}
+	console.log(JSON.stringify(tempData))
+	unitWebsitePro(tempData, function(data) {
+		console.log('编辑课程表课程表:' + JSON.stringify(data));
+		if(data.RspCode == 0) {} else {
+			mui.toast(data.RspTxt)
+		}
+	})
+
 }

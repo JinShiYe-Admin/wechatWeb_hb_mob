@@ -82,12 +82,11 @@
 						<div class="weui-flex__item">操作</div>
 					</div>
 					<div class="weui-flex" v-for="(item,index) in items_array">
-						<div class="weui-flex__item" v-for="(list_value,list_item) in list_array" @click="clickItem(index,list_value)">
+						<div :id="index+'-'+list_value" class="weui-flex__item" :class="{'first':list_item==0,'second':list_item==1,'other':list_item!=0&&list_item!=1}" v-for="(list_value,list_item) in list_array">
 							<div v-if="list_value == 'daytype'">{{item.daytype}}</div>
 							<div v-else-if="list_value == 'timespan'">{{item.timespan}}</div>
 							<template v-else>
-								<div>{{item[list_value + 'subname']}}</div>
-								<div>{{item[list_value + 'uname']}}</div>
+								<div>{{item[list_value + 'subname']+item[list_value + 'uname']}}</div>
 							</template>
 						</div>
 						<div class="weui-flex__item time-table-item-del">
@@ -99,7 +98,8 @@
 						</div>-->
 					</div>
 				</div>
-				<button v-if="show_add" @click="clickAddButton" class="weui-btn weui-btn_mini weui-btn_primary">添加</button>
+				<button v-if="show_add" @click="clickAddButton" class="weui-btn weui-btn_mini weui-btn_primary">添加一行</button>
+				<!--<button class="weui-btn weui-btn_mini weui-btn_primary">提交</button>-->
 			</div>
 		</template>
 		<div id="time_table" class="time-table-content">

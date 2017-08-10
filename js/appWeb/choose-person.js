@@ -31,12 +31,13 @@ Vue.component("person-list", {
 	},
 	methods: {
 		getListData: function() {
+			var com = this;
 			this.isLoading = true;
 			request.getDepartList(function(data) {
 				console.log("获取的部门列表：" + JSON.stringify(data));
-				this.listData = data;
-				this.isLoading = false;
-				this.getPesonList(data[0].value);
+				com.listData = data;
+				com.isLoading = false;
+				com.getPesonList(data[0].value);
 			});
 		},
 		getPersonList: function(id) {

@@ -10,21 +10,23 @@ var request = (function(mod) {
 		jQuery.post(url, data, callback, 'json');
 	}
 	mod.getDepartList = function(data, callback) {
-		mod.postData(consts.MAINURL, {
+		mod.postData(consts.MAINURL, JSON.stringify({
 			cmd: 'persondeparts',
 			type: 'findpage'
-		}, function(response) {
+		}), function(response) {
+			console.log("获取的部门列表值：" + JSON.stringify(response));
 			if(response.RspCode === 0) {
 				callback(response.RspData);
 			}
 		})
 	}
 	mod.getDepartPersons = function(id, callback) {
-		mod.postData(consts.MAINURL, {
+		mod.postData(consts.MAINURL, JSON.stringify({
 			cmd: departpersons,
 			type: 'findpage',
 			colid: id
-		}, function(response) {
+		}), function(response) {
+			console.log("获取的部门人员列表列表值：" + JSON.stringify(response));
 			if(response.RspCode == 0) {
 				callback(response.RspData);
 			}

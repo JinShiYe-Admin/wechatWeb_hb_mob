@@ -1,8 +1,7 @@
 Vue.component("person-list", {
 	props: {
 		depart_id: {
-			type: Number,
-			default: -2
+			type: Number
 		}
 	},
 	template: '<div v-if="loading">loading</div>' +
@@ -24,14 +23,23 @@ Vue.component("person-list", {
 			this.getCurDepart();
 		}
 	},
+	watch: {
+		'$route' (to, from) {
+			console.log("当前路由id:" + this.$route.params.id);
+			if(this.$route.params.id === -1) {
+				this.getAllListData();
+			} else {
+				this.getCurDepart();
+			}
+		}
+	},
 	methods: {
 		getAllListData: function() {
 			var com = this;
 			this.isLoading = true;
 			request.getDepartList(function(data) {
-				console.log("获取的部门列表：" + JSON.stringify(data));
-				com.listData = JSON.parse(data);
-				localStorage.setItem(consts.KEY_DEPARTS, com.listData);
+				console.log("获取的部门列表：" + JSON.stringify(JSON.parse(data)));
+				localStorage.setItem(consts.KEY_DEPARTS, data);
 				com.getCurDepart();
 				com.isLoading = false;
 			});
@@ -43,22 +51,26 @@ Vue.component("person-list", {
 			} else {
 				parentId = this.depart_id;
 			}
-			var listData = localStorage.getItem(consts.KEY_DEPARTS);
-			var childDepart = listData.filter(function(item) {
-				return item.parentvalue == parentId;
+			var list = JSON.parse(localStorage.getItem(consts.KEY_DEPARTS));
+			console.log(list);
+			console.log("获取的本地部门列表:" + JSON.stringify(list));
+			var childDepart = list.filter(function(el) {
+				return el.parentvalue == parentId;
 			});
 			console.log("获取的当前部门的子部门:" + JSON.stringify(childDepart));
-			if(childDepart && childDepart.length === 0) {
-				getPersonList(this.depart_id);
+			if(childDepart.length === 0) {
+				this.getPersonList(this.depart_id);
 			} else {
 				this.listData = childDepart;
 			}
 		},
 		getPersonList: function(id) {
+			var com=this;
+			com.loading=true;
 			request.getDepartPersons(id, function(data) {
-				this.loading = true;
+				com.loading = false;
 				console.log("获取的部门人员列表:" + JSON.stringify(data));
-				this.listData = data;
+				com.listData = data;
 			})
 		},
 		clickEvent: function(item) {

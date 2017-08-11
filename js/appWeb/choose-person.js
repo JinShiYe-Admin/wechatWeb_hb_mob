@@ -7,35 +7,69 @@ Vue.component("person-list", {
 	},
 	template: '<div v-if="loading">loading</div>' +
 		'<ul v-else v-show="listData.length>0">' +
-		'<li v-for="(item,index) of listData" v-on:click="routerTo(item)" ><p>{{item.title}}</p></li>' +
+		'<li v-for="(item,index) of listData" v-on:click="clickEvent(item)"><p>{{item.title?item.title:item.name}}</p></li>' +
 		'</ul>',
 	data: function() {
 		return {
 			listData: [],
-			personList: [],
 			loading: false,
 			id: this.depart_id
 		}
 	},
 	created: function() {
 		console.log("获取的的id" + this.$route.params.id)
-		this.getListData();
+		if(this.$route.params.id === -1) {
+			this.getAllListData();
+		} else {
+			this.getCurDepart();
+		}
 	},
 	methods: {
-		getListData: function() {
+		getAllListData: function() {
 			var com = this;
 			this.isLoading = true;
 			request.getDepartList(function(data) {
 				console.log("获取的部门列表：" + JSON.stringify(data));
-				com.listData = com.rechargeList(JSON.parse(data));
+				com.listData = JSON.parse(data);
+				localStorage.setItem(consts.KEY_DEPARTS, com.listData);
+				com.getCurDepart();
 				com.isLoading = false;
-				com.getPersonList(-1);
 			});
+		},
+		getCurDepart: function() {
+			var parentId = 0;
+			if(this.depart_id === -1) {
+				parentId = 1;
+			} else {
+				parentId = this.depart_id;
+			}
+			var listData = localStorage.getItem(consts.KEY_DEPARTS);
+			var childDepart = listData.filter(function(item) {
+				return item.parentvalue == parentId;
+			});
+			console.log("获取的当前部门的子部门:" + JSON.stringify(childDepart));
+			if(childDepart && childDepart.length === 0) {
+				getPersonList(this.depart_id);
+			} else {
+				this.listData = childDepart;
+			}
 		},
 		getPersonList: function(id) {
 			request.getDepartPersons(id, function(data) {
+				this.loading = true;
 				console.log("获取的部门人员列表:" + JSON.stringify(data));
+				this.listData = data;
 			})
+		},
+		clickEvent: function(item) {
+			if(item.value) {
+				this.routerTo(item);
+			} else {
+				this.choosePerson(item);
+			}
+		},
+		choosePesron: function(item) {
+
 		},
 		//通过部门id 更新界面
 		routerTo: function(item) {

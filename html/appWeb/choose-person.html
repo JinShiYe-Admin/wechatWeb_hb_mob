@@ -24,10 +24,79 @@
 		<script src="../../js/demoCssJs/jquery-weui.js"></script>
 
 		<script type="text/javascript">
+			var listData = [{
+				"value": 2,
+				"title": "湖北大区",
+				"parentvalue": 1,
+				"order": 2147483447
+			}, {
+				"value": 3,
+				"title": "荆门办事处",
+				"parentvalue": 2,
+				"order": 2147483447
+			}, {
+				"value": 4,
+				"title": "大区办公室",
+				"parentvalue": 2,
+				"order": 2147483247
+			}, {
+				"value": 5,
+				"title": "黄冈办事处",
+				"parentvalue": 2,
+				"order": 2147483047
+			}, {
+				"value": 6,
+				"title": "黄石咸宁鄂州办事处",
+				"parentvalue": 2,
+				"order": 2147482847
+			}, {
+				"value": 7,
+				"title": "襄阳孝感随州办事处",
+				"parentvalue": 2,
+				"order": 2147482647
+			}, {
+				"value": 8,
+				"title": "宜昌恩施办事处",
+				"parentvalue": 2,
+				"order": 2147482447
+			}, {
+				"value": 9,
+				"title": "荆州江汉办事处",
+				"parentvalue": 2,
+				"order": 2147482247
+			}, {
+				"value": 11,
+				"title": "开发部",
+				"parentvalue": 1,
+				"order": 2147483047
+			}, {
+				"value": 12,
+				"title": "测试子部门",
+				"parentvalue": 11,
+				"order": 100000000
+			}, {
+				"value": 13,
+				"title": "测试孙部门",
+				"parentvalue": 12,
+				"order": 100000000
+			}, {
+				"value": -1,
+				"title": "全部",
+				"parentvalue": 0,
+				"order": 0
+			}];
+			localStorage.setItem(consts.KEY_DEPARTS,JSON.stringify(listData));
+			console.log(listData);
+			console.log();
+			var list= JSON.parse(localStorage.getItem(consts.KEY_DEPARTS)); 
+			console.log("获取的数据:"+JSON.stringify(list))
+			var child = list.filter(function(item) {
+				return item.parentvalue == 1;
+			})
+			console.log("筛选的数组" + JSON.stringify(child));
 			const choosePerson = {
 				template: '<person-list v-bind:depart_id="parseInt($route.params.id)"></person-list>'
 			}
-			
 			const router = new VueRouter({
 				mod: 'history',
 				routes: [{
@@ -39,11 +108,11 @@
 			const chosePerson = new Vue({
 				router: router
 			}).$mount('#page-router');
-			
+
 			router.push({
 				name: 'choose-person',
 				params: {
-					id: -1//全部
+					id: -1 //全部
 				}
 			})
 		</script>

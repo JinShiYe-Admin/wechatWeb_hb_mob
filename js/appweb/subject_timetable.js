@@ -1,6 +1,6 @@
 Vue.component("time-table", {
-	props: ["title", "subtitle", "items_array", "show_add"],
-	template: '#time-table',
+	props: ["edulename", "departname", "timespanb", "timespane", "items_array", "show_submit"],
+	template: '#template-table',
 	data: function() {
 		return {
 			list_array: ["daytype", "timespan", "mon", "tues", "wed", "thur", "fri", "sat", "sun"]
@@ -10,8 +10,8 @@ Vue.component("time-table", {
 		/**
 		 * 点击底部的添加按钮
 		 */
-		clickAddButton: function() {
-			this.$emit("click-add-button");
+		clickSubmitButton: function() {
+			this.$emit("click-submit-button");
 		},
 		/**
 		 * 点击某一个item
@@ -28,36 +28,40 @@ Vue.component("time-table", {
 var vm_time_table = new Vue({
 	el: "#time_table",
 	data: {
-		title: "2017秋季课程表",
-		subtitle: "开发部 2017/8/1 0:00:00时效:201709至201802",
+		flag: 0,
+		edulename: "",
+		departname: "",
+		departid:"",
+		timespanb: "",
+		timespane: "",
 		items_array: [],
 		departs_array: [],
 		sub_array: []
+	},
+	watch: {
+		edulename: function(newVal, oldVal) {
+			editEdule(oldVal, newVal, "edulename")
+
+		},
+		departname: function(newVal, oldVal) {
+			editEdule(oldVal, newVal, "depart")
+
+		},
+		timespanb: function(newVal, oldVal) {
+			editEdule(oldVal, newVal, "timespanb")
+
+		},
+		timespane: function(newVal, oldVal) {
+			editEdule(oldVal, newVal, "timespane")
+
+		},
 	},
 	methods: {
 		/**
 		 * 点击底部的添加按钮
 		 */
-		addTableItem: function() {
-			var item = {
-				daytype: "上午",
-				timespan: "8:00-9:00",
-				monsubname: "",
-				monuname: "",
-				tuessubname: "",
-				tuesuname: "",
-				wedsubname: "",
-				weduname: "",
-				thursubname: "",
-				thuruname: "",
-				frisubname: "",
-				friuname: "",
-				satsubname: "",
-				satuname: "",
-				sunsubname: "",
-				sununame: ""
-			};
-			vm_time_table.items_array.push(item);
+		submitTable: function() {
+			addEdule();
 		},
 		/**
 		 * 点击某一个item
@@ -90,18 +94,18 @@ var vm_time_table = new Vue({
 		}
 	},
 	computed: {
-		show_add: function() {
+		show_submit: function() {
 			var show = true;
-			if(this.items_array.length > 8) {
+			if(this.flag == 1) {
 				show = false
 			}
 			return show;
 		}
 	},
 	updated: function() {
-		console.log('刷新数据:' + JSON.stringify(vm_time_table.items_array))
+		console.log('刷新数据:' + JSON.stringify(vm_time_table.$data))
 		var div = document.getElementById("time_table");
-		console.log(div.innerHTML)
+		//		console.log(div.innerHTML)
 
 		// 时间选择器
 		mui('.time-table-content').on('tap', '.first', function() {
@@ -220,13 +224,60 @@ var vm_time_table = new Vue({
 		})
 	}
 });
+//for(var item in vm.$data) {
+//						(function addwatch(key) {
+//							vm.$watch(key + '.message', function(newVal, oldVal) {
+//								edit(oldVal, newVal, key)
+//							})
+//							vm.$watch(key + '.check', function(newVal, oldVal) {
+//								edit(oldVal, newVal, key)
+//							})
+//						})(item)
+//
+//					}
+for(var i = 0; i < 9; i++) {
+	var daytype, timespan;
+	if(i < 4) {
+		daytype = "上午"
+	} else if(i > 6) {
+		daytype = "晚上"
+	} else {
+		daytype = "下午"
+	}
+	var item = {
+		daytype: daytype,
+		timespan: "8:00-9:00",
+		monsubname: "",
+		monuname: "",
+		tuessubname: "",
+		tuesuname: "",
+		wedsubname: "",
+		weduname: "",
+		thursubname: "",
+		thuruname: "",
+		frisubname: "",
+		friuname: "",
+		satsubname: "",
+		satuname: "",
+		sunsubname: "",
+		sununame: ""
+	};
+	vm_time_table.items_array.push(item);
+}
 window.onload = function() {
 	var detail = utils.getDataFromUrl(window.location.href);
 	if(detail.flag == 0) {
-
+		vm_time_table.flag = 0
+		getPersondeparts();
+		getSub();
 	} else {
-		vm_time_table.title = detail.edulename;
-		vm_time_table.subtitle = detail.departname + detail.timespanb + "到" + detail.timespane;
+		vm_time_table.flag = 1
+		vm_time_table.edulename = detail.edulename;
+		vm_time_table.eduleid = detail.eduleid;
+		vm_time_table.departname = detail.departname;
+		vm_time_table.departid = detail.departid;
+		vm_time_table.timespanb = detail.timespanb;
+		vm_time_table.timespane = detail.timespane;
 		getEduleweek(detail.eduleid);
 		getPersondeparts();
 		getSub();
@@ -266,7 +317,7 @@ function getDepartpersons(id, index) {
 	var tempData = {
 		cmd: 'departpersons',
 		type: 'findpage',
-		colid: 11
+		colid: id
 	}
 	unitWebsitePro(tempData, function(data) {
 		console.log('人员:' + JSON.stringify(data));
@@ -321,6 +372,7 @@ function getEduleweek(pid) {
 		console.log('获取课程表明细:' + JSON.stringify(data));
 		if(data.RspCode == 0) {
 			vm_time_table.items_array = data.RspData
+
 		} else {
 			mui.toast(data.RspTxt)
 		}
@@ -329,6 +381,9 @@ function getEduleweek(pid) {
 }
 
 function editEduleweek(colv, callcol, colid) {
+	if(vm_time_table.flag == 0) {
+		return
+	}
 	var tempData = {
 		cmd: 'eduleweek',
 		type: 'edit',
@@ -345,3 +400,116 @@ function editEduleweek(colv, callcol, colid) {
 	})
 
 }
+
+function addEdule() {
+	var tempData = {
+		cmd: 'edule',
+		type: 'add',
+		edulename: vm_time_table.edulename,
+		departid: vm_time_table.departid,
+		departname: vm_time_table.departname,
+		timespanb: vm_time_table.timespanb,
+		timespane: vm_time_table.timespane,
+		edulerows: vm_time_table.items_array
+
+	}
+	unitWebsitePro(tempData, function(data) {
+		console.log('添加课程表:' + JSON.stringify(data));
+		if(data.RspCode == 0) {} else {
+			mui.toast(data.RspTxt)
+		}
+	})
+
+}
+
+function editEdule(oldVal, newVal, callcol) {
+	if(vm_time_table.flag == 0 || oldVal == newVal) {
+		return;
+	}
+	var colv
+	switch(callcol) {
+		case "edulename":
+			{
+				colv = vm_time_table.edulename
+			}
+			break;
+		case "depart":
+			{
+				colv = vm_time_table.departid + "|" + vm_time_table.departname
+			}
+			break;
+		case "timespanb":
+			{
+				colv = vm_time_table.timespanb
+			}
+			break;
+		case "timespane":
+			{
+				colv = vm_time_table.timespane
+			}
+			break;
+		default:
+			break;
+	}
+
+	var tempData = {
+		cmd: 'edule',
+		type: 'edit',
+		callcol: callcol,
+		colid: vm_time_table.eduleid,
+		colv: colv,
+	}
+	unitWebsitePro(tempData, function(data) {
+
+		console.log('编辑课程表:' + JSON.stringify(data));
+		if(data.RspCode == 0) {} else {
+			mui.toast(data.RspTxt)
+		}
+	})
+
+}
+
+function selectDepart(input_item) {
+	// 多列选择器
+	weui.picker(vm_time_table.departs_array, {
+		depth: 1,
+		defaultValue: [1],
+		onChange: function onChange(result) {
+			//										console.log(result);
+		},
+		onConfirm: function onConfirm(result) {
+			vm_time_table.departid = result[0].value;
+			vm_time_table.departname = result[0].label;
+		},
+		id: 'cascadePicker'
+	});
+}
+function selectDate(input_item) {
+	var self = input_item;
+	    weui.datePicker({
+	        start: '2016-12-29',
+	        end: '2030-12-29',
+	        cron: '* */2 0',
+	        defaultValue: [2017, 7, 9],
+	        onChange: function onChange(result) {
+//	            console.log(result);
+	        },
+	        onConfirm: function onConfirm(result) {
+	        	console.log(self.id)
+	        	console.log(JSON.stringify(result));
+			vm_time_table[self.id] = result[0].label+result[1].label+result[2].label;
+//	            console.log(result);
+	        },
+	        id: 'datePicker'
+	    });
+	   }
+	
+$("#depart").focus(function() {
+	document.activeElement.blur();
+});
+$("#timespanb").focus(function() {
+	document.activeElement.blur();
+});
+$("#timespane").focus(function() {
+	document.activeElement.blur();
+});

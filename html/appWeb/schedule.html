@@ -13,7 +13,6 @@
 	<body>
 		<div class="mui-content mui-scroll-wrapper" style="z-index: 1;" id="schedule">
 			<div class="mui-scroll">
-
 				<!--列表信息流 开始-->
 				<ul id="list" class="mui-table-view">
 					<li class="mui-table-view-cell mui-media" v-on:tap=clickItem()>
@@ -45,18 +44,20 @@
 		</script>
 		<script type="text/javascript">
 			mui.init();
-			var schedulePage = 1; //获取的新闻页码
-			var scheduleFlag = 0; //0刷新，1加载更多
-			var chnid;
 			var schedule = new Vue({
 				el: '#schedule',
 				data: {
+					pg: {
+						PageIndex: 1,
+						PageSize: 10,
+						PageCount: 0,
+						RowCount: 0
+					},
 					items: [] //列表信息流数据
 				},
 				methods: {
 					clickItem: function(item) {
 						if(item == undefined) {
-							console.log(123)
 							item = {
 								flag: 0
 							}
@@ -69,6 +70,7 @@
 				}
 			});
 			getscheduleList()
+			addpullRefresh();
 
 			//获取课程表列表
 			function getscheduleList() {
@@ -76,366 +78,57 @@
 					cmd: 'edule', //文章管理
 					type: 'findpage', //分页查找文章列表
 					pagesize: '10', //每页条数
-					pageindex: schedulePage, //页码
+					pageindex: schedule.pg.PageIndex, //页码
 
 				}
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
 						if(data.RspData.dt.length > 0) {
-							//判断是刷新0，还是加载更多1
-							if(scheduleFlag == 0) {
+							if(schedule.pg.PageIndex == 1) {
 								schedule.items = data.RspData.dt;
 							} else {
 								schedule.items = schedule.items.concat(data.RspData.dt);
 							}
+							schedule.pg = data.RspData.pg
 						}
-						schedulePage++;
 					} else {
 						alert(data.RspTxt);
 					}
 				});
 			}
-//			addEdule();
-editEdule();
-//		deleteEdule();
-		function editEdule() {
-			var tempData = {
+			//			addEdule();
+			//			editEdule();
+			//		deleteEdule();
+			function editEdule() {
+				var tempData = {
 					cmd: 'edule',
 					type: 'edit',
-					callcol:'edulename',
-					colid:32,
-					colv:"修改名称成功"
+					callcol: 'edulename',
+					colid: 32,
+					colv: "修改名称成功"
 				}
-			unitWebsitePro(tempData, function(data) {
+				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
 						console.log("修改名称成功")
 					} else {
 						alert(data.RspTxt);
 					}
 				});
-		}
-		function deleteEdule() {
-			var tempData = {
+			}
+
+			function deleteEdule() {
+				var tempData = {
 					cmd: 'edule',
 					type: 'del',
-					colid:33
+					colid: 33
 				}
-			unitWebsitePro(tempData, function(data) {
+				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
 						console.log("删除成功")
 					} else {
 						alert(data.RspTxt);
 					}
 				});
-		}
-
-			function addEdule() {
-				var tempData = {
-					cmd: 'edule',
-					type: 'add',
-					edulename: "夏季课程表",
-					departid: 11,
-					departname: "开发部",
-					timespanb: '201707',
-					timespane: '201709',
-					edulerows: [{
-						timespan: "09:00-10:00",
-						daytype: "下午",
-						orderid: 1,
-						monsub: 5,
-						monsubname: "物理",
-						monuid: "moshanglin",
-						monuname: "莫尚林",
-						tuessub: 5,
-						tuessubname: "物理",
-						tuesuid: "moshanglin",
-						tuesuname: "莫尚林",
-						wedsub: 5,
-						wedsubname: "物理",
-						weduid: "moshanglin",
-						weduname: "莫尚林",
-						thursub: 5,
-						thursubname: "物理",
-						thuruid: "moshanglin",
-						thuruname: "莫尚林",
-						frisub: 5,
-						frisubname: "物理",
-						friuid: "moshanglin",
-						friuname: "莫尚林",
-						satsub: 5,
-						satsubname: "物理",
-						satuid: "moshanglin",
-						satuname: "莫尚林",
-						sunsub: 5,
-						sunsubname: "物理",
-						sunuid: "moshanglin",
-						sununame: "莫尚林",
-					}, {
-						timespan: "09:00-10:00",
-						daytype: "下午",
-						orderid: 2,
-						monsub: 5,
-						monsubname: "物理",
-						monuid: "moshanglin",
-						monuname: "莫尚林",
-						tuessub: 5,
-						tuessubname: "物理",
-						tuesuid: "moshanglin",
-						tuesuname: "莫尚林",
-						wedsub: 5,
-						wedsubname: "物理",
-						weduid: "moshanglin",
-						weduname: "莫尚林",
-						thursub: 5,
-						thursubname: "物理",
-						thuruid: "moshanglin",
-						thuruname: "莫尚林",
-						frisub: 5,
-						frisubname: "物理",
-						friuid: "moshanglin",
-						friuname: "莫尚林",
-						satsub: 5,
-						satsubname: "物理",
-						satuid: "moshanglin",
-						satuname: "莫尚林",
-						sunsub: 5,
-						sunsubname: "物理",
-						sunuid: "moshanglin",
-						sununame: "莫尚林",
-					}, {
-						timespan: "09:00-10:00",
-						daytype: "下午",
-						orderid: 3,
-						monsub: 5,
-						monsubname: "物理",
-						monuid: "moshanglin",
-						monuname: "莫尚林",
-						tuessub: 5,
-						tuessubname: "物理",
-						tuesuid: "moshanglin",
-						tuesuname: "莫尚林",
-						wedsub: 5,
-						wedsubname: "物理",
-						weduid: "moshanglin",
-						weduname: "莫尚林",
-						thursub: 5,
-						thursubname: "物理",
-						thuruid: "moshanglin",
-						thuruname: "莫尚林",
-						frisub: 5,
-						frisubname: "物理",
-						friuid: "moshanglin",
-						friuname: "莫尚林",
-						satsub: 5,
-						satsubname: "物理",
-						satuid: "moshanglin",
-						satuname: "莫尚林",
-						sunsub: 5,
-						sunsubname: "物理",
-						sunuid: "moshanglin",
-						sununame: "莫尚林",
-					}, {
-						timespan: "09:00-10:00",
-						daytype: "下午",
-						orderid: 4,
-						monsub: 5,
-						monsubname: "物理",
-						monuid: "moshanglin",
-						monuname: "莫尚林",
-						tuessub: 5,
-						tuessubname: "物理",
-						tuesuid: "moshanglin",
-						tuesuname: "莫尚林",
-						wedsub: 5,
-						wedsubname: "物理",
-						weduid: "moshanglin",
-						weduname: "莫尚林",
-						thursub: 5,
-						thursubname: "物理",
-						thuruid: "moshanglin",
-						thuruname: "莫尚林",
-						frisub: 5,
-						frisubname: "物理",
-						friuid: "moshanglin",
-						friuname: "莫尚林",
-						satsub: 5,
-						satsubname: "物理",
-						satuid: "moshanglin",
-						satuname: "莫尚林",
-						sunsub: 5,
-						sunsubname: "物理",
-						sunuid: "moshanglin",
-						sununame: "莫尚林",
-					}, {
-						timespan: "09:00-10:00",
-						daytype: "下午",
-						orderid: 5,
-						monsub: 5,
-						monsubname: "物理",
-						monuid: "moshanglin",
-						monuname: "莫尚林",
-						tuessub: 5,
-						tuessubname: "物理",
-						tuesuid: "moshanglin",
-						tuesuname: "莫尚林",
-						wedsub: 5,
-						wedsubname: "物理",
-						weduid: "moshanglin",
-						weduname: "莫尚林",
-						thursub: 5,
-						thursubname: "物理",
-						thuruid: "moshanglin",
-						thuruname: "莫尚林",
-						frisub: 5,
-						frisubname: "物理",
-						friuid: "moshanglin",
-						friuname: "莫尚林",
-						satsub: 5,
-						satsubname: "物理",
-						satuid: "moshanglin",
-						satuname: "莫尚林",
-						sunsub: 5,
-						sunsubname: "物理",
-						sunuid: "moshanglin",
-						sununame: "莫尚林",
-					}, {
-						timespan: "09:00-10:00",
-						daytype: "下午",
-						orderid: 6,
-						monsub: 5,
-						monsubname: "物理",
-						monuid: "moshanglin",
-						monuname: "莫尚林",
-						tuessub: 5,
-						tuessubname: "物理",
-						tuesuid: "moshanglin",
-						tuesuname: "莫尚林",
-						wedsub: 5,
-						wedsubname: "物理",
-						weduid: "moshanglin",
-						weduname: "莫尚林",
-						thursub: 5,
-						thursubname: "物理",
-						thuruid: "moshanglin",
-						thuruname: "莫尚林",
-						frisub: 5,
-						frisubname: "物理",
-						friuid: "moshanglin",
-						friuname: "莫尚林",
-						satsub: 5,
-						satsubname: "物理",
-						satuid: "moshanglin",
-						satuname: "莫尚林",
-						sunsub: 5,
-						sunsubname: "物理",
-						sunuid: "moshanglin",
-						sununame: "莫尚林",
-					}, {
-						timespan: "09:00-10:00",
-						daytype: "下午",
-						orderid: 7,
-						monsub: 5,
-						monsubname: "物理",
-						monuid: "moshanglin",
-						monuname: "莫尚林",
-						tuessub: 5,
-						tuessubname: "物理",
-						tuesuid: "moshanglin",
-						tuesuname: "莫尚林",
-						wedsub: 5,
-						wedsubname: "物理",
-						weduid: "moshanglin",
-						weduname: "莫尚林",
-						thursub: 5,
-						thursubname: "物理",
-						thuruid: "moshanglin",
-						thuruname: "莫尚林",
-						frisub: 5,
-						frisubname: "物理",
-						friuid: "moshanglin",
-						friuname: "莫尚林",
-						satsub: 5,
-						satsubname: "物理",
-						satuid: "moshanglin",
-						satuname: "莫尚林",
-						sunsub: 5,
-						sunsubname: "物理",
-						sunuid: "moshanglin",
-						sununame: "莫尚林",
-					}, {
-						timespan: "09:00-10:00",
-						daytype: "下午",
-						orderid: 8,
-						monsub: 5,
-						monsubname: "物理",
-						monuid: "moshanglin",
-						monuname: "莫尚林",
-						tuessub: 5,
-						tuessubname: "物理",
-						tuesuid: "moshanglin",
-						tuesuname: "莫尚林",
-						wedsub: 5,
-						wedsubname: "物理",
-						weduid: "moshanglin",
-						weduname: "莫尚林",
-						thursub: 5,
-						thursubname: "物理",
-						thuruid: "moshanglin",
-						thuruname: "莫尚林",
-						frisub: 5,
-						frisubname: "物理",
-						friuid: "moshanglin",
-						friuname: "莫尚林",
-						satsub: 5,
-						satsubname: "物理",
-						satuid: "moshanglin",
-						satuname: "莫尚林",
-						sunsub: 5,
-						sunsubname: "物理",
-						sunuid: "moshanglin",
-						sununame: "莫尚林",
-					}, {
-						timespan: "09:00-10:00",
-						daytype: "下午",
-						orderid: 9,
-						monsub: 5,
-						monsubname: "物理",
-						monuid: "moshanglin",
-						monuname: "莫尚林",
-						tuessub: 5,
-						tuessubname: "物理",
-						tuesuid: "moshanglin",
-						tuesuname: "莫尚林",
-						wedsub: 5,
-						wedsubname: "物理",
-						weduid: "moshanglin",
-						weduname: "莫尚林",
-						thursub: 5,
-						thursubname: "物理",
-						thuruid: "moshanglin",
-						thuruname: "莫尚林",
-						frisub: 5,
-						frisubname: "物理",
-						friuid: "moshanglin",
-						friuname: "莫尚林",
-						satsub: 5,
-						satsubname: "物理",
-						satuid: "moshanglin",
-						satuname: "莫尚林",
-						sunsub: 5,
-						sunsubname: "物理",
-						sunuid: "moshanglin",
-						sununame: "莫尚林",
-					}]
-
-				}
-				unitWebsitePro(tempData, function(data) {
-					console.log('添加课程表:' + JSON.stringify(data));
-					if(data.RspCode == 0) {} else {
-						mui.toast(data.RspTxt)
-					}
-				})
-
 			}
 
 			function addpullRefresh() {
@@ -444,10 +137,10 @@ editEdule();
 						callback: function() {
 							console.log('down');
 							setTimeout(function() {
-								scheduleFlag = 0; //0刷新，1加载更多
-								schedulePage = 0;
+								schedule.pg.PageIndex = 1;
 								getscheduleList();
 								pullRefresh.endPullDownToRefresh(); //结束下拉刷新
+								pullRefresh.refresh(true)
 							}, 1000);
 						}
 					},
@@ -455,7 +148,12 @@ editEdule();
 						callback: function() {
 							console.log('up');
 							setTimeout(function() {
-								scheduleFlag = 1; //0刷新，1加载更多
+								schedule.pg.PageIndex++;
+								if(schedule.pg.PageIndex > schedule.pg.PageCount) {
+									schedule.pg.PageIndex--;
+									pullRefresh.endPullUpToRefresh(true);
+									return;
+								}
 								getscheduleList();
 								pullRefresh.endPullUpToRefresh();
 							}, 1000);

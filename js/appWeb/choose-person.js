@@ -5,9 +5,14 @@ Vue.component("person-list", {
 		}
 	},
 	template: '<div v-if="loading">loading</div>' +
-		'<ul v-else v-show="listData.length>0">' +
-		'<li v-for="(item,index) of listData" v-on:click="clickEvent(item)"><p>{{item.title?item.title:item.name}}</p></li>' +
-		'</ul>',
+		'<div v-bind:class=["weui-cells","weui-cells_checkbox"] v-else v-show="listData.length>0">' +
+		'<label v-for="(item,index) of listData" v-on:click="clickEvent(item)">' +
+		'<div v-bind:class=["weui-cell__hd"]>' +
+		'<input v-bind:type="checkbox" v-bind:class=["weui-check"] v-bind:id="item.value?item.value:item.id">' +
+		'<i v-bind:class=["weui-icon-checked"]>' +
+		'</div>' +
+		'<div v-bind:class=["weui-cell_bd"]><p>{{item.title?item.title:item.name}}</p></div></label>' +
+		'</div>',
 	data: function() {
 		return {
 			listData: [],
@@ -65,8 +70,8 @@ Vue.component("person-list", {
 			}
 		},
 		getPersonList: function(id) {
-			var com=this;
-			com.loading=true;
+			var com = this;
+			com.loading = true;
 			request.getDepartPersons(id, function(data) {
 				com.loading = false;
 				console.log("获取的部门人员列表:" + JSON.stringify(data));

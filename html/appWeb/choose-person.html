@@ -5,10 +5,80 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<title>人员选择</title>
+		<link href="../../css/weui.css" rel="stylesheet" />
+		<style>
+			input[type=checkbox] {
+				position: absolute;
+				z-index: -9999;
+				opacity: 0;
+			}
+			
+			.weui-icon-checked:before {
+				content: '\EA01';
+				color: #C9C9C9;
+				font-size: 23px;
+				display: block;
+			}
+			
+			input[type=checkbox]:checked+.weui-icon-checked:before {
+				display: inline-block;
+				content: '\EA06';
+				color: #09BB07;
+				font-size: 23px;
+				display: block;
+			}
+		</style>
 	</head>
 
 	<body>
+
 		<div id="page-router">
+			<div class="weui-cells weui-cells_checkbox">
+				<label class="weui-cell weui-check__label" for="s11">
+                <div class="weui-cell__hd">
+                    <input type="checkbox" name="checkbox1" class="weui-check" id="s11"/>
+                    <i class="weui-icon-checked"></i>
+                </div>
+                <div class="weui-cell__bd">
+                    <p>standard is dealicient for u.</p>
+                </div>
+            </label>
+				<label class="weui-cell weui-check__label" for="s12">
+                <div class="weui-cell__hd">
+                    <input type="checkbox" name="checkbox1" class="weui-check" id="s12"/>
+                    <i class="weui-icon-checked"></i>
+                </div>
+                <div class="weui-cell__bd">
+                    <p>standard is dealicient for u.</p>
+                </div>
+            </label>
+			</div>
+			<div class="weui-cells">
+				<a class="weui-cell weui-cell_access" href="javascript:;">
+					<div class="weui-cell__hd">
+						<label for="test1">
+			<input type="checkbox" class="" value="1" name="test" id="test1">
+			<i class="weui-icon-checked"></i>
+			</label>
+					</div>
+					<div class="weui-cell__bd">
+						<p>cell standard</p>
+					</div>
+					<div class="weui-cell__ft">说明文字</div>
+				</a>
+				<a class="weui-cell weui-cell_access" href="javascript:;">
+					<div class="weui-cell__hd">
+						<label for="test">
+			<input type="checkbox" class="" value="1" name="test" id="test">
+			<i class="weui-icon-checked"></i>
+			</label>
+					</div>
+					<div class="weui-cell__bd">
+						<p>cell standard</p>
+					</div>
+					<div class="weui-cell__ft">说明文字</div>
+				</a>
+			</div>
 			<router-view></router-view>
 			<div style="position: fixed;bottom: 0;height: 50px;width: 100%;">
 				<div></div>

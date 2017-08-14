@@ -5,7 +5,7 @@ Vue.component("person-list", {
 		}
 	},
 	template: '<div v-if="loading">loading</div>' +
-		'<div v-else v-bind:class="[\'weui-cells\',{\'weui-cells_checkbox\':listData[0].name}]">' +
+		'<div v-else v-bind:class="[\'weui-cells\',{\'weui-cells_checkbox\':listData[0]&&listData[0].name}]">' +
 		'<template v-for="(item,index) of listData">' +
 		'<label  v-if="item.name" v-bind:for="item.userid" v-bind:class="[\'weui-cell\',\'weui-check__label\']">' +
 		'<div v-bind:class="[\'weui-cell__hd\']">' +

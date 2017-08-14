@@ -5,13 +5,31 @@ Vue.component("person-list", {
 		}
 	},
 	template: '<div v-if="loading">loading</div>' +
-		'<div v-bind:class=["weui-cells","weui-cells_checkbox"] v-else v-show="listData.length>0">' +
-		'<label v-for="(item,index) of listData" v-on:click="clickEvent(item)">' +
-		'<div v-bind:class=["weui-cell__hd"]>' +
-		'<input v-bind:type="checkbox" v-bind:class=["weui-check"] v-bind:id="item.value?item.value:item.id">' +
-		'<i v-bind:class=["weui-icon-checked"]>' +
+		'<div v-else v-bind:class="[\'weui-cells\',{\'weui-cells_checkbox\':listData[0].name}]">' +
+		'<template v-for="(item,index) of listData">' +
+		'<label  v-if="item.name" v-bind:for="item.userid" v-bind:class="[\'weui-cell\',\'weui-check__label\']">' +
+		'<div v-bind:class="[\'weui-cell__hd\']">' +
+		'<input type="checkbox" v-bind:class="[\'weui-check\']" v-bind:id="item.userid" v-bind:value="item.userid">' +
+		'<i v-bind:class="[\'weui-icon-checked\']"></i>' +
 		'</div>' +
-		'<div v-bind:class=["weui-cell_bd"]><p>{{item.title?item.title:item.name}}</p></div></label>' +
+		'<div v-bind:class="[\'weui-cell__bd\']">' +
+		'<p>{{item.name}}</p>' +
+		'</div>' +
+		'</label>' +
+		'<a v-else v-bind:class="[\'weui-cell\',\'weui-cell_access\']">' +
+		'<div v-bind:class="[\'weui-cell__hd\']">' +
+		'<label v-bind:for="item.value">' +
+		'<input type="checkbox" v-bind:class="" v-bind:id="item.value" v-bind:value="item.value" />' +
+		'<i v-bind:class="[\'weui-icon-checked\']"></i>' +
+		'</label>' +
+		'</div>' +
+		'<div v-bind:class="[\'weui-cell__bd\']" v-on:click="clickEvent(item)">' +
+		'<p>{{item.title}}</p>' +
+		'</div>' +
+		'<div v-bind:class="[\'weui-cell__ft\']" v-on:click="clickEvent(item)"></div>' +
+		'</a>' +
+		'</template>' +
+		'</div>' +
 		'</div>',
 	data: function() {
 		return {
@@ -100,22 +118,6 @@ Vue.component("person-list", {
 		//返回上个页面
 		goForword: function() {
 			router.go(-1);
-		},
-		rechargeList: function(nodes) {
-			var map = {},
-				node, roots = [];
-			for(var i = 0; i < nodes.length; i++) {
-				node = nodes[i];
-				node.children = [];
-				map[node.value] = i; // use map to look-up the parents
-				if(node.parentvalue > 1) {
-					nodes[map[node.parentvalue]].children.push(node);
-				} else if(node.parentvalue === 1) {
-					roots.push(node);
-				}
-			}
-			console.log("重拍数组后的数据：" + JSON.stringify(roots))
-			return roots;
 		}
 	}
-})
+});

@@ -11,8 +11,13 @@
 			document.write('<link rel="stylesheet" href="../../js/demoCssJs/weui.min.css?' + Math.random() + '" />');
 			document.write('<link rel="stylesheet" href="../../js/demoCssJs/jquery-weui.css?' + Math.random() + '" />');
 			document.write('<link rel="stylesheet" href="../../js/demoCssJs/demos.css?' + Math.random() + '" />');
+			document.write('<link rel="stylesheet" href="../../css/utils/iconfont.css?' + Math.random() + '" />');
 		</script>
 		<style>
+			body {
+				word-break: break-all;
+			}
+
 			.weui-tab__bd-item {
 				width: 100%;
 			}
@@ -43,22 +48,217 @@
 
 			.weui-tab__bd-item.weui-pull-to-refresh {
 				top: 60px;
+				bottom: 46px;
 			}
 
 			.weui-pull-to-refresh {
 				margin-top: -60px;
 			}
 
-			.content-padded {
-				margin-top: 10px;
-			}
-
-			.weui-media-box_appmsg.weui-media-box:before {
+			.weui-media-box:before {
 				left: 0px;
 			}
 
 			.weui-media-box__title {
 				color: #80CCF5;
+			}
+
+			.weui-media-box_appmsg .weui-media-box__hd {
+				margin-right: 15px;
+				height: 40px;
+				width: 40px;
+			}
+
+			.class-circle-headimage-hd {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				overflow: hidden;
+			}
+
+			.class-circle-headimage {
+				height: initial;
+				max-height: none !important;
+			}
+
+			.weui-media-box__bd {
+				display: inline-block;
+			}
+
+			.weui-media-box__title {
+				float: left;
+				max-width: 100%;
+				padding-right: 5px;
+			}
+
+			.class-circle-mark {
+				background-color: green;
+				border-radius: 10px;
+				padding: 8px 10px 6px 10px;
+				margin: 2px 0;
+				display: inline-block;
+				float: left;
+				font-size: 10px;
+				line-height: 1;
+				color: white;
+			}
+
+			.class-circle-title {
+				width: 100%;
+				height: auto;
+			}
+
+			.weui-media-box__desc {
+				display: block;
+				width: 100%;
+			}
+
+			.class-circle-grids {
+				width: 100%;
+				line-height: 0;
+				font-size: 0;
+				font-family: inherit;
+			}
+
+			.class-circle-grids-item {
+				width: 32%;
+				overflow: hidden;
+				display: inline-block;
+				height: 0px;
+				padding-top: 16%;
+				padding-bottom: 16%;
+			}
+
+			.class-circle-grids .class-circle-grids-item:nth-child(2),
+			.class-circle-grids .class-circle-grids-item:nth-child(5),
+			.class-circle-grids .class-circle-grids-item:nth-child(8) {
+				margin: 0 2%;
+			}
+
+			.class-circle-grids .class-circle-grids-item:nth-child(4),
+			.class-circle-grids .class-circle-grids-item:nth-child(5),
+			.class-circle-grids .class-circle-grids-item:nth-child(6),
+			.class-circle-grids .class-circle-grids-item:nth-child(7),
+			.class-circle-grids .class-circle-grids-item:nth-child(8),
+			.class-circle-grids .class-circle-grids-item:nth-child(9) {
+				margin-top: 2%;
+			}
+
+			.class-circle-grids-item img {
+				width: 100%;
+				position: relative;
+				-webkit-transform: translateY(-50%);
+			}
+
+			.class-circle-content-img {
+				max-width: 100%;
+				max-height: 30%;
+			}
+
+			.class-circle-function {
+				color: #BBBBBB;
+				display: block;
+				height: 25px;
+			}
+
+			.class-circle-function .class-circle-views {
+				float: left;
+			}
+
+			.class-circle-function .icon-dianzan,
+			.class-circle-function .icon-newmessage,
+			.class-circle-function .icon-trash {
+				float: right;
+				margin: 0 5px;
+			}
+
+			.class-circle-praise-comment {
+				background-color: #F2F2F2;
+				position: relative;
+				margin-top: 10px;
+				padding: 10px;
+			}
+
+			.class-circle-triangle {
+				position: absolute;
+				top: -18px;
+				margin-left: 10px;
+				height: 0px;
+				width: 0px;
+				border-width: 10px 10px;
+				border-style: solid;
+				border-color: transparent transparent #F2F2F2;
+			}
+
+			.class-circle-praise-comment-line {
+				height: 1px;
+				background: gainsboro;
+				width: 100%;
+				margin: 5px 0;
+			}
+
+			.class-circle-praiser:before {
+				content: ",";
+				color: #323232;
+				margin-right: 6px;
+			}
+
+			.class-circle-praise-bg .class-circle-praiser:nth-child(1):before {
+				content: "\e63c";
+				font-family: "iconfont" !important;
+				font-size: 16px;
+				font-style: normal;
+				-webkit-font-smoothing: antialiased;
+				color: #80CCF5;
+			}
+
+			.class-circle-praiser,
+			.class-circle-comment-name {
+				display: inline;
+				color: #80CCF5;
+			}
+
+			.class-circle-comment-content {
+				display: inline;
+			}
+
+			.class-circle-comment-name,
+			.class-circle-comment-content {
+				font-size: 16px;
+			}
+
+			.class-circle-comment-item {
+				font-size: 0;
+				-webkit-text-size-adjust: none;
+			}
+
+			.class-circle-report {
+				position: absolute;
+				bottom: 0px;
+				width: 100%;
+				text-align: center;
+				background-color: white;
+				padding: 10px 0;
+				border-top: 1px solid gainsboro;
+				color: #80CCF5;
+			}
+
+			.weui-tab {
+				top: 0px;
+				bottom: 46px;
+			}
+
+			.weui-tab__bd,
+			.weui-loadmore {
+				padding-bottom: 46px;
+			}
+
+			.weui-photo-browser-modal .photo-container {
+				justify-content: center;
+			}
+
+			.weui-photo-browser-modal {
+				z-index: 999;
 			}
 		</style>
 	</head>
@@ -85,25 +285,94 @@
 						<div class="up">释放刷新</div>
 						<div class="refresh">正在刷新</div>
 					</div>
-					<div class="content-padded">
-						<div class="weui-panel weui-panel_access">
-							<div class="weui-panel__bd">
-								<div class="weui-media-box weui-media-box_appmsg">
-									<div class="weui-media-box__hd">
-										<img class="weui-media-box__thumb" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAB4CAMAAAAOusbgAAAAeFBMVEUAwAD///+U5ZTc9twOww7G8MYwzDCH4YcfyR9x23Hw+/DY9dhm2WZG0kbT9NP0/PTL8sux7LFe115T1VM+zz7i+OIXxhes6qxr2mvA8MCe6J6M4oz6/frr+us5zjn2/fa67rqB4IF13XWn6ad83nxa1loqyirn+eccHxx4AAAC/klEQVRo3u2W2ZKiQBBF8wpCNSCyLwri7v//4bRIFVXoTBBB+DAReV5sG6lTXDITiGEYhmEYhmEYhmEYhmEY5v9i5fsZGRx9PyGDne8f6K9cfd+mKXe1yNG/0CcqYE86AkBMBh66f20deBc7wA/1WFiTwvSEpBMA2JJOBsSLxe/4QEEaJRrASP8EVF8Q74GbmevKg0saa0B8QbwBdjRyADYxIhqxAZ++IKYtciPXLQVG+imw+oo4Bu56rjEJ4GYsvPmKOAB+xlz7L5aevqUXuePWVhvWJ4eWiwUQ67mK51qPj4dFDMlRLBZTqF3SDvmr4BwtkECu5gHWPkmDfQh02WLxXuvbvC8ku8F57GsI5e0CmUwLz1kq3kD17R1In5816rGvQ5VMk5FEtIiWislTffuDpl/k/PzscdQsv8r9qWq4LRWX6tQYtTxvI3XyrwdyQxChXioOngH3dLgOFjk0all56XRi/wDFQrGQU3Os5t0wJu1GNtNKHdPqYaGYQuRDfbfDf26AGLYSyGS3ZAK4S8XuoAlxGSdYMKwqZKM9XJMtyqXi7HX/CiAZS6d8bSVUz5J36mEMFDTlAFQzxOT1dzLRljjB6+++ejFqka+mXIe6F59mw22OuOw1F4T6lg/9VjL1rLDoI9Xzl1MSYDNHnPQnt3D1EE7PrXjye/3pVpr1Z45hMUdcACc5NVQI0bOdS1WA0wuz73e7/5TNqBPhQXPEFGJNV2zNqWI7QKBd2Gn6AiBko02zuAOXeWIXjV0jNqdKegaE/kJQ6Bfs4aju04lMLkA2T5wBSYPKDGF3RKhFYEa6A1L1LG2yacmsaZ6YPOSAMKNsO+N5dNTfkc5Aqe26uxHpx7ZirvgCwJpWq/lmX1hA7LyabQ34tt5RiJKXSwQ+0KU0V5xg+hZrd4Bn1n4EID+WkQdgLfRNtvil9SPfwy+WQ7PFBWQz6dGWZBLkeJFXZGCfLUjCgGgqXo5TuSu3cugdcTv/HjqnBTEMwzAMwzAMwzAMwzAMw/zf/AFbXiOA6frlMAAAAABJRU5ErkJggg==" alt="">
+					<div class="weui-panel weui-panel_access">
+						<div class="weui-panel__bd">
+							<div class="weui-media-box">
+								<div class="weui-media-box_appmsg">
+									<div class="weui-media-box__hd class-circle-headimage-hd">
+										<img class="weui-media-box__thumb class-circle-headimage" src="http://www.w3school.com.cn/i/bg_flower_small.gif" />
 									</div>
 									<div class="weui-media-box__bd">
-										<h4 class="weui-media-box__title">标题一标题一标题一标题一标题一标题一</h4>
-										<p class="weui-media-box__desc">由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。</p>
+										<div class="class-circle-title">
+											<div class="weui-media-box__title">标题一</div>
+											<div class="class-circle-mark">一年级一班</div>
+										</div>
+										<div class="weui-media-box__desc">2017-8-14 09:14:42</div>
 									</div>
 								</div>
-								<div class="weui-media-box weui-media-box_appmsg">
-									<div class="weui-media-box__hd">
-										<img class="weui-media-box__thumb" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAB4CAMAAAAOusbgAAAAeFBMVEUAwAD///+U5ZTc9twOww7G8MYwzDCH4YcfyR9x23Hw+/DY9dhm2WZG0kbT9NP0/PTL8sux7LFe115T1VM+zz7i+OIXxhes6qxr2mvA8MCe6J6M4oz6/frr+us5zjn2/fa67rqB4IF13XWn6ad83nxa1loqyirn+eccHxx4AAAC/klEQVRo3u2W2ZKiQBBF8wpCNSCyLwri7v//4bRIFVXoTBBB+DAReV5sG6lTXDITiGEYhmEYhmEYhmEYhmEY5v9i5fsZGRx9PyGDne8f6K9cfd+mKXe1yNG/0CcqYE86AkBMBh66f20deBc7wA/1WFiTwvSEpBMA2JJOBsSLxe/4QEEaJRrASP8EVF8Q74GbmevKg0saa0B8QbwBdjRyADYxIhqxAZ++IKYtciPXLQVG+imw+oo4Bu56rjEJ4GYsvPmKOAB+xlz7L5aevqUXuePWVhvWJ4eWiwUQ67mK51qPj4dFDMlRLBZTqF3SDvmr4BwtkECu5gHWPkmDfQh02WLxXuvbvC8ku8F57GsI5e0CmUwLz1kq3kD17R1In5816rGvQ5VMk5FEtIiWislTffuDpl/k/PzscdQsv8r9qWq4LRWX6tQYtTxvI3XyrwdyQxChXioOngH3dLgOFjk0all56XRi/wDFQrGQU3Os5t0wJu1GNtNKHdPqYaGYQuRDfbfDf26AGLYSyGS3ZAK4S8XuoAlxGSdYMKwqZKM9XJMtyqXi7HX/CiAZS6d8bSVUz5J36mEMFDTlAFQzxOT1dzLRljjB6+++ejFqka+mXIe6F59mw22OuOw1F4T6lg/9VjL1rLDoI9Xzl1MSYDNHnPQnt3D1EE7PrXjye/3pVpr1Z45hMUdcACc5NVQI0bOdS1WA0wuz73e7/5TNqBPhQXPEFGJNV2zNqWI7QKBd2Gn6AiBko02zuAOXeWIXjV0jNqdKegaE/kJQ6Bfs4aju04lMLkA2T5wBSYPKDGF3RKhFYEa6A1L1LG2yacmsaZ6YPOSAMKNsO+N5dNTfkc5Aqe26uxHpx7ZirvgCwJpWq/lmX1hA7LyabQ34tt5RiJKXSwQ+0KU0V5xg+hZrd4Bn1n4EID+WkQdgLfRNtvil9SPfwy+WQ7PFBWQz6dGWZBLkeJFXZGCfLUjCgGgqXo5TuSu3cugdcTv/HjqnBTEMwzAMwzAMwzAMwzAMw/zf/AFbXiOA6frlMAAAAABJRU5ErkJggg==" alt="">
+								<div>一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十</div>
+							</div>
+							<div class="weui-media-box">
+								<div class="weui-media-box_appmsg">
+									<div class="weui-media-box__hd class-circle-headimage-hd">
+										<img class="weui-media-box__thumb class-circle-headimage" src="http://www.w3school.com.cn/i/bg_flower_small.gif" />
 									</div>
 									<div class="weui-media-box__bd">
-										<h4 class="weui-media-box__title">标题二</h4>
-										<p class="weui-media-box__desc">由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。</p>
+										<div class="class-circle-title">
+											<div class="weui-media-box__title">标题一标题一标题一标题一标题一标题一</div>
+											<div class="class-circle-mark">一年级一班</div>
+										</div>
+										<div class="weui-media-box__desc">2017-8-14 09:14:42</div>
+									</div>
+								</div>
+								<div>一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十</div>
+								<img class="class-circle-content-img" src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2760619582,1034521198&fm=11&gp=0.jpg" />
+							</div>
+							<div class="weui-media-box">
+								<div class="weui-media-box_appmsg">
+									<div class="weui-media-box__hd class-circle-headimage-hd">
+										<img class="weui-media-box__thumb class-circle-headimage" src="../../image/config/func_actssm.jpg" />
+									</div>
+									<div class="weui-media-box__bd">
+										<div class="class-circle-title">
+											<div class="weui-media-box__title">标题一标题一标题</div>
+											<div class="class-circle-mark">一年级一班</div>
+										</div>
+										<div class="weui-media-box__desc">2017-8-14 09:14:42</div>
+									</div>
+								</div>
+								<div>一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十</div>
+								<div class="class-circle-grids">
+									<div class="class-circle-grids-item">
+										<img src="https://www.baidu.com/img/bd_logo1.png" />
+									</div>
+									<div class="class-circle-grids-item">
+										<img src="../../image/config/func_actssm.jpg" />
+									</div>
+									<div class="class-circle-grids-item">
+										<img src="http://www.w3school.com.cn/i/bg_flower_small.gif" />
+									</div>
+									<div class="class-circle-grids-item">
+										<img src="http://www.w3school.com.cn/i/bg_flower_small.gif" />
+									</div>
+									<div class="class-circle-grids-item">
+										<img src="https://www.baidu.com/img/bd_logo1.png" />
+									</div>
+								</div>
+								<div class="class-circle-function">
+									<div class="class-circle-views">浏览数 200</div>
+									<div class="iconfont icon-trash"></div>
+									<div class="iconfont icon-newmessage"></div>
+									<div class="iconfont icon-dianzan"></div>
+								</div>
+								<div class="class-circle-praise-comment">
+									<div class="class-circle-triangle"></div>
+									<div class="class-circle-praise-bg">
+										<div class="class-circle-praiser">第一个</div>
+										<div class="class-circle-praiser">第二个</div>
+									</div>
+									<div class="class-circle-praise-comment-line"></div>
+									<div class="class-circle-comment-bg">
+										<div class="class-circle-comment-item">
+											<div class="class-circle-comment-name">壹</div>
+											<div class="class-circle-comment-content">：一二三四 </div>
+										</div>
+										<div class="class-circle-comment-item">
+											<div class="class-circle-comment-name">贰</div>
+											<div class="class-circle-comment-content">回复</div>
+											<div class="class-circle-comment-name">壹</div>
+											<div class="class-circle-comment-content">：一二三四五六七八九十</div>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -144,12 +413,13 @@
 				</div>
 			</div>
 		</div>
-
+		<div class="class-circle-report">+ 发表动态</div>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/mui.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-2.1.4.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-weui.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/swiper.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/weui.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/vue.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_home.js?" + Math.random() + "'></s" + "cript>");

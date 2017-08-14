@@ -27,7 +27,8 @@
 				font-size: 23px;
 				display: block;
 			}
-			.weui-cells{
+			
+			.weui-cells {
 				margin-top: 0;
 			}
 		</style>
@@ -38,8 +39,14 @@
 		<div id="page-router">
 			<router-view></router-view>
 			<div style="position: fixed;bottom: 0;height: 50px;width: 100%;">
-				<div></div>
-				<button class="" style="float: right;">button</button>
+				<div>
+					<div>
+						<div v-for="person of chosePersons">
+							<p>{{person.name}}</p>
+						</div>
+					</div>
+				</div>
+				<a class="weui-btn weui-btn_mini weui-btn_primary" style="float: right;margin-right: 15px;">确定({{chosePersons.length}})</a>
 			</div>
 		</div>
 		<script src="../../js/utils/consts.js"></script>
@@ -47,6 +54,7 @@
 		<script src="../../js/utils/request.js"></script>
 		<script src="../../js/vue.js"></script>
 		<script src="../../js/vue-router.js"></script>
+		<script src="../../js/utils/events.js"></script>
 		<script src="../../js/appWeb/choose-person.js"></script>
 		<script src="../../js/demoCssJs/jquery-weui.js"></script>
 
@@ -63,7 +71,13 @@
 				}]
 			});
 			const chosePerson = new Vue({
-				router: router
+				router: router,
+				data: {
+					chosePersons: []
+				},
+				methods: {
+
+				}
 			}).$mount('#page-router');
 
 			router.push({

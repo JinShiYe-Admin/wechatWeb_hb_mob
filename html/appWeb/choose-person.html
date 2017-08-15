@@ -60,6 +60,7 @@
 
 		<script type="text/javascript">
 			const choosePerson = {
+				template: '<person-list v-bind:depart_id="parseInt($route.params.id)" v-on:togglePerson="togglePersen(persen, isAdd)"></person-list>'
 			}
 			const router = new VueRouter({
 				mod: 'history',

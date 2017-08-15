@@ -74,18 +74,21 @@ Vue.component("person-list", {
 			//				"parentvalue": 1,
 			//				"order": 2147483047
 			//			}]
-			this.isLoading = true;
+			com.isLoading = true;
 			request.getDepartList(function(data) {
 				console.log("获取的部门列表：" + JSON.stringify(JSON.parse(data)));
-				localStorage.setItem(consts.KEY_DEPARTS, data);
+				sessionStorage.setItem(consts.KEY_DEPARTS, data);
 				com.getCurDeparts();
-				com.isLoading = false;
 			});
 		},
 		getCurDeparts: function() {
+			console.log("获取当前部门*****");
+			this.loading = true;
 			var children = this.getLocalChildren();
 			if(children && children.length > 0) {
+				this.setItemsStatus(children);
 				this.listData = children;
+				this.isLoading = false;
 			} else {
 				this.requestChildren();
 			}
@@ -94,10 +97,11 @@ Vue.component("person-list", {
 			var com = this;
 			com.loading = true;
 			request.getDepartPersons(id, function(data) {
-				com.loading = false;
+				com.setItemsStatus(data);
 				console.log("获取的部门人员列表:" + JSON.stringify(data));
 				com.listData = data;
 				com.setAsChildren();
+				com.isLoading = false;
 			})
 		},
 		clickEvent: function(item) {
@@ -109,7 +113,7 @@ Vue.component("person-list", {
 		},
 		//向下传递事件
 		setItemsStatus: function(items) {
-			var arr = events.isExistInLocalArray(consts.KEY_CHOOSE_DEPARTS, this.$route.params.id);
+			var arr = events.isExistInSessionArray(consts.KEY_CHOOSE_DEPARTS, this.$route.params.id);
 			if(arr[1] >= 0) { //如果上级目录是已选择目录；
 				this.isAllChecked = true;
 				//设置本级目录为已选择目录，并保存在localStorage
@@ -120,18 +124,20 @@ Vue.component("person-list", {
 					key = consts.KEY_CHOOSE_PERSONS;
 				}
 				for(var i in items) {
-					events.toggleValueInLocalArray(key,
+					events.toggleValueInSessionArray(key,
 						items[i].value ? items[i].value : items[i].id,
 						true);
 				}
+				console.log("是否已全选？"+this.isAllChecked);
 			} else {
 				//重复情况    
-				this.getSingleChecked(items); //人员重复  只考虑人员 
+				items = this.getSingleChecked(items); //人员重复  只考虑人员 
+				console.log("更改人员是否已选择的标记："+JSON.stringify(items));
 			}
 		},
 		getSingleChecked: function(items) {
 			items = items.map(function(item) {
-				if(events.isExistInLocalArray(consts.KEY_CHOOSE_PERSONS, item.id)[1] >= 0) {
+				if(events.isExistInSessionArray(consts.KEY_CHOOSE_PERSONS, item.id)[1] >= 0) {
 					item.isChecked = true;
 				} else {
 					item.isChecked = false;
@@ -141,20 +147,22 @@ Vue.component("person-list", {
 		},
 		togglePerson: function(item, event) { //关注的人 选择
 			var isAdd = event.target.checked;
-			events.toggleValueInLocalArray(consts.KEY_CHOOSE_PERSONS, item.id, isAdd);
+			events.toggleValueInSessionArray(consts.KEY_CHOOSE_PERSONS, item.id, isAdd);
 			this.choseItems = events.toggleValueInArray(this.choseItems, item.value, isAdd);
-			events.toggleValueInLocalArray(consts.KEY_CHOOSE_DEPARTS, this.$route.params.id, (this.choseItems.length == this.listData.length));
+			events.toggleValueInSessionArray(consts.KEY_CHOOSE_DEPARTS, this.$route.params.id, (this.choseItems.length == this.listData.length));
 			this.$emit("togglePerson", [item], event.target.checked);
 		},
 		toggleDepart: function(item, event) { //关注的部门选择
+			var com = this;
 			var isAdd = event.target.checked;
-			events.toggleValueInLocalArray(consts.KEY_CHOOSE_DEPARTS, item.value, isAdd);
-			console.log("部门选择变化？0" + JSON.stringify(events.getLocalArray(consts.KEY_CHOOSE_DEPARTS)));
-			this.choseItems = events.toggleValueInArray(this.choseItems, item.value, isAdd);
-			console.log("部门选择变化？1" + JSON.stringify(events.getLocalArray(consts.KEY_CHOOSE_DEPARTS)) + "当前id:" + this.$route.params.id);
+			events.toggleValueInSessionArray(consts.KEY_CHOOSE_DEPARTS, item.value, isAdd);
+			console.log("部门选择变化？0" + events.getSessionArray(consts.KEY_CHOOSE_DEPARTS));
+			com.choseItems = events.toggleValueInArray(com.choseItems, item.value, isAdd);
+			console.log("部门选择变化？1" + JSON.stringify(com.choseItems) + "当前id:" + JSON.stringify(com.listData));
 			//父部门是否标记为标记为已选择
-			events.toggleValueInLocalArray(consts.KEY_CHOOSE_DEPARTS, this.$route.params.id, (this.choseItems.length === this.listData.length));
-			console.log("部门选择变化？2" + JSON.stringify(events.getLocalArray(consts.KEY_CHOOSE_DEPARTS)));
+			var isAdd = com.choseItems.length === com.listData.length;
+			events.toggleValueInSessionArray(consts.KEY_CHOOSE_DEPARTS, com.$route.params.id, isAdd);
+			console.log("部门选择变化？2" + JSON.stringify(events.getSessionArray(consts.KEY_CHOOSE_DEPARTS)));
 			//向上传递选择事件时，如何更改界面？
 		},
 		requestChildren: function() { //获取部门内部信息
@@ -164,7 +172,7 @@ Vue.component("person-list", {
 			} else {
 				parentId = this.depart_id;
 			}
-			var list = JSON.parse(localStorage.getItem(consts.KEY_DEPARTS));
+			var list = JSON.parse(sessionStorage.getItem(consts.KEY_DEPARTS));
 			console.log(list);
 			console.log("获取的本地部门列表:" + JSON.stringify(list));
 			var childDepart = list.filter(function(el) {
@@ -174,14 +182,17 @@ Vue.component("person-list", {
 			if(childDepart.length === 0) {
 				this.getPersonList(this.depart_id);
 			} else {
+				this.setItemsStatus(childDepart);
 				this.listData = childDepart;
+				console.log("放置的listData:"+JSON.stringify(childDepart));
+				this.isLoading = false;
 				this.setAsChildren();
 			}
 		},
 		getDepartIndex: function() { //获取部门再部门列表中的序号
 			var id = this.$route.params.id;
 			var com = this;
-			var departList = JSON.parse(localStorage.getItem(consts.KEY_DEPARTS));
+			var departList = JSON.parse(sessionStorage.getItem(consts.KEY_DEPARTS));
 			for(var i in departList) {
 				if(departList[i].value == id) {
 					return i;
@@ -197,13 +208,10 @@ Vue.component("person-list", {
 			departList[this.getDepartIndex(parentId)].children = this.listData;
 			console.log("加入子类后的信息：" + JSON.stringify(departList));
 			//将修改后的数据保存到本地储存列表
-			localStorage.setItem(consts.KEY_DEPARTS, JSON.stringify(departList));
+			sessionStorage.setItem(consts.KEY_DEPARTS, JSON.stringify(departList));
 		},
-		getLocalChildren: function() {
+		getLocalChildren: function() { //获取本地的子项
 			var id = this.$route.params.id;
-			if(id === -1) {
-				id = 1;
-			}
 			var departList = this.getLocalDeparts();
 			var departs = departList.filter(function(depart) {
 				return depart.value == id;
@@ -211,10 +219,10 @@ Vue.component("person-list", {
 			return departs[0].children || [];
 		},
 		getLocalDeparts: function() {
-			return localStorage.getItem(consts.KEY_DEPARTS) || [];
+			return sessionStorage.getItem(consts.KEY_DEPARTS) || [];
 		},
 		getLocalPersons: function() {
-			return localStorage.getItem(consts.KEY_CHOOSE_PERSONS) || [];
+			return sessionStorage.getItem(consts.KEY_CHOOSE_PERSONS) || [];
 		},
 		//通过部门id 更新界面
 		routerTo: function(item) {

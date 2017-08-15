@@ -5,10 +5,10 @@ var events = (function(mod) {
 	 * @param {Object} value 要存储或删除的值
 	 * @param {Object} isAdd 0删除 1添加
 	 */
-	mod.toggleValueInLocalArray = function(key, value, isAdd) {
-		var arr = localStorage.getItem(key)||[];
-		console.log("获取的本地的值："+JSON.stringify(arr));
-		localStorage.setItem(key, mod.toggleValueInArray(arr, value, isAdd));
+	mod.toggleValueInSessionArray = function(key, value, isAdd) {
+		var arr = mod.getSessionArray(key);
+		console.log("获取的本地的值：" + JSON.stringify(arr));
+		sessionStorage.setItem(key, JSON.stringify(mod.toggleValueInArray(arr, value, isAdd)));
 	}
 	/**
 	 * 数组中删除或添加值
@@ -17,27 +17,36 @@ var events = (function(mod) {
 	 * @param {Object} isAdd 0删除 1添加
 	 */
 	mod.toggleValueInArray = function(arr, value, isAdd) {
-		var arrs = mod.isExistInLocalArray(arr, value);
+		console.log("是否添加数据？"+isAdd);
+		var arrs = mod.isExistInArray(arr, value);
+		console.log("是否获取的："+JSON.stringify(arrs));
 		if(isAdd) {
 			if(arrs[1] < 0) {
 				arrs[0].push(value);
 			}
 		} else {
-			if(arrs[1] >= 0)
-				arr[0].splice(arrs[1], 1);
+			if(arrs[1] >= 0) {
+				arrs[0].splice(arrs[1], 1);
+			}
 		}
-		console.log("保存的值："+JSON.stringify(arrs[0]));
+		console.log("保存的值：" + JSON.stringify(arrs[0]));
 		return arrs[0];
 	}
 	/**
 	 * 获取存储在本地的localStorage
 	 * @param {Object} key 数组对应的key值
 	 */
-	mod.getLocalArray = function(key) {
-		return localStorage.getItem(key) || [];
+	mod.getSessionArray = function(key) {
+		var arr;
+		if(sessionStorage.getItem(key)) {
+			arr = JSON.parse(sessionStorage.getItem(key));
+		} else {
+			arr = [];
+		}
+		console.log("获取的本地存储数据："+JSON.stringify(arr));
+		return arr;
 	}
-	mod.isExistInLocalArray = function(key, value) {
-		var arr = mod.getLocalArray(key);
+	mod.isExistInArray = function(arr, value) {
 		return [arr, arr.indexOf(value)];
 	}
 	return mod;

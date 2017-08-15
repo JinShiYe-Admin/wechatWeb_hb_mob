@@ -1,3 +1,16 @@
+//动态组件
+Vue.component("trends-item", {
+	template: "#template_trends",
+	props: ["value"]
+});
+
+var all_trends = new Vue({
+	el: "#all_trends",
+	data: {
+		trends: []
+	}
+})
+
 window.onload = function() {
 	//	console.log("window.onload");
 	$(".weui-tab__bd-item").pullToRefresh();
@@ -18,13 +31,13 @@ window.onload = function() {
 			loading = false;
 		}, 1500); //模拟延迟
 	});
-//	var pb1 = $.photoBrowser({
-//		items: [
-//			"https://www.baidu.com/img/bd_logo1.png",
-//			"../../image/config/func_actssm.jpg",
-//			"http://www.w3school.com.cn/i/bg_flower_small.gif"
-//		]
-//	});
-//	pb1.open();
-//	pb1.slideTo(1, 1000);
+	//	var pb1 = $.photoBrowser({
+	//		items: [
+	//			"https://www.baidu.com/img/bd_logo1.png",
+	//			"../../image/config/func_actssm.jpg",
+	//			"http://www.w3school.com.cn/i/bg_flower_small.gif"
+	//		]
+	//	});
+	//	pb1.open();
+	//	pb1.slideTo(1, 1000);
 }

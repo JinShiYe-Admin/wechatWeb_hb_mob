@@ -12,369 +12,8 @@
 			document.write('<link rel="stylesheet" href="../../js/demoCssJs/jquery-weui.css?' + Math.random() + '" />');
 			document.write('<link rel="stylesheet" href="../../js/demoCssJs/demos.css?' + Math.random() + '" />');
 			document.write('<link rel="stylesheet" href="../../css/utils/iconfont.css?' + Math.random() + '" />');
+			document.write('<link rel="stylesheet" href="../../css/classCircle/class_circle_home.css?' + Math.random() + '" />');
 		</script>
-		<style>
-			body {
-				word-break: break-all;
-			}
-
-			.weui-tab__bd-item {
-				width: 100%;
-			}
-
-			.weui-navbar {
-				background: #F2F2F2;
-			}
-
-			.weui-navbar__item {
-				font-size: 15px;
-				color: #323232;
-				background: #F2F2F2;
-			}
-
-			.weui-navbar__item div {
-				padding: 5px;
-			}
-
-			.weui-navbar__item.weui-bar__item--on {
-				font-size: 15px;
-				color: #323232;
-				background: #F2F2F2;
-			}
-
-			.weui-navbar__item.weui-bar__item--on div {
-				border-bottom: 2px solid deepskyblue;
-			}
-
-			.weui-tab__bd-item.weui-pull-to-refresh {
-				top: 60px;
-				bottom: 46px;
-			}
-
-			.weui-pull-to-refresh {
-				margin-top: -60px;
-			}
-
-			.weui-media-box:before {
-				left: 0px;
-			}
-
-			.weui-media-box__title {
-				color: #80CCF5;
-			}
-
-			.weui-media-box_appmsg .weui-media-box__hd {
-				margin-right: 15px;
-				height: 40px;
-				width: 40px;
-			}
-
-			.class-circle-headimage-hd {
-				/*发布者头像父元素*/
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				overflow: hidden;
-			}
-
-			.class-circle-headimage {
-				/*发布者头像*/
-				height: initial;
-				max-height: none !important;
-			}
-
-			.weui-media-box__bd {
-				display: inline-block;
-			}
-
-			.weui-media-box__title {
-				/*发布人名称*/
-				float: left;
-				max-width: 100%;
-				padding-right: 5px;
-			}
-
-			.class-circle-mark {
-				/*发布者标识*/
-				background-color: green;
-				border-radius: 10px;
-				padding: 8px 10px 6px 10px;
-				margin: 2px 0;
-				display: inline-block;
-				float: left;
-				font-size: 10px;
-				line-height: 1;
-				color: white;
-			}
-
-			.class-circle-title {
-				/*发布者信息区域*/
-				width: 100%;
-				height: auto;
-			}
-
-			.weui-media-box__desc {
-				/*发布时间*/
-				display: block;
-				width: 100%;
-			}
-
-			.class-circle-grids {
-				/*多张图片区域*/
-				width: 100%;
-				line-height: 0;
-				font-size: 0;
-				font-family: inherit;
-			}
-
-			.class-circle-grids-item {
-				/*多张图片*/
-				width: 32%;
-				overflow: hidden;
-				display: inline-block;
-				height: 0px;
-				padding-top: 16%;
-				padding-bottom: 16%;
-			}
-
-			.class-circle-grids .class-circle-grids-item:nth-child(2),
-			.class-circle-grids .class-circle-grids-item:nth-child(5),
-			.class-circle-grids .class-circle-grids-item:nth-child(8) {
-				/*多张图片*/
-				margin: 0 2%;
-			}
-
-			.class-circle-grids .class-circle-grids-item:nth-child(4),
-			.class-circle-grids .class-circle-grids-item:nth-child(5),
-			.class-circle-grids .class-circle-grids-item:nth-child(6),
-			.class-circle-grids .class-circle-grids-item:nth-child(7),
-			.class-circle-grids .class-circle-grids-item:nth-child(8),
-			.class-circle-grids .class-circle-grids-item:nth-child(9) {
-				/*多张图片*/
-				margin-top: 2%;
-			}
-
-			.class-circle-grids-item img {
-				/*多张图片*/
-				width: 100%;
-				position: relative;
-				-webkit-transform: translateY(-50%);
-			}
-
-			.class-circle-content-img {
-				/*内容的图片为一张的情况*/
-				max-width: 100%;
-				max-height: 30%;
-			}
-
-			.class-circle-function {
-				/*功能区域*/
-				color: #BBBBBB;
-				display: block;
-				height: 25px;
-			}
-
-			.class-circle-function .class-circle-views {
-				/*浏览数*/
-				float: left;
-			}
-
-			.class-circle-function .icon-dianzan,
-			.class-circle-function .icon-newmessage,
-			.class-circle-function .icon-trash {
-				/*点赞，评论，删除按钮*/
-				float: right;
-				margin: 0 5px;
-			}
-
-			.class-circle-praise-comment {
-				/*点赞和评论区域*/
-				background-color: #F2F2F2;
-				position: relative;
-				margin-top: 10px;
-				padding: 10px;
-			}
-
-			.class-circle-triangle {
-				/*点赞评论区域的三角形*/
-				position: absolute;
-				top: -18px;
-				margin-left: 10px;
-				height: 0px;
-				width: 0px;
-				border-width: 10px 10px;
-				border-style: solid;
-				border-color: transparent transparent #F2F2F2;
-			}
-
-			.class-circle-praise-comment-line {
-				/*点赞人和评论人之间的横线*/
-				height: 1px;
-				background: gainsboro;
-				width: 100%;
-				margin: 5px 0;
-			}
-
-			.class-circle-praiser:before {
-				/*点赞人*/
-				content: ",";
-				color: #323232;
-				margin-right: 6px;
-			}
-
-			.class-circle-praise-bg .class-circle-praiser:nth-child(1):before {
-				/*第一个点赞人*/
-				content: "\e63c";
-				font-family: "iconfont" !important;
-				font-size: 16px;
-				font-style: normal;
-				-webkit-font-smoothing: antialiased;
-				color: #80CCF5;
-			}
-
-			.class-circle-praiser,
-			.class-circle-comment-name {
-				/*点赞人和评论人的名字*/
-				display: inline;
-				color: #80CCF5;
-			}
-
-			.class-circle-comment-content {
-				/*评论内容*/
-				display: inline;
-			}
-
-			.class-circle-comment-item {
-				/*每一条评论*/
-				font-size: 0;
-				-webkit-text-size-adjust: none;
-			}
-
-			.class-circle-comment-name,
-			.class-circle-comment-content {
-				/*评论人的名称和评论内容*/
-				font-size: 16px;
-			}
-
-			.class-circle-report {
-				/*发表动态*/
-				position: absolute;
-				bottom: 0px;
-				width: 100%;
-				text-align: center;
-				background-color: white;
-				padding: 10px 0;
-				border-top: 1px solid gainsboro;
-				color: #80CCF5;
-			}
-
-			.weui-tab {
-				top: 0px;
-				bottom: 46px;
-			}
-
-			.weui-tab__bd,
-			.weui-loadmore {
-				/*加载更多*/
-				padding-bottom: 46px;
-			}
-
-			.weui-photo-browser-modal .photo-container {
-				/*查看图片时的背景*/
-				justify-content: center;
-			}
-
-			.weui-photo-browser-modal {
-				/*查看图片时的背景*/
-				z-index: 999;
-			}
-
-			.class-circle-content-limit {
-				/*动态内容限制8行*/
-				overflow: hidden;
-				text-overflow: ellipsis;
-				display: -webkit-box;
-				-webkit-line-clamp: 8;
-				-webkit-box-orient: vertical;
-			}
-
-			.class-circle-show-all {
-				/*展开全部按钮*/
-				color: #80CCF5;
-			}
-
-			.relate-name {
-				/*与我相关人员名字*/
-				color: #323232;
-			}
-
-			.relate-reply {
-				/*与我相关回复功能*/
-				float: right;
-				color: #80CCF5;
-				margin-left: 10px;
-			}
-
-			.relate-reply-type {
-				/*与我相关类型*/
-				float: left;
-				padding-left: 5px;
-			}
-
-			.relate-reply-content {
-				/*与我相关原始内容区域*/
-				position: relative;
-				display: block;
-				width: 100%;
-				line-height: 1;
-				font-size: 0;
-				background-color: #F2F2F2;
-				height: 50px;
-			}
-
-			.relate-reply-type-praise .relate-reply-content {
-				margin: 5px 0;
-			}
-
-			.relate-reply-content-img {
-				/*与我相关原始内容图片*/
-				height: 50px;
-				width: 50px;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				overflow: hidden;
-				position: relative;
-				float: left;
-			}
-
-			.relate-reply-content-img img {
-				/*与我相关原始内容图片*/
-				width: 100%;
-			}
-
-			.relate-reply-content-text {
-				/*与我相关原始内容文字*/
-				font-size: 16px;
-				line-height: 50px;
-			}
-
-			.relate-reply-content-name {
-				/*与我相关原始内容人员名称*/
-				color: #80CCF5;
-				display: inline;
-				margin-left: 5px;
-			}
-
-			.relate-reply-content-limit {
-				/*与我相关原始内容限制一行*/
-				overflow: hidden;
-				text-overflow: ellipsis;
-				display: -webkit-box;
-				-webkit-line-clamp: 1;
-				-webkit-box-orient: vertical;
-			}
-		</style>
 		<script>
 			//动态设置样式
 			(function() {
@@ -394,18 +33,18 @@
 	<body>
 		<div class="weui-tab">
 			<div class="weui-navbar">
-				<div class="weui-navbar__item" href="#all_trends">
+				<div class="weui-navbar__item weui-bar__item--on" href="#all_trends">
 					<div>全部动态</div>
 				</div>
 				<div class="weui-navbar__item" href="#mine_trends">
 					<div>我的动态</div>
 				</div>
-				<div class="weui-navbar__item weui-bar__item--on" href="#relate_to_me">
+				<div class="weui-navbar__item" href="#relate_to_me">
 					<div>与我相关</div>
 				</div>
 			</div>
 			<div class="weui-tab__bd">
-				<div id="all_trends" class="weui-tab__bd-item weui-pull-to-refresh">
+				<div id="all_trends" class="weui-tab__bd-item weui-pull-to-refresh  weui-tab__bd-item--active">
 					<div class="weui-pull-to-refresh__layer">
 						<div class='weui-pull-to-refresh__arrow'></div>
 						<div class='weui-pull-to-refresh__preloader'></div>
@@ -520,13 +159,16 @@
 						<div class="up">释放刷新</div>
 						<div class="refresh">正在刷新</div>
 					</div>
-					<div class="content-padded">我的动态</div>
+					<div class="weui-panel weui-panel_access">
+						<div class="weui-panel__bd">
+						</div>
+					</div>
 					<div class="weui-loadmore">
 						<i class="weui-loading"></i>
 						<span class="weui-loadmore__tips">正在加载</span>
 					</div>
 				</div>
-				<div id="relate_to_me" class="weui-tab__bd-item weui-tab__bd-item--active weui-pull-to-refresh">
+				<div id="relate_to_me" class="weui-tab__bd-item weui-pull-to-refresh">
 					<div class="weui-pull-to-refresh__layer">
 						<div class='weui-pull-to-refresh__arrow'></div>
 						<div class='weui-pull-to-refresh__preloader'></div>
@@ -675,6 +317,138 @@
 			</div>
 		</div>
 		<div class="class-circle-report">+ 发表动态</div>
+		<template id="template_trends">
+			<div class="weui-media-box">
+				<div class="weui-media-box_appmsg">
+					<div class="weui-media-box__hd class-circle-headimage-hd">
+						<img class="weui-media-box__thumb class-circle-headimage" src="http://www.w3school.com.cn/i/bg_flower_small.gif" />
+					</div>
+					<div class="weui-media-box__bd">
+						<div class="class-circle-title">
+							<div class="weui-media-box__title">标题一</div>
+							<div class="class-circle-mark">一年级一班</div>
+						</div>
+						<div class="weui-media-box__desc">2017-8-14 09:14:42</div>
+					</div>
+				</div>
+				<div class="class-circle-content-limit">一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十</div>
+				<div class="class-circle-show-all">展开全部</div>
+				<img class="class-circle-content-img" src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2760619582,1034521198&fm=11&gp=0.jpg" />
+				<div class="class-circle-grids">
+					<div class="class-circle-grids-item">
+						<img src="https://www.baidu.com/img/bd_logo1.png" />
+					</div>
+					<div class="class-circle-grids-item">
+						<img src="../../image/config/func_actssm.jpg" />
+					</div>
+					<div class="class-circle-grids-item">
+						<img src="http://www.w3school.com.cn/i/bg_flower_small.gif" />
+					</div>
+					<div class="class-circle-grids-item">
+						<img src="http://www.w3school.com.cn/i/bg_flower_small.gif" />
+					</div>
+					<div class="class-circle-grids-item">
+						<img src="https://www.baidu.com/img/bd_logo1.png" />
+					</div>
+				</div>
+				<div class="class-circle-praise-comment">
+					<div class="class-circle-triangle"></div>
+					<div class="class-circle-praise-bg">
+						<div class="class-circle-praiser">第一个</div>
+						<div class="class-circle-praiser">第二个</div>
+					</div>
+					<div class="class-circle-praise-comment-line"></div>
+					<div class="class-circle-comment-bg">
+						<div class="class-circle-comment-item">
+							<div class="class-circle-comment-name">壹</div>
+							<div class="class-circle-comment-content">：一二三四 </div>
+						</div>
+						<div class="class-circle-comment-item">
+							<div class="class-circle-comment-name">贰</div>
+							<div class="class-circle-comment-content">回复</div>
+							<div class="class-circle-comment-name">壹</div>
+							<div class="class-circle-comment-content">：一二三四五六七八九十</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</template>
+		<template id="temp_relate_to_me_praise">
+			<div class="weui-media-box relate-reply-type-praise">
+				<div class="weui-media-box_appmsg">
+					<div class="weui-media-box__hd class-circle-headimage-hd">
+						<img class="weui-media-box__thumb class-circle-headimage" src="../../image/config/func_actssm.jpg" />
+					</div>
+					<div class="weui-media-box__bd">
+						<div class="class-circle-title">
+							<div class="weui-media-box__title relate-name">
+								标题一标题一标题一标
+							</div>
+							<div class="relate-reply-type">赞了我</div>
+						</div>
+						<div class="weui-media-box__desc">2017-8-14 09:14:42</div>
+					</div>
+				</div>
+				<div class="relate-reply-content">
+					<div class="relate-reply-content-img">
+						<img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2760619582,1034521198&fm=11&gp=0.jpg" />
+					</div>
+					<div class="relate-reply-content-text">
+						<div class="relate-reply-content-limit">
+							<div class="relate-reply-content-name">
+								张一二三四五六七八九十云张一二三四五六七八九十云
+							</div>
+							：一二三四五六七八九十一二三四五六七八九十
+						</div>
+					</div>
+				</div>
+			</div>
+		</template>
+		<template id="temp_relate_to_me_comment">
+			<div class="weui-media-box relate-reply-type-comment">
+				<div class="weui-media-box_appmsg">
+					<div class="weui-media-box__hd class-circle-headimage-hd">
+						<img class="weui-media-box__thumb class-circle-headimage" src="../../image/config/func_actssm.jpg" />
+					</div>
+					<div class="weui-media-box__bd">
+						<div class="class-circle-title">
+							<div class="weui-media-box__title relate-name">
+								标题一标题一标一标
+							</div>
+							<div class="relate-reply-type">评论了我</div>
+							<div class="relate-reply">回复</div>
+						</div>
+						<div class="weui-media-box__desc">2017-8-14 09:14:42</div>
+					</div>
+				</div>
+				<div>一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十</div>
+				<div class="relate-reply-content">
+					<div class="relate-reply-content-img">
+						<img src="http://www.w3school.com.cn/i/bg_flower_small.gif" />
+					</div>
+					<div class="relate-reply-content-text">
+						<div class="relate-reply-content-limit">
+							<div class="relate-reply-content-name">
+								张一
+							</div>
+							：一二三四五六七八九十一二三四五六七八九十
+						</div>
+					</div>
+				</div>
+				<div class="class-circle-comment-bg">
+					<div class="class-circle-comment-item">
+						<div class="class-circle-comment-name">壹</div>
+						<div class="class-circle-comment-content">：一二三四 </div>
+					</div>
+					<div class="class-circle-comment-item">
+						<div class="class-circle-comment-name">贰</div>
+						<div class="class-circle-comment-content">回复</div>
+						<div class="class-circle-comment-name">壹</div>
+						<div class="class-circle-comment-content">：一二三四五六七八九十</div>
+					</div>
+				</div>
+			</div>
+		</template>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/mui.min.js?" + Math.random() + "'></s" + "cript>");

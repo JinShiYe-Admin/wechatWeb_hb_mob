@@ -253,6 +253,8 @@ body {
 }
 
 .weui-tab {
+	width: 100%;
+	position: absolute;
 	top: 0px;
 	bottom: 46px;
 }

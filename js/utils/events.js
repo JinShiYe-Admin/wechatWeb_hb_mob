@@ -17,9 +17,8 @@ var events = (function(mod) {
 	 * @param {Object} isAdd 0删除 1添加
 	 */
 	mod.toggleValueInArray = function(arr, value, isAdd) {
-		console.log("是否添加数据？"+isAdd);
+		console.log("是否添加数据？" + isAdd + ",要处理的值:" + value);
 		var arrs = mod.isExistInArray(arr, value);
-		console.log("是否获取的："+JSON.stringify(arrs));
 		if(isAdd) {
 			if(arrs[1] < 0) {
 				arrs[0].push(value);
@@ -29,7 +28,7 @@ var events = (function(mod) {
 				arrs[0].splice(arrs[1], 1);
 			}
 		}
-		console.log("保存的值：" + JSON.stringify(arrs[0]));
+		console.log("加载或删除后的数组：" + JSON.stringify(arrs[0]));
 		return arrs[0];
 	}
 	/**
@@ -43,11 +42,17 @@ var events = (function(mod) {
 		} else {
 			arr = [];
 		}
-		console.log("获取的本地存储数据："+JSON.stringify(arr));
+		console.log("获取的本地存储数组：" + JSON.stringify(arr));
 		return arr;
 	}
+	mod.isExistInSessionArray = function(key, value) {
+		var arr = mod.getSessionArray(key);
+		return mod.isExistInArray(arr, value);
+	}
 	mod.isExistInArray = function(arr, value) {
-		return [arr, arr.indexOf(value)];
+		var arrs = [arr, arr.indexOf(value)];
+		console.log("获取的是否值是否存在于数组中：" + JSON.stringify(arrs));
+		return arrs;
 	}
 	return mod;
 })(events || {})

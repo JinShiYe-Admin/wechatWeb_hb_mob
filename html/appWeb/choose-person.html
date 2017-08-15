@@ -37,16 +37,16 @@
 	<body>
 
 		<div id="page-router">
-			<router-view></router-view>
+			<router-view v-on:togglePerson="togglePersen(arguments)"></router-view>
 			<div style="position: fixed;bottom: 0;height: 50px;width: 100%;">
 				<div>
 					<div>
-						<div v-for="person of chosePersons">
-							<p>{{person.name}}</p>
+						<div v-for="person of chosePersen" style="display: inline-block;">
+							<p style="display: inline-block;padding: 10px 15px;">{{person.name}}</p>
 						</div>
 					</div>
 				</div>
-				<a class="weui-btn weui-btn_mini weui-btn_primary" style="float: right;margin-right: 15px;">确定({{chosePersons.length}})</a>
+				<a class="weui-btn weui-btn_mini weui-btn_primary" style="float: right;margin-right: 15px;">确定({{chosePersen.length}})</a>
 			</div>
 		</div>
 		<script src="../../js/utils/consts.js"></script>
@@ -73,10 +73,33 @@
 			const chosePerson = new Vue({
 				router: router,
 				data: {
-					chosePersons: []
+					chosePersen: []
 				},
 				methods: {
-
+					togglePersen: function(persen, isAdd) {
+						console.log("父界面获取的值：" + JSON.stringify(persen) + ",是否已添加：" + isAdd);
+						console.log("父界面获取的值：" + JSON.stringify(arguments));
+						for(var i in persen) {
+							var arrs = events.isExistInArray(this.getPersonIdArray(this.chosePersen), persen[i].userid);
+							if(arrs[1] >= 0) { //存在
+								if(!isAdd) { //刪除
+									this.chosePersen.splice(arrs[1], 1);
+								}
+							} else { //不存在
+								if(isAdd) { //添加
+									this.chosePersen.push(persen[i]);
+								}
+							}
+						}
+						console.log("父界面获取的最终值:" + JSON.stringify(this.chosePersen));
+					},
+					getPersonIdArray: function(persen) {
+						var persenIds = [];
+						for(var i in persen) {
+							persenIds.push(persen[i]);
+						}
+						return persenIds;
+					}
 				}
 			}).$mount('#page-router');
 

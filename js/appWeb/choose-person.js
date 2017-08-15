@@ -180,6 +180,16 @@ Vue.component("person-list", {
 			console.log("部门选择变化？2" + JSON.stringify(events.getSessionArray(consts.KEY_CHOOSE_DEPARTS)));
 			//向上传递选择事件时，如何更改界面？
 		},
+		getToggleDepartPersons:function(item,isAdd){
+			var com=this;
+			request.getDepartPersons(item.value,function(data){
+				console.log("获取的关注部门的人:"+JSON.stringify(data));
+				for(var i in data){
+					events.toggleValueInSessionArray(consts.KEY_CHOOSE_PERSONS,data[i].userid,isAdd);
+				}
+				com.$emit("togglePerson", data, isAdd);//传值给父
+			})
+		},
 		requestChildren: function() { //获取部门内部信息
 			console.log("*********获取本页列表数据******");
 			var parentId = 0;
@@ -220,7 +230,7 @@ Vue.component("person-list", {
 			if(parentId === 1) {
 				parentId = -1;
 			}
-			var departList = this.getLocalDeparts();
+			var departList = events.getSessionArray(consts.KEY_DEPARTS);
 			departList[this.getDepartIndex(parentId)].children = this.listData;
 			console.log("加入子类后的信息：" + JSON.stringify(departList));
 			//将修改后的数据保存到本地储存列表
@@ -228,18 +238,12 @@ Vue.component("person-list", {
 		},
 		getLocalChildren: function() { //获取本地的子项
 			var id = this.$route.params.id;
-			var departList = this.getLocalDeparts();
+			var departList = events.getSessionArray(consts.KEY_DEPARTS);
 			console.log("获取的存储在本地的部门数据:" + JSON.stringify(departList));
 			var departs = departList.filter(function(depart) {
 				return depart.value == id;
 			});
 			return departs[0].children || [];
-		},
-		getLocalDeparts: function() {
-			return events.getSessionArray(consts.KEY_DEPARTS);
-		},
-		getLocalPersons: function() {
-			return events.getSessionArray(consts.KEY_CHOOSE_PERSONS);
 		},
 		//通过部门id 更新界面
 		routerTo: function(item) {

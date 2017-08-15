@@ -37,7 +37,7 @@
 	<body>
 
 		<div id="page-router">
-			<router-view v-on:togglePerson="togglePersen(arguments)"></router-view>
+			<router-view></router-view>
 			<div style="position: fixed;bottom: 0;height: 50px;width: 100%;">
 				<div>
 					<div>
@@ -60,7 +60,6 @@
 
 		<script type="text/javascript">
 			const choosePerson = {
-				template: '<person-list v-bind:depart_id="parseInt($route.params.id)"></person-list>'
 			}
 			const router = new VueRouter({
 				mod: 'history',

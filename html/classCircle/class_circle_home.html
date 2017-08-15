@@ -302,24 +302,110 @@
 				/*展开全部按钮*/
 				color: #80CCF5;
 			}
+
+			.relate-name {
+				/*与我相关人员名字*/
+				color: #323232;
+			}
+
+			.relate-reply {
+				/*与我相关回复功能*/
+				float: right;
+				color: #80CCF5;
+				margin-left: 10px;
+			}
+
+			.relate-reply-type {
+				/*与我相关类型*/
+				float: left;
+				padding-left: 5px;
+			}
+
+			.relate-reply-content {
+				/*与我相关原始内容区域*/
+				position: relative;
+				display: block;
+				width: 100%;
+				line-height: 1;
+				font-size: 0;
+				background-color: #F2F2F2;
+				height: 50px;
+			}
+
+			.relate-reply-type-praise .relate-reply-content {
+				margin: 5px 0;
+			}
+
+			.relate-reply-content-img {
+				/*与我相关原始内容图片*/
+				height: 50px;
+				width: 50px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				overflow: hidden;
+				position: relative;
+				float: left;
+			}
+
+			.relate-reply-content-img img {
+				/*与我相关原始内容图片*/
+				width: 100%;
+			}
+
+			.relate-reply-content-text {
+				/*与我相关原始内容文字*/
+				font-size: 16px;
+				line-height: 50px;
+			}
+
+			.relate-reply-content-name {
+				/*与我相关原始内容人员名称*/
+				color: #80CCF5;
+				display: inline;
+				margin-left: 5px;
+			}
+
+			.relate-reply-content-limit {
+				/*与我相关原始内容限制一行*/
+				overflow: hidden;
+				text-overflow: ellipsis;
+				display: -webkit-box;
+				-webkit-line-clamp: 1;
+				-webkit-box-orient: vertical;
+			}
 		</style>
+		<script>
+			//动态设置样式
+			(function() {
+				var wsWidth = window.screen.width;
+				var relate_praise_name = wsWidth - 30 - 40 - 15 - 5 - 5 - 48; //与我相关的人的名称的宽度(赞了我)
+				var relate_comment_name = wsWidth - 30 - 40 - 15 - 5 - 5 - 64 - 10 - 32; //与我相关的人的名称的宽度(评论了我)
+				var style = document.createElement("style");
+				style.type = "text/css";
+				var sstr_0 = ".relate-reply-type-praise .relate-name{max-width: " + relate_praise_name + "px;}";
+				var sstr_1 = ".relate-reply-type-comment .relate-name{max-width: " + relate_comment_name + "px;}";
+				style.innerHTML = sstr_0 + sstr_1;
+				document.getElementsByTagName('head').item(0).appendChild(style);
+			})();
+		</script>
 	</head>
 
 	<body>
 		<div class="weui-tab">
 			<div class="weui-navbar">
-				<div class="weui-navbar__item weui-bar__item--on" href="#all_trends">
+				<div class="weui-navbar__item" href="#all_trends">
 					<div>全部动态</div>
 				</div>
 				<div class="weui-navbar__item" href="#mine_trends">
 					<div>我的动态</div>
 				</div>
-				<div class="weui-navbar__item" href="#tab3">
+				<div class="weui-navbar__item weui-bar__item--on" href="#relate_to_me">
 					<div>与我相关</div>
 				</div>
 			</div>
 			<div class="weui-tab__bd">
-				<div id="all_trends" class="weui-tab__bd-item weui-tab__bd-item--active weui-pull-to-refresh">
+				<div id="all_trends" class="weui-tab__bd-item weui-pull-to-refresh">
 					<div class="weui-pull-to-refresh__layer">
 						<div class='weui-pull-to-refresh__arrow'></div>
 						<div class='weui-pull-to-refresh__preloader'></div>
@@ -440,7 +526,7 @@
 						<span class="weui-loadmore__tips">正在加载</span>
 					</div>
 				</div>
-				<div id="tab3" class="weui-tab__bd-item weui-pull-to-refresh">
+				<div id="relate_to_me" class="weui-tab__bd-item weui-tab__bd-item--active weui-pull-to-refresh">
 					<div class="weui-pull-to-refresh__layer">
 						<div class='weui-pull-to-refresh__arrow'></div>
 						<div class='weui-pull-to-refresh__preloader'></div>
@@ -448,7 +534,139 @@
 						<div class="up">释放刷新</div>
 						<div class="refresh">正在刷新</div>
 					</div>
-					<div class="content-padded">与我相关</div>
+					<div class="weui-panel weui-panel_access">
+						<div class="weui-panel__bd">
+							<div class="weui-media-box relate-reply-type-praise">
+								<div class="weui-media-box_appmsg">
+									<div class="weui-media-box__hd class-circle-headimage-hd">
+										<img class="weui-media-box__thumb class-circle-headimage" src="../../image/config/func_actssm.jpg" />
+									</div>
+									<div class="weui-media-box__bd">
+										<div class="class-circle-title">
+											<div class="weui-media-box__title relate-name">
+												标题一标题一标题一标
+											</div>
+											<div class="relate-reply-type">赞了我</div>
+										</div>
+										<div class="weui-media-box__desc">2017-8-14 09:14:42</div>
+									</div>
+								</div>
+								<div class="relate-reply-content">
+									<div class="relate-reply-content-img">
+										<img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2760619582,1034521198&fm=11&gp=0.jpg" />
+									</div>
+									<div class="relate-reply-content-text">
+										<div class="relate-reply-content-limit">
+											<div class="relate-reply-content-name">
+												张一二三四五六七八九十云张一二三四五六七八九十云
+											</div>
+											：一二三四五六七八九十一二三四五六七八九十
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="weui-media-box relate-reply-type-praise">
+								<div class="weui-media-box_appmsg">
+									<div class="weui-media-box__hd class-circle-headimage-hd">
+										<img class="weui-media-box__thumb class-circle-headimage" src="../../image/config/func_actssm.jpg" />
+									</div>
+									<div class="weui-media-box__bd">
+										<div class="class-circle-title">
+											<div class="weui-media-box__title relate-name">
+												标题一标题一标题一标题一标
+											</div>
+											<div class="relate-reply-type">赞了我</div>
+										</div>
+										<div class="weui-media-box__desc">2017-8-14 09:14:42</div>
+									</div>
+								</div>
+								<div class="relate-reply-content">
+									<div class="relate-reply-content-text">
+										<div class="relate-reply-content-limit">
+											<div class="relate-reply-content-name">
+												张一
+											</div>
+											：一二三四五六七八九十一二三四五六七八九十
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="weui-media-box relate-reply-type-comment">
+								<div class="weui-media-box_appmsg">
+									<div class="weui-media-box__hd class-circle-headimage-hd">
+										<img class="weui-media-box__thumb class-circle-headimage" src="../../image/config/func_actssm.jpg" />
+									</div>
+									<div class="weui-media-box__bd">
+										<div class="class-circle-title">
+											<div class="weui-media-box__title relate-name">
+												标题一标题
+											</div>
+											<div class="relate-reply-type">评论了我</div>
+											<div class="relate-reply">回复</div>
+										</div>
+										<div class="weui-media-box__desc">2017-8-14 09:14:42</div>
+									</div>
+								</div>
+								<div>一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十</div>
+								<div class="relate-reply-content">
+									<div class="relate-reply-content-img">
+										<img src="http://www.w3school.com.cn/i/bg_flower_small.gif" />
+									</div>
+									<div class="relate-reply-content-text">
+										<div class="relate-reply-content-limit">
+											<div class="relate-reply-content-name">
+												张一
+											</div>
+											：一二三四五六七八九十一二三四五六七八九十
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="weui-media-box relate-reply-type-comment">
+								<div class="weui-media-box_appmsg">
+									<div class="weui-media-box__hd class-circle-headimage-hd">
+										<img class="weui-media-box__thumb class-circle-headimage" src="../../image/config/func_actssm.jpg" />
+									</div>
+									<div class="weui-media-box__bd">
+										<div class="class-circle-title">
+											<div class="weui-media-box__title relate-name">
+												标题一标题一标一标
+											</div>
+											<div class="relate-reply-type">评论了我</div>
+											<div class="relate-reply">回复</div>
+										</div>
+										<div class="weui-media-box__desc">2017-8-14 09:14:42</div>
+									</div>
+								</div>
+								<div>一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十</div>
+								<div class="relate-reply-content">
+									<div class="relate-reply-content-img">
+										<img src="http://www.w3school.com.cn/i/bg_flower_small.gif" />
+									</div>
+									<div class="relate-reply-content-text">
+										<div class="relate-reply-content-limit">
+											<div class="relate-reply-content-name">
+												张一
+											</div>
+											：一二三四五六七八九十一二三四五六七八九十
+										</div>
+									</div>
+								</div>
+								<div class="class-circle-comment-bg">
+									<div class="class-circle-comment-item">
+										<div class="class-circle-comment-name">壹</div>
+										<div class="class-circle-comment-content">：一二三四 </div>
+									</div>
+									<div class="class-circle-comment-item">
+										<div class="class-circle-comment-name">贰</div>
+										<div class="class-circle-comment-content">回复</div>
+										<div class="class-circle-comment-name">壹</div>
+										<div class="class-circle-comment-content">：一二三四五六七八九十</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 					<div class="weui-loadmore">
 						<i class="weui-loading"></i>
 						<span class="weui-loadmore__tips">正在加载</span>

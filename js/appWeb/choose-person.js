@@ -39,7 +39,8 @@ Vue.component("person-list", {
 			isLoading: false,
 			id: this.depart_id,
 			choseItems: [],
-			isAllChecked: false
+			isAllChecked: false,
+			count: 0
 		}
 	},
 	created: function() {
@@ -106,24 +107,30 @@ Vue.component("person-list", {
 		//获取的子部门的人员数据
 		getChildDepartsPersen: function(departs) {
 			console.log("********getChildDepartsPersen********");
-			var count = 0;
+
 			var com = this;
 			if(departs.length > 0) {
 				for(var i in departs) {
-					this.getDepartAllPersen(departs[i], function(data) {
-						count++;
-						departs[i].persen = data;
-						if(count == departs.length) {
-							console.log("获取的子部门人员:" + JSON.stringify(departs));
-							//获取当前部门的人员
-							com.getCurPersen(departs);
-						}
-					});
+					this.getSingleDepartAllPersen(departs[i], departs);
 				}
 			} else {
 				console.log("沒有子部门时，获取成员，子部门：" + JSON.stringify(departs));
 				com.getCurPersen(departs);
 			}
+		},
+		getSingleDepartAllPersen: function(depart, departs) {
+			var mod = this;
+			mod.getDepartAllPersen(depart, function(data) {
+				mod.count++;
+				depart.persen = data;
+				console.log("当前的depart:" + JSON.stringify(depart));
+				if(mod.count == departs.length) {
+					console.log("获取的子部门人员:" + JSON.stringify(departs));
+					//获取当前部门的人员
+					mod.getCurPersen(departs);
+					mod.count = 0;
+				}
+			});
 		},
 		/**
 		 * 获取部门所有人员 包括子部门
@@ -205,9 +212,9 @@ Vue.component("person-list", {
 			console.log("部门对应的人员的map值：" + JSON.stringify(events.getSessionMap(consts.KEY_CHOSE_MAP)));
 			console.log("已选部门的值：" + JSON.stringify(events.getSessionArray(consts.KEY_CHOOSE_DEPARTS)));
 			if(item.userid) { //如果是人员 测试
-				return events.isExistInArray(events.getSessionMapValue(consts.KEY_CHOSE_MAP, this.$route.params.id))[1] >= 0;
+				return events.isExistInArray(events.getSessionMapValue(consts.KEY_CHOSE_MAP, this.$route.params.id), item.userid)[1] >= 0;
 			} else { //如果是部门
-				if(events.isExistInSessionArray(consts.KEY_CHOOSE_DEPARTS, item.value)) {
+				if(events.isExistInSessionArray(consts.KEY_CHOOSE_DEPARTS, item.value)[1] >= 0) {
 					return true;
 				} else {
 					return events.getSessionMapValue(consts.KEY_CHOSE_MAP, item.value).length === item.persen.length;

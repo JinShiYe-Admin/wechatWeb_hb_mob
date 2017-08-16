@@ -114,7 +114,7 @@ Vue.component("person-list", {
 						count++;
 						departs[i].persen = data;
 						if(count == departs.length) {
-							console.log("获取的子部门人员:" + JSON.stingify(departs));
+							console.log("获取的子部门人员:" + JSON.stringify(departs));
 							//获取当前部门的人员
 							com.getCurPersen(departs);
 						}

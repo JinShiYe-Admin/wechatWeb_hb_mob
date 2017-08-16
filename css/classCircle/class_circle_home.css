@@ -44,7 +44,7 @@ body {
 }
 
 .weui-media-box__title {
-	color: #80CCF5;
+	color: #46BDFF;
 }
 
 .weui-media-box_appmsg .weui-media-box__hd {
@@ -213,14 +213,14 @@ body {
 	font-size: 16px;
 	font-style: normal;
 	-webkit-font-smoothing: antialiased;
-	color: #80CCF5;
+	color: #46BDFF;
 }
 
 .class-circle-praiser,
 .class-circle-comment-name {
 	/*点赞人和评论人的名字*/
 	display: inline;
-	color: #80CCF5;
+	color: #46BDFF;
 }
 
 .class-circle-comment-content {
@@ -249,7 +249,7 @@ body {
 	background-color: white;
 	padding: 10px 0;
 	border-top: 1px solid gainsboro;
-	color: #80CCF5;
+	color: #46BDFF;
 }
 
 .weui-tab {
@@ -286,7 +286,7 @@ body {
 
 .class-circle-show-all {
 	/*展开全部按钮*/
-	color: #80CCF5;
+	color: #46BDFF;
 }
 
 .relate-name {
@@ -297,7 +297,7 @@ body {
 .relate-reply {
 	/*与我相关回复功能*/
 	float: right;
-	color: #80CCF5;
+	color: #46BDFF;
 	margin-left: 10px;
 }
 
@@ -347,7 +347,7 @@ body {
 
 .relate-reply-content-name {
 	/*与我相关原始内容人员名称*/
-	color: #80CCF5;
+	color: #46BDFF;
 	display: inline;
 	margin-left: 5px;
 }
@@ -359,4 +359,52 @@ body {
 	display: -webkit-box;
 	-webkit-line-clamp: 1;
 	-webkit-box-orient: vertical;
+}
+
+.class-circle-add {
+	width: 100%;
+}
+
+.class-circle-add {
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	width: 100%;
+	height: 100%;
+}
+
+.class-circle-add .weui-textarea {
+	margin: 1% 2%;
+	width: 96%;
+}
+
+.class-circle-add .class-circle-add-media {
+	display: block;
+	padding-left: 2%;
+	border-bottom: 1px solid gainsboro;
+}
+
+.class-circle-add .class-circle-add-media div {
+	font-size: 24px;
+	color: #B2B2B2;
+	display: inline-block;
+	line-height: 1;
+}
+
+.class-circle-add-media .icon-xiangji2 {
+	margin-left: 3px;
+}
+
+.class-circle-add .weui-btn_primary {
+	margin-left: 5%;
+	width: 90%;
+	background-color: #46BDFF;
+	border-color: #46BDFF;
+	margin-top: 50px;
+}
+
+.weui-btn_primary:not(.weui-btn_disabled):active {
+	background-color: #46BDFF;
+	border-color: #46BDFF;
+	opacity: .5;
 }

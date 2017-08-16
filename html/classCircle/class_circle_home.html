@@ -31,305 +31,58 @@
 	</head>
 
 	<body>
+		<!--班级圈路由-->
 		<div id="class_circle_app">
-			<router-link to="/home"></router-link>
-			<router-view keep-alive></router-view>
+			<router-view></router-view>
 		</div>
-
+		<!--班级圈主页-->
 		<template id="temp_class_circle_home">
-			<!--班级圈主页-->
 			<div>
 				<div class="weui-tab">
 					<div class="weui-navbar">
-						<div class="weui-navbar__item weui-bar__item--on" href="#all_trends">
-							<div>全部动态</div>
-						</div>
-						<div class="weui-navbar__item" href="#mine_trends">
-							<div>我的动态</div>
-						</div>
-						<div class="weui-navbar__item" href="#relate_to_me">
-							<div>与我相关</div>
-						</div>
+						<home-navbar-item v-for="(value,index) in home_tab" :key="index" :value="value" :index="index" :is_on="is_on" @click-item="clickItem"></home-navbar-item>
 					</div>
 					<div class="weui-tab__bd">
-						<div id="all_trends" class="weui-tab__bd-item weui-pull-to-refresh  weui-tab__bd-item--active">
-							<div class="weui-pull-to-refresh__layer">
-								<div class='weui-pull-to-refresh__arrow'></div>
-								<div class='weui-pull-to-refresh__preloader'></div>
-								<div class="down">下拉刷新</div>
-								<div class="up">释放刷新</div>
-								<div class="refresh">正在刷新</div>
-							</div>
-							<div class="weui-panel weui-panel_access">
-								<div class="weui-panel__bd">
-									<!--<trends-item :message="message"></trends-item>-->
-									<div class="weui-media-box">
-										<div class="weui-media-box_appmsg">
-											<div class="weui-media-box__hd class-circle-headimage-hd">
-												<img class="weui-media-box__thumb class-circle-headimage" src="http://www.w3school.com.cn/i/bg_flower_small.gif" />
-											</div>
-											<div class="weui-media-box__bd">
-												<div class="class-circle-title">
-													<div class="weui-media-box__title">标题一</div>
-													<div class="class-circle-mark">一年级一班</div>
-												</div>
-												<div class="weui-media-box__desc">2017-8-14 09:14:42</div>
-											</div>
-										</div>
-										<div class="class-circle-content-limit">一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十</div>
-										<div class="class-circle-show-all">展开全部</div>
-									</div>
-									<div class="weui-media-box">
-										<div class="weui-media-box_appmsg">
-											<div class="weui-media-box__hd class-circle-headimage-hd">
-												<img class="weui-media-box__thumb class-circle-headimage" src="http://www.w3school.com.cn/i/bg_flower_small.gif" />
-											</div>
-											<div class="weui-media-box__bd">
-												<div class="class-circle-title">
-													<div class="weui-media-box__title">标题一标题一标题一标题一标题一标题一</div>
-													<div class="class-circle-mark">一年级一班</div>
-												</div>
-												<div class="weui-media-box__desc">2017-8-14 09:14:42</div>
-											</div>
-										</div>
-										<div>一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十</div>
-										<img class="class-circle-content-img" src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2760619582,1034521198&fm=11&gp=0.jpg" />
-									</div>
-									<div class="weui-media-box">
-										<div class="weui-media-box_appmsg">
-											<div class="weui-media-box__hd class-circle-headimage-hd">
-												<img class="weui-media-box__thumb class-circle-headimage" src="../../image/config/func_actssm.jpg" />
-											</div>
-											<div class="weui-media-box__bd">
-												<div class="class-circle-title">
-													<div class="weui-media-box__title">标题一标题一标题</div>
-													<div class="class-circle-mark">一年级一班</div>
-												</div>
-												<div class="weui-media-box__desc">2017-8-14 09:14:42</div>
-											</div>
-										</div>
-										<div>一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十</div>
-										<div class="class-circle-grids">
-											<div class="class-circle-grids-item">
-												<img src="https://www.baidu.com/img/bd_logo1.png" />
-											</div>
-											<div class="class-circle-grids-item">
-												<img src="../../image/config/func_actssm.jpg" />
-											</div>
-											<div class="class-circle-grids-item">
-												<img src="http://www.w3school.com.cn/i/bg_flower_small.gif" />
-											</div>
-											<div class="class-circle-grids-item">
-												<img src="http://www.w3school.com.cn/i/bg_flower_small.gif" />
-											</div>
-											<div class="class-circle-grids-item">
-												<img src="https://www.baidu.com/img/bd_logo1.png" />
-											</div>
-										</div>
-										<div class="class-circle-function">
-											<div class="class-circle-views">浏览数 200</div>
-											<div class="iconfont icon-trash"></div>
-											<div class="iconfont icon-newmessage"></div>
-											<div class="iconfont icon-dianzan"></div>
-										</div>
-										<div class="class-circle-praise-comment">
-											<div class="class-circle-triangle"></div>
-											<div class="class-circle-praise-bg">
-												<div class="class-circle-praiser">第一个</div>
-												<div class="class-circle-praiser">第二个</div>
-											</div>
-											<div class="class-circle-praise-comment-line"></div>
-											<div class="class-circle-comment-bg">
-												<div class="class-circle-comment-item">
-													<div class="class-circle-comment-name">壹</div>
-													<div class="class-circle-comment-content">：一二三四 </div>
-												</div>
-												<div class="class-circle-comment-item">
-													<div class="class-circle-comment-name">贰</div>
-													<div class="class-circle-comment-content">回复</div>
-													<div class="class-circle-comment-name">壹</div>
-													<div class="class-circle-comment-content">：一二三四五六七八九十</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="weui-loadmore">
-								<i class="weui-loading"></i>
-								<span class="weui-loadmore__tips">正在加载</span>
-							</div>
-						</div>
-						<div id="mine_trends" class="weui-tab__bd-item weui-pull-to-refresh">
-							<div class="weui-pull-to-refresh__layer">
-								<div class='weui-pull-to-refresh__arrow'></div>
-								<div class='weui-pull-to-refresh__preloader'></div>
-								<div class="down">下拉刷新</div>
-								<div class="up">释放刷新</div>
-								<div class="refresh">正在刷新</div>
-							</div>
-							<div class="weui-panel weui-panel_access">
-								<div class="weui-panel__bd">
-								</div>
-							</div>
-							<div class="weui-loadmore">
-								<i class="weui-loading"></i>
-								<span class="weui-loadmore__tips">正在加载</span>
-							</div>
-						</div>
-						<div id="relate_to_me" class="weui-tab__bd-item weui-pull-to-refresh">
-							<div class="weui-pull-to-refresh__layer">
-								<div class='weui-pull-to-refresh__arrow'></div>
-								<div class='weui-pull-to-refresh__preloader'></div>
-								<div class="down">下拉刷新</div>
-								<div class="up">释放刷新</div>
-								<div class="refresh">正在刷新</div>
-							</div>
-							<div class="weui-panel weui-panel_access">
-								<div class="weui-panel__bd">
-									<div class="weui-media-box relate-reply-type-praise">
-										<div class="weui-media-box_appmsg">
-											<div class="weui-media-box__hd class-circle-headimage-hd">
-												<img class="weui-media-box__thumb class-circle-headimage" src="../../image/config/func_actssm.jpg" />
-											</div>
-											<div class="weui-media-box__bd">
-												<div class="class-circle-title">
-													<div class="weui-media-box__title relate-name">
-														标题一标题一标题一标
-													</div>
-													<div class="relate-reply-type">赞了我</div>
-												</div>
-												<div class="weui-media-box__desc">2017-8-14 09:14:42</div>
-											</div>
-										</div>
-										<div class="relate-reply-content">
-											<div class="relate-reply-content-img">
-												<img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2760619582,1034521198&fm=11&gp=0.jpg" />
-											</div>
-											<div class="relate-reply-content-text">
-												<div class="relate-reply-content-limit">
-													<div class="relate-reply-content-name">
-														张一二三四五六七八九十云张一二三四五六七八九十云
-													</div>
-													：一二三四五六七八九十一二三四五六七八九十
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="weui-media-box relate-reply-type-praise">
-										<div class="weui-media-box_appmsg">
-											<div class="weui-media-box__hd class-circle-headimage-hd">
-												<img class="weui-media-box__thumb class-circle-headimage" src="../../image/config/func_actssm.jpg" />
-											</div>
-											<div class="weui-media-box__bd">
-												<div class="class-circle-title">
-													<div class="weui-media-box__title relate-name">
-														标题一标题一标题一标题一标
-													</div>
-													<div class="relate-reply-type">赞了我</div>
-												</div>
-												<div class="weui-media-box__desc">2017-8-14 09:14:42</div>
-											</div>
-										</div>
-										<div class="relate-reply-content">
-											<div class="relate-reply-content-text">
-												<div class="relate-reply-content-limit">
-													<div class="relate-reply-content-name">
-														张一
-													</div>
-													：一二三四五六七八九十一二三四五六七八九十
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="weui-media-box relate-reply-type-comment">
-										<div class="weui-media-box_appmsg">
-											<div class="weui-media-box__hd class-circle-headimage-hd">
-												<img class="weui-media-box__thumb class-circle-headimage" src="../../image/config/func_actssm.jpg" />
-											</div>
-											<div class="weui-media-box__bd">
-												<div class="class-circle-title">
-													<div class="weui-media-box__title relate-name">
-														标题一标题
-													</div>
-													<div class="relate-reply-type">评论了我</div>
-													<div class="relate-reply">回复</div>
-												</div>
-												<div class="weui-media-box__desc">2017-8-14 09:14:42</div>
-											</div>
-										</div>
-										<div>一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十</div>
-										<div class="relate-reply-content">
-											<div class="relate-reply-content-img">
-												<img src="http://www.w3school.com.cn/i/bg_flower_small.gif" />
-											</div>
-											<div class="relate-reply-content-text">
-												<div class="relate-reply-content-limit">
-													<div class="relate-reply-content-name">
-														张一
-													</div>
-													：一二三四五六七八九十一二三四五六七八九十
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="weui-media-box relate-reply-type-comment">
-										<div class="weui-media-box_appmsg">
-											<div class="weui-media-box__hd class-circle-headimage-hd">
-												<img class="weui-media-box__thumb class-circle-headimage" src="../../image/config/func_actssm.jpg" />
-											</div>
-											<div class="weui-media-box__bd">
-												<div class="class-circle-title">
-													<div class="weui-media-box__title relate-name">
-														标题一标题一标一标
-													</div>
-													<div class="relate-reply-type">评论了我</div>
-													<div class="relate-reply">回复</div>
-												</div>
-												<div class="weui-media-box__desc">2017-8-14 09:14:42</div>
-											</div>
-										</div>
-										<div>一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十</div>
-										<div class="relate-reply-content">
-											<div class="relate-reply-content-img">
-												<img src="http://www.w3school.com.cn/i/bg_flower_small.gif" />
-											</div>
-											<div class="relate-reply-content-text">
-												<div class="relate-reply-content-limit">
-													<div class="relate-reply-content-name">
-														张一
-													</div>
-													：一二三四五六七八九十一二三四五六七八九十
-												</div>
-											</div>
-										</div>
-										<div class="class-circle-comment-bg">
-											<div class="class-circle-comment-item">
-												<div class="class-circle-comment-name">壹</div>
-												<div class="class-circle-comment-content">：一二三四 </div>
-											</div>
-											<div class="class-circle-comment-item">
-												<div class="class-circle-comment-name">贰</div>
-												<div class="class-circle-comment-content">回复</div>
-												<div class="class-circle-comment-name">壹</div>
-												<div class="class-circle-comment-content">：一二三四五六七八九十</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="weui-loadmore">
-								<i class="weui-loading"></i>
-								<span class="weui-loadmore__tips">正在加载</span>
-							</div>
-						</div>
+						<home-bd-item v-for="(value,index) in home_tab" :key="index" :value="value" :index="index" :is_on="is_on"></home-bd-item>
 					</div>
 				</div>
 				<router-link to="/add" class="class-circle-report">+ 发表动态</router-link>
 			</div>
 		</template>
+		<!--班级圈主页--顶部导航-->
+		<template id="temp_trends_navbar_item">
+			<div class="weui-navbar__item" :class="isOnClass" @click="click(index)">
+				<div>{{value.title}}</div>
+			</div>
+		</template>
+		<!--班级圈主页--底部内容-->
+		<template id="temp_trends_tab_bd_item">
+			<div :id="value.id" class="weui-tab__bd-item weui-pull-to-refresh" :class="isOnClass">
+				<div class="weui-pull-to-refresh__layer">
+					<div class="weui-pull-to-refresh__arrow"></div>
+					<div class="weui-pull-to-refresh__preloader"></div>
+					<div class="down">下拉刷新</div>
+					<div class="up">释放刷新</div>
+					<div class="refresh">正在刷新</div>
+				</div>
+				<div class="weui-panel weui-panel_access">
+					<div class="weui-panel__bd">
+						<template v-if="value.id=='relate_to_me'">
+							<relate-item></relate-item>
+						</template>
+						<template v-else>
+							<trends-item v-for="(item_value,item_index) in value.data" :key="index" :value="item_value"></trends-item>
+						</template>
+					</div>
+				</div>
+				<div class="weui-loadmore">
+					<i class="weui-loading"></i>
+					<span class="weui-loadmore__tips">正在加载</span>
+				</div>
+			</div>
+		</template>
+		<!--动态模版-->
 		<template id="template_trends">
-			<!--动态模版-->
 			<div class="weui-media-box">
 				<div class="weui-media-box_appmsg">
 					<div class="weui-media-box__hd class-circle-headimage-hd">
@@ -385,8 +138,8 @@
 				</div>
 			</div>
 		</template>
-		<template id="temp_relate_to_me_praise">
-			<!--与我相关模板-->
+		<!--与我相关模板-->
+		<template id="temp_relate_to_me">
 			<div class="weui-media-box relate-reply-type-praise">
 				<div class="weui-media-box_appmsg">
 					<div class="weui-media-box__hd class-circle-headimage-hd">
@@ -417,8 +170,8 @@
 				</div>
 			</div>
 		</template>
+		<!--与我相关模板-->
 		<template id="temp_relate_to_me_comment">
-			<!--与我相关模板-->
 			<div class="weui-media-box relate-reply-type-comment">
 				<div class="weui-media-box_appmsg">
 					<div class="weui-media-box__hd class-circle-headimage-hd">
@@ -464,7 +217,16 @@
 			</div>
 		</template>
 		<template id="temp_add_trends">
-			<div>发表动态</div>
+			<div class="class-circle-add">
+				<textarea class="weui-textarea" placeholder="请输入内容" rows="5" maxlength="6000"></textarea>
+				<div class="class-circle-add-media">
+					<div class="iconfont icon-tuku"></div>
+					<div class="iconfont icon-xiangji2"></div>
+					<div class="iconfont icon-yuyin3"></div>
+					<div class="iconfont icon-shipin2"></div>
+				</div>
+				<button class="weui-btn weui-btn_primary">提交</button>
+			</div>
 		</template>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");

@@ -20,15 +20,18 @@ var request = (function(mod) {
 			}
 		})
 	}
-	mod.getDepartPersons = function(id, callback) {
+	mod.getDepartPersons = function(id, colv, callback) {
 		mod.postData(consts.MAINURL, JSON.stringify({
 			cmd: "departpersons",
 			type: 'findpage',
-			colid: id
+			colid: id,
+			colv: colv
 		}), function(response) {
 			console.log("获取的部门人员列表列表值：" + JSON.stringify(response));
 			if(response.RspCode == 0) {
 				callback(response.RspData);
+			} else {
+				callback([]);
 			}
 		})
 	}

@@ -54,5 +54,23 @@ var events = (function(mod) {
 		console.log("获取的是否值是否存在于数组中：" + JSON.stringify(arrs));
 		return arrs;
 	}
+	mod.getSessionMap = function(key) {
+		if(sessionStorage.getItem(key)) {
+			return JSON.parse(sessionStorage.getItem(key));
+		}
+		return {};
+	}
+	mod.getSessionMapValue = function(storageKey, key) {
+		var map = mod.getSessionMap(storageKey);
+		if(map[key]) {
+			return map[key];
+		}
+		return [];
+	}
+	mod.setSesionMapValue = function(storageKey, key, value) {
+		var map = mod.getSessionMap(storageKey);
+		map[key] = value;
+		sessionStorage.setItem(storageKey, map);
+	}
 	return mod;
 })(events || {})

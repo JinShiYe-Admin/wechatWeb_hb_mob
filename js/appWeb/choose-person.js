@@ -202,6 +202,8 @@ Vue.component("person-list", {
 		isItemChecked: function(item) {
 			console.log("********isItemChecked********");
 			console.log("要设置的item的数据：" + JSON.stringify(item));
+			console.log("部门对应的人员的map值：" + JSON.stringify(events.getSessionMap(consts.KEY_CHOSE_MAP)));
+			console.log("已选部门的值：" + JSON.stringify(events.getSessionArray(consts.KEY_CHOOSE_DEPARTS)));
 			if(item.userid) { //如果是人员 测试
 				return events.isExistInArray(events.getSessionMapValue(consts.KEY_CHOSE_MAP, this.$route.params.id))[1] >= 0;
 			} else { //如果是部门

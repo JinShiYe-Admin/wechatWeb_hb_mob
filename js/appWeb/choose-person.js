@@ -121,7 +121,7 @@ Vue.component("person-list", {
 					});
 				}
 			} else {
-				console.log("沒有子部门时，获取成员，子部门：" + JSON.stingify(departs));
+				console.log("沒有子部门时，获取成员，子部门：" + JSON.stringify(departs));
 				com.getCurPersen(departs);
 			}
 		},

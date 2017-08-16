@@ -88,7 +88,7 @@ Vue.component("person-list", {
 			}
 		},
 		requestChildren: function() { //获取部门内部信息
-			console.log("*********获取本页列表数据******");
+			console.log("*********requestChildren获取本页列表数据******");
 			var parentId = 0;
 			if(this.depart_id === -1) {
 				parentId = 1;
@@ -110,7 +110,7 @@ Vue.component("person-list", {
 			var com = this;
 			if(departs.length > 0) {
 				for(var i in departs) {
-					this.getDepartAllPersen(departs[i].value, function(data) {
+					this.getDepartAllPersen(departs[i], function(data) {
 						count++;
 						departs[i].persen = data;
 						if(count == departs.length) {
@@ -130,9 +130,9 @@ Vue.component("person-list", {
 		 * @param {Object} departId
 		 * @param {Function} callback 回调
 		 */
-		getDepartAllPersen: function(departId, callback) {
+		getDepartAllPersen: function(depart, callback) {
 			console.log("********getDepartAllPersen********");
-			request.getDepartPersons(departId, 1, function(data) {
+			request.getDepartPersons(depart, 1, function(data) {
 				console.log("递归获取的本部门人员:" + JSON.stringify(data));
 				callback(data);
 			})
@@ -143,6 +143,12 @@ Vue.component("person-list", {
 		getCurPersen: function(departs) {
 			console.log("********getCurPersen获取当前部门人员********");
 			var com = this;
+			var id;
+			if(com.$route.params.id == -1) {
+				id = 1
+			} else {
+				id = com.$route.params.id
+			}
 			request.getDepartPersons(com.$route.params.id, 0, function(data) {
 				console.log("获取的本部门人员:" + JSON.stringify(data));
 				var children = data.concat(departs);
@@ -195,6 +201,7 @@ Vue.component("person-list", {
 		},
 		isItemChecked: function(item) {
 			console.log("********isItemChecked********");
+			console.log("要设置的item的数据：" + JSON.stringify(item));
 			if(item.userid) { //如果是人员 测试
 				return events.isExistInArray(events.getSessionMapValue(consts.KEY_CHOSE_MAP, this.$route.params.id))[1] >= 0;
 			} else { //如果是部门

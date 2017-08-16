@@ -21,6 +21,9 @@ var request = (function(mod) {
 		})
 	}
 	mod.getDepartPersons = function(id, colv, callback) {
+		if(typeof(id.value) !== "undefined") {
+			id = id.value;
+		}
 		mod.postData(consts.MAINURL, JSON.stringify({
 			cmd: "departpersons",
 			type: 'findpage',

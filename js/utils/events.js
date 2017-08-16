@@ -55,6 +55,7 @@ var events = (function(mod) {
 		return arrs;
 	}
 	mod.getSessionMap = function(key) {
+		console.log("****getSessionMap***获取的本地值:" + sessionStorage.getItem(key));
 		if(sessionStorage.getItem(key)) {
 			return JSON.parse(sessionStorage.getItem(key));
 		}
@@ -62,6 +63,7 @@ var events = (function(mod) {
 	}
 	mod.getSessionMapValue = function(storageKey, key) {
 		var map = mod.getSessionMap(storageKey);
+		console.log("***getSessionMapValue***获取的部门已选择的人的数组" + JSON.stringify(map));
 		if(map[key]) {
 			return map[key];
 		}
@@ -70,7 +72,8 @@ var events = (function(mod) {
 	mod.setSesionMapValue = function(storageKey, key, value) {
 		var map = mod.getSessionMap(storageKey);
 		map[key] = value;
-		sessionStorage.setItem(storageKey, map);
+		sessionStorage.setItem(storageKey, JSON.stringify(map));
+		console.log("****setSesionMapValue***放置的本地值：" + JSON.stringify(map));
 	}
 	return mod;
 })(events || {})

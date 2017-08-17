@@ -188,38 +188,40 @@ var vm_time_table = new Vue({
 		})
 		// 时间选择器
 		mui('.time-table-content').on('tap', '.other', function() {
-			var self = this;
-			for(var i = 0; i < vm_time_table.departs_array.length; i++) {
-				var departs = vm_time_table.departs_array[i]
-				for(var j = 0; j < departs.children.length; j++) {
-					var kemu = departs.children[j];
-					kemu.children = vm_time_table.sub_array;
-				}
-			}
-			console.log("部门数组:" + JSON.stringify(vm_time_table.departs_array))
-
-			// 多列选择器
-			weui.picker(vm_time_table.departs_array, {
-				depth: 3,
-				defaultValue: [1, "like", 4],
-				onChange: function onChange(result) {
-					//										console.log(result);
-				},
-				onConfirm: function onConfirm(result) {
-					console.log(JSON.stringify(result));
-					var tempArr = self.id.split('-');
-					var index = tempArr[0];
-					var list_value = tempArr[1]
-					var model = vm_time_table.items_array[index]
-					model[list_value + "subname"] = result[2].label;
-					model[list_value + "uname"] = result[1].label;
-					var callcol = list_value;
-					var colv = result[2].value + "|" + result[2].label + "|" + result[1].value + "|" + result[1].label
-					var colid = model.weekrowid
-					editEduleweek(colv, callcol, colid);
-				},
-				id: 'cascadePicker'
-			});
+			utils.mOpenWithData("choose-person.html", {});
+			
+//			var self = this;
+//			for(var i = 0; i < vm_time_table.departs_array.length; i++) {
+//				var departs = vm_time_table.departs_array[i]
+//				for(var j = 0; j < departs.children.length; j++) {
+//					var kemu = departs.children[j];
+//					kemu.children = vm_time_table.sub_array;
+//				}
+//			}
+//			console.log("部门数组:" + JSON.stringify(vm_time_table.departs_array))
+//
+//			// 多列选择器
+//			weui.picker(vm_time_table.departs_array, {
+//				depth: 3,
+//				defaultValue: [1, "like", 4],
+//				onChange: function onChange(result) {
+//					//										console.log(result);
+//				},
+//				onConfirm: function onConfirm(result) {
+//					console.log(JSON.stringify(result));
+//					var tempArr = self.id.split('-');
+//					var index = tempArr[0];
+//					var list_value = tempArr[1]
+//					var model = vm_time_table.items_array[index]
+//					model[list_value + "subname"] = result[2].label;
+//					model[list_value + "uname"] = result[1].label;
+//					var callcol = list_value;
+//					var colv = result[2].value + "|" + result[2].label + "|" + result[1].value + "|" + result[1].label
+//					var colid = model.weekrowid
+//					editEduleweek(colv, callcol, colid);
+//				},
+//				id: 'cascadePicker'
+//			});
 
 		})
 	}
@@ -317,8 +319,10 @@ function getDepartpersons(id, index) {
 	var tempData = {
 		cmd: 'departpersons',
 		type: 'findpage',
-		colid: id
+		colid: id,
+		colv:1
 	}
+	console.log(JSON.stringify(tempData))
 	unitWebsitePro(tempData, function(data) {
 		console.log('人员:' + JSON.stringify(data));
 		if(data.RspCode == 0) {

@@ -68,7 +68,7 @@
 				<div class="weui-panel weui-panel_access">
 					<div class="weui-panel__bd">
 						<template v-if="value.id=='relate_to_me'">
-							<relate-item></relate-item>
+							<relate-item v-for="(item_value,item_index) in value.data" :key="index" :value="item_value"></relate-item>
 						</template>
 						<template v-else>
 							<trends-item v-for="(item_value,item_index) in value.data" :key="index" :value="item_value"></trends-item>
@@ -115,6 +115,12 @@
 					<div class="class-circle-grids-item">
 						<img src="https://www.baidu.com/img/bd_logo1.png" />
 					</div>
+				</div>
+				<div class="class-circle-function">
+					<div class="class-circle-views">浏览数 200</div>
+					<div class="iconfont icon-trash"></div>
+					<div class="iconfont icon-newmessage"></div>
+					<div class="iconfont icon-dianzan"></div>
 				</div>
 				<div class="class-circle-praise-comment">
 					<div class="class-circle-triangle"></div>

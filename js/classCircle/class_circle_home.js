@@ -114,6 +114,7 @@ var add_trends_data = {
 	images: [], //图片，限制9张
 	video: '' //视频，限制一个
 }
+var mineInfo; //我的个人信息model,查看参数详细信息请访问:http://open.work.weixin.qq.com/wwopen/doc#10019
 
 window.onload = function() {
 	$.showLoading('正在加载');
@@ -302,12 +303,26 @@ function getUserInfo(id) {
 		colid: id
 	}
 	unitWebsitePro(tempData, function(data) {
-		$.alert('getUserInfo:' + JSON.stringify(data));
-		if(data.RspCode == 0 && data.RspData.length > 0) {
-			$.hideLoading();
+		console.log('getUserInfo:' + JSON.stringify(data));
+		if(data.RspCode == 0 && data.RspData.userid != undefined) {
+			if(id == 0) {
+				//成功获取我的信息
+				mineInfo = data.RspData;
+				//获取我所属的部门的所有成员
+				var getMemberData = [];
+				for(var i = 0; i < mineInfo.department.length; i++) {
+					getMemberData.push({
+						departmentId: mineInfo.department[i]
+					});
+				}
+			}
 		} else {
 			$.hideLoading();
 			$.alert(data.RspTxt, "加载失败");
 		}
 	});
+}
+
+function getDepartmentMember() {
+
 }

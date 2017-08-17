@@ -92,7 +92,7 @@ var home_data = {
 		title: "全部动态", //tab的名称
 		scrollTop: 0, //tab列表的滚动距离
 		leave: false, //是否离开
-		data: ['1', '2'] //tab列表的数据
+		data: [] //tab列表的数据
 	}, {
 		id: "mine_trends",
 		title: "我的动态",
@@ -104,7 +104,7 @@ var home_data = {
 		title: "与我相关",
 		scrollTop: 0,
 		leave: false,
-		data: ['1', '2', '3', '4', '1', '2', '3', '4']
+		data: []
 	}]
 };
 //发布动态页面数据
@@ -116,7 +116,9 @@ var add_trends_data = {
 }
 
 window.onload = function() {
-	initRouter();
+	$.showLoading('正在加载');
+	getUserInfo(0);
+	//initRouter();
 }
 
 //设置路由
@@ -287,4 +289,25 @@ function toBeforePosition(timeId, index) {
 	} else {
 		clearInterval(timeId);
 	}
+}
+
+/**
+ * 获取用户的信息
+ * @param {Object} id
+ */
+function getUserInfo(id) {
+	var tempData = {
+		cmd: 'userinfo',
+		type: 'findpage',
+		colid: id
+	}
+	unitWebsitePro(tempData, function(data) {
+		$.alert('getUserInfo:' + JSON.stringify(data));
+		if(data.RspCode == 0 && data.RspData.length > 0) {
+			$.hideLoading();
+		} else {
+			$.hideLoading();
+			$.alert(data.RspTxt, "加载失败");
+		}
+	});
 }

@@ -25,10 +25,24 @@ var sendConfigPro = function(configmsg, apiList) {
 
 //发送对应的网站协议，根据页面传送的data
 var unitWebsitePro = function(data0, callback) {
-	jQuery.post('https://jsypay.jiaobaowang.net/wxth/appschweb/schwebapi.aspx', JSON.stringify(data0), function(data1) {
-		//		alert('协议返回:'+JSON.stringify(data1));
-		console.log('协议返回:' + JSON.stringify(data1));
-		callback(data1);
+	jQuery.ajax({
+		url: 'https://jsypay.jiaobaowang.net/wxth/appschweb/schwebapi.aspx',
+		type: "POST",
+		data: JSON.stringify(data0),
+		timeout: 1000,
+		dataType: "json",
+		async: true,
+		success: function(success_data) { //请求成功的回调
+			console.log('请求成功:' + JSON.stringify(success_data));
+			callback(success_data);
+		},
+		error: function(xhr, type, errorThrown) {
+			console.log('请求失败:' + JSON.stringify(xhr) + " " + type);
+			callback({
+				RspCode: 404,
+				RspData: null,
+				RspTxt: type
+			});
+		}
 	});
 }
-

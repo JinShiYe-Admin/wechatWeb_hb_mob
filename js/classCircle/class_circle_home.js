@@ -5,13 +5,13 @@ Vue.component("home-navbar-item", {
 	computed: {
 		isOnClass: function() {
 			return {
-				'weui-bar__item--on': this.index == this.is_on
+				'weui-bar__item--on': this.index == this.is_on //计算点中的选项
 			}
 		}
 	},
 	methods: {
 		/**
-		 * 点击item
+		 * 点击顶部导航选项
 		 * @param {Object} index
 		 */
 		click: function(index) {
@@ -26,8 +26,50 @@ Vue.component("home-bd-item", {
 	computed: {
 		isOnClass: function() {
 			return {
-				'weui-tab__bd-item--active': this.index == this.is_on
+				'weui-tab__bd-item--active': this.index == this.is_on //计算显示的列表
 			}
+		}
+	}
+});
+
+//添加动态组件
+Vue.component("add-trends", {
+	template: "#temp_add_trends_com",
+	props: ["content"],
+	data: function() {
+		return {
+			com_content: this.content //组件内的content
+		}
+	},
+	methods: {
+		/**
+		 * 点击添加多媒体
+		 * @param {Object} type 0,图库;1,相机
+		 */
+		addMedia: function(type) {
+			this.$emit("add-media", type);
+		},
+		/**
+		 * 点击提交按钮
+		 */
+		commit: function() {
+			this.$emit("commit");
+		}
+	},
+	watch: {
+		/**
+		 * 监控组件外的content
+		 * @param {Object} val
+		 */
+		content: function(val) {
+			this.com_content = val;
+		},
+		/**
+		 * 监控组件内的content
+		 * @param {Object} val
+		 */
+		com_content: function(val) {
+			this.$emit("content-change", val);
 		}
 	}
 });
@@ -41,6 +83,7 @@ Vue.component("relate-item", {
 	template: "#temp_relate_to_me",
 	props: ["value"]
 });
+
 //班级圈主页数据
 var home_data = {
 	is_on: 0, //当前显示的列表
@@ -66,7 +109,10 @@ var home_data = {
 };
 //发布动态页面数据
 var add_trends_data = {
-	message: ""
+	allback: true,
+	content: "", //文字，限制6000字
+	images: [], //图片，限制9张
+	video: '' //视频，限制一个
 }
 
 window.onload = function() {
@@ -137,6 +183,42 @@ function initRouter() {
 		data: function() {
 			return add_trends_data;
 		},
+		methods: {
+			/**
+			 * 点击添加多媒体
+			 * @param {Object} type 0,图库;1,相机
+			 */
+			addMedia: function(type) {
+				console.log("add_trends-addMedia:" + type);
+			},
+			/**
+			 * 点击提交按钮
+			 */
+			commit: function() {
+				console.log("add_trends-commit:");
+				var commitContent = $.trim(add_trends_data.content);
+				console.log("commitContent:" + commitContent);
+				if(commitContent === "") {
+					$.toast("请输入内容", "forbidden");
+					return
+				} else {
+					$.showLoading('正在上传数据');
+					add_trends_data.allback = false;
+					setTimeout(function() {
+						$.hideLoading();
+						$.toast("发布成功");
+						add_trends_data.allback = true;
+					}, 3000);
+				}
+			},
+			/**
+			 * 组件内的content变化的监控
+			 * @param {Object} val
+			 */
+			contentChange: function(val) {
+				add_trends_data.content = val; //组件内外content双向绑定
+			}
+		},
 		beforeRouteEnter: function(to, from, next) {
 			console.log("add-beforeRouteEnter:");
 			console.log("to:" + to.path);
@@ -147,7 +229,7 @@ function initRouter() {
 			console.log("add-beforeRouteLeave:");
 			console.log("to:" + to.path);
 			console.log("from:" + from.path);
-			next();
+			next(add_trends_data.allback);
 		}
 	};
 

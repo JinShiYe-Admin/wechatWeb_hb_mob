@@ -35,7 +35,7 @@
 		<div id="class_circle_app">
 			<router-view></router-view>
 		</div>
-		<!--班级圈主页-->
+		<!--路由--班级圈主页-->
 		<template id="temp_class_circle_home">
 			<div>
 				<div class="weui-tab">
@@ -48,6 +48,10 @@
 				</div>
 				<router-link to="/add" class="class-circle-report">+ 发表动态</router-link>
 			</div>
+		</template>
+		<!--路由--发布动态-->
+		<template id="temp_add_trends">
+			<add-trends :content="content" @add-media="addMedia" @commit="commit" @content-change="contentChange"></add-trends>
 		</template>
 		<!--班级圈主页--顶部导航-->
 		<template id="temp_trends_navbar_item">
@@ -222,16 +226,15 @@
 				</div>
 			</div>
 		</template>
-		<template id="temp_add_trends">
+		<!--发布动态组件-->
+		<template id="temp_add_trends_com">
 			<div class="class-circle-add">
-				<textarea class="weui-textarea" placeholder="请输入内容" rows="5" maxlength="6000"></textarea>
+				<textarea class="weui-textarea" v-model="com_content" placeholder="请输入内容" rows="6" maxlength="6000"></textarea>
 				<div class="class-circle-add-media">
-					<div class="iconfont icon-tuku"></div>
-					<div class="iconfont icon-xiangji2"></div>
-					<div class="iconfont icon-yuyin3"></div>
-					<div class="iconfont icon-shipin2"></div>
+					<div class="iconfont icon-tuku" @click="addMedia(0)"></div>
+					<div class="iconfont icon-xiangji2" @click="addMedia(1)"></div>
 				</div>
-				<button class="weui-btn weui-btn_primary">提交</button>
+				<button class="weui-btn weui-btn_primary" @click="commit">提交</button>
 			</div>
 		</template>
 		<script type="text/javascript">

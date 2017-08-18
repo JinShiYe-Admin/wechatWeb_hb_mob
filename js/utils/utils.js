@@ -83,5 +83,35 @@ var utils = (function(mod) {
 		}
 	}
 
+	/**
+	 * 给头像添加默认值
+	 * @param {Object} string 传过来的头像url
+	 * @param {Object} flag 当前调用界面对于默认头像的层级关系
+	 */
+	mod.updateHeadImage = function(string, flag) {
+		var tempStr = '';
+		//判断img是否为null，或者空
+		if(string == '' || string == null || string == 'null' || string == undefined) { //赋值
+			switch(flag) {
+				case 0:
+					tempStr = 'image/utils/default_personalimage.png';
+					break;
+				case 1:
+					tempStr = '../image/utils/default_personalimage.png';
+					break;
+				case 2:
+				default:
+					tempStr = '../../image/utils/default_personalimage.png';
+					break;
+				case 3:
+					tempStr = '../../image/utils/default_personalimage.png';
+					break;
+			}
+		} else {
+			tempStr = string;
+		}
+		return tempStr;
+	}
+
 	return mod;
 })(window.utils || {});

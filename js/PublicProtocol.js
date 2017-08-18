@@ -25,19 +25,31 @@ var sendConfigPro = function(configmsg, apiList) {
 
 //发送对应的网站协议，根据页面传送的data
 var unitWebsitePro = function(data0, callback) {
+	jQAjaxPost('https://jsypay.jiaobaowang.net/wxth/appschweb/schwebapi.aspx', JSON.stringify(data0), callback);
+}
+
+/**
+ * 发送 jQuery ajax post 的请求
+ * @param {Object} url 路径
+ * @param {Object} data 数据
+ * @param {Object} callback 回调
+ */
+var jQAjaxPost = function(url, data, callback) {
+	console.log('jQAP-Url:' + url);
+	console.log('jQAP-Data:' + data);
 	jQuery.ajax({
-		url: 'https://jsypay.jiaobaowang.net/wxth/appschweb/schwebapi.aspx',
+		url: url,
 		type: "POST",
-		data: JSON.stringify(data0),
+		data: data,
 		timeout: 1000,
 		dataType: "json",
 		async: true,
 		success: function(success_data) { //请求成功的回调
-			console.log('请求成功:' + JSON.stringify(success_data));
+			console.log('jQAP-Success:' + JSON.stringify(success_data));
 			callback(success_data);
 		},
 		error: function(xhr, type, errorThrown) {
-			console.log('请求失败:' + JSON.stringify(xhr) + " " + type);
+			console.log('jQAP-Error:' + JSON.stringify(xhr) + " " + type);
 			callback({
 				RspCode: 404,
 				RspData: null,

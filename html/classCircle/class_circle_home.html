@@ -79,7 +79,7 @@
 						</template>
 					</div>
 				</div>
-				<div class="weui-loadmore">
+				<div :id="'loadmore_' + value.id" class="weui-loadmore" v-show="value.show_loadmore">
 					<i class="weui-loading"></i>
 					<span class="weui-loadmore__tips">正在加载</span>
 				</div>
@@ -90,19 +90,19 @@
 			<div class="weui-media-box">
 				<div class="weui-media-box_appmsg">
 					<div class="weui-media-box__hd class-circle-headimage-hd">
-						<img class="weui-media-box__thumb class-circle-headimage" src="http://www.w3school.com.cn/i/bg_flower_small.gif" />
+						<img class="weui-media-box__thumb class-circle-headimage" :src="value.PublisherImage" />
 					</div>
 					<div class="weui-media-box__bd">
 						<div class="class-circle-title">
-							<div class="weui-media-box__title">标题一</div>
-							<div class="class-circle-mark">一年级一班</div>
+							<div class="weui-media-box__title">{{value.PublisherName}}</div>
+							<!--<div class="class-circle-mark"></div>-->
 						</div>
-						<div class="weui-media-box__desc">2017-8-14 09:14:42</div>
+						<div class="weui-media-box__desc">{{value.PublishDate}}</div>
 					</div>
 				</div>
-				<div class="class-circle-content-limit">一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十</div>
-				<div class="class-circle-show-all">展开全部</div>
-				<img class="class-circle-content-img" src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2760619582,1034521198&fm=11&gp=0.jpg" />
+				<div class="class-circle-content-limit">{{value.MsgContent}}</div>
+				<!--<div class="class-circle-show-all">展开全部</div>-->
+				<!--<img class="class-circle-content-img" src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2760619582,1034521198&fm=11&gp=0.jpg" />
 				<div class="class-circle-grids">
 					<div class="class-circle-grids-item">
 						<img src="https://www.baidu.com/img/bd_logo1.png" />
@@ -119,9 +119,9 @@
 					<div class="class-circle-grids-item">
 						<img src="https://www.baidu.com/img/bd_logo1.png" />
 					</div>
-				</div>
+				</div>-->
 				<div class="class-circle-function">
-					<div class="class-circle-views">浏览数 200</div>
+					<div class="class-circle-views">浏览数 {{value.ReadCnt}}</div>
 					<div class="iconfont icon-trash"></div>
 					<div class="iconfont icon-newmessage"></div>
 					<div class="iconfont icon-dianzan"></div>
@@ -239,14 +239,15 @@
 		</template>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/mui.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-2.1.4.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-weui.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/swiper.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/weui.min.js?" + Math.random() + "'></s" + "cript>");
+			//			document.write("<s" + "cript type='text/javascript' src='../../js/weui.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/vue.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/vue-router.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/vconsole/vconsole.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_protocol.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_home.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 	</body>

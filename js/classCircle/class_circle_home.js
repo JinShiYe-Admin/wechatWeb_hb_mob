@@ -92,18 +92,24 @@ var home_data = {
 		title: "全部动态", //tab的名称
 		scrollTop: 0, //tab列表的滚动距离
 		leave: false, //是否离开
+		show_loadmore: true, //是否显示加载更多
+		allow_loadmore: false, //允许加载更多
 		data: [] //tab列表的数据
 	}, {
 		id: "mine_trends",
 		title: "我的动态",
 		scrollTop: 0,
 		leave: false,
+		show_loadmore: true,
+		allow_loadmore: false,
 		data: []
 	}, {
 		id: "relate_to_me",
 		title: "与我相关",
 		scrollTop: 0,
 		leave: false,
+		show_loadmore: true,
+		allow_loadmore: false,
 		data: []
 	}]
 };
@@ -114,12 +120,42 @@ var add_trends_data = {
 	images: [], //图片，限制9张
 	video: '' //视频，限制一个
 }
-var mineInfo; //我的个人信息model,查看参数详细信息请访问:http://open.work.weixin.qq.com/wwopen/doc#10019
+var mineUserInfo = {
+	"userid": "moshanglin",
+	"name": "莫尚霖",
+	"department": [
+		11
+	],
+	"order": [
+		0
+	],
+	"position": "",
+	"mobile": null,
+	"english_name": "",
+	"gender": 1,
+	"isleader": 0,
+	"telephone": null,
+	"email": null,
+	"weixinid": null,
+	"avatar": "http: //shp.qpic.cn/bizmp/LlAHpaR9WIamIqUyfAicDggv1icib12xUv983mowPgnEeMwjJRENdrYhg/",
+	"status": 1,
+	"extattr": null,
+	"errcode": 0,
+	"errmsg": "ok",
+	"P2PData": null
+}; //我的个人信息model,查看参数详细信息请访问:http://open.work.weixin.qq.com/wwopen/doc#10019
+var departUserInfo = {
+	key: [],
+	value: {}
+}; //记录所有人的用户信息
+var temp_data; //临时变量;用于查询我所处部门的所有成员
+var router; //路由
 
 window.onload = function() {
 	$.showLoading('正在加载');
-	getUserInfo(0);
-	//initRouter();
+	initRouter();
+	temp_data = 0;
+	getDepartmentMember(mineUserInfo.department[temp_data]);
 }
 
 //设置路由
@@ -236,42 +272,38 @@ function initRouter() {
 		}
 	};
 
-	var routes = [{
-		path: '/home',
-		component: class_circle_home
-	}, {
-		path: '/add',
-		component: add_trends
-	}];
-
-	var router = new VueRouter({
-		routes: routes
+	//配置路由
+	router = new VueRouter({
+		routes: [{
+			path: '/home',
+			component: class_circle_home
+		}, {
+			path: '/add',
+			component: add_trends
+		}]
 	});
 
 	var class_circle_app = new Vue({
 		router: router
 	}).$mount('#class_circle_app');
-
-	router.push('home');
 }
 
 function initScroll() {
+	/**
+	 * 初始化下拉刷新
+	 */
 	$(".weui-tab__bd-item").pullToRefresh();
-	$(".weui-tab__bd-item").infinite();
 	$(".weui-tab__bd-item").on("pull-to-refresh", function() {
 		var self = this
 		setTimeout(function() {
 			$(self).pullToRefreshDone();
 		}, 2000)
 	});
-	var loading = false; //状态标记
+
+	//初始化加载更多
+	$(".weui-tab__bd-item").infinite();
 	$(".weui-tab__bd-item").infinite().on("infinite", function() {
-		if(loading) return;
-		console.log("loading");
-		loading = true;
-		setTimeout(function() {
-			loading = false;
-		}, 1500); //模拟延迟
+		console.log("loadmore:" + this.id)
 	});
 }
 
@@ -307,14 +339,10 @@ function getUserInfo(id) {
 		if(data.RspCode == 0 && data.RspData.userid != undefined) {
 			if(id == 0) {
 				//成功获取我的信息
-				mineInfo = data.RspData;
+				mineUserInfo = data.RspData;
 				//获取我所属的部门的所有成员
-				var getMemberData = [];
-				for(var i = 0; i < mineInfo.department.length; i++) {
-					getMemberData.push({
-						departmentId: mineInfo.department[i]
-					});
-				}
+				temp_data = 0;
+				getDepartmentMember(mineUserInfo.department[temp_data]);
 			}
 		} else {
 			$.hideLoading();
@@ -323,6 +351,77 @@ function getUserInfo(id) {
 	});
 }
 
-function getDepartmentMember() {
+/**
+ * 处理获取的成员信息
+ * @param {Object} data
+ */
+function disposeMemberData(data) {
+	console.log("disposeMemberData:", data);
+	if(data.RspCode == 0) {
+		for(var i = 0; i < data.RspData.length; i++) {
+			if(departUserInfo.value[data.RspData[i].userid] === undefined) {
+				departUserInfo.key.push(data.RspData[i].userid);
+				departUserInfo.value[data.RspData[i].userid] = $.extend(true, {}, data.RspData[i]);
+			}
+		}
+	}
+	if(temp_data == mineUserInfo.department.length - 1) {
+		//查询完我所处部门的所有成员
+		console.log("departUserInfo:" + departUserInfo);
+		//显示班级圈主页
+		router.push('home');
+		$.hideLoading();
+		//获取全部动态
+		getAllUserSpaces(1);
+	} else {
+		temp_data++;
+		getDepartmentMember(mineUserInfo.department[temp_data]);
+	}
+}
 
+/**
+ * 发送请求获取部门的所有的成员
+ * @param {Object} 部门id
+ */
+function getDepartmentMember(id) {
+	var tempData = {
+		cmd: 'departpersons',
+		type: 'findpage',
+		colid: id,
+		colv: 0,
+		callcol: "info"
+	}
+	unitWebsitePro(tempData, disposeMemberData);
+}
+
+//获取全部动态
+function getAllUserSpaces(pageIndex) {
+	var postData = {
+		userId: mineUserInfo.userid, //用户ID
+		publisherIds: departUserInfo.key, //发布者ID
+		pageIndex: pageIndex, //当前页数
+		pageSize: 10 //每页记录数
+	}
+	classCircleProtocol.getAllUserSpacesByUser(postData, function(data) {
+		console.log("getAllUserSpacesByUser:" + JSON.stringify(data));
+		if(data.RspCode == 0) {
+			console.log("length:" + data.RspData.Data.length);
+			for(var i = 0; i < data.RspData.Data.length; i++) {
+				//设置发布者的信息
+				var temp_0 = data.RspData.Data[i];
+				//temp_0.PublisherId="moshanglin"
+				var userInfo = departUserInfo.value[temp_0.PublisherId];
+				if(userInfo != undefined) {
+					temp_0.PublisherName = userInfo.name;
+					temp_0.PublisherImage = utils.updateHeadImage(userInfo.avatar, 2);
+				} else {
+					temp_0.PublisherName = temp_0.PublisherId;
+					temp_0.PublisherImage = utils.updateHeadImage("", 2);
+				}
+				home_data.home_tab[0].data.push(temp_0);
+			}
+		} else {
+			$.alert(data.RspTxt, "加载失败");
+		}
+	});
 }

@@ -124,7 +124,7 @@ Vue.component("person-list", {
 
 		getDepartAllPersen: function(depart, callback) {
 			console.log("********getDepartAllPersen********");
-			request.getDepartPersons(depart, 1, function(data) {
+			request.getDepartPersons(depart, 1, 0, function(data) {
 				console.log("递归获取的本部门人员:" + JSON.stringify(data));
 				callback(data);
 			})
@@ -172,7 +172,7 @@ Vue.component("person-list", {
 		 */
 		getDepartPersen: function(depart, callback) {
 			console.log("********getDepartAllPersen********");
-			request.getDepartPersons(depart, 0, function(data) {
+			request.getDepartPersons(depart, 0, 0, function(data) {
 				console.log("递归获取的本部门人员:" + JSON.stringify(data));
 				callback(data);
 			})
@@ -189,7 +189,7 @@ Vue.component("person-list", {
 			} else {
 				id = com.$route.params.id
 			}
-			request.getDepartPersons(com.$route.params.id, 0, function(data) {
+			request.getDepartPersons(com.$route.params.id, 0, 0, function(data) {
 				console.log("获取的本部门人员:" + JSON.stringify(data));
 				var children = data.concat(departs);
 				com.setItemsStatus(children);

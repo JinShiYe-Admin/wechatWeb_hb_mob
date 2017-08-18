@@ -31,22 +31,56 @@
 			.weui-cells {
 				margin-top: 0;
 			}
+			
+			.container-wrap {
+				margin-right: 10px;
+				width: 50%;
+				height: 50px;
+				white-space: nowrap;
+				overflow: hidden;
+				overflow-x: scroll;
+				/* 1 */
+				-webkit-backface-visibility: hidden;
+				-webkit-perspective: 1000;
+				-webkit-overflow-scrolling: touch;
+				/* 2 */
+				text-align: justify;
+				/* 3 */
+				-webkit-scrollbar {
+					display: none;
+				}
+				.container>div {
+					display: inline-block;
+					height: 50px;
+					color: #fff;
+					text-align: center;
+					line-height: 50px;
+				}
+			}
+			
+			.weui-btn_mini {
+				line-height: 3.2;
+			}
+			
+			.margin-bottom50 {
+				margin-bottom: 50px;
+			}
 		</style>
 	</head>
 
 	<body>
 
 		<div id="page-router">
-			<router-view></router-view>
-			<div style="position: fixed;bottom: 0;height: 50px;width: 100%;">
-				<div>
-					<div>
+			<router-view v-bind:class='[{"margin-bottom50":chosePersen.length>0}]'></router-view>
+			<div v-if="chosePersen.length>0" class="weui-flex" style="position: fixed;bottom: 0;height: 50px;width: 100%;">
+				<div class="container-wrap weui-flex__item">
+					<div class="container">
 						<div v-for="person of chosePersen" style="display: inline-block;">
 							<p style="display: inline-block;padding: 10px 15px;">{{person.name}}</p>
 						</div>
 					</div>
 				</div>
-				<a class="weui-btn weui-btn_mini weui-btn_primary" style="float: right;margin-right: 15px;">确定({{chosePersen.length}})</a>
+				<a class="weui-btn weui-btn_mini weui-btn_primary" style="width:25%;margin-bottom: 10px;">确定({{chosePersen.length>99?'99+':chosePersen.length}})</a>
 			</div>
 		</div>
 		<script src="../../js/utils/consts.js"></script>
@@ -85,7 +119,8 @@
 				},
 				methods: {
 					togglePersen: function(persen, isAdd) {
-						console.log("000000#######choose-person.html######" + JSON.stringify(persen) + "是否添加" + isAdd);
+						this.chosePersen =
+							console.log("000000#######choose-person.html######" + JSON.stringify(persen) + "是否添加" + isAdd);
 						if(isAdd) {
 							this.chosePersen = this.chosePersen.concat(persen);
 						} else {

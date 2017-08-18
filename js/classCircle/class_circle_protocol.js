@@ -12,6 +12,86 @@ var classCircleProtocol = (function(mod) {
 		token: "",
 		sign: ""
 	}
+	
+	//1.（用户空间）获取用户针对某用户的空间列表
+	mod.classCirclePro_getUserSpacesByUserForPublisher = function(data, callback) {
+		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "getUserSpacesByUserForPublisher", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+	}
+	
+	//2.（用户空间）获取用户某条用户空间是否点赞
+	mod.classCirclePro_getIsLikeUserSpaceByUser = function(data, callback) {
+		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "getIsLikeUserSpaceByUser", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+	}
+	
+	//3.（用户空间）获取用户空间所有点赞用户
+	mod.classCirclePro_getIsLikeUsersById = function(data, callback) {
+		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "getIsLikeUsersById", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+	}
+	
+	//4.（用户空间）获取多用户空间列表
+	mod.classCirclePro_getUserSpacesByUser = function(data, callback) {
+		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "getUserSpacesByUser", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+	}
+	
+	//5.（用户空间）新增某用户空间信息 
+	mod.classCirclePro_addUserSpace = function(data, callback) {
+		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "addUserSpace", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+	}
+	
+	//6.（用户空间）新增某用户某用户空间评论
+	mod.classCirclePro_addUserSpaceComment = function(data, callback) {
+		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "addUserSpaceComment", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+	}
+	
+	//7.（用户空间）新增某用户某用户空间评论回复
+	mod.classCirclePro_addUserSpaceCommentReply = function(data, callback) {
+		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "addUserSpaceCommentReply", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+	}
+	
+	//8.（用户空间）修改某用户针对某发布用户的空间阅读状态为已读
+	mod.classCirclePro_setUserSpaceReadByUser = function(data, callback) {
+		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "setUserSpaceReadByUser", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+	}
+	
+	//9.（用户空间）修改某用户某用户空间点赞状态为点赞
+	mod.classCirclePro_setUserSpaceLikeByUser = function(data, callback) {
+		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "setUserSpaceLikeByUser", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+	}
+	
+	//10.（用户空间）删除某用户空间
+	mod.classCirclePro_delUserSpaceById = function(data, callback) {
+		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "delUserSpaceById", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+	}
+	
+	//11.（用户空间）删除某条用户空间评论
+	mod.classCirclePro_delUserSpaceCommentById = function(data, callback) {
+		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "delUserSpaceCommentById", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+	}
+	
+	//12.（用户空间）获取与我相关
+	mod.classCirclePro_getAboutMe = function(data, callback) {
+		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "getAboutMe", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+	}
+	
+	//13.（用户空间）修改某用户评论、回复、留言状态为已读
+	mod.classCirclePro_setCommentMsgReadByUser = function(data, callback) {
+		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "setCommentMsgReadByUser", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+	}
+	
+	//14.（用户空间）新增用户空间
+	mod.classCirclePro_addNewUserSpaceInfo = function(data, callback) {
+		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "addNewUserSpaceInfo", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+	}
+	
+	//15.（用户空间）获取用户空间所有已读用户
+	mod.classCirclePro_getReadUserBySpaceId = function(data, callback) {
+		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "getReadUserBySpaceId", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+	}
+	
+	//16.（用户空间）删除某用户某用户空间点赞
+	mod.classCirclePro_delUserSpaceLikeByUser = function(data, callback) {
+		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "delUserSpaceLikeByUser", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+	}
 
 	/**
 	 * 17.（用户空间）获取多用户空间所有用户动态列表
@@ -20,6 +100,16 @@ var classCircleProtocol = (function(mod) {
 	 */
 	mod.getAllUserSpacesByUser = function(data, callback) {
 		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "getAllUserSpacesByUser", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+	}
+	
+	//18.（用户空间）获取多班级多用户空间所有用户未读数
+	mod.classCirclePro_getNoReadCntForClassByUser = function(data, callback) {
+		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "getNoReadCntForClassByUser", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+	}
+	
+	//19.（用户空间）获取用户针对某条空间详情
+	mod.classCirclePro_getUserSpaceByUser = function(data, callback) {
+		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "getUserSpaceByUser", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
 	}
 
 	return mod;

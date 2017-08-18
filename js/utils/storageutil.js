@@ -7,18 +7,21 @@ var storageutil = (function(mod) {
 		mod.QNGETUPLOADTOKEN = 'http://114.215.222.186:8004/Api/QiNiu/GetUpLoadToKen'; //七牛获取上传token的url
 		mod.QNGETDOWNLOADTOKEN = 'http://114.215.222.186:8004/Api/QiNiu/GetAccess'; //七牛获取下载token的url
 		mod.QNGETDELETEFILES = 'http://114.215.222.186:8004/Api/QiNiu/Delete'; //获取批量删除七牛文件的token的url
+		mod.CLASSCIRCLEMAIN = "http://192.168.1.113:8081/WxClassService/"; //企业微信班级圈
 	} else if(mod.KEY == 1) {
 		//测试
 		mod.QNPBDOMAIN = 'http://qn-cspb.jiaobaowang.net/'; //七牛公开空间域名
 		mod.QNGETUPLOADTOKEN = 'http://114.215.222.186:8005/Api/QiNiu/GetUpLoadToKen'; //七牛获取上传token的url
 		mod.QNGETDOWNLOADTOKEN = 'http://114.215.222.186:8005/Api/QiNiu/GetAccess'; //七牛获取下载token的url
 		mod.QNGETDELETEFILES = 'http://114.215.222.186:8005/Api/QiNiu/Delete'; //获取批量删除七牛文件的token的url
+		mod.CLASSCIRCLEMAIN = "http://192.168.1.113:8081/WxClassService/"; //企业微信班级圈
 	} else {
 		//外网
 		mod.QNPBDOMAIN = 'http://qn-cspb.jiaobaowang.net/'; //七牛公开空间域名
 		mod.QNGETUPLOADTOKEN = 'http://114.215.222.186:8005/Api/QiNiu/GetUpLoadToKen'; //七牛获取上传token的url
 		mod.QNGETDOWNLOADTOKEN = 'http://114.215.222.186:8005/Api/QiNiu/GetAccess'; //七牛获取下载token的url
 		mod.QNGETDELETEFILES = 'http://114.215.222.186:8005/Api/QiNiu/Delete'; //获取批量删除七牛文件的token的url
+		mod.CLASSCIRCLEMAIN = "http://192.168.1.113:8081/WxClassService/"; //企业微信班级圈
 	}
 	//---七牛key值---start---
 	mod.QNPUBSPACE = "pb"; //七牛公开空间

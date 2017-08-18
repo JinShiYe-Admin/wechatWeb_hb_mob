@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>发布界面</title>
+		<link href="../../css/weui.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<div id="publish-home">
+			<router-view keep-alive></router-view>
+		</div>
+		<script src="../../js/vue.js"></script>
+		<script src="../../js/vue-router.js"></script>
+		<script src="../../js/appWeb/choose-person.js"></script>
+		<script src="../../js/appWeb/com-persen.js"></script>
+		<script src="../../js/appWeb/com-publish.js"></script>
+		<script type="text/javascript">
+			const choosePerson = {
+				template: '<person-list v-bind:depart_id="parseInt($route.params.id)" v-on:togglePerson="togglePersen"></person-list>',
+				methods: {
+					togglePersen: function(persen, isAdd) {
+						console.log("#######choose-person.html######" + JSON.stringify(persen) + "是否添加" + isAdd);
+						console.log(arguments);
+						this.$root.togglePersen(persen, isAdd);
+					}
+				}
+			}
+			const comPersen = {
+				template: '<com-persen></com-persen>',
+			}
+			const comPublish = {
+				template: '<com-publish></com-publish>'
+			}
+			const router = new VueRouter({
+				mode: 'history',
+				routes: [{
+					path: 'publish',
+					name: 'publish',
+					component: comPublish
+				}, {
+					path: 'persen',
+					name: 'persen',
+					component: comPersen,
+					children: [{
+						path: '/choose-person/:id',
+						name: 'choose-person',
+						component: choosePerson
+					}]
+				}]
+			})
+			var home = new Vue({
+				el: '#publish-home',
+				router: router,
+				data: {
+
+				},
+				methods: {
+
+				}
+			})
+			router.push({
+				name: 'publish',
+				path:'/publish'
+			})
+		</script>
+	</body>
+
+</html>

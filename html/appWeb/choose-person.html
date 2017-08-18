@@ -60,8 +60,15 @@
 
 		<script type="text/javascript">
 			const choosePerson = {
-				template: '<person-list v-bind:depart_id="parseInt($route.params.id)" v-on:togglePerson="togglePersen(persen, isAdd)"></person-list>'
-			}
+				template: '<person-list v-bind:depart_id="parseInt($route.params.id)" v-on:togglePerson="togglePersen"></person-list>',
+				methods: {
+					togglePersen: function(persen, isAdd) {
+						console.log("#######choose-person.html######" + JSON.stringify(persen) + "是否添加" + isAdd);
+						console.log(arguments);
+						this.$root.togglePersen(persen,isAdd);
+					}
+				}
+			};
 			const router = new VueRouter({
 				mod: 'history',
 				routes: [{
@@ -70,38 +77,18 @@
 					component: choosePerson
 				}]
 			});
-			const chosePerson = new Vue({
+			var chosePerson = new Vue({
+				el: "#page-router",
 				router: router,
 				data: {
 					chosePersen: []
 				},
 				methods: {
-					togglePersen: function(persen, isAdd) {
-						console.log("父界面获取的值：" + JSON.stringify(persen) + ",是否已添加：" + isAdd);
-						console.log("父界面获取的值：" + JSON.stringify(arguments));
-						for(var i in persen) {
-							var arrs = events.isExistInArray(this.getPersonIdArray(this.chosePersen), persen[i].userid);
-							if(arrs[1] >= 0) { //存在
-								if(!isAdd) { //刪除
-									this.chosePersen.splice(arrs[1], 1);
-								}
-							} else { //不存在
-								if(isAdd) { //添加
-									this.chosePersen.push(persen[i]);
-								}
-							}
-						}
-						console.log("父界面获取的最终值:" + JSON.stringify(this.chosePersen));
-					},
-					getPersonIdArray: function(persen) {
-						var persenIds = [];
-						for(var i in persen) {
-							persenIds.push(persen[i]);
-						}
-						return persenIds;
+					togglePersen:function(persen,isAdd){
+						console.log("000000#######choose-person.html######" + JSON.stringify(persen) + "是否添加" + isAdd);
 					}
 				}
-			}).$mount('#page-router');
+			})
 
 			router.push({
 				name: 'choose-person',

@@ -40,7 +40,8 @@ Vue.component("person-list", {
 			id: this.depart_id,
 			choseItems: [],
 			isAllChecked: false,
-			count: 0
+			count: 0,
+			allCount: 0
 		}
 	},
 	created: function() {
@@ -111,24 +112,56 @@ Vue.component("person-list", {
 			var com = this;
 			if(departs.length > 0) {
 				for(var i in departs) {
+					departs[i].children = this.getAllChildDeparts(departs[i].value);
 					this.getSingleDepartAllPersen(departs[i], departs);
+					this.getSingleDepartPersen(departs[i], departs);
 				}
 			} else {
 				console.log("沒有子部门时，获取成员，子部门：" + JSON.stringify(departs));
 				com.getCurPersen(departs);
 			}
 		},
+
+		getDepartAllPersen: function(depart, callback) {
+			console.log("********getDepartAllPersen********");
+			request.getDepartPersons(depart, 1, function(data) {
+				console.log("递归获取的本部门人员:" + JSON.stringify(data));
+				callback(data);
+			})
+		},
 		getSingleDepartAllPersen: function(depart, departs) {
+			console.log("********getSingleDepartAllPersen********");
 			var mod = this;
 			mod.getDepartAllPersen(depart, function(data) {
+				mod.allCount++;
+				depart.allPersen = data;
+				console.log("当前的depart:" + JSON.stringify(depart));
+				if(mod.allCount == departs.length) {
+					console.log("获取的部门所有人员:" + JSON.stringify(departs));
+					if(mod.allCount == departs.length && mod.count == departs.length) {
+						//获取当前部门的人员
+						mod.getCurPersen(departs);
+						mod.allCount = 0;
+						mod.count = 0;
+					}
+				}
+			});
+		},
+		getSingleDepartPersen: function(depart, departs) {
+			console.log("********getSingleDepartPersen********");
+			var mod = this;
+			mod.getDepartPersen(depart, function(data) {
 				mod.count++;
 				depart.persen = data;
 				console.log("当前的depart:" + JSON.stringify(depart));
 				if(mod.count == departs.length) {
-					console.log("获取的子部门人员:" + JSON.stringify(departs));
-					//获取当前部门的人员
-					mod.getCurPersen(departs);
-					mod.count = 0;
+					console.log("获取的部门人员:" + JSON.stringify(departs));
+					if(mod.allCount == departs.length && mod.count == departs.length) {
+						//获取当前部门的人员
+						mod.getCurPersen(departs);
+						mod.allCount = 0;
+						mod.count = 0;
+					}
 				}
 			});
 		},
@@ -137,9 +170,9 @@ Vue.component("person-list", {
 		 * @param {Object} departId
 		 * @param {Function} callback 回调
 		 */
-		getDepartAllPersen: function(depart, callback) {
+		getDepartPersen: function(depart, callback) {
 			console.log("********getDepartAllPersen********");
-			request.getDepartPersons(depart, 1, function(data) {
+			request.getDepartPersons(depart, 0, function(data) {
 				console.log("递归获取的本部门人员:" + JSON.stringify(data));
 				callback(data);
 			})
@@ -214,12 +247,26 @@ Vue.component("person-list", {
 			if(item.userid) { //如果是人员 测试
 				return events.isExistInArray(events.getSessionMapValue(consts.KEY_CHOSE_MAP, this.$route.params.id), item.userid)[1] >= 0;
 			} else { //如果是部门
+				events.toggleValueInSessionArray(consts.KEY_CHOOSE_DEPARTS, item.value, this.isAllChildrenChose(item));
 				if(events.isExistInSessionArray(consts.KEY_CHOOSE_DEPARTS, item.value)[1] >= 0) {
 					return true;
 				} else {
-					return events.getSessionMapValue(consts.KEY_CHOSE_MAP, item.value).length === item.persen.length;
+					return false;
 				}
 			}
+		},
+		isAllChildrenChose: function(item) {
+			console.log("********isAllChildrenInLocal********");
+			console.log("要处理的部门数据:" + JSON.stringify(item));
+			for(var i in item.children) {
+				if(events.isExistInSessionArray(consts.KEY_CHOOSE_DEPARTS, item.children[i].value)[1] < 0) {
+					return false
+				}
+			}
+			if(events.getSessionMapValue(consts.KEY_CHOSE_MAP, item.value).length === item.persen.length) {
+				return true;
+			}
+			return false;
 		},
 		/**
 		 * 选择或取消选择人员的响应方法
@@ -229,6 +276,8 @@ Vue.component("person-list", {
 		togglePerson: function(item, event) { //关注的人 选择
 			console.log("********togglePerson人员选择********");
 			var isAdd = event.target.checked;
+			console.log("********关注的人事件传递********");
+			this.$emit('togglePerson', [item], isAdd);
 			this.changeSessionByPerson(item, isAdd);
 			this.setItemsStatus(this.listData);
 		},
@@ -263,6 +312,8 @@ Vue.component("person-list", {
 			console.log("********toggleDepart部门选取事件********");
 			var com = this;
 			var isAdd = event.target.checked;
+			console.log("******传递事件togglePerson******");
+			com.$emit('togglePerson', item.allPersen, isAdd);
 			var childDeparts = this.getAllChildDeparts(item.value);
 			childDeparts.push(item);
 			//添加或删除本地已选择部门数据
@@ -273,10 +324,11 @@ Vue.component("person-list", {
 			console.log("保存或删除本部门及子部门：" + events.getSessionArray(consts.KEY_CHOOSE_DEPARTS));
 			//人员选择
 			//item.persen 它的响应逻辑
-			item.persen.forEach(function(person) {
+			item.allPersen.forEach(function(person) {
 				//单个人员选择或取消选择的响应逻辑
 				com.changeSessionByPerson(person, isAdd);
 			});
+
 			//设置页面状态
 			com.setItemsStatus(com.listData);
 		},

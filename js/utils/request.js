@@ -21,6 +21,11 @@ var request = (function(mod) {
 		})
 	}
 	mod.getDepartPersons = function(id, colv,callcol, callback) {
+		if(callcol){
+			callcol='info';
+		}else{
+			callcol='base';
+		}
 		if(typeof(id.value) !== "undefined") {
 			id = id.value;
 		}

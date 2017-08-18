@@ -65,7 +65,7 @@
 					togglePersen: function(persen, isAdd) {
 						console.log("#######choose-person.html######" + JSON.stringify(persen) + "是否添加" + isAdd);
 						console.log(arguments);
-						this.$root.togglePersen(persen,isAdd);
+						this.$root.togglePersen(persen, isAdd);
 					}
 				}
 			};
@@ -84,8 +84,28 @@
 					chosePersen: []
 				},
 				methods: {
-					togglePersen:function(persen,isAdd){
+					togglePersen: function(persen, isAdd) {
 						console.log("000000#######choose-person.html######" + JSON.stringify(persen) + "是否添加" + isAdd);
+						if(isAdd) {
+							this.chosePersen = this.chosePersen.concat(persen);
+						} else {
+							this.delPersen(persen);
+						}
+					},
+					delPersen: function(persen) {
+						var com = this;
+						this.chosePersen = this.chosePersen.filter(function(chosePerson) {
+							return !com.isExistInDelPersen(chosePerson, persen);
+						})
+						console.log("删除人员后的值：" + JSON.stringify(this.chosePersen));
+					},
+					isExistInDelPersen: function(person, persen) {
+						for(var i in persen) {
+							if(persen[i].userid == person.userid) {
+								return true;
+							}
+						}
+						return false;
 					}
 				}
 			})

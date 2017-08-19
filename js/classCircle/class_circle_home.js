@@ -7,10 +7,7 @@ Vue.filter('userName', function(userId) {
 		return userId; //返回传入的值
 	}
 });
-//显示评论的过滤器
-Vue.filter('comments', function(comments) {
-	return comments;
-});
+
 //班级圈主页tab顶部导航
 Vue.component("home-navbar-item", {
 	template: "#temp_trends_navbar_item",

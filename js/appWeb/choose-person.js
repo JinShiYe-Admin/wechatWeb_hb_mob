@@ -46,7 +46,7 @@ Vue.component("person-list", {
 	},
 	created: function() {
 		console.log("获取的的id" + this.$route.params.id)
-		if(this.$route.params.id === -1) {
+		if(this.depart_id === -1) {
 			this.getAllListData();
 		} else {
 			this.getCurDeparts();
@@ -55,7 +55,7 @@ Vue.component("person-list", {
 	watch: {
 		'$route' (to, from) {
 			console.log("当前路由id:" + this.$route.params.id);
-			if(this.$route.params.id === -1) {
+			if(this.depart_id === -1) {
 				this.getAllListData();
 			} else {
 				this.getCurDeparts();
@@ -381,8 +381,11 @@ Vue.component("person-list", {
 			var departs = departList.filter(function(depart) {
 				return depart.value == id;
 			});
-			console.log("获取的存储在本地的本部门的列表数据:" + JSON.stringify(departs[0].children));
-			return departs[0].children || [];
+			if(departs && departs.length > 0) {
+				return departs[0].children
+			}else{
+				return [];
+			}
 		},
 		//通过部门id 更新界面
 		routerTo: function(item) {

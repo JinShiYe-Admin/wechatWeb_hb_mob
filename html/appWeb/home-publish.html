@@ -10,10 +10,14 @@
 
 	<body>
 		<div id="publish-home">
-			<router-view keep-alive></router-view>
+			<router-view style="width: 100%;"></router-view>
 		</div>
 		<script src="../../js/vue.js"></script>
 		<script src="../../js/vue-router.js"></script>
+		<script src="../../js/utils/consts.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/demoCssJs/jquery-2.1.4.js"></script>
+		<script src="../../js/utils/request.js"></script>
 		<script src="../../js/appWeb/choose-person.js"></script>
 		<script src="../../js/appWeb/com-persen.js"></script>
 		<script src="../../js/appWeb/com-publish.js"></script>
@@ -41,14 +45,9 @@
 					name: 'publish',
 					component: comPublish
 				}, {
-					path: 'persen',
+					path: 'persen/:id',
 					name: 'persen',
 					component: comPersen,
-					children: [{
-						path: '/choose-person/:id',
-						name: 'choose-person',
-						component: choosePerson
-					}]
 				}]
 			})
 			var home = new Vue({
@@ -63,7 +62,7 @@
 			})
 			router.push({
 				name: 'publish',
-				path:'/publish'
+				path: '/publish'
 			})
 		</script>
 	</body>

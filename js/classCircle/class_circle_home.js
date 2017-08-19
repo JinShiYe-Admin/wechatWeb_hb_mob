@@ -44,7 +44,7 @@ Vue.component("home-bd-item", {
 
 //添加动态组件
 Vue.component("add-trends", {
-	template: "#temp_add_trends_com",
+	template: "#temp_trends_add_com",
 	props: ["content"],
 	data: function() {
 		return {
@@ -221,12 +221,13 @@ var home_data = {
 	}]
 };
 //发布动态页面数据
-var add_trends_data = {
+var trends_add_data = {
 	allback: true,
 	content: "", //文字，限制6000字
 	images: [], //图片，限制9张
 	video: '' //视频，限制一个
 }
+var trends_details_data;//动态详情页面的数据
 var mineUserInfo = {
 	"userid": "moshanglin",
 	"name": "莫尚霖",
@@ -325,10 +326,10 @@ function initRouter() {
 		}
 	};
 	//发布动态
-	var add_trends = {
-		template: "#temp_add_trends",
+	var trends_add = {
+		template: "#temp_trends_add",
 		data: function() {
-			return add_trends_data;
+			return trends_add_data;
 		},
 		methods: {
 			/**
@@ -336,25 +337,25 @@ function initRouter() {
 			 * @param {Object} type 0,图库;1,相机
 			 */
 			addMedia: function(type) {
-				console.log("add_trends-addMedia:" + type);
+				console.log("trends_add-addMedia:" + type);
 			},
 			/**
 			 * 点击提交按钮
 			 */
 			commit: function() {
-				console.log("add_trends-commit:");
-				var commitContent = $.trim(add_trends_data.content);
+				console.log("trends_add-commit:");
+				var commitContent = $.trim(trends_add_data.content);
 				console.log("commitContent:" + commitContent);
 				if(commitContent === "") {
 					$.toast("请输入内容", "forbidden");
 					return
 				} else {
 					$.showLoading('正在上传数据');
-					add_trends_data.allback = false;
+					trends_add_data.allback = false;
 					setTimeout(function() {
 						$.hideLoading();
 						$.toast("发布成功");
-						add_trends_data.allback = true;
+						trends_add_data.allback = true;
 					}, 3000);
 				}
 			},
@@ -363,7 +364,7 @@ function initRouter() {
 			 * @param {Object} val
 			 */
 			contentChange: function(val) {
-				add_trends_data.content = val; //组件内外content双向绑定
+				trends_add_data.content = val; //组件内外content双向绑定
 			}
 		},
 		beforeRouteEnter: function(to, from, next) {
@@ -376,9 +377,27 @@ function initRouter() {
 			console.log("add-beforeRouteLeave:");
 			console.log("to:" + to.path);
 			console.log("from:" + from.path);
-			next(add_trends_data.allback);
+			next(trends_add_data.allback);
 		}
 	};
+
+	var trends_details={
+		template: "#temp_trends_details",
+		data: function() {
+			return trends_details_data;
+		},
+		beforeRouteEnter: function(to, from, next) {
+			console.log("add-beforeRouteEnter:");
+			console.log("to:" + to.path);
+			console.log("from:" + from.path);
+			next();
+		},
+		beforeRouteLeave: function(to, from, next) {
+			console.log("add-beforeRouteLeave:");
+			console.log("to:" + to.path);
+			console.log("from:" + from.path);
+			next();
+		}
 
 	//配置路由
 	router = new VueRouter({
@@ -387,7 +406,7 @@ function initRouter() {
 			component: class_circle_home
 		}, {
 			path: '/add',
-			component: add_trends
+			component: trends_add
 		}]
 	});
 

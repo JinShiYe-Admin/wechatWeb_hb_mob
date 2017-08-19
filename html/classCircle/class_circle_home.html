@@ -90,11 +90,11 @@
 			<div class="weui-media-box">
 				<div class="weui-media-box_appmsg">
 					<div class="weui-media-box__hd class-circle-headimage-hd">
-						<img class="weui-media-box__thumb class-circle-headimage" :src="value.PublisherImage" />
+						<img class="weui-media-box__thumb class-circle-headimage" :src="PublisherImage" />
 					</div>
 					<div class="weui-media-box__bd">
 						<div class="class-circle-title">
-							<div class="weui-media-box__title">{{value.PublisherName}}</div>
+							<div class="weui-media-box__title">{{value.PublisherId|userName}}</div>
 							<!--<div class="class-circle-mark"></div>-->
 						</div>
 						<div class="weui-media-box__desc">{{value.PublishDate}}</div>
@@ -102,49 +102,29 @@
 				</div>
 				<div class="class-circle-content-limit">{{value.MsgContent}}</div>
 				<!--<div class="class-circle-show-all">展开全部</div>-->
-				<!--<img class="class-circle-content-img" src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2760619582,1034521198&fm=11&gp=0.jpg" />
-				<div class="class-circle-grids">
-					<div class="class-circle-grids-item">
-						<img src="https://www.baidu.com/img/bd_logo1.png" />
+				<template v-if="value.EncType == 1">
+					<template v-if="value.EncImgAddr_array.length == 1">
+						<img class="class-circle-content-img" :src="value.EncImgAddr_array[0]" />
+					</template>
+					<div v-else-if="value.EncImgAddr_array.length > 1" v-for="(img_value,img_item) in value.EncImgAddr_array" class="class-circle-grids">
+						<div class="class-circle-grids-item">
+							<img :src="img_value" />
+						</div>
 					</div>
-					<div class="class-circle-grids-item">
-						<img src="../../image/config/func_actssm.jpg" />
-					</div>
-					<div class="class-circle-grids-item">
-						<img src="http://www.w3school.com.cn/i/bg_flower_small.gif" />
-					</div>
-					<div class="class-circle-grids-item">
-						<img src="http://www.w3school.com.cn/i/bg_flower_small.gif" />
-					</div>
-					<div class="class-circle-grids-item">
-						<img src="https://www.baidu.com/img/bd_logo1.png" />
-					</div>
-				</div>-->
+				</template>
 				<div class="class-circle-function">
 					<div class="class-circle-views">浏览数 {{value.ReadCnt}}</div>
 					<div class="iconfont icon-trash"></div>
 					<div class="iconfont icon-newmessage"></div>
-					<div class="iconfont icon-dianzan"></div>
+					<div class="iconfont icon-dianzan" :class="{'trends-praise': value.IsLike}"></div>
 				</div>
-				<div class="class-circle-praise-comment">
+				<div class="class-circle-praise-comment" v-if="showPraiseComment">
 					<div class="class-circle-triangle"></div>
-					<div class="class-circle-praise-bg">
-						<div class="class-circle-praiser">第一个</div>
-						<div class="class-circle-praiser">第二个</div>
+					<div class="class-circle-praise-bg" v-for="(praise_value,praise_index) in value.LikeUsers">
+						<div class="class-circle-praiser">{{praise_value.name}}</div>
 					</div>
-					<div class="class-circle-praise-comment-line"></div>
-					<div class="class-circle-comment-bg">
-						<div class="class-circle-comment-item">
-							<div class="class-circle-comment-name">壹</div>
-							<div class="class-circle-comment-content">：一二三四 </div>
-						</div>
-						<div class="class-circle-comment-item">
-							<div class="class-circle-comment-name">贰</div>
-							<div class="class-circle-comment-content">回复</div>
-							<div class="class-circle-comment-name">壹</div>
-							<div class="class-circle-comment-content">：一二三四五六七八九十</div>
-						</div>
-					</div>
+					<div class="class-circle-praise-comment-line" v-if="showLine"></div>
+					<comments-item :value="value.Comments"></comments-item>
 				</div>
 			</div>
 		</template>
@@ -222,6 +202,23 @@
 						<div class="class-circle-comment-content">回复</div>
 						<div class="class-circle-comment-name">壹</div>
 						<div class="class-circle-comment-content">：一二三四五六七八九十</div>
+					</div>
+				</div>
+			</div>
+		</template>
+		<!--评论组件-->
+		<template id="temp_comments">
+			<div class="class-circle-comment-bg">
+				<div v-for="(comment_value,comment_index) in value">
+					<div class="class-circle-comment-item">
+						<div class="class-circle-comment-name">{{comment_value.UserId|userName}}</div>
+						<div class="class-circle-comment-content">：{{comment_value.CommentContent}}</div>
+					</div>
+					<div class="class-circle-comment-item" v-for="(replys_value,replys_index) in comment_value.Replys">
+						<div class="class-circle-comment-name">{{replys_value.ReplyId|userName}}</div>
+						<div class="class-circle-comment-content">回复</div>
+						<div class="class-circle-comment-name">{{replys_value.UserId|userName}}</div>
+						<div class="class-circle-comment-content">：{{replys_value.CommentContent}}</div>
 					</div>
 				</div>
 			</div>

@@ -1,3 +1,13 @@
+//显示用户名的过滤器
+Vue.filter('userName', function(userId) {
+	var userInfo = departUserInfo.value[userId];
+	if(userInfo != undefined) {
+		return userInfo.name; //返回人员信息中的名字
+	} else {
+		return userId; //返回传入的值
+	}
+});
+
 //班级圈主页tab顶部导航
 Vue.component("home-navbar-item", {
 	template: "#temp_trends_navbar_item",
@@ -34,7 +44,7 @@ Vue.component("home-bd-item", {
 
 //添加动态组件
 Vue.component("add-trends", {
-	template: "#temp_add_trends_com",
+	template: "#temp_trends_add_com",
 	props: ["content"],
 	data: function() {
 		return {
@@ -76,14 +86,40 @@ Vue.component("add-trends", {
 //动态组件
 Vue.component("trends-item", {
 	template: "#template_trends",
-	props: ["value"]
+	props: ["value"],
+	computed: {
+		showPraiseComment: function() {
+			//是否显示点赞和评论区域
+			return this.value.LikeUsers.length > 0 || this.value.Comments.length > 0;
+		},
+		showLine: function() {
+			//是否显示点赞和评论之间的横线
+			return this.value.LikeUsers.length > 0 && this.value.Comments.length > 0;
+		},
+		PublisherImage: function() {
+			//发布者的头像
+			var userInfo = departUserInfo.value[this.value.PublisherId];
+			if(userInfo != undefined && userInfo.avatar != "") {
+				return userInfo.avatar + "100";
+			} else {
+				return utils.updateHeadImage("", 2);
+			}
+		}
+	},
+	method: {
+
+	}
 });
 //与我相关组件
 Vue.component("relate-item", {
 	template: "#temp_relate_to_me",
 	props: ["value"]
 });
-
+//评论组件
+Vue.component("comments-item", {
+	template: "#temp_comments",
+	props: ["value"]
+});
 //班级圈主页数据
 var home_data = {
 	is_on: 0, //当前显示的列表
@@ -94,7 +130,78 @@ var home_data = {
 		leave: false, //是否离开
 		show_loadmore: true, //是否显示加载更多
 		allow_loadmore: false, //允许加载更多
-		data: [] //tab列表的数据
+		data: [{
+			"LikeUsers": [],
+			"TabId": 3,
+			"Comments": [{
+				"CommentDate": "2017-01-10 09:24:13",
+				"TabId": 92,
+				"Replys": [],
+				"ReplyId": "0",
+				"CommentContent": "你好",
+				"UserId": "1",
+				"UpperId": 0
+			}, {
+				"CommentDate": "2017-08-11 11:20:11",
+				"TabId": 527,
+				"Replys": [{
+					"CommentDate": "2017-08-11 11:37:15",
+					"TabId": 528,
+					"ReplyId": "1",
+					"CommentContent": "这是对527号评论的回复",
+					"UserId": "11",
+					"UpperId": 527
+				}, {
+					"CommentDate": "2017-08-14 10:18:56",
+					"TabId": 530,
+					"ReplyId": "1",
+					"CommentContent": "8-14测试回复",
+					"UserId": "1",
+					"UpperId": 527
+				}, {
+					"CommentDate": "2017-08-14 10:21:27",
+					"TabId": 531,
+					"ReplyId": "123",
+					"CommentContent": "8-14测试回复",
+					"UserId": "1",
+					"UpperId": 527
+				}, {
+					"CommentDate": "2017-08-14 10:22:10",
+					"TabId": 532,
+					"ReplyId": "1",
+					"CommentContent": "8-14测试回复",
+					"UserId": "231",
+					"UpperId": 527
+				}],
+				"ReplyId": "0",
+				"CommentContent": "这是8月11号的评论内容的测试",
+				"UserId": "1",
+				"UpperId": 0
+			}, {
+				"CommentDate": "2017-08-14 10:32:20",
+				"TabId": 533,
+				"Replys": [],
+				"ReplyId": "0",
+				"CommentContent": "8-14测试评论",
+				"UserId": "231",
+				"UpperId": 0
+			}],
+			"MsgContent": "<html>\n <head></head>\n <body>\n <p><br><img src=\"http://qn-kfpb.jiaobaowang.net/jbypc/pc/9498620170615111755.jpg\" title=\"01.jpg\" alt=\"01.jpg\" width=\"100%\"><br></p>\n </body>\n</html>",
+			"EncTypeStr": "图文混排",
+			"EncType": 5,
+			"EncAddr": "http://qn-kfpb.jiaobaowang.net/jbypc/pc/9498620170615111755.jpg",
+			"NoteType": 2,
+			"MsgContentTxt": "",
+			"PublisherId": "chenuodong",
+			"EncImgAddr": "http://qn-kfpb.jiaobaowang.net/jbypc/pc/thumb/9498620170615111755.jpg",
+			"InShow": 1,
+			"NoteTypeStr": "个人空间动态",
+			"EncIntro": "",
+			"ReadCnt": 7,
+			"EncLen": 0,
+			"IsLike": 0,
+			"PublishDate": "2017-06-15 11:18:04"
+		}] //tab列表的数据
 	}, {
 		id: "mine_trends",
 		title: "我的动态",
@@ -114,12 +221,13 @@ var home_data = {
 	}]
 };
 //发布动态页面数据
-var add_trends_data = {
+var trends_add_data = {
 	allback: true,
 	content: "", //文字，限制6000字
 	images: [], //图片，限制9张
 	video: '' //视频，限制一个
 }
+var trends_details_data;//动态详情页面的数据
 var mineUserInfo = {
 	"userid": "moshanglin",
 	"name": "莫尚霖",
@@ -154,6 +262,7 @@ var router; //路由
 window.onload = function() {
 	$.showLoading('正在加载');
 	initRouter();
+	//getUserInfo(0);
 	temp_data = 0;
 	getDepartmentMember(mineUserInfo.department[temp_data]);
 }
@@ -217,10 +326,10 @@ function initRouter() {
 		}
 	};
 	//发布动态
-	var add_trends = {
-		template: "#temp_add_trends",
+	var trends_add = {
+		template: "#temp_trends_add",
 		data: function() {
-			return add_trends_data;
+			return trends_add_data;
 		},
 		methods: {
 			/**
@@ -228,25 +337,25 @@ function initRouter() {
 			 * @param {Object} type 0,图库;1,相机
 			 */
 			addMedia: function(type) {
-				console.log("add_trends-addMedia:" + type);
+				console.log("trends_add-addMedia:" + type);
 			},
 			/**
 			 * 点击提交按钮
 			 */
 			commit: function() {
-				console.log("add_trends-commit:");
-				var commitContent = $.trim(add_trends_data.content);
+				console.log("trends_add-commit:");
+				var commitContent = $.trim(trends_add_data.content);
 				console.log("commitContent:" + commitContent);
 				if(commitContent === "") {
 					$.toast("请输入内容", "forbidden");
 					return
 				} else {
 					$.showLoading('正在上传数据');
-					add_trends_data.allback = false;
+					trends_add_data.allback = false;
 					setTimeout(function() {
 						$.hideLoading();
 						$.toast("发布成功");
-						add_trends_data.allback = true;
+						trends_add_data.allback = true;
 					}, 3000);
 				}
 			},
@@ -255,7 +364,7 @@ function initRouter() {
 			 * @param {Object} val
 			 */
 			contentChange: function(val) {
-				add_trends_data.content = val; //组件内外content双向绑定
+				trends_add_data.content = val; //组件内外content双向绑定
 			}
 		},
 		beforeRouteEnter: function(to, from, next) {
@@ -268,9 +377,27 @@ function initRouter() {
 			console.log("add-beforeRouteLeave:");
 			console.log("to:" + to.path);
 			console.log("from:" + from.path);
-			next(add_trends_data.allback);
+			next(trends_add_data.allback);
 		}
 	};
+
+	var trends_details={
+		template: "#temp_trends_details",
+		data: function() {
+			return trends_details_data;
+		},
+		beforeRouteEnter: function(to, from, next) {
+			console.log("add-beforeRouteEnter:");
+			console.log("to:" + to.path);
+			console.log("from:" + from.path);
+			next();
+		},
+		beforeRouteLeave: function(to, from, next) {
+			console.log("add-beforeRouteLeave:");
+			console.log("to:" + to.path);
+			console.log("from:" + from.path);
+			next();
+		}
 
 	//配置路由
 	router = new VueRouter({
@@ -279,7 +406,7 @@ function initRouter() {
 			component: class_circle_home
 		}, {
 			path: '/add',
-			component: add_trends
+			component: trends_add
 		}]
 	});
 
@@ -301,10 +428,10 @@ function initScroll() {
 	});
 
 	//初始化加载更多
-	$(".weui-tab__bd-item").infinite();
-	$(".weui-tab__bd-item").infinite().on("infinite", function() {
-		console.log("loadmore:" + this.id)
-	});
+	//	$(".weui-tab__bd-item").infinite();
+	//	$(".weui-tab__bd-item").infinite().on("infinite", function() {
+	//		console.log("loadmore:" + this.id)
+	//	});
 }
 
 /**
@@ -403,23 +530,20 @@ function getAllUserSpaces(pageIndex) {
 		pageSize: 10 //每页记录数
 	}
 	classCircleProtocol.getAllUserSpacesByUser(postData, function(data) {
-		console.log("getAllUserSpacesByUser:" + JSON.stringify(data));
+		console.log("getAllUserSpacesByUser:", data);
 		if(data.RspCode == 0) {
-			console.log("length:" + data.RspData.Data.length);
+			//console.log("log-8:" + JSON.stringify(data.RspData.Data[8]));
 			for(var i = 0; i < data.RspData.Data.length; i++) {
 				//设置发布者的信息
 				var temp_0 = data.RspData.Data[i];
-				//temp_0.PublisherId="moshanglin"
-				var userInfo = departUserInfo.value[temp_0.PublisherId];
-				if(userInfo != undefined) {
-					temp_0.PublisherName = userInfo.name;
-					temp_0.PublisherImage = utils.updateHeadImage(userInfo.avatar, 2);
-				} else {
-					temp_0.PublisherName = temp_0.PublisherId;
-					temp_0.PublisherImage = utils.updateHeadImage("", 2);
-				}
+				//temp_0.PublisherId="moshanglin";
+				//temp_0.EncType = 1;
+				//console.log("value.encType:" + temp_0.EncType);
+				temp_0.EncAddr_array = temp_0.EncAddr.split("|");
+				temp_0.EncImgAddr_array = temp_0.EncImgAddr.split("|");
 				home_data.home_tab[0].data.push(temp_0);
 			}
+			console.log("home_data.home_tab:", home_data.home_tab);
 		} else {
 			$.alert(data.RspTxt, "加载失败");
 		}

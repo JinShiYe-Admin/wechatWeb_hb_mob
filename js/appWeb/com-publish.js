@@ -6,25 +6,20 @@ Vue.component("com-publish", {
 		'人员选择' +
 		'</div>' +
 		'<div v-bind:class="[\'weui-cell__ft\']" >' +
-//		'{{chosePersen.length>99?"99+":"chosePersen.length"}}' +
+		//		'{{chosePersen.length>99?"99+":"chosePersen.length"}}' +
 		'</div>' +
 		'</div>' +
 		'</div>' +
 		'<a v-bind:class="[\'weui-btn\', \'weui-btn_primary\']">发布</a></div>',
 	data: function() {
 		return {
-			
+
 		}
 	},
 	methods: {
-		routeToPersen:function(){
+		routeToPersen: function() {
 			console.log("导向新路由");
-			router.push({
-				name:'persen',
-				params:{
-					id:'-1'
-				}
-			})
+			router.push('/persen/choose-person/-1')
 		}
 	}
 })

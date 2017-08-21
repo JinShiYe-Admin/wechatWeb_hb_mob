@@ -16,8 +16,8 @@
 		<script src="../../js/vue-router.js"></script>
 		<script src="../../js/utils/consts.js"></script>
 		<script src="../../js/utils/events.js"></script>
-		<script src="../../js/demoCssJs/jquery-2.1.4.js"></script>
 		<script src="../../js/utils/request.js"></script>
+		<script src="../../js/demoCssJs/jquery-2.1.4.js"></script>
 		<script src="../../js/appWeb/choose-person.js"></script>
 		<script src="../../js/appWeb/com-persen.js"></script>
 		<script src="../../js/appWeb/com-publish.js"></script>
@@ -45,9 +45,14 @@
 					name: 'publish',
 					component: comPublish
 				}, {
-					path: 'persen/:id',
+					path: '/persen',
 					name: 'persen',
 					component: comPersen,
+					children: [{
+						path: 'choose-person/:id',
+						name: 'choose-person',
+						component: choosePerson,
+					}]
 				}]
 			})
 			var home = new Vue({
@@ -61,8 +66,7 @@
 				}
 			})
 			router.push({
-				name: 'publish',
-				path: '/publish'
+				name:'publish'
 			})
 		</script>
 	</body>

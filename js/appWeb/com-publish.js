@@ -12,6 +12,12 @@ Vue.component("com-publish", {
 		'</div>' +
 		'</div>' +
 		'<a v-bind:class="[\'weui-btn\', \'weui-btn_primary\']" v-on:click="publishMethod">发布</a></div>',
+	watch: {
+		'$route' (to, from) {
+			// 对路由变化作出响应...
+			console.log("@@@@@com-persen@@@@@路由变化" + this.$route.params.id);
+		}
+	},
 	data: function() {
 		return {
 			title: '',

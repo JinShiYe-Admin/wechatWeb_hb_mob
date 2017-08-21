@@ -93,7 +93,7 @@
 				}
 			}
 			const comPersen = {
-				template: '<com-persen v-bind:chosePersen="this.$root.chosePersen" v-on:chosedPersen="this.$root.chosedPersen"></com-persen>',
+				template: '<com-persen v-bind:chosePersen="this.$root.chosePersen" v-on:chosedPersen="chosedPersen"></com-persen>',
 				methods: {
 					chosedPersen: function(persen) {
 						console.log("####home-publish####传过来选择的人：" + JSON.stringify(persen));
@@ -109,7 +109,7 @@
 			const router = new VueRouter({
 				mode: 'history',
 				routes: [{
-					path: 'publish',
+					path: '/publish',
 					name: 'publish',
 					component: comPublish
 				}, {
@@ -124,6 +124,11 @@
 						path: '',
 						redirectTo: 'choose-persen/-1'
 					}]
+				},{
+					path:'',
+					redirectTo:{
+						name:'publish'
+					}
 				}]
 			});
 			var home = new Vue({
@@ -159,7 +164,7 @@
 					}
 				}
 			});
-			router.push({
+			router.replace({
 				name: 'publish'
 			})
 		</script>

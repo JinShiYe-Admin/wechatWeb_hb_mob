@@ -62,6 +62,32 @@
 	<body>
 		<template id="template-table">
 			<div>
+				<div class="weui-cells">
+					<div class="weui-cell">
+						<div class="weui-cell__hd"><label class="weui-label">课程表名称</label></div>
+						<div class="weui-cell__bd">
+							<input class="weui-input" placeholder="请输入课程表名字" :value="edulename" v-model.lazy="edulename">
+						</div>
+					</div>
+					<div class="weui-cell">
+						<div class="weui-cell__hd"><label class="weui-label">部门名称</label></div>
+						<div class="weui-cell__bd">
+							<input id="depart" onclick="selectDepart(this)" class="weui-input" placeholder="请选择部门" :value="departname" v-model.lazy="departname" v->
+						</div>
+					</div>
+					<div class="weui-cell">
+						<div class="weui-cell__hd"><label class="weui-label">开始时间</label></div>
+						<div class="weui-cell__bd">
+							<input id="timespanb" onclick="selectDate(this)" class="weui-input" placeholder="请选择开始时间" :value="timespanb" v-model.lazy="timespanb">
+						</div>
+					</div>
+					<div class="weui-cell">
+						<div class="weui-cell__hd"><label class="weui-label">开始时间</label></div>
+						<div class="weui-cell__bd">
+							<input id="timespane" onclick="selectDate(this)" class="weui-input" placeholder="请选择结束时间" :value="timespane" v-model.lazy="timespane">
+						</div>
+					</div>
+				</div>
 				<div class="time-table">
 					<div class="weui-flex" v-once>
 						<div class="weui-flex__item">类型</div>
@@ -88,34 +114,10 @@
 			</div>
 		</template>
 		<div id="time_table" class="time-table-content">
-						<div class="weui-cells">
-					<div class="weui-cell">
-						<div class="weui-cell__hd"><label class="weui-label">课程表名称</label></div>
-						<div class="weui-cell__bd">
-							<input class="weui-input" placeholder="请输入课程表名字" :value="edulename" v-model.lazy="edulename">
-						</div>
-					</div>
-					<div class="weui-cell">
-						<div class="weui-cell__hd"><label class="weui-label">部门名称</label></div>
-						<div class="weui-cell__bd">
-							<input id="depart" onclick="selectDepart(this)"  class="weui-input" placeholder="请选择部门" :value="departname" v-model.lazy="departname" v->
-						</div>
-					</div>
-					<div class="weui-cell">
-						<div class="weui-cell__hd"><label class="weui-label">开始时间</label></div>
-						<div class="weui-cell__bd">
-							<input id="timespanb" onclick="selectDate(this)"  class="weui-input" placeholder="请选择开始时间" :value="timespanb" v-model.lazy="timespanb">
-						</div>
-					</div>
-					<div class="weui-cell">
-						<div class="weui-cell__hd"><label class="weui-label">开始时间</label></div>
-						<div class="weui-cell__bd">
-							<input id="timespane" onclick="selectDate(this)"  class="weui-input" placeholder="请选择结束时间" :value="timespane" v-model.lazy="timespane">
-						</div>
-					</div>
-				</div>
-			<time-table @click-submit-button="submitTable" @click-item="clickItem"  :items_array="items_array" :show_submit="show_submit"></time-table>
+
+			<time-table @click-submit-button="submitTable" @click-item="clickItem" :items_array="items_array" :show_submit="show_submit"></time-table>
 		</div>
+		<script src="../../js/lib/vconsole/vconsole.min.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/mui.min.js?" + Math.random() + "'></s" + "cript>");

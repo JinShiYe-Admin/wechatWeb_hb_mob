@@ -94,46 +94,68 @@
 			}
 
 			const comPersen = {
-				template: '<com-persen></com-persen>',
+				template: '<com-persen chosePersen="$root.chosePersen"></com-persen>',
 			}
 
 			const comPublish = {
-				template: '<com-publish></com-publish>'
+				template: '<com-publish chosePersen="$root.chosePersen"></com-publish>'
 			}
 
 			const router = new VueRouter({
-					mode: 'history',
-					routes: [{
-						path: 'publish',
-						name: 'publish',
-						component: comPublish
+				mode: 'history',
+				routes: [{
+					path: 'publish',
+					name: 'publish',
+					component: comPublish
+				}, {
+					path: '/persen',
+					name: 'persen',
+					component: comPersen,
+					children: [{
+						path: 'choose-person/:id',
+						name: 'choose-person',
+						component: choosePerson,
 					}, {
-						path: '/persen',
-						name: 'persen',
-						component: comPersen,
-						children: [{
-							path: 'choose-person/:id',
-							name: 'choose-person',
-							component: choosePerson,
-						},{
-							path:'',
-							redirectTo:'choose-persen/-1'
-						}]
+						path: '',
+						redirectTo: 'choose-persen/-1'
 					}]
+				}]
+			});
+			var home = new Vue({
+				el: '#publish-home',
+				router: router,
+				data: {
+					chosePerson: []
+				},
+				methods: {
+					togglePersen: function(persen, isAdd) {
+						console.log("000000#######choose-person.html######" + JSON.stringify(persen) + "是否添加" + isAdd);
+						if(isAdd) {
+							this.chosePersen = this.chosePersen.concat(persen);
+						} else {
+							this.delPersen(persen);
+						}
+					},
+					delPersen: function(persen) {
+						var com = this;
+						this.chosePersen = this.chosePersen.filter(function(chosePerson) {
+							return !com.isExistInDelPersen(chosePerson, persen);
+						})
+						console.log("删除人员后的值：" + JSON.stringify(this.chosePersen));
+					},
+					isExistInDelPersen: function(person, persen) {
+						for(var i in persen) {
+							if(persen[i].userid == person.userid) {
+								return true;
+							}
+						}
+						return false;
+					}
 				}
-
-			) var home = new Vue({
-					el: '#publish-home',
-					router: router,
-					data: {},
-					methods: {}
-				}
-
-			) router.push({
-					name: 'publish'
-				}
-
-			)
+			});
+			router.push({
+				name: 'publish'
+			})
 		</script>
 	</body>
 

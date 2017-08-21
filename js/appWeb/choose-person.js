@@ -383,19 +383,14 @@ Vue.component("person-list", {
 			});
 			if(departs && departs.length > 0) {
 				return departs[0].children
-			}else{
+			} else {
 				return [];
 			}
 		},
 		//通过部门id 更新界面
 		routerTo: function(item) {
 			console.log("********routerTo路由跳转********");
-			router.push({
-				name: 'choose-person',
-				params: {
-					id: item.value
-				}
-			});
+			router.push('/persen/choose-person/' + item.value);
 		},
 	}
 });

@@ -6,6 +6,66 @@
 		<meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<title>发布界面</title>
 		<link href="../../css/weui.css" rel="stylesheet" />
+		<style>
+			input[type=checkbox] {
+				position: absolute;
+				z-index: -9999;
+				opacity: 0;
+			}
+			
+			.weui-icon-checked:before {
+				content: '\EA01';
+				color: #C9C9C9;
+				font-size: 23px;
+				display: block;
+			}
+			
+			input[type=checkbox]:checked+.weui-icon-checked:before {
+				display: inline-block;
+				content: '\EA06';
+				color: #09BB07;
+				font-size: 23px;
+				display: block;
+			}
+			
+			.weui-cells {
+				margin-top: 0;
+			}
+			
+			.container-wrap {
+				margin-right: 10px;
+				width: 50%;
+				height: 50px;
+				white-space: nowrap;
+				overflow: hidden;
+				overflow-x: scroll;
+				/* 1 */
+				-webkit-backface-visibility: hidden;
+				-webkit-perspective: 1000;
+				-webkit-overflow-scrolling: touch;
+				/* 2 */
+				text-align: justify;
+				/* 3 */
+				-webkit-scrollbar {
+					display: none;
+				}
+				.container>div {
+					display: inline-block;
+					height: 50px;
+					color: #fff;
+					text-align: center;
+					line-height: 50px;
+				}
+			}
+			
+			.weui-btn_mini {
+				line-height: 3.2;
+			}
+			
+			.margin-bottom50 {
+				margin-bottom: 50px;
+			}
+		</style>
 	</head>
 
 	<body>
@@ -32,42 +92,48 @@
 					}
 				}
 			}
+
 			const comPersen = {
 				template: '<com-persen></com-persen>',
 			}
+
 			const comPublish = {
 				template: '<com-publish></com-publish>'
 			}
+
 			const router = new VueRouter({
-				mode: 'history',
-				routes: [{
-					path: 'publish',
-					name: 'publish',
-					component: comPublish
-				}, {
-					path: '/persen',
-					name: 'persen',
-					component: comPersen,
-					children: [{
-						path: 'choose-person/:id',
-						name: 'choose-person',
-						component: choosePerson,
+					mode: 'history',
+					routes: [{
+						path: 'publish',
+						name: 'publish',
+						component: comPublish
+					}, {
+						path: '/persen',
+						name: 'persen',
+						component: comPersen,
+						children: [{
+							path: 'choose-person/:id',
+							name: 'choose-person',
+							component: choosePerson,
+						},{
+							path:'',
+							redirectTo:'choose-persen/-1'
+						}]
 					}]
-				}]
-			})
-			var home = new Vue({
-				el: '#publish-home',
-				router: router,
-				data: {
-
-				},
-				methods: {
-
 				}
-			})
-			router.push({
-				name:'publish'
-			})
+
+			) var home = new Vue({
+					el: '#publish-home',
+					router: router,
+					data: {},
+					methods: {}
+				}
+
+			) router.push({
+					name: 'publish'
+				}
+
+			)
 		</script>
 	</body>
 

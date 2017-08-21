@@ -115,7 +115,7 @@
 				el: "#page-router",
 				router: router,
 				data: {
-					chosePersen: []
+					chosePersen: events.getSessionArray(consts.KEY_CHOOSE_PERSONS)
 				},
 				methods: {
 					togglePersen: function(persen, isAdd) {
@@ -125,6 +125,7 @@
 						} else {
 							this.delPersen(persen);
 						}
+						sessionStorage.setItem(consts.KEY_CHOOSE_PERSONS);
 					},
 					delPersen: function(persen) {
 						var com = this;
@@ -144,7 +145,7 @@
 				}
 			})
 
-			router.push({
+			router.replace({
 				name: 'choose-person',
 				params: {
 					id: -1 //全部

@@ -167,6 +167,9 @@
 			router.replace({
 				name: 'publish'
 			})
+			window.onbeforeunload=function(){
+				sessionStorage.clear();
+			}
 		</script>
 	</body>
 

@@ -16,6 +16,7 @@ Vue.component("com-publish", {
 		'$route' (to, from) {
 			// 对路由变化作出响应...
 			console.log("@@@@@com-persen@@@@@路由变化" + this.$route.params.id);
+			console.log(to);
 		}
 	},
 	data: function() {

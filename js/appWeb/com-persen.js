@@ -10,11 +10,30 @@ Vue.component('com-persen', {
 		'</div>' +
 		'</div>' +
 		'<a v-bind:class="[\'weui-btn\',\'weui-btn_mini\',\'weui-btn_primary\']" v-bind:style="{width:\'25%\',\'margin-bottom\': \'10px\'}">确定({{chosePersen.length>99?' +
-		'\"99+\":chosePersen.length}})</a>' +
+		'\"99+\":chosePersen.length}}) v-on:click="chosedPersen"</a>' +
 		'</div></div>',
+	watch: {
+		'$route' (to, from) {
+			// 对路由变化作出响应...
+			console.log("@@@@@com-persen@@@@@路由变化" + this.$route.params.id);
+		}
+	},
 	data: function() {
+		return {
+
+		}
 	},
 	methods: {
-
+		chosedPersen: function() {
+			this.routerToPub();
+			console.log("@@@@@com-persen@@@@@传递已选择的人:" + JSON.stringify(this.chosePersen));
+			this.emit('chosedPersen', this.chosePersen);
+		},
+		routerToPub: function() {
+			console.log("@@@@@com-persen@@@@@导向发布页面");
+			router.push({
+				name: 'publish'
+			})
+		}
 	}
 })

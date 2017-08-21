@@ -92,13 +92,18 @@
 					}
 				}
 			}
-
 			const comPersen = {
-				template: '<com-persen chosePersen="$root.chosePersen"></com-persen>',
+				template: '<com-persen v-bind:chosePersen="this.$root.chosePersen" v-on:chosedPersen="this.$root.chosedPersen"></com-persen>',
+				methods: {
+					chosedPersen: function(persen) {
+						console.log("####home-publish####传过来选择的人：" + JSON.stringify(persen));
+						this.$root.chosedPersen = persen;
+					}
+				}
 			}
-
+			
 			const comPublish = {
-				template: '<com-publish chosePersen="$root.chosePersen"></com-publish>'
+				template: '<com-publish v-bind:chosePersen="this.$root.chosedPersen"></com-publish>'
 			}
 
 			const router = new VueRouter({
@@ -125,7 +130,8 @@
 				el: '#publish-home',
 				router: router,
 				data: {
-					chosePerson: []
+					chosePersen: [],
+					chosedPersen: []
 				},
 				methods: {
 					togglePersen: function(persen, isAdd) {

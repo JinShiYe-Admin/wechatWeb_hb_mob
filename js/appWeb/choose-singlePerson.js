@@ -38,6 +38,9 @@ Vue.component("single-choose-person", {
 				this.requestChildren();
 			}
 		},
+		/**
+		 * 获取当前部门的子部门
+		 */
 		requestChildren: function() { //获取部门内部信息
 			console.log("*********requestChildren获取本页列表数据******");
 			var parentId = 0;
@@ -52,37 +55,6 @@ Vue.component("single-choose-person", {
 				return el.parentvalue == parentId;
 			});
 			console.log("获取的当前部门的子部门:" + JSON.stringify(childDeparts));
-//			this.getChildDepartsPersen(childDeparts);
-		},
-		getSingleDepartPersen: function(depart, departs) {
-			console.log("********getSingleDepartPersen********");
-			var mod = this;
-			mod.getDepartPersen(depart, function(data) {
-				mod.count++;
-				depart.persen = data;
-				console.log("当前的depart:" + JSON.stringify(depart));
-				if(mod.count == departs.length) {
-					console.log("获取的部门人员:" + JSON.stringify(departs));
-					if(mod.allCount == departs.length && mod.count == departs.length) {
-						//获取当前部门的人员
-						mod.getCurPersen(departs);
-						mod.allCount = 0;
-						mod.count = 0;
-					}
-				}
-			});
-		},
-		/**
-		 * 获取部门所有人员 包括子部门
-		 * @param {Object} departId
-		 * @param {Function} callback 回调
-		 */
-		getDepartPersen: function(depart, callback) {
-			console.log("********getDepartAllPersen********");
-			request.getDepartPersons(depart, 0, 0, function(data) {
-				console.log("递归获取的本部门人员:" + JSON.stringify(data));
-				callback(data);
-			})
 		},
 		/**
 		 * 获取当前部门人员
@@ -125,53 +97,8 @@ Vue.component("single-choose-person", {
 		 * @param {Object} event
 		 */
 		togglePerson: function(item, event) { //关注的人 选择
-			console.log("********togglePerson人员选择********");
-			var isAdd = event.target.checked;
 			console.log("********关注的人事件传递********");
-			this.$emit('togglePerson', [item], isAdd);
-			this.changeSessionByPerson(item, isAdd);
-			this.setItemsStatus(this.listData);
-		},
-		/**
-		 * 
-		 * @param {Object} person 选择或取消选择的信息
-		 * @param {Object} isAdd 添加删除逻辑
-		 */
-		changeSessionByPerson: function(person, isAdd) { //
-			console.log("********changeSessionByPerson人员选择后的响应********");
-			var com = this;
-			person.department.forEach(function(departId) {
-				com.togglePersonInDepart(departId, person, isAdd);
-				if(!isAdd) { //如果是刪除 刪除其所在所有部门的选择状态
-					events.toggleValueInSessionArray(consts.KEY_CHOOSE_DEPARTS, departId, isAdd);
-				}
-			});
-		},
-		togglePersonInDepart: function(departId, person, isAdd) {
-			console.log("********togglePersonInDepart相关部门内数据的存取********");
-			var personArr = events.toggleValueInArray(events.getSessionMapValue(consts.KEY_CHOSE_MAP, departId), person.userid, isAdd);
-			events.setSesionMapValue(consts.KEY_CHOSE_MAP, departId, personArr);
-			console.log("保存的map数据:" + JSON.stringify(events.getSessionMap(consts.KEY_CHOSE_MAP)));
-		},
-
-
-		/**
-		 * 获取所有的子部门
-		 * 包括递归的子部门
-		 */
-		getAllChildDeparts: function(departId) {
-			console.log("********getAllChildDeparts 递归获取所有子部门********");
-			var allDeparts = events.getSessionArray(consts.KEY_DEPARTS);
-			var childDeparts = allDeparts.filter(function(depart) {
-				return depart.parentvalue === departId;
-			});
-			if(childDeparts.length > 0) {
-				for(var i in childDeparts) {
-					childDeparts = childDeparts.concat(this.getAllChildDeparts(childDeparts[i].value));
-				}
-			}
-			console.log("departId为:" + departId + "的获取的所有子部门" + JSON.stringify(childDeparts));
-			return childDeparts;
+			this.$emit('togglePerson', item, isAdd);
 		},
 		setAsChildren: function() { //将列表数据设置为副部门的children
 			console.log("********setAsChildren将子部门数据保存至本地数组中********");

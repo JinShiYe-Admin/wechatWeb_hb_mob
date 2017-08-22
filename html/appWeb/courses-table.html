@@ -51,9 +51,39 @@
 	</head>
 
 	<body>
+
 		<div id="course-table-view">
+			<div class="weui-cells weui-cells_radio">
+				<a  class="weui-cell weui-cell_access">
+						<div class="weui-cell__bd">
+							你好
+						</div>
+						<div class="weui-cell__ft"></div>
+				</a>
+				<label class="weui-cell" for="item.userid">
+						<div class="weui-cell__bd">
+							<p>1123</p>
+						</div>
+						<div class="weui-cell__ft">
+							<input type="radio" class="weui-check" name='1' id="item.userid" v-on:change="isChecked($event)" />
+							<span class="weui-icon-checked"></span>
+						</div>
+				</label>
+				<label class="weui-cell" for="1">
+						<div class="weui-cell__bd">
+							<p>1123</p>
+						</div>
+						<div class="weui-cell__ft">
+							<input type="radio" class="weui-check" name="1" id="1" v-on:change="isChecked($event)" />
+							<span class="weui-icon-checked"></span>
+						</div>
+				</label>
+			</div>
 			<router-view></router-view>
 		</div>
+		<script src="../../js/utils/consts.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/utils/request.js"></script>
 		<script src="../../js/vue.js"></script>
 		<script src="../../js/vue-router.js"></script>
 		<script src="../../js/jquery.min.js"></script>
@@ -61,10 +91,10 @@
 		<script src="../../js/appWeb/choose-singlePerson.js"></script>
 		<script type="text/javascript">
 			const chooseSinglePer = {
-				template: '<single-choose-person  v-on:chosedPerson=""></single-choose-person>',
+				template: '<single-choose-person v-bind:depart_id="this.$route.params.id" v-on:chosedPerson=""></single-choose-person>',
 				methods: {
-					chosedPerson: function() {
-
+					chosedPerson: function(item, isAdd) {
+						console.log("#####courses获取的传过来的值：" + JSON.stringify(item) + ",isAdd:" + isAdd);
 					}
 				}
 			}
@@ -90,7 +120,9 @@
 
 				},
 				methods: {
-
+					isChecked:function(event){
+						console.log("isChecked"+event.target.checked);
+					}
 				}
 			})
 			router.replace({

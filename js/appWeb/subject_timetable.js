@@ -53,31 +53,6 @@ Vue.component("time-table", {
 			'</div>',
 	data: function() {
 		return {
-			list_array: ["daytype", "timespan", "mon", "tues", "wed", "thur", "fri", "sat", "sun"]
-		}
-	},
-	methods: {
-		/**
-		 * 点击底部的添加按钮
-		 */
-		clickSubmitButton: function() {
-			this.$emit("click-submit-button");
-		},
-		/**
-		 * 点击某一个item
-		 * @param {Object} index 第几行
-		 * @param {Object} callcol 对应的操作
-		 */
-		clickItem: function(index, callcol) {
-			this.$emit("click-item", index, callcol);
-		}
-	}
-});
-
-//课程表
-var vm_time_table = new Vue({
-	el: "#time_table",
-	data: {
 		flag: 0,
 		edulename: "",
 		departname: "",
@@ -87,6 +62,9 @@ var vm_time_table = new Vue({
 		items_array: [],
 		departs_array: [],
 		sub_array: []
+	
+			list_array: ["daytype", "timespan", "mon", "tues", "wed", "thur", "fri", "sat", "sun"]
+		}
 	},
 	watch: {
 		edulename: function(newVal, oldVal) {
@@ -110,8 +88,9 @@ var vm_time_table = new Vue({
 		/**
 		 * 点击底部的添加按钮
 		 */
-		submitTable: function() {
+		clickSubmitButton: function() {
 			addEdule();
+		
 		},
 		/**
 		 * 点击某一个item
@@ -132,17 +111,25 @@ var vm_time_table = new Vue({
 				});
 			} else if(callcol == "daytype") {
 				//点击类型
-				vm_time_table.items_array[index][callcol] = callcol;
+				this.items_array[index][callcol] = callcol;
 			} else if(callcol == "timespan") {
 				//点击时间段
-				vm_time_table.items_array[index][callcol] = callcol;
+				this.items_array[index][callcol] = callcol;
 			} else {
 				//点击具体星期
-				vm_time_table.items_array[index][callcol + "subname"] = callcol + "subname";
-				vm_time_table.items_array[index][callcol + "uname"] = callcol + "uname";
+				this.items_array[index][callcol + "subname"] = callcol + "subname";
+				this.items_array[index][callcol + "uname"] = callcol + "uname";
 			}
 		}
-	},
+	}
+});
+
+//课程表
+var vm_time_table = new Vue({
+	el: "#time_table",
+	data: {},
+	watch: {},
+	methods: {},
 	computed: {
 		show_submit: function() {
 			var show = true;

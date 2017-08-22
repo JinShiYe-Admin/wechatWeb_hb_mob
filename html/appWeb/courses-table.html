@@ -142,7 +142,7 @@
 				}
 			}
 			const courseTab = {
-				tempalte: '<time-table v-bind:choosePerson=""></time-table>'
+				tempalte: '<time-table v-on:click-submit-button="submitTable" v-on:click-item="clickItem" v-bind:items_array="items_array" v-bind:show_submit="show_submit"></time-table>'
 			}
 			const router = new VueRouter({
 				mode: 'history',

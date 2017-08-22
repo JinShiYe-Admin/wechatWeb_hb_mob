@@ -1,6 +1,6 @@
 Vue.component("time-table", {
 	props: ["edulename", "departname", "timespanb", "timespane", "items_array", "show_submit"],
-	template: '#template-table',
+	template: '.template-table',
 	data: function() {
 		return {
 			list_array: ["daytype", "timespan", "mon", "tues", "wed", "thur", "fri", "sat", "sun"]

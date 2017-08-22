@@ -1,9 +1,34 @@
 Vue.component("single-choose-person", {
-	props: ['depart_id'],
-	template: '.single-choose-person',
+	template: '<div v-bind:class="[\'weui-cells\']">' +
+		'<template v-for="(item,index) of listData">' +
+		'<a v-if="item.value" v-bind:class="[\'weui-cell\',\'weui-cell_access\']">' +
+		'<div v-bind:class="[\'weui-cell__bd\']">' +
+		'{{item.title}}' +
+		'</div>' +
+		'<div v-bind:class="[\'weui-cell__ft\']"></div>' +
+		'</a>' +
+		'<label v-else v-bind:class="[\'weui-cell\',\'weui-check__label\']" v-bind:for="item.userid">' +
+		'<div v-bind:class="[\'weui-cell__bd\']">' +
+		'<p>{{item.name}}</p>' +
+		'</div>' +
+		'<div v-bind:class="[\'weui-cell__ft\']">' +
+		'<input type="radio" v-bind:class="[\'weui-check\']" v-bind:id="item.userid" />' +
+		'</div>' +
+		'</label>' +
+		'</template>' +
+		'</div>',
+	created:function(){
+		console.log("当前的部门id:" + this.$route.params.id);
+		this.getAllListData();
+	},
 	watch: {
 		'$route' (to, from) {
 			console.log("当前的部门id:" + this.$route.params.id);
+			if(this.this.$route.params.id==-1){
+				this.getAllListData();
+			}else{
+				this.getCurDeparts();
+			}
 		}
 	},
 	data: function() {
@@ -31,7 +56,7 @@ Vue.component("single-choose-person", {
 			var children = this.getLocalChildren();
 			console.log("获取当前部门*****" + JSON.stringify(children));
 			if(children && children.length > 0) {
-//				this.setItemsStatus(children);
+				//				this.setItemsStatus(children);
 				this.listData = children;
 				this.isLoading = false;
 			} else {
@@ -55,6 +80,7 @@ Vue.component("single-choose-person", {
 				return el.parentvalue == parentId;
 			});
 			console.log("获取的当前部门的子部门:" + JSON.stringify(childDeparts));
+			this.getCurPersen(childDeparts);
 		},
 		/**
 		 * 获取当前部门人员
@@ -71,7 +97,6 @@ Vue.component("single-choose-person", {
 			request.getDepartPersons(com.$route.params.id, 0, 0, function(data) {
 				console.log("获取的本部门人员:" + JSON.stringify(data));
 				var children = data.concat(departs);
-				com.setItemsStatus(children);
 				com.listData = children;
 				com.isLoading = false;
 				com.setAsChildren();

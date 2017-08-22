@@ -107,6 +107,7 @@
 				<button v-if="show_submit" @click="clickSubmitButton" class="weui-btn weui-btn_mini weui-btn_primary">提交</button>
 			</div>
 		</template>
+		<template id="single-choose-person" class="single-choose-person">
 			<div class="weui-cells">
 				<template v-for="(item,index) of listData">
 					<a v-if="item.value" class="weui-cell weui-cell_access">

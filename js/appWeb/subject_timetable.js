@@ -1,6 +1,56 @@
 Vue.component("time-table", {
 	props: ["edulename", "departname", "timespanb", "timespane", "items_array", "show_submit"],
-	template: '.template-table',
+	template: '<div>'+
+				'<div class="weui-cells">'+
+					'<div class="weui-cell">'+
+						'<div class="weui-cell__hd"><label class="weui-label">课程表名称</label></div>'+
+						'<div class="weui-cell__bd">'+
+							'<input class="weui-input" placeholder="请输入课程表名字" :value="edulename" v-model.lazy="edulename">'+
+						'</div>'+
+					'</div>'+
+					'<div class="weui-cell">'+
+						'<div class="weui-cell__hd"><label class="weui-label">部门名称</label></div>'+
+						'<div class="weui-cell__bd">'+
+							'<input id="depart" onclick="selectDepart(this)" class="weui-input" placeholder="请选择部门" :value="departname" v-model.lazy="departname" >'+
+						'</div>'+
+					'</div>'+
+					'<div class="weui-cell">'+
+						'<div class="weui-cell__hd"><label class="weui-label">开始时间</label></div>'+
+						'<div class="weui-cell__bd">'+
+							'<input id="timespanb" onclick="selectDate(this)" class="weui-input" placeholder="请选择开始时间" :value="timespanb" v-model.lazy="timespanb">'+
+						'</div>'+
+					'</div>'+
+					'<div class="weui-cell">'+
+						'<div class="weui-cell__hd"><label class="weui-label">开始时间</label></div>'+
+						'<div class="weui-cell__bd">'+
+							'<input id="timespane" onclick="selectDate(this)" class="weui-input" placeholder="请选择结束时间" :value="timespane" v-model.lazy="timespane">'+
+						'</div>'+
+					'</div>'+
+				'</div>'+
+				'<div class="time-table">'+
+					'<div class="weui-flex" v-once>'+
+						'<div class="weui-flex__item">类型</div>'+
+						'<div class="weui-flex__item">时间段</div>'+
+						'<div class="weui-flex__item">周一</div>'+
+						'<div class="weui-flex__item">周二</div>'+
+						'<div class="weui-flex__item">周三</div>'+
+						'<div class="weui-flex__item">周四</div>'+
+						'<div class="weui-flex__item">周五</div>'+
+						'<div class="weui-flex__item">周六</div>'+
+						'<div class="weui-flex__item">周日</div>'+
+					'</div>'+
+					'<div class="weui-flex" v-for="(item,index) in items_array">'+
+						'<div :id="index+\'-\'+list_value" class="weui-flex__item" :class="{\'first\':list_item==0,\'second\':list_item==1,\'other\':list_item!=0&&list_item!=1}" v-for="(list_value,list_item) in list_array">'+
+							'<div v-if="list_value == \'daytype\'">{{item.daytype}}</div>'+
+							'<div v-else-if="list_value == \'timespan\'">{{item.timespan}}</div>'+
+							'<template v-else>'+
+								'<div>{{item[list_value + \'subname\']+item[list_value + \'uname\']}}</div>'+
+							'</template>'+
+						'</div>'+
+					'</div>'+
+				'</div>'+
+				'<button v-if="show_submit" @click="clickSubmitButton" class="weui-btn weui-btn_mini weui-btn_primary">提交</button>'+
+			'</div>',
 	data: function() {
 		return {
 			list_array: ["daytype", "timespan", "mon", "tues", "wed", "thur", "fri", "sat", "sun"]
@@ -316,29 +366,29 @@ function getPersondeparts() {
 }
 
 function getDepartpersons(id, index) {
-	var tempData = {
-		cmd: 'departpersons',
-		type: 'findpage',
-		colid: id,
-		colv:1
-	}
-	console.log(JSON.stringify(tempData))
-	unitWebsitePro(tempData, function(data) {
-		console.log('人员:' + JSON.stringify(data));
-		if(data.RspCode == 0) {
-			var tempArr = vm_time_table.departs_array;
-			for(var i = 0; i < data.RspData.length; i++) {
-				var model = data.RspData[i];
-				model.value = model.userid;
-				model.label = model.name;
-
-			}
-			tempArr[index].children = data.RspData;
-			console.log(JSON.stringify(vm_time_table.departs_array));
-		} else {
-			mui.toast(data.RspTxt)
-		}
-	})
+//	var tempData = {
+//		cmd: 'departpersons',
+//		type: 'findpage',
+//		colid: id,
+//		colv:1
+//	}
+//	console.log(JSON.stringify(tempData))
+//	unitWebsitePro(tempData, function(data) {
+//		console.log('人员:' + JSON.stringify(data));
+//		if(data.RspCode == 0) {
+//			var tempArr = vm_time_table.departs_array;
+//			for(var i = 0; i < data.RspData.length; i++) {
+//				var model = data.RspData[i];
+//				model.value = model.userid;
+//				model.label = model.name;
+//
+//			}
+//			tempArr[index].children = data.RspData;
+//			console.log(JSON.stringify(vm_time_table.departs_array));
+//		} else {
+//			mui.toast(data.RspTxt)
+//		}
+//	})
 }
 
 function getSub() {

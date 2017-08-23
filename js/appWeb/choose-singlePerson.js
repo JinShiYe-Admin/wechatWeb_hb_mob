@@ -126,6 +126,7 @@ Vue.component("single-choose-person", {
 			console.log("********关注的人事件传递********");
 			var isAdd = event.target.checked;
 			this.$emit('chosedPerson', item, isAdd);
+			this.routerToTab();
 		},
 		setAsChildren: function() { //将列表数据设置为副部门的children
 			console.log("********setAsChildren将子部门数据保存至本地数组中********");
@@ -163,6 +164,11 @@ Vue.component("single-choose-person", {
 			} else {
 				return [];
 			}
+		},
+		routerToTab: function() {
+			router.push({
+				name: 'table'
+			})
 		},
 		//通过部门id 更新界面
 		routerTo: function(item) {

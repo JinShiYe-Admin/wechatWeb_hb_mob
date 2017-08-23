@@ -149,6 +149,12 @@
 					chosedPerson: function(item, isAdd) {
 						console.log("#####courses获取的传过来的值：" + JSON.stringify(item) + ",isAdd:" + isAdd);
 						this.$root.chosedPerson = item;
+						if(table_data.type==0){
+							table_data.departname=item.departname
+							table_data.departid=item.departid
+						}else{
+//							table_data
+						}
 					}
 				}
 			}

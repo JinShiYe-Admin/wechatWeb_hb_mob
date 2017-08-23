@@ -166,6 +166,13 @@ Vue.component("time-table", {
 				});
 
 			} else {
+				table_data.type = 1;
+				router.push({
+					name: 'chooseSinPer',
+					params: {
+						id: -1
+					}
+				})
 				//点击具体星期
 				//				this.items_array[index][callcol + "subname"] = callcol + "subname";
 				//				this.items_array[index][callcol + "uname"] = callcol + "uname";
@@ -322,6 +329,7 @@ function editEdule(oldVal, newVal, callcol) {
 }
 
 function selectDepart(input_item) {
+	table_data.type = 0;
 	router.push({
 		name: 'chooseSinPer',
 		params: {

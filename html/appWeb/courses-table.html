@@ -178,7 +178,10 @@
 							table_data.departname = item.departname
 							table_data.departid = item.departid
 						} else {
-							//							table_data
+							var index = table_data.rowIndex;
+							var callcol = table_data.colIndex
+							table_data.items_array[index][callcol + "uname"] = item.name;
+							table_data.items_array[index][callcol + "uid"] = item.userid;
 						}
 					}
 				}

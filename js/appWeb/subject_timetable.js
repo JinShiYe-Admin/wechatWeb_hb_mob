@@ -2,6 +2,8 @@ var table_data = {
 	type: 0,
 	flag: 0,
 	isCreated: 0,
+	rowIndex:0,
+	colIndex:0,
 	edulename: "",
 	departname: "",
 	departid: "",
@@ -166,6 +168,16 @@ Vue.component("time-table", {
 				});
 
 			} else {
+				table_data.type = 1;
+				table_data.rowIndex = index;
+				table_data.colIndex = callcol;
+				
+				router.push({
+					name: 'chooseSinPer',
+					params: {
+						id: -1
+					}
+				})
 				//点击具体星期
 				//				this.items_array[index][callcol + "subname"] = callcol + "subname";
 				//				this.items_array[index][callcol + "uname"] = callcol + "uname";
@@ -322,6 +334,7 @@ function editEdule(oldVal, newVal, callcol) {
 }
 
 function selectDepart(input_item) {
+	table_data.type = 0;
 	router.push({
 		name: 'chooseSinPer',
 		params: {

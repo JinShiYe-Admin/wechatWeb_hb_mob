@@ -47,6 +47,31 @@
 			.time-table-item-del {
 				color: red;
 			}
+			
+			input[type=radio] {
+				position: absolute;
+				z-index: -9999;
+				opacity: 0;
+			}
+			
+			.weui-icon-checked:before {
+				content: '\EA01';
+				color: #C9C9C9;
+				font-size: 23px;
+				display: block;
+			}
+			
+			input[type=radio]:checked+.weui-icon-checked:before {
+				display: inline-block;
+				content: '\EA06';
+				color: #09BB07;
+				font-size: 23px;
+				display: block;
+			}
+			
+			.weui-cells {
+				margin-top: 0;
+			}
 		</style>
 	</head>
 
@@ -145,7 +170,7 @@
 				template: "#table",
 			}
 			const chooseSinglePer = {
-				template: '<single-choose-person v-bind:chooseType="table_data.type" v-bind:depart_id="parseInt(this.$route.params.id)" v-on:chosedPerson="chosedPerson"></single-choose-person>',
+				template: '<single-choose-person v-bind:chooseType="$root.table_data.type" v-bind:depart_id="parseInt(this.$route.params.id)" v-on:chosedPerson="chosedPerson"></single-choose-person>',
 				methods: {
 					chosedPerson: function(item, isAdd) {
 						console.log("#####courses获取的传过来的值：" + JSON.stringify(item) + ",isAdd:" + isAdd);
@@ -180,7 +205,8 @@
 				data: {
 					chosedPerson: {
 
-					}
+					},
+					table_data: table_data
 				},
 				methods: {
 					isChecked: function(event) {

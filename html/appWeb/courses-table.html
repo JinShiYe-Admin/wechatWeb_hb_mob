@@ -154,10 +154,10 @@
 			const router = new VueRouter({
 				mode: 'history',
 				routes: [{
-					//					path: '/table',
-					//					name: 'table',
-					//					component: courseTab
-					//				}, {
+					path: '/table',
+					name: 'table',
+					component: courseTab
+				}, {
 					path: '/chooseSinPer/:id',
 					name: 'chooseSinPer',
 					component: chooseSinglePer
@@ -176,10 +176,7 @@
 				}
 			})
 			router.replace({
-				name: 'chooseSinPer',
-				params: {
-					id: -1
-				}
+				name: 'table'
 			})
 		</script>
 	</body>

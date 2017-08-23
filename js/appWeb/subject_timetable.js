@@ -315,8 +315,14 @@ function editEdule(oldVal, newVal, callcol) {
 }
 
 function selectDepart(input_item) {
-	document.activeElement.blur();
+	router.push({
+		name:'chooseSinPer',
+		params:{
+			id:-1
+		}
+	})
 }
+
 
 function selectDate(input_item) {
 	document.activeElement.blur();

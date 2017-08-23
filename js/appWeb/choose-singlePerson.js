@@ -1,7 +1,8 @@
 Vue.component("single-choose-person", {
-	template: '<div v-bind:class="[\'weui-cells\']">' +
+	props: ['depart_id'],
+	template: '<div v-bind:class="[\'weui-cells\',\'weui-cells_radio\']">' +
 		'<template v-for="(item,index) of listData">' +
-		'<a v-if="item.value" v-bind:class="[\'weui-cell\',\'weui-cell_access\']">' +
+		'<a v-if="item.value" v-bind:class="[\'weui-cell\',\'weui-cell_access\']" v-on:click="clickEvent(item)">' +
 		'<div v-bind:class="[\'weui-cell__bd\']">' +
 		'{{item.title}}' +
 		'</div>' +
@@ -12,21 +13,22 @@ Vue.component("single-choose-person", {
 		'<p>{{item.name}}</p>' +
 		'</div>' +
 		'<div v-bind:class="[\'weui-cell__ft\']">' +
-		'<input type="radio" v-bind:class="[\'weui-check\']" v-bind:id="item.userid" />' +
+		'<input type="radio" v-bind:class="[\'weui-check\']" v-bind:name="depart_id" v-bind:id="item.userid" v-on:change="togglePerson(item,$event)"/>' +
+		'<span v-bind:class="[\'weui-icon-checked\']"></span>' +
 		'</div>' +
 		'</label>' +
 		'</template>' +
 		'</div>',
-	created:function(){
+	created: function() {
 		console.log("当前的部门id:" + this.$route.params.id);
 		this.getAllListData();
 	},
 	watch: {
 		'$route' (to, from) {
 			console.log("当前的部门id:" + this.$route.params.id);
-			if(this.this.$route.params.id==-1){
+			if(this.$route.params.id == -1) {
 				this.getAllListData();
-			}else{
+			} else {
 				this.getCurDeparts();
 			}
 		}
@@ -112,8 +114,7 @@ Vue.component("single-choose-person", {
 				console.log("路由跳转")
 				this.routerTo(item);
 			} else {
-				console.log("人员选择");
-				this.choosePerson(item);
+
 			}
 		},
 		/**
@@ -123,7 +124,8 @@ Vue.component("single-choose-person", {
 		 */
 		togglePerson: function(item, event) { //关注的人 选择
 			console.log("********关注的人事件传递********");
-			this.$emit('togglePerson', item, isAdd);
+			var isAdd = event.target.checked;
+			this.$emit('chosedPerson', item, isAdd);
 		},
 		setAsChildren: function() { //将列表数据设置为副部门的children
 			console.log("********setAsChildren将子部门数据保存至本地数组中********");
@@ -165,7 +167,12 @@ Vue.component("single-choose-person", {
 		//通过部门id 更新界面
 		routerTo: function(item) {
 			console.log("********routerTo路由跳转********");
-			router.push('/persen/choose-person/' + item.value);
+			router.push({
+				name: 'chooseSinPer',
+				params: {
+					id: item.value
+				}
+			})
 		},
 
 	}

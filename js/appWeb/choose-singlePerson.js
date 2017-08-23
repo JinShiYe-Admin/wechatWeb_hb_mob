@@ -1,19 +1,19 @@
 Vue.component("single-choose-person", {
-	props: ['depart_id'],
+	props: ['depart_id', 'chooseType'],
 	template: '<div v-bind:class="[\'weui-cells\',\'weui-cells_radio\']">' +
 		'<template v-for="(item,index) of listData">' +
-		'<a v-if="item.value" v-bind:class="[\'weui-cell\',\'weui-cell_access\']" v-on:click="clickEvent(item)">' +
+		'<a v-if="item.value&&chooseType===1" v-bind:class="[\'weui-cell\',\'weui-cell_access\']" v-on:click="clickEvent(item)">' +
 		'<div v-bind:class="[\'weui-cell__bd\']">' +
 		'{{item.title}}' +
 		'</div>' +
 		'<div v-bind:class="[\'weui-cell__ft\']"></div>' +
 		'</a>' +
-		'<label v-else v-bind:class="[\'weui-cell\',\'weui-check__label\']" v-bind:for="item.userid">' +
+		'<label v-else v-bind:class="[\'weui-cell\',\'weui-check__label\']" v-bind:for="chooseType===0?item.value:item.userid">' +
 		'<div v-bind:class="[\'weui-cell__bd\']">' +
-		'<p>{{item.name}}</p>' +
+		'<p>{{chooseType===0?item.value:item.name}}</p>' +
 		'</div>' +
 		'<div v-bind:class="[\'weui-cell__ft\']">' +
-		'<input type="radio" v-bind:class="[\'weui-check\']" v-bind:name="depart_id" v-bind:id="item.userid" v-on:change="togglePerson(item,$event)"/>' +
+		'<input type="radio" v-bind:class="[\'weui-check\']" v-bind:name="depart_id" v-bind:id="chooseType===0?item.value:item.userid" v-on:change="togglePerson(item,$event)"/>' +
 		'<span v-bind:class="[\'weui-icon-checked\']"></span>' +
 		'</div>' +
 		'</label>' +

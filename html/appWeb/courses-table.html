@@ -144,7 +144,7 @@
 				template: "#table",
 			}
 			const chooseSinglePer = {
-				template: '<single-choose-person v-bind:depart_id="this.$route.params.id" v-on:chosedPerson=""></single-choose-person>',
+				template: '<single-choose-person v-bind:depart_id="parseInt(this.$route.params.id)" v-on:chosedPerson=""></single-choose-person>',
 				methods: {
 					chosedPerson: function(item, isAdd) {
 						console.log("#####courses获取的传过来的值：" + JSON.stringify(item) + ",isAdd:" + isAdd);
@@ -154,10 +154,10 @@
 			const router = new VueRouter({
 				mode: 'history',
 				routes: [{
-					//					path: '/table',
-					//					name: 'table',
-					//					component: courseTab
-					//				}, {
+					path: '/table',
+					name: 'table',
+					component: courseTab
+				}, {
 					path: '/chooseSinPer/:id',
 					name: 'chooseSinPer',
 					component: chooseSinglePer
@@ -176,10 +176,7 @@
 				}
 			})
 			router.replace({
-				name: 'chooseSinPer',
-				params: {
-					id: -1
-				}
+				name: 'table'
 			})
 		</script>
 	</body>

@@ -99,7 +99,8 @@
 							<div @click="clickItem(index,list_value)" v-if="list_value == 'daytype'">{{item.daytype}}</div>
 							<div @click="clickItem(index,list_value)" v-else-if="list_value == 'timespan'">{{item.timespan}}</div>
 							<template v-else>
-								<div @click="clickItem(index,list_value)">{{item[list_value + 'subname']+item[list_value + 'uname']}}</div>
+								<div @click="clickItem(index,list_value)">{{item[list_value + 'subname']}}</div>
+								<div @click="clickItem(index,list_value)">{{item[list_value + 'uname']}}</div>
 							</template>
 						</div>
 					</div>
@@ -150,8 +151,8 @@
 						console.log("#####courses获取的传过来的值：" + JSON.stringify(item) + ",isAdd:" + isAdd);
 						this.$root.chosedPerson = item;
 						if(table_data.type == 0) {
-							table_data.departname = item.departname
-							table_data.departid = item.departid
+							table_data.departname = item.title
+							table_data.departid = item.value
 						} else {
 							var index = table_data.rowIndex;
 							var callcol = table_data.colIndex

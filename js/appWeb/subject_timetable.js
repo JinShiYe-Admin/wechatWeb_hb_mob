@@ -22,6 +22,30 @@ Vue.component("time-table", {
 		if(table_data.isCreated == 0) {
 			table_data.isCreated = 1;
 		} else {
+			if(table_data.type==1){
+							
+				// 多列选择器
+				weui.picker(table_data.sub_array, {
+					defaultValue: [],
+					onChange: function onChange(result) {
+//						console.log(result);
+					},
+					onConfirm: function onConfirm(result) {
+						console.log(result);
+						var index = table_data.rowIndex;
+						var colIndex = table_data.colIndex
+						var model = table_data.items_array[index]
+						model[colIndex] = result[0].label;
+						
+						var uname = table_data.items_array[index][colIndex + "uname"];
+						var uid = table_data.items_array[index][colIndex + "uid"];
+						var colv = result[0].value+'|'+result[0].label+'|'+uid+'|'+uname
+						var colid = model.weekrowid
+						editEduleweek(colv, colIndex, colid);
+					},
+					id: 'picker'
+				});
+			}
 			return;
 		}
 		if(table_data.flag == 0) {
@@ -38,20 +62,20 @@ Vue.component("time-table", {
 				var item = {
 					daytype: daytype,
 					timespan: "8:00-9:00",
-					monsubname: "",
-					monuname: "",
-					tuessubname: "",
-					tuesuname: "",
-					wedsubname: "",
-					weduname: "",
-					thursubname: "",
-					thuruname: "",
-					frisubname: "",
-					friuname: "",
-					satsubname: "",
-					satuname: "",
-					sunsubname: "",
-					sununame: ""
+					monsubname: "选择课程",
+					monuname: "人员",
+					tuessubname: "选择课程",
+					tuesuname: "人员",
+					wedsubname: "选择课程",
+					weduname: "人员",
+					thursubname: "选择课程",
+					thuruname: "人员",
+					frisubname: "选择课程",
+					friuname: "人员",
+					satsubname: "选择课程",
+					satuname: "人员",
+					sunsubname: "选择课程",
+					sununame: "人员"
 				};
 				this.items_array.push(item);
 			}
@@ -110,7 +134,7 @@ Vue.component("time-table", {
 				}], {
 					defaultValue: ['上午'],
 					onChange: function onChange(result) {
-						console.log(result);
+//						console.log(result);
 					},
 					onConfirm: function onConfirm(result) {
 						console.log(result);
@@ -153,7 +177,7 @@ Vue.component("time-table", {
 				}], minutes, {
 					defaultValue: ['08', ":", '00', "到", "08", ":", "00"],
 					onChange: function onChange(result) {
-						console.log(result);
+//						console.log(result);
 					},
 					onConfirm: function onConfirm(result) {
 						console.log(JSON.stringify(result));
@@ -171,7 +195,6 @@ Vue.component("time-table", {
 				table_data.type = 1;
 				table_data.rowIndex = index;
 				table_data.colIndex = callcol;
-				
 				router.push({
 					name: 'chooseSinPer',
 					params: {

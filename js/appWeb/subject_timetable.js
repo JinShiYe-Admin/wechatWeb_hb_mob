@@ -15,7 +15,6 @@ Vue.component("time-table", {
 		return table_data
 	},
 	created: function() {
-
 		if(table_data.flag == 0) {
 			getSub();
 			for(var i = 0; i < 9; i++) {
@@ -49,7 +48,6 @@ Vue.component("time-table", {
 			}
 		} else {
 			getEduleweek(detail.eduleid);
-			getPersondeparts();
 			getSub();
 		}
 
@@ -89,7 +87,7 @@ Vue.component("time-table", {
 			console.log("clickItem:" + index + " " + callcol);
 			if(callcol == "daytype") {
 				//点击类型
-//				table_data.items_array[index][callcol] = callcol;
+				//				table_data.items_array[index][callcol] = callcol;
 				// 多列选择器
 				weui.picker([{
 					label: "上午",
@@ -118,7 +116,7 @@ Vue.component("time-table", {
 
 			} else if(callcol == "timespan") {
 				//点击时间段
-//				table_data.items_array[index][callcol] = callcol;
+				//				table_data.items_array[index][callcol] = callcol;
 
 				var self = this;
 				var hours = [];
@@ -162,8 +160,8 @@ Vue.component("time-table", {
 
 			} else {
 				//点击具体星期
-				this.items_array[index][callcol + "subname"] = callcol + "subname";
-				this.items_array[index][callcol + "uname"] = callcol + "uname";
+//				this.items_array[index][callcol + "subname"] = callcol + "subname";
+//				this.items_array[index][callcol + "uname"] = callcol + "uname";
 			}
 		}
 	},
@@ -317,22 +315,11 @@ function editEdule(oldVal, newVal, callcol) {
 }
 
 function selectDepart(input_item) {
-	// 多列选择器
-	weui.picker(table_data.departs_array, {
-		depth: 1,
-		defaultValue: [1],
-		onChange: function onChange(result) {
-			//										console.log(result);
-		},
-		onConfirm: function onConfirm(result) {
-			table_data.departid = result[0].value;
-			table_data.departname = result[0].label;
-		},
-		id: 'cascadePicker'
-	});
+	document.activeElement.blur();
 }
 
 function selectDate(input_item) {
+	document.activeElement.blur();
 	var self = input_item;
 	weui.datePicker({
 		start: '2016-12-29',
@@ -351,13 +338,3 @@ function selectDate(input_item) {
 		id: 'datePicker'
 	});
 }
-
-$("#depart").focus(function() {
-	document.activeElement.blur();
-});
-$("#timespanb").focus(function() {
-	document.activeElement.blur();
-});
-$("#timespane").focus(function() {
-	document.activeElement.blur();
-});

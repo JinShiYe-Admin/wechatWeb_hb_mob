@@ -47,11 +47,36 @@
 			.time-table-item-del {
 				color: red;
 			}
+			
+			input[type=radio] {
+				position: absolute;
+				z-index: -9999;
+				opacity: 0;
+			}
+			
+			.weui-icon-checked:before {
+				content: '\EA01';
+				color: #C9C9C9;
+				font-size: 23px;
+				display: block;
+			}
+			
+			input[type=radio]:checked+.weui-icon-checked:before {
+				display: inline-block;
+				content: '\EA06';
+				color: #09BB07;
+				font-size: 23px;
+				display: block;
+			}
+			
+			.weui-cells {
+				margin-top: 0;
+			}
 		</style>
 	</head>
 
 	<body>
-		<template id="table" >
+		<template id="table">
 			<time-table></time-table>
 		</template>
 		<template id="template-table">
@@ -149,11 +174,11 @@
 					chosedPerson: function(item, isAdd) {
 						console.log("#####courses获取的传过来的值：" + JSON.stringify(item) + ",isAdd:" + isAdd);
 						this.$root.chosedPerson = item;
-						if(table_data.type==0){
-							table_data.departname=item.departname
-							table_data.departid=item.departid
-						}else{
-//							table_data
+						if(table_data.type == 0) {
+							table_data.departname = item.departname
+							table_data.departid = item.departid
+						} else {
+							//							table_data
 						}
 					}
 				}

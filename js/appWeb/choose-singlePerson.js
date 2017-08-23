@@ -2,21 +2,36 @@ Vue.component("single-choose-person", {
 	props: ['depart_id', 'chooseType'],
 	template: '<div v-bind:class="[\'weui-cells\',\'weui-cells_radio\']">' +
 		'<template v-for="(item,index) of listData">' +
-		'<a v-if="item.value&&chooseType===1" v-bind:class="[\'weui-cell\',\'weui-cell_access\']" v-on:click="clickEvent(item)">' +
+		'<template v-if="chooseType===1">' +
+		'<a v-if="item.value" v-bind:class="[\'weui-cell\',\'weui-cell_access\']" v-on:click="clickEvent(item)">' +
 		'<div v-bind:class="[\'weui-cell__bd\']">' +
 		'{{item.title}}' +
 		'</div>' +
 		'<div v-bind:class="[\'weui-cell__ft\']"></div>' +
 		'</a>' +
-		'<label v-else v-bind:class="[\'weui-cell\',\'weui-check__label\']" v-bind:for="chooseType===0?item.value:item.userid">' +
+		'<label v-else v-bind:class="[\'weui-cell\',\'weui-check__label\']" v-bind:for="item.userid">' +
 		'<div v-bind:class="[\'weui-cell__bd\']">' +
-		'<p>{{chooseType===0?item.value:item.name}}</p>' +
+		'<p>{{item.name}}</p>' +
 		'</div>' +
 		'<div v-bind:class="[\'weui-cell__ft\']">' +
-		'<input type="radio" v-bind:class="[\'weui-check\']" v-bind:name="depart_id" v-bind:id="chooseType===0?item.value:item.userid" v-on:change="togglePerson(item,$event)"/>' +
+		'<input type="radio" v-bind:class="[\'weui-check\']" v-bind:name="depart_id" v-bind:id="item.userid" v-on:change="togglePerson(item,$event)"/>' +
 		'<span v-bind:class="[\'weui-icon-checked\']"></span>' +
 		'</div>' +
 		'</label>' +
+		'</template>' +
+		'<a v-else v-bind:class="[\'weui-cell\',\'weui-cell_access\']">' +
+		'<div v-bind:class="[\'weui-cell__hd\']">' +
+		'<label v-bind:for="item.value">' +
+		'<input type="radio" v-bind:class="[\'weui-check\']"  v-bind:id="item.value" v-bind:name="depart_id"' +
+		'v-on:change="togglePerson(item,$event)"/>' +
+		'<i v-bind:class="[\'weui-icon-checked\']"></i>' +
+		'</label>' +
+		'</div>' +
+		'<div v-bind:class="[\'weui-cell__bd\']" v-on:click="clickEvent(item)">' +
+		'<p>{{item.title}}</p>' +
+		'</div>' +
+		'<div v-bind:class="[\'weui-cell__ft\']" v-on:click="clickEvent(item)"></div>' +
+		'</a>' +
 		'</template>' +
 		'</div>',
 	created: function() {
@@ -82,7 +97,14 @@ Vue.component("single-choose-person", {
 				return el.parentvalue == parentId;
 			});
 			console.log("获取的当前部门的子部门:" + JSON.stringify(childDeparts));
-			this.getCurPersen(childDeparts);
+			if(this.chooseType===1){
+				this.getCurPersen(childDeparts);
+			}else{
+				this.listData = childDeparts;
+				this.isLoading = false;
+				this.setAsChildren();
+			}
+			
 		},
 		/**
 		 * 获取当前部门人员

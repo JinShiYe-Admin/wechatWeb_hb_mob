@@ -51,7 +51,7 @@
 	</head>
 
 	<body>
-		<template id="table" >
+		<template id="table">
 			<time-table></time-table>
 		</template>
 		<template id="template-table">
@@ -149,11 +149,14 @@
 					chosedPerson: function(item, isAdd) {
 						console.log("#####courses获取的传过来的值：" + JSON.stringify(item) + ",isAdd:" + isAdd);
 						this.$root.chosedPerson = item;
-						if(table_data.type==0){
-							table_data.departname=item.departname
-							table_data.departid=item.departid
-						}else{
-//							table_data
+						if(table_data.type == 0) {
+							table_data.departname = item.departname
+							table_data.departid = item.departid
+						} else {
+							var index = table_data.rowIndex;
+							var callcol = table_data.colIndex
+							table_data.items_array[index][callcol + "uname"] = item.name;
+							table_data.items_array[index][callcol + "uid"] = item.userid;
 						}
 					}
 				}

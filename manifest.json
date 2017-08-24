@@ -321,7 +321,8 @@
 					"js/importJS.js"
 				],
 				"refer": [
-					"html/appWeb/subject_timetable.html"
+					"html/appWeb/subject_timetable.html",
+					"html/appWeb/schedule.html"
 				],
 				"priority": 0
 			},
@@ -338,6 +339,43 @@
 					"js/weui.min.js",
 					"js/demoCssJs/weui.min.css",
 					"js/utils/storageutil.js",
+					"js/importJS.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/appWeb/schedule.html": {
+				"resources": [
+					"js/utils/mui.pullToRefresh.material.js",
+					"js/utils/mui.pullToRefresh.js",
+					"css/utils/pullToRefresh.css",
+					"js/jquery.min.js",
+					"js/utils/utils.js",
+					"js/PublicProtocol.js",
+					"js/vue.min.js",
+					"html/appWeb/courses-table.html",
+					"js/utils/storageutil.js",
+					"js/importJS.js",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/appWeb/courses-table.html": {
+				"resources": [
+					"js/utils/utils.js",
+					"js/utils/events.js",
+					"js/PublicProtocol.js",
+					"js/utils/request.js",
+					"js/appWeb/choose-singlePerson.js",
+					"js/utils/storageutil.js",
+					"js/vue.js",
+					"js/mui.min.js",
+					"js/demoCssJs/jquery-weui.js",
+					"js/vue-router.js",
+					"js/weui.min.js",
+					"js/utils/consts.js",
+					"css/weui.css",
 					"js/importJS.js"
 				],
 				"refer": [],
@@ -418,8 +456,7 @@
 				"css/jquery-weui.min.css",
 				"html/unitWeb/testweuiscroll.html",
 				"html/unitWeb/Skin.html",
-				"html/unitWeb/testAAA.html",
-				"css/weui.css"
+				"html/unitWeb/testAAA.html"
 			]
 		}
 	}

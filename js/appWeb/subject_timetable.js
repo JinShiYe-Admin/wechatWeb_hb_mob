@@ -1,4 +1,5 @@
 var table_data = {
+	tempFlag:0,
 	type: 0,
 	flag: 0,
 	isCreated: 0,
@@ -22,7 +23,8 @@ Vue.component("time-table", {
 		if(table_data.isCreated == 0) {
 			table_data.isCreated = 1;
 		} else {
-			if(table_data.type==1){
+			if(table_data.type==1&&table_data.tempFlag==1){
+				table_data.tempFlag=0;
 							
 				// 多列选择器
 				weui.picker(table_data.sub_array, {

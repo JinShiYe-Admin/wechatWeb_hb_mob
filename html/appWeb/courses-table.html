@@ -175,10 +175,12 @@
 					chosedPerson: function(item, isAdd) {
 						console.log("#####courses获取的传过来的值：" + JSON.stringify(item) + ",isAdd:" + isAdd);
 						this.$root.chosedPerson = item;
+						
 						if(table_data.type == 0) {
 							table_data.departname = item.title
 							table_data.departid = item.value
 						} else {
+							table_data.tempFlag =1;
 							var index = table_data.rowIndex;
 							var callcol = table_data.colIndex
 							table_data.items_array[index][callcol + "uname"] = item.name;

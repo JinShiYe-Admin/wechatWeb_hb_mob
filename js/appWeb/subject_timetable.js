@@ -35,7 +35,7 @@ Vue.component("time-table", {
 						var index = table_data.rowIndex;
 						var colIndex = table_data.colIndex
 						var model = table_data.items_array[index]
-						model[colIndex] = result[0].label;
+						model[colIndex+'subname'] = result[0].label;
 						
 						var uname = table_data.items_array[index][colIndex + "uname"];
 						var uid = table_data.items_array[index][colIndex + "uid"];

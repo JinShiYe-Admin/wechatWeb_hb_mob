@@ -46,6 +46,7 @@ Vue.component("person-list", {
 	},
 	created: function() {
 		console.log("获取的的id" + this.$route.params.id)
+		this.setPosition();
 		if(this.depart_id === -1) {
 			this.getAllListData();
 		} else {
@@ -55,6 +56,7 @@ Vue.component("person-list", {
 	watch: {
 		'$route' (to, from) {
 			console.log("当前路由id:" + this.$route.params.id);
+			this.setPosition();
 			if(this.depart_id === -1) {
 				this.getAllListData();
 			} else {
@@ -299,7 +301,7 @@ Vue.component("person-list", {
 		togglePersonInDepart: function(departId, person, isAdd) {
 			console.log("********togglePersonInDepart相关部门内数据的存取********");
 			var personArr = events.toggleValueInArray(events.getSessionMapValue(consts.KEY_CHOSE_MAP, departId), person.userid, isAdd);
-			events.setSesionMapValue(consts.KEY_CHOSE_MAP, departId, personArr);
+			events.setSessionMapValue(consts.KEY_CHOSE_MAP, departId, personArr);
 			console.log("保存的map数据:" + JSON.stringify(events.getSessionMap(consts.KEY_CHOSE_MAP)));
 		},
 
@@ -386,6 +388,25 @@ Vue.component("person-list", {
 			} else {
 				return [];
 			}
+		},
+		getDepartInfo: function() {
+			var list = JSON.parse(sessionStorage.getItem(consts.KEY_DEPARTS));
+			for(var i in list) {
+				if(this.$root.params.id == list[i].value) {
+					return list[i];
+				}
+			}
+		},
+		setPosition: function() {
+			console.log("********setPosition********");
+			if(this.$root.params.id === -1) {
+				events.setSessionMapValue(consts.KEY_DEPART_POSITION, 1, 1);
+			} else {
+				var departInfo = this.getDepartInfo();
+				var parentPosition = events.getSessionMapValue(consts.KEY_DEPART_POSITION, departInfo.parentvalue);
+				events.setSessionMapValue(consts.KEY_DEPART_POSITION, departInfo.value, parseInt(parentPosition) + 1);
+			}
+			console.log("本地存储的部门位置:"+JSON.stringify(events.getSessionMap(consts.KEY_DEPART_POSITION)));
 		},
 		//通过部门id 更新界面
 		routerTo: function(item) {

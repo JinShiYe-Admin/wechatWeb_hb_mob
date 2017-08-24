@@ -30,10 +30,12 @@ Vue.component('com-persen', {
 			this.$emit('chosedPersen', this.chosePersen);
 		},
 		routerToPub: function() {
+			var pos=this.getPosition();
 			console.log("@@@@@com-persen@@@@@导向发布页面");
-			router.push({
-				name: 'publish'
-			})
+			router.go(-parseInt(pos));
+		},
+		getPosition:function(){
+			return events.getSessionMapValue(consts.KEY_DEPART_POSITION,this.$root.params.id);
 		}
 	}
 })

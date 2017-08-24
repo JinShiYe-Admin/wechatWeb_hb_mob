@@ -69,11 +69,11 @@ var events = (function(mod) {
 		}
 		return [];
 	}
-	mod.setSesionMapValue = function(storageKey, key, value) {
+	mod.setSessionMapValue = function(storageKey, key, value) {
 		var map = mod.getSessionMap(storageKey);
 		map[key] = value;
 		sessionStorage.setItem(storageKey, JSON.stringify(map));
-		console.log("****setSesionMapValue***放置的本地值：" + JSON.stringify(map));
+		console.log("****setSessionMapValue***放置的本地值：" + JSON.stringify(map));
 	}
 	return mod;
 })(events || {})

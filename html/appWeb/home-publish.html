@@ -135,7 +135,7 @@
 				el: '#publish-home',
 				router: router,
 				data: {
-					chosePersen: [],
+					chosePersen: events.getSessionArray(consts.KEY_CHOOSE_PERSONS),
 					chosedPersen: []
 				},
 				methods: {
@@ -146,7 +146,7 @@
 						} else {
 							this.delPersen(persen);
 						}
-//						sessionStorage.setItem(consts.KEY_CHOOSE_PERSONS,JSON.stringify(this.chosePersen));
+						sessionStorage.setItem(consts.KEY_CHOOSE_PERSONS,JSON.stringify(this.chosePersen));
 					},
 					delPersen: function(persen) {
 						var com = this;

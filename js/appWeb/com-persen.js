@@ -9,7 +9,7 @@ Vue.component('com-persen', {
 		'</div>' +
 		'</div>' +
 		'</div>' +
-		'<a v-bind:class="[\'weui-btn\',\'weui-btn_mini\',\'weui-btn_primary\']" v-bind:style="{width:\'25%\',\'margin-bottom\': \'10px\'}" v-on:click="chosedPersen">' +
+		'<a v-bind:class="[\'weui-btn\',\'weui-btn_mini\',\'weui-btn_primary\']" v-bind:style="{width:\'30%\',\'margin\': \'10px 5px\'}" v-on:click="chosedPersen">' +
 		'确定({{chosePersen.length>99?\"99+\":chosePersen.length}})</a>' +
 		'</div></div>',
 	watch: {

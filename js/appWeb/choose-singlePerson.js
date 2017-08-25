@@ -195,7 +195,11 @@ Vue.component("single-choose-person", {
 			router.go(-parseInt(pos));
 		},
 		getPosition: function() {
-			return events.getSessionMapValue(consts.KEY_DEPART_POSITION, this.$root.params.id);
+			var id = 1;
+			if(parseInt(this.$route.params.id) > 0) {
+				id = parseInt(this.$route.params.id)
+			}
+			return events.getSessionMapValue(consts.KEY_DEPART_POSITION, id);
 		},
 		//通过部门id 更新界面
 		routerTo: function(item) {
@@ -225,14 +229,14 @@ Vue.component("single-choose-person", {
 		getDepartInfo: function() {
 			var list = JSON.parse(sessionStorage.getItem(consts.KEY_DEPARTS));
 			for(var i in list) {
-				if(this.$root.params.id == list[i].value) {
+				if(this.$route.params.id == list[i].value) {
 					return list[i];
 				}
 			}
 		},
 		setPosition: function() {
 			console.log("********setPosition********");
-			if(this.$root.params.id === -1) {
+			if(parseInt(this.$route.params.id) === -1) {
 				events.setSessionMapValue(consts.KEY_DEPART_POSITION, 1, 1);
 			} else {
 				var departInfo = this.getDepartInfo();

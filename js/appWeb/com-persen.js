@@ -1,7 +1,7 @@
 Vue.component('com-persen', {
 	props: ['chosePersen'],
 	template: '<div><router-view v-bind:class="[{\'margin-bottom50\':chosePersen.length>0}]"></router-view>' +
-		'<div v-if="chosePersen.length>0" v-bind:class="[\'weui-flex\']" v-bind:style="{position: \'fixed\',bottom: 0,height:\'50px\',width: \'100%\'}">' +
+		'<div v-if="chosePersen.length>0" v-bind:class="[\'weui-flex\']" v-bind:style="{position: \'fixed\',bottom: 0,height:\'50px\',width: \'100%\',background:\'white\'}">' +
 		'<div v-bind:class="[\'container-wrap\',\'weui-flex__item\']">' +
 		'<div v-bind:class="[\'container\']">' +
 		'<div v-for="person of chosePersen" v-bind:style="{display: \'inline-block\'}">' +
@@ -30,12 +30,16 @@ Vue.component('com-persen', {
 			this.$emit('chosedPersen', this.chosePersen);
 		},
 		routerToPub: function() {
-			var pos=this.getPosition();
+			var pos = this.getPosition();
 			console.log("@@@@@com-persen@@@@@导向发布页面");
 			router.go(-parseInt(pos));
 		},
-		getPosition:function(){
-			return events.getSessionMapValue(consts.KEY_DEPART_POSITION,this.$root.params.id);
+		getPosition: function() {
+			var id = 1;
+			if(parseInt(this.$route.params.id) > 0) {
+				id = parseInt(this.$route.params.id)
+			}
+			return events.getSessionMapValue(consts.KEY_DEPART_POSITION, id);
 		}
 	}
 })

@@ -392,21 +392,21 @@ Vue.component("person-list", {
 		getDepartInfo: function() {
 			var list = JSON.parse(sessionStorage.getItem(consts.KEY_DEPARTS));
 			for(var i in list) {
-				if(this.$root.params.id == list[i].value) {
+				if(this.$route.params.id == list[i].value) {
 					return list[i];
 				}
 			}
 		},
 		setPosition: function() {
 			console.log("********setPosition********");
-			if(this.$root.params.id === -1) {
+			if(parseInt(this.$route.params.id) === -1) {
 				events.setSessionMapValue(consts.KEY_DEPART_POSITION, 1, 1);
 			} else {
 				var departInfo = this.getDepartInfo();
 				var parentPosition = events.getSessionMapValue(consts.KEY_DEPART_POSITION, departInfo.parentvalue);
 				events.setSessionMapValue(consts.KEY_DEPART_POSITION, departInfo.value, parseInt(parentPosition) + 1);
 			}
-			console.log("本地存储的部门位置:"+JSON.stringify(events.getSessionMap(consts.KEY_DEPART_POSITION)));
+			console.log("本地存储的部门位置:" + JSON.stringify(events.getSessionMap(consts.KEY_DEPART_POSITION)));
 		},
 		//通过部门id 更新界面
 		routerTo: function(item) {

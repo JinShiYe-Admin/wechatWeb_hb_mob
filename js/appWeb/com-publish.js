@@ -21,7 +21,6 @@ Vue.component("com-publish", {
 	},
 	data: function() {
 		return {
-			title: '',
 			content: ''
 		}
 	},
@@ -29,12 +28,12 @@ Vue.component("com-publish", {
 		publishMethod: function() {
 			console.log("&&&&&com-publish&&&&&发布按钮的点击事件");
 			console.log("获取的双向绑定的值：" + this.content);
-			if(this.title.length == 0) {
-				console.log("未设置标题！")
-				return;
-			}
 			if(this.content.length == 0) {
 				console.log("未填写内容！")
+				return;
+			}
+			if(this.content.length>1000){
+				console.log("不得大于1000字！")
 				return;
 			}
 			if(this.chosePersen.length == 0) {
@@ -45,7 +44,15 @@ Vue.component("com-publish", {
 		},
 		publish: function() {
 			console.log("&&&&&com-publish&&&&&发布事件！");
-			window.close(); //关闭当前页面
+			request.publishMessage(this.chosePersen, content, function(data) {
+				if(data.RspCode == 0) {
+					sessionStorage.clear();
+					window.close(); //关闭当前页面
+				} else {
+					console.log("发布通知失败："+data.RspTxt);
+				}
+			})
+
 		},
 		routeToPersen: function() {
 			console.log("&&&&&com-publish&&&&&导向新路由");

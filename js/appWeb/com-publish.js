@@ -1,16 +1,8 @@
 Vue.component("com-publish", {
 	props: ['chosePersen'],
-	template: '<div><textarea v-model="content" v-bind:rows=10 v-bind:style="{width:\'100%\'}"></textarea>' +
-		'<div v-bind:class="[\'weui-cells\']">' +
-		'<div v-bind:class="[\'weui-cell\',\'weui-cell_access\']" v-on:click="routeToPersen">' +
-		'<div v-bind:class="[\'weui-cell__bd\']">' +
-		'人员选择' +
-		'</div>' +
-		'<div v-bind:class="[\'weui-cell__ft\']" >' +
-		'{{chosePersen.length>99?"99+":chosePersen.length}}' +
-		'</div>' +
-		'</div>' +
-		'</div>' +
+	template: '<div>' +
+		'<select-choose></select-choose>' +
+		'<textarea v-model="content" v-bind:rows=10 v-bind:style="{width:\'100%\'}"></textarea>' +
 		'<a v-bind:class="[\'weui-btn\', \'weui-btn_primary\']" v-on:click="publishMethod">发布</a></div>',
 	watch: {
 		'$route' (to, from) {
@@ -32,7 +24,7 @@ Vue.component("com-publish", {
 				console.log("未填写内容！")
 				return;
 			}
-			if(this.content.length>1000){
+			if(this.content.length > 1000) {
 				console.log("不得大于1000字！")
 				return;
 			}
@@ -49,14 +41,10 @@ Vue.component("com-publish", {
 					sessionStorage.clear();
 					window.close(); //关闭当前页面
 				} else {
-					console.log("发布通知失败："+data.RspTxt);
+					console.log("发布通知失败：" + data.RspTxt);
 				}
 			})
 
-		},
-		routeToPersen: function() {
-			console.log("&&&&&com-publish&&&&&导向新路由");
-			router.push('/persen/choose-person/-1')
 		}
 	}
 })

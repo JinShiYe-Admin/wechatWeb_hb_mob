@@ -1,7 +1,8 @@
 Vue.component("com-publish", {
 	props: ['chosePersen'],
 	template: '<div>' +
-		'<select-choose></select-choose>' +
+		//		'<select-choose v-bind:chosedPersen="chosePersen"></select-choose>' +
+		'<slot></slot>' +
 		'<textarea v-model="content" v-bind:rows=10 v-bind:style="{width:\'100%\'}"></textarea>' +
 		'<a v-bind:class="[\'weui-btn\', \'weui-btn_primary\']" v-on:click="publishMethod">发布</a></div>',
 	watch: {

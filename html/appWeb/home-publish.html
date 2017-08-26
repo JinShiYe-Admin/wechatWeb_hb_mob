@@ -81,7 +81,20 @@
 		<script src="../../js/appWeb/choose-person.js"></script>
 		<script src="../../js/appWeb/com-persen.js"></script>
 		<script src="../../js/appWeb/com-publish.js"></script>
+		<script src="../../js/appWeb/select-choose.js"></script>
+		<script src="../../js/utils/wx-utils.js"></script>
+		<script src="../../js/jweixin-1.2.0.js"></script>
 		<script type="text/javascript">
+			var apiList = [
+				'startRecord',
+				'stopRecord',
+				'onVoiceRecordEnd',
+				'uploadVoice',
+				'chooseImage',
+				'uploadImage',
+				'previewImage'
+			]
+			wxUtils.setConfig(apiList);
 			const choosePerson = {
 				template: '<person-list v-bind:depart_id="parseInt($route.params.id)" v-on:togglePerson="togglePersen"></person-list>',
 				methods: {
@@ -101,9 +114,11 @@
 					}
 				}
 			}
-			
+
 			const comPublish = {
-				template: '<com-publish v-bind:chosePersen="this.$root.chosedPersen"></com-publish>'
+				template: '<com-publish v-bind:chosePersen="this.$root.chosedPersen">' +
+					'<select-choose v-bind:chosedPersen="this.$root.chosedPersen"></select-choose>' +
+					'</com-publish>'
 			}
 
 			const router = new VueRouter({
@@ -124,10 +139,10 @@
 						path: '',
 						redirectTo: 'choose-persen/-1'
 					}]
-				},{
-					path:'',
-					redirectTo:{
-						name:'publish'
+				}, {
+					path: '',
+					redirectTo: {
+						name: 'publish'
 					}
 				}]
 			});
@@ -146,7 +161,7 @@
 						} else {
 							this.delPersen(persen);
 						}
-						sessionStorage.setItem(consts.KEY_CHOOSE_PERSONS,JSON.stringify(this.chosePersen));
+						sessionStorage.setItem(consts.KEY_CHOOSE_PERSONS, JSON.stringify(this.chosePersen));
 					},
 					delPersen: function(persen) {
 						var com = this;
@@ -168,7 +183,7 @@
 			router.replace({
 				name: 'publish'
 			})
-			window.onbeforeunload=function(){
+			window.onbeforeunload = function() {
 				sessionStorage.clear();
 			}
 		</script>

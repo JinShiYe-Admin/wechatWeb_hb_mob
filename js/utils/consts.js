@@ -1,5 +1,6 @@
 var consts = (function(mod) {
 	mod.MAINURL = 'https://jsypay.jiaobaowang.net/wxth/appschweb/schwebapi.aspx';
+	mod.CONFIGURL = 'https://jsypay.jiaobaowang.net/wxth/jssdkapi.aspx';
 	mod.KEY_DEPARTS = 'key-departments';
 	mod.KEY_CHOOSE_PERSONS = 'key-choosePersons';
 	mod.KEY_CHOOSE_DEPARTS = 'key-chooseDeparts';
@@ -14,7 +15,8 @@ var consts = (function(mod) {
 		typeNo: 1,
 		typeName: '文本卡片'
 	}, {
-		type: ''
+		
+		type: 'imagecard',
 		typeNo: 2,
 		typeName: '图文'
 	}, {

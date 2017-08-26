@@ -75,11 +75,11 @@ var wxUtils = (function(mod) {
 				break;
 		}
 		wx.invoke("selectEnterpriseContact", {
-			"fromDepartmentId": -1, // 必填，-1表示打开的通讯录从自己所在部门开始展示, 0表示从最上层开始
+			"fromDepartmentId": 0, // 必填，-1表示打开的通讯录从自己所在部门开始展示, 0表示从最上层开始
 			"mode": modeType, // 必填，选择模式，single表示单选，multi表示多选
 			"type": types, // 必填，选择限制类型，指定department、user中的一个或者多个
-			//			"selectedDepartmentIds": [2, 3], // 非必填，已选部门ID列表
-			//			"selectedUserIds": ["lisi", "lisi2"] // 非必填，已选用户ID列表
+			"selectedDepartmentIds": [], // 非必填，已选部门ID列表
+			"selectedUserIds": [] // 非必填，已选用户ID列表
 		}, function(res) {
 			console.log(res);
 			console.log("选部门或人后的获取的数据:" + JSON.stringify(res));

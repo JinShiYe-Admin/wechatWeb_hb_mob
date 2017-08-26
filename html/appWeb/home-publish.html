@@ -92,9 +92,11 @@
 				'uploadVoice',
 				'chooseImage',
 				'uploadImage',
-				'previewImage'
+				'previewImage',
+				'selectEnterpriseContact'
 			]
 			wxUtils.setConfig(apiList);
+			wxUtils.error(apiList);
 			const choosePerson = {
 				template: '<person-list v-bind:depart_id="parseInt($route.params.id)" v-on:togglePerson="togglePersen"></person-list>',
 				methods: {

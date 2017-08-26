@@ -32,46 +32,47 @@ Vue.component('select-choose', {
 		},
 		getType: function(event) {
 			console.log(event.target.value);
-			this.msgType =parseInt(event.target.value);
+			this.msgType = parseInt(event.target.value);
 			switch(this.msgType) {
-				case 0://文字
+				case 0: //文字
 					break;
-				case 1://文字卡片
+				case 1: //文字卡片
+					this.choosePersen();
 					break;
-				case 2://图文
+				case 2: //图文
 					break;
-				case 3://图片
+				case 3: //图片
 					this.getImg();
 					break;
-				case 4://语音
-					this.getVoice();
+				case 4: //语音
+					this.getRecord();
 					break;
-				case 5://视频
+				case 5: //视频
 					break;
-				case 6://文件
+				case 6: //文件
 					break;
 				default:
 					break;
 			}
 		},
-		choosePersen:function(){
-			wxUtils.invoke(1,2,function(departList,userList){
-				console.log("获取的已选部门列表："+JSON.stringify(departList));
-				console.log("获取的已选用户列表："+JSON.stringify(userList));
+		choosePersen: function() {
+			wxUtils.invoke(1, 2, function(departList, userList) {
+				console.log("获取的已选部门列表：" + JSON.stringify(departList));
+				console.log("获取的已选用户列表：" + JSON.stringify(userList));
 			})
 		},
-		getImg:function(){
-			wxUtils.chooseImage(1,function(picId){
-				wxUtils.uploadImage(picId,function(serverId){
-					console.log("pic获取的serverId:"+serverId)
+		getImg: function() {
+			wxUtils.chooseImage(1, function(picId) {
+				wxUtils.uploadImage(picId, function(serverId) {
+					console.log("pic获取的serverId:" + serverId)
 				})
 			})
 		},
-		getRecord:function(){
+		getRecord: function() {
 			wxUtils.startRecord();
-			wxUtils.onVoiceRecordEnd(function(localId){
-				wxUtils.uploadVoice(localId,function(serverId){
-					console.log("voice获取的serverId:"+serverId)
+			wxUtils.onVoiceRecordEnd(function(localId) {
+				wxUtils.uploadVoice(localId, function(serverId) {
+					console.log("voice获取的serverId:" + serverId)
 				})
 			})
 		}

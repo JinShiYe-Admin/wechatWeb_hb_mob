@@ -44,11 +44,10 @@ Vue.component("home-bd-item", {
 
 //添加动态组件
 Vue.component("add-trends", {
-	template: "#temp_trends_add_com",
-	props: ["content"],
+	template: "#temp_add_trends_com",
 	data: function() {
 		return {
-			com_content: this.content //组件内的content
+			com_content: "" //组件内的content
 		}
 	},
 	methods: {
@@ -188,7 +187,7 @@ var home_data = {
 			}],
 			"MsgContent": "<html>\n <head></head>\n <body>\n <p><br><img src=\"http://qn-kfpb.jiaobaowang.net/jbypc/pc/9498620170615111755.jpg\" title=\"01.jpg\" alt=\"01.jpg\" width=\"100%\"><br></p>\n </body>\n</html>",
 			"EncTypeStr": "图文混排",
-			"EncType": 5,
+			"EncType": 1,
 			"EncAddr": "http://qn-kfpb.jiaobaowang.net/jbypc/pc/9498620170615111755.jpg",
 			"NoteType": 2,
 			"MsgContentTxt": "",
@@ -217,13 +216,13 @@ var home_data = {
 		leave: false,
 		show_loadmore: true,
 		allow_loadmore: false,
-		data: []
+		data: [1, 2]
 	}]
 };
 //发布动态页面数据
 var trends_add_data = {
 	allback: true,
-	content: "", //文字，限制6000字
+	content: "11111", //文字，限制6000字
 	images: [], //图片，限制9张
 	video: '' //视频，限制一个
 }
@@ -327,7 +326,7 @@ function initRouter() {
 	};
 	//发布动态
 	var trends_add = {
-		template: "#temp_trends_add",
+		template: "#temp_add_trends",
 		data: function() {
 			return trends_add_data;
 		},
@@ -495,7 +494,7 @@ function disposeMemberData(data) {
 	}
 	if(temp_data == mineUserInfo.department.length - 1) {
 		//查询完我所处部门的所有成员
-		console.log("departUserInfo:" + departUserInfo);
+		console.log("departUserInfo:", departUserInfo);
 		//显示班级圈主页
 		router.push('home');
 		$.hideLoading();

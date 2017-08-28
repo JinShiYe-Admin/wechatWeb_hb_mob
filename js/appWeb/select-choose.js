@@ -70,7 +70,7 @@ Vue.component('select-choose', {
 			wxUtils.startRecord();
 			wxUtils.onVoiceRecordEnd(function(localId) {
 				wxUtils.uploadVoice(localId, function(serverId) {
-					console.log("voice获取的serverId:" + serverId)
+					console.log("voice获取的serverId:" + serverId);
 				})
 			})
 		}

@@ -106,7 +106,6 @@ Vue.component("single-choose-person", {
 				this.listData = childDeparts;
 				this.setAsChildren();
 			}
-
 		},
 		/**
 		 * 获取当前部门人员

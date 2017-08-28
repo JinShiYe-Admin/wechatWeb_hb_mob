@@ -30,6 +30,7 @@ var wxUtils = (function(mod) {
 	mod.setConfig = function(apiList) {
 		mod.getConfigParams(function(configmsg) {
 			mod.sendConfigPro(configmsg, apiList);
+			request.
 		})
 	}
 	/**

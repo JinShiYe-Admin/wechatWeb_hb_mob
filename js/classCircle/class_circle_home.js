@@ -227,7 +227,7 @@ var trends_add_data = {
 	images: [], //图片，限制9张
 	video: '' //视频，限制一个
 }
-var trends_details_data;//动态详情页面的数据
+var trends_details_data; //动态详情页面的数据
 var mineUserInfo = {
 	"userid": "moshanglin",
 	"name": "莫尚霖",
@@ -381,7 +381,7 @@ function initRouter() {
 		}
 	};
 
-	var trends_details={
+	var trends_details = {
 		template: "#temp_trends_details",
 		data: function() {
 			return trends_details_data;
@@ -398,6 +398,7 @@ function initRouter() {
 			console.log("from:" + from.path);
 			next();
 		}
+	}
 
 	//配置路由
 	router = new VueRouter({

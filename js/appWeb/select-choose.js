@@ -62,10 +62,8 @@ Vue.component('select-choose', {
 			})
 		},
 		getImg: function() {
-			wxUtils.chooseImage(1, function(picId) {
-				wxUtils.uploadImage(picId, function(serverId) {
-					console.log("pic获取的serverId:" + serverId)
-				})
+			wxUtils.chooseImage(1, function(picIds) {
+				compress.comImg(picIds[0], 2);
 			})
 		},
 		getRecord: function() {

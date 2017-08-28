@@ -84,7 +84,6 @@ var wxUtils = (function(mod) {
 			console.log(res);
 			console.log("选部门或人后的获取的数据:" + JSON.stringify(res));
 			if(res.err_msg == "selectEnterpriseContact:ok") {
-
 				var selectedDepartmentList = res.result.departmentList; // 已选的部门列表
 				for(var i = 0; i < selectedDepartmentList.length; i++) {
 					var department = selectedDepartmentList[i];
@@ -112,6 +111,8 @@ var wxUtils = (function(mod) {
 	mod.chooseImage = function(count, callback) {
 		wx.chooseImage({
 			count: count,
+			sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+			sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
 			success: function(res) {
 				console.log("选取的照片路径：" + JSON.stringify(res.localIds));
 				callback(res.localIds)
@@ -126,6 +127,7 @@ var wxUtils = (function(mod) {
 	mod.uploadImage = function(localId, callback) {
 		wx.uploadImage({
 			localId: localId,
+			isShowProgressTips: 1, // 默认为1，显示进度提示
 			success: function(res) {
 				console.log("上传图片后的服务端ID:" + res.serverId);
 				callback(res.serverId);

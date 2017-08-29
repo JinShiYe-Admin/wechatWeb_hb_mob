@@ -7,6 +7,11 @@ Vue.filter('userName', function(userId) {
 		return userId; //返回传入的值
 	}
 });
+//显示图片的过滤器
+Vue.filter('imagesArray', function(imagePaths) {
+	var images = imagePaths.split('|');
+	return images;
+});
 
 //班级圈主页tab顶部导航
 Vue.component("home-navbar-item", {
@@ -119,6 +124,11 @@ Vue.component("comments-item", {
 	template: "#temp_comments",
 	props: ["value"]
 });
+//显示图片组件
+Vue.component("image-item", {
+	template: "#temp_show_image",
+	props: ["images", "imagesThumb"]
+});
 //班级圈主页数据
 var home_data = {
 	is_on: 0, //当前显示的列表
@@ -192,7 +202,7 @@ var home_data = {
 			"NoteType": 2,
 			"MsgContentTxt": "",
 			"PublisherId": "chenuodong",
-			"EncImgAddr": "http://qn-kfpb.jiaobaowang.net/jbypc/pc/thumb/9498620170615111755.jpg",
+			"EncImgAddr": "http://qn-kfpb.jiaobaowang.net/jbypc/pc/thumb/9498620170615111755.jpg|http://qn-kfpb.jiaobaowang.net/jbypc/pc/thumb/9498620170615111755.jpg",
 			"InShow": 1,
 			"NoteTypeStr": "个人空间动态",
 			"EncIntro": "",

@@ -107,14 +107,7 @@
 				<div class="class-circle-content-limit">{{value.MsgContent}}</div>
 				<!--<div class="class-circle-show-all">展开全部</div>-->
 				<template v-if="value.EncType == 1">
-					<template>
-						<img class="class-circle-content-img" :src="value.EncImgAddr" />
-					</template>
-					<!--<div v-else-if="value.EncImgAddr_array.length > 1" v-for="(img_value,img_item) in value.EncImgAddr_array" class="class-circle-grids">
-						<div class="class-circle-grids-item">
-							<img :src="img_value" />
-						</div>
-					</div>-->
+					<image-item :images="value.EncAddr|imagesArray" :images-thumb="value.EncImgAddr|imagesArray"></image-item>
 				</template>
 				<div class="class-circle-function">
 					<div class="class-circle-views">浏览数 {{value.ReadCnt}}</div>
@@ -238,7 +231,19 @@
 				<button class="weui-btn weui-btn_primary" @click="commit">提交</button>
 			</div>
 		</template>
-
+		<!--显示图片的组件-->
+		<template id="temp_show_image">
+			<div>
+				<template v-if="imagesThumb.length == 1">
+					<img class="class-circle-content-img" :src="imagesThumb[0]" />
+				</template>
+				<div v-else-if="imagesThumb.length > 1" class="class-circle-grids">
+					<div class="class-circle-grids-item" v-for="(img_value,img_item) in imagesThumb">
+						<img :src="img_value" />
+					</div>
+				</div>
+			</div>
+		</template>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-2.1.4.js?" + Math.random() + "'></s" + "cript>");
@@ -247,7 +252,7 @@
 			//			document.write("<s" + "cript type='text/javascript' src='../../js/weui.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/vue.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/vue-router.js?" + Math.random() + "'></s" + "cript>");
-//			document.write("<s" + "cript type='text/javascript' src='../../js/lib/vconsole/vconsole.min.js?" + Math.random() + "'></s" + "cript>");
+			//			document.write("<s" + "cript type='text/javascript' src='../../js/lib/vconsole/vconsole.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_protocol.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_home.js?" + Math.random() + "'></s" + "cript>");

@@ -43,7 +43,7 @@
 						<home-navbar-item v-for="(value,index) in home_tab" :key="index" :value="value" :index="index" :is_on="is_on" @click-item="clickItem"></home-navbar-item>
 					</div>
 					<div class="weui-tab__bd">
-						<home-bd-item v-for="(value,index) in home_tab" :key="index" :value="value" :index="index" :is_on="is_on"></home-bd-item>
+						<home-bd-item v-for="(value,index) in home_tab" :key="index" :value="value" :index="index" :is_on="is_on" @click-person="showPersonTrends" @click-content="showTrendsDetails"></home-bd-item>
 					</div>
 				</div>
 				<router-link to="/add" class="class-circle-report">+ 发表动态</router-link>
@@ -63,7 +63,7 @@
 				<div>{{value.title}}</div>
 			</div>
 		</template>
-		<!--班级圈主页--底部内容-->
+		<!--班级圈主页--中间内容-->
 		<template id="temp_trends_tab_bd_item">
 			<div :id="value.id" class="weui-tab__bd-item weui-pull-to-refresh" :class="isOnClass">
 				<div class="weui-pull-to-refresh__layer">
@@ -76,10 +76,11 @@
 				<div class="weui-panel weui-panel_access">
 					<div class="weui-panel__bd">
 						<template v-if="value.id=='relate_to_me'">
+							<!--与我相关-->
 							<relate-item v-for="(item_value,item_index) in value.data" :key="index" :value="item_value"></relate-item>
 						</template>
 						<template v-else>
-							<trends-item v-for="(item_value,item_index) in value.data" :key="index" :value="item_value"></trends-item>
+							<trends-item v-for="(item_value,item_index) in value.data" :id="value.id" :index="item_index" :key="index" :value="item_value" @click-person="clickPerson" @click-content="clickContent"></trends-item>
 						</template>
 					</div>
 				</div>
@@ -94,24 +95,24 @@
 			<div class="weui-media-box">
 				<div class="weui-media-box_appmsg">
 					<div class="weui-media-box__hd class-circle-headimage-hd">
-						<img class="weui-media-box__thumb class-circle-headimage" :src="PublisherImage" />
+						<img class="weui-media-box__thumb class-circle-headimage" @click="clickPerson(value.PublisherId)" :src="PublisherImage" />
 					</div>
 					<div class="weui-media-box__bd">
 						<div class="class-circle-title">
-							<div class="weui-media-box__title">{{value.PublisherId|userName}}</div>
+							<div class="weui-media-box__title" @click="clickPerson(value.PublisherId)">{{value.PublisherId|userName}}</div>
 							<!--<div class="class-circle-mark"></div>-->
 						</div>
 						<div class="weui-media-box__desc">{{value.PublishDate}}</div>
 					</div>
 				</div>
-				<div class="class-circle-content-limit">{{value.MsgContent}}</div>
+				<div class="class-circle-content-limit" @click="clickContent(id,index)">{{value.MsgContent}}</div>
 				<!--<div class="class-circle-show-all">展开全部</div>-->
 				<template v-if="value.EncType == 1">
 					<image-item :images="value.EncAddr|imagesArray" :images-thumb="value.EncImgAddr|imagesArray"></image-item>
 				</template>
 				<div class="class-circle-function">
 					<div class="class-circle-views">浏览数 {{value.ReadCnt}}</div>
-					<div class="iconfont icon-trash"></div>
+					<div class="iconfont icon-trash" v-if="showTrash(value.PublisherId)"></div>
 					<div class="iconfont icon-newmessage"></div>
 					<div class="iconfont icon-dianzan" :class="{'trends-praise': value.IsLike}"></div>
 				</div>

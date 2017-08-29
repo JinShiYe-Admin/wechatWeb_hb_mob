@@ -44,6 +44,14 @@ Vue.component("home-bd-item", {
 				'weui-tab__bd-item--active': this.index == this.is_on //计算显示的列表
 			}
 		}
+	},
+	methods: {
+		clickPerson: function(publisherId) {
+			this.$emit("click-person", publisherId);
+		},
+		clickContent: function(id, index) {
+			this.$emit("click-content", id, index);
+		}
 	}
 });
 
@@ -90,7 +98,7 @@ Vue.component("add-trends", {
 //动态组件
 Vue.component("trends-item", {
 	template: "#template_trends",
-	props: ["value"],
+	props: ["id", "value", "index"],
 	computed: {
 		showPraiseComment: function() {
 			//是否显示点赞和评论区域
@@ -110,8 +118,29 @@ Vue.component("trends-item", {
 			}
 		}
 	},
-	method: {
-
+	methods: {
+		/**
+		 * 点击发布动态者的头像或名称
+		 * @param {String} id
+		 */
+		clickPerson: function(publisherId) {
+			this.$emit("click-person", publisherId);
+		},
+		/**
+		 * 点击动态的内容
+		 * @param {String} id 动态的列表id
+		 * @param {Number} index 动态在列表中的序号
+		 */
+		clickContent: function(id, index) {
+			this.$emit("click-content", id, index);
+		},
+		showTrash: function(publisherId) {
+			if(publisherId == mineUserInfo.userid) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 	}
 });
 //与我相关组件
@@ -301,6 +330,21 @@ function initRouter() {
 						toBeforePosition(timeId, home_data.is_on);
 					}, 100);
 				}
+			},
+			/**
+			 * 点击发布动态者的头像或者名称
+			 * @param {String} publisherId 发布动态者的id
+			 */
+			showPersonTrends: function(publisherId) {
+				console.log("showPersonTrends:" + publisherId);
+			},
+			/**
+			 * 显示动态的详细内容
+			 * @param {String} id 动态的列表id
+			 * @param {Number} index 动态在列表中的序号
+			 */
+			showTrendsDetails: function(id, index) {
+				console.log("showTrendsDetails:" + id + ":" + index);
 			}
 		},
 		/**

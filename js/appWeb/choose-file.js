@@ -19,7 +19,7 @@ Vue.component('choose-file', {
 		'<li v-for="file of uploadedFiles" v-bind:class="[\'weui-uploader__file\']" v-bind:style="{\'background-image\':\'url(\'+file+\')\'}"></li>' +
 		'</ul>' +
 		'<div v-bind:class="[\'weui-uploader__input-box\']" v-on:click="toExtra()">' +
-		'<input v-if="(msgType!==2&&msgType!==5)||uploadReal" id="uploaderInput" v-bind:class="[\'weui-uploader__input\']" type="file" v-bind:accept="getAcceptType()" v-on:change="selectFile($event)">' +
+		'<input v-if="((msgType!==2&&msgType!==5)||uploadReal)&&msgType!==1" id="uploaderInput" v-bind:class="[\'weui-uploader__input\']" type="file" v-bind:accept="getAcceptType()" v-on:change="selectFile($event)">' +
 		'</div>' +
 		'</div>' +
 		'</div>',
@@ -39,7 +39,7 @@ Vue.component('choose-file', {
 	},
 	methods: {
 		toExtra: function() {
-			if(this.msgType == 2 || this.msgType == 5) {
+			if(this.msgType == 1 || this.msgType == 2 || this.msgType == 5) {
 				router.push({
 					name: "extra-pub"
 				})

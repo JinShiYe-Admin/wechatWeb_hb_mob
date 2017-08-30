@@ -15,7 +15,7 @@ Vue.component("com-publish", {
 	},
 	template: '<div>' +
 		'<slot></slot>' +
-		'<textarea v-if="msgType<2" v-model="content" v-bind:rows=10 v-bind:style="{width:\'100%\'}"></textarea>' +
+		'<textarea v-if="msgType<1" v-model="content" v-bind:rows=10 v-bind:style="{width:\'100%\'}"></textarea>' +
 		'<slot name="choose-file"></slot>' +
 		'<a v-bind:class="[\'weui-btn\', \'weui-btn_primary\']" v-on:click="publishMethod">发布</a></div>',
 	watch: {

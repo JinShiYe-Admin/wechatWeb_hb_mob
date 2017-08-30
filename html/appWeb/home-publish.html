@@ -132,7 +132,7 @@
 			const comPublish = {
 				template: '<com-publish v-bind:extraData="$root.extraData" v-bind:msgType="$root.msgType" v-bind:chosePersen="this.$root.chosedPersen">' +
 					'<select-choose v-bind:msgType="$root.msgType" v-bind:chosedPersen="this.$root.chosedPersen"  v-on:msg-type="getMsgType"></select-choose>' +
-					'<choose-file v-if="$root.msgType>1" v-bind:msgType="$root.msgType" slot="choose-file"></choose-file>' +
+					'<choose-file v-if="$root.msgType>0" v-bind:msgType="$root.msgType" slot="choose-file"></choose-file>' +
 					'</com-publish>',
 				methods: {
 					getMsgType: function(msgType) {
@@ -146,7 +146,7 @@
 			 */
 			const comExtra = {
 				template: '<extra-pub v-bind:msgType="$root.msgType" v-on:extraData="getExtraData">' +
-					'<choose-file uploadReal="true" v-bind:msgType="$root.msgType"></choose-file>' +
+					'<choose-file v-if="$root.msgType>1" uploadReal="true" v-bind:msgType="$root.msgType"></choose-file>' +
 					'</extra-pub>',
 				methods: {
 					getExtraData: function(extraData) {

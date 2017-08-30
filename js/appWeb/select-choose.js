@@ -1,5 +1,5 @@
 Vue.component('select-choose', {
-	props: ['chosedPersen'],
+	props: ['chosedPersen','msgType'],
 	template: '<div v-bind:class="[\'weui-cells\']">' +
 		'<div v-bind:class="[\'weui-cell\',\'weui-cell_select\',\'weui-cell_select-after\']">' +
 		'<div v-bind:class="[\'weui-cell__hd\']">' +
@@ -7,11 +7,10 @@ Vue.component('select-choose', {
 		'</div>' +
 		'<div v-bind:class="[\'weui-cell__bd\']">' +
 		'<select v-bind:class="[\'weui-select\']" name="select" v-on:change="getType($event)">' +
-		'<option v-for="(msgStyle,index) of msgStyles" v-bind:value="msgStyle.typeNo">{{msgStyle.typeName}}</option>' +
+		'<option   v-for="(msgStyle,index) of msgStyles" v-bind:selected="msgStyle.typeNo===msgType" v-bind:value="msgStyle.typeNo">{{msgStyle.typeName}}</option>' +
 		'</select>' +
 		'</div>' +
 		'</div>' +
-	
 		'<div v-bind:class="[\'weui-cell\',\'weui-cell_access\']" v-on:click="routeToPersen">' +
 		'<div v-bind:class="[\'weui-cell__bd\']">' +
 		'人员选择' +
@@ -24,7 +23,12 @@ Vue.component('select-choose', {
 	data: function() {
 		return {
 			msgStyles: consts.MESSAGE_STYLES,
-			msgType: consts.MESSAGE_STYLES[0].type
+			thisMsgType:this.msgType
+		}
+	},
+	watch: {
+		msgType: function(newVal, oldVal) {
+			console.log("新值：" + newVal + ",旧值：" + oldVal);
 		}
 	},
 	methods: {
@@ -33,8 +37,8 @@ Vue.component('select-choose', {
 		},
 		getType: function(event) {
 			console.log(event.target.value);
-			this.msgType = parseInt(event.target.value);
-			this.$emit("msg-type", this.msgType);
+			this.thisMsgType = parseInt(event.target.value);
+			this.$emit("msg-type", this.thisMsgType);
 		}
 	},
 	choosePersen: function() {

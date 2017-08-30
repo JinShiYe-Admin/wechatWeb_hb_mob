@@ -85,6 +85,7 @@
 		<script src="../../js/appWeb/com-publish.js"></script>
 		<script src="../../js/appWeb/select-choose.js"></script>
 		<script src="../../js/appWeb/choose-file.js"></script>
+		<script src="../../js/appWeb/extra-publish.js"></script>
 		<script src="../../js/utils/wx-utils.js"></script>
 		<script src="../../js/jweixin-1.2.0.js"></script>
 		<script type="text/javascript">
@@ -130,8 +131,8 @@
 			 */
 			const comPublish = {
 				template: '<com-publish v-bind:msgType="$root.msgType" v-bind:chosePersen="this.$root.chosedPersen">' +
-					'<select-choose v-bind:chosedPersen="this.$root.chosedPersen"  v-on:msg-type="getMsgType"></select-choose>' +
-					'<choose-file v-if="$root.msgType>1" v-bind:fileType="$root.msgType" slot="choose-file"></choose-file>' +
+					'<select-choose v-bind:msgType="$root.msgType" v-bind:chosedPersen="this.$root.chosedPersen"  v-on:msg-type="getMsgType"></select-choose>' +
+					'<choose-file v-if="$root.msgType>1" v-bind:msgType="$root.msgType" slot="choose-file"></choose-file>' +
 					'</com-publish>',
 				methods: {
 					getMsgType: function(msgType) {
@@ -144,7 +145,9 @@
 			 * 額外信息組件
 			 */
 			const comExtra = {
-				template: '<extra-pub v-bind:msgType="$root.msgType"><extra-pub>'
+				template: '<extra-pub v-bind:msgType="$root.msgType">' +
+					'<choose-file uploadReal="true" v-bind:msgType="$root.msgType"></choose-file>' +
+					'</extra-pub>'
 			}
 
 			const router = new VueRouter({
@@ -165,6 +168,10 @@
 						path: '',
 						redirectTo: 'choose-persen/-1'
 					}]
+				}, {
+					path: 'extra-pub',
+					name: 'extra-pub',
+					component: comExtra
 				}, {
 					path: '',
 					redirectTo: {

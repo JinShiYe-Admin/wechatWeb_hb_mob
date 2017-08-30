@@ -1,8 +1,12 @@
 Vue.component('choose-file', {
 	props: {
-		fileType: {
+		msgType: {
 			type: Number,
 			default: 3
+		},
+		uploadReal: {
+			type: Boolean,
+			default: false
 		}
 	},
 	template: '<div v-bind:class="[\'weui-uploader\']">' +
@@ -14,8 +18,8 @@ Vue.component('choose-file', {
 		'<ul v-bind:class="[\'weui-uploader__files\']" id="uploaderFiles">' +
 		'<li v-for="file of uploadedFiles" v-bind:class="[\'weui-uploader__file\']" v-bind:style="{\'background-image\':\'url(\'+file+\')\'}"></li>' +
 		'</ul>' +
-		'<div v-bind:class="[\'weui-uploader__input-box\']">' +
-		'<input id="uploaderInput" v-bind:class="[\'weui-uploader__input\']" type="file" accept="image/*" v-on:change="selectFile($event)">' +
+		'<div v-bind:class="[\'weui-uploader__input-box\']" v-on:click="toExtra()">' +
+		'<input v-if="(msgType!==2&&msgType!==5)||uploadReal" id="uploaderInput" v-bind:class="[\'weui-uploader__input\']" type="file" v-bind:accept="getAcceptType()" v-on:change="selectFile($event)">' +
 		'</div>' +
 		'</div>' +
 		'</div>',
@@ -34,9 +38,17 @@ Vue.component('choose-file', {
 
 	},
 	methods: {
+		toExtra: function() {
+			if(this.msgType == 2 || this.msgType == 5) {
+				router.push({
+					name: "extra-pub"
+				})
+			}
+		},
 		getHintInfo: function() {
+			console.log("选择文件时的文件类型：" + this.msgType);
 			var hintInfo;
-			switch(this.fileType) {
+			switch(this.msgType) {
 				case 0:
 					hintInfo = "添加文字";
 					break;
@@ -62,6 +74,35 @@ Vue.component('choose-file', {
 					break;
 			}
 			return hintInfo;
+		},
+		getAcceptType: function() {
+			var acceptType;
+			switch(this.msgType) {
+				case 0:
+					acceptType = "添加文字";
+					break;
+				case 1:
+					acceptType = "添加文本";
+					break;
+				case 2:
+					acceptType = "image/jpeg,image/png";
+					break;
+				case 3:
+					acceptType = "image/jpeg,image/png";
+					break;
+				case 4:
+					acceptType = "audio/AMR";
+					break;
+				case 5:
+					acceptType = "video/mp4";
+					break;
+				case 6:
+					acceptType = "*";
+					break;
+				default:
+					break;
+			}
+			return acceptType;
 		},
 		selectFile: function(event) {
 			if(event.target.value) {

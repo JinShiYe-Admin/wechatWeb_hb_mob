@@ -120,6 +120,7 @@ body {
 	height: 0px;
 	padding-top: 16%;
 	padding-bottom: 16%;
+	background-color: gainsboro;
 }
 
 .class-circle-grids .class-circle-grids-item:nth-child(2),

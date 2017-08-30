@@ -156,7 +156,16 @@ Vue.component("comments-item", {
 //显示图片组件
 Vue.component("image-item", {
 	template: "#temp_show_image",
-	props: ["images", "imagesThumb"]
+	props: ["images", "imagesThumb"],
+	methods: {
+		showImage: function(index) {
+			var pb = $.photoBrowser({
+				initIndex: index,
+				items: this.images
+			});
+			pb.open();
+		}
+	}
 });
 //班级圈主页数据
 var home_data = {
@@ -227,11 +236,11 @@ var home_data = {
 			"MsgContent": "<html>\n <head></head>\n <body>\n <p><br><img src=\"http://qn-kfpb.jiaobaowang.net/jbypc/pc/9498620170615111755.jpg\" title=\"01.jpg\" alt=\"01.jpg\" width=\"100%\"><br></p>\n </body>\n</html>",
 			"EncTypeStr": "图文混排",
 			"EncType": 1,
-			"EncAddr": "http://qn-kfpb.jiaobaowang.net/jbypc/pc/9498620170615111755.jpg",
+			"EncAddr": "http://jqweui.com/dist/demos/images/swiper-1.jpg|http://qn-kfpb.jiaobaowang.net/jbypc/pc/9498620170615111755.jpg|http://static.firefoxchina.cn/img/201708/8_59a61038ec68a0.jpg|http://jqweui.com/dist/demos/images/swiper-2.jpg",
 			"NoteType": 2,
 			"MsgContentTxt": "",
 			"PublisherId": "chenuodong",
-			"EncImgAddr": "http://qn-kfpb.jiaobaowang.net/jbypc/pc/thumb/9498620170615111755.jpg|http://qn-kfpb.jiaobaowang.net/jbypc/pc/thumb/9498620170615111755.jpg",
+			"EncImgAddr": "http://jqweui.com/dist/demos/images/swiper-2.jpg",
 			"InShow": 1,
 			"NoteTypeStr": "个人空间动态",
 			"EncIntro": "",

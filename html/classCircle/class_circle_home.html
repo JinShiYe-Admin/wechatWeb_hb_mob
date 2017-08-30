@@ -43,10 +43,10 @@
 						<home-navbar-item v-for="(value,index) in home_tab" :key="index" :value="value" :index="index" :is_on="is_on" @click-item="clickItem"></home-navbar-item>
 					</div>
 					<div class="weui-tab__bd">
-						<home-bd-item v-for="(value,index) in home_tab" :key="index" :value="value" :index="index" :is_on="is_on" @click-person="showPersonTrends" @click-content="showTrendsDetails"></home-bd-item>
+						<home-bd-item v-for="(value,index) in home_tab" :key="index" :value="value" :index="index" :is_on="is_on" @click-person="showPersonTrends" @click-content="showTrendsDetails" @click-function="clickFunction"></home-bd-item>
 					</div>
 				</div>
-				<router-link to="/add" class="class-circle-report">+ 发表动态</router-link>
+				<router-link to="/trends_add" class="class-circle-report">+ 发表动态</router-link>
 			</div>
 		</template>
 		<!--路由--发布动态-->
@@ -80,7 +80,7 @@
 							<relate-item v-for="(item_value,item_index) in value.data" :key="index" :value="item_value"></relate-item>
 						</template>
 						<template v-else>
-							<trends-item v-for="(item_value,item_index) in value.data" :id="value.id" :index="item_index" :key="index" :value="item_value" @click-person="clickPerson" @click-content="clickContent"></trends-item>
+							<trends-item v-for="(item_value,item_index) in value.data" :id="value.id" :index="item_index" :key="index" :value="item_value" @click-person="clickPerson" @click-content="clickContent" @click-function="clickFunction"></trends-item>
 						</template>
 					</div>
 				</div>
@@ -106,15 +106,14 @@
 					</div>
 				</div>
 				<div class="class-circle-content-limit" @click="clickContent(id,index)">{{value.MsgContent}}</div>
-				<!--<div class="class-circle-show-all">展开全部</div>-->
 				<template v-if="value.EncType == 1">
 					<image-item :images="value.EncAddr|imagesArray" :images-thumb="value.EncImgAddr|imagesArray"></image-item>
 				</template>
 				<div class="class-circle-function">
 					<div class="class-circle-views">浏览数 {{value.ReadCnt}}</div>
-					<div class="iconfont icon-trash" v-if="showTrash(value.PublisherId)"></div>
-					<div class="iconfont icon-newmessage"></div>
-					<div class="iconfont icon-dianzan" :class="{'trends-praise': value.IsLike}"></div>
+					<div class="iconfont icon-trash" @click="clickFunction(2,id,index)" v-if="showTrash(value.PublisherId)"></div>
+					<div class="iconfont icon-newmessage" @click="clickFunction(1,id,index)"></div>
+					<div class="iconfont icon-dianzan" @click="clickFunction(0,id,index)" :class="{'trends-praise': value.IsLike}"></div>
 				</div>
 				<div class="class-circle-praise-comment" v-if="showPraiseComment">
 					<div class="class-circle-triangle"></div>
@@ -122,7 +121,7 @@
 						<div class="class-circle-praiser">{{praise_value.name}}</div>
 					</div>
 					<div class="class-circle-praise-comment-line" v-if="showLine"></div>
-					<comments-item :value="value.Comments"></comments-item>
+					<comments-item :value="value.Comments|commentArray":show="value.Comments|showAllButton"></comments-item>
 				</div>
 			</div>
 		</template>
@@ -208,17 +207,18 @@
 		<template id="temp_comments">
 			<div class="class-circle-comment-bg">
 				<div v-for="(comment_value,comment_index) in value">
-					<div class="class-circle-comment-item">
+					<div class="weui-cell weui-cell_access class-circle-comment-item" @click="clickComment(comment_index)">
 						<div class="class-circle-comment-name">{{comment_value.UserId|userName}}</div>
 						<div class="class-circle-comment-content">：{{comment_value.CommentContent}}</div>
 					</div>
-					<div class="class-circle-comment-item" v-for="(replys_value,replys_index) in comment_value.Replys">
+					<div class="weui-cell weui-cell_access class-circle-comment-item" v-for="(replys_value,replys_index) in comment_value.Replys" @click="clickComment(comment_index,replys_index)">
 						<div class="class-circle-comment-name">{{replys_value.ReplyId|userName}}</div>
 						<div class="class-circle-comment-content">回复</div>
 						<div class="class-circle-comment-name">{{replys_value.UserId|userName}}</div>
 						<div class="class-circle-comment-content">：{{replys_value.CommentContent}}</div>
 					</div>
 				</div>
+				<div class="class-circle-show-all" v-if="show">查看全部</div>
 			</div>
 		</template>
 		<!--发布动态组件-->
@@ -255,6 +255,7 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/vue-router.js?" + Math.random() + "'></s" + "cript>");
 			//			document.write("<s" + "cript type='text/javascript' src='../../js/lib/vconsole/vconsole.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_vue.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_protocol.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_home.js?" + Math.random() + "'></s" + "cript>");
 		</script>

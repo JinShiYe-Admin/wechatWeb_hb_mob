@@ -230,11 +230,16 @@ body {
 	/*评论内容*/
 	display: inline;
 }
-
+.weui-cell.class-circle-comment-item:before{
+	border: none;
+	height: 0px;
+}
 .class-circle-comment-item {
 	/*每一条评论*/
 	font-size: 0;
 	-webkit-text-size-adjust: none;
+	display: block;
+	padding: 0;
 }
 
 .class-circle-comment-name,

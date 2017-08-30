@@ -67,7 +67,7 @@ var request = (function(mod) {
 	 * @param {Object} users 用户
 	 * @param {Object} dataInfo 发送的数据信息
 	 */
-	mod.postMessage = function(users, dataInfo) {
+	mod.postMessage = function(users, dataInfo,callback) {
 		var userids = users.map(function(user) {
 			return user.userid;
 		})

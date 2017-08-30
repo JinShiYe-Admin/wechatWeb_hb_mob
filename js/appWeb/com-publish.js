@@ -7,6 +7,10 @@ Vue.component("com-publish", {
 		msgType: {
 			type: Number,
 			default: 0
+		},
+		extraData: {
+			type: Object,
+			default: {}
 		}
 	},
 	template: '<div>' +
@@ -45,9 +49,10 @@ Vue.component("com-publish", {
 			}
 			this.publish();
 		},
-		publish: function() {
+		publish: function() { //发布
+			this.extraData.type = this.getPubType();
 			console.log("&&&&&com-publish&&&&&发布事件！");
-			request.publishMessage(this.chosePersen, content, function(data) {
+			request.postMessage(this.chosePersen, this.extraData, function(data) {
 				if(data.RspCode == 0) {
 					sessionStorage.clear();
 					window.close(); //关闭当前页面
@@ -56,6 +61,14 @@ Vue.component("com-publish", {
 				}
 			})
 
+		},
+		getPubType: function() { //發佈的類型
+			for(var i in consts.MESSAGE_STYLES) {
+				var msgStyle = consts.MESSAGE_STYLES[i];
+				if(msgStyle.typeNo = this.msgType) {
+					return msgStyle.type;
+				}
+			}
 		}
 	}
 })

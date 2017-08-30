@@ -1,30 +1,60 @@
 var compress = (function(mod) {
-	mod.comImg = function(imgUrl, maxSize) {
+	mod.comImg = function(file, maxSize) {
 		maxSize = maxSize * 1024 * 1024;
-		console.log("要处理的图片地址：" + imgUrl);
-		mod.getImgInfo(imgUrl, function(img, imgInfo) {
-			console.log("获取的文件信息：" + JSON.stringify(imgInfo));
-			var newDataUrl = mod.getCanvasDataUrl(img, mod.getSuitableSize(imgInfo, maxSize));
-			console.log("获取的图片Base64格式:" + newDataUrl);
-			var blob = mod.base64ToBlob(newDataUrl);
-			console.log('要传递的文件大小：'+blob.size);
-			var formData = new FormData();
-			formData.append('image', blob)
-		})
+		console.log("要处理的图片地址：" + file.name);
+		mod.getFileReader(file, maxSize);
 	}
-	mod.postFile = function() {
-		alert("开始上传");
+	mod.getFileReader = function(file, maxSize) {
+		var reader = new FileReader();
+		reader.onload = function() {
+			var result = this.result;
+			var formData = new FormData();
+			mod.getImgInfo(result, function(img, imgInfo) {
+				console.log("获取的文件信息：" + JSON.stringify(imgInfo));
+				if(result.length > maxSize) {
+					var newDataUrl = mod.getCanvasDataUrl(img, mod.getSuitableSize(imgInfo, maxSize));
+					console.log("获取的图片Base64格式:" + newDataUrl);
+					var blob = mod.base64ToBlob(newDataUrl, 'image/png');
+					console.log("blob.type:" + blob.type);
+					console.log('要传递的文件大小：' + blob.size);
+					var newFile = new File([blob], Date.now() + '.png');
+					formData.append('image', newFile)
+				} else {
+					formData.append('image', file);
+				}
+				mod.postFile(formData);
+			})
+		}
+		reader.readAsDataURL(file);
+	}
+	mod.postFile = function(formData, size) {
+		console.log("开始上传");
 		jQuery.ajax({
-			url: consts.UPLOADURL,
-			type: "POST",
-			cache: false,
-			contentType: false,
-			processData: false,
-			data: formData
-		}).done(function(e) {
-			console.log(e);
-			console.log(JSON.stringify(e.message));
-		});
+				url: consts.UPLOADURL,
+				type: "POST",
+				cache: false,
+				contentType: false,
+				processData: false,
+				data: formData,
+				success: function(response) {
+					console.log(response);
+				},
+				error: function(errRes) {
+					console.log("发生未知错误：");
+					console.log(errRes);
+				}
+			})
+			.done(function(e) {
+				console.log("已完成")
+				console.log(e);
+				console.log(JSON.stringify(e.message));
+			})
+			.fail(function() {
+				console.log("failed!");
+			})
+			.always(function() {
+				console.log("complete!");
+			});
 	}
 	mod.getCanvasDataUrl = function(img, suitableSize) {
 		console.log("*****重绘图片的宽高******");
@@ -38,15 +68,13 @@ var compress = (function(mod) {
 		return canvas.toDataURL(imageType, imageArgu);
 	}
 	mod.getSuitableSize = function(imgInfo, maxSize) {
-		if(imgInfo.width * imgInfo.height > maxSize) {
-			var multi = Math.ceil(imgInfo.width * imgInfo.height / maxSize);
-			imgInfo.width = imgInfo.width / multi;
-			imgInfo.height = imgInfo.height / multi;
-		}
+		var multi = Math.ceil(imgInfo.width * imgInfo.height / maxSize);
+		imgInfo.width = imgInfo.width / multi;
+		imgInfo.height = imgInfo.height / multi;
 		console.log("获取的图片要裁剪的尺寸：" + JSON.stringify(imgInfo));
 		return imgInfo;
 	}
-	mod.getImgInfo = function(imgUrl, callback) {
+	mod.getImgInfo = function(result, callback) {
 		var img = new Image();
 		var imgInfo = {};
 		img.onload = function() {
@@ -56,14 +84,13 @@ var compress = (function(mod) {
 			console.log("获取的图片宽高：" + JSON.stringify(imgInfo));
 			callback(img, imgInfo);
 		}
-		img.setAttribute('crossOrigin', 'anonymous');
-		img.src = imgUrl;
+		img.src = result;
 	}
 
 	mod.base64ToBlob = function(base64Url, mime) {
 		var base64 = base64Url.replace(/^data:image\/(png|jpg);base64,/, "");
 		console.log("处理后的database64:" + base64);
-		mime = mime || '';
+		//		mime = mime || '';
 		var sliceSize = 1024;
 		var byteChars = window.atob(base64);
 		var byteArrays = [];
@@ -80,7 +107,7 @@ var compress = (function(mod) {
 
 			byteArrays.push(byteArray);
 		}
-
+		console.log("文件类型：" + mime);
 		return new Blob(byteArrays, {
 			type: mime
 		});

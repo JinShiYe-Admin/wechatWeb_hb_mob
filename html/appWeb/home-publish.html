@@ -72,7 +72,7 @@
 		<div id="publish-home">
 			<router-view style="width: 100%;"></router-view>
 		</div>
-		<script src="../../js/lib/vconsole/vconsole.min.js"></script>
+		<!--<script src="../../js/lib/vconsole/vconsole.min.js"></script>-->
 		<script src="../../js/vue.js"></script>
 		<script src="../../js/vue-router.js"></script>
 		<script src="../../js/utils/consts.js"></script>
@@ -100,6 +100,9 @@
 			]
 			wxUtils.setConfig(apiList);
 			wxUtils.error(apiList);
+			/**
+			 * 人员部門列表组件
+			 */
 			const choosePerson = {
 				template: '<person-list v-bind:depart_id="parseInt($route.params.id)" v-on:togglePerson="togglePersen"></person-list>',
 				methods: {
@@ -110,6 +113,9 @@
 					}
 				}
 			}
+			/**
+			 * 人员选择组件
+			 */
 			const comPersen = {
 				template: '<com-persen v-bind:chosePersen="this.$root.chosePersen" v-on:chosedPersen="chosedPersen"></com-persen>',
 				methods: {
@@ -119,12 +125,26 @@
 					}
 				}
 			}
-
+			/**
+			 * 发布组件
+			 */
 			const comPublish = {
-				template: '<com-publish v-bind:chosePersen="this.$root.chosedPersen">' +
-					'<select-choose v-bind:chosedPersen="this.$root.chosedPersen"></select-choose>' +
-					'<choose-file slot="choose-file"></choose-file>' +
-					'</com-publish>'
+				template: '<com-publish v-bind:msgType="$root.msgType" v-bind:chosePersen="this.$root.chosedPersen">' +
+					'<select-choose v-bind:chosedPersen="this.$root.chosedPersen"  v-on:msg-type="getMsgType"></select-choose>' +
+					'<choose-file v-if="$root.msgType>1" v-bind:fileType="$root.msgType" slot="choose-file"></choose-file>' +
+					'</com-publish>',
+				methods: {
+					getMsgType: function(msgType) {
+						console.log("获取的所选类型：" + msgType);
+						this.$root.msgType = msgType;
+					}
+				}
+			}
+			/***
+			 * 額外信息組件
+			 */
+			const comExtra = {
+				template: '<extra-pub v-bind:msgType="$root.msgType"><extra-pub>'
 			}
 
 			const router = new VueRouter({
@@ -157,7 +177,8 @@
 				router: router,
 				data: {
 					chosePersen: events.getSessionArray(consts.KEY_CHOOSE_PERSONS),
-					chosedPersen: []
+					chosedPersen: [],
+					msgType: 0 //默认为文字
 				},
 				methods: {
 					togglePersen: function(persen, isAdd) {

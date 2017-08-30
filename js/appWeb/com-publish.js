@@ -1,10 +1,18 @@
 Vue.component("com-publish", {
-	props: ['chosePersen'],
+	props: {
+		chosePersen: {
+			type: Array,
+			default: []
+		},
+		msgType: {
+			type: Number,
+			default: 0
+		}
+	},
 	template: '<div>' +
-		//		'<select-choose v-bind:chosedPersen="chosePersen"></select-choose>' +
 		'<slot></slot>' +
-		'<textarea v-model="content" v-bind:rows=10 v-bind:style="{width:\'100%\'}"></textarea>' +
-		'<slot name="choose-file"></slot>'+
+		'<textarea v-if="msgType<2" v-model="content" v-bind:rows=10 v-bind:style="{width:\'100%\'}"></textarea>' +
+		'<slot name="choose-file"></slot>' +
 		'<a v-bind:class="[\'weui-btn\', \'weui-btn_primary\']" v-on:click="publishMethod">发布</a></div>',
 	watch: {
 		'$route' (to, from) {
@@ -15,6 +23,7 @@ Vue.component("com-publish", {
 	},
 	data: function() {
 		return {
+			fileType: 0,
 			content: ''
 		}
 	},

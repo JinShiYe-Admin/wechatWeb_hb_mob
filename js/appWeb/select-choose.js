@@ -11,6 +11,7 @@ Vue.component('select-choose', {
 		'</select>' +
 		'</div>' +
 		'</div>' +
+	
 		'<div v-bind:class="[\'weui-cell\',\'weui-cell_access\']" v-on:click="routeToPersen">' +
 		'<div v-bind:class="[\'weui-cell__bd\']">' +
 		'人员选择' +
@@ -33,46 +34,26 @@ Vue.component('select-choose', {
 		getType: function(event) {
 			console.log(event.target.value);
 			this.msgType = parseInt(event.target.value);
-			switch(this.msgType) {
-				case 0: //文字
-					break;
-				case 1: //文字卡片
-					this.choosePersen();
-					break;
-				case 2: //图文
-					break;
-				case 3: //图片
-					this.getImg();
-					break;
-				case 4: //语音
-					this.getRecord();
-					break;
-				case 5: //视频
-					break;
-				case 6: //文件
-					break;
-				default:
-					break;
-			}
-		},
-		choosePersen: function() {
-			wxUtils.invoke(1, 2, function(departList, userList) {
-				console.log("获取的已选部门列表：" + JSON.stringify(departList));
-				console.log("获取的已选用户列表：" + JSON.stringify(userList));
-			})
-		},
-		getImg: function() {
-			wxUtils.chooseImage(1, function(picIds) {
-				compress.comImg(picIds[0], 2);
-			})
-		},
-		getRecord: function() {
-			wxUtils.startRecord();
-			wxUtils.onVoiceRecordEnd(function(localId) {
-				wxUtils.uploadVoice(localId, function(serverId) {
-					console.log("voice获取的serverId:" + serverId);
-				})
-			})
+			this.$emit("msg-type", this.msgType);
 		}
+	},
+	choosePersen: function() {
+		wxUtils.invoke(1, 2, function(departList, userList) {
+			console.log("获取的已选部门列表：" + JSON.stringify(departList));
+			console.log("获取的已选用户列表：" + JSON.stringify(userList));
+		})
+	},
+	getImg: function() {
+		wxUtils.chooseImage(1, function(picIds) {
+			compress.comImg(picIds[0], 2);
+		})
+	},
+	getRecord: function() {
+		wxUtils.startRecord();
+		wxUtils.onVoiceRecordEnd(function(localId) {
+			wxUtils.uploadVoice(localId, function(serverId) {
+				console.log("voice获取的serverId:" + serverId);
+			})
+		})
 	}
 })

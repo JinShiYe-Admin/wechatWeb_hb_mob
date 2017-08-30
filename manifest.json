@@ -322,7 +322,9 @@
 				],
 				"refer": [
 					"html/appWeb/subject_timetable.html",
-					"html/appWeb/schedule.html"
+					"html/appWeb/schedule.html",
+					"html/appWeb/home-publish.html",
+					"html/appWeb/courses-table.html"
 				],
 				"priority": 0
 			},
@@ -376,7 +378,29 @@
 					"js/weui.min.js",
 					"js/utils/consts.js",
 					"css/weui.css",
-					"js/importJS.js"
+					"js/importJS.js",
+					"js/jquery.min.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/appWeb/home-publish.html": {
+				"resources": [
+					"js/appWeb/select-choose.js",
+					"js/appWeb/choose-file.js",
+					"js/utils/events.js",
+					"js/appWeb/com-persen.js",
+					"js/utils/request.js",
+					"js/lib/vconsole/vconsole.min.js",
+					"js/appWeb/choose-person.js",
+					"js/vue.js",
+					"js/utils/wx-utils.js",
+					"js/utils/compress.js",
+					"js/vue-router.js",
+					"js/jweixin-1.2.0.js",
+					"js/appWeb/com-publish.js",
+					"js/utils/consts.js",
+					"css/weui.css"
 				],
 				"refer": [],
 				"priority": 0
@@ -417,7 +441,6 @@
 				"js/fastclick.js",
 				"image/config/func_disc.jpg",
 				"html/unitWeb/newList.html",
-				"js/jweixin-1.2.0.js",
 				"html/unitWeb/testA.html",
 				"image/config/loading.jpg",
 				"html/unitWeb/column.html",

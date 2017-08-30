@@ -81,7 +81,9 @@
 		"refer": [
 			"html/unitWeb/column-home.html",
 			"html/appWeb/subject_timetable.html",
-			"html/appWeb/schedule.html"
+			"html/appWeb/schedule.html",
+			"html/appWeb/home-publish.html",
+			"html/appWeb/courses-table.html"
 		]
 	},
 	"html/unitWeb/column-home.html": {
@@ -242,7 +244,27 @@
 			"js/weui.min.js",
 			"js/utils/consts.js",
 			"css/weui.css",
-			"js/importJS.js"
+			"js/importJS.js",
+			"js/jquery.min.js"
+		]
+	},
+	"html/appWeb/home-publish.html": {
+		"resources": [
+			"js/appWeb/select-choose.js",
+			"js/appWeb/choose-file.js",
+			"js/utils/events.js",
+			"js/appWeb/com-persen.js",
+			"js/utils/request.js",
+			"js/lib/vconsole/vconsole.min.js",
+			"js/appWeb/choose-person.js",
+			"js/vue.js",
+			"js/utils/wx-utils.js",
+			"js/utils/compress.js",
+			"js/vue-router.js",
+			"js/jweixin-1.2.0.js",
+			"js/appWeb/com-publish.js",
+			"js/utils/consts.js",
+			"css/weui.css"
 		]
 	}
 }

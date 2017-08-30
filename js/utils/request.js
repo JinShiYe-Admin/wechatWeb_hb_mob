@@ -45,19 +45,13 @@ var request = (function(mod) {
 		})
 	}
 	mod.publishMessage = function(users, content, callback) {
-		var userids = users.map(function(user) {
-			return user.userid
-		})
-		var usernames = users.map(function(user) {
-			return user.name
-		})
+
 		var comData = {
 			cmd: 'msg',
 			type: 'text',
 			touser: userids.join('|'),
 			toparty: '',
 			totag: '',
-			msgtype: 'text',
 			content: content,
 			tousername: usernames.join('|'),
 			topartyname: '',
@@ -67,6 +61,37 @@ var request = (function(mod) {
 			console.log("发布消息返回的值：" + JSON.stringify(response));
 			callback(response);
 		})
+	}
+	/**
+	 * 发送消息
+	 * @param {Object} users 用户
+	 * @param {Object} dataInfo 发送的数据信息
+	 */
+	mod.postMessage = function(users, dataInfo) {
+		var userids = users.map(function(user) {
+			return user.userid;
+		})
+		var usernames = users.map(function(user) {
+			return user.name;
+		})
+		var comData = {
+			cmd: 'msg',
+			//			type: 'text',
+			touser: userids.join('|'),
+			toparty: '',
+			totag: '',
+			safe: 0,
+			//			content: content,
+			tousername: usernames.join('|'),
+			topartyname: '',
+			totagname: ''
+		}
+		jQuery.extend(comData, dataInfo);
+		mod.postData(consts.MAINURL, JSON.stringify(comData), function(response) {
+			console.log("发布消息返回的值：" + JSON.stringify(response));
+			callback(response);
+		})
+
 	}
 	return mod;
 })(request || {})

@@ -1,10 +1,11 @@
 //显示用户名的过滤器
 Vue.filter('userName', function(userId) {
 	var userInfo = departUserInfo.value[userId];
-	if(userInfo != undefined) {
+	if(userInfo !== undefined) {
 		return userInfo.name; //返回人员信息中的名字
 	} else {
 		return userId; //返回传入的值
+		//return "未知";
 	}
 });
 //显示图片的过滤器
@@ -91,15 +92,18 @@ Vue.component("home-bd-item", {
 		}
 	},
 	methods: {
-		clickPerson: function(publisherId) {
-			this.$emit("click-person", publisherId);
+		clickPerson: function(userId) {
+			this.$emit("click-person", userId);
 		},
-		clickContent: function(id, index) {
-			this.$emit("click-content", id, index);
+		clickContent: function(valueIndex) {
+			this.$emit("click-content", this.index, valueIndex);
 		},
-		clickFunction: function(type, id, index) {
-			this.$emit("click-function", type, id, index);
+		clickFunction: function(valueIndex, type) {
+			this.$emit("click-function", this.index, valueIndex, type);
 		},
+		clickComment: function(valueIndex, commentIndex, replysIndex) {
+			this.$emit("click-comment", this.index, valueIndex, commentIndex, replysIndex);
+		}
 	}
 });
 
@@ -146,11 +150,21 @@ Vue.component("add-trends", {
 //动态组件
 Vue.component("trends-item", {
 	template: "#template_trends",
-	props: ["id", "value", "index"],
+	props: ["value", "index"],
 	computed: {
 		showPraiseComment: function() {
 			//是否显示点赞和评论区域
 			return this.value.LikeUsers.length > 0 || this.value.Comments.length > 0;
+		},
+		/**
+		 * 是否显示删除按钮
+		 */
+		showTrash: function() {
+			if(this.value.PublisherId === mineUserInfo.userid) {
+				return true;
+			} else {
+				return false;
+			}
 		},
 		showLine: function() {
 			//是否显示点赞和评论之间的横线
@@ -168,40 +182,46 @@ Vue.component("trends-item", {
 	},
 	methods: {
 		/**
-		 * 是否显示删除按钮
-		 * @param {Object} publisherId
-		 */
-		showTrash: function(publisherId) {
-			if(publisherId == mineUserInfo.userid) {
-				return true;
-			} else {
-				return false;
-			}
-		},
-		/**
 		 * 点击发布动态者的头像或名称
-		 * @param {String} id
 		 */
-		clickPerson: function(publisherId) {
-			this.$emit("click-person", publisherId);
+		clickPerson: function() {
+			this.$emit("click-person", this.value.PublisherId);
 		},
 		/**
 		 * 点击动态的内容
-		 * @param {String} id 动态的列表id
 		 * @param {Number} index 动态在列表中的序号
 		 */
-		clickContent: function(id, index) {
-			this.$emit("click-content", id, index);
+		clickContent: function() {
+			this.$emit("click-content", this.index);
 		},
 		/**
 		 * 点击动态的赞，评论，删除按钮
 		 * @param {String} type 按钮序号 0,赞;1,评论;2,删除;
-		 * @param {String} id 动态的列表id
-		 * @param {Number} index 动态在列表中的序号
 		 */
-		clickFunction: function(type, id, index) {
-			this.$emit("click-function", type, id, index);
+		clickFunction: function(type) {
+			this.$emit("click-function", this.index, type);
 		},
+		/**
+		 * 点击评论或者回复的内容
+		 * @param {Object} commentIndex 评论的序号
+		 * @param {Object} replysIndex 回复的序号
+		 */
+		clickComment: function(commentIndex, replysIndex) {
+			this.$emit("click-comment", this.index, commentIndex, replysIndex);
+		},
+		/**
+		 * 点击评论区域的查看全部按钮
+		 */
+		clickShowAll: function() {
+			this.$emit("click-content", this.index);
+		},
+		/**
+		 * 点击评论者或者回复者的名字
+		 * @param {Object} userId 用户的id
+		 */
+		clickName: function(userId) {
+			this.$emit("click-person", userId);
+		}
 	}
 });
 //与我相关组件
@@ -214,8 +234,26 @@ Vue.component("comments-item", {
 	template: "#temp_comments",
 	props: ["value", "show"],
 	methods: {
-		clickComment: function(comment_index, replys_index) {
-			console.log("clickComment:" + comment_index + " " + replys_index);
+		/**
+		 * 点击评论或者回复的内容
+		 * @param {Object} commentIndex 评论的序号
+		 * @param {Object} replysIndex 回复的序号
+		 */
+		clickComment: function(commentIndex, replysIndex) {
+			this.$emit("click-comment", commentIndex, replysIndex);
+		},
+		/**
+		 * 点击评论区域的查看全部按钮
+		 */
+		clickShowAll: function() {
+			this.$emit("click-show-all");
+		},
+		/**
+		 * 点击评论者或者回复者的名字
+		 * @param {Object} userId 用户的id
+		 */
+		clickName: function(userId) {
+			this.$emit("click-name", userId);
 		}
 	}
 });
@@ -224,6 +262,10 @@ Vue.component("image-item", {
 	template: "#temp_show_image",
 	props: ["images", "imagesThumb"],
 	methods: {
+		/**
+		 * 浏览图片原图
+		 * @param {Object} index 需要显示的图片的序号
+		 */
 		showImage: function(index) {
 			var pb = $.photoBrowser({
 				initIndex: index,

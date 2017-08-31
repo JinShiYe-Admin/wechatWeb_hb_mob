@@ -176,9 +176,7 @@ var trends_add_data = {
 	images: [], //图片，限制9张
 	video: '' //视频，限制一个
 }
-var trends_details_data = {
-	data: []
-}; //动态详情页面的数据
+
 var mineUserInfo = {
 	"userid": "moshanglin",
 	"name": "莫尚霖",
@@ -260,10 +258,10 @@ function initRouter() {
 				if(index == home_data.is_on) {
 					return;
 				}
-				home_data.home_tab[home_data.is_on].scrollTop = $("#" + home_data.home_tab[home_data.is_on].id).scrollTop();
-				home_data.is_on = index;
-				if(home_data.home_tab[home_data.is_on].leave) {
-					home_data.home_tab[home_data.is_on].leave = false;
+				this.home_tab[home_data.is_on].scrollTop = $("#" + home_data.home_tab[home_data.is_on].id).scrollTop();
+				this.is_on = index;
+				if(this.home_tab[this.is_on].leave) {
+					this.home_tab[this.is_on].leave = false;
 					var timeId = setInterval(function() {
 						toBeforePosition(timeId, home_data.is_on);
 					}, 100);
@@ -271,20 +269,9 @@ function initRouter() {
 			},
 			/**
 			 * 点击发布动态者的头像或者名称或者评论者(回复者)的名称
-			 * @param {Number} listIndex 列表的序号
-			 * @param {Number} valueIndex 数据的序号
+			 * @param {String} userId 用户id
 			 */
-			showPersonTrends: function(userId) {
-				console.log("showPersonTrends:" + userId);
-				var userInfo = departUserInfo.value[userId];
-				if(userInfo !== undefined) {
-					console.log("userInfo:" + JSON.stringify(userInfo));
-					//跳转到这个用户的个人空间
-				} else {
-					console.log("无此人资料");
-					//不做任何处理
-				}
-			},
+			showPersonTrends: showPersonTrends,
 			/**
 			 * 显示动态的详细内容或者查看全部按钮
 			 * @param {Number} listIndex 列表的序号
@@ -292,9 +279,7 @@ function initRouter() {
 			 */
 			showTrendsDetails: function(listIndex, valueIndex) {
 				console.log("showTrendsDetails:" + listIndex + ":" + valueIndex);
-				var trendsValue = this.home_tab[listIndex].data[valueIndex];
-				console.log("trendsValue:" + JSON.stringify(trendsValue));
-				showTrendsDatails(trendsValue);
+				showTrendsDetails(this.home_tab[listIndex].data[valueIndex])
 			},
 			/**
 			 * 点击动态的赞，评论，删除按钮
@@ -304,6 +289,9 @@ function initRouter() {
 			 */
 			clickFunction: function(listIndex, valueIndex, type) {
 				console.log("clickFunction:" + listIndex + " " + valueIndex + " " + type);
+				var trendsValue = home_data.home_tab[listIndex].data[valueIndex];
+				console.log("trendsValue:" + JSON.stringify(trendsValue))
+				trendsValue.IsLike = !trendsValue.IsLike;
 			},
 			/**
 			 * 点击评论或者回复的内容
@@ -407,7 +395,27 @@ function initRouter() {
 	var trends_details = {
 		template: "#temp_trends_details",
 		data: function() {
-			return trends_details_data;
+			console.log("trends_details:" + this.$route.params.id + " " + this.$route.params.data);
+			if(this.$route.params.data === undefined) {
+				return {
+					data: []
+				}
+			} else {
+				return {
+					data: [this.$route.params.data]
+				}
+			}
+		},
+		methods: {
+			clickPerson: showPersonTrends,
+			clickFunction: function(valueIndex, type) {
+				console.log("clickFunction:" + valueIndex + " " + type);
+				var trendsValue = this.data[valueIndex];
+				trendsValue.IsLike = !trendsValue.IsLike;
+			},
+			clickComment: function(valueIndex, commentIndex, replysIndex) {
+				console.log("clickComment:" + valueIndex + " " + commentIndex + ' ' + replysIndex);
+			}
 		},
 		beforeRouteEnter: function(to, from, next) {
 			console.log("路由-动态详情-显示之前:from:" + from.path + " to:" + to.path);
@@ -425,12 +433,15 @@ function initRouter() {
 	router = new VueRouter({
 		routes: [{
 			path: '/home',
+			name: 'home',
 			component: class_circle_home
 		}, {
 			path: '/trends_add',
+			name: 'add',
 			component: trends_add
 		}, {
-			path: '/trends_details',
+			path: '/trends_details/:id',
+			name: 'details',
 			component: trends_details
 		}]
 	});
@@ -576,10 +587,31 @@ function getAllUserSpaces(pageIndex) {
 }
 
 /**
- * 显示动态的详情
- * @param {Object} trendsValue 动态的数据
+ * 进入动态的详情
+ * @param {Object} trendsValue
  */
-function showTrendsDatails(trendsValue) {
-	trends_details_data.data[0] = trendsValue;
-	router.push('trends_details');
+function showTrendsDetails(trendsValue) {
+	router.push({
+		name: 'details',
+		params: {
+			id: new Date().getTime(),
+			data: trendsValue
+		}
+	});
+}
+
+/**
+ * 进入用户的空间
+ * @param {Object} userId 用户id
+ */
+function showPersonTrends(userId) {
+	console.log("showPersonTrends:" + userId);
+	var userInfo = departUserInfo.value[userId];
+	if(userInfo !== undefined) {
+		console.log("userInfo:" + JSON.stringify(userInfo));
+		//跳转到这个用户的个人空间
+	} else {
+		console.log("无此人资料");
+		//不做任何处理
+	}
 }

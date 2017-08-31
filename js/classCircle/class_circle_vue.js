@@ -150,7 +150,7 @@ Vue.component("add-trends", {
 //动态组件
 Vue.component("trends-item", {
 	template: "#template_trends",
-	props: ["value", "index"],
+	props: ["value", "index","detail"],
 	computed: {
 		showPraiseComment: function() {
 			//是否显示点赞和评论区域

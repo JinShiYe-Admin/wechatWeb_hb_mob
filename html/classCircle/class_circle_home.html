@@ -55,7 +55,9 @@
 		</template>
 		<!--路由--动态详情-->
 		<template id="temp_trends_details">
-			<trends-item v-for="(item_value,item_index) in data" :index="item_index" :key="item_index" :value="item_value" @click-person="clickPerson" @click-content="clickContent" @click-function="clickFunction" @click-comment="clickComment"></trends-item>
+			<div>
+				<trends-item v-for="(item_value,item_index) in data" :index="item_index" :key="item_index" :value="item_value" :detail="true" @click-person="clickPerson" @click-function="clickFunction" @click-comment="clickComment"></trends-item>
+			</div>
 		</template>
 		<!--班级圈主页--顶部导航-->
 		<template id="temp_trends_navbar_item">
@@ -77,10 +79,10 @@
 					<div class="weui-panel__bd">
 						<template v-if="value.id=='relate_to_me'">
 							<!--与我相关-->
-							<relate-item v-for="(item_value,item_index) in value.data" :key="index" :value="item_value"></relate-item>
+							<relate-item v-for="(item_value,item_index) in value.data" :key="item_index" :value="item_value"></relate-item>
 						</template>
 						<template v-else>
-							<trends-item v-for="(item_value,item_index) in value.data" :index="item_index" :key="index" :value="item_value" @click-person="clickPerson" @click-content="clickContent" @click-function="clickFunction" @click-comment="clickComment"></trends-item>
+							<trends-item v-for="(item_value,item_index) in value.data" :index="item_index" :key="item_index" :value="item_value" :detail="false" @click-person="clickPerson" @click-content="clickContent" @click-function="clickFunction" @click-comment="clickComment"></trends-item>
 						</template>
 					</div>
 				</div>
@@ -105,7 +107,7 @@
 						<div class="weui-media-box__desc">{{value.PublishDate}}</div>
 					</div>
 				</div>
-				<div class="class-circle-content-limit" @click="clickContent">{{value.MsgContent}}</div>
+				<div class="class-circle-content-limit" @click="clickContent" :class="{'class-circle-content-limit-break':detail}">{{value.MsgContent}}</div>
 				<template v-if="value.EncType == 1">
 					<image-item :images="value.EncAddr|imagesArray" :images-thumb="value.EncImgAddr|imagesArray"></image-item>
 				</template>
@@ -121,7 +123,12 @@
 						<div class="class-circle-praiser">{{praise_value.name}}</div>
 					</div>
 					<div class="class-circle-praise-comment-line" v-if="showLine"></div>
-					<comments-item :value="value.Comments|commentArray" :show="value.Comments|showAllButton" @click-comment="clickComment" @click-show-all="clickShowAll" @click-name="clickName"></comments-item>
+					<template v-if="detail">
+						<comments-item :value="value.Comments" :show="false" @click-comment="clickComment" @click-show-all="clickShowAll" @click-name="clickName"></comments-item>
+					</template>
+					<template v-else>
+						<comments-item :value="value.Comments|commentArray" :show="value.Comments|showAllButton" @click-comment="clickComment" @click-show-all="clickShowAll" @click-name="clickName"></comments-item>
+					</template>
 				</div>
 			</div>
 		</template>

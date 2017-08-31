@@ -56,31 +56,31 @@ Vue.component('extra-pub', {
 		},
 		emitEvents: function() {
 			var realData;
-			switch(this.msgtype) {
+			switch(this.msgType) {
 				case 1:
 					realData = {
-						news: JOSN.parse({
+						news: {
 							title: this.title,
 							description: this.description
-						})
+						}
 					}
 					break;
-				case 3:
+				case 2:
 					var extraData = jQuery.extend({
 						title: this.title,
 						description: this.description,
 						picurl: this.fileInfo.fileurl
 					}, this.fileInfo);
 					realData = {
-						news: JSON.parse({
+						news: {
 							articles: [extraData]
-						})
+						}
 					};
 					break;
 				default:
 					break;
 			}
-			console.log("要传递的realData:" + JOSN.stringify(realData))
+			console.log("要传递的realData:" + JSON.stringify(realData))
 			this.$emit("extraData", realData);
 			router.go(-1);
 		},

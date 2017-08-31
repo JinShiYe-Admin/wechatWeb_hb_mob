@@ -14,6 +14,7 @@ var consts = (function(mod) {
 		typeName: '文字'
 	}, {
 		type: 'textcard',
+		msgtype: 'textcard',
 		typeNo: 1,
 		typeName: '文本卡片'
 	}, {
@@ -33,7 +34,7 @@ var consts = (function(mod) {
 		typeName: '语音'
 	}, {
 		type: 'video',
-		msgtype : "video",
+		msgtype: "video",
 		typeNo: 5,
 		typeName: '视频'
 	}, {

@@ -76,12 +76,10 @@ var request = (function(mod) {
 		})
 		var comData = {
 			cmd: 'msg',
-			//			type: 'text',
 			touser: userids.join('|'),
 			toparty: '',
 			totag: '',
 			safe: 0,
-			//			content: content,
 			tousername: usernames.join('|'),
 			topartyname: '',
 			totagname: ''

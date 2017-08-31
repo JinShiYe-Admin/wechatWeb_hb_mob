@@ -2,7 +2,9 @@ Vue.component("com-publish", {
 	props: {
 		chosePersen: {
 			type: Array,
-			default: []
+			default: function() {
+				return []
+			}
 		},
 		msgType: {
 			type: Number,
@@ -10,11 +12,15 @@ Vue.component("com-publish", {
 		},
 		exData: {
 			type: Object,
-			default: {}
+			default: function() {
+				return {}
+			}
 		},
 		fileInfo: {
 			type: Object,
-			default: {}
+			default: function() {
+				return {}
+			}
 		}
 	},
 	template: '<div>' +
@@ -53,7 +59,7 @@ Vue.component("com-publish", {
 						return;
 					}
 					this.extraData = {
-						content: content
+						content: this.content
 					}
 					break;
 				case 1:

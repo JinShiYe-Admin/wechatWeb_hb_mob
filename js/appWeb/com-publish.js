@@ -85,8 +85,10 @@ Vue.component("com-publish", {
 		},
 		publish: function() { //发布
 			this.extraData.type = this.getPubType();
-			console.log("&&&&&com-publish&&&&&发布事件！");
+			console.log("&&&&&com-publish&&&&&发布事件！" + JSON.stringify(this.extraData));
 			request.postMessage(this.chosePersen, this.extraData, function(data) {
+				console.log("发送消息，返回的值：" + JSON.stringify(data));
+				console.log(data);
 				if(data.RspCode == 0) {
 					sessionStorage.clear();
 					window.close(); //关闭当前页面

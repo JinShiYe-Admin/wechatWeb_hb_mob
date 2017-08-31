@@ -114,8 +114,10 @@ Vue.component('choose-file', {
 				console.log(event.target.files);
 				var file = event.target.files[0];
 				compress.uploadImg(file, 2, function(response) {
+					console.log("已上傳的文件！" + JOSN.stringify(response))
 					if(response.RspCode == 0) {
-						uploadedFiles = [response.RspData];
+						com.uploadedFiles = [response.RspData];
+
 						com.$emit('uploadFile', response.RspData);
 					} else {
 						console.log("发生错误！" + JSON.stringify(response));

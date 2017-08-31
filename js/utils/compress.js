@@ -37,11 +37,11 @@ var compress = (function(mod) {
 				processData: false,
 				data: formData,
 				success: function(response) {
-					console.log(response);
-					callback(response);
+					console.log("上传文件获取的回调："+response);
+					callback(JSON.parse(response));
 				},
 				error: function(errRes) {
-					callback(errRes);
+					callback(JSON.parse(errRes));
 					console.log("发生未知错误：");
 					console.log(errRes);
 				}

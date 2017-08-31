@@ -72,7 +72,7 @@
 		<div id="publish-home">
 			<router-view style="width: 100%;"></router-view>
 		</div>
-		<!--<script src="../../js/lib/vconsole/vconsole.min.js"></script>-->
+		<script src="../../js/lib/vconsole/vconsole.min.js"></script>
 		<script src="../../js/vue.js"></script>
 		<script src="../../js/vue-router.js"></script>
 		<script src="../../js/utils/consts.js"></script>
@@ -130,7 +130,7 @@
 			 * 发布组件
 			 */
 			const comPublish = {
-				template: '<com-publish v-bind:fileInfo="$root.uploadFileInfo" v-bind:extraData="$root.extraData" v-bind:msgType="$root.msgType" v-bind:chosePersen="this.$root.chosedPersen">' +
+				template: '<com-publish v-bind:fileInfo="$root.uploadFileInfo" v-bind:exData="$root.extraData" v-bind:msgType="$root.msgType" v-bind:chosePersen="this.$root.chosedPersen">' +
 					'<select-choose v-bind:msgType="$root.msgType" v-bind:chosedPersen="this.$root.chosedPersen"  v-on:msg-type="getMsgType"></select-choose>' +
 					'<choose-file  v-on:uploadFile="getUploadFile" v-if="$root.msgType>0" v-bind:msgType="$root.msgType" slot="choose-file"></choose-file>' +
 					'</com-publish>',

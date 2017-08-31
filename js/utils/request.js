@@ -67,7 +67,7 @@ var request = (function(mod) {
 	 * @param {Object} users 用户
 	 * @param {Object} dataInfo 发送的数据信息
 	 */
-	mod.postMessage = function(users, dataInfo,callback) {
+	mod.postMessage = function(users, dataInfo, callback) {
 		var userids = users.map(function(user) {
 			return user.userid;
 		})
@@ -87,6 +87,7 @@ var request = (function(mod) {
 			totagname: ''
 		}
 		jQuery.extend(comData, dataInfo);
+		console.log("要传递的值：" + JSON.stringify(comData));
 		mod.postData(consts.MAINURL, JSON.stringify(comData), function(response) {
 			console.log("发布消息返回的值：" + JSON.stringify(response));
 			callback(response);

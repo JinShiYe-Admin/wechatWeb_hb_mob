@@ -36,13 +36,14 @@ var compress = (function(mod) {
 				contentType: false,
 				processData: false,
 				data: formData,
+				dataType: 'json',
 				success: function(response) {
-					console.log("上传文件获取的回调："+response);
-					callback(JSON.parse(response));
+					console.log("上传文件获取的回调：" + JSON.stringify(response));
+					callback(response);
 				},
 				error: function(errRes) {
-					callback(JSON.parse(errRes));
-					console.log("发生未知错误：");
+					callback(errRes);
+					console.log("发生未知错误：" + JSON.stringify(errRes));
 					console.log(errRes);
 				}
 			})

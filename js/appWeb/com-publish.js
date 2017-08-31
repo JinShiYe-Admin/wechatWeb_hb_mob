@@ -70,7 +70,6 @@ Vue.component("com-publish", {
 					}
 					break;
 				case 3:
-
 				case 4:
 				case 6:
 					if(typeof(this.fileInfo.fileurl) === undefined) {

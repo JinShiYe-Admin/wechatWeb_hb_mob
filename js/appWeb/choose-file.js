@@ -29,7 +29,7 @@ Vue.component('choose-file', {
 		'</div>',
 	data: function() {
 		return {
-			uploadedFiles: [this.fileInfo]
+			uploadedFiles: this.fileInfo.fileurl?[this.fileInfo]:[]
 		}
 	},
 	created: function() {

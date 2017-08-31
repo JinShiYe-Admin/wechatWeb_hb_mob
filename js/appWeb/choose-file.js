@@ -10,7 +10,9 @@ Vue.component('choose-file', {
 		},
 		fileInfo: {
 			type: Object,
-			default: {}
+			default: function() {
+				return {};
+			}
 		}
 	},
 	template: '<div v-bind:class="[\'weui-uploader\']">' +
@@ -29,7 +31,7 @@ Vue.component('choose-file', {
 		'</div>',
 	data: function() {
 		return {
-			uploadedFiles: this.fileInfo.fileurl?[this.fileInfo]:[]
+			uploadedFiles: this.fileInfo.fileurl ? [this.fileInfo] : []
 		}
 	},
 	created: function() {

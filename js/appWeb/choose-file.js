@@ -7,6 +7,10 @@ Vue.component('choose-file', {
 		uploadReal: {
 			type: Boolean,
 			default: false
+		},
+		fileInfo: {
+			type: Object,
+			default: {}
 		}
 	},
 	template: '<div v-bind:class="[\'weui-uploader\']">' +
@@ -25,7 +29,7 @@ Vue.component('choose-file', {
 		'</div>',
 	data: function() {
 		return {
-			uploadedFiles: []
+			uploadedFiles: [this.fileInfo]
 		}
 	},
 	created: function() {
@@ -114,7 +118,7 @@ Vue.component('choose-file', {
 				console.log(event.target.files);
 				var file = event.target.files[0];
 				compress.uploadImg(file, 2, function(response) {
-					console.log("已上傳的文件！" + JOSN.stringify(response))
+					console.log("已上傳的文件！" + JSON.stringify(response))
 					if(response.RspCode == 0) {
 						com.uploadedFiles = [response.RspData];
 

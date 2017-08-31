@@ -32,7 +32,8 @@ Vue.component("com-publish", {
 	data: function() {
 		return {
 			fileType: 0,
-			content: ''
+			content: '',
+			extraData: this.exData
 		}
 	},
 	methods: {
@@ -51,19 +52,19 @@ Vue.component("com-publish", {
 						console.log("请填写内容！");
 						return;
 					}
-					this.exData = {
+					this.extraData = {
 						content: content
 					}
 					break;
 				case 1:
-					if(typeof(this.exData.title) === "undefined") {
+					if(typeof(this.extraData.title) === "undefined") {
 						console.log("文字卡片未填写内容！！！");
 						return;
 					}
 					break;
 				case 2:
 				case 5:
-					if(typeof(this.exData.fileurl) === undefined) {
+					if(typeof(this.extraData.fileurl) === undefined) {
 						console.log("请填写内容和选择文件！！！");
 						return;
 					}
@@ -76,7 +77,7 @@ Vue.component("com-publish", {
 						console.log("请选择文件");
 						return;
 					}
-					this.exData = this.fileInfo;
+					this.extraData = this.fileInfo;
 					break;
 				default:
 					break;

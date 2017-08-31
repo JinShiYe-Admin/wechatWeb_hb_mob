@@ -17,8 +17,8 @@ var consts = (function(mod) {
 		typeNo: 1,
 		typeName: '文本卡片'
 	}, {
-		type: 'mpnews',
-		msgtype: 'mpnews',
+		type: 'news',
+		msgtype: 'news',
 		typeNo: 2,
 		typeName: '图文'
 	}, {

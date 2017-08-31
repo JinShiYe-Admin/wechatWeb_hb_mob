@@ -68,10 +68,11 @@ Vue.component('extra-pub', {
 				case 3:
 					var extraData = jQuery.extend({
 						title: this.title,
-						description: this.description
+						description: this.description,
+						picurl: this.fileInfo.fileurl
 					}, this.fileInfo);
 					realData = {
-						mpnews: JSON.parse({
+						news: JSON.parse({
 							articles: [extraData]
 						})
 					};

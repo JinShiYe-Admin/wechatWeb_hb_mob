@@ -37,7 +37,7 @@ Vue.component("com-publish", {
 			// 对路由变化作出响应...
 			console.log("@@@@@com-persen@@@@@路由变化" + this.$route.params.id);
 			console.log(to);
-		}
+		},
 		content: function(newVal, oldVal) {
 			console.log("输入内容的newVal：" + newVal + ",oldVal:" + oldVal);
 			this.$emit("putContent", newVal);

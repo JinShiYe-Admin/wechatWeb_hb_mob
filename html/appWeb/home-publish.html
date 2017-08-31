@@ -130,7 +130,7 @@
 			 * 发布组件
 			 */
 			const comPublish = {
-				template: '<com-publish v-bind:fileInfo="$root.uploadFileInfo" v-bind:exData="$root.extraData" v-bind:msgType="$root.msgType" v-bind:chosePersen="this.$root.chosedPersen">' +
+				template: '<com-publish v-bind:initialCon="$root.content" v-on:putContent="getContent" v-bind:fileInfo="$root.uploadFileInfo" v-bind:exData="$root.extraData" v-bind:msgType="$root.msgType" v-bind:chosePersen="this.$root.chosedPersen">' +
 					'<select-choose v-bind:msgType="$root.msgType" v-bind:chosedPersen="this.$root.chosedPersen"  v-on:msg-type="getMsgType"></select-choose>' +
 					'<choose-file  v-bind:fileInfo="$root.uploadFileInfo" v-on:uploadFile="getUploadFile" v-if="$root.msgType>0" v-bind:msgType="$root.msgType" slot="choose-file"></choose-file>' +
 					'</com-publish>',
@@ -142,6 +142,10 @@
 					getUploadFile: function(fileData) {
 						console.log("获取的已上传组件信息：" + JSON.stringify(fileData));
 						this.$root.uploadFileInfo = fileData;
+					},
+					getContent: function(content) {
+						console.log("文本内容：" + content);
+						this.$root.content = content;
 					}
 				}
 			}
@@ -202,12 +206,14 @@
 					msgType: 0, //默认为文字
 					extraData: {},
 					uploadFileInfo: {},
-					uploadReal: true
+					uploadReal: true,
+					content: ''
 				},
 				watch: {
 					msgType: function(newVal, oldVal) {
 						this.extraData = {};
 						this.uploadFileInfo = {};
+						this.content = '';
 					}
 				},
 				methods: {

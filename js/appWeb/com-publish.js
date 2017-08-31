@@ -21,11 +21,15 @@ Vue.component("com-publish", {
 			default: function() {
 				return {}
 			}
+		},
+		initialCon: {
+			type: String,
+			default: ''
 		}
 	},
 	template: '<div>' +
 		'<slot></slot>' +
-		'<textarea v-if="msgType<1" v-model.trim="content" v-bind:rows=10 v-bind:style="{width:\'100%\'}"></textarea>' +
+		'<textarea v-if="msgType<1" v-model.trim.lazy="content" v-bind:rows=10 v-bind:style="{width:\'100%\'}"></textarea>' +
 		'<slot name="choose-file"></slot>' +
 		'<a v-bind:class="[\'weui-btn\', \'weui-btn_primary\']" v-on:click="publishMethod">发布</a></div>',
 	watch: {
@@ -34,11 +38,15 @@ Vue.component("com-publish", {
 			console.log("@@@@@com-persen@@@@@路由变化" + this.$route.params.id);
 			console.log(to);
 		}
+		content: function(newVal, oldVal) {
+			console.log("输入内容的newVal：" + newVal + ",oldVal:" + oldVal);
+			this.$emit("putContent", newVal);
+		}
 	},
 	data: function() {
 		return {
 			fileType: 0,
-			content: '',
+			content: this.initialCon,
 			extraData: this.exData
 		}
 	},

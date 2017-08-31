@@ -38,7 +38,7 @@ Vue.component('choose-file', {
 	watch: {
 		msgType: function(newVal, oldVal) {
 			console.log("文件选择的消息类型变化：" + newVal + ",旧值：" + oldVal);
-			uploadedFiles = [];
+			this.uploadedFiles = [];
 		}
 	},
 	computed: {

@@ -67,11 +67,11 @@ var home_data = {
 			"MsgContent": "<html>\n <head></head>\n <body>\n <p><br><img src=\"http://qn-kfpb.jiaobaowang.net/jbypc/pc/9498620170615111755.jpg\" title=\"01.jpg\" alt=\"01.jpg\" width=\"100%\"><br></p>\n </body>\n</html>",
 			"EncTypeStr": "图文混排",
 			"EncType": 1,
-			"EncAddr": "http://jqweui.com/dist/demos/images/swiper-1.jpg|http://qn-kfpb.jiaobaowang.net/jbypc/pc/9498620170615111755.jpg|http://static.firefoxchina.cn/img/201708/8_59a61038ec68a0.jpg|http://jqweui.com/dist/demos/images/swiper-2.jpg",
+			"EncAddr": "http://qn-kfpb.jiaobaowang.net/jbypc/pc/9498620170615111755.jpg|http://static.firefoxchina.cn/img/201708/8_59a61038ec68a0.jpg|http://jqweui.com/dist/demos/images/swiper-2.jpg",
 			"NoteType": 2,
 			"MsgContentTxt": "",
 			"PublisherId": "chenuodong",
-			"EncImgAddr": "http://jqweui.com/dist/demos/images/swiper-2.jpg",
+			"EncImgAddr": "http://qn-kfpb.jiaobaowang.net/jbypc/pc/9498620170615111755.jpg|http://qn-kfpb.jiaobaowang.net/jbypc/pc/9498620170615111755.jpg",
 			"InShow": 1,
 			"NoteTypeStr": "个人空间动态",
 			"EncIntro": "",
@@ -87,7 +87,78 @@ var home_data = {
 		leave: false,
 		show_loadmore: true,
 		allow_loadmore: false,
-		data: []
+		data: [{
+			"LikeUsers": [],
+			"TabId": 3,
+			"Comments": [{
+				"CommentDate": "2017-01-10 09:24:13",
+				"TabId": 92,
+				"Replys": [],
+				"ReplyId": "0",
+				"CommentContent": "你好这是对527号评论的回复这是对527号评论的回复这是对527号评论的回复这是对527号评论的回复",
+				"UserId": "1",
+				"UpperId": 0
+			}, {
+				"CommentDate": "2017-08-11 11:20:11",
+				"TabId": 527,
+				"Replys": [{
+					"CommentDate": "2017-08-11 11:37:15",
+					"TabId": 528,
+					"ReplyId": "1",
+					"CommentContent": "这是对527号评论的回复这是对527号评论的回复这是对527号评论的回复",
+					"UserId": "11",
+					"UpperId": 527
+				}, {
+					"CommentDate": "2017-08-14 10:18:56",
+					"TabId": 530,
+					"ReplyId": "1",
+					"CommentContent": "8-14测试回复",
+					"UserId": "1",
+					"UpperId": 527
+				}, {
+					"CommentDate": "2017-08-14 10:21:27",
+					"TabId": 531,
+					"ReplyId": "123",
+					"CommentContent": "8-14测试回复",
+					"UserId": "1",
+					"UpperId": 527
+				}, {
+					"CommentDate": "2017-08-14 10:22:10",
+					"TabId": 532,
+					"ReplyId": "1",
+					"CommentContent": "8-14测试回复",
+					"UserId": "231",
+					"UpperId": 527
+				}],
+				"ReplyId": "0",
+				"CommentContent": "这是8月11号的评论内容的测试",
+				"UserId": "1",
+				"UpperId": 0
+			}, {
+				"CommentDate": "2017-08-14 10:32:20",
+				"TabId": 533,
+				"Replys": [],
+				"ReplyId": "0",
+				"CommentContent": "8-14测试评论",
+				"UserId": "moshanglin",
+				"UpperId": 0
+			}],
+			"MsgContent": "<html>\n <head></head>\n <body>\n <p><br><img src=\"http://qn-kfpb.jiaobaowang.net/jbypc/pc/9498620170615111755.jpg\" title=\"01.jpg\" alt=\"01.jpg\" width=\"100%\"><br></p>\n </body>\n</html>",
+			"EncTypeStr": "图文混排",
+			"EncType": 1,
+			"EncAddr": "http://qn-kfpb.jiaobaowang.net/jbypc/pc/9498620170615111755.jpg|http://static.firefoxchina.cn/img/201708/8_59a61038ec68a0.jpg|http://jqweui.com/dist/demos/images/swiper-2.jpg",
+			"NoteType": 2,
+			"MsgContentTxt": "",
+			"PublisherId": "moshanglin",
+			"EncImgAddr": "http://qn-kfpb.jiaobaowang.net/jbypc/pc/9498620170615111755.jpg|http://qn-kfpb.jiaobaowang.net/jbypc/pc/9498620170615111755.jpg",
+			"InShow": 1,
+			"NoteTypeStr": "个人空间动态",
+			"EncIntro": "",
+			"ReadCnt": 7,
+			"EncLen": 0,
+			"IsLike": 0,
+			"PublishDate": "2017-06-15 11:18:04"
+		}]
 	}, {
 		id: "relate_to_me",
 		title: "与我相关",
@@ -105,7 +176,9 @@ var trends_add_data = {
 	images: [], //图片，限制9张
 	video: '' //视频，限制一个
 }
-var trends_details_data; //动态详情页面的数据
+var trends_details_data = {
+	data: []
+}; //动态详情页面的数据
 var mineUserInfo = {
 	"userid": "moshanglin",
 	"name": "莫尚霖",
@@ -123,7 +196,7 @@ var mineUserInfo = {
 	"telephone": null,
 	"email": null,
 	"weixinid": null,
-	"avatar": "http: //shp.qpic.cn/bizmp/LlAHpaR9WIamIqUyfAicDggv1icib12xUv983mowPgnEeMwjJRENdrYhg/",
+	"avatar": "http://shp.qpic.cn/bizmp/LlAHpaR9WIamIqUyfAicDggv1icib12xUv983mowPgnEeMwjJRENdrYhg/",
 	"status": 1,
 	"extattr": null,
 	"errcode": 0,
@@ -131,8 +204,33 @@ var mineUserInfo = {
 	"P2PData": null
 }; //我的个人信息model,查看参数详细信息请访问:http://open.work.weixin.qq.com/wwopen/doc#10019
 var departUserInfo = {
-	key: [],
-	value: {}
+	key: ["moshanglin"],
+	value: {
+		"moshanglin": {
+			"userid": "moshanglin",
+			"name": "莫尚霖",
+			"department": [
+				11
+			],
+			"order": [
+				0
+			],
+			"position": "",
+			"mobile": null,
+			"english_name": "",
+			"gender": 1,
+			"isleader": 0,
+			"telephone": null,
+			"email": null,
+			"weixinid": null,
+			"avatar": "http://shp.qpic.cn/bizmp/LlAHpaR9WIamIqUyfAicDggv1icib12xUv983mowPgnEeMwjJRENdrYhg/",
+			"status": 1,
+			"extattr": null,
+			"errcode": 0,
+			"errmsg": "ok",
+			"P2PData": null
+		}
+	}
 }; //记录所有人的用户信息
 var temp_data; //临时变量;用于查询我所处部门的所有成员
 var router; //路由
@@ -172,29 +270,59 @@ function initRouter() {
 				}
 			},
 			/**
-			 * 点击发布动态者的头像或者名称
-			 * @param {String} publisherId 发布动态者的id
+			 * 点击发布动态者的头像或者名称或者评论者(回复者)的名称
+			 * @param {Number} listIndex 列表的序号
+			 * @param {Number} valueIndex 数据的序号
 			 */
-			showPersonTrends: function(publisherId) {
-				console.log("showPersonTrends:" + publisherId);
+			showPersonTrends: function(userId) {
+				console.log("showPersonTrends:" + userId);
+				var userInfo = departUserInfo.value[userId];
+				if(userInfo !== undefined) {
+					console.log("userInfo:" + JSON.stringify(userInfo));
+					//跳转到这个用户的个人空间
+				} else {
+					console.log("无此人资料");
+					//不做任何处理
+				}
 			},
 			/**
-			 * 显示动态的详细内容
-			 * @param {String} id 动态的列表id
-			 * @param {Number} index 动态在列表中的序号
+			 * 显示动态的详细内容或者查看全部按钮
+			 * @param {Number} listIndex 列表的序号
+			 * @param {Number} valueIndex 数据的序号
 			 */
-			showTrendsDetails: function(id, index) {
-				console.log("showTrendsDetails:" + id + ":" + index);
+			showTrendsDetails: function(listIndex, valueIndex) {
+				console.log("showTrendsDetails:" + listIndex + ":" + valueIndex);
+				var trendsValue = this.home_tab[listIndex].data[valueIndex];
+				console.log("trendsValue:" + JSON.stringify(trendsValue));
+				showTrendsDatails(trendsValue);
 			},
 			/**
 			 * 点击动态的赞，评论，删除按钮
-			 * @param {String} type 按钮序号 0,赞;1,评论;2,删除;
-			 * @param {String} id 动态的列表id
-			 * @param {Number} index 动态在列表中的序号
+			 * @param {Number} listIndex 列表的序号
+			 * @param {Number} valueIndex 数据的序号
+			 * @param {Number} type 按钮序号 0,赞;1,评论;2,删除;
 			 */
-			clickFunction: function(type, id, index) {
-				console.log("clickFunction:" + type + " " + id + " " + index);
+			clickFunction: function(listIndex, valueIndex, type) {
+				console.log("clickFunction:" + listIndex + " " + valueIndex + " " + type);
 			},
+			/**
+			 * 点击评论或者回复的内容
+			 * @param {Number} listIndex 列表的序号
+			 * @param {Number} valueIndex 数据的序号
+			 * @param {Object} commentIndex 评论的序号
+			 * @param {Object} replysIndex 回复的序号
+			 */
+			clickComment: function(listIndex, valueIndex, commentIndex, replysIndex) {
+				console.log("clickComment:" + listIndex + " " + valueIndex + " " + commentIndex + " " + replysIndex);
+				var trendsValue = this.home_tab[listIndex].data[valueIndex];
+				if(replysIndex === undefined) { //评论
+					var comments = trendsValue.Comments[commentIndex];
+					console.log("CommentContent:" + comments.CommentContent);
+				} else { //回复
+					var Replys = trendsValue.Comments[commentIndex].Replys[replysIndex];
+					console.log("CommentContent:" + Replys.CommentContent);
+				}
+			}
 		},
 		/**
 		 * 组件显示之前
@@ -275,6 +403,7 @@ function initRouter() {
 		}
 	};
 
+	//动态详情
 	var trends_details = {
 		template: "#temp_trends_details",
 		data: function() {
@@ -300,6 +429,9 @@ function initRouter() {
 		}, {
 			path: '/trends_add',
 			component: trends_add
+		}, {
+			path: '/trends_details',
+			component: trends_details
 		}]
 	});
 
@@ -441,4 +573,13 @@ function getAllUserSpaces(pageIndex) {
 			$.alert(data.RspTxt, "加载失败");
 		}
 	});
+}
+
+/**
+ * 显示动态的详情
+ * @param {Object} trendsValue 动态的数据
+ */
+function showTrendsDatails(trendsValue) {
+	trends_details_data.data[0] = trendsValue;
+	router.push('trends_details');
 }

@@ -1,10 +1,10 @@
 var compress = (function(mod) {
-	mod.comImg = function(file, maxSize) {
+	mod.uploadImg = function(file, maxSize, callback) {
 		maxSize = maxSize * 1024 * 1024;
 		console.log("要处理的图片地址：" + file.name);
-		mod.getFileReader(file, maxSize);
+		mod.getFileReader(file, maxSize, callback);
 	}
-	mod.getFileReader = function(file, maxSize) {
+	mod.getFileReader = function(file, maxSize, callback) {
 		var reader = new FileReader();
 		reader.onload = function() {
 			var result = this.result;
@@ -22,12 +22,12 @@ var compress = (function(mod) {
 				} else {
 					formData.append('image', file);
 				}
-				mod.postFile(formData);
+				mod.postFile(formData, callback);
 			})
 		}
 		reader.readAsDataURL(file);
 	}
-	mod.postFile = function(formData, size) {
+	mod.postFile = function(formData, callback) {
 		console.log("开始上传");
 		jQuery.ajax({
 				url: consts.UPLOADURL,
@@ -38,8 +38,10 @@ var compress = (function(mod) {
 				data: formData,
 				success: function(response) {
 					console.log(response);
+					callback(response);
 				},
 				error: function(errRes) {
+					callback(errRes);
 					console.log("发生未知错误：");
 					console.log(errRes);
 				}

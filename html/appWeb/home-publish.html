@@ -130,14 +130,18 @@
 			 * 发布组件
 			 */
 			const comPublish = {
-				template: '<com-publish v-bind:extraData="$root.extraData" v-bind:msgType="$root.msgType" v-bind:chosePersen="this.$root.chosedPersen">' +
+				template: '<com-publish v-bind:fileInfo="$root.uploadFileInfo" v-bind:extraData="$root.extraData" v-bind:msgType="$root.msgType" v-bind:chosePersen="this.$root.chosedPersen">' +
 					'<select-choose v-bind:msgType="$root.msgType" v-bind:chosedPersen="this.$root.chosedPersen"  v-on:msg-type="getMsgType"></select-choose>' +
-					'<choose-file v-if="$root.msgType>0" v-bind:msgType="$root.msgType" slot="choose-file"></choose-file>' +
+					'<choose-file  v-on:uploadFile="getUploadFile" v-if="$root.msgType>0" v-bind:msgType="$root.msgType" slot="choose-file"></choose-file>' +
 					'</com-publish>',
 				methods: {
 					getMsgType: function(msgType) {
 						console.log("获取的所选类型：" + msgType);
 						this.$root.msgType = msgType;
+					},
+					getUploadFile: function(fileData) {
+						console.log("获取的已上传组件信息：" + JSON.stringify(fileData));
+						this.$root.uploadFileInfo = fileData;
 					}
 				}
 			}
@@ -145,13 +149,17 @@
 			 * 額外信息組件
 			 */
 			const comExtra = {
-				template: '<extra-pub v-bind:msgType="$root.msgType" v-on:extraData="getExtraData">' +
-					'<choose-file v-if="$root.msgType>1" uploadReal="true" v-bind:msgType="$root.msgType"></choose-file>' +
+				template: '<extra-pub v-bind:fileInfo="$root.uploadFileInfo" v-bind:msgType="$root.msgType" v-on:extraData="getExtraData">' +
+					'<choose-file v-if="$root.msgType>1" uploadReal="true" v-bind:msgType="$root.msgType" v-on:uploadFile="getUploadFile"></choose-file>' +
 					'</extra-pub>',
 				methods: {
 					getExtraData: function(extraData) {
 						console.log("获取的额外数据：" + JSON.stringify(extraData));
 						this.$root.extraData = extraData;
+					},
+					getUploadFile: function(fileData) {
+						console.log("获取的已上传组件信息：" + JSON.stringify(fileData));
+						this.$root.uploadFileInfo = fileData;
 					}
 				}
 			}
@@ -192,7 +200,14 @@
 					chosePersen: events.getSessionArray(consts.KEY_CHOOSE_PERSONS),
 					chosedPersen: [],
 					msgType: 0, //默认为文字
-					extraData: {}
+					extraData: {},
+					uploadFileInfo: {}
+				},
+				watch: {
+					msgType: function(newVal, oldVal) {
+						this.extraData = {};
+						this.uploadFileInfo = {};
+					}
 				},
 				methods: {
 					togglePersen: function(persen, isAdd) {

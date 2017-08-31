@@ -2,7 +2,7 @@ Vue.component('choose-file', {
 	props: {
 		msgType: {
 			type: Number,
-			default: 3
+			default: 1
 		},
 		uploadReal: {
 			type: Boolean,
@@ -16,7 +16,7 @@ Vue.component('choose-file', {
 		'</div>' +
 		'<div v-bind:class="[\'weui-uploader__bd\']">' +
 		'<ul v-bind:class="[\'weui-uploader__files\']" id="uploaderFiles">' +
-		'<li v-for="file of uploadedFiles" v-bind:class="[\'weui-uploader__file\']" v-bind:style="{\'background-image\':\'url(\'+file+\')\'}"></li>' +
+		'<li v-for="file of uploadedFiles" v-bind:class="[\'weui-uploader__file\']" v-bind:style="{\'background-image\':\'url(\'+file.fileurl+\')\'}"></li>' +
 		'</ul>' +
 		'<div v-bind:class="[\'weui-uploader__input-box\']" v-on:click="toExtra()">' +
 		'<input v-if="((msgType!==2&&msgType!==5)||uploadReal)&&msgType!==1" id="uploaderInput" v-bind:class="[\'weui-uploader__input\']" type="file" v-bind:accept="getAcceptType()" v-on:change="selectFile($event)">' +
@@ -32,14 +32,17 @@ Vue.component('choose-file', {
 
 	},
 	watch: {
-
+		msgType: function(newVal, oldVal) {
+			console.log("文件选择的消息类型变化：" + newVal + ",旧值：" + oldVal);
+			uploadedFiles = [];
+		}
 	},
 	computed: {
 
 	},
 	methods: {
 		toExtra: function() {
-			if(this.msgType == 1 || this.msgType == 2 || this.msgType == 5) {
+			if((this.msgType == 1 || this.msgType == 2 || this.msgType == 5) && !this.uploadReal) {
 				router.push({
 					name: "extra-pub"
 				})
@@ -105,12 +108,19 @@ Vue.component('choose-file', {
 			return acceptType;
 		},
 		selectFile: function(event) {
+			var com = this;
 			if(event.target.value) {
 				console.log("选中的文件路径：" + event.target.value);
 				console.log(event.target.files);
 				var file = event.target.files[0];
-				uploadedFiles = [file]
-				compress.comImg(file, 2);
+				compress.uploadImg(file, 2, function(response) {
+					if(response.RspCode == 0) {
+						uploadedFiles = [response.RspData];
+						com.$emit('uploadFile', response.RspData);
+					} else {
+						console.log("发生错误！" + JSON.stringify(response));
+					}
+				});
 			}
 		}
 	}

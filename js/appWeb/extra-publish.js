@@ -3,39 +3,43 @@ Vue.component('extra-pub', {
 		msgType: {
 			type: Number,
 			default: 3
+		},
+		fileInfo: {
+			type: Object,
+			default: {}
 		}
 	},
 	template: '<div v-bind:class="[\'weui-cells\',\'weui-cells_form\']">' +
 		'<div v-bind:class="[\'weui-cell\']">' +
 		'<div v-bind:class="[\'weui-cell__bd\']">' +
-		'<input v-bind:class="[\'weui-input\']" v-model="title" type="text" placeholder="在此输入标题"/>' +
+		'<input v-bind:class="[\'weui-input\']" v-model.trim="title" type="text" placeholder="在此输入标题"/>' +
 		'</div>' +
 		'</div>' +
-		'<div v-if="msgType==2" v-bind:class="[\'weui-cell\']">' +
+		'<div v v-bind:class="[\'weui-cell\']">' +
 		'<div v-bind:class="[\'weui-cell_bd\']">' +
-		'<textarea rows="10" v-model="description" v-bind:class="[\'weui-textarea\']" placeholder="在此输入正文"></textarea>' +
+		'<textarea rows="10" v-model.trim="description" v-bind:class="[\'weui-textarea\']" placeholder="在此输入正文"></textarea>' +
 		'</div>' +
 		'</div>' +
-		'<div v-bind:class="[\'weui-cell\']">' +
-		'<div v-bind:class="[\'weui-cell_bd\']">' +
-		'<textarea rows="3" v-model="content" v-bind:class="[\'weui-textarea\']" placeholder="在此输入摘要"></textarea>' +
-		'</div>' +
-		'</div>' +
-		'<div v-if="msgType==2" v-bind:class="[\'weui-cell\']">' +
-		'<div v-bind:class="[\'weui-cell__bd\']">' +
-		'<input v-bind:class="[\'weui-input\']" v-model="title" type="text" placeholder="作者"/>' +
-		'</div>' +
-		'</div>' +
+		//		'<div v-bind:class="[\'weui-cell\']">' +
+		//		'<div v-bind:class="[\'weui-cell_bd\']">' +
+		//		'<textarea rows="3" v-model="" v-bind:class="[\'weui-textarea\']" placeholder="在此输入摘要"></textarea>' +
+		//		'</div>' +
+		//		'</div>' +
+		//		'<div v-if="msgType==2" v-bind:class="[\'weui-cell\']">' +
+		//		'<div v-bind:class="[\'weui-cell__bd\']">' +
+		//		'<input v-bind:class="[\'weui-input\']" v-model="title" type="text" placeholder="作者"/>' +
+		//		'</div>' +
+		//		'</div>' +
 		'<slot></slot>' +
-		'<a v-bind:class="[\'weui-btn\',\'weui-btn_mini\',\'weui-btn_primary\']">完成</a>' +
-		'<a v-bind:class="[\'weui-btn\',\'weui-btn_mini\',\'weui-btn_default\']">取消</a>' +
+		'<a v-bind:class="[\'weui-btn\',\'weui-btn_mini\',\'weui-btn_primary\']" v-on:click="finishMethod()">完成</a>' +
+		'<a v-bind:class="[\'weui-btn\',\'weui-btn_mini\',\'weui-btn_default\']" v-on:click="cancelMethod()">取消</a>' +
 		'</div>',
 	data: function() {
 		return {
 			title: '',
 			description: '',
-			picurl:'',
-			btntxt:'阅读全文'
+			picurl: '',
+			btntxt: '阅读全文'
 		}
 	},
 	computed: {
@@ -43,13 +47,39 @@ Vue.component('extra-pub', {
 	},
 	methods: {
 		finishMethod: function() {
-			this.$emit("extraData", {//传递数据
-
-			});
-			router.go(-1);
+			console.log("点击完成按钮");
+			this.isLegalFinish();
 		},
 		cancelMethod: function() {
+			console.log("点击取消按钮")
 			router.go(-1);
+		},
+		emitEvents: function() {
+			console.log("要传递的extraData:" + JSON.stringify(jQuery.extend({
+				title: this.title,
+				description: this.description,
+			}, this.fileInfo)));
+			this.$emit("extraData", jQuery.extend({
+				title: this.title,
+				description: this.description,
+			}, this.fileInfo));
+
+			router.go(-1);
+		},
+		isLegalFinish: function() {
+			if(this.title.length === 0) {
+				console.log("请输入标题！")
+				return;
+			}
+			if(this.description.length === 0) {
+				console.log("请输入描述");
+				return;
+			}
+			if(typeof(this.fileInfo.fileurl) === "undefined" && this.msgType !== 1) {
+				console.log("请上传附件！"+this.msgType);
+				return;
+			}
+			this.emitEvents();
 		}
 	}
 })

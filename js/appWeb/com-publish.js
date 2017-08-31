@@ -84,7 +84,9 @@ Vue.component("com-publish", {
 			this.publish();
 		},
 		publish: function() { //发布
-			this.extraData.type = this.getPubType();
+			var tStyle = this.getPubStyle();
+			this.extraData.msgtype = tStyle.msgtype;
+			this.extraData.type = tStyle.type;
 			console.log("&&&&&com-publish&&&&&发布事件！" + JSON.stringify(this.extraData));
 			request.postMessage(this.chosePersen, this.extraData, function(data) {
 				console.log("发送消息，返回的值：" + JSON.stringify(data));
@@ -98,11 +100,11 @@ Vue.component("com-publish", {
 			})
 
 		},
-		getPubType: function() { //發佈的類型
+		getPubStyle: function() { //發佈的類型
 			for(var i in consts.MESSAGE_STYLES) {
 				var msgStyle = consts.MESSAGE_STYLES[i];
-				if(msgStyle.typeNo = this.msgType) {
-					return msgStyle.type;
+				if(msgStyle.typeNo == this.msgType) {
+					return msgStyle;
 				}
 			}
 		}

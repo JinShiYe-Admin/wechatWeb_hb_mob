@@ -150,7 +150,7 @@
 			 */
 			const comExtra = {
 				template: '<extra-pub v-bind:fileInfo="$root.uploadFileInfo" v-bind:msgType="$root.msgType" v-on:extraData="getExtraData">' +
-					'<choose-file v-bind:fileInfo="$root.uploadFileInfo" v-if="$root.msgType>1" uploadReal="true" v-bind:msgType="$root.msgType" v-on:uploadFile="getUploadFile"></choose-file>' +
+					'<choose-file v-bind:fileInfo="$root.uploadFileInfo" v-if="$root.msgType>1" v-bind:uploadReal="$root.uploadReal" v-bind:msgType="$root.msgType" v-on:uploadFile="getUploadFile"></choose-file>' +
 					'</extra-pub>',
 				methods: {
 					getExtraData: function(extraData) {
@@ -201,7 +201,8 @@
 					chosedPersen: [],
 					msgType: 0, //默认为文字
 					extraData: {},
-					uploadFileInfo: {}
+					uploadFileInfo: {},
+					uploadReal: true
 				},
 				watch: {
 					msgType: function(newVal, oldVal) {

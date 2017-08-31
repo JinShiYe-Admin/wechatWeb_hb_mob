@@ -55,15 +55,32 @@ Vue.component('extra-pub', {
 			router.go(-1);
 		},
 		emitEvents: function() {
-			console.log("要传递的extraData:" + JSON.stringify(jQuery.extend({
-				title: this.title,
-				description: this.description,
-			}, this.fileInfo)));
-			this.$emit("extraData", jQuery.extend({
-				title: this.title,
-				description: this.description,
-			}, this.fileInfo));
-
+			var realData;
+			switch(this.msgtype) {
+				case 1:
+					realData = {
+						news: JOSN.parse({
+							title: this.title,
+							description: this.description
+						})
+					}
+					break;
+				case 3:
+					var extraData = jQuery.extend({
+						title: this.title,
+						description: this.description
+					}, this.fileInfo);
+					realData = {
+						mpnews: JSON.parse({
+							articles: [extraData]
+						})
+					};
+					break;
+				default:
+					break;
+			}
+			console.log("要传递的realData:" + JOSN.stringify(realData))
+			this.$emit("extraData", realData);
 			router.go(-1);
 		},
 		isLegalFinish: function() {
@@ -76,7 +93,7 @@ Vue.component('extra-pub', {
 				return;
 			}
 			if(typeof(this.fileInfo.fileurl) === "undefined" && this.msgType !== 1) {
-				console.log("请上传附件！"+this.msgType);
+				console.log("请上传附件！" + this.msgType);
 				return;
 			}
 			this.emitEvents();

@@ -169,13 +169,6 @@ var home_data = {
 		data: [1, 2]
 	}]
 };
-//发布动态页面数据
-var trends_add_data = {
-	allback: true,
-	content: "11111", //文字，限制6000字
-	images: [], //图片，限制9张
-	video: '' //视频，限制一个
-}
 
 var mineUserInfo = {
 	"userid": "moshanglin",
@@ -234,11 +227,11 @@ var temp_data; //临时变量;用于查询我所处部门的所有成员
 var router; //路由
 
 window.onload = function() {
+	console.log("href:" + window.location.href);
 	$.showLoading('正在加载');
 	initRouter();
+	//获取我的信息
 	//getUserInfo(0);
-	temp_data = 0;
-	getDepartmentMember(mineUserInfo.department[temp_data]);
 }
 
 //设置路由
@@ -343,7 +336,12 @@ function initRouter() {
 	var trends_add = {
 		template: "#temp_add_trends",
 		data: function() {
-			return trends_add_data;
+			return {
+				allowBack: false,
+				content: "11111", //文字，限制6000字
+				images: [], //图片，限制9张
+				video: '' //视频，限制一个
+			};
 		},
 		methods: {
 			/**
@@ -358,18 +356,18 @@ function initRouter() {
 			 */
 			commit: function() {
 				console.log("trends_add-commit:");
-				var commitContent = $.trim(trends_add_data.content);
+				var commitContent = $.trim(this.content);
 				console.log("commitContent:" + commitContent);
 				if(commitContent === "") {
 					$.toast("请输入内容", "forbidden");
 					return
 				} else {
 					$.showLoading('正在上传数据');
-					trends_add_data.allback = false;
+					this.allowBack = false;
 					setTimeout(function() {
 						$.hideLoading();
 						$.toast("发布成功");
-						trends_add_data.allback = true;
+						this.allowBack = true;
 					}, 3000);
 				}
 			},
@@ -378,16 +376,24 @@ function initRouter() {
 			 * @param {Object} val
 			 */
 			contentChange: function(val) {
-				trends_add_data.content = val; //组件内外content双向绑定
+				this.content = val; //组件内外content双向绑定
 			}
 		},
 		beforeRouteEnter: function(to, from, next) {
 			console.log("路由-发布动态动态-显示之前:from:" + from.path + " to:" + to.path);
-			next();
+			if("/" == from.path) {
+				next({
+					path: '/home'
+				})
+			} else {
+				next(function(vm) {
+					vm.allowBack = true;
+				});
+			}
 		},
 		beforeRouteLeave: function(to, from, next) {
 			console.log("路由-发布动态动态-离开之前:from:" + from.path + " to:" + to.path);
-			next(trends_add_data.allback);
+			next(this.allowBack);
 		}
 	};
 
@@ -395,14 +401,15 @@ function initRouter() {
 	var trends_details = {
 		template: "#temp_trends_details",
 		data: function() {
-			console.log("trends_details:" + this.$route.params.id + " " + this.$route.params.data);
-			if(this.$route.params.data === undefined) {
+			if(this.$route.params.data != undefined) {
 				return {
-					data: []
+					allowBack: true,
+					data: [this.$route.params.data]
 				}
 			} else {
 				return {
-					data: [this.$route.params.data]
+					allowBack: false,
+					data: []
 				}
 			}
 		},
@@ -415,17 +422,28 @@ function initRouter() {
 			},
 			clickComment: function(valueIndex, commentIndex, replysIndex) {
 				console.log("clickComment:" + valueIndex + " " + commentIndex + ' ' + replysIndex);
+				showTrendsDetails(this.data[0]);
 			}
 		},
 		beforeRouteEnter: function(to, from, next) {
 			console.log("路由-动态详情-显示之前:from:" + from.path + " to:" + to.path);
+			if("/" == from.path) {
+				next({
+					path: '/home'
+				})
+			} else {
+				next(function(vm) {
+					vm.allowBack = true;
+				});
+			}
+		},
+		beforeRouteUpdate: function(to, from, next) {
+			console.log("路由-动态详情-复用:from:" + from.path + " to:" + to.path);
 			next();
 		},
 		beforeRouteLeave: function(to, from, next) {
 			console.log("路由-动态详情-离开之前:from:" + from.path + " to:" + to.path);
-			console.log("to:" + to.path);
-			console.log("from:" + from.path);
-			next();
+			next(this.allowBack);
 		}
 	}
 
@@ -449,6 +467,10 @@ function initRouter() {
 	var class_circle_app = new Vue({
 		router: router
 	}).$mount('#class_circle_app');
+
+	$.hideLoading();
+	//显示班级圈主页
+	router.push('home');
 }
 
 function initScroll() {
@@ -588,7 +610,7 @@ function getAllUserSpaces(pageIndex) {
 
 /**
  * 进入动态的详情
- * @param {Object} trendsValue
+ * @param {Object} trendsValue 动态详情的数据
  */
 function showTrendsDetails(trendsValue) {
 	router.push({

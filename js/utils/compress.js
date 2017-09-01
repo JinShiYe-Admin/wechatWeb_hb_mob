@@ -11,14 +11,14 @@ var compress = (function(mod) {
 			var formData = new FormData();
 			mod.getImgInfo(result, function(img, imgInfo) {
 				console.log("获取的文件信息：" + JSON.stringify(imgInfo));
+				console.log("原图尺寸：" + result.length);
 				if(result.length > maxSize) {
-					var newDataUrl = mod.getCanvasDataUrl(img, mod.getSuitableSize(imgInfo, maxSize));
-					console.log("获取的图片Base64格式:" + newDataUrl);
+					var newDataUrl = mod.getCanvasDataUrl(img, mod.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)));
 					var blob = mod.base64ToBlob(newDataUrl, 'image/png');
 					console.log("blob.type:" + blob.type);
 					console.log('要传递的文件大小：' + blob.size);
-					var newFile = new File([blob], Date.now() + '.png');
-					formData.append('image', newFile)
+					//					var newFile = new File([blob], Date.now() + '.png');
+					formData.append('image', blob, Date.now() + '.png');
 				} else {
 					formData.append('image', file);
 				}
@@ -70,8 +70,7 @@ var compress = (function(mod) {
 		ctx.drawImage(img, 0, 0, suitableSize.width, suitableSize.height);
 		return canvas.toDataURL(imageType, imageArgu);
 	}
-	mod.getSuitableSize = function(imgInfo, maxSize) {
-		var multi = Math.ceil(imgInfo.width * imgInfo.height / maxSize);
+	mod.getSuitableSize = function(imgInfo, multi) {
 		imgInfo.width = imgInfo.width / multi;
 		imgInfo.height = imgInfo.height / multi;
 		console.log("获取的图片要裁剪的尺寸：" + JSON.stringify(imgInfo));
@@ -92,8 +91,7 @@ var compress = (function(mod) {
 
 	mod.base64ToBlob = function(base64Url, mime) {
 		var base64 = base64Url.replace(/^data:image\/(png|jpg);base64,/, "");
-		console.log("处理后的database64:" + base64);
-		//		mime = mime || '';
+		//		console.log("处理后的database64:" + base64);
 		var sliceSize = 1024;
 		var byteChars = window.atob(base64);
 		var byteArrays = [];
@@ -105,9 +103,7 @@ var compress = (function(mod) {
 			for(var i = 0; i < slice.length; i++) {
 				byteNumbers[i] = slice.charCodeAt(i);
 			}
-
 			var byteArray = new Uint8Array(byteNumbers);
-
 			byteArrays.push(byteArray);
 		}
 		console.log("文件类型：" + mime);

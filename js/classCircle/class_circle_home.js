@@ -248,15 +248,15 @@ function initRouter() {
 			 * @param {Object} index
 			 */
 			clickItem: function(index) {
-				if(index == home_data.is_on) {
+				if(index == this.is_on) {
 					return;
 				}
-				this.home_tab[home_data.is_on].scrollTop = $("#" + home_data.home_tab[home_data.is_on].id).scrollTop();
+				this.home_tab[this.is_on].scrollTop = $("#" + this.home_tab[this.is_on].id).scrollTop();
 				this.is_on = index;
 				if(this.home_tab[this.is_on].leave) {
 					this.home_tab[this.is_on].leave = false;
 					var timeId = setInterval(function() {
-						toBeforePosition(timeId, home_data.is_on);
+						homeToBeforePosition(timeId, home_data.is_on);
 					}, 100);
 				}
 			},
@@ -282,9 +282,22 @@ function initRouter() {
 			 */
 			clickFunction: function(listIndex, valueIndex, type) {
 				console.log("clickFunction:" + listIndex + " " + valueIndex + " " + type);
-				var trendsValue = home_data.home_tab[listIndex].data[valueIndex];
+				var trendsValue = this.home_tab[listIndex].data[valueIndex];
 				console.log("trendsValue:" + JSON.stringify(trendsValue))
-				trendsValue.IsLike = !trendsValue.IsLike;
+				switch(type) {
+					case 0:
+						trendsValue.IsLike = !trendsValue.IsLike;
+						break;
+					case 1:
+						router.push({
+							name: 'add',
+							params: {
+								id: 'addComment',
+								data: trendsValue
+							}
+						});
+						break;
+				}
 			},
 			/**
 			 * 点击评论或者回复的内容
@@ -296,13 +309,31 @@ function initRouter() {
 			clickComment: function(listIndex, valueIndex, commentIndex, replysIndex) {
 				console.log("clickComment:" + listIndex + " " + valueIndex + " " + commentIndex + " " + replysIndex);
 				var trendsValue = this.home_tab[listIndex].data[valueIndex];
+				var comments;
 				if(replysIndex === undefined) { //评论
-					var comments = trendsValue.Comments[commentIndex];
-					console.log("CommentContent:" + comments.CommentContent);
+					comments = trendsValue.Comments[commentIndex];
 				} else { //回复
-					var Replys = trendsValue.Comments[commentIndex].Replys[replysIndex];
-					console.log("CommentContent:" + Replys.CommentContent);
+					comments = trendsValue.Comments[commentIndex].Replys[replysIndex];
 				}
+				console.log("CommentContent:" + comments.CommentContent);
+				router.push({
+					name: 'add',
+					params: {
+						id: 'addReplys',
+						data: comments
+					}
+				});
+			},
+			/**
+			 * 点击发布动态
+			 */
+			clickAddTrends: function() {
+				router.push({
+					name: 'add',
+					params: {
+						id: 'addTrends',
+					}
+				});
 			}
 		},
 		/**
@@ -314,9 +345,9 @@ function initRouter() {
 				//初始化滚动
 				initScroll();
 				//回滚到之前的位置
-				$("#" + home_data.home_tab[0].id).scrollTop(home_data.home_tab[0].scrollTop);
-				$("#" + home_data.home_tab[1].id).scrollTop(home_data.home_tab[1].scrollTop);
-				$("#" + home_data.home_tab[2].id).scrollTop(home_data.home_tab[2].scrollTop);
+				for(var i = 0; i < home_data.home_tab.length; i++) {
+					$("#" + home_data.home_tab[i].id).scrollTop(home_data.home_tab[i].scrollTop);
+				}
 				home_data.home_tab[home_data.is_on].leave = false;
 			});
 		},
@@ -325,23 +356,36 @@ function initRouter() {
 		 */
 		beforeRouteLeave: function(to, from, next) {
 			console.log("路由-班级圈主页-离开之前:from:" + from.path + " to:" + to.path);
-			home_data.home_tab[home_data.is_on].scrollTop = $("#" + home_data.home_tab[home_data.is_on].id).scrollTop();
-			home_data.home_tab[0].leave = true;
-			home_data.home_tab[1].leave = true;
-			home_data.home_tab[2].leave = true;
+			this.home_tab[this.is_on].scrollTop = $("#" + this.home_tab[this.is_on].id).scrollTop();
+			this.home_tab[0].leave = true;
+			this.home_tab[1].leave = true;
+			this.home_tab[2].leave = true;
 			next();
 		}
 	};
-	//发布动态
+	//发布动态或者进行评论
 	var trends_add = {
 		template: "#temp_add_trends",
 		data: function() {
-			return {
-				allowBack: false,
-				content: "11111", //文字，限制6000字
+			console.log("trends_add:id:" + this.$route.params.id);
+			if(this.$route.params.data != undefined) {
+				console.log("trends_add:data:" + JSON.stringify(this.$route.params.data));
+			} else {
+				console.log("trends_add:data:" + this.$route.params.data);
+			}
+			var addData = {
+				allowBack: false, //允许返回
+				content: "", //文字，限制6000字
+				showMedia: false, //是否显示添加图片，视频功能
 				images: [], //图片，限制9张
 				video: '' //视频，限制一个
 			};
+			if(this.$route.params.id === "addTrends") {
+				//发布动态
+				addData.showMedia = true;
+			}
+
+			return addData;
 		},
 		methods: {
 			/**
@@ -401,9 +445,10 @@ function initRouter() {
 	var trends_details = {
 		template: "#temp_trends_details",
 		data: function() {
+			console.log("trends_details:data:" + this.$route.params.data);
 			if(this.$route.params.data != undefined) {
 				return {
-					allowBack: true,
+					allowBack: false, //允许返回
 					data: [this.$route.params.data]
 				}
 			} else {
@@ -418,11 +463,39 @@ function initRouter() {
 			clickFunction: function(valueIndex, type) {
 				console.log("clickFunction:" + valueIndex + " " + type);
 				var trendsValue = this.data[valueIndex];
-				trendsValue.IsLike = !trendsValue.IsLike;
+				switch(type) {
+					case 0:
+						trendsValue.IsLike = !trendsValue.IsLike;
+						break;
+					case 1:
+						router.push({
+							name: 'add',
+							params: {
+								id: 'addComment',
+								data: trendsValue
+							}
+						});
+						break;
+				}
+
 			},
 			clickComment: function(valueIndex, commentIndex, replysIndex) {
 				console.log("clickComment:" + valueIndex + " " + commentIndex + ' ' + replysIndex);
-				showTrendsDetails(this.data[0]);
+				var trendsValue = this.data[valueIndex];
+				var comments;
+				if(replysIndex === undefined) { //评论
+					comments = trendsValue.Comments[commentIndex];
+				} else { //回复
+					comments = trendsValue.Comments[commentIndex].Replys[replysIndex];
+				}
+				console.log("CommentContent:" + comments.CommentContent);
+				router.push({
+					name: 'add',
+					params: {
+						id: 'addReplys',
+						data: comments
+					}
+				});
 			}
 		},
 		beforeRouteEnter: function(to, from, next) {
@@ -497,8 +570,8 @@ function initScroll() {
  * @param {Object} timeId
  * @param {Object} index
  */
-function toBeforePosition(timeId, index) {
-	console.log("toBeforePosition:" + index);
+function homeToBeforePosition(timeId, index) {
+	console.log("homeToBeforePosition:" + index);
 	var scrollTop_0 = $("#" + home_data.home_tab[index].id).scrollTop();
 	var scrollTop_1 = home_data.home_tab[index].scrollTop;
 	if(scrollTop_0 == 0 && scrollTop_0 != scrollTop_1) {
@@ -546,7 +619,7 @@ function disposeMemberData(data) {
 		for(var i = 0; i < data.RspData.length; i++) {
 			if(departUserInfo.value[data.RspData[i].userid] === undefined) {
 				departUserInfo.key.push(data.RspData[i].userid);
-				departUserInfo.value[data.RspData[i].userid] = $.extend(true, {}, data.RspData[i]);
+				departUserInfo.value[data.RspData[i].userid] = $.extend({}, data.RspData[i]);
 			}
 		}
 	}
@@ -617,7 +690,7 @@ function showTrendsDetails(trendsValue) {
 		name: 'details',
 		params: {
 			id: new Date().getTime(),
-			data: trendsValue
+			data: $.extend({}, trendsValue)
 		}
 	});
 }

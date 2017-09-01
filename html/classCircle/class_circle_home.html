@@ -33,7 +33,9 @@
 	<body>
 		<!--班级圈路由-->
 		<div id="class_circle_app">
-			<router-view></router-view>
+			<keep-alive>
+				<router-view></router-view>
+			</keep-alive>
 		</div>
 		<!--路由--班级圈主页-->
 		<template id="temp_class_circle_home">
@@ -46,12 +48,12 @@
 						<home-bd-item v-for="(value,index) in home_tab" :key="index" :value="value" :index="index" :is_on="is_on" @click-person="showPersonTrends" @click-content="showTrendsDetails" @click-function="clickFunction" @click-comment="clickComment"></home-bd-item>
 					</div>
 				</div>
-				<router-link to="/trends_add" class="class-circle-report">+ 发表动态</router-link>
+				<div @click="clickAddTrends" class="class-circle-report">+ 发表动态</div>
 			</div>
 		</template>
-		<!--路由--发布动态-->
+		<!--路由--发布动态或者评论-->
 		<template id="temp_add_trends">
-			<add-trends :content="content" @add-media="addMedia" @commit="commit" @content-change="contentChange"></add-trends>
+			<add-trends :content="content" :show-media="showMedia" @add-media="addMedia" @commit="commit" @content-change="contentChange"></add-trends>
 		</template>
 		<!--路由--动态详情-->
 		<template id="temp_trends_details">
@@ -231,11 +233,12 @@
 		<!--发布动态组件-->
 		<template id="temp_add_trends_com">
 			<div class="class-circle-add">
-				<textarea class="weui-textarea" v-model="com_content" placeholder="请输入内容" rows="6" maxlength="6000"></textarea>
-				<div class="class-circle-add-media">
+				<textarea class="weui-textarea" v-model="com_content" placeholder="不能为空" rows="6" maxlength="6000"></textarea>
+				<div class="class-circle-add-media" v-if="showMedia">
 					<div class="iconfont icon-tuku" @click="addMedia(0)"></div>
 					<div class="iconfont icon-xiangji2" @click="addMedia(1)"></div>
 				</div>
+				<div class="class-circle-add-line"></div>
 				<button class="weui-btn weui-btn_primary" @click="commit">提交</button>
 			</div>
 		</template>
@@ -260,7 +263,7 @@
 			//			document.write("<s" + "cript type='text/javascript' src='../../js/weui.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/vue.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/vue-router.js?" + Math.random() + "'></s" + "cript>");
-//			document.write("<s" + "cript type='text/javascript' src='../../js/lib/vconsole/vconsole.min.js?" + Math.random() + "'></s" + "cript>");
+			//			document.write("<s" + "cript type='text/javascript' src='../../js/lib/vconsole/vconsole.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_vue.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_protocol.js?" + Math.random() + "'></s" + "cript>");

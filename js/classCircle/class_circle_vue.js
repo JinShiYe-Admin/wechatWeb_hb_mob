@@ -110,6 +110,7 @@ Vue.component("home-bd-item", {
 //添加动态组件
 Vue.component("add-trends", {
 	template: "#temp_add_trends_com",
+	props:["showMedia"],
 	data: function() {
 		return {
 			com_content: "" //组件内的content

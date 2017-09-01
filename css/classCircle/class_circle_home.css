@@ -396,8 +396,13 @@ body {
 .class-circle-add .class-circle-add-media {
 	display: block;
 	padding-left: 4%;
-	border-bottom: 1px solid gainsboro;
 	height: 30px;
+}
+
+.class-circle-add-line {
+	height: 1px;
+	width: 100%;
+	background: gainsboro;
 }
 
 .class-circle-add .class-circle-add-media div {

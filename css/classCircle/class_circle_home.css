@@ -429,3 +429,24 @@ body {
 .icon-dianzan.trends-praise {
 	color: #46BDFF;
 }
+
+.class-circle-user-space-bg {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 25px 0;
+	background-image: url(../../image/classCircle/userSpace.png);
+	background-size: 100%;
+	-webkit-background-size: 100%;
+	background-repeat: no-repeat;
+}
+
+.class-circle-user-space-bg img {
+	width: 80px;
+	min-height: 80px;
+}
+
+.class-circle-user-space-bg div {
+	margin-top: 5px;
+}

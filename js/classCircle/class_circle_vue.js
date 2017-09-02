@@ -8,6 +8,24 @@ Vue.filter('userName', function(userId) {
 		//return "未知";
 	}
 });
+//显示用户的头像的过滤器
+Vue.filter('userImage', function(userId) {
+	var userInfo = departUserInfo.value[userId];
+	if(userInfo != undefined && userInfo.avatar != "") {
+		return userInfo.avatar;
+	} else {
+		return utils.updateHeadImage("", 2);
+	}
+});
+//显示用户的缩略图头像的过滤器
+Vue.filter('userThumbImage', function(userId) {
+	var userInfo = departUserInfo.value[userId];
+	if(userInfo != undefined && userInfo.avatar != "") {
+		return userInfo.avatar + "100";
+	} else {
+		return utils.updateHeadImage("", 2);
+	}
+});
 //显示图片的过滤器
 Vue.filter('imagesArray', function(imagePaths) {
 	var images = imagePaths.split('|');
@@ -110,7 +128,7 @@ Vue.component("home-bd-item", {
 //添加动态组件
 Vue.component("add-trends", {
 	template: "#temp_add_trends_com",
-	props:["showMedia"],
+	props: ["showMedia"],
 	data: function() {
 		return {
 			com_content: "" //组件内的content
@@ -151,7 +169,7 @@ Vue.component("add-trends", {
 //动态组件
 Vue.component("trends-item", {
 	template: "#template_trends",
-	props: ["value", "index","detail"],
+	props: ["value", "index", "detail"],
 	computed: {
 		showPraiseComment: function() {
 			//是否显示点赞和评论区域
@@ -170,15 +188,6 @@ Vue.component("trends-item", {
 		showLine: function() {
 			//是否显示点赞和评论之间的横线
 			return this.value.LikeUsers.length > 0 && this.value.Comments.length > 0;
-		},
-		PublisherImage: function() {
-			//发布者的头像
-			var userInfo = departUserInfo.value[this.value.PublisherId];
-			if(userInfo != undefined && userInfo.avatar != "") {
-				return userInfo.avatar + "100";
-			} else {
-				return utils.updateHeadImage("", 2);
-			}
 		}
 	},
 	methods: {

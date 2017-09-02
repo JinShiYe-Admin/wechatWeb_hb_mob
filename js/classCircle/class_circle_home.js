@@ -238,7 +238,7 @@ window.onload = function() {
 function initRouter() {
 	//班级圈主页
 	var class_circle_home = {
-		template: "#temp_class_circle_home",
+		template: "#router_class_circle_home",
 		data: function() {
 			return home_data;
 		},
@@ -286,14 +286,14 @@ function initRouter() {
 				console.log("trendsValue:" + JSON.stringify(trendsValue))
 				switch(type) {
 					case 0:
-						trendsValue.IsLike = !trendsValue.IsLike;
+						changePraise(trendsValue);
 						break;
 					case 1:
 						router.push({
 							name: 'add',
 							params: {
 								id: 'addComment',
-								data: trendsValue
+								trendsValue: trendsValue,
 							}
 						});
 						break;
@@ -308,19 +308,13 @@ function initRouter() {
 			 */
 			clickComment: function(listIndex, valueIndex, commentIndex, replysIndex) {
 				console.log("clickComment:" + listIndex + " " + valueIndex + " " + commentIndex + " " + replysIndex);
-				var trendsValue = this.home_tab[listIndex].data[valueIndex];
-				var comments;
-				if(replysIndex === undefined) { //评论
-					comments = trendsValue.Comments[commentIndex];
-				} else { //回复
-					comments = trendsValue.Comments[commentIndex].Replys[replysIndex];
-				}
-				console.log("CommentContent:" + comments.CommentContent);
 				router.push({
 					name: 'add',
 					params: {
 						id: 'addReplys',
-						data: comments
+						trendsValue: this.home_tab[listIndex].data[valueIndex],
+						commentIndex: commentIndex,
+						replysIndex: replysIndex
 					}
 				});
 			},
@@ -365,27 +359,15 @@ function initRouter() {
 	};
 	//发布动态或者进行评论
 	var trends_add = {
-		template: "#temp_add_trends",
+		template: "#router_add_trends",
 		data: function() {
-			console.log("trends_add:id:" + this.$route.params.id);
-			if(this.$route.params.data != undefined) {
-				console.log("trends_add:data:" + JSON.stringify(this.$route.params.data));
-			} else {
-				console.log("trends_add:data:" + this.$route.params.data);
-			}
-			var addData = {
+			return {
 				allowBack: false, //允许返回
 				content: "", //文字，限制6000字
 				showMedia: false, //是否显示添加图片，视频功能
 				images: [], //图片，限制9张
 				video: '' //视频，限制一个
 			};
-			if(this.$route.params.id === "addTrends") {
-				//发布动态
-				addData.showMedia = true;
-			}
-
-			return addData;
 		},
 		methods: {
 			/**
@@ -423,8 +405,12 @@ function initRouter() {
 				this.content = val; //组件内外content双向绑定
 			}
 		},
+		beforeRouteUpdate: function(to, from, next) {
+			console.log("路由-发布动态或评论-复用:from:" + from.path + " to:" + to.path);
+			next();
+		},
 		beforeRouteEnter: function(to, from, next) {
-			console.log("路由-发布动态动态-显示之前:from:" + from.path + " to:" + to.path);
+			console.log("路由-发布动态或评论-显示之前:from:" + from.path + " to:" + to.path);
 			if("/" == from.path) {
 				next({
 					path: '/home'
@@ -432,18 +418,30 @@ function initRouter() {
 			} else {
 				next(function(vm) {
 					vm.allowBack = true;
+					console.log("trends_add:id:" + vm.$route.params.id);
+					if(vm.$route.params.trendsValue != undefined) {
+						console.log("trends_add:trendsValue:" + JSON.stringify(vm.$route.params.trendsValue));
+						console.log("trends_add:commentIndex:" + vm.$route.params.commentIndex);
+						console.log("trends_add:replysIndex:" + vm.$route.params.replysIndex);
+					} else {
+						console.log("trends_add:trendsValue:" + vm.$route.params.trendsValue);
+					}
+					if(vm.$route.params.id === "addTrends") {
+						//发布动态
+						vm.showMedia = true;
+					}
 				});
 			}
 		},
 		beforeRouteLeave: function(to, from, next) {
-			console.log("路由-发布动态动态-离开之前:from:" + from.path + " to:" + to.path);
+			console.log("路由-发布动态或评论-离开之前:from:" + from.path + " to:" + to.path);
 			next(this.allowBack);
 		}
 	};
 
 	//动态详情
 	var trends_details = {
-		template: "#temp_trends_details",
+		template: "#router_trends_details",
 		data: function() {
 			console.log("trends_details:data:" + this.$route.params.data);
 			if(this.$route.params.data != undefined) {
@@ -465,14 +463,14 @@ function initRouter() {
 				var trendsValue = this.data[valueIndex];
 				switch(type) {
 					case 0:
-						trendsValue.IsLike = !trendsValue.IsLike;
+						changePraise(trendsValue);
 						break;
 					case 1:
 						router.push({
 							name: 'add',
 							params: {
 								id: 'addComment',
-								data: trendsValue
+								trendsValue: trendsValue,
 							}
 						});
 						break;
@@ -481,22 +479,20 @@ function initRouter() {
 			},
 			clickComment: function(valueIndex, commentIndex, replysIndex) {
 				console.log("clickComment:" + valueIndex + " " + commentIndex + ' ' + replysIndex);
-				var trendsValue = this.data[valueIndex];
-				var comments;
-				if(replysIndex === undefined) { //评论
-					comments = trendsValue.Comments[commentIndex];
-				} else { //回复
-					comments = trendsValue.Comments[commentIndex].Replys[replysIndex];
-				}
-				console.log("CommentContent:" + comments.CommentContent);
 				router.push({
 					name: 'add',
 					params: {
 						id: 'addReplys',
-						data: comments
+						trendsValue: this.data[valueIndex],
+						commentIndex: commentIndex,
+						replysIndex: replysIndex
 					}
 				});
 			}
+		},
+		beforeRouteUpdate: function(to, from, next) {
+			console.log("路由-动态详情-复用:from:" + from.path + " to:" + to.path);
+			next();
 		},
 		beforeRouteEnter: function(to, from, next) {
 			console.log("路由-动态详情-显示之前:from:" + from.path + " to:" + to.path);
@@ -510,13 +506,95 @@ function initRouter() {
 				});
 			}
 		},
-		beforeRouteUpdate: function(to, from, next) {
-			console.log("路由-动态详情-复用:from:" + from.path + " to:" + to.path);
-			next();
-		},
 		beforeRouteLeave: function(to, from, next) {
 			console.log("路由-动态详情-离开之前:from:" + from.path + " to:" + to.path);
 			next(this.allowBack);
+		}
+	}
+
+	/**
+	 * 用户个人空间
+	 */
+	var user_space = {
+		template: "#router_user_space",
+		data: function() {
+			var space_data = {
+				userId: "",
+				data: []
+			};
+			space_data.data[0] = $.extend({}, home_data.home_tab[0].data[0]);
+			space_data.data[1] = $.extend({}, home_data.home_tab[1].data[0]);
+			console.log("trends_details:id:" + this.$route.params.id);
+			console.log("trends_details:userId:" + this.$route.params.userId);
+			if(this.$route.params.userId != undefined) {
+				space_data.userId = this.$route.params.userId;
+			}
+			return space_data;
+		},
+		methods: {
+			/**
+			 * 点击发布动态者的头像或者名称或者评论者(回复者)的名称
+			 * @param {String} userId 用户id
+			 */
+			showPersonTrends: function(userId) {
+				if(userId == this.userId) {
+					return false;
+				}
+				showPersonTrends(userId)
+			},
+			/**
+			 * 显示动态的详细内容或者查看全部按钮
+			 * @param {Number} valueIndex 数据的序号
+			 */
+			showTrendsDetails: function(valueIndex) {
+				console.log("showTrendsDetails:" + valueIndex);
+			},
+			/**
+			 * 点击动态的赞，评论，删除按钮
+			 * @param {Number} valueIndex 数据的序号
+			 * @param {Number} type 按钮序号 0,赞;1,评论;2,删除;
+			 */
+			clickFunction: function(valueIndex, type) {
+				console.log("clickFunction:" + valueIndex + " " + type);
+				var trendsValue = this.data[valueIndex];
+				switch(type) {
+					case 0:
+						changePraise(trendsValue);
+						break;
+					case 1:
+						router.push({
+							name: 'add',
+							params: {
+								id: 'addComment',
+								trendsValue: trendsValue,
+								component: this
+							}
+						});
+						break;
+				}
+
+			},
+			/**
+			 * 点击评论或者回复的内容
+			 * @param {Number} valueIndex 数据的序号
+			 * @param {Object} commentIndex 评论的序号
+			 * @param {Object} replysIndex 回复的序号
+			 */
+			clickComment: function(valueIndex, commentIndex, replysIndex) {
+				console.log("clickComment:" + valueIndex + " " + commentIndex + " " + replysIndex);
+			}
+		},
+		beforeRouteUpdate: function(to, from, next) {
+			console.log("路由-用户空间-复用:from:" + from.path + " to:" + to.path);
+			next();
+		},
+		beforeRouteEnter: function(to, from, next) {
+			console.log("路由-用户空间-显示之前:from:" + from.path + " to:" + to.path);
+			next();
+		},
+		beforeRouteLeave: function(to, from, next) {
+			console.log("路由-用户空间-离开之前:from:" + from.path + " to:" + to.path);
+			next();
 		}
 	}
 
@@ -534,16 +612,20 @@ function initRouter() {
 			path: '/trends_details/:id',
 			name: 'details',
 			component: trends_details
+		}, {
+			path: '/user_space/:id',
+			name: 'space',
+			component: user_space
 		}]
 	});
 
 	var class_circle_app = new Vue({
 		router: router
-	}).$mount('#class_circle_app');
+	}).$mount('#router_class_circle_app');
 
 	$.hideLoading();
 	//显示班级圈主页
-	router.push('home');
+	router.push('/home');
 }
 
 function initScroll() {
@@ -704,9 +786,24 @@ function showPersonTrends(userId) {
 	var userInfo = departUserInfo.value[userId];
 	if(userInfo !== undefined) {
 		console.log("userInfo:" + JSON.stringify(userInfo));
+		router.push({
+			name: 'space',
+			params: {
+				id: new Date().getTime(),
+				userId: userId
+			}
+		});
 		//跳转到这个用户的个人空间
 	} else {
 		console.log("无此人资料");
 		//不做任何处理
 	}
+}
+
+/**
+ * 修改动态的赞
+ * @param {Object} trendsValue
+ */
+function changePraise(trendsValue) {
+	trendsValue.IsLike = !trendsValue.IsLike;
 }

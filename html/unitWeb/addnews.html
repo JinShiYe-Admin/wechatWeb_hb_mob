@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 
 	<head>
@@ -8,35 +9,185 @@
 		<title>新闻添加</title>
 		<link rel="stylesheet" href="../../css/weui.min.css" />
 		<link href="../../css/mui.min.css" rel="stylesheet" />
-		<!--<link href="../../css/index.css" rel="stylesheet" type="text/css" />-->
+		<link rel="stylesheet" type="text/css" href="../../css/Simditor/simditor.css" />
+		<style>
+			.dropdown:before,
+			.dropdown:after {
+				content: '';
+				position: absolute;
+				z-index: 20;
+				top: 18px;
+				right: 10px;
+				border: 4px dashed;
+				border-color: #888888 transparent;
+			}
+			
+			.dropdown:before {
+				border-bottom-style: solid;
+				border-top: none;
+			}
+			
+			.dropdown:after {
+				margin-top: 7px;
+				border-top-style: solid;
+				border-bottom: none;
+			}
+			
+			.dropdown-select:focus {
+				z-index: 6;
+				width: 100%;
+				color: #394349;
+				outline: 10px solid #49aff2;
+				outline: 2px solid -webkit-focus-ring-color;
+				outline-offset: -2px;
+			}
+			
+			.dropdown-select>option {
+				margin: 10px;
+				padding: 10px 50px;
+				text-shadow: none;
+				background: #FFFFFF;
+				border-radius: 200px;
+				cursor: pointer;
+			}
+			
+			.lt-ie9 .dropdown {
+				z-index: 1;
+			}
+			
+			.lt-ie9 .dropdown-select {
+				z-index: -1;
+			}
+			
+			.lt-ie9 .dropdown-select:focus {
+				z-index: 3;
+			}
+			
+			@-moz-document url-prefix() {
+				.dropdown-select {
+					padding-left: 6px;
+				}
+			}
+			
+			.dropdown-dark {
+				background: #444;
+				border-color: #111111 #0a0a0a black;
+				background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
+				background-image: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
+				background-image: -o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
+				background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.4));
+				-webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), 0 1px 1px rgba(0, 0, 0, 0.2);
+				box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), 0 1px 1px rgba(0, 0, 0, 0.2);
+			}
+			
+			.dropdown-dark:before {
+				border-bottom-color: #aaa;
+			}
+			
+			.dropdown-dark:after {
+				border-top-color: #aaa;
+			}
+			
+			.dropdown-dark .dropdown-select {
+				color: #aaa;
+				text-shadow: 0 1px black;
+				background: #444;
+				/* Fallback for IE 8 */
+			}
+			
+			.dropdown-dark .dropdown-select:focus {
+				color: #ccc;
+			}
+			
+			.dropdown-dark .dropdown-select>option {
+				background: #444;
+				text-shadow: 0 1px rgba(0, 0, 0, 0.4);
+			}
+			
+			.weui-cells {
+				margin-top: 0px;
+			}
+			
+			.weui-cells__title {
+				color: black;
+			}
+			
+			.a-upload {
+				padding: 4px 10px;
+				width: 90px;
+				height: 40px;
+				box-sizing: border-box;
+				line-height: 31px;
+				position: relative;
+				cursor: pointer;
+				color: #FFFFFF;
+				background: #1AAD19;
+				border: 1px solid #ddd;
+				border-radius: 4px;
+				overflow: hidden;
+				display: inline-block;
+				*display: inline;
+				*zoom: 1;
+				top: 5px;
+			}
+			
+			.a-upload input {
+				position: absolute;
+				font-size: 200px;
+				opacity: 0;
+				filter: alpha(opacity=0);
+				cursor: pointer;
+				width: 0px;
+				height: 30px;
+				left: 0;
+				top: 0;
+			}
+			
+			.a-upload:hover {
+				color: #FFFFFF;
+				background: #1AAD19;
+				border-color: #ccc;
+				text-decoration: none
+			}
+			
+			.kuan input {
+				width: 220px;
+				height: 40px;
+				background: background: 。。。;
+				border: none;
+				float: left
+			}
+			
+			.an input {
+				width: 100px;
+				height: 40px;
+				background: #1AAD19;
+				border: none;
+				float: left
+			}
+		</style>
 	</head>
 
 	<body>
-		<div id="loading" v-show="isShow" style="display: none;">
-			<div class="weui-mask_transparent"></div>
-			<div class="weui-toast">
-				<i class="weui-loading weui-icon_toast"></i>
-				<p class="weui-toast__content">{{content}}</p>
-			</div>
-		</div>
 		<div class="weui-cells weui-cells_form">
 			<div class="weui-cells__title">所属栏目</div>
 			<div class="weui-cells">
-				<div>
+				<div>  
 					<section class="container">
 						<div class="dropdown">
 							<select name="one" id="chnid" class="dropdown-select" style="font-size: 17px;color: #929292;">
 								<option value="">请选择所属栏目....</option>
-								<option v-for="item in items">{{item.cname}}</option>
-							</select>
+								<option  v-for="item in items" :value="item.chnid" >{{item.cname}}</option>
+							</select> 
 						</div>
 					</section>
-				</div>
+				</div> 
 			</div>
-		</div>
+		</div> 
+		
+		 
 		<div id="conetent" class="weui-cells weui-cells_form">
 			<div id="input_list">
-
 				<!--输入列表-->
 				<div>
 					<div class="weui-cells__title">{{cname.title}}</div>
@@ -65,33 +216,54 @@
 					<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
-								<textarea id="conten" v-model.lazy="newscontent.message" class="weui-input" placeholder="请输入新闻内容" onchange="upperCase(this.id)" style="border-color: white;height: 10rem;"></textarea>
+								<!--<div>
+									<textarea id="conten" v-model.lazy="newscontent.message" class="weui-input" placeholder="请输入新闻内容" onchange="upperCase(this.id)" style="border-color: white;height: 7rem;"></textarea>
+									<div class="kuan"><input id="imgname" type="text" /></div>
+									<div class="an">
+										<a href="#" style="float:right" class="a-upload"><input id="file1" type="file" value="搜索" />上传图片</a>
+									</div>
+								</div>-->
+								<div id="insert"></div>
+								<!--<textarea id="editor" placeholder="请输入新闻内容(最多输入2000字)" autofocus> 
+									<section>
+									<h3>1.主政中国这五年，习近平三记重拳管党治党</h3>
+									<p>
+										向党内贪腐宣战，动真碰硬不断刷新人们想象力；整顿软弱涣散基层党组织，让能者上庸者下；以上率下抓“关键少数”，推动各项事业迈上新台阶。主政中国这五年，习近平三记重拳管党治党。
+									</p>
+									<p>
+										<img src="../../image/config/xjp.jpg" width="300px" height="150px" alt=""> 
+									</p> 
+								</section>
+								<section>
+									<h3>2.正风肃纪、反腐倡廉，“党的好作风又回来了”</h3>
+									<p>
+										“我们党面临着许多严峻挑战，党内存在着许多亟待解决的问题。尤其是一些党员干部中发生的贪污腐败、脱离群众、形式主义、官僚主义等问题，必须下大气力解决。”
+
+　　习近平总书记上任伊始，就向党内贪污腐败等问题宣战。或许当时国内外很多人都不以为然，但很快他们就在震惊中承认，习近平这些话不只是口头说说而已。
+									</p> 
+								</section> 
+								</textarea>-->
 							</div>
+
 						</div>
+						<div align="center">
+							<img src="../../image/add.png" width="50px" height="40px" id="x" onclick="addDiv()" />
+						</div>
+						<!--<img src="../../image/20170808120135.png" width="100%" height="40px" />-->
 					</div>
 				</div>
-
-				<!--<div id="image_list">
-					<todo-item></todo-item>
-				</div>-->
-				<div class="container">
+				<div class="container" id="onisfileup">
 					<div class="weui-cells__title">附件上传</div>
-					<div class="weui-cells">
-						<div class="weui-cell">
-							<div class="upload-input margin-auto ">
-								<div>
-									<p>文件名称: {{ name }}</p>
-								</div>
-								<div class="upload-group" id="PriImg">
-									<input id="upload" type="file" class="file">
-									<p></p>
-									<p></p>
-									<img id="onisImg" src="http://qn-kfpb.jiaobaowang.net/wechat/webcon/150149001333390.jpg" width="200px" height="150px" />
-									<br />
-									<button onclick="uploadFile()">附件上传</button>
-
-									<!--<   @click="clickSc();" type="button" class="file-btn"  value="附件上传" />-->
-								</div>
+					<div class="weui-cells"> 
+						<div class="weui-cell"> 
+							<!--<div class="upload-group" id="PriImg" style="float: right;">
+									<a href="#" style="float:right" class="a-upload"><input type="file" class="upload" name="file" id="upload">上传附件 </a>
+									</span>
+									<img id="onisImg" src="{{imgurl}}" width="200px" height="150px" />
+								</div>-->
+							<div class="kuan"><input id="filename" type="text" /></div>
+							<div class="an">
+								<a href="#" style="float:right" class="a-upload"><input id="upload" type="file" value="搜索" />附件上传</a>
 							</div>
 							<div class="result margin-auto " id="result-show"></div>
 						</div>
@@ -135,57 +307,76 @@
 						</div>
 					</div>
 				</div>
-
 			</div>
 			<div class="weui-btn-area">
 				<button id="submit" v-on:click="submitClick" class="weui-btn weui-btn_primary">{{editName}}</button>
 			</div>
 		</div>
-		<!--<script src="../../js/mui.min.js"></script>-->
+		<script src="../../js/mui.min.js"></script>
 		<script type="text/javascript" src="../../js/weui.min.js"></script>
 		<script type="text/javascript" src="../../js/vue.min.js"></script>
 		<script type="text/javascript" src="../../js/jweixin.js"></script>
 		<script type="text/javascript" src="../../js/jquery.min.js"></script>
+		<script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+		<script type="text/javascript" src="../../js/Simditor/module.min.js"></script>
+		<script type="text/javascript" src="../../js/Simditor/hotkeys.min.js"></script>
+		<script type="text/javascript" src="../../js/Simditor/uploader.min.js"></script>
+		<script type="text/javascript" src="../../js/Simditor/simditor.min.js"></script>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
-
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/qiniu/qiniu.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cloudutil.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cryption.js?" + Math.random() + "'></s" + "cript>");
-
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/pluploadutil.js?" + Math.random() + "'></s" + "cript>");
 		</script>
-		<script type="text/javascript">
+		<script>
+			//			function div_elem(i) {
+			//				return '<textarea id=\"conten\" v-model.lazy=\"newscontent.message\" class=\"weui-input\" placeholder=\"请输入新闻内容\" onchange=\"upperCase(this.id)\" style=\"border-color: white;height: 7rem;\"></textarea><div class=\"kuan\"><input id=\"imgname\" type=\"text\" /></div><div class=\"an\"><a href=\"#\" style=\"float:right\" class=\"a-upload\"><input id=\"d' + i + '\" type=\"file\"  />上传图片</a></div>';
+			//			}  
+			function addDiv() {
+				//创建一个div
+				var div = document.createElement('div');
+				var w = "";
+				count1++;
+				if(count1 <= 5) {
+					for(var i = 0; i < count1; i++) {
+						w = i;
+						div.innerHTML = '<input name=\"dl\" id=\"title' + i + '\" placeholder="请输入节标题"  type="text"  ><input name=\"dl\" id=\"conten' + i + '\"   v-model.lazy=\"newscontent.message\" class=\"weui-input\" placeholder=\"请输入新闻内容\" onchange=\"upperCase(this.id)\" style=\"border-color: white;height: 7rem;\ /"><div class=\"kuan\"><input name=\"dl\" id=\"Priimgname' + i + '\" type=\"text\" /></div><div class=\"an\"><a href=\"#\" style=\"float:right\" class=\"a-upload\"><input id=\"Prifile' + i + '\" type=\"file\"  />上传图片</a></div>';
+					}
+				} else {
+					alert('不能再增加了');
+					return;
+				}
+				console.log('html:' + div.innerHTML);
+				var bo = document.getElementById("insert");
+				bo.insertBefore(div, bo.newnode);
+				var Priid = "Prifile" + w;
+				var Priimgname = "Priimgname" + w;
+				initUploader(Priid, Priimgname);
+			}
 			var vm_loading; //等待框
 			var fileUploader; //上传logo七牛对象
 			var bannerUploader; //上传banner七牛对象
 			var uptokenData; //上传的token
-			var imgurl = ""; //圖片地址 
-
-			var vue_img = new Vue({
-				el: '#PriImg',
+			var imgurl = ""; //圖片地址   
+			var FileData; //附件参数
+			var imgName;
+			var count1 = 0;
+			var objArray = new Array();
+			//所属栏目下拉框
+			var vue_input = new Vue({
+				el: '#chnid',
 				data: {
-					imgurl: imgurl
+					items: [ 
+					]
 				}
 			});
 			window.onload = function() {
-				if(imgurl == "") {
-					document.getElementById('onisImg').style.display = "none";
-				}
-
 				initUploader();
-				//等待框
-				vm_loading = new Vue({
-					el: "#loading",
-					data: {
-						isShow: true,
-						content: "数据加载中"
-					}
-				});
-				vm_loading.isShow = false;
+
 				/**
 				 * 获取网站配置信息
 				 */
@@ -197,7 +388,7 @@
 				unitWebsitePro(tempData, function(data) {
 					console.log('配置为:' + JSON.stringify(data));
 					if(data.RspCode == 0) {
-						if(data.RspData.length > 0) {
+						if(data.RspData.length > 0) { 
 							webConfig = data.RspData[0];
 							if(webConfig.isreply == 0) //0表示禁止回复，并隐藏回复功能
 								document.getElementById('onisReply').style.display = "none";
@@ -210,29 +401,26 @@
 						weui.alert(data.RspTxt);
 					}
 				});
-				/**
-				 * 获取网站栏目
-				 */
+
 				var tempData = {
 					cmd: 'chn', //网站栏目
-					type: 'findpage', //分页查找栏目列表
-					iswrite: '1',
-					pagesize: 999, //每页条数
-					pageindex: 1 //页码
-				}
-				unitWebsitePro(tempData, function(data) {
-					alert(JSON.stringify(data.RspData.dt));
+					type: 'findpage', //分页查找栏目列表 
+					pagesize: 999, //每页条数 
+					iswrite: '0',
+					pageindex: 1 //页码  
+				} 
+				unitWebsitePro(tempData, function(data) { 
 					if(data.RspCode == 0) {
-						if(data.RspData.dt.length > 0) {
+						if(data.RspData.dt.length > 0) { 
 							vue_input.items = data.RspData.dt;
-						} else {
-							alert('暂时还没有栏目');
+							console.log('111111====='+JSON.stringify(data.RspData.dt)) 
+						} else { 
+							alert('暂时还没有栏目'); 
 						}
 					} else {
 						alert(data.RspTxt);
 					}
 				});
-				//
 				var detail = utils.getDataFromUrl(window.location.href);
 				vm.type = 'edit1';
 				if(vm.type == 'edit') {
@@ -249,22 +437,15 @@
 								edit(oldVal, newVal, key)
 							})
 						})(item)
-					}
+					} 
 				} else {
 					vm.editName = '添加'
 				}
 			}
-			var vue_input = new Vue({
-				el: '#chnid',
-				data: {
-					items: []
-				},
-				methods: {}
-			});
 			var vm = new Vue({
 				el: '#conetent',
 				data: {
-					editName: '',
+					editName: '',  
 					cname: {
 						title: "新闻标题",
 						message: ""
@@ -293,7 +474,6 @@
 						title: "是否允许回复",
 						check: true
 					},
-
 				},
 				computed: {
 					// a computed getter
@@ -305,104 +485,178 @@
 					submitClick: function() {}
 				}
 			})
-
 			//按钮监听
 			document.getElementById('submit').addEventListener('tap', function() {
+				bannerUploader.start();
+				/**
+				 * 文章附件管理添加
+				 */
+
+				//				var Pridl1 = document.getElementById("conten1").value;
+				//				var Pridl2 = document.getElementById("conten2").value;
+				//				var Pridl3 = document.getElementById("conten3").value;
+				//				var Pridl4 = document.getElementById("conten4").value;
+				var PriConten = "";
+				//                 if (count1==1){
+				//              	var Prititle = document.getElementById("title0").value;  
+				//				    var Pridl = document.getElementById("conten0").value;
+				//				    var Priimg=document.getElementById("Priimgname0").value; 
+				//				    }
+				//				   if(count1==2){
+				//				    var Prititle1 = document.getElementById("title1").value;
+				//				    var Pridl1 = document.getElementById("conten1").value;
+				//				    var Priimg1=document.getElementById("Priimgname1").value;  
+				//				   } 
+				//				   if(count1==3){
+				//				    var Prititle2 = document.getElementById("title2").value;
+				//				    var Pridl2 = document.getElementById("conten2").value; 
+				//				    var Priimg2=document.getElementById("Priimgname2").value;
+				//				   }
+				var allInputs = document.getElementsByTagName('input');
+				var allInputs
+				var libIds = [];
+				for(var i = 0; i < allInputs.length; i++) {
+					if(allInputs[i].type === 'text' && allInputs[i].name === 'dl') {
+						libIds.push(allInputs[i]);
+					}
+				}
+				var theValue = '';
+				//				for(var i = 0; i < count1; i++) {
+				//					for(var j = 0; j < libIds.length; j++) {
+				//						theValue += libIds[j].value + ',';
+				//					}
+				//					PriConten += '<section><h3>' + libIds[i].value + '</h3><p>' + libIds[i + 1].value + '</p><p><img src=' + libIds[i + 2].value + ' alt=""></p></section>';
+				//				} 
+				if(count1 == 1) {
+					PriConten += '<section><h3>' + libIds[0].value + '</h3><p>' + libIds[1].value + '</p><p><img src=' + libIds[2].value + ' alt=""></p></section>';
+				}
+				if(count1 == 2) {
+					PriConten += '<section><h3>' + libIds[0].value + '</h3><p>' + libIds[1].value + '</p><p><img src=' + libIds[2].value + ' alt=""></p></section>';
+					PriConten += '<section><h3>' + libIds[3].value + '</h3><p>' + libIds[4].value + '</p><p><img src=' + libIds[5].value + ' alt=""></p></section>';
+				}
+				if(count1 == 3) {
+					PriConten += '<section><h3>' + libIds[0].value + '</h3><p>' + libIds[1].value + '</p><p><img src=' + libIds[2].value + ' alt=""></p></section>';
+					PriConten += '<section><h3>' + libIds[3].value + '</h3><p>' + libIds[4].value + '</p><p><img src=' + libIds[5].value + ' alt=""></p></section>';
+					PriConten += '<section><h3>' + libIds[6].value + '</h3><p>' + libIds[7].value + '</p><p><img src=' + libIds[8].value + ' alt=""></p></section>';
+				}
+				if(count1 == 4) {
+					PriConten += '<section><h3>' + libIds[0].value + '</h3><p>' + libIds[1].value + '</p><p><img src=' + libIds[2].value + ' alt=""></p></section>';
+					PriConten += '<section><h3>' + libIds[3].value + '</h3><p>' + libIds[4].value + '</p><p><img src=' + libIds[5].value + ' alt=""></p></section>';
+					PriConten += '<section><h3>' + libIds[6].value + '</h3><p>' + libIds[7].value + '</p><p><img src=' + libIds[8].value + ' alt=""></p></section>';
+					PriConten += '<section><h3>' + libIds[9].value + '</h3><p>' + libIds[10].value + '</p><p><img src=' + libIds[11].value + ' alt=""></p></section>';
+				} 
+				if(count1 == 5) {
+					PriConten += '<section><h3>' + libIds[0].value + '</h3><p>' + libIds[1].value + '</p><p><img src=' + libIds[2].value + ' alt=""></p></section>';
+					PriConten += '<section><h3>' + libIds[3].value + '</h3><p>' + libIds[4].value + '</p><p><img src=' + libIds[5].value + ' alt=""></p></section>';
+					PriConten += '<section><h3>' + libIds[6].value + '</h3><p>' + libIds[7].value + '</p><p><img src=' + libIds[8].value + ' alt=""></p></section>';
+					PriConten += '<section><h3>' + libIds[9].value + '</h3><p>' + libIds[10].value + '</p><p><img src=' + libIds[11].value + ' alt=""></p></section>';
+					PriConten += '<section><h3>' + libIds[12].value + '</h3><p>' + libIds[13].value + '</p><p><img src=' + libIds[14].value + ' alt=""></p></section>';
+				}
+				console.log('内容组装=========================' + JSON.stringify(PriConten));
+				
+		 
 				var PriIsquo = '';
 				var PriQuourl = '';
 				var comData = '';
 				var PriIsReply = '';
 				var PriTopic = document.getElementById("cname").value; //新闻标题
 				var Prisubtopic = document.getElementById("fname").value; //新闻副标题
-				var PriConten = document.getElementById("conten").value; //新闻内容
+				//var PriConten = document.getElementById("conten0").value; //新闻内容
 				var PriSummas = document.getElementById("summas").value; //新闻摘要
-				var Chnid = document.getElementById("chnid"); //栏目id
-				var PriChnid = Chnid.selectedIndex; // 选中索引
+				//var Chnid = document.getElementById("chnid"); //栏目id
+				//var PriChnid = Chnid.selectedIndex; // 选中索引
+				var PriChnid = $("#chnid option:selected").val(); 
 				console.log('所属栏目=========================:' + PriChnid);
 				PriIsquo = document.getElementById("islink").checked == true ? 1 : 0;
 				PriIsReply = document.getElementById("isReply").checked == true ? 1 : 0;
-				PriQuourl = document.getElementById("quourl").value;
+				PriQuourl = document.getElementById("islink").value;
 				comData = {
 					cmd: 'news', //文章管理
 					type: 'add',
 					chnid: PriChnid,
 					subtopic: Prisubtopic,
-					topic: PriTopic,
+					topic: PriTopic, 
 					content: PriConten,
 					summas: PriSummas,
+					encs: FileData,
 					isquo: PriIsquo,
 					quourl: PriQuourl,
 					isreply: PriIsReply,
-					stat: webConfig.isnewchk
+					stat: 1
 				};
+				return;
 				unitWebsitePro(comData, function(data) {
 					if(data.RspCode == 0) {
 						weui.toast("添加成功");
 						//清空数据 
 						document.getElementById("cname").value = ""; //新闻标题
-						document.getElementById("conten").value = ""; //新闻内容
+						//document.getElementById("conten").value = ""; //新闻内容
 						document.getElementById("summas").value = ""; //新闻摘要
 						document.getElementById("chnid").selectedIndex = 0; //栏目id
-						document.getElementById("quourl").value = ""; //引用地址
+						document.getElementById("islink").value = ""; //引用地址
 						document.getElementById("fname").value = "";
-
+						$('.weui-input').val("");
+						location.reload();
 					} else {
 						weui.toast(data.RspTxt);
 					}
 				});
 				console.log('comData=========================:' + JSON.stringify(comData));
+				var vue_img = new Vue({
+					el: '#PriImg',
+					data: {
+						imgurl: imgurl
+					}
+				});
 			});
 			//编辑发送协议
-			//			function upperCase(x) {
-			//				if(vm.type == 'edit') {
-			//					switch(x) {
-			//						case 'cname': //新闻标题
-			//							var y = document.getElementById(x).value;
-			//							console.log(y);
-			//							var data = {
-			//								type: 0,
-			//								index: 0,
-			//								callcol: "skinid",
-			//								colv: x
-			//							}
-			//							changeWebsiteConfig(data)
-			//							break;
-			//						case 'conten': //新闻内容
-			//							var y = document.getElementById(x).value;
-			//							console.log(y);
-			//							var data = {
-			//								type: 0,
-			//								index: 0,
-			//								callcol: "skinid",
-			//								colv: x
-			//							}
-			//							changeWebsiteConfig(data)
-			//							break;
-			//						default:
-			//							break;
-			//					}
-			//					document.getElementById(x).value = y.toUpperCase()
-			//				}
-			//			}
-
+			function upperCase(x) {
+				if(vm.type == 'edit') {
+					switch(x) {
+						case 'cname': //新闻标题
+							var y = document.getElementById(x).value;
+							console.log(y);
+							var data = {
+								type: 0,
+								index: 0,
+								callcol: "skinid",
+								colv: x
+							}
+							changeWebsiteConfig(data)
+							break;
+						case 'conten': //新闻内容
+							var y = document.getElementById(x).value;
+							console.log(y);
+							var data = {
+								type: 0,
+								index: 0,
+								callcol: "skinid",
+								colv: x
+							}
+							changeWebsiteConfig(data)
+							break;
+						default:
+							break;
+					}
+					document.getElementById(x).value = y.toUpperCase()
+				}
+			}
 			/**
 			 * 初始化上传
 			 */
-			function initUploader() {
+			function initUploader(priid, Priimgname) {
 				var bannerOption = {
 					disable_statistics_report: true, // 禁止自动发送上传统计信息到七牛，默认允许发送
 					runtimes: 'html5,flash,html4', // 上传模式,依次退化
-					browse_button: 'upload', // 上传选择的点选按钮，**必需**
-					uptoken_func: function(file) { // 在需要获取 uptoken 时，该方法会被调用
+					browse_button: ['upload', priid], // 上传选择的点选按钮，**必需**
+					uptoken_func: function(file) { // 在需要获取 uptoken 时，该方法会被调用 
 						console.log("uptoken_func:" + JSON.stringify(file));
 						uptokenData = null;
 						uptokenData = getQNUpToken(file);
 						console.log("获取uptoken回调:" + JSON.stringify(uptokenData));
 						if(uptokenData && uptokenData.code) { //成功   
 							return uptokenData.data.Data[0].Token;
-						} else {
-							vm_loading.isShow = false;
-							vm_loading.content = "数据加载中";
+						} else { 
 							bannerUploader.stop();
 							var dialog = weui.dialog({
 								title: "上传失败",
@@ -427,7 +681,7 @@
 					max_retries: 0, // 上传失败最大重试次数
 					dragdrop: false, // 开启可拖曳上传
 					chunk_size: '4mb', // 分块上传时，每块的体积
-					auto_start: false, // 选择文件后自动上传，若关闭需要自己绑定事件触发上传,
+					auto_start: true, // 选择文件后自动上传，若关闭需要自己绑定事件触发上传,
 					filters: {
 						mime_types: [ //只允许上传图片和zip文件
 							{
@@ -440,37 +694,46 @@
 						'FilesAdded': function(up, files) {
 							plupload.each(files, function(file) {
 								// 文件添加进队列后,处理相关的事情
+								imgName = JSON.stringify(file.name)
+								var img = imgName.substring(-1, (imgName - 1));
+
+								//document.getElementById('Priimgname0').value = imgName;
 								console.log("FilesAdded:" + JSON.stringify(file));
 							});
 						},
 						'UploadProgress': function(up, file) {
-							// 每个文件上传时,处理相关的事情 
-							vm_loading.content = "上传中 " + file.percent + "%";
+							// 每个文件上传时,处理相关的事情  
+							//vm_loading.content = "上传中 " + file.percent + "%";
 						},
 						'FileUploaded': function(up, file, info) {
 							// 每个文件上传成功后,处理相关的事情 
 							console.log("文件:info:" + JSON.stringify(info));
 							if(info.status == 200) {
-								vm_loading.isShow = false;
 								var cc = eval("(" + info.response + ")");
-								imgurl = 'http://qn-kfpb.jiaobaowang.net/' + cc.key; 
-					            document.getElementById('onisImg').style.display = "block "; 
-								/**
-								 * 文章附件管理添加
-								 */
-								var tempData = {
-									cmd: 'newsenc', //文章附件管理
-									type: 'add', //添加文章附件  
-									saveurl: imgurl, //图片地址
-									oldname: file.name, //原名称
-									newname: cc.key, //新名称
-									filesize: file.size, //文件大小
-									colv: 1 //是否通过
+								imgurl = 'http://qn-kfpb.jiaobaowang.net/' + cc.key;
+								var imgLink = Qiniu.imageView2({
+									mode: 3, // 缩略模式，共6种[0-5]
+									w: 100, // 具体含义由缩略模式决定 
+									h: 100, // 具体含义由缩略模式决定
+									q: 100, // 新图的图像质量，取值范围：1-100
+									format: 'png' // 新图的输出格式，取值范围：jpg，gif，png，webp等
+								}, cc.key);
+								//Pridl=Priimgname.substring(9,10)
+								if(Priimgname != undefined) {
+									document.getElementById(Priimgname).value = imgurl;
+									objArray.push([imgurl]);
+								} else {
+									document.getElementById('filename').value = imgurl;
+									FileData = [{
+										saveurl: imgurl, //图片地址 
+										imgurl: imgLink, //图片的缩略图 
+										oldname: file.name, //原名称  
+										newname: cc.key, //新名称
+										filesize: file.size //文件大小  
+									}]
 								}
-								unitWebsitePro(tempData, function(data) {
-									if(data.RspCode == 0)
-										weui.toast("上传成功");
-								});
+								//vm_loading.isShow = false; 
+
 							} else {
 								var dialog = weui.dialog({
 									title: "上传失败",
@@ -491,8 +754,8 @@
 							//console.log("Error:" + up);
 							//console.log("Error:" + JSON.stringify(err));
 							//console.log("Error:" + errTip);
-							vm_loading.isShow = false;
-							vm_loading.content = "数据加载中";
+							//							vm_loading.isShow = false;
+							//							vm_loading.content = "数据加载中";
 							var dialog = weui.dialog({
 								title: "操作失败",
 								content: pluploadutil.errMes(err.code, errTip),
@@ -521,6 +784,7 @@
 				}
 				bannerUploader = Qiniu.uploader(bannerOption);
 			}
+
 			/**
 			 * 获取七牛上传token
 			 */
@@ -533,7 +797,7 @@
 					appId: storageutil.QNQYWXKID,
 					mainSpace: storageutil.QNPUBSPACE,
 					saveSpace: storageutil.QNSSPACEWEBCON,
-					fileArray: [{
+					fileArray: [{ 
 						qnFileName: fileName,
 					}]
 				}
@@ -546,9 +810,7 @@
 			}
 
 			function uploadFile() {
-				bannerUploader.start();
+
 			}
 		</script>
 	</body>
-
-</html>

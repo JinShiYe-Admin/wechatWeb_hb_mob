@@ -1,211 +1,270 @@
 {
-  "html/appWeb/newsIndex.html": {
-    "resources": [
-      "image/icon_tabbar.png",
-      "js/demoCssJs/jquery-weui.css",
-      "js/demoCssJs/jquery-2.1.4.js",
-      "js/utils/utils.js",
-      "js/PublicProtocol.js",
-      "js/vue.min.js",
-      "js/utils/storageutil.js",
-      "js/mui.min.js",
-      "js/demoCssJs/demos.css",
-      "css/mui.min.css",
-      "js/demoCssJs/jquery-weui.js",
-      "js/demoCssJs/iscroll.js",
-      "js/demoCssJs/weui.min.css",
-      "js/importJS.js",
-      "html/appWeb/new-detail.html",
-      "js/demoCssJs/fastclick.js",
-      "html/appWeb/mineIndex.html",
-      "image/newsIndex.png",
-      "image/mineIndex.png",
-      "html/appWeb/noticeIndex.html"
-    ],
-    "refer": [
-      "html/appWeb/new-detail.html",
-      "html/appWeb/mineIndex.html",
-      "html/appWeb/noticeIndex.html"
-    ]
-  },
-  "html/appWeb/new-detail.html": {
-    "resources": [
-      "image/utils/default_personalimage.png",
-      "js/utils/utils.js",
-      "fonts/mui.ttf",
-      "css/new-detail.css",
-      "html/appWeb/newsIndex.html",
-      "css/mui.min.css",
-      "js/mui.min.js",
-      "js/vue.min.js",
-      "image/icon_tabbar.png",
-      "js/jquery.min.js",
-      "js/jweixin.js",
-      "html/appWeb/contacts.html"
-    ],
-    "refer": [
-      "html/appWeb/newsIndex.html",
-      "html/appWeb/contacts.html"
-    ]
-  },
-  "html/appWeb/mineIndex.html": {
-    "resources": [
-      "image/icon_tabbar.png",
-      "js/jquery.min.js",
-      "css/jquery-weui.css",
-      "js/utils/utils.js",
-      "css/demos.css",
-      "js/PublicProtocol.js",
-      "js/iscroll.js",
-      "html/appWeb/newsIndex.html",
-      "js/jquery-weui.js",
-      "js/utils/storageutil.js",
-      "js/importJS.js",
-      "css/weui.css"
-    ],
-    "refer": [
-      "html/appWeb/newsIndex.html"
-    ]
-  },
-  "html/unitWeb/configIndex.html": {
-    "resources": [
-      "js/mui.min.js",
-      "js/utils/utils.js",
-      "js/demoCssJs/jquery-2.1.4.js",
-      "js/PublicProtocol.js",
-      "fonts/mui.ttf",
-      "css/mui.min.css",
-      "js/utils/storageutil.js",
-      "js/importJS.js"
-    ],
-    "refer": [
-      "html/unitWeb/column-home.html",
-      "html/appWeb/subject_timetable.html"
-    ]
-  },
-  "html/unitWeb/column-home.html": {
-    "resources": [
-      "js/jquery.min.js",
-      "js/utils/utils.js",
-      "js/jweixin.js",
-      "js/PublicProtocol.js",
-      "css/weui.min.css",
-      "js/vue.min.js",
-      "js/weui.min.js",
-      "js/utils/storageutil.js",
-      "js/importJS.js",
-      "html/unitWeb/column.html",
-      "css/mui.min.css"
-    ],
-    "refer": [
-      "html/unitWeb/column.html"
-    ]
-  },
-  "html/unitWeb/column.html": {
-    "resources": [
-      "js/utils/utils.js",
-      "js/PublicProtocol.js",
-      "js/utils/storageutil.js",
-      "js/importJS.js",
-      "html/unitWeb/column-home.html",
-      "css/mui.min.css",
-      "css/weui.min.css"
-    ],
-    "refer": [
-      "html/unitWeb/column-home.html"
-    ]
-  },
-  "html/unitWeb/newsList.html": {
-    "resources": [
-      "js/demoCssJs/jquery-weui.css",
-      "js/mui.min.js",
-      "js/utils/utils.js",
-      "js/demoCssJs/jquery-2.1.4.js",
-      "js/demoCssJs/demos.css",
-      "js/PublicProtocol.js",
-      "js/demoCssJs/jquery-weui.js",
-      "js/vue.min.js",
-      "js/demoCssJs/iscroll.js",
-      "js/demoCssJs/weui.min.css",
-      "js/utils/storageutil.js",
-      "js/importJS.js"
-    ],
-    "refer": []
-  },
-  "html/index/index.html": {
-    "resources": [
-      "js/jquery.min.js",
-      "js/mui.min.js",
-      "js/utils/utils.js",
-      "js/jweixin.js",
-      "fonts/mui.ttf",
-      "js/PublicProtocol.js",
-      "css/mui.min.css",
-      "js/utils/storageutil.js",
-      "js/importJS.js"
-    ],
-    "refer": []
-  },
-  "html/appWeb/noticeIndex.html": {
-    "resources": [
-      "js/demoCssJs/jquery-weui.css",
-      "js/utils/utils.js",
-      "js/demoCssJs/demos.css",
-      "js/PublicProtocol.js",
-      "js/demoCssJs/weui.min.css",
-      "js/utils/storageutil.js",
-      "js/importJS.js",
-      "html/appWeb/contacts.html",
-      "js/demoCssJs/jquery-2.1.4.js",
-      "image/newsIndex.png",
-      "js/vue.min.js",
-      "js/mui.min.js",
-      "image/mineIndex.png",
-      "js/demoCssJs/jquery-weui.js"
-    ],
-    "refer": [
-      "html/appWeb/contacts.html"
-    ]
-  },
-  "html/appWeb/contacts.html": {
-    "resources": [
-      "js/utils/mui.pullToRefresh.material.js",
-      "js/utils/mui.pullToRefresh.js",
-      "css/utils/pullToRefresh.css",
-      "js/jquery.min.js",
-      "js/utils/utils.js",
-      "js/PublicProtocol.js",
-      "css/mui.min.css",
-      "js/utils/storageutil.js",
-      "js/importJS.js",
-      "image/utils/default_personalimage.png",
-      "html/appWeb/new-detail.html",
-      "html/appWeb/contacts.html",
-      "image/newsIndex.png",
-      "fonts/mui.ttf",
-      "js/mui.min.js",
-      "js/vue.min.js"
-    ],
-    "refer": [
-      "html/appWeb/new-detail.html",
-      "html/appWeb/contacts.html"
-    ]
-  },
-  "html/appWeb/subject_timetable.html": {
-    "resources": [
-      "js/appweb/subject_timetable.js",
-      "js/vue.js",
-      "js/demoCssJs/jquery-weui.css",
-      "js/mui.min.js",
-      "js/utils/utils.js",
-      "js/demoCssJs/jquery-2.1.4.js",
-      "js/PublicProtocol.js",
-      "js/demoCssJs/jquery-weui.js",
-      "js/weui.min.js",
-      "js/demoCssJs/weui.min.css",
-      "js/utils/storageutil.js",
-      "js/importJS.js"
-    ],
-    "refer": []
-  }
+	"html/appWeb/newsIndex.html": {
+		"resources": [
+			"image/icon_tabbar.png",
+			"js/demoCssJs/jquery-weui.css",
+			"js/demoCssJs/jquery-2.1.4.js",
+			"js/utils/utils.js",
+			"js/PublicProtocol.js",
+			"js/vue.min.js",
+			"js/utils/storageutil.js",
+			"js/mui.min.js",
+			"js/demoCssJs/demos.css",
+			"css/mui.min.css",
+			"js/demoCssJs/jquery-weui.js",
+			"js/demoCssJs/iscroll.js",
+			"js/demoCssJs/weui.min.css",
+			"js/importJS.js",
+			"html/appWeb/new-detail.html",
+			"js/demoCssJs/fastclick.js",
+			"html/appWeb/mineIndex.html",
+			"image/newsIndex.png",
+			"image/mineIndex.png",
+			"html/appWeb/noticeIndex.html"
+		],
+		"refer": [
+			"html/appWeb/new-detail.html",
+			"html/appWeb/mineIndex.html",
+			"html/appWeb/noticeIndex.html"
+		]
+	},
+	"html/appWeb/new-detail.html": {
+		"resources": [
+			"image/utils/default_personalimage.png",
+			"js/utils/utils.js",
+			"fonts/mui.ttf",
+			"css/new-detail.css",
+			"html/appWeb/newsIndex.html",
+			"css/mui.min.css",
+			"js/mui.min.js",
+			"js/vue.min.js",
+			"image/icon_tabbar.png",
+			"js/jquery.min.js",
+			"js/jweixin.js",
+			"html/appWeb/contacts.html"
+		],
+		"refer": [
+			"html/appWeb/newsIndex.html",
+			"html/appWeb/contacts.html"
+		]
+	},
+	"html/appWeb/mineIndex.html": {
+		"resources": [
+			"image/icon_tabbar.png",
+			"js/jquery.min.js",
+			"css/jquery-weui.css",
+			"js/utils/utils.js",
+			"css/demos.css",
+			"js/PublicProtocol.js",
+			"js/iscroll.js",
+			"html/appWeb/newsIndex.html",
+			"js/jquery-weui.js",
+			"js/utils/storageutil.js",
+			"js/importJS.js",
+			"css/weui.css"
+		],
+		"refer": [
+			"html/appWeb/newsIndex.html"
+		]
+	},
+	"html/unitWeb/configIndex.html": {
+		"resources": [
+			"js/mui.min.js",
+			"js/utils/utils.js",
+			"js/demoCssJs/jquery-2.1.4.js",
+			"js/PublicProtocol.js",
+			"fonts/mui.ttf",
+			"css/mui.min.css",
+			"js/utils/storageutil.js",
+			"js/importJS.js"
+		],
+		"refer": [
+			"html/unitWeb/column-home.html",
+			"html/appWeb/subject_timetable.html",
+			"html/appWeb/schedule.html",
+			"html/appWeb/home-publish.html",
+			"html/appWeb/courses-table.html"
+		]
+	},
+	"html/unitWeb/column-home.html": {
+		"resources": [
+			"js/jquery.min.js",
+			"js/utils/utils.js",
+			"js/jweixin.js",
+			"js/PublicProtocol.js",
+			"css/weui.min.css",
+			"js/vue.min.js",
+			"js/weui.min.js",
+			"js/utils/storageutil.js",
+			"js/importJS.js",
+			"html/unitWeb/column.html",
+			"css/mui.min.css"
+		],
+		"refer": [
+			"html/unitWeb/column.html"
+		]
+	},
+	"html/unitWeb/column.html": {
+		"resources": [
+			"js/utils/utils.js",
+			"js/PublicProtocol.js",
+			"js/utils/storageutil.js",
+			"js/importJS.js",
+			"html/unitWeb/column-home.html",
+			"css/mui.min.css",
+			"css/weui.min.css"
+		],
+		"refer": [
+			"html/unitWeb/column-home.html"
+		]
+	},
+	"html/unitWeb/newsList.html": {
+		"resources": [
+			"js/demoCssJs/jquery-weui.css",
+			"js/mui.min.js",
+			"js/utils/utils.js",
+			"js/demoCssJs/jquery-2.1.4.js",
+			"js/demoCssJs/demos.css",
+			"js/PublicProtocol.js",
+			"js/demoCssJs/jquery-weui.js",
+			"js/vue.min.js",
+			"js/demoCssJs/iscroll.js",
+			"js/demoCssJs/weui.min.css",
+			"js/utils/storageutil.js",
+			"js/importJS.js"
+		],
+		"refer": []
+	},
+	"html/index/index.html": {
+		"resources": [
+			"js/jquery.min.js",
+			"js/mui.min.js",
+			"js/utils/utils.js",
+			"js/jweixin.js",
+			"fonts/mui.ttf",
+			"js/PublicProtocol.js",
+			"css/mui.min.css",
+			"js/utils/storageutil.js",
+			"js/importJS.js"
+		],
+		"refer": []
+	},
+	"html/appWeb/noticeIndex.html": {
+		"resources": [
+			"js/demoCssJs/jquery-weui.css",
+			"js/utils/utils.js",
+			"js/demoCssJs/demos.css",
+			"js/PublicProtocol.js",
+			"js/demoCssJs/weui.min.css",
+			"js/utils/storageutil.js",
+			"js/importJS.js",
+			"html/appWeb/contacts.html",
+			"js/demoCssJs/jquery-2.1.4.js",
+			"image/newsIndex.png",
+			"js/vue.min.js",
+			"js/mui.min.js",
+			"image/mineIndex.png",
+			"js/demoCssJs/jquery-weui.js"
+		],
+		"refer": [
+			"html/appWeb/contacts.html"
+		]
+	},
+	"html/appWeb/contacts.html": {
+		"resources": [
+			"js/utils/mui.pullToRefresh.material.js",
+			"js/utils/mui.pullToRefresh.js",
+			"css/utils/pullToRefresh.css",
+			"js/jquery.min.js",
+			"js/utils/utils.js",
+			"js/PublicProtocol.js",
+			"css/mui.min.css",
+			"js/utils/storageutil.js",
+			"js/importJS.js",
+			"image/utils/default_personalimage.png",
+			"html/appWeb/new-detail.html",
+			"html/appWeb/contacts.html",
+			"image/newsIndex.png",
+			"fonts/mui.ttf",
+			"js/mui.min.js",
+			"js/vue.min.js"
+		],
+		"refer": [
+			"html/appWeb/new-detail.html",
+			"html/appWeb/contacts.html"
+		]
+	},
+	"html/appWeb/subject_timetable.html": {
+		"resources": [
+			"js/appweb/subject_timetable.js",
+			"js/vue.js",
+			"js/demoCssJs/jquery-weui.css",
+			"js/mui.min.js",
+			"js/utils/utils.js",
+			"js/demoCssJs/jquery-2.1.4.js",
+			"js/PublicProtocol.js",
+			"js/demoCssJs/jquery-weui.js",
+			"js/weui.min.js",
+			"js/demoCssJs/weui.min.css",
+			"js/utils/storageutil.js",
+			"js/importJS.js"
+		],
+		"refer": []
+	},
+	"html/appWeb/schedule.html": {
+		"resources": [
+			"js/utils/mui.pullToRefresh.material.js",
+			"js/utils/mui.pullToRefresh.js",
+			"css/utils/pullToRefresh.css",
+			"js/jquery.min.js",
+			"js/utils/utils.js",
+			"js/PublicProtocol.js",
+			"js/vue.min.js",
+			"html/appWeb/courses-table.html",
+			"js/utils/storageutil.js",
+			"js/importJS.js",
+			"css/mui.min.css"
+		],
+		"refer": [
+			"html/appWeb/courses-table.html"
+		]
+	},
+	"html/appWeb/courses-table.html": {
+		"resources": [
+			"js/utils/utils.js",
+			"js/utils/events.js",
+			"js/PublicProtocol.js",
+			"js/utils/request.js",
+			"js/appWeb/choose-singlePerson.js",
+			"js/utils/storageutil.js",
+			"js/vue.js",
+			"js/mui.min.js",
+			"js/demoCssJs/jquery-weui.js",
+			"js/vue-router.js",
+			"js/weui.min.js",
+			"js/utils/consts.js",
+			"css/weui.css",
+			"js/importJS.js",
+			"js/jquery.min.js"
+		]
+	},
+	"html/appWeb/home-publish.html": {
+		"resources": [
+			"js/appWeb/select-choose.js",
+			"js/appWeb/choose-file.js",
+			"js/utils/events.js",
+			"js/appWeb/com-persen.js",
+			"js/utils/request.js",
+			"js/lib/vconsole/vconsole.min.js",
+			"js/appWeb/choose-person.js",
+			"js/vue.js",
+			"js/utils/wx-utils.js",
+			"js/utils/compress.js",
+			"js/vue-router.js",
+			"js/jweixin-1.2.0.js",
+			"js/appWeb/com-publish.js",
+			"js/utils/consts.js",
+			"css/weui.css"
+		]
+	}
 }

@@ -72,16 +72,38 @@
 		<div id="publish-home">
 			<router-view style="width: 100%;"></router-view>
 		</div>
+		<script src="../../js/lib/vconsole/vconsole.min.js"></script>
 		<script src="../../js/vue.js"></script>
 		<script src="../../js/vue-router.js"></script>
 		<script src="../../js/utils/consts.js"></script>
 		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/utils/compress.js"></script>
 		<script src="../../js/utils/request.js"></script>
 		<script src="../../js/demoCssJs/jquery-2.1.4.js"></script>
 		<script src="../../js/appWeb/choose-person.js"></script>
 		<script src="../../js/appWeb/com-persen.js"></script>
 		<script src="../../js/appWeb/com-publish.js"></script>
+		<script src="../../js/appWeb/select-choose.js"></script>
+		<script src="../../js/appWeb/choose-file.js"></script>
+		<script src="../../js/appWeb/extra-publish.js"></script>
+		<script src="../../js/utils/wx-utils.js"></script>
+		<script src="../../js/jweixin-1.2.0.js"></script>
 		<script type="text/javascript">
+			var apiList = [
+				'startRecord',
+				'stopRecord',
+				'onVoiceRecordEnd',
+				'uploadVoice',
+				'chooseImage',
+				'uploadImage',
+				'previewImage',
+				'selectEnterpriseContact'
+			]
+			wxUtils.setConfig(apiList);
+			wxUtils.error(apiList);
+			/**
+			 * 人员部門列表组件
+			 */
 			const choosePerson = {
 				template: '<person-list v-bind:depart_id="parseInt($route.params.id)" v-on:togglePerson="togglePersen"></person-list>',
 				methods: {
@@ -92,6 +114,9 @@
 					}
 				}
 			}
+			/**
+			 * 人员选择组件
+			 */
 			const comPersen = {
 				template: '<com-persen v-bind:chosePersen="this.$root.chosePersen" v-on:chosedPersen="chosedPersen"></com-persen>',
 				methods: {
@@ -101,9 +126,46 @@
 					}
 				}
 			}
-			
+			/**
+			 * 发布组件
+			 */
 			const comPublish = {
-				template: '<com-publish v-bind:chosePersen="this.$root.chosedPersen"></com-publish>'
+				template: '<com-publish v-bind:initialCon="$root.content" v-on:putContent="getContent" v-bind:fileInfo="$root.uploadFileInfo" v-bind:exData="$root.extraData" v-bind:msgType="$root.msgType" v-bind:chosePersen="this.$root.chosedPersen">' +
+					'<select-choose v-bind:msgType="$root.msgType" v-bind:chosedPersen="this.$root.chosedPersen"  v-on:msg-type="getMsgType"></select-choose>' +
+					'<choose-file  v-bind:fileInfo="$root.uploadFileInfo" v-on:uploadFile="getUploadFile" v-if="$root.msgType>0" v-bind:msgType="$root.msgType" slot="choose-file"></choose-file>' +
+					'</com-publish>',
+				methods: {
+					getMsgType: function(msgType) {
+						console.log("获取的所选类型：" + msgType);
+						this.$root.msgType = msgType;
+					},
+					getUploadFile: function(fileData) {
+						console.log("获取的已上传组件信息：" + JSON.stringify(fileData));
+						this.$root.uploadFileInfo = fileData;
+					},
+					getContent: function(content) {
+						console.log("文本内容：" + content);
+						this.$root.content = content;
+					}
+				}
+			}
+			/***
+			 * 額外信息組件
+			 */
+			const comExtra = {
+				template: '<extra-pub v-bind:fileInfo="$root.uploadFileInfo" v-bind:msgType="$root.msgType" v-on:extraData="getExtraData">' +
+					'<choose-file v-bind:fileInfo="$root.uploadFileInfo" v-if="$root.msgType>1" v-bind:uploadReal="$root.uploadReal" v-bind:msgType="$root.msgType" v-on:uploadFile="getUploadFile"></choose-file>' +
+					'</extra-pub>',
+				methods: {
+					getExtraData: function(extraData) {
+						console.log("获取的额外数据：" + JSON.stringify(extraData));
+						this.$root.extraData = extraData;
+					},
+					getUploadFile: function(fileData) {
+						console.log("获取的已上传组件信息：" + JSON.stringify(fileData));
+						this.$root.uploadFileInfo = fileData;
+					}
+				}
 			}
 
 			const router = new VueRouter({
@@ -124,10 +186,14 @@
 						path: '',
 						redirectTo: 'choose-persen/-1'
 					}]
-				},{
-					path:'',
-					redirectTo:{
-						name:'publish'
+				}, {
+					path: 'extra-pub',
+					name: 'extra-pub',
+					component: comExtra
+				}, {
+					path: '',
+					redirectTo: {
+						name: 'publish'
 					}
 				}]
 			});
@@ -135,8 +201,20 @@
 				el: '#publish-home',
 				router: router,
 				data: {
-					chosePersen: [],
-					chosedPersen: []
+					chosePersen: events.getSessionArray(consts.KEY_CHOOSE_PERSONS),
+					chosedPersen: [],
+					msgType: 0, //默认为文字
+					extraData: {},
+					uploadFileInfo: {},
+					uploadReal: true,
+					content: ''
+				},
+				watch: {
+					msgType: function(newVal, oldVal) {
+						this.extraData = {};
+						this.uploadFileInfo = {};
+						this.content = '';
+					}
 				},
 				methods: {
 					togglePersen: function(persen, isAdd) {
@@ -146,6 +224,7 @@
 						} else {
 							this.delPersen(persen);
 						}
+						sessionStorage.setItem(consts.KEY_CHOOSE_PERSONS, JSON.stringify(this.chosePersen));
 					},
 					delPersen: function(persen) {
 						var com = this;
@@ -167,7 +246,7 @@
 			router.replace({
 				name: 'publish'
 			})
-			window.onbeforeunload=function(){
+			window.onbeforeunload = function() {
 				sessionStorage.clear();
 			}
 		</script>

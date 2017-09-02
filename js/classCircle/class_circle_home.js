@@ -1,125 +1,3 @@
-//显示用户名的过滤器
-Vue.filter('userName', function(userId) {
-	var userInfo = departUserInfo.value[userId];
-	if(userInfo != undefined) {
-		return userInfo.name; //返回人员信息中的名字
-	} else {
-		return userId; //返回传入的值
-	}
-});
-
-//班级圈主页tab顶部导航
-Vue.component("home-navbar-item", {
-	template: "#temp_trends_navbar_item",
-	props: ["value", "index", "is_on"],
-	computed: {
-		isOnClass: function() {
-			return {
-				'weui-bar__item--on': this.index == this.is_on //计算点中的选项
-			}
-		}
-	},
-	methods: {
-		/**
-		 * 点击顶部导航选项
-		 * @param {Object} index
-		 */
-		click: function(index) {
-			this.$emit("click-item", index);
-		}
-	}
-});
-//班级圈主页tab列表
-Vue.component("home-bd-item", {
-	template: "#temp_trends_tab_bd_item",
-	props: ["value", "index", "is_on"],
-	computed: {
-		isOnClass: function() {
-			return {
-				'weui-tab__bd-item--active': this.index == this.is_on //计算显示的列表
-			}
-		}
-	}
-});
-
-//添加动态组件
-Vue.component("add-trends", {
-	template: "#temp_trends_add_com",
-	props: ["content"],
-	data: function() {
-		return {
-			com_content: this.content //组件内的content
-		}
-	},
-	methods: {
-		/**
-		 * 点击添加多媒体
-		 * @param {Object} type 0,图库;1,相机
-		 */
-		addMedia: function(type) {
-			this.$emit("add-media", type);
-		},
-		/**
-		 * 点击提交按钮
-		 */
-		commit: function() {
-			this.$emit("commit");
-		}
-	},
-	watch: {
-		/**
-		 * 监控组件外的content
-		 * @param {Object} val
-		 */
-		content: function(val) {
-			this.com_content = val;
-		},
-		/**
-		 * 监控组件内的content
-		 * @param {Object} val
-		 */
-		com_content: function(val) {
-			this.$emit("content-change", val);
-		}
-	}
-});
-//动态组件
-Vue.component("trends-item", {
-	template: "#template_trends",
-	props: ["value"],
-	computed: {
-		showPraiseComment: function() {
-			//是否显示点赞和评论区域
-			return this.value.LikeUsers.length > 0 || this.value.Comments.length > 0;
-		},
-		showLine: function() {
-			//是否显示点赞和评论之间的横线
-			return this.value.LikeUsers.length > 0 && this.value.Comments.length > 0;
-		},
-		PublisherImage: function() {
-			//发布者的头像
-			var userInfo = departUserInfo.value[this.value.PublisherId];
-			if(userInfo != undefined && userInfo.avatar != "") {
-				return userInfo.avatar + "100";
-			} else {
-				return utils.updateHeadImage("", 2);
-			}
-		}
-	},
-	method: {
-
-	}
-});
-//与我相关组件
-Vue.component("relate-item", {
-	template: "#temp_relate_to_me",
-	props: ["value"]
-});
-//评论组件
-Vue.component("comments-item", {
-	template: "#temp_comments",
-	props: ["value"]
-});
 //班级圈主页数据
 var home_data = {
 	is_on: 0, //当前显示的列表
@@ -138,7 +16,7 @@ var home_data = {
 				"TabId": 92,
 				"Replys": [],
 				"ReplyId": "0",
-				"CommentContent": "你好",
+				"CommentContent": "你好这是对527号评论的回复这是对527号评论的回复这是对527号评论的回复这是对527号评论的回复",
 				"UserId": "1",
 				"UpperId": 0
 			}, {
@@ -148,7 +26,7 @@ var home_data = {
 					"CommentDate": "2017-08-11 11:37:15",
 					"TabId": 528,
 					"ReplyId": "1",
-					"CommentContent": "这是对527号评论的回复",
+					"CommentContent": "这是对527号评论的回复这是对527号评论的回复这是对527号评论的回复",
 					"UserId": "11",
 					"UpperId": 527
 				}, {
@@ -188,12 +66,12 @@ var home_data = {
 			}],
 			"MsgContent": "<html>\n <head></head>\n <body>\n <p><br><img src=\"http://qn-kfpb.jiaobaowang.net/jbypc/pc/9498620170615111755.jpg\" title=\"01.jpg\" alt=\"01.jpg\" width=\"100%\"><br></p>\n </body>\n</html>",
 			"EncTypeStr": "图文混排",
-			"EncType": 5,
-			"EncAddr": "http://qn-kfpb.jiaobaowang.net/jbypc/pc/9498620170615111755.jpg",
+			"EncType": 1,
+			"EncAddr": "http://qn-kfpb.jiaobaowang.net/jbypc/pc/9498620170615111755.jpg|http://static.firefoxchina.cn/img/201708/8_59a61038ec68a0.jpg|http://jqweui.com/dist/demos/images/swiper-2.jpg",
 			"NoteType": 2,
 			"MsgContentTxt": "",
 			"PublisherId": "chenuodong",
-			"EncImgAddr": "http://qn-kfpb.jiaobaowang.net/jbypc/pc/thumb/9498620170615111755.jpg",
+			"EncImgAddr": "http://qn-kfpb.jiaobaowang.net/jbypc/pc/9498620170615111755.jpg|http://qn-kfpb.jiaobaowang.net/jbypc/pc/9498620170615111755.jpg",
 			"InShow": 1,
 			"NoteTypeStr": "个人空间动态",
 			"EncIntro": "",
@@ -209,7 +87,78 @@ var home_data = {
 		leave: false,
 		show_loadmore: true,
 		allow_loadmore: false,
-		data: []
+		data: [{
+			"LikeUsers": [],
+			"TabId": 3,
+			"Comments": [{
+				"CommentDate": "2017-01-10 09:24:13",
+				"TabId": 92,
+				"Replys": [],
+				"ReplyId": "0",
+				"CommentContent": "你好这是对527号评论的回复这是对527号评论的回复这是对527号评论的回复这是对527号评论的回复",
+				"UserId": "1",
+				"UpperId": 0
+			}, {
+				"CommentDate": "2017-08-11 11:20:11",
+				"TabId": 527,
+				"Replys": [{
+					"CommentDate": "2017-08-11 11:37:15",
+					"TabId": 528,
+					"ReplyId": "1",
+					"CommentContent": "这是对527号评论的回复这是对527号评论的回复这是对527号评论的回复",
+					"UserId": "11",
+					"UpperId": 527
+				}, {
+					"CommentDate": "2017-08-14 10:18:56",
+					"TabId": 530,
+					"ReplyId": "1",
+					"CommentContent": "8-14测试回复",
+					"UserId": "1",
+					"UpperId": 527
+				}, {
+					"CommentDate": "2017-08-14 10:21:27",
+					"TabId": 531,
+					"ReplyId": "123",
+					"CommentContent": "8-14测试回复",
+					"UserId": "1",
+					"UpperId": 527
+				}, {
+					"CommentDate": "2017-08-14 10:22:10",
+					"TabId": 532,
+					"ReplyId": "1",
+					"CommentContent": "8-14测试回复",
+					"UserId": "231",
+					"UpperId": 527
+				}],
+				"ReplyId": "0",
+				"CommentContent": "这是8月11号的评论内容的测试",
+				"UserId": "1",
+				"UpperId": 0
+			}, {
+				"CommentDate": "2017-08-14 10:32:20",
+				"TabId": 533,
+				"Replys": [],
+				"ReplyId": "0",
+				"CommentContent": "8-14测试评论",
+				"UserId": "moshanglin",
+				"UpperId": 0
+			}],
+			"MsgContent": "<html>\n <head></head>\n <body>\n <p><br><img src=\"http://qn-kfpb.jiaobaowang.net/jbypc/pc/9498620170615111755.jpg\" title=\"01.jpg\" alt=\"01.jpg\" width=\"100%\"><br></p>\n </body>\n</html>",
+			"EncTypeStr": "图文混排",
+			"EncType": 1,
+			"EncAddr": "http://qn-kfpb.jiaobaowang.net/jbypc/pc/9498620170615111755.jpg|http://static.firefoxchina.cn/img/201708/8_59a61038ec68a0.jpg|http://jqweui.com/dist/demos/images/swiper-2.jpg",
+			"NoteType": 2,
+			"MsgContentTxt": "",
+			"PublisherId": "moshanglin",
+			"EncImgAddr": "http://qn-kfpb.jiaobaowang.net/jbypc/pc/9498620170615111755.jpg|http://qn-kfpb.jiaobaowang.net/jbypc/pc/9498620170615111755.jpg",
+			"InShow": 1,
+			"NoteTypeStr": "个人空间动态",
+			"EncIntro": "",
+			"ReadCnt": 7,
+			"EncLen": 0,
+			"IsLike": 0,
+			"PublishDate": "2017-06-15 11:18:04"
+		}]
 	}, {
 		id: "relate_to_me",
 		title: "与我相关",
@@ -217,17 +166,10 @@ var home_data = {
 		leave: false,
 		show_loadmore: true,
 		allow_loadmore: false,
-		data: []
+		data: [1, 2]
 	}]
 };
-//发布动态页面数据
-var trends_add_data = {
-	allback: true,
-	content: "", //文字，限制6000字
-	images: [], //图片，限制9张
-	video: '' //视频，限制一个
-}
-var trends_details_data;//动态详情页面的数据
+
 var mineUserInfo = {
 	"userid": "moshanglin",
 	"name": "莫尚霖",
@@ -245,7 +187,7 @@ var mineUserInfo = {
 	"telephone": null,
 	"email": null,
 	"weixinid": null,
-	"avatar": "http: //shp.qpic.cn/bizmp/LlAHpaR9WIamIqUyfAicDggv1icib12xUv983mowPgnEeMwjJRENdrYhg/",
+	"avatar": "http://shp.qpic.cn/bizmp/LlAHpaR9WIamIqUyfAicDggv1icib12xUv983mowPgnEeMwjJRENdrYhg/",
 	"status": 1,
 	"extattr": null,
 	"errcode": 0,
@@ -253,18 +195,43 @@ var mineUserInfo = {
 	"P2PData": null
 }; //我的个人信息model,查看参数详细信息请访问:http://open.work.weixin.qq.com/wwopen/doc#10019
 var departUserInfo = {
-	key: [],
-	value: {}
+	key: ["moshanglin"],
+	value: {
+		"moshanglin": {
+			"userid": "moshanglin",
+			"name": "莫尚霖",
+			"department": [
+				11
+			],
+			"order": [
+				0
+			],
+			"position": "",
+			"mobile": null,
+			"english_name": "",
+			"gender": 1,
+			"isleader": 0,
+			"telephone": null,
+			"email": null,
+			"weixinid": null,
+			"avatar": "http://shp.qpic.cn/bizmp/LlAHpaR9WIamIqUyfAicDggv1icib12xUv983mowPgnEeMwjJRENdrYhg/",
+			"status": 1,
+			"extattr": null,
+			"errcode": 0,
+			"errmsg": "ok",
+			"P2PData": null
+		}
+	}
 }; //记录所有人的用户信息
 var temp_data; //临时变量;用于查询我所处部门的所有成员
 var router; //路由
 
 window.onload = function() {
+	console.log("href:" + window.location.href);
 	$.showLoading('正在加载');
 	initRouter();
+	//获取我的信息
 	//getUserInfo(0);
-	temp_data = 0;
-	getDepartmentMember(mineUserInfo.department[temp_data]);
 }
 
 //设置路由
@@ -281,33 +248,106 @@ function initRouter() {
 			 * @param {Object} index
 			 */
 			clickItem: function(index) {
-				if(index == home_data.is_on) {
+				if(index == this.is_on) {
 					return;
 				}
-				home_data.home_tab[home_data.is_on].scrollTop = $("#" + home_data.home_tab[home_data.is_on].id).scrollTop();
-				home_data.is_on = index;
-				if(home_data.home_tab[home_data.is_on].leave) {
-					home_data.home_tab[home_data.is_on].leave = false;
+				this.home_tab[this.is_on].scrollTop = $("#" + this.home_tab[this.is_on].id).scrollTop();
+				this.is_on = index;
+				if(this.home_tab[this.is_on].leave) {
+					this.home_tab[this.is_on].leave = false;
 					var timeId = setInterval(function() {
-						toBeforePosition(timeId, home_data.is_on);
+						homeToBeforePosition(timeId, home_data.is_on);
 					}, 100);
 				}
+			},
+			/**
+			 * 点击发布动态者的头像或者名称或者评论者(回复者)的名称
+			 * @param {String} userId 用户id
+			 */
+			showPersonTrends: showPersonTrends,
+			/**
+			 * 显示动态的详细内容或者查看全部按钮
+			 * @param {Number} listIndex 列表的序号
+			 * @param {Number} valueIndex 数据的序号
+			 */
+			showTrendsDetails: function(listIndex, valueIndex) {
+				console.log("showTrendsDetails:" + listIndex + ":" + valueIndex);
+				showTrendsDetails(this.home_tab[listIndex].data[valueIndex])
+			},
+			/**
+			 * 点击动态的赞，评论，删除按钮
+			 * @param {Number} listIndex 列表的序号
+			 * @param {Number} valueIndex 数据的序号
+			 * @param {Number} type 按钮序号 0,赞;1,评论;2,删除;
+			 */
+			clickFunction: function(listIndex, valueIndex, type) {
+				console.log("clickFunction:" + listIndex + " " + valueIndex + " " + type);
+				var trendsValue = this.home_tab[listIndex].data[valueIndex];
+				console.log("trendsValue:" + JSON.stringify(trendsValue))
+				switch(type) {
+					case 0:
+						trendsValue.IsLike = !trendsValue.IsLike;
+						break;
+					case 1:
+						router.push({
+							name: 'add',
+							params: {
+								id: 'addComment',
+								data: trendsValue
+							}
+						});
+						break;
+				}
+			},
+			/**
+			 * 点击评论或者回复的内容
+			 * @param {Number} listIndex 列表的序号
+			 * @param {Number} valueIndex 数据的序号
+			 * @param {Object} commentIndex 评论的序号
+			 * @param {Object} replysIndex 回复的序号
+			 */
+			clickComment: function(listIndex, valueIndex, commentIndex, replysIndex) {
+				console.log("clickComment:" + listIndex + " " + valueIndex + " " + commentIndex + " " + replysIndex);
+				var trendsValue = this.home_tab[listIndex].data[valueIndex];
+				var comments;
+				if(replysIndex === undefined) { //评论
+					comments = trendsValue.Comments[commentIndex];
+				} else { //回复
+					comments = trendsValue.Comments[commentIndex].Replys[replysIndex];
+				}
+				console.log("CommentContent:" + comments.CommentContent);
+				router.push({
+					name: 'add',
+					params: {
+						id: 'addReplys',
+						data: comments
+					}
+				});
+			},
+			/**
+			 * 点击发布动态
+			 */
+			clickAddTrends: function() {
+				router.push({
+					name: 'add',
+					params: {
+						id: 'addTrends',
+					}
+				});
 			}
 		},
 		/**
 		 * 组件显示之前
 		 */
 		beforeRouteEnter: function(to, from, next) {
-			console.log("home-beforeRouteEnter:");
-			console.log("to:" + to.path);
-			console.log("from:" + from.path);
+			console.log("路由-班级圈主页-显示之前:from:" + from.path + " to:" + to.path);
 			next(function() {
 				//初始化滚动
 				initScroll();
 				//回滚到之前的位置
-				$("#" + home_data.home_tab[0].id).scrollTop(home_data.home_tab[0].scrollTop);
-				$("#" + home_data.home_tab[1].id).scrollTop(home_data.home_tab[1].scrollTop);
-				$("#" + home_data.home_tab[2].id).scrollTop(home_data.home_tab[2].scrollTop);
+				for(var i = 0; i < home_data.home_tab.length; i++) {
+					$("#" + home_data.home_tab[i].id).scrollTop(home_data.home_tab[i].scrollTop);
+				}
 				home_data.home_tab[home_data.is_on].leave = false;
 			});
 		},
@@ -315,21 +355,37 @@ function initRouter() {
 		 * 组件离开之前
 		 */
 		beforeRouteLeave: function(to, from, next) {
-			console.log("home-beforeRouteLeave:");
-			console.log("to:" + to.path);
-			console.log("from:" + from.path);
-			home_data.home_tab[home_data.is_on].scrollTop = $("#" + home_data.home_tab[home_data.is_on].id).scrollTop();
-			home_data.home_tab[0].leave = true;
-			home_data.home_tab[1].leave = true;
-			home_data.home_tab[2].leave = true;
+			console.log("路由-班级圈主页-离开之前:from:" + from.path + " to:" + to.path);
+			this.home_tab[this.is_on].scrollTop = $("#" + this.home_tab[this.is_on].id).scrollTop();
+			this.home_tab[0].leave = true;
+			this.home_tab[1].leave = true;
+			this.home_tab[2].leave = true;
 			next();
 		}
 	};
-	//发布动态
+	//发布动态或者进行评论
 	var trends_add = {
-		template: "#temp_trends_add",
+		template: "#temp_add_trends",
 		data: function() {
-			return trends_add_data;
+			console.log("trends_add:id:" + this.$route.params.id);
+			if(this.$route.params.data != undefined) {
+				console.log("trends_add:data:" + JSON.stringify(this.$route.params.data));
+			} else {
+				console.log("trends_add:data:" + this.$route.params.data);
+			}
+			var addData = {
+				allowBack: false, //允许返回
+				content: "", //文字，限制6000字
+				showMedia: false, //是否显示添加图片，视频功能
+				images: [], //图片，限制9张
+				video: '' //视频，限制一个
+			};
+			if(this.$route.params.id === "addTrends") {
+				//发布动态
+				addData.showMedia = true;
+			}
+
+			return addData;
 		},
 		methods: {
 			/**
@@ -344,18 +400,18 @@ function initRouter() {
 			 */
 			commit: function() {
 				console.log("trends_add-commit:");
-				var commitContent = $.trim(trends_add_data.content);
+				var commitContent = $.trim(this.content);
 				console.log("commitContent:" + commitContent);
 				if(commitContent === "") {
 					$.toast("请输入内容", "forbidden");
 					return
 				} else {
 					$.showLoading('正在上传数据');
-					trends_add_data.allback = false;
+					this.allowBack = false;
 					setTimeout(function() {
 						$.hideLoading();
 						$.toast("发布成功");
-						trends_add_data.allback = true;
+						this.allowBack = true;
 					}, 3000);
 				}
 			},
@@ -364,55 +420,130 @@ function initRouter() {
 			 * @param {Object} val
 			 */
 			contentChange: function(val) {
-				trends_add_data.content = val; //组件内外content双向绑定
+				this.content = val; //组件内外content双向绑定
 			}
 		},
 		beforeRouteEnter: function(to, from, next) {
-			console.log("add-beforeRouteEnter:");
-			console.log("to:" + to.path);
-			console.log("from:" + from.path);
-			next();
+			console.log("路由-发布动态动态-显示之前:from:" + from.path + " to:" + to.path);
+			if("/" == from.path) {
+				next({
+					path: '/home'
+				})
+			} else {
+				next(function(vm) {
+					vm.allowBack = true;
+				});
+			}
 		},
 		beforeRouteLeave: function(to, from, next) {
-			console.log("add-beforeRouteLeave:");
-			console.log("to:" + to.path);
-			console.log("from:" + from.path);
-			next(trends_add_data.allback);
+			console.log("路由-发布动态动态-离开之前:from:" + from.path + " to:" + to.path);
+			next(this.allowBack);
 		}
 	};
 
-	var trends_details={
+	//动态详情
+	var trends_details = {
 		template: "#temp_trends_details",
 		data: function() {
-			return trends_details_data;
+			console.log("trends_details:data:" + this.$route.params.data);
+			if(this.$route.params.data != undefined) {
+				return {
+					allowBack: false, //允许返回
+					data: [this.$route.params.data]
+				}
+			} else {
+				return {
+					allowBack: false,
+					data: []
+				}
+			}
+		},
+		methods: {
+			clickPerson: showPersonTrends,
+			clickFunction: function(valueIndex, type) {
+				console.log("clickFunction:" + valueIndex + " " + type);
+				var trendsValue = this.data[valueIndex];
+				switch(type) {
+					case 0:
+						trendsValue.IsLike = !trendsValue.IsLike;
+						break;
+					case 1:
+						router.push({
+							name: 'add',
+							params: {
+								id: 'addComment',
+								data: trendsValue
+							}
+						});
+						break;
+				}
+
+			},
+			clickComment: function(valueIndex, commentIndex, replysIndex) {
+				console.log("clickComment:" + valueIndex + " " + commentIndex + ' ' + replysIndex);
+				var trendsValue = this.data[valueIndex];
+				var comments;
+				if(replysIndex === undefined) { //评论
+					comments = trendsValue.Comments[commentIndex];
+				} else { //回复
+					comments = trendsValue.Comments[commentIndex].Replys[replysIndex];
+				}
+				console.log("CommentContent:" + comments.CommentContent);
+				router.push({
+					name: 'add',
+					params: {
+						id: 'addReplys',
+						data: comments
+					}
+				});
+			}
 		},
 		beforeRouteEnter: function(to, from, next) {
-			console.log("add-beforeRouteEnter:");
-			console.log("to:" + to.path);
-			console.log("from:" + from.path);
+			console.log("路由-动态详情-显示之前:from:" + from.path + " to:" + to.path);
+			if("/" == from.path) {
+				next({
+					path: '/home'
+				})
+			} else {
+				next(function(vm) {
+					vm.allowBack = true;
+				});
+			}
+		},
+		beforeRouteUpdate: function(to, from, next) {
+			console.log("路由-动态详情-复用:from:" + from.path + " to:" + to.path);
 			next();
 		},
 		beforeRouteLeave: function(to, from, next) {
-			console.log("add-beforeRouteLeave:");
-			console.log("to:" + to.path);
-			console.log("from:" + from.path);
-			next();
+			console.log("路由-动态详情-离开之前:from:" + from.path + " to:" + to.path);
+			next(this.allowBack);
 		}
+	}
 
 	//配置路由
 	router = new VueRouter({
 		routes: [{
 			path: '/home',
+			name: 'home',
 			component: class_circle_home
 		}, {
-			path: '/add',
+			path: '/trends_add',
+			name: 'add',
 			component: trends_add
+		}, {
+			path: '/trends_details/:id',
+			name: 'details',
+			component: trends_details
 		}]
 	});
 
 	var class_circle_app = new Vue({
 		router: router
 	}).$mount('#class_circle_app');
+
+	$.hideLoading();
+	//显示班级圈主页
+	router.push('home');
 }
 
 function initScroll() {
@@ -439,8 +570,8 @@ function initScroll() {
  * @param {Object} timeId
  * @param {Object} index
  */
-function toBeforePosition(timeId, index) {
-	console.log("toBeforePosition:" + index);
+function homeToBeforePosition(timeId, index) {
+	console.log("homeToBeforePosition:" + index);
 	var scrollTop_0 = $("#" + home_data.home_tab[index].id).scrollTop();
 	var scrollTop_1 = home_data.home_tab[index].scrollTop;
 	if(scrollTop_0 == 0 && scrollTop_0 != scrollTop_1) {
@@ -483,18 +614,18 @@ function getUserInfo(id) {
  * @param {Object} data
  */
 function disposeMemberData(data) {
-	console.log("disposeMemberData:", data);
+	console.log("处理获取的成员信息:", data);
 	if(data.RspCode == 0) {
 		for(var i = 0; i < data.RspData.length; i++) {
 			if(departUserInfo.value[data.RspData[i].userid] === undefined) {
 				departUserInfo.key.push(data.RspData[i].userid);
-				departUserInfo.value[data.RspData[i].userid] = $.extend(true, {}, data.RspData[i]);
+				departUserInfo.value[data.RspData[i].userid] = $.extend({}, data.RspData[i]);
 			}
 		}
 	}
 	if(temp_data == mineUserInfo.department.length - 1) {
 		//查询完我所处部门的所有成员
-		console.log("departUserInfo:" + departUserInfo);
+		console.log("查询完我所处部门的所有成员:", departUserInfo);
 		//显示班级圈主页
 		router.push('home');
 		$.hideLoading();
@@ -530,7 +661,7 @@ function getAllUserSpaces(pageIndex) {
 		pageSize: 10 //每页记录数
 	}
 	classCircleProtocol.getAllUserSpacesByUser(postData, function(data) {
-		console.log("getAllUserSpacesByUser:", data);
+		console.log("获取全部动态:", data);
 		if(data.RspCode == 0) {
 			//console.log("log-8:" + JSON.stringify(data.RspData.Data[8]));
 			for(var i = 0; i < data.RspData.Data.length; i++) {
@@ -548,4 +679,34 @@ function getAllUserSpaces(pageIndex) {
 			$.alert(data.RspTxt, "加载失败");
 		}
 	});
+}
+
+/**
+ * 进入动态的详情
+ * @param {Object} trendsValue 动态详情的数据
+ */
+function showTrendsDetails(trendsValue) {
+	router.push({
+		name: 'details',
+		params: {
+			id: new Date().getTime(),
+			data: $.extend({}, trendsValue)
+		}
+	});
+}
+
+/**
+ * 进入用户的空间
+ * @param {Object} userId 用户id
+ */
+function showPersonTrends(userId) {
+	console.log("showPersonTrends:" + userId);
+	var userInfo = departUserInfo.value[userId];
+	if(userInfo !== undefined) {
+		console.log("userInfo:" + JSON.stringify(userInfo));
+		//跳转到这个用户的个人空间
+	} else {
+		console.log("无此人资料");
+		//不做任何处理
+	}
 }

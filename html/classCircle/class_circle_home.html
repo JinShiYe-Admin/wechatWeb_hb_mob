@@ -33,7 +33,9 @@
 	<body>
 		<!--班级圈路由-->
 		<div id="class_circle_app">
-			<router-view></router-view>
+			<keep-alive>
+				<router-view></router-view>
+			</keep-alive>
 		</div>
 		<!--路由--班级圈主页-->
 		<template id="temp_class_circle_home">
@@ -43,19 +45,21 @@
 						<home-navbar-item v-for="(value,index) in home_tab" :key="index" :value="value" :index="index" :is_on="is_on" @click-item="clickItem"></home-navbar-item>
 					</div>
 					<div class="weui-tab__bd">
-						<home-bd-item v-for="(value,index) in home_tab" :key="index" :value="value" :index="index" :is_on="is_on"></home-bd-item>
+						<home-bd-item v-for="(value,index) in home_tab" :key="index" :value="value" :index="index" :is_on="is_on" @click-person="showPersonTrends" @click-content="showTrendsDetails" @click-function="clickFunction" @click-comment="clickComment"></home-bd-item>
 					</div>
 				</div>
-				<router-link to="/add" class="class-circle-report">+ 发表动态</router-link>
+				<div @click="clickAddTrends" class="class-circle-report">+ 发表动态</div>
 			</div>
 		</template>
-		<!--路由--发布动态-->
+		<!--路由--发布动态或者评论-->
 		<template id="temp_add_trends">
-			<add-trends :content="content" @add-media="addMedia" @commit="commit" @content-change="contentChange"></add-trends>
+			<add-trends :content="content" :show-media="showMedia" @add-media="addMedia" @commit="commit" @content-change="contentChange"></add-trends>
 		</template>
 		<!--路由--动态详情-->
 		<template id="temp_trends_details">
-			<trends-item></trends-item>
+			<div>
+				<trends-item v-for="(item_value,item_index) in data" :index="item_index" :key="item_index" :value="item_value" :detail="true" @click-person="clickPerson" @click-function="clickFunction" @click-comment="clickComment"></trends-item>
+			</div>
 		</template>
 		<!--班级圈主页--顶部导航-->
 		<template id="temp_trends_navbar_item">
@@ -63,7 +67,7 @@
 				<div>{{value.title}}</div>
 			</div>
 		</template>
-		<!--班级圈主页--底部内容-->
+		<!--班级圈主页--中间内容-->
 		<template id="temp_trends_tab_bd_item">
 			<div :id="value.id" class="weui-tab__bd-item weui-pull-to-refresh" :class="isOnClass">
 				<div class="weui-pull-to-refresh__layer">
@@ -76,10 +80,11 @@
 				<div class="weui-panel weui-panel_access">
 					<div class="weui-panel__bd">
 						<template v-if="value.id=='relate_to_me'">
-							<relate-item v-for="(item_value,item_index) in value.data" :key="index" :value="item_value"></relate-item>
+							<!--与我相关-->
+							<relate-item v-for="(item_value,item_index) in value.data" :key="item_index" :value="item_value"></relate-item>
 						</template>
 						<template v-else>
-							<trends-item v-for="(item_value,item_index) in value.data" :key="index" :value="item_value"></trends-item>
+							<trends-item v-for="(item_value,item_index) in value.data" :index="item_index" :key="item_index" :value="item_value" :detail="false" @click-person="clickPerson" @click-content="clickContent" @click-function="clickFunction" @click-comment="clickComment"></trends-item>
 						</template>
 					</div>
 				</div>
@@ -94,33 +99,25 @@
 			<div class="weui-media-box">
 				<div class="weui-media-box_appmsg">
 					<div class="weui-media-box__hd class-circle-headimage-hd">
-						<img class="weui-media-box__thumb class-circle-headimage" :src="PublisherImage" />
+						<img class="weui-media-box__thumb class-circle-headimage" @click="clickPerson" :src="PublisherImage" />
 					</div>
 					<div class="weui-media-box__bd">
 						<div class="class-circle-title">
-							<div class="weui-media-box__title">{{value.PublisherId|userName}}</div>
+							<div class="weui-media-box__title" @click="clickPerson">{{value.PublisherId|userName}}</div>
 							<!--<div class="class-circle-mark"></div>-->
 						</div>
 						<div class="weui-media-box__desc">{{value.PublishDate}}</div>
 					</div>
 				</div>
-				<div class="class-circle-content-limit">{{value.MsgContent}}</div>
-				<!--<div class="class-circle-show-all">展开全部</div>-->
+				<div class="class-circle-content-limit" @click="clickContent" :class="{'class-circle-content-limit-break':detail}">{{value.MsgContent}}</div>
 				<template v-if="value.EncType == 1">
-					<template v-if="value.EncImgAddr_array.length == 1">
-						<img class="class-circle-content-img" :src="value.EncImgAddr_array[0]" />
-					</template>
-					<div v-else-if="value.EncImgAddr_array.length > 1" v-for="(img_value,img_item) in value.EncImgAddr_array" class="class-circle-grids">
-						<div class="class-circle-grids-item">
-							<img :src="img_value" />
-						</div>
-					</div>
+					<image-item :images="value.EncAddr|imagesArray" :images-thumb="value.EncImgAddr|imagesArray"></image-item>
 				</template>
 				<div class="class-circle-function">
 					<div class="class-circle-views">浏览数 {{value.ReadCnt}}</div>
-					<div class="iconfont icon-trash"></div>
-					<div class="iconfont icon-newmessage"></div>
-					<div class="iconfont icon-dianzan" :class="{'trends-praise': value.IsLike}"></div>
+					<div class="iconfont icon-trash" @click="clickFunction(2)" v-if="showTrash"></div>
+					<div class="iconfont icon-newmessage" @click="clickFunction(1)"></div>
+					<div class="iconfont icon-dianzan" @click="clickFunction(0)" :class="{'trends-praise': value.IsLike}"></div>
 				</div>
 				<div class="class-circle-praise-comment" v-if="showPraiseComment">
 					<div class="class-circle-triangle"></div>
@@ -128,7 +125,12 @@
 						<div class="class-circle-praiser">{{praise_value.name}}</div>
 					</div>
 					<div class="class-circle-praise-comment-line" v-if="showLine"></div>
-					<comments-item :value="value.Comments"></comments-item>
+					<template v-if="detail">
+						<comments-item :value="value.Comments" :show="false" @click-comment="clickComment" @click-show-all="clickShowAll" @click-name="clickName"></comments-item>
+					</template>
+					<template v-else>
+						<comments-item :value="value.Comments|commentArray" :show="value.Comments|showAllButton" @click-comment="clickComment" @click-show-all="clickShowAll" @click-name="clickName"></comments-item>
+					</template>
 				</div>
 			</div>
 		</template>
@@ -214,31 +216,45 @@
 		<template id="temp_comments">
 			<div class="class-circle-comment-bg">
 				<div v-for="(comment_value,comment_index) in value">
-					<div class="class-circle-comment-item">
-						<div class="class-circle-comment-name">{{comment_value.UserId|userName}}</div>
+					<div class="weui-cell weui-cell_access class-circle-comment-item" @click="clickComment(comment_index)">
+						<div class="class-circle-comment-name" @click.stop="clickName(comment_value.UserId)">{{comment_value.UserId|userName}}</div>
 						<div class="class-circle-comment-content">：{{comment_value.CommentContent}}</div>
 					</div>
-					<div class="class-circle-comment-item" v-for="(replys_value,replys_index) in comment_value.Replys">
-						<div class="class-circle-comment-name">{{replys_value.ReplyId|userName}}</div>
+					<div class="weui-cell weui-cell_access class-circle-comment-item" v-for="(replys_value,replys_index) in comment_value.Replys" @click="clickComment(comment_index,replys_index)">
+						<div class="class-circle-comment-name" @click.stop="clickName(replys_value.ReplyId)">{{replys_value.ReplyId|userName}}</div>
 						<div class="class-circle-comment-content">回复</div>
-						<div class="class-circle-comment-name">{{replys_value.UserId|userName}}</div>
+						<div class="class-circle-comment-name" @click.stop="clickName(replys_value.UserId)">{{replys_value.UserId|userName}}</div>
 						<div class="class-circle-comment-content">：{{replys_value.CommentContent}}</div>
 					</div>
 				</div>
+				<div class="class-circle-show-all" v-if="show" @click="clickShowAll">查看全部</div>
 			</div>
 		</template>
 		<!--发布动态组件-->
 		<template id="temp_add_trends_com">
 			<div class="class-circle-add">
-				<textarea class="weui-textarea" v-model="com_content" placeholder="请输入内容" rows="6" maxlength="6000"></textarea>
-				<div class="class-circle-add-media">
+				<textarea class="weui-textarea" v-model="com_content" placeholder="不能为空" rows="6" maxlength="6000"></textarea>
+				<div class="class-circle-add-media" v-if="showMedia">
 					<div class="iconfont icon-tuku" @click="addMedia(0)"></div>
 					<div class="iconfont icon-xiangji2" @click="addMedia(1)"></div>
 				</div>
+				<div class="class-circle-add-line"></div>
 				<button class="weui-btn weui-btn_primary" @click="commit">提交</button>
 			</div>
 		</template>
-
+		<!--显示图片的组件-->
+		<template id="temp_show_image">
+			<div>
+				<template v-if="imagesThumb.length == 1">
+					<img class="class-circle-content-img" :src="imagesThumb[0]" @click="showImage(0)" />
+				</template>
+				<div v-else-if="imagesThumb.length > 1" class="class-circle-grids">
+					<div class="class-circle-grids-item" v-for="(img_value,img_index) in imagesThumb" @click="showImage(img_index)">
+						<img :src="img_value" />
+					</div>
+				</div>
+			</div>
+		</template>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-2.1.4.js?" + Math.random() + "'></s" + "cript>");
@@ -247,8 +263,9 @@
 			//			document.write("<s" + "cript type='text/javascript' src='../../js/weui.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/vue.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/vue-router.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/lib/vconsole/vconsole.min.js?" + Math.random() + "'></s" + "cript>");
+			//			document.write("<s" + "cript type='text/javascript' src='../../js/lib/vconsole/vconsole.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_vue.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_protocol.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_home.js?" + Math.random() + "'></s" + "cript>");
 		</script>

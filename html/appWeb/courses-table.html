@@ -47,14 +47,39 @@
 			.time-table-item-del {
 				color: red;
 			}
+			
+			input[type=radio] {
+				position: absolute;
+				z-index: -9999;
+				opacity: 0;
+			}
+			
+			.weui-icon-checked:before {
+				content: '\EA01';
+				color: #C9C9C9;
+				font-size: 23px;
+				display: block;
+			}
+			
+			input[type=radio]:checked+.weui-icon-checked:before {
+				display: inline-block;
+				content: '\EA06';
+				color: #09BB07;
+				font-size: 23px;
+				display: block;
+			}
+			
+			.weui-cells {
+				margin-top: 0;
+			}
 		</style>
 	</head>
 
 	<body>
-		<div id="course-table-view">
-			<router-view></router-view>
-		</div>
-		<template id="time_table" class="template-table">
+		<template id="table">
+			<time-table></time-table>
+		</template>
+		<template id="template-table">
 			<div>
 				<div class="weui-cells">
 					<div class="weui-cell">
@@ -96,10 +121,11 @@
 					</div>
 					<div class="weui-flex" v-for="(item,index) in items_array">
 						<div :id="index+'-'+list_value" class="weui-flex__item" :class="{'first':list_item==0,'second':list_item==1,'other':list_item!=0&&list_item!=1}" v-for="(list_value,list_item) in list_array">
-							<div v-if="list_value == 'daytype'">{{item.daytype}}</div>
-							<div v-else-if="list_value == 'timespan'">{{item.timespan}}</div>
+							<div @click="clickItem(index,list_value)" v-if="list_value == 'daytype'">{{item.daytype}}</div>
+							<div @click="clickItem(index,list_value)" v-else-if="list_value == 'timespan'">{{item.timespan}}</div>
 							<template v-else>
-								<div>{{item[list_value + 'subname']+item[list_value + 'uname']}}</div>
+								<div @click="clickItem(index,list_value)">{{item[list_value + 'subname']}}</div>
+								<div @click="clickItem(index,list_value)">{{item[list_value + 'uname']}}</div>
 							</template>
 						</div>
 					</div>
@@ -107,42 +133,61 @@
 				<button v-if="show_submit" @click="clickSubmitButton" class="weui-btn weui-btn_mini weui-btn_primary">提交</button>
 			</div>
 		</template>
-		<template id="single-choose-person" class="single-choose-person">
-			<div class="weui-cells">
-				<template v-for="(item,index) of listData">
-					<a v-if="item.value" class="weui-cell weui-cell_access">
-						<div class="weui-cell__bd">
-							{{item.title}}
-						</div>
-						<div class="weui-cell__ft"></div>
-					</a>
-					<label v-else class="weui-cell weui-check__label" v-bind:for="item.userid">
-						<div class="weui-cell__bd">
-							<p>{{item.name}}</p>
-						</div>
-						<div class="weui-cell__ft">
-							<input type="radio" class="weui-check" v-bind:id="item.userid" />
-						</div>
-					</label>
-				</template>
-			</div>
-		</template>
+		<div id="course-table-view">
+			<router-view></router-view>
+		</div>
+		<script src="../../js/utils/consts.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/utils/request.js"></script>
 		<script src="../../js/vue.js"></script>
 		<script src="../../js/vue-router.js"></script>
 		<script src="../../js/jquery.min.js"></script>
-		<script src="../../js/appWeb/subject_timetable.js"></script>
 		<script src="../../js/appWeb/choose-singlePerson.js"></script>
 		<script type="text/javascript">
-			const chooseSinglePer = {
-				template: '<choose-single-persen v-bind:depart_id="$root.params.id" v-on:chosedPerson=""></choose-single-person>',
-				methods: {
-					chosedPerson: function() {
+			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/mui.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-weui.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/weui.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/appweb/subject_timetable.js?" + Math.random() + "'></s" + "cript>");
+		</script>
+		<script type="text/javascript">
+			var detail = utils.getDataFromUrl(window.location.href);
+			console.log('detail=' + JSON.stringify(detail))
+			if(detail.flag == 0) {
+				table_data.flag = 0
+			} else {
+				table_data.flag = 1
+				table_data.edulename = detail.edulename;
+				table_data.eduleid = detail.eduleid;
+				table_data.departname = detail.departname;
+				table_data.departid = detail.departid;
+				table_data.timespanb = detail.timespanb;
+				table_data.timespane = detail.timespane;
 
+			}
+
+			var courseTab = {
+				template: "#table",
+			}
+			const chooseSinglePer = {
+				template: '<single-choose-person v-bind:chooseType="$root.table_data.type" v-bind:depart_id="parseInt(this.$route.params.id)" v-on:chosedPerson="chosedPerson"></single-choose-person>',
+				methods: {
+					chosedPerson: function(item, isAdd) {
+						console.log("#####courses获取的传过来的值：" + JSON.stringify(item) + ",isAdd:" + isAdd);
+						this.$root.chosedPerson = item;
+						
+						if(table_data.type == 0) {
+							table_data.departname = item.title
+							table_data.departid = item.value
+						} else {
+							table_data.tempFlag =1;
+							var index = table_data.rowIndex;
+							var callcol = table_data.colIndex
+							table_data.items_array[index][callcol + "uname"] = item.name;
+							table_data.items_array[index][callcol + "uid"] = item.userid;
+						}
 					}
 				}
-			}
-			const courseTab = {
-				tempalte: '<time-table v-on:click-submit-button="submitTable" v-on:click-item="clickItem" v-bind:items_array="items_array" v-bind:show_submit="show_submit"></time-table>'
 			}
 			const router = new VueRouter({
 				mode: 'history',
@@ -160,10 +205,15 @@
 				el: '#course-table-view',
 				router: router,
 				data: {
+					chosedPerson: {
 
+					},
+					table_data: table_data
 				},
 				methods: {
-
+					isChecked: function(event) {
+						console.log("isChecked" + event.target.checked);
+					}
 				}
 			})
 			router.replace({

@@ -321,7 +321,10 @@
 					"js/importJS.js"
 				],
 				"refer": [
-					"html/appWeb/subject_timetable.html"
+					"html/appWeb/subject_timetable.html",
+					"html/appWeb/schedule.html",
+					"html/appWeb/home-publish.html",
+					"html/appWeb/courses-table.html"
 				],
 				"priority": 0
 			},
@@ -339,6 +342,65 @@
 					"js/demoCssJs/weui.min.css",
 					"js/utils/storageutil.js",
 					"js/importJS.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/appWeb/schedule.html": {
+				"resources": [
+					"js/utils/mui.pullToRefresh.material.js",
+					"js/utils/mui.pullToRefresh.js",
+					"css/utils/pullToRefresh.css",
+					"js/jquery.min.js",
+					"js/utils/utils.js",
+					"js/PublicProtocol.js",
+					"js/vue.min.js",
+					"html/appWeb/courses-table.html",
+					"js/utils/storageutil.js",
+					"js/importJS.js",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/appWeb/courses-table.html": {
+				"resources": [
+					"js/utils/utils.js",
+					"js/utils/events.js",
+					"js/PublicProtocol.js",
+					"js/utils/request.js",
+					"js/appWeb/choose-singlePerson.js",
+					"js/utils/storageutil.js",
+					"js/vue.js",
+					"js/mui.min.js",
+					"js/demoCssJs/jquery-weui.js",
+					"js/vue-router.js",
+					"js/weui.min.js",
+					"js/utils/consts.js",
+					"css/weui.css",
+					"js/importJS.js",
+					"js/jquery.min.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/appWeb/home-publish.html": {
+				"resources": [
+					"js/appWeb/select-choose.js",
+					"js/appWeb/choose-file.js",
+					"js/utils/events.js",
+					"js/appWeb/com-persen.js",
+					"js/utils/request.js",
+					"js/lib/vconsole/vconsole.min.js",
+					"js/appWeb/choose-person.js",
+					"js/vue.js",
+					"js/utils/wx-utils.js",
+					"js/utils/compress.js",
+					"js/vue-router.js",
+					"js/jweixin-1.2.0.js",
+					"js/appWeb/com-publish.js",
+					"js/utils/consts.js",
+					"css/weui.css"
 				],
 				"refer": [],
 				"priority": 0
@@ -379,7 +441,6 @@
 				"js/fastclick.js",
 				"image/config/func_disc.jpg",
 				"html/unitWeb/newList.html",
-				"js/jweixin-1.2.0.js",
 				"html/unitWeb/testA.html",
 				"image/config/loading.jpg",
 				"html/unitWeb/column.html",
@@ -418,8 +479,7 @@
 				"css/jquery-weui.min.css",
 				"html/unitWeb/testweuiscroll.html",
 				"html/unitWeb/Skin.html",
-				"html/unitWeb/testAAA.html",
-				"css/weui.css"
+				"html/unitWeb/testAAA.html"
 			]
 		}
 	}

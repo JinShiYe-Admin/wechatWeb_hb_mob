@@ -53,7 +53,7 @@ var jQAjaxPost = function(url, data, callback) {
 			callback({
 				RspCode: 404,
 				RspData: null,
-				RspTxt: type
+				RspTxt: "网络连接失败,请重新尝试一下"
 			});
 		}
 	});

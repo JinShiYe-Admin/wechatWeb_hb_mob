@@ -624,7 +624,8 @@ function initRouter() {
 			};
 		},
 		beforeRouteUpdate: function(to, from, next) {
-			console.log("路由-用户空间-复用:from:" + from.path);
+			console.log("路由-用户空间-复用:from.path:" + from.path);
+			console.log("路由-用户空间-复用:from.name:" + from.name);
 			console.log("路由-用户空间-复用:to.path:" + to.path);
 			console.log("路由-用户空间-复用:to.id:" + to.params.id);
 			this.initData(to.params.id);

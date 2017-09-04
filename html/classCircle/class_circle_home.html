@@ -42,10 +42,10 @@
 			<div>
 				<div class="weui-tab">
 					<div class="weui-navbar">
-						<home-navbar-item v-for="(value,index) in home_tab" :key="index" :value="value" :index="index" :is_on="is_on" @click-item="clickItem"></home-navbar-item>
+						<home-navbar-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-item="clickItem"></home-navbar-item>
 					</div>
 					<div class="weui-tab__bd">
-						<home-bd-item v-for="(value,index) in home_tab" :key="index" :value="value" :index="index" :is_on="is_on" @click-person="showPersonTrends" @click-content="showTrendsDetails" @click-function="clickFunction" @click-comment="clickComment"></home-bd-item>
+						<home-bd-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-person="showPersonTrends" @click-content="showTrendsDetails" @click-function="clickFunction" @click-comment="clickComment"></home-bd-item>
 					</div>
 				</div>
 				<div @click="clickAddTrends" class="class-circle-report">+ 发表动态</div>
@@ -63,12 +63,23 @@
 		</template>
 		<!--路由-用户个人空间-->
 		<template id="router_user_space">
-			<div>
+			<div class="class-circle-user-space">
+				<div class="weui-pull-to-refresh__layer">
+					<div class='weui-pull-to-refresh__arrow'></div>
+					<div class='weui-pull-to-refresh__preloader'></div>
+					<div class="down">下拉刷新</div>
+					<div class="up">释放刷新</div>
+					<div class="refresh">正在刷新</div>
+				</div>
 				<div class="class-circle-user-space-bg">
 					<img :src="userId|userImage" />
 					<div>{{userId|userName}}</div>
 				</div>
 				<trends-item v-for="(item_value,item_index) in data" :index="item_index" :key="item_index" :value="item_value" :detail="false" @click-person="showPersonTrends" @click-content="showTrendsDetails" @click-function="clickFunction" @click-comment="clickComment"></trends-item>
+				<div class="weui-loadmore">
+					<i class="weui-loading"></i>
+					<span class="weui-loadmore__tips">正在加载</span>
+				</div>
 			</div>
 		</template>
 		<!--班级圈主页--顶部导航-->

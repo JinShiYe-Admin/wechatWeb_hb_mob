@@ -450,3 +450,10 @@ body {
 .class-circle-user-space-bg div {
 	margin-top: 5px;
 }
+
+.class-circle-user-space.weui-pull-to-refresh {
+	margin-top: -30px;
+}
+.class-circle-user-space .weui-loadmore{
+	padding-bottom:0 ;
+}

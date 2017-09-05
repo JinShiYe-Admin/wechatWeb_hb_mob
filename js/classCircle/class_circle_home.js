@@ -600,21 +600,29 @@ function initRouter() {
 					}
 				});
 			},
-			initData: function(id) {
+			/**
+			 * 初始化数据
+			 * @param {Object} id 个人空间数据的id
+			 * @param {Object} update 是否是复用
+			 */
+			initData: function(id, update) {
 				console.log("initData:id:" + id);
 				var temp_userId = "";
 				var temp_data = [];
+				var temp_scrollTop = 0;
 				var temp = space_data[id];
 				console.log("initData:data:" + temp);
 				if(temp != undefined) {
 					temp_userId = temp.userId;
+					temp_scrollTop = temp.scrollTop;
 				}
-				if(temp_userId == "chenuodong") {
-					temp_data.push($.extend({}, home_data.data[0].data[0]));
-					temp_data.push($.extend({}, home_data.data[1].data[0]));
-				}
+				temp_data.push($.extend({}, home_data.data[0].data[0]));
+				temp_data.push($.extend({}, home_data.data[1].data[0]));
 				this.userId = temp_userId;
 				this.data = temp_data;
+				if(update) {
+					$(window).scrollTop(temp_scrollTop);
+				}
 			}
 		},
 		data: function() {
@@ -625,10 +633,16 @@ function initRouter() {
 		},
 		beforeRouteUpdate: function(to, from, next) {
 			console.log("路由-用户空间-复用:from.path:" + from.path);
-			console.log("路由-用户空间-复用:from.name:" + from.name);
+			console.log("路由-用户空间-复用:from.id:" + from.params.id);
 			console.log("路由-用户空间-复用:to.path:" + to.path);
 			console.log("路由-用户空间-复用:to.id:" + to.params.id);
-			this.initData(to.params.id);
+			//记录原页面的滚动距离
+			var from_data = space_data[from.params.id];
+			if(from_data != undefined) {
+				from_data.scrollTop = $(window).scrollTop();
+				console.log("from_data:" + JSON.stringify(from_data));
+			}
+			this.initData(to.params.id, true);
 			next();
 		},
 		beforeRouteEnter: function(to, from, next) {
@@ -657,7 +671,8 @@ function initRouter() {
 		},
 		beforeRouteLeave: function(to, from, next) {
 			console.log("路由-用户空间-离开之前:from:" + from.path + " to:" + to.path);
-			if("/home" == to.path) {//回到主页清空空间数据
+			if("/home" == to.path) {
+				//回到主页清空空间数据
 				space_data = null;
 				space_data = {};
 			}
@@ -857,7 +872,8 @@ function showPersonTrends(userId, name) {
 		console.log("userInfo:" + JSON.stringify(userInfo));
 		var model = {
 			id: new Date().getTime().toString(),
-			userId: userId
+			userId: userId,
+			scrollTop: 0
 		}
 		space_data[model.id] = model;
 		router.push({

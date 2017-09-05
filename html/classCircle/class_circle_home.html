@@ -100,7 +100,7 @@
 				</div>
 				<div class="weui-panel weui-panel_access">
 					<div class="weui-panel__bd">
-						<template v-if="value.id=='relate_to_me'">
+						<template v-if="value.id=='relate_to_me_2'">
 							<!--与我相关-->
 							<relate-item v-for="(item_value,item_index) in value.data" :key="item_index" :value="item_value"></relate-item>
 						</template>
@@ -110,8 +110,8 @@
 					</div>
 				</div>
 				<div :id="'loadmore_' + value.id" class="weui-loadmore" v-show="value.show_loadmore">
-					<i class="weui-loading"></i>
-					<span class="weui-loadmore__tips">正在加载</span>
+					<i class="weui-loading" v-show="value.show_loadmore_loading"></i>
+					<span class="weui-loadmore__tips">{{value.show_loadmore_content}}</span>
 				</div>
 			</div>
 		</template>
@@ -284,7 +284,7 @@
 			//			document.write("<s" + "cript type='text/javascript' src='../../js/weui.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/vue.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/vue-router.js?" + Math.random() + "'></s" + "cript>");
-			//			document.write("<s" + "cript type='text/javascript' src='../../js/lib/vconsole/vconsole.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/vconsole/vconsole.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_vue.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_protocol.js?" + Math.random() + "'></s" + "cript>");

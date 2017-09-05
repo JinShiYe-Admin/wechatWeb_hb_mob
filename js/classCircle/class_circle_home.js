@@ -72,7 +72,7 @@ window.onload = function() {
 	$.showLoading('正在加载');
 	initRouter();
 	//获取我的信息
-	getUserInfo(0);
+	getUserInfo("");
 	//temp_data = 0;
 	//getDepartmentMember(mineUserInfo.department[temp_data]);
 }
@@ -586,7 +586,7 @@ function getUserInfo(id) {
 	var tempData = {
 		cmd: 'userinfo',
 		type: 'findpage',
-		colid: id
+		colv: id
 	}
 	unitWebsitePro(tempData, function(data) {
 		console.log('getUserInfo:' + JSON.stringify(data));

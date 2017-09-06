@@ -18,7 +18,7 @@ body {
 }
 
 .weui-navbar__item div {
-	padding: 5px;
+	padding: 6px;
 }
 
 .weui-navbar__item.weui-bar__item--on {
@@ -179,7 +179,7 @@ body {
 	background-color: #F2F2F2;
 	position: relative;
 	margin-top: 10px;
-	padding: 10px;
+	padding: 5px 10px;
 }
 
 .class-circle-triangle {

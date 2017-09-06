@@ -35,8 +35,8 @@ var unitWebsitePro = function(data0, callback) {
  * @param {Object} callback 回调
  */
 var jQAjaxPost = function(url, data, callback) {
-	console.log('jQAP-Url:' + url);
-	console.log('jQAP-Data:' + data);
+	console.log('jQAP-Url:', url);
+	console.log('jQAP-Data:', data);
 	jQuery.ajax({
 		url: url,
 		type: "POST",
@@ -45,11 +45,11 @@ var jQAjaxPost = function(url, data, callback) {
 		dataType: "json",
 		async: true,
 		success: function(success_data) { //请求成功的回调
-			console.log('jQAP-Success:' + JSON.stringify(success_data));
+			console.log('jQAP-Success:', success_data);
 			callback(success_data);
 		},
 		error: function(xhr, type, errorThrown) {
-			console.log('jQAP-Error:' + JSON.stringify(xhr) + " " + type);
+			console.log('jQAP-Error:', xhr, type);
 			callback({
 				RspCode: 404,
 				RspData: null,

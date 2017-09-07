@@ -4,8 +4,8 @@ Vue.filter('userName', function(userId) {
 	if(userInfo !== undefined) {
 		return userInfo.name; //返回人员信息中的名字
 	} else {
-		return userId; //返回传入的值
-		//return "未知";
+		//return userId; //返回传入的值
+		return "未知";
 	}
 });
 //显示用户的头像的过滤器

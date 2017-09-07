@@ -50,6 +50,7 @@ var home_data = {
 	}]
 };
 var space_data = {}; //空间的所有数据
+
 window.onload = function() {
 //	mui.init({
 //		beforeback: function() {
@@ -98,7 +99,7 @@ function initRouter() {
 					this.data[index].init_getData = false;
 					if(index == 1) {
 						console.log("获取我的动态的数据");
-						getAllTrends(1, 1)
+						getHomeTrends(1, 1)
 					} else if(index == 2) {
 						console.log("获取与我相关的数据");
 					}
@@ -214,6 +215,7 @@ function initRouter() {
 			next();
 		}
 	};
+
 	//发布动态或者进行评论
 	var trends_add = {
 		template: "#router_add_trends",
@@ -360,14 +362,35 @@ function initRouter() {
 		template: "#router_user_space",
 		methods: {
 			/**
+			 * 头像加载成功
+			 * @param {Object} e
+			 */
+			headLoad: function(e) {
+				var img = e.target;
+				var imgWidth = img.width;
+				var imgHeight = img.height;
+				if(imgWidth > imgHeight) {
+					img.style.height = imgWidth + "px";
+					img.style.width = 'initial';
+				}
+			},
+			/**
+			 * 头像加载失败
+			 * @param {Object} e
+			 */
+			headError: function(e, level) {
+				e.target.src = utils.updateHeadImage("", level);
+			},
+			/**
 			 * 点击发布动态者的头像或者名称或者评论者(回复者)的名称
 			 * @param {String} userId 用户id
 			 */
-			showPersonTrends: function(userId) {
+			clickPerson: function(userId) {
+				console.log();
 				if(userId == this.userId) {
 					return false;
 				}
-				showPersonTrends(userId, this.$route.name);
+				showPersonTrends(userId);
 			},
 			/**
 			 * 显示动态的详细内容或者查看全部按钮
@@ -384,22 +407,23 @@ function initRouter() {
 			 */
 			clickFunction: function(valueIndex, type) {
 				console.log("clickFunction:" + valueIndex + " " + type);
-				var trendsValue = this.data[valueIndex];
-				switch(type) {
-					case 0:
-						changePraise(trendsValue);
-						break;
-					case 1:
-						router.push({
-							name: 'add',
-							params: {
-								id: 'addComment',
-								trendsValue: trendsValue,
-								component: this
-							}
-						});
-						break;
-				}
+				var trendsValue = this.space_value.data[valueIndex];
+				console.log("trendsValue:", trendsValue);
+				//				switch(type) {
+				//					case 0:
+				//						changePraise(trendsValue);
+				//						break;
+				//					case 1:
+				//						router.push({
+				//							name: 'add',
+				//							params: {
+				//								id: 'addComment',
+				//								trendsValue: this.space_value.data[valueIndex],
+				//								component: this
+				//							}
+				//						});
+				//						break;
+				//				}
 
 			},
 			/**
@@ -426,29 +450,31 @@ function initRouter() {
 			 * @param {Object} update 是否是复用
 			 */
 			initData: function(id, update) {
-				console.log("initData:id:" + id);
-				var temp_userId = "";
-				var temp_dataArray = [];
+				console.log("initData:id:", id);
+				console.log("initData:space_data", space_data[id]);
 				var temp_scrollTop = 0;
-				var temp = space_data[id];
-				console.log("initData:data:" + temp);
-				if(temp != undefined) {
-					temp_userId = temp.userId;
-					temp_scrollTop = temp.scrollTop;
-				}
-				temp_dataArray.push($.extend({}, home_data.data[0].data[0]));
-				temp_dataArray.push($.extend({}, home_data.data[1].data[0]));
-				this.userId = temp_userId;
-				this.data = temp_dataArray;
-				if(update) {
-					$(window).scrollTop(temp_scrollTop);
+				if(space_data[id] != undefined) {
+					temp_scrollTop = space_data[id].scrollTop;
+					this.space_value = space_data[id];
+					if(space_data[id].data == undefined) {
+						//未获取数据则获取空间数据
+						getUserSpace(space_data[id].userId, 1, id);
+					}
+					initSpacePullToRefresh(id);
 				}
 			}
 		},
 		data: function() {
 			return {
-				userId: "",
-				data: []
+				space_value: {
+					userId: "",
+					allow_loaddata: false, //允许下刷新或者加载中
+					init_loadmore: true, //是否初始化加载更多
+					show_loadmore: true, //是否显示加载中
+					show_loadmore_loading: true, //是否显示加载中的转圈图标
+					show_loadmore_content: "加载中", //加载中元素的文字
+					data: []
+				}
 			};
 		},
 		beforeRouteUpdate: function(to, from, next) {
@@ -459,31 +485,19 @@ function initRouter() {
 			//记录原页面的滚动距离
 			var from_data = space_data[from.params.id];
 			if(from_data != undefined) {
-				from_data.scrollTop = $(window).scrollTop();
-				console.log("from_data:" + JSON.stringify(from_data));
+				from_data.scrollTop = $(".class-circle-user-space #user_space_" + from.params.id + ".weui-tab__bd-item").scrollTop();
+				console.log("from_data:", from_data);
 			}
 			this.initData(to.params.id, true);
 			next();
 		},
 		beforeRouteEnter: function(to, from, next) {
 			console.log("路由-用户空间-显示之前:from:" + from.path + " to:" + to.path);
-			var topid = to.params.id;
 			if("/" == from.path) {
 				showClassCircleApp(next);
 			} else {
 				next(function(vm) {
-					vm.initData(topid);
-					topid = null;
-					//初始化滚动
-					$(".class-circle-user-space").pullToRefresh();
-					$(".class-circle-user-space").on("pull-to-refresh", function() {
-						console.log("下拉刷新");
-						var self = this
-						setTimeout(function() {
-							console.log("下拉刷新Done");
-							$(self).pullToRefreshDone();
-						}, 2000)
-					});
+					vm.initData(to.params.id);
 				});
 			}
 		},
@@ -523,14 +537,14 @@ function initRouter() {
 		router: router
 	}).$mount('#router_class_circle_app');
 }
-var a = true;
+
 /**
  * 初始化主页下拉刷新
  */
 function initHomePullToRefresh() {
 	//初始化下拉刷新
-	$(".weui-tab__bd-item").pullToRefresh();
-	$(".weui-tab__bd-item").on("pull-to-refresh", function() {
+	$("#class_circle_home .weui-tab__bd-item").pullToRefresh();
+	$("#class_circle_home .weui-tab__bd-item").on("pull-to-refresh", function() {
 		var listIds = this.id.split("_");
 		var listId = listIds[listIds.length - 1] * 1;
 		if(!home_data.data[listId].allow_loaddata) {
@@ -538,18 +552,18 @@ function initHomePullToRefresh() {
 			$(this).pullToRefreshDone();
 			return false;
 		}
-		console.log("下拉刷新:" + listId);
+		console.log("主页下拉刷新:" + listId);
 		home_data.data[listId].allow_loaddata = false;
 		home_data.data[listId].init_loadmore = true;
-		initLoadmore(this.id);
+		initHomeLoadmore(this.id);
 		if(listId === 0 || listId === 1) {
-			getAllTrends(listId, 1, this);
+			getHomeTrends(listId, 1, this);
 		}
 	});
 
 	for(var i = 0; i < home_data.data.length; i++) {
 		if(home_data.data[i].init_loadmore) {
-			initLoadmore(home_data.data[i].id);
+			initHomeLoadmore(home_data.data[i].id);
 		} else {
 			$("#" + home_data.data[i].id + ".weui-tab__bd-item").destroyInfinite();
 		}
@@ -559,7 +573,7 @@ function initHomePullToRefresh() {
 /**
  * 初始化列表加载更多
  */
-function initLoadmore(id) {
+function initHomeLoadmore(id) {
 	$("#" + id + ".weui-tab__bd-item").infinite();
 	$("#" + id + ".weui-tab__bd-item").infinite().on("infinite", function() {
 		var listIds = this.id.split("_");
@@ -571,9 +585,44 @@ function initLoadmore(id) {
 		//禁止下拉刷新和上拉加载中
 		home_data.data[listId].allow_loaddata = false;
 		if(listId === 0 || listId === 1) {
-			getAllTrends(listId, home_data.data[listId].pageIndex + 1);
+			getHomeTrends(listId, home_data.data[listId].pageIndex + 1);
 		}
 	});
+}
+
+/**
+ * 初始化空间下拉刷新
+ */
+function initSpacePullToRefresh(spaceId) {
+	console.log("initSpacePullToRefresh:" + spaceId);
+	//初始化下拉刷新
+	$(".class-circle-user-space #user_space_" + spaceId + ".weui-tab__bd-item").pullToRefresh();
+	$(".class-circle-user-space #user_space_" + spaceId + ".weui-tab__bd-item").on("pull-to-refresh", function() {
+		var ids = this.id.split("_");
+		var id = ids[ids.length - 1];
+		if(!space_data[id].allow_loaddata) {
+			$(this).pullToRefreshDone();
+			return false;
+		}
+		console.log("个人空间下拉刷新:" + id);
+		space_data[id].allow_loaddata = false;
+		space_data[id].init_loadmore = true;
+		getUserSpace(space_data[id].userId, 1, id, this);
+
+	});
+	if(space_data[spaceId].init_loadmore) {
+		$(".class-circle-user-space #user_space_" + spaceId + ".weui-tab__bd-item").infinite();
+		$(".class-circle-user-space #user_space_" + spaceId + ".weui-tab__bd-item").infinite().on("infinite", function() {
+			var ids = this.id.split("_");
+			var id = ids[ids.length - 1];
+			if(!space_data[id].allow_loaddata) {
+				return false;
+			}
+			console.log("个人空间加载更多");
+			space_data[id].allow_loaddata = false;
+			getUserSpace(space_data[id].userId, space_data[id].pageIndex + 1, id, this);
+		});
+	}
 }
 
 /**
@@ -647,7 +696,7 @@ function disposeMemberData(data) {
 			//禁止全部动态列表进行下拉刷新和上拉加载中
 			home_data.data[0].allow_loaddata = false;
 			//获取全部动态
-			getAllTrends(0, 1);
+			getHomeTrends(0, 1);
 		} else {
 			$.alert(data.RspTxt, "加载失败");
 		}
@@ -691,15 +740,20 @@ function showTrendsDetails(trendsValue) {
  * 进入用户的空间
  * @param {Object} userId 用户id
  */
-function showPersonTrends(userId, name) {
+function showPersonTrends(userId) {
 	console.log("showPersonTrends:" + userId);
 	var userInfo = departUserInfo.value[userId];
 	if(userInfo !== undefined) {
 		console.log("userInfo:" + JSON.stringify(userInfo));
 		var model = {
 			id: new Date().getTime().toString(),
-			userId: userId,
-			scrollTop: 0
+			userId: userId, //用户id
+			scrollTop: 0, //滚动距离
+			allow_loaddata: false, //允许下刷新或者加载中
+			init_loadmore: true, //是否初始化加载更多
+			show_loadmore: true, //是否显示加载中
+			show_loadmore_loading: true, //是否显示加载中的转圈图标
+			show_loadmore_content: "加载中", //加载中元素的文字
 		}
 		space_data[model.id] = model;
 		router.push({
@@ -727,7 +781,7 @@ function changePraise(trendsValue) {
 		//设置为点赞
 		classCircleProtocol.setUserSpaceLikeByUser(submitData, function(data) {
 			if(data.RspCode == 0 && data.RspData.Result == 1) {
-				trendsValue.IsLike = !trendsValue.IsLike;
+				trendsValue.IsLike = 1;
 				trendsValue.LikeUsers.unshift({
 					userId: mineUserInfo.userid
 				})
@@ -739,7 +793,7 @@ function changePraise(trendsValue) {
 		//取消点赞
 		classCircleProtocol.delUserSpaceLikeByUser(submitData, function(data) {
 			if(data.RspCode == 0 && data.RspData.Result == 1) {
-				trendsValue.IsLike = !trendsValue.IsLike;
+				trendsValue.IsLike = 0;
 				for(var i = 0; i < trendsValue.LikeUsers.length; i++) {
 					if(trendsValue.LikeUsers[i].userId == mineUserInfo.userid) {
 						trendsValue.LikeUsers.splice(i, 1);
@@ -767,8 +821,13 @@ function showClassCircleApp(next) {
 	}
 }
 
-//获取全部动态
-function getAllTrends(type, pageIndex, element) {
+/**
+ * 主页获取动态
+ * @param {Number} type 主页列表序号
+ * @param {Number} pageIndex 页码
+ * @param {Object} element
+ */
+function getHomeTrends(type, pageIndex, element) {
 	var submitData = {
 		userId: mineUserInfo.userid, //用户ID
 		pageIndex: pageIndex, //当前页数
@@ -780,7 +839,7 @@ function getAllTrends(type, pageIndex, element) {
 		submitData.publisherIds = departUserInfo.key; //发布者ID
 	}
 	classCircleProtocol.getAllUserSpacesByUser(submitData, function(data) {
-		console.log("getAllUserSpacesByUser:", data);
+		console.log("getHomeTrends:", data);
 		//允许下拉刷新或者上拉加载更多
 		home_data.data[type].allow_loaddata = true;
 		if(data.RspCode == 0) {
@@ -808,6 +867,60 @@ function getAllTrends(type, pageIndex, element) {
 			}
 		} else {
 			$.alert(data.RspTxt, "加载失败");
+		}
+	});
+}
+
+/**
+ * 获取用户空间的动态
+ * @param {String} publisherIds 发布者ID
+ * @param {Number} pageIndex 页码
+ * @param {Object} id 路由对象的id
+ * @param {Object} element
+ */
+function getUserSpace(publisherIds, pageIndex, id, element) {
+	var submitData = {
+		userId: mineUserInfo.userid, //用户ID
+		publisherIds: [publisherIds], //发布者ID
+		pageIndex: pageIndex, //当前页数
+		pageSize: 10 //每页记录数
+	}
+	classCircleProtocol.getAllUserSpacesByUser(submitData, function(data) {
+		console.log("getUserSpace:", data);
+		var vm_data = space_data[id];
+		//允许下拉刷新或者上拉加载更多
+		vm_data.allow_loaddata = true;
+		//收起下拉刷新
+		if(data.RspCode == 0) {
+			if(submitData.pageIndex == 1) {
+				//下拉刷新或者获取第一页的内容
+				vm_data.data = data.RspData.Data;
+				//收起下拉刷新
+				if(element != undefined) {
+					$(element).pullToRefreshDone();
+				}
+				vm_data.data = data.RspData.Data;
+			} else {
+				Array.prototype.push.apply(vm_data.data, data.RspData.Data);
+			}
+			vm_data.pageIndex = pageIndex; //当前页数
+			vm_data.TotalPage = data.RspData.TotalPage; //总页数
+			if(vm_data.pageIndex >= vm_data.TotalPage) {
+				console.log("没有下一页")
+				//没有下一页
+				//调整插件信息
+				vm_data.init_loadmore = false;
+				vm_data.show_loadmore_loading = false;
+				vm_data.show_loadmore_content = "没有更多了";
+				//销毁插件
+				$(".class-circle-user-space #user_space_" + id + ".weui-tab__bd-item").destroyInfinite();
+			}
+		} else {
+			$.alert(data.RspTxt, "加载失败");
+		}
+		console.log("space_data[id]", space_data[id]);
+		if(router.currentRoute.name == "space" && id == router.currentRoute.params.id) {
+			router.currentRoute.params.space_data = space_data[id];
 		}
 	});
 }

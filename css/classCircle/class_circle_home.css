@@ -49,7 +49,7 @@ body {
 }
 
 .weui-media-box_appmsg .weui-media-box__hd {
-	margin-right: 15px;
+	margin-right: 10px;
 	height: 40px;
 	width: 40px;
 }
@@ -59,13 +59,13 @@ body {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	flex-direction: column;
 	overflow: hidden;
 }
 
 .class-circle-headimage {
 	/*发布者头像*/
-	height: initial;
-	max-height: none !important;
+	width: 100%;
 }
 
 .weui-media-box__bd {
@@ -442,18 +442,50 @@ body {
 	background-repeat: no-repeat;
 }
 
-.class-circle-user-space-bg img {
+.class-circle-user-space-headimage {
 	width: 80px;
-	min-height: 80px;
+	height: 80px;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+.class-circle-user-space-headimage img {
+	width: 100%;
+	/*height: inherit;*/
 }
 
 .class-circle-user-space-bg div {
 	margin-top: 5px;
 }
 
-.class-circle-user-space.weui-pull-to-refresh {
+.class-circle-user-space .weui-loadmore {
+	padding-bottom: 0;
+}
+
+.weui-tab.class-circle-user-space {
+	bottom: 0;
+}
+
+.class-circle-user-space .weui-tab__bd {
+	padding-bottom: 0;
+}
+
+.class-circle-user-space .weui-panel {
+	margin-top: 0px;
+}
+
+/*.class-circle-user-space .weui-pull-to-refresh__layer {
 	margin-top: -30px;
+}*/
+
+.class-circle-user-space.weui-tab {
+	width: 100%;
+	top: -30px;
+	bottom: 0;
 }
-.class-circle-user-space .weui-loadmore{
-	padding-bottom:0 ;
-}
+/*.class-circle-user-space .weui-tab__bd .weui-tab__bd-item{
+	overflow: visible;
+}*/

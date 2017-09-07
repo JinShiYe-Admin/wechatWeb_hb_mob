@@ -71,7 +71,7 @@ Vue.component("com-publish", {
 					}
 					break;
 				case 1:
-					if(typeof(this.extraData.news) === "undefined") {
+					if(typeof(this.extraData.textcard) === "undefined") {
 						console.log("文字卡片未填写内容！！！");
 						return;
 					}

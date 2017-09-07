@@ -145,8 +145,8 @@ Vue.component("add-trends", {
 		/**
 		 * 点击提交按钮
 		 */
-		commit: function() {
-			this.$emit("commit");
+		submitData: function() {
+			this.$emit("submitData");
 		}
 	},
 	watch: {
@@ -231,6 +231,26 @@ Vue.component("trends-item", {
 		 */
 		clickName: function(userId) {
 			this.$emit("click-person", userId);
+		},
+		/**
+		 * 头像加载成功
+		 * @param {Object} e
+		 */
+		headLoad: function(e) {
+			var img = e.target;
+			var imgWidth = img.width;
+			var imgHeight = img.height;
+			if(imgWidth > imgHeight) {
+				img.style.height = imgWidth + "px";
+				img.style.width = 'initial';
+			}
+		},
+		/**
+		 * 头像加载失败
+		 * @param {Object} e
+		 */
+		headError: function(e, level) {
+			e.target.src = utils.updateHeadImage("", level);
 		}
 	}
 });

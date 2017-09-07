@@ -59,7 +59,7 @@ Vue.component('extra-pub', {
 			switch(this.msgType) {
 				case 1:
 					realData = {
-						news: {
+						textcard: {
 							title: this.title,
 							description: this.description
 						}

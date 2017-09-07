@@ -42,10 +42,10 @@
 			<div>
 				<div class="weui-tab">
 					<div class="weui-navbar">
-						<home-navbar-item v-for="(value,index) in home_tab" :key="index" :value="value" :index="index" :is_on="is_on" @click-item="clickItem"></home-navbar-item>
+						<home-navbar-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-item="clickItem"></home-navbar-item>
 					</div>
 					<div class="weui-tab__bd">
-						<home-bd-item v-for="(value,index) in home_tab" :key="index" :value="value" :index="index" :is_on="is_on" @click-person="showPersonTrends" @click-content="showTrendsDetails" @click-function="clickFunction" @click-comment="clickComment"></home-bd-item>
+						<home-bd-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-person="showPersonTrends" @click-content="showTrendsDetails" @click-function="clickFunction" @click-comment="clickComment"></home-bd-item>
 					</div>
 				</div>
 				<div @click="clickAddTrends" class="class-circle-report">+ 发表动态</div>
@@ -53,7 +53,7 @@
 		</template>
 		<!--路由--发布动态或者评论-->
 		<template id="router_add_trends">
-			<add-trends :content="content" :show-media="showMedia" @add-media="addMedia" @commit="commit" @content-change="contentChange"></add-trends>
+			<add-trends :content="content" :show-media="showMedia" @add-media="addMedia" @submitData="submitData" @content-change="contentChange"></add-trends>
 		</template>
 		<!--路由--动态详情-->
 		<template id="router_trends_details">
@@ -63,12 +63,23 @@
 		</template>
 		<!--路由-用户个人空间-->
 		<template id="router_user_space">
-			<div>
+			<div class="class-circle-user-space">
+				<div class="weui-pull-to-refresh__layer">
+					<div class='weui-pull-to-refresh__arrow'></div>
+					<div class='weui-pull-to-refresh__preloader'></div>
+					<div class="down">下拉刷新</div>
+					<div class="up">释放刷新</div>
+					<div class="refresh">正在刷新</div>
+				</div>
 				<div class="class-circle-user-space-bg">
 					<img :src="userId|userImage" />
 					<div>{{userId|userName}}</div>
 				</div>
 				<trends-item v-for="(item_value,item_index) in data" :index="item_index" :key="item_index" :value="item_value" :detail="false" @click-person="showPersonTrends" @click-content="showTrendsDetails" @click-function="clickFunction" @click-comment="clickComment"></trends-item>
+				<div class="weui-loadmore">
+					<i class="weui-loading"></i>
+					<span class="weui-loadmore__tips">正在加载</span>
+				</div>
 			</div>
 		</template>
 		<!--班级圈主页--顶部导航-->
@@ -89,7 +100,7 @@
 				</div>
 				<div class="weui-panel weui-panel_access">
 					<div class="weui-panel__bd">
-						<template v-if="value.id=='relate_to_me'">
+						<template v-if="value.id=='relate_to_me_2'">
 							<!--与我相关-->
 							<relate-item v-for="(item_value,item_index) in value.data" :key="item_index" :value="item_value"></relate-item>
 						</template>
@@ -99,8 +110,8 @@
 					</div>
 				</div>
 				<div :id="'loadmore_' + value.id" class="weui-loadmore" v-show="value.show_loadmore">
-					<i class="weui-loading"></i>
-					<span class="weui-loadmore__tips">正在加载</span>
+					<i class="weui-loading" v-show="value.show_loadmore_loading"></i>
+					<span class="weui-loadmore__tips">{{value.show_loadmore_content}}</span>
 				</div>
 			</div>
 		</template>
@@ -109,7 +120,7 @@
 			<div class="weui-media-box">
 				<div class="weui-media-box_appmsg">
 					<div class="weui-media-box__hd class-circle-headimage-hd">
-						<img class="weui-media-box__thumb class-circle-headimage" @click="clickPerson" :src="value.PublisherId|userThumbImage" />
+						<img class="weui-media-box__thumb class-circle-headimage" @load="headLoad($event)" @error.once="headError($event)" @click="clickPerson" :src="value.PublisherId|userThumbImage" />
 					</div>
 					<div class="weui-media-box__bd">
 						<div class="class-circle-title">
@@ -131,8 +142,10 @@
 				</div>
 				<div class="class-circle-praise-comment" v-if="showPraiseComment">
 					<div class="class-circle-triangle"></div>
-					<div class="class-circle-praise-bg" v-for="(praise_value,praise_index) in value.LikeUsers">
-						<div class="class-circle-praiser">{{praise_value.name}}</div>
+					<div class="class-circle-praise-bg">
+						<div class="class-circle-praiser" v-for="(praise_value,praise_index) in value.LikeUsers">
+							{{praise_value.userId|userName}}
+						</div>
 					</div>
 					<div class="class-circle-praise-comment-line" v-if="showLine"></div>
 					<template v-if="detail">
@@ -249,7 +262,7 @@
 					<div class="iconfont icon-xiangji2" @click="addMedia(1)"></div>
 				</div>
 				<div class="class-circle-add-line"></div>
-				<button class="weui-btn weui-btn_primary" @click="commit">提交</button>
+				<button class="weui-btn weui-btn_primary" @click="submitData">提交</button>
 			</div>
 		</template>
 		<!--显示图片的组件-->
@@ -266,18 +279,20 @@
 			</div>
 		</template>
 		<script type="text/javascript">
+//			document.write("<s" + "cript type='text/javascript' src='../../js/mui.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-2.1.4.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-weui.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/swiper.js?" + Math.random() + "'></s" + "cript>");
-			//			document.write("<s" + "cript type='text/javascript' src='../../js/weui.min.js?" + Math.random() + "'></s" + "cript>");
+			//document.write("<s" + "cript type='text/javascript' src='../../js/weui.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/vue.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/vue-router.js?" + Math.random() + "'></s" + "cript>");
-			//			document.write("<s" + "cript type='text/javascript' src='../../js/lib/vconsole/vconsole.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/vconsole/vconsole.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_vue.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_protocol.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_home.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_temp_data.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 	</body>
 

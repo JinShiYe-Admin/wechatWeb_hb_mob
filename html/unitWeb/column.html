@@ -93,7 +93,7 @@
 					<div class="weui-cell weui-cell_switch">
 						<div class="weui-cell__bd">{{iswrite.title}}</div>
 						<div class="weui-cell__ft">
-							<input :disabled="!((iswrite.check)||((!islink.check)&&iswrite_all==1))" class="weui-switch" type="checkbox" v-model="iswrite.check">
+							<input :disabled="(islink.check)||(iswrite_all==0)" class="weui-switch" type="checkbox" v-model="iswrite.check">
 						</div>
 					</div>
 				</div>
@@ -114,7 +114,7 @@
 			window.onload = function() {
 				getWebsitConfig();
 				var detail = utils.getDataFromUrl(window.location.href);
-								alert("detail " + JSON.stringify(detail));
+				alert("detail " + JSON.stringify(detail));
 				vm.type = detail.type;
 				if(vm.type == 'edit') {
 					vm.editName = '删除'
@@ -122,8 +122,8 @@
 					vm.cname.message = detail.cname;
 					vm.orderid.message = detail.orderid;
 					vm.linkurl.message = detail.linkurl;
-					vm.islink.check = detail.islink==1?true:false;
-					vm.iswrite.check = detail.iswrite==1?true:false;
+					vm.islink.check = detail.islink == 1 ? true : false;
+					vm.iswrite.check = detail.iswrite == 1 ? true : false;
 					vm.note.message = detail.note
 					for(var item in vm.$data) {
 						(function addwatch(key) {
@@ -139,6 +139,9 @@
 
 				} else {
 					vm.editName = '添加'
+					vm.$watch('islink.check', function(newVal, oldVal) {
+						edit(oldVal, newVal, 'islink')
+					})
 				}
 
 			}
@@ -146,7 +149,7 @@
 				el: '#conetent',
 				data: {
 					editName: '',
-					iswrite_all:1,
+					iswrite_all: 1,
 					cname: {
 						title: "栏目名称",
 						message: ""
@@ -250,7 +253,16 @@
 
 			function edit(oldVal, newVal, key) {
 				console.log('key=' + key + '--oldVal=' + oldVal + '--newVal=' + newVal)
+				if(vm.type == "add" && key == 'islink') {
+					if(newVal == true) {
+						$("#linkurl").focus();
+						vm.iswrite.check = false;
+					}
+					return;
+
+				}
 				if(key == 'islink' && newVal == true) {
+
 					$("#linkurl").focus();
 					vm.iswrite.check = false;
 				}
@@ -292,10 +304,10 @@
 					console.log('配置为:' + JSON.stringify(data));
 					if(data.RspCode == 0) {
 						if(data.RspData.length > 0) {
-							vm.iswrite_all = 0;
-//							vm.iswrite.check = false;
+							vm.iswrite_all = data.RspData[0].iswrite;
+							//							vm.iswrite.check = false;
 						}
-					} 
+					}
 				});
 			}
 		</script>

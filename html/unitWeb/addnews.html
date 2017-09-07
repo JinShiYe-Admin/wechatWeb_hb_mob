@@ -223,6 +223,7 @@
 						</div>
 						<div align="center">
 							<img src="../../image/add.png" width="50px" height="40px" id="x" onclick="addDiv()" />
+							<img src="../../image/add.png" width="50px" height="40px" id="x" onclick="delDiv()" />
 						</div>
 						<!--<img src="../../image/20170808120135.png" width="100%" height="40px" />-->
 					</div>
@@ -303,13 +304,15 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cryption.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/pluploadutil.js?" + Math.random() + "'></s" + "cript>");
 		</script>
-		<script>
-			//			function div_elem(i) {
-			//				return '<textarea id=\"conten\" v-model.lazy=\"newscontent.message\" class=\"weui-input\" placeholder=\"请输入新闻内容\" onchange=\"upperCase(this.id)\" style=\"border-color: white;height: 7rem;\"></textarea><div class=\"kuan\"><input id=\"imgname\" type=\"text\" /></div><div class=\"an\"><a href=\"#\" style=\"float:right\" class=\"a-upload\"><input id=\"d' + i + '\" type=\"file\"  />上传图片</a></div>';
-			//			}  
+		<script>  
+			function delDiv(){
+				$("#insert").empty();
+				count1=0; 
+			}
 			function addDiv() {
 				//创建一个div
 				var div = document.createElement('div');
+				div.className="italic";
 				var ic = count1 + 1;
 				if(ic <= 5) {
 					for(var i = 0; i < ic; i++) {

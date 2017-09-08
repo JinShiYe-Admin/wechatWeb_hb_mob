@@ -48,7 +48,7 @@
 						<home-navbar-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-item="clickItem"></home-navbar-item>
 					</div>
 					<div class="weui-tab__bd">
-						<home-bd-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-person="showPersonTrends" @click-content="showTrendsDetails" @click-function="clickFunction" @click-comment="clickComment"></home-bd-item>
+						<home-bd-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-person="clickPerson" @click-content="clickContent" @click-function="clickFunction" @click-comment="clickComment"></home-bd-item>
 					</div>
 				</div>
 				<div @click="clickAddTrends" class="class-circle-report">+ 发表动态</div>
@@ -56,7 +56,7 @@
 		</template>
 		<!--路由--发布动态或者评论-->
 		<template id="router_add_trends">
-			<add-trends :content="content" :show-media="showMedia" :maxlength="maxlength" @add-media="addMedia" @submit-data="submitData" @content-change="contentChange"></add-trends>
+			<add-trends :content="content" :show-media="showMedia" :maxlength="maxlength" :placeholder="placeholder" @add-media="addMedia" @submit-data="submitData" @content-change="contentChange"></add-trends>
 		</template>
 		<!--路由--动态详情-->
 		<template id="router_trends_details">
@@ -84,7 +84,7 @@
 									</div>
 									<div>{{userId|userName}}</div>
 								</div>
-								<trends-item v-for="(item_value,item_index) in data" :index="item_index" :key="item_index" :value="item_value" :detail="false" @click-person="clickPerson" @click-function="clickFunction" @click-comment="clickComment"></trends-item>
+								<trends-item v-for="(item_value,item_index) in data" :index="item_index" :key="item_index" :value="item_value" :detail="false" @click-person="clickPerson" @click-function="clickFunction" @click-comment="clickComment" @click-content="clickContent"></trends-item>
 							</div>
 						</div>
 						<div class="weui-loadmore" v-show="show_loadmore">
@@ -259,9 +259,9 @@
 						<div class="class-circle-comment-content">：{{comment_value.CommentContent}}</div>
 					</div>
 					<div class="weui-cell weui-cell_access class-circle-comment-item" v-for="(replys_value,replys_index) in comment_value.Replys" @click="clickComment(comment_index,replys_index)">
-						<div class="class-circle-comment-name" @click.stop="clickName(replys_value.ReplyId)">{{replys_value.ReplyId|userName}}</div>
-						<div class="class-circle-comment-content">回复</div>
 						<div class="class-circle-comment-name" @click.stop="clickName(replys_value.UserId)">{{replys_value.UserId|userName}}</div>
+						<div class="class-circle-comment-content">回复</div>
+						<div class="class-circle-comment-name" @click.stop="clickName(replys_value.ReplyId)">{{replys_value.ReplyId|userName}}</div>
 						<div class="class-circle-comment-content">：{{replys_value.CommentContent}}</div>
 					</div>
 				</div>
@@ -271,7 +271,7 @@
 		<!--发布动态组件-->
 		<template id="temp_add_trends_com">
 			<div class="class-circle-add">
-				<textarea class="weui-textarea" v-model="com_content" placeholder="不能为空" rows="6" :maxlength="maxlength"></textarea>
+				<textarea class="weui-textarea" v-model="com_content" :placeholder="placeholder" rows="6" :maxlength="maxlength"></textarea>
 				<div class="class-circle-add-media" v-if="showMedia">
 					<div class="iconfont icon-tuku" @click="addMedia(0)"></div>
 					<div class="iconfont icon-xiangji2" @click="addMedia(1)"></div>
@@ -293,6 +293,7 @@
 				</div>
 			</div>
 		</template>
+		<!--点赞列表-->
 		<template id="temp_praiser_list">
 			<div class="class-circle-praise-bg">
 				<div class="class-circle-praiser" v-for="(value,index) in likers.showArray" @click="clickName(value.userId)">

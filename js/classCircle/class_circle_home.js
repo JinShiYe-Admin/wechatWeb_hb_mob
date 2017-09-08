@@ -119,14 +119,14 @@ function initRouter() {
 			 * 点击发布动态者的头像或者名称或者评论者(回复者)的名称
 			 * @param {String} userId 用户id
 			 */
-			showPersonTrends: showPersonTrends,
+			clickPerson: showPersonTrends,
 			/**
 			 * 显示动态的详细内容或者查看全部按钮
 			 * @param {Number} listIndex 列表的序号
 			 * @param {Number} valueIndex 数据的序号
 			 */
-			showTrendsDetails: function(listIndex, valueIndex) {
-				console.log("showTrendsDetails:" + listIndex + ":" + valueIndex);
+			clickContent: function(listIndex, valueIndex) {
+				console.log("clickContent:" + listIndex + ":" + valueIndex);
 				showTrendsDetails(this.data[listIndex].data[valueIndex])
 			},
 			/**
@@ -138,19 +138,12 @@ function initRouter() {
 			clickFunction: function(listIndex, valueIndex, type) {
 				console.log("clickFunction:" + listIndex + " " + valueIndex + " " + type);
 				var trendsValue = this.data[listIndex].data[valueIndex];
-				console.log("trendsValue:" + JSON.stringify(trendsValue))
 				switch(type) {
 					case 0:
 						changePraise(trendsValue);
 						break;
 					case 1:
-						router.push({
-							name: 'add',
-							params: {
-								id: 'addComment',
-								trendsValue: trendsValue,
-							}
-						});
+						showAddComments(trendsValue);
 						break;
 				}
 			},
@@ -163,15 +156,7 @@ function initRouter() {
 			 */
 			clickComment: function(listIndex, valueIndex, commentIndex, replysIndex) {
 				console.log("clickComment:" + listIndex + " " + valueIndex + " " + commentIndex + " " + replysIndex);
-				router.push({
-					name: 'add',
-					params: {
-						id: 'addReplys',
-						trendsValue: this.data[listIndex].data[valueIndex],
-						commentIndex: commentIndex,
-						replysIndex: replysIndex
-					}
-				});
+				addReplys(this.data[listIndex].data[valueIndex], commentIndex, replysIndex);
 			},
 			/**
 			 * 点击发布动态
@@ -180,7 +165,7 @@ function initRouter() {
 				router.push({
 					name: 'add',
 					params: {
-						id: 'addTrends',
+						id: 'addTrend',
 					}
 				});
 			}
@@ -228,7 +213,8 @@ function initRouter() {
 				showMedia: false, //是否显示添加图片，视频功能
 				images: [], //图片，限制9张
 				video: '', //视频，限制一个
-				maxlength: 200 //动态限制6000字，评论回复限制200
+				maxlength: 200, //动态限制6000字，评论回复限制200
+				placeholder: "不能为空" //输入框提示语
 			};
 		},
 		methods: {
@@ -253,8 +239,8 @@ function initRouter() {
 					$.showLoading('正在上传数据');
 					this.allowBack = false;
 					switch(this.$route.params.id) {
-						case "addTrends":
-							console.log("发布动态");
+						case "addTrend":
+							//发布动态
 							var submitData = {
 								userId: mineUserInfo.userid, //用户ID
 								msgTitle: "", //记事标题
@@ -270,6 +256,10 @@ function initRouter() {
 								pubArea: "" //发布区域
 							}
 							addTrend(submitData, this);
+							break;
+						case "addComment":
+							//发布评论
+							addComment(this.$route.params.trendsValue, submitDataContent, this);
 							break;
 					}
 				}
@@ -290,17 +280,27 @@ function initRouter() {
 				next(function(vm) {
 					console.log("trends_add:id:" + vm.$route.params.id);
 					if(vm.$route.params.trendsValue != undefined) {
-						console.log("trends_add:trendsValue:" + JSON.stringify(vm.$route.params.trendsValue));
+						console.log("trends_add:trendsValue:", vm.$route.params.trendsValue);
 						console.log("trends_add:commentIndex:" + vm.$route.params.commentIndex);
 						console.log("trends_add:replysIndex:" + vm.$route.params.replysIndex);
 					} else {
 						console.log("trends_add:trendsValue:" + vm.$route.params.trendsValue);
 					}
 					vm.allowBack = true;
-					if(vm.$route.params.id == "addTrends") {
+					if(vm.$route.params.id == "addTrend") {
 						//发布动态
 						vm.showMedia = true;
 						vm.maxlength = 6000;
+						vm.placeholder = "动态不能为空,最多6000字!";
+					} else if(vm.$route.params.id == "addComment") {
+						//发布评论
+						vm.showMedia = false;
+						vm.maxlength = 200;
+						vm.placeholder = "评论不能为空,最多200字!";
+					} else if(vm.$route.params.id == "addReply") {
+						vm.showMedia = false;
+						vm.maxlength = 200;
+						vm.placeholder = "回复不能为空,最多200字!";
 					}
 				});
 			}
@@ -330,28 +330,14 @@ function initRouter() {
 						changePraise(trendsValue);
 						break;
 					case 1:
-						router.push({
-							name: 'add',
-							params: {
-								id: 'addComment',
-								trendsValue: trendsValue,
-							}
-						});
+						showAddComments(trendsValue);
 						break;
 				}
 
 			},
 			clickComment: function(valueIndex, commentIndex, replysIndex) {
 				console.log("clickComment:" + valueIndex + " " + commentIndex + ' ' + replysIndex);
-				router.push({
-					name: 'add',
-					params: {
-						id: 'addReplys',
-						trendsValue: this.data[valueIndex],
-						commentIndex: commentIndex,
-						replysIndex: replysIndex
-					}
-				});
+				addReplys(this.data[valueIndex], commentIndex, replysIndex);
 			}
 		},
 		beforeRouteEnter: function(to, from, next) {
@@ -415,7 +401,7 @@ function initRouter() {
 			 * 显示动态的详细内容或者查看全部按钮
 			 * @param {Number} valueIndex 数据的序号
 			 */
-			showTrendsDetails: function(valueIndex) {
+			clickContent: function(valueIndex) {
 				console.log("showTrendsDetails:" + valueIndex);
 				showTrendsDetails(space_data[this.$route.params.id].data[valueIndex]);
 			},
@@ -432,14 +418,7 @@ function initRouter() {
 						changePraise(trendsValue);
 						break;
 					case 1:
-						router.push({
-							name: 'add',
-							params: {
-								id: 'addComment',
-								trendsValue: this.data[valueIndex],
-								component: this
-							}
-						});
+						showAddComments(trendsValue);
 						break;
 				}
 			},
@@ -451,15 +430,7 @@ function initRouter() {
 			 */
 			clickComment: function(valueIndex, commentIndex, replysIndex) {
 				console.log("clickComment:" + valueIndex + " " + commentIndex + " " + replysIndex);
-				router.push({
-					name: 'add',
-					params: {
-						id: 'addReplys',
-						trendsValue: space_data[this.$route.params.id].data[valueIndex],
-						commentIndex: commentIndex,
-						replysIndex: replysIndex
-					}
-				});
+				addReplys(space_data[this.$route.params.id].data[valueIndex], commentIndex, replysIndex);
 			},
 			/**
 			 * 初始化数据
@@ -848,6 +819,7 @@ function changePraise(trendsValue) {
 			if(data.RspCode == 0 && data.RspData.Result == 1) {
 				trendsValue.IsLike = 1;
 				trendsValue.LikeUsers.unshift({
+					operDate: utils.getCurentTime(),
 					userId: mineUserInfo.userid
 				})
 			} else {
@@ -1011,13 +983,13 @@ function getUserSpace(publisherIds, pageIndex, id, element) {
 /**
  * 发布动态
  * @param {Object} submitData 提交的数据
- * @param {Object} addTrendRoute 路由对象
+ * @param {Object} routeAdd 路由对象
  */
-function addTrend(submitData, addTrendRoute) {
+function addTrend(submitData, routeAdd) {
 	classCircleProtocol.addUserSpace(submitData, function(data) {
 		console.log("addTrend:", data);
 		$.hideLoading();
-		addTrendRoute.allowBack = true;
+		routeAdd.allowBack = true;
 		if(data.RspCode == 0 && data.RspData.Result != 0) {
 			$.toast("发布成功");
 			var newTrends = {
@@ -1047,4 +1019,76 @@ function addTrend(submitData, addTrendRoute) {
 			$.alert(data.RspTxt, "发布失败");
 		}
 	});
+}
+
+/**
+ * 对评论进行回复
+ * @param {Number} trendsValue 动态
+ * @param {Object} commentIndex 评论的序号
+ * @param {Object} replysIndex 回复的序号
+ */
+function addReplys(trendsValue, commentIndex, replysIndex) {
+	console.log("addReplys:", trendsValue);
+	var Replys = trendsValue.Comments[commentIndex].Replys[replysIndex];
+	console.log("Replys:", Replys);
+	router.push({
+		name: 'add',
+		params: {
+			id: 'addReply',
+			trendsValue: trendsValue,
+			commentIndex: commentIndex,
+			replysIndex: replysIndex
+		}
+	});
+}
+
+/**
+ * 进入评论页面
+ * @param {Number} trendsValue 动态
+ */
+function showAddComments(trendsValue) {
+	console.log("showAddComments:", trendsValue);
+	router.push({
+		name: 'add',
+		params: {
+			id: 'addComment',
+			trendsValue: trendsValue,
+		}
+	});
+}
+
+/**
+ * 添加评论
+ * @param {Object} trendsValue 动态数据
+ * @param {Object} commentContent 评论内容
+ * @param {Object} routeAdd 路由对象
+ */
+function addComment(trendsValue, commentContent, routeAdd) {
+	console.log("addComment:trendsValue:", trendsValue);
+	console.log("addComment:commentContent:", commentContent);
+	var submitData = {
+		userId: mineUserInfo.userid, //用户ID
+		userSpaceId: trendsValue.TabId, //用户空间ID
+		commentContent: commentContent //评论内容
+	}
+	classCircleProtocol.addUserSpaceComment(submitData, function(data) {
+		$.hideLoading();
+		routeAdd.allowBack = true;
+		if(data.RspCode == 0) {
+			var newComment = {
+				"CommentDate": utils.getCurentTime(),
+				"TabId": 2,
+				"Replys": [],
+				"ReplyId": "0",
+				"CommentContent": commentContent,
+				"UserId": "moshanglin",
+				"UpperId": 0
+			}
+			trendsValue.Comments.unshift(newComment);
+			router.back();
+		} else {
+			$.alert(data.RspTxt, "发布失败");
+		}
+	});
+
 }

@@ -79,7 +79,6 @@ Vue.filter('showAllButton', function(commentArray) {
 
 //显示点赞列表的过滤器
 Vue.filter('praiserArray', function(praiserArray) {
-	console.log("praiserArray:" + JSON.stringify(praiserArray));
 	var showArray = $.extend([], praiserArray).splice(0, 20);
 	var model = {
 		num: praiserArray.length, //总长度
@@ -140,7 +139,7 @@ Vue.component("home-bd-item", {
 //添加动态组件
 Vue.component("add-trends", {
 	template: "#temp_add_trends_com",
-	props: ["showMedia", "maxlength"],
+	props: ["showMedia", "maxlength","placeholder"],
 	data: function() {
 		return {
 			com_content: "" //组件内的content

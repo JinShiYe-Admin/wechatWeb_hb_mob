@@ -155,16 +155,18 @@
 				</div>
 				<div class="class-circle-praise-comment" v-if="showPraiseComment">
 					<div class="class-circle-triangle"></div>
-					<div class="class-circle-praise-bg">
-						<div class="class-circle-praiser" v-for="(praise_value,praise_index) in value.LikeUsers" @click="clickName(praise_value.userId)">
-							{{praise_value.userId|userName}}
-						</div>
-					</div>
-					<div class="class-circle-praise-comment-line" v-if="showLine"></div>
 					<template v-if="detail">
+						<div class="class-circle-praise-bg">
+							<div class="class-circle-praiser" v-for="(praiser_value,praiser_index) in value.LikeUsers" @click="clickName(praiser_value.userId)">
+								{{praiser_value.userId|userName}}
+							</div>
+						</div>
+						<div class="class-circle-praise-comment-line" v-if="showLine"></div>
 						<comments-item :value="value.Comments" :show="false" @click-comment="clickComment" @click-show-all="clickShowAll" @click-name="clickName"></comments-item>
 					</template>
 					<template v-else>
+						<praiser-item :likers="value.LikeUsers|praiserArray" @click-name="clickName"></praiser-item>
+						<div class="class-circle-praise-comment-line" v-if="showLine"></div>
 						<comments-item :value="value.Comments|commentArray" :show="value.Comments|showAllButton" @click-comment="clickComment" @click-show-all="clickShowAll" @click-name="clickName"></comments-item>
 					</template>
 				</div>
@@ -289,6 +291,14 @@
 						<img :src="img_value" />
 					</div>
 				</div>
+			</div>
+		</template>
+		<template id="temp_praiser_list">
+			<div class="class-circle-praise-bg">
+				<div class="class-circle-praiser" v-for="(value,index) in likers.showArray" @click="clickName(value.userId)">
+					{{value.userId|userName}}
+				</div>
+				<div class="class-circle-praiser" v-if="likers.num > 20">等{{likers.num}}人觉得很赞</div>
 			</div>
 		</template>
 		<script type="text/javascript">

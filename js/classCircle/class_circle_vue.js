@@ -77,6 +77,18 @@ Vue.filter('showAllButton', function(commentArray) {
 	return isShow;
 });
 
+//显示点赞列表的过滤器
+Vue.filter('praiserArray', function(praiserArray) {
+	console.log("praiserArray:" + JSON.stringify(praiserArray));
+	var showArray = $.extend([], praiserArray).splice(0, 20);
+	var model = {
+		num: praiserArray.length, //总长度
+		showArray: showArray //显示前20个
+	}
+
+	return model;
+});
+
 //班级圈主页tab顶部导航
 Vue.component("home-navbar-item", {
 	template: "#temp_trends_navbar_item",
@@ -128,7 +140,7 @@ Vue.component("home-bd-item", {
 //添加动态组件
 Vue.component("add-trends", {
 	template: "#temp_add_trends_com",
-	props: ["showMedia","maxlength"],
+	props: ["showMedia", "maxlength"],
 	data: function() {
 		return {
 			com_content: "" //组件内的content
@@ -302,6 +314,20 @@ Vue.component("image-item", {
 				items: this.images
 			});
 			pb.open();
+		}
+	}
+});
+//点赞列表组件
+Vue.component("praiser-item", {
+	template: "#temp_praiser_list",
+	props: ["likers"],
+	methods:{
+		/**
+		 * 点击点赞人的名字
+		 * @param {Object} userId 用户的id
+		 */
+		clickName: function(userId) {
+			this.$emit("click-name", userId);
 		}
 	}
 });

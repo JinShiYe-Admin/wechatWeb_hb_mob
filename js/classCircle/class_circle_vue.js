@@ -241,7 +241,7 @@ Vue.component("trends-item", {
 			var imgWidth = img.width;
 			var imgHeight = img.height;
 			if(imgWidth > imgHeight) {
-				img.style.height = imgWidth + "px";
+				img.style.height = "40px";
 				img.style.width = 'initial';
 			}
 		},

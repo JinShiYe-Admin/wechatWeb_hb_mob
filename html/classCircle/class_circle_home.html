@@ -79,16 +79,16 @@
 							<div class="weui-panel__bd">
 								<div class="class-circle-user-space-bg">
 									<div class="class-circle-user-space-headimage">
-										<img :src="space_value.userId|userImage" @load="headLoad($event)" @error.once="headError($event)" />
+										<img :src="userId|userImage" @load="headLoad($event)" @error.once="headError($event)" />
 									</div>
-									<div>{{space_value.userId|userName}}</div>
+									<div>{{userId|userName}}</div>
 								</div>
-								<trends-item v-for="(item_value,item_index) in space_value.data" :index="item_index" :key="item_index" :value="item_value" :detail="false" @click-person="clickPerson" @click-function="clickFunction" @click-comment="clickComment"></trends-item>
+								<trends-item v-for="(item_value,item_index) in data" :index="item_index" :key="item_index" :value="item_value" :detail="false" @click-person="clickPerson" @click-function="clickFunction" @click-comment="clickComment"></trends-item>
 							</div>
 						</div>
-						<div class="weui-loadmore" v-show="space_value.show_loadmore">
-							<i class="weui-loading" v-show="space_value.show_loadmore_loading"></i>
-							<span class="weui-loadmore__tips">{{space_value.show_loadmore_content}}</span>
+						<div class="weui-loadmore" v-show="show_loadmore">
+							<i class="weui-loading" v-show="show_loadmore_loading"></i>
+							<span class="weui-loadmore__tips">{{show_loadmore_content}}</span>
 						</div>
 					</div>
 				</div>

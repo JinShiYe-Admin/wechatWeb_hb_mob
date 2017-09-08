@@ -9,7 +9,7 @@
 		<title>新闻添加</title>
 		<link rel="stylesheet" href="../../css/weui.min.css" />
 		<link href="../../css/mui.min.css" rel="stylesheet" />
-		<link rel="stylesheet" type="text/css" href="../../css/Simditor/simditor.css" />
+
 		<style>
 			.dropdown:before,
 			.dropdown:after {
@@ -172,19 +172,19 @@
 		<div class="weui-cells weui-cells_form">
 			<div class="weui-cells__title">所属栏目</div>
 			<div class="weui-cells">
-				<div>  
+				<div>
 					<section class="container">
 						<div class="dropdown">
 							<select name="one" id="chnid" class="dropdown-select" style="font-size: 17px;color: #929292;">
 								<option value="">请选择所属栏目....</option>
-								<option  v-for="item in items" :value="item.chnid" >{{item.cname}}</option>
-							</select> 
+								<option v-for="item in items" :value="item.chnid">{{item.cname}}</option>
+							</select>
 						</div>
 					</section>
-				</div> 
+				</div>
 			</div>
-		</div> 
-		 
+		</div>
+
 		<div id="conetent" class="weui-cells weui-cells_form">
 			<div id="input_list">
 				<!--输入列表-->
@@ -215,46 +215,23 @@
 					<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
-								<!--<div>
-									<textarea id="conten" v-model.lazy="newscontent.message" class="weui-input" placeholder="请输入新闻内容" onchange="upperCase(this.id)" style="border-color: white;height: 7rem;"></textarea>
-									<div class="kuan"><input id="imgname" type="text" /></div>
-									<div class="an">
-										<a href="#" style="float:right" class="a-upload"><input id="file1" type="file" value="搜索" />上传图片</a>
-									</div>
-								</div>-->
-								<div id="insert"></div>
-								<!--<textarea id="editor" placeholder="请输入新闻内容(最多输入2000字)" autofocus> 
-									<section>
-									<h3>1.主政中国这五年，习近平三记重拳管党治党</h3>
-									<p>
-										向党内贪腐宣战，动真碰硬不断刷新人们想象力；整顿软弱涣散基层党组织，让能者上庸者下；以上率下抓“关键少数”，推动各项事业迈上新台阶。主政中国这五年，习近平三记重拳管党治党。
-									</p>
-									<p>
-										<img src="../../image/config/xjp.jpg" width="300px" height="150px" alt=""> 
-									</p> 
-								</section>
-								<section>
-									<h3>2.正风肃纪、反腐倡廉，“党的好作风又回来了”</h3>
-									<p>
-										“我们党面临着许多严峻挑战，党内存在着许多亟待解决的问题。尤其是一些党员干部中发生的贪污腐败、脱离群众、形式主义、官僚主义等问题，必须下大气力解决。”
 
-　　习近平总书记上任伊始，就向党内贪污腐败等问题宣战。或许当时国内外很多人都不以为然，但很快他们就在震惊中承认，习近平这些话不只是口头说说而已。
-									</p> 
-								</section> 
-								</textarea>-->
+								<div id="insert"></div>
+
 							</div>
 
 						</div>
 						<div align="center">
 							<img src="../../image/add.png" width="50px" height="40px" id="x" onclick="addDiv()" />
+							<img src="../../image/add.png" width="50px" height="40px" id="x" onclick="delDiv()" />
 						</div>
 						<!--<img src="../../image/20170808120135.png" width="100%" height="40px" />-->
 					</div>
 				</div>
 				<div class="container" id="onisfileup">
 					<div class="weui-cells__title">附件上传</div>
-					<div class="weui-cells"> 
-						<div class="weui-cell"> 
+					<div class="weui-cells">
+						<div class="weui-cell">
 							<!--<div class="upload-group" id="PriImg" style="float: right;">
 									<a href="#" style="float:right" class="a-upload"><input type="file" class="upload" name="file" id="upload">上传附件 </a>
 									</span>
@@ -317,10 +294,6 @@
 		<script type="text/javascript" src="../../js/jweixin.js"></script>
 		<script type="text/javascript" src="../../js/jquery.min.js"></script>
 		<script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
-		<script type="text/javascript" src="../../js/Simditor/module.min.js"></script>
-		<script type="text/javascript" src="../../js/Simditor/hotkeys.min.js"></script>
-		<script type="text/javascript" src="../../js/Simditor/uploader.min.js"></script>
-		<script type="text/javascript" src="../../js/Simditor/simditor.min.js"></script>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.min.js?" + Math.random() + "'></s" + "cript>");
@@ -331,19 +304,19 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cryption.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/pluploadutil.js?" + Math.random() + "'></s" + "cript>");
 		</script>
-		<script>
-			//			function div_elem(i) {
-			//				return '<textarea id=\"conten\" v-model.lazy=\"newscontent.message\" class=\"weui-input\" placeholder=\"请输入新闻内容\" onchange=\"upperCase(this.id)\" style=\"border-color: white;height: 7rem;\"></textarea><div class=\"kuan\"><input id=\"imgname\" type=\"text\" /></div><div class=\"an\"><a href=\"#\" style=\"float:right\" class=\"a-upload\"><input id=\"d' + i + '\" type=\"file\"  />上传图片</a></div>';
-			//			}  
+		<script>  
+			function delDiv(){
+				$("#insert").empty();
+				count1=0; 
+			}
 			function addDiv() {
 				//创建一个div
 				var div = document.createElement('div');
-				var w = "";
-				count1++;
-				if(count1 <= 5) {
-					for(var i = 0; i < count1; i++) {
-						w = i;
-						div.innerHTML = '<input name=\"dl\" id=\"title' + i + '\" placeholder="请输入节标题"  type="text"  ><input name=\"dl\" id=\"conten' + i + '\"   v-model.lazy=\"newscontent.message\" class=\"weui-input\" placeholder=\"请输入新闻内容\" onchange=\"upperCase(this.id)\" style=\"border-color: white;height: 7rem;\ /"><div class=\"kuan\"><input name=\"dl\" id=\"Priimgname' + i + '\" type=\"text\" /></div><div class=\"an\"><a href=\"#\" style=\"float:right\" class=\"a-upload\"><input id=\"Prifile' + i + '\" type=\"file\"  />上传图片</a></div>';
+				div.className="italic";
+				var ic = count1 + 1;
+				if(ic <= 5) {
+					for(var i = 0; i < ic; i++) {
+						div.innerHTML = '<input name=\"dlt\" id=\"title' + i + '\" placeholder="请输入节标题"  type="text"  ><input name=\"dlc\" id=\"conten' + i + '\"   v-model.lazy=\"newscontent.message\" class=\"weui-input\" placeholder=\"请输入新闻内容\" onchange=\"upperCase(this.id)\" style=\"border-color: white;height: 7rem;\ /"><div class=\"kuan\"><input name=\"dle\" id=\"Priimgname' + i + '\" type=\"text\" /></div><div class=\"an\"><a href=\"#\" style=\"float:right\" class=\"a-upload\"><input id=\"Prifile' + i + '\" type=\"file\"  />上传图片</a></div>';
 					}
 				} else {
 					alert('不能再增加了');
@@ -352,16 +325,17 @@
 				console.log('html:' + div.innerHTML);
 				var bo = document.getElementById("insert");
 				bo.insertBefore(div, bo.newnode);
-				var Priid = "Prifile" + w;
-				var Priimgname = "Priimgname" + w;
+				var Priid = "Prifile" + count1;
+				var Priimgname = "Priimgname" + count1;
 				initUploader(Priid, Priimgname);
+				count1++;
 			}
 			var vm_loading; //等待框
 			var fileUploader; //上传logo七牛对象
 			var bannerUploader; //上传banner七牛对象
 			var uptokenData; //上传的token
 			var imgurl = ""; //圖片地址   
-			var FileData; //附件参数
+			var FileDataArray = new Array(); //附件参数
 			var imgName;
 			var count1 = 0;
 			var objArray = new Array();
@@ -369,12 +343,12 @@
 			var vue_input = new Vue({
 				el: '#chnid',
 				data: {
-					items: [ 
-					]
+					items: []
 				}
 			});
 			window.onload = function() {
 				initUploader();
+				addDiv();
 
 				/**
 				 * 获取网站配置信息
@@ -387,7 +361,7 @@
 				unitWebsitePro(tempData, function(data) {
 					console.log('配置为:' + JSON.stringify(data));
 					if(data.RspCode == 0) {
-						if(data.RspData.length > 0) { 
+						if(data.RspData.length > 0) {
 							webConfig = data.RspData[0];
 							if(webConfig.isreply == 0) //0表示禁止回复，并隐藏回复功能
 								document.getElementById('onisReply').style.display = "none";
@@ -399,22 +373,21 @@
 					} else {
 						weui.alert(data.RspTxt);
 					}
-				});
-
+				}); 
 				var tempData = {
 					cmd: 'chn', //网站栏目
 					type: 'findpage', //分页查找栏目列表 
 					pagesize: 999, //每页条数 
-					iswrite: '0',
+					iswrite: '1',
+					stat: '1',
 					pageindex: 1 //页码  
-				} 
-				unitWebsitePro(tempData, function(data) { 
+				}
+				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
-						if(data.RspData.dt.length > 0) { 
+						if(data.RspData.dt.length > 0) {
 							vue_input.items = data.RspData.dt;
-							console.log('111111====='+JSON.stringify(data.RspData.dt)) 
-						} else { 
-							alert('暂时还没有栏目'); 
+						} else {
+							alert('暂时还没有栏目');
 						}
 					} else {
 						alert(data.RspTxt);
@@ -436,7 +409,7 @@
 								edit(oldVal, newVal, key)
 							})
 						})(item)
-					} 
+					}
 				} else {
 					vm.editName = '添加'
 				}
@@ -444,7 +417,7 @@
 			var vm = new Vue({
 				el: '#conetent',
 				data: {
-					editName: '',  
+					editName: '',
 					cname: {
 						title: "新闻标题",
 						message: ""
@@ -490,70 +463,13 @@
 				/**
 				 * 文章附件管理添加
 				 */
-
-				//				var Pridl1 = document.getElementById("conten1").value;
-				//				var Pridl2 = document.getElementById("conten2").value;
-				//				var Pridl3 = document.getElementById("conten3").value;
-				//				var Pridl4 = document.getElementById("conten4").value;
 				var PriConten = "";
-				//                 if (count1==1){
-				//              	var Prititle = document.getElementById("title0").value;  
-				//				    var Pridl = document.getElementById("conten0").value;
-				//				    var Priimg=document.getElementById("Priimgname0").value; 
-				//				    }
-				//				   if(count1==2){
-				//				    var Prititle1 = document.getElementById("title1").value;
-				//				    var Pridl1 = document.getElementById("conten1").value;
-				//				    var Priimg1=document.getElementById("Priimgname1").value;  
-				//				   } 
-				//				   if(count1==3){
-				//				    var Prititle2 = document.getElementById("title2").value;
-				//				    var Pridl2 = document.getElementById("conten2").value; 
-				//				    var Priimg2=document.getElementById("Priimgname2").value;
-				//				   }
-				var allInputs = document.getElementsByTagName('input');
-				var allInputs
-				var libIds = [];
-				for(var i = 0; i < allInputs.length; i++) {
-					if(allInputs[i].type === 'text' && allInputs[i].name === 'dl') {
-						libIds.push(allInputs[i]);
-					}
-				}
-				var theValue = '';
-				//				for(var i = 0; i < count1; i++) {
-				//					for(var j = 0; j < libIds.length; j++) {
-				//						theValue += libIds[j].value + ',';
-				//					}
-				//					PriConten += '<section><h3>' + libIds[i].value + '</h3><p>' + libIds[i + 1].value + '</p><p><img src=' + libIds[i + 2].value + ' alt=""></p></section>';
-				//				} 
-				if(count1 == 1) {
-					PriConten += '<section><h3>' + libIds[0].value + '</h3><p>' + libIds[1].value + '</p><p><img src=' + libIds[2].value + ' alt=""></p></section>';
-				}
-				if(count1 == 2) {
-					PriConten += '<section><h3>' + libIds[0].value + '</h3><p>' + libIds[1].value + '</p><p><img src=' + libIds[2].value + ' alt=""></p></section>';
-					PriConten += '<section><h3>' + libIds[3].value + '</h3><p>' + libIds[4].value + '</p><p><img src=' + libIds[5].value + ' alt=""></p></section>';
-				}
-				if(count1 == 3) {
-					PriConten += '<section><h3>' + libIds[0].value + '</h3><p>' + libIds[1].value + '</p><p><img src=' + libIds[2].value + ' alt=""></p></section>';
-					PriConten += '<section><h3>' + libIds[3].value + '</h3><p>' + libIds[4].value + '</p><p><img src=' + libIds[5].value + ' alt=""></p></section>';
-					PriConten += '<section><h3>' + libIds[6].value + '</h3><p>' + libIds[7].value + '</p><p><img src=' + libIds[8].value + ' alt=""></p></section>';
-				}
-				if(count1 == 4) {
-					PriConten += '<section><h3>' + libIds[0].value + '</h3><p>' + libIds[1].value + '</p><p><img src=' + libIds[2].value + ' alt=""></p></section>';
-					PriConten += '<section><h3>' + libIds[3].value + '</h3><p>' + libIds[4].value + '</p><p><img src=' + libIds[5].value + ' alt=""></p></section>';
-					PriConten += '<section><h3>' + libIds[6].value + '</h3><p>' + libIds[7].value + '</p><p><img src=' + libIds[8].value + ' alt=""></p></section>';
-					PriConten += '<section><h3>' + libIds[9].value + '</h3><p>' + libIds[10].value + '</p><p><img src=' + libIds[11].value + ' alt=""></p></section>';
+				var allInputst = $("*[name='dlt']");
+				var allInputsc = $("*[name='dlc']");
+				var allInputse = $("*[name='dle']"); 
+				for(var i = 0; i < allInputst.length; i++) {
+					PriConten += '<section><h3>' + allInputst[i].value + '</h3><p>' + allInputsc[i].value + '</p><p><img src=' + allInputse[i].value + ' alt=""></p></section>';
 				} 
-				if(count1 == 5) {
-					PriConten += '<section><h3>' + libIds[0].value + '</h3><p>' + libIds[1].value + '</p><p><img src=' + libIds[2].value + ' alt=""></p></section>';
-					PriConten += '<section><h3>' + libIds[3].value + '</h3><p>' + libIds[4].value + '</p><p><img src=' + libIds[5].value + ' alt=""></p></section>';
-					PriConten += '<section><h3>' + libIds[6].value + '</h3><p>' + libIds[7].value + '</p><p><img src=' + libIds[8].value + ' alt=""></p></section>';
-					PriConten += '<section><h3>' + libIds[9].value + '</h3><p>' + libIds[10].value + '</p><p><img src=' + libIds[11].value + ' alt=""></p></section>';
-					PriConten += '<section><h3>' + libIds[12].value + '</h3><p>' + libIds[13].value + '</p><p><img src=' + libIds[14].value + ' alt=""></p></section>';
-				}
-				console.log('内容组装=========================' + JSON.stringify(PriConten));
-				
-		 
 				var PriIsquo = '';
 				var PriQuourl = '';
 				var comData = '';
@@ -564,26 +480,28 @@
 				var PriSummas = document.getElementById("summas").value; //新闻摘要
 				//var Chnid = document.getElementById("chnid"); //栏目id
 				//var PriChnid = Chnid.selectedIndex; // 选中索引
-				var PriChnid = $("#chnid option:selected").val(); 
+				var PriChnid = $("#chnid option:selected").val();
 				console.log('所属栏目=========================:' + PriChnid);
 				PriIsquo = document.getElementById("islink").checked == true ? 1 : 0;
 				PriIsReply = document.getElementById("isReply").checked == true ? 1 : 0;
 				PriQuourl = document.getElementById("islink").value;
+				console.log('附件=========================:' + JSON.stringify(FileDataArray));
+				var PriFileData = JSON.stringify(FileDataArray); 
 				comData = {
 					cmd: 'news', //文章管理
 					type: 'add',
 					chnid: PriChnid,
 					subtopic: Prisubtopic,
-					topic: PriTopic, 
+					topic: PriTopic,
 					content: PriConten,
 					summas: PriSummas,
-					encs: FileData,
+					encs: PriFileData,
 					isquo: PriIsquo,
 					quourl: PriQuourl,
 					isreply: PriIsReply,
 					stat: 1
 				};
-		 
+				console.log('comData=========================:' + JSON.stringify(comData)); 
 				unitWebsitePro(comData, function(data) {
 					if(data.RspCode == 0) {
 						weui.toast("添加成功");
@@ -600,7 +518,7 @@
 						weui.toast(data.RspTxt);
 					}
 				});
-				console.log('comData=========================:' + JSON.stringify(comData));
+
 				var vue_img = new Vue({
 					el: '#PriImg',
 					data: {
@@ -655,7 +573,7 @@
 						console.log("获取uptoken回调:" + JSON.stringify(uptokenData));
 						if(uptokenData && uptokenData.code) { //成功   
 							return uptokenData.data.Data[0].Token;
-						} else { 
+						} else {
 							bannerUploader.stop();
 							var dialog = weui.dialog({
 								title: "上传失败",
@@ -694,8 +612,7 @@
 							plupload.each(files, function(file) {
 								// 文件添加进队列后,处理相关的事情
 								imgName = JSON.stringify(file.name)
-								var img = imgName.substring(-1, (imgName - 1));
-
+								var img = imgName.substring(-1, (imgName - 1)); 
 								//document.getElementById('Priimgname0').value = imgName;
 								console.log("FilesAdded:" + JSON.stringify(file));
 							});
@@ -719,27 +636,35 @@
 								}, cc.key);
 								//Pridl=Priimgname.substring(9,10)
 								if(Priimgname != undefined) {
-									document.getElementById(Priimgname).value = imgurl;
+									document.getElementById(Priimgname).value = imgurl; 
+									var person = new Object();
+									person.id = priid;//控件id
+									person.saveurl = imgurl;//图片地址
+									person.imgurl = imgLink;
+									person.oldname = file.name;
+									person.newname = cc.key;
+									person.filesize = file.size; 
+									//循环附件数组，判断id是否有重复
+									for(var i = 0; i < FileDataArray.length; i++) { 
+										if(FileDataArray[i].id == priid) {
+											//如果有重复则移除原来的
+                                           FileDataArray.splice(i,1);
+										}
+									}
+									//添加新的附件
+									FileDataArray.push(person);
 									objArray.push([imgurl]);
 								} else {
 									document.getElementById('filename').value = imgurl;
-									FileData = [{
-										saveurl: imgurl, //图片地址 
-										imgurl: imgLink, //图片的缩略图 
-										oldname: file.name, //原名称  
-										newname: cc.key, //新名称
-										filesize: file.size //文件大小  
-									}]
 								}
-								//vm_loading.isShow = false; 
-
+								//vm_loading.isShow = false;  
 							} else {
 								var dialog = weui.dialog({
 									title: "上传失败",
 									content: JSON.stringify(info),
 									className: "custom-classname",
 									buttons: [{
-										label: "确定",
+										label: "确定", 
 										type: "primary",
 										onClick: function() {
 											dialog.hide();
@@ -748,13 +673,7 @@
 								});
 							}
 						},
-						'Error': function(up, err, errTip) {
-							//上传出错时,处理相关的事情
-							//console.log("Error:" + up);
-							//console.log("Error:" + JSON.stringify(err));
-							//console.log("Error:" + errTip);
-							//							vm_loading.isShow = false;
-							//							vm_loading.content = "数据加载中";
+						'Error': function(up, err, errTip) { 
 							var dialog = weui.dialog({
 								title: "操作失败",
 								content: pluploadutil.errMes(err.code, errTip),
@@ -796,7 +715,7 @@
 					appId: storageutil.QNQYWXKID,
 					mainSpace: storageutil.QNPUBSPACE,
 					saveSpace: storageutil.QNSSPACEWEBCON,
-					fileArray: [{ 
+					fileArray: [{
 						qnFileName: fileName,
 					}]
 				}

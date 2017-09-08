@@ -113,5 +113,40 @@ var utils = (function(mod) {
 		return tempStr;
 	}
 
+	/**
+	 * 获取时间 YYYY-MM-DD HH-MM-SS(2017-9-8 11:56:40)
+	 */
+	mod.getCurentTime = function() {
+		var myDate = new Date();
+		var year = myDate.getFullYear(); //年
+		var month = myDate.getMonth() + 1; //月
+		var day = myDate.getDate(); //日
+		var hh = myDate.getHours(); //时
+		var mm = myDate.getMinutes(); //分
+		var ss = myDate.getSeconds(); //秒
+		var clock = year + "-";
+		if(month < 10) {
+			clock += "0";
+		}
+		clock += month + "-";
+		if(day < 10) {
+			clock += "0";
+		}
+		clock += day + " ";
+		if(hh < 10) {
+			clock += "0";
+		}
+		clock += hh + ":";
+		if(mm < 10) {
+			clock += '0';
+		}
+		clock += mm + ":";
+		if(ss < 10) {
+			clock += '0';
+		}
+		clock += ss;
+		return clock;
+	}
+
 	return mod;
 })(window.utils || {});

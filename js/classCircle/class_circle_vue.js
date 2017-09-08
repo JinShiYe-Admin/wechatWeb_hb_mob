@@ -128,7 +128,7 @@ Vue.component("home-bd-item", {
 //添加动态组件
 Vue.component("add-trends", {
 	template: "#temp_add_trends_com",
-	props: ["showMedia"],
+	props: ["showMedia","maxlength"],
 	data: function() {
 		return {
 			com_content: "" //组件内的content
@@ -146,7 +146,7 @@ Vue.component("add-trends", {
 		 * 点击提交按钮
 		 */
 		submitData: function() {
-			this.$emit("submitData");
+			this.$emit("submit-data");
 		}
 	},
 	watch: {

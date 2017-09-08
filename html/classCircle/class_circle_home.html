@@ -36,8 +36,9 @@
 		<!--班级圈路由-->
 		<div id="router_class_circle_app">
 			<keep-alive>
-				<router-view></router-view>
+				<router-view v-if="$route.meta.keepAlive"></router-view>
 			</keep-alive>
+			<router-view v-if="!$route.meta.keepAlive"></router-view>
 		</div>
 		<!--路由--班级圈主页-->
 		<template id="router_class_circle_home">
@@ -55,7 +56,7 @@
 		</template>
 		<!--路由--发布动态或者评论-->
 		<template id="router_add_trends">
-			<add-trends :content="content" :show-media="showMedia" @add-media="addMedia" @submit-data="submitData" @content-change="contentChange"></add-trends>
+			<add-trends :content="content" :show-media="showMedia" :maxlength="maxlength" @add-media="addMedia" @submit-data="submitData" @content-change="contentChange"></add-trends>
 		</template>
 		<!--路由--动态详情-->
 		<template id="router_trends_details">
@@ -142,7 +143,7 @@
 						<div class="weui-media-box__desc">{{value.PublishDate}}</div>
 					</div>
 				</div>
-				<div class="class-circle-content-limit" @click="clickContent" :class="{'class-circle-content-limit-break':detail}">{{value.MsgContent}}</div>
+				<div class="class-circle-content-limit" @click="clickContent" :class="{'class-circle-content-limit-break':detail}">{{value.MsgContentTxt}}</div>
 				<template v-if="value.EncType == 1">
 					<image-item :images="value.EncAddr|imagesArray" :images-thumb="value.EncImgAddr|imagesArray"></image-item>
 				</template>
@@ -268,7 +269,7 @@
 		<!--发布动态组件-->
 		<template id="temp_add_trends_com">
 			<div class="class-circle-add">
-				<textarea class="weui-textarea" v-model="com_content" placeholder="不能为空" rows="6" maxlength="6000"></textarea>
+				<textarea class="weui-textarea" v-model="com_content" placeholder="不能为空" rows="6" :maxlength="maxlength"></textarea>
 				<div class="class-circle-add-media" v-if="showMedia">
 					<div class="iconfont icon-tuku" @click="addMedia(0)"></div>
 					<div class="iconfont icon-xiangji2" @click="addMedia(1)"></div>

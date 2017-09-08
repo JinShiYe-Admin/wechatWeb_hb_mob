@@ -221,12 +221,14 @@ function initRouter() {
 	var trends_add = {
 		template: "#router_add_trends",
 		data: function() {
+			console.log("trends_add:data:")
 			return {
 				allowBack: false, //允许返回
-				content: "", //文字，限制6000字
+				content: "", //文字，
 				showMedia: false, //是否显示添加图片，视频功能
 				images: [], //图片，限制9张
-				video: '' //视频，限制一个
+				video: '', //视频，限制一个
+				maxlength: 200 //动态限制6000字，评论回复限制200
 			};
 		},
 		methods: {
@@ -246,15 +248,30 @@ function initRouter() {
 				console.log("submitDataContent:" + submitDataContent);
 				if(submitDataContent === "") {
 					$.toast("请输入内容", "forbidden");
-					return
+					return false;
 				} else {
 					$.showLoading('正在上传数据');
 					this.allowBack = false;
-					setTimeout(function() {
-						$.hideLoading();
-						$.toast("发布成功");
-						this.allowBack = true;
-					}, 3000);
+					switch(this.$route.params.id) {
+						case "addTrends":
+							console.log("发布动态");
+							var submitData = {
+								userId: mineUserInfo.userid, //用户ID
+								msgTitle: "", //记事标题
+								msgContent: submitDataContent, //记事内容
+								encType: 3, //附件类型;1图片;2视频;3仅文字;4音频;5图文混排
+								encLen: 0, //音视频时长
+								encAddr: "", //附件地址
+								encImg: "", //附件缩略图地址
+								encIntro: "", //附件简介
+								noteType: 2, //信息类型
+								userIds: [], //推送用户ID
+								pubScopes: [1], //发布范围
+								pubArea: "" //发布区域
+							}
+							addTrend(submitData, this);
+							break;
+					}
 				}
 			},
 			/**
@@ -267,11 +284,10 @@ function initRouter() {
 		},
 		beforeRouteEnter: function(to, from, next) {
 			console.log("路由-发布动态或评论-显示之前:from:" + from.path + " to:" + to.path);
-			if("/" == from.path) {
+			if("/" == from.path || to.params.id == undefined) {
 				showClassCircleApp(next);
 			} else {
 				next(function(vm) {
-					vm.allowBack = true;
 					console.log("trends_add:id:" + vm.$route.params.id);
 					if(vm.$route.params.trendsValue != undefined) {
 						console.log("trends_add:trendsValue:" + JSON.stringify(vm.$route.params.trendsValue));
@@ -280,9 +296,11 @@ function initRouter() {
 					} else {
 						console.log("trends_add:trendsValue:" + vm.$route.params.trendsValue);
 					}
-					if(vm.$route.params.id === "addTrends") {
+					vm.allowBack = true;
+					if(vm.$route.params.id == "addTrends") {
 						//发布动态
 						vm.showMedia = true;
+						vm.maxlength = 6000;
 					}
 				});
 			}
@@ -494,9 +512,7 @@ function initRouter() {
 		},
 		beforeRouteUpdate: function(to, from, next) {
 			console.log("路由-用户空间-复用:from.path:" + from.path);
-			console.log("路由-用户空间-复用:from.id:" + from.params.id);
 			console.log("路由-用户空间-复用:to.path:" + to.path);
-			console.log("路由-用户空间-复用:to.id:" + to.params.id);
 			//记录原页面的滚动距离
 			var from_data = space_data[from.params.id];
 			if(from_data != undefined) {
@@ -539,19 +555,31 @@ function initRouter() {
 		routes: [{
 			path: '/home',
 			name: 'home',
-			component: class_circle_home
+			component: class_circle_home,
+			mate: {
+				keepAlive: true
+			}
 		}, {
 			path: '/trends_add',
 			name: 'add',
-			component: trends_add
+			component: trends_add,
+			mate: {
+				keepAlive: false
+			}
 		}, {
 			path: '/trends_details/:id',
 			name: 'details',
-			component: trends_details
+			component: trends_details,
+			mate: {
+				keepAlive: true
+			}
 		}, {
 			path: '/user_space/:id',
 			name: 'space',
-			component: user_space
+			component: user_space,
+			mate: {
+				keepAlive: true
+			}
 		}]
 	});
 
@@ -926,22 +954,16 @@ function getUserSpace(publisherIds, pageIndex, id, element) {
 	classCircleProtocol.getAllUserSpacesByUser(submitData, function(data) {
 		console.log("getUserSpace:", data);
 
-		var vm_data = space_data[id];
+		var vm_data = {};
 		//允许下拉刷新或者上拉加载更多
 		vm_data.allow_loaddata = true;
 		//收起下拉刷新
 		if(data.RspCode == 0) {
-			if(submitData.pageIndex == 1) {
-				//下拉刷新或者获取第一页的内容
-				vm_data.data = data.RspData.Data;
-				//收起下拉刷新
-				if(element != undefined) {
-					$(element).pullToRefreshDone();
-				}
-				vm_data.data = data.RspData.Data;
-			} else {
-				Array.prototype.push.apply(vm_data.data, data.RspData.Data);
+			//收起下拉刷新
+			if(element != undefined) {
+				$(element).pullToRefreshDone();
 			}
+			vm_data.data = data.RspData.Data;
 			vm_data.pageIndex = pageIndex; //当前页数
 			vm_data.TotalPage = data.RspData.TotalPage; //总页数
 			if(vm_data.pageIndex >= vm_data.TotalPage) {
@@ -957,13 +979,72 @@ function getUserSpace(publisherIds, pageIndex, id, element) {
 		} else {
 			$.alert(data.RspTxt, "加载失败");
 		}
-		if(id == router_user_space.$route.params.id) {
-			router_user_space.allow_loaddata = space_data[id].allow_loaddata;
-			router_user_space.init_loadmore = space_data[id].init_loadmore;
-			router_user_space.show_loadmore = space_data[id].show_loadmore;
-			router_user_space.show_loadmore_loading = space_data[id].show_loadmore_loading;
-			router_user_space.show_loadmore_content = space_data[id].show_loadmore_content;
-			router_user_space.data = space_data[id].data;
+		try {
+			if(space_data[id] != undefined) {
+				space_data[id].pageIndex = vm_data.pageIndex;
+				space_data[id].TotalPage = vm_data.TotalPage;
+				space_data[id].allow_loaddata = vm_data.allow_loaddata;
+				space_data[id].init_loadmore = vm_data.init_loadmore;
+				space_data[id].show_loadmore_loading = vm_data.show_loadmore_loading;
+				space_data[id].show_loadmore_content = vm_data.show_loadmore_content;
+				if(submitData.pageIndex == 1) {
+					//下拉刷新或者获取第一页的内容
+					space_data[id].data = vm_data.data;
+				} else {
+					Array.prototype.push.apply(space_data[id].data, vm_data.data);
+				}
+			}
+			if(id == router_user_space.$route.params.id) {
+				router_user_space.allow_loaddata = space_data[id].allow_loaddata;
+				router_user_space.init_loadmore = space_data[id].init_loadmore;
+				router_user_space.show_loadmore = space_data[id].show_loadmore;
+				router_user_space.show_loadmore_loading = space_data[id].show_loadmore_loading;
+				router_user_space.show_loadmore_content = space_data[id].show_loadmore_content;
+				router_user_space.data = space_data[id].data;
+			}
+		} catch(e) {
+			console.log("error:" + e.message);
+		}
+	});
+}
+
+/**
+ * 发布动态
+ * @param {Object} submitData 提交的数据
+ * @param {Object} addTrendRoute 路由对象
+ */
+function addTrend(submitData, addTrendRoute) {
+	classCircleProtocol.addUserSpace(submitData, function(data) {
+		console.log("addTrend:", data);
+		$.hideLoading();
+		addTrendRoute.allowBack = true;
+		if(data.RspCode == 0 && data.RspData.Result != 0) {
+			$.toast("发布成功");
+			var newTrends = {
+				"LikeUsers": [],
+				"TabId": data.RspData.Result,
+				"Comments": [],
+				"MsgContent": submitData.msgContent,
+				"EncTypeStr": "",
+				"EncType": 3,
+				"EncAddr": "",
+				"NoteType": 2,
+				"MsgContentTxt": submitData.msgContent,
+				"PublisherId": submitData.userId,
+				"EncImgAddr": "",
+				"InShow": 0,
+				"NoteTypeStr": "",
+				"EncIntro": "",
+				"ReadCnt": 0,
+				"EncLen": 0,
+				"IsLike": 0,
+				"PublishDate": utils.getCurentTime()
+			}
+			home_data.data[0].data.unshift($.extend({}, newTrends));
+			home_data.data[1].data.unshift($.extend({}, newTrends));
+			router.back();
+		} else {
+			$.alert(data.RspTxt, "发布失败");
 		}
 	});
 }

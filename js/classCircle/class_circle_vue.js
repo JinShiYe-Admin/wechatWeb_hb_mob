@@ -139,7 +139,7 @@ Vue.component("home-bd-item", {
 //添加动态组件
 Vue.component("add-trends", {
 	template: "#temp_add_trends_com",
-	props: ["showMedia", "maxlength","placeholder"],
+	props: ["showMedia", "maxlength", "placeholder"],
 	data: function() {
 		return {
 			com_content: "" //组件内的content
@@ -268,7 +268,29 @@ Vue.component("trends-item", {
 //与我相关组件
 Vue.component("relate-item", {
 	template: "#temp_relate_to_me",
-	props: ["value"]
+	props: ["value"],
+	methods: {
+		/**
+		 * 头像加载成功
+		 * @param {Object} e
+		 */
+		headLoad: function(e) {
+			var img = e.target;
+			var imgWidth = img.width;
+			var imgHeight = img.height;
+			if(imgWidth > imgHeight) {
+				img.style.height = "40px";
+				img.style.width = 'initial';
+			}
+		},
+		/**
+		 * 头像加载失败
+		 * @param {Object} e
+		 */
+		headError: function(e, level) {
+			e.target.src = utils.updateHeadImage("", level);
+		}
+	}
 });
 //评论组件
 Vue.component("comments-item", {
@@ -320,7 +342,7 @@ Vue.component("image-item", {
 Vue.component("praiser-item", {
 	template: "#temp_praiser_list",
 	props: ["likers"],
-	methods:{
+	methods: {
 		/**
 		 * 点击点赞人的名字
 		 * @param {Object} userId 用户的id

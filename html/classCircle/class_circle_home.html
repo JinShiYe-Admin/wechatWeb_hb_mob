@@ -177,16 +177,24 @@
 			<div class="weui-media-box relate-reply-type-praise">
 				<div class="weui-media-box_appmsg">
 					<div class="weui-media-box__hd class-circle-headimage-hd">
-						<img class="weui-media-box__thumb class-circle-headimage" src="../../image/config/func_actssm.jpg" />
+						<img class="weui-media-box__thumb class-circle-headimage" @load="headLoad($event)" @error.once="headError($event)" :src="value.UserId|userThumbImage" />
 					</div>
 					<div class="weui-media-box__bd">
 						<div class="class-circle-title">
-							<div class="weui-media-box__title relate-name">
-								标题一标题一标题一标
-							</div>
-							<div class="relate-reply-type">赞了我</div>
+							<div class="weui-media-box__title relate-name">{{value.UserId|userName}}</div>
+							<template v-if="value.MsgType == 1">
+								<div class="relate-reply-type">评论了我</div>
+								<div class="relate-reply">回复</div>
+							</template>
+							<template v-else-if="value.MsgType == 2">
+								<div class="relate-reply-type">回复了我</div>
+								<div class="relate-reply">回复</div>
+							</template>
+							<template v-else-if="value.MsgType == 3">
+								<div class="relate-reply-type">赞了我</div>
+							</template>
 						</div>
-						<div class="weui-media-box__desc">2017-8-14 09:14:42</div>
+						<div class="weui-media-box__desc">{{value.MsgDate}}</div>
 					</div>
 				</div>
 				<div class="relate-reply-content">
@@ -214,7 +222,7 @@
 					<div class="weui-media-box__bd">
 						<div class="class-circle-title">
 							<div class="weui-media-box__title relate-name">
-								标题一标题一标一标
+								标题一标题一标一标标题一标题一标题一标
 							</div>
 							<div class="relate-reply-type">评论了我</div>
 							<div class="relate-reply">回复</div>
@@ -301,7 +309,7 @@
 			</div>
 		</template>
 		<script type="text/javascript">
-			document.write("<s" + "cript type='text/javascript' src='../../js/mui.min.js?" + Math.random() + "'></s" + "cript>");
+//			document.write("<s" + "cript type='text/javascript' src='../../js/mui.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-2.1.4.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-weui.js?" + Math.random() + "'></s" + "cript>");

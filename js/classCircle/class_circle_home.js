@@ -255,11 +255,15 @@ function initRouter() {
 								pubScopes: [1], //发布范围
 								pubArea: "" //发布区域
 							}
-							addTrend(submitData, this);
+							addTrend(this, submitData);
 							break;
 						case "addComment":
 							//发布评论
-							addComment(this.$route.params.trendsValue, submitDataContent, this);
+							addComment(this, submitDataContent, this.$route.params.trendsValue);
+							break;
+						case "addReply":
+							//发布回复
+							addReply(this, submitDataContent, this.$route.params.trendsValue, this.$route.params.replyUserId, this.$route.params.commentIndex, this.$route.params.replysIndex)
 							break;
 					}
 				}
@@ -291,16 +295,16 @@ function initRouter() {
 						//发布动态
 						vm.showMedia = true;
 						vm.maxlength = 6000;
-						vm.placeholder = "动态不能为空,最多6000字!";
+						vm.placeholder = "动态:不能为空,最多6000字!";
 					} else if(vm.$route.params.id == "addComment") {
 						//发布评论
 						vm.showMedia = false;
 						vm.maxlength = 200;
-						vm.placeholder = "评论不能为空,最多200字!";
+						vm.placeholder = "评论:不能为空,最多200字!";
 					} else if(vm.$route.params.id == "addReply") {
 						vm.showMedia = false;
 						vm.maxlength = 200;
-						vm.placeholder = "回复不能为空,最多200字!";
+						vm.placeholder = "回复" + departUserInfo.value[vm.$route.params.replyUserId].name + ":不能为空,最多200字!";
 					}
 				});
 			}
@@ -818,7 +822,7 @@ function changePraise(trendsValue) {
 		classCircleProtocol.setUserSpaceLikeByUser(submitData, function(data) {
 			if(data.RspCode == 0 && data.RspData.Result == 1) {
 				trendsValue.IsLike = 1;
-				trendsValue.LikeUsers.unshift({
+				trendsValue.LikeUsers.push({
 					operDate: utils.getCurentTime(),
 					userId: mineUserInfo.userid
 				})
@@ -981,13 +985,68 @@ function getUserSpace(publisherIds, pageIndex, id, element) {
 }
 
 /**
- * 发布动态
- * @param {Object} submitData 提交的数据
- * @param {Object} routeAdd 路由对象
+ * 进入评论页面
+ * @param {Number} trendsValue 动态
  */
-function addTrend(submitData, routeAdd) {
+function showAddComments(trendsValue) {
+	console.log("showAddComments:", trendsValue);
+	router.push({
+		name: 'add',
+		params: {
+			id: 'addComment',
+			trendsValue: trendsValue,
+		}
+	});
+}
+
+/**
+ * 进入回复页面
+ * @param {Number} trendsValue 动态
+ * @param {Object} commentIndex 评论的序号
+ * @param {Object} replysIndex 回复的序号
+ */
+function addReplys(trendsValue, commentIndex, replysIndex) {
+	console.log("addReplys:", trendsValue);
+	var Comment;
+	if(replysIndex == undefined) {
+		//点击评论
+		Comment = trendsValue.Comments[commentIndex];
+	} else {
+		//点击回复
+		Comment = trendsValue.Comments[commentIndex].Replys[replysIndex];
+	}
+	console.log("Comment:", Comment);
+	if(Comment.UserId == mineUserInfo.userid) {
+		//评论者是自己
+		console.log("评论者是自己");
+		return false;
+	}
+	if(departUserInfo.value[Comment.UserId] == undefined) {
+		//评论者没有对应资料
+		console.log("无此人资料");
+		return false;
+	}
+	router.push({
+		name: 'add',
+		params: {
+			id: 'addReply',
+			trendsValue: trendsValue, //动态
+			replyUserId: Comment.UserId, //回复人id
+			commentIndex: commentIndex, //评论的序号
+			replysIndex: replysIndex, //回复的序号
+		}
+	});
+}
+
+/**
+ * 发布动态
+ * @param {Object} routeAdd 路由对象
+ * @param {Object} submitData 提交的数据
+ */
+function addTrend(routeAdd, submitData) {
+	console.log("addTrend:submitData:", submitData);
 	classCircleProtocol.addUserSpace(submitData, function(data) {
-		console.log("addTrend:", data);
+		console.log("新增动态:", data);
 		$.hideLoading();
 		routeAdd.allowBack = true;
 		if(data.RspCode == 0 && data.RspData.Result != 0) {
@@ -1022,66 +1081,31 @@ function addTrend(submitData, routeAdd) {
 }
 
 /**
- * 对评论进行回复
- * @param {Number} trendsValue 动态
- * @param {Object} commentIndex 评论的序号
- * @param {Object} replysIndex 回复的序号
- */
-function addReplys(trendsValue, commentIndex, replysIndex) {
-	console.log("addReplys:", trendsValue);
-	var Replys = trendsValue.Comments[commentIndex].Replys[replysIndex];
-	console.log("Replys:", Replys);
-	router.push({
-		name: 'add',
-		params: {
-			id: 'addReply',
-			trendsValue: trendsValue,
-			commentIndex: commentIndex,
-			replysIndex: replysIndex
-		}
-	});
-}
-
-/**
- * 进入评论页面
- * @param {Number} trendsValue 动态
- */
-function showAddComments(trendsValue) {
-	console.log("showAddComments:", trendsValue);
-	router.push({
-		name: 'add',
-		params: {
-			id: 'addComment',
-			trendsValue: trendsValue,
-		}
-	});
-}
-
-/**
  * 添加评论
- * @param {Object} trendsValue 动态数据
- * @param {Object} commentContent 评论内容
  * @param {Object} routeAdd 路由对象
+ * @param {Object} commentContent 评论内容
+ * @param {Object} trendsValue 动态数据
  */
-function addComment(trendsValue, commentContent, routeAdd) {
-	console.log("addComment:trendsValue:", trendsValue);
-	console.log("addComment:commentContent:", commentContent);
+function addComment(routeAdd, commentContent, trendsValue) {
+	console.log("addComment:", commentContent, trendsValue);
 	var submitData = {
 		userId: mineUserInfo.userid, //用户ID
 		userSpaceId: trendsValue.TabId, //用户空间ID
 		commentContent: commentContent //评论内容
 	}
 	classCircleProtocol.addUserSpaceComment(submitData, function(data) {
+		console.log("新增评论:", data);
 		$.hideLoading();
 		routeAdd.allowBack = true;
 		if(data.RspCode == 0) {
+			$.toast("发布成功");
 			var newComment = {
 				"CommentDate": utils.getCurentTime(),
-				"TabId": 2,
+				"TabId": data.RspData.Result,
 				"Replys": [],
 				"ReplyId": "0",
 				"CommentContent": commentContent,
-				"UserId": "moshanglin",
+				"UserId": mineUserInfo.userid,
 				"UpperId": 0
 			}
 			trendsValue.Comments.unshift(newComment);
@@ -1090,5 +1114,44 @@ function addComment(trendsValue, commentContent, routeAdd) {
 			$.alert(data.RspTxt, "发布失败");
 		}
 	});
-
 }
+
+/**
+ * 添加回复
+ * @param {Object} routeAdd 路由对象
+ * @param {Object} commentContent 回复内容
+ * @param {Object} trendsValue 动态数据
+ * @param {Object} replyUserId 回复ID
+ * @param {Object} commentIndex 评论的序号
+ * @param {Object} replysIndex 回复的序号
+ */
+function addReply(routeAdd, commentContent, trendsValue, replyUserId, commentIndex, replysIndex) {
+	console.log("addReply:", commentContent, trendsValue, replyUserId, commentIndex, replysIndex);
+	var submitData = {
+		userId: mineUserInfo.userid, //用户ID
+		upperId: trendsValue.Comments[commentIndex].TabId, //主评论ID
+		replyUserId: replyUserId, //回复ID
+		userSpaceId: trendsValue.TabId, //用户空间ID
+		commentContent: commentContent //回复内容
+	}
+	classCircleProtocol.addUserSpaceCommentReply(submitData, function(data) {
+		console.log("新增回复:", data);
+		$.hideLoading();
+		routeAdd.allowBack = true;
+		if(data.RspCode == 0) {
+			$.toast("发布成功");
+			var newReply = {
+				"CommentDate": utils.getCurentTime(),
+				"TabId": data.RspData.Result,
+				"ReplyId": replyUserId,
+				"CommentContent": commentContent,
+				"UserId": mineUserInfo.userid,
+				"UpperId": trendsValue.Comments[commentIndex].TabId
+			}
+			trendsValue.Comments[commentIndex].Replys.push(newReply);
+			router.back();
+		} else {
+			$.alert(data.RspTxt, "发布失败");
+		}
+	});
+};

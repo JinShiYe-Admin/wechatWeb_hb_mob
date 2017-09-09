@@ -296,9 +296,7 @@
 		<!--点赞列表-->
 		<template id="temp_praiser_list">
 			<div class="class-circle-praise-bg">
-				<div class="class-circle-praiser" v-for="(value,index) in likers.showArray" @click="clickName(value.userId)">
-					{{value.userId|userName}}
-				</div>
+				<div class="class-circle-praiser" v-for="(value,index) in likers.showArray" @click="clickName(value.userId)">{{value.userId|userName}}</div>
 				<div class="class-circle-praiser" v-if="likers.num > 20">等{{likers.num}}人觉得很赞</div>
 			</div>
 		</template>

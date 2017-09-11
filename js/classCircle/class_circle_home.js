@@ -7,6 +7,9 @@ var departUserInfo = {
 };
 var temp_data; //临时变量;用于查询我所处部门的所有成员
 var show_class_circle_app = false; //是否显示班级圈app
+//---假数据---start---
+//var show_class_circle_app = true; //是否显示班级圈app
+//---假数据--end---
 var router; //路由
 var router_user_space; //个人空间路由
 //班级圈主页数据
@@ -53,28 +56,17 @@ var home_data = {
 var space_data = {}; //空间的所有数据
 
 window.onload = function() {
-	//	mui.init({
-	//		beforeback: function() {
-	//			console.log("beforeback:");
-	//			router.back();
-	//			return false;
-	//		}
-	//	});
-
 	//console.log("href:" + window.location.href);
-	$.showLoading('正在加载');
+	$.showLoading('加载中...');
 	initRouter();
 	//获取我的信息
 	getMineInfo();
 
-	//$.hideLoading();
+	//---假数据---start---
 	//temp_data = null;
-	//	//显示班级圈主页
 	//router.push('home');
-	//	//禁止全部动态列表进行下拉刷新和上拉加载中
-	//	home_data.data[0].allow_loaddata = false;
-	//	//获取与我相关
 	//getHomeTrends(0, 1);
+	//---假数据---end---
 }
 
 //设置路由
@@ -161,6 +153,43 @@ function initRouter() {
 					name: 'add',
 					params: {
 						id: 'addTrend',
+					}
+				});
+			},
+			/**
+			 * 点击与我相关内容
+			 * @param {Object} SpaceId
+			 */
+			clickRelateContent: function(spaceId) {
+				getTrendsDetails(spaceId);
+			},
+			/**
+			 * 点击与我相关的回复或者回复的内容
+			 * @param {Object} valueIndex 与我相关列表序号
+			 * @param {Object} spaceId 动态id
+			 * @param {Object} tabId 主评论id
+			 * @param {Object} replyUserId 回复的id
+			 */
+			clickRelateReply: function(valueIndex, spaceId, tabId, replyUserId) {
+				console.log("clickRelateReply:" + valueIndex + " " + spaceId + " " + replyUserId);
+				if(mineUserInfo.userid == replyUserId) {
+					//评论者是自己
+					console.log("评论者是自己");
+					return false;
+				}
+				if(departUserInfo.value[replyUserId] == undefined) {
+					//评论者没有对应资料
+					console.log("无此人资料");
+					return false;
+				}
+				router.push({
+					name: 'add',
+					params: {
+						id: 'addRelateReply',
+						valueIndex: valueIndex, //与我相关列表序号
+						spaceId: spaceId, //动态id
+						tabId: tabId, //主评论id
+						replyUserId: replyUserId, //回复的id
 					}
 				});
 			}
@@ -264,6 +293,9 @@ function initRouter() {
 							//发布回复
 							addReply(this, submitDataContent, this.$route.params.trendsValue, this.$route.params.replyUserId, this.$route.params.commentIndex, this.$route.params.replysIndex)
 							break;
+						case "addRelateReply":
+							addRelateReply(this, submitDataContent, this.$route.params.valueIndex, this.$route.params.spaceId, this.$route.params.tabId, this.$route.params.replyUserId);
+							break;
 					}
 				}
 			},
@@ -282,13 +314,7 @@ function initRouter() {
 			} else {
 				next(function(vm) {
 					console.log("trends_add:id:" + vm.$route.params.id);
-					if(vm.$route.params.trendsValue != undefined) {
-						console.log("trends_add:trendsValue:", vm.$route.params.trendsValue);
-						console.log("trends_add:commentIndex:" + vm.$route.params.commentIndex);
-						console.log("trends_add:replysIndex:" + vm.$route.params.replysIndex);
-					} else {
-						console.log("trends_add:trendsValue:" + vm.$route.params.trendsValue);
-					}
+					console.log("trends_add:params:", vm.$route.params);
 					vm.allowBack = true;
 					vm.$refs.add.cleanContent(); //清理内容
 					if(vm.$route.params.id == "addTrend") {
@@ -301,7 +327,7 @@ function initRouter() {
 						vm.showMedia = false;
 						vm.maxlength = 200;
 						vm.placeholder = "评论:不能为空,最多200字!";
-					} else if(vm.$route.params.id == "addReply") {
+					} else if(vm.$route.params.id == "addReply" || vm.$route.params.id == "addRelateReply") {
 						vm.showMedia = false;
 						vm.maxlength = 200;
 						vm.placeholder = "回复" + departUserInfo.value[vm.$route.params.replyUserId].name + ":不能为空,最多200字!";
@@ -493,7 +519,6 @@ function initRouter() {
 			if(from_data != undefined) {
 				from_data.scrollTop = $(".class-circle-user-space #user_space_" + from.params.id + ".weui-tab__bd-item").scrollTop();
 				from_data.leave = true;
-
 			}
 			var leave = space_data[to.params.id]
 			this.initData(to.params.id, leave);
@@ -699,6 +724,14 @@ function disposeMemberData(data) {
 			if(departUserInfo.value[data.RspData[i].userid] === undefined) {
 				var userId = data.RspData[i].userid.toString();
 				departUserInfo.key.push(userId);
+				var avatar = departUserInfoArray[i].avatar;
+				if(avatar != "" && "/" != avatar[avatar.length - 1]) {
+					var k = avatar.split("").reverse().join("").indexOf("/");
+					if(k != 0) {
+						avatar = avatar.substring(0, avatar.length - k);
+						departUserInfoArray[i].avatar = avatar;
+					}
+				}
 				departUserInfo.value[userId] = $.extend({}, data.RspData[i]);
 			}
 		}
@@ -883,14 +916,14 @@ function disposeHomeData(type, submitData, element, data) {
 	console.log("disposeHomeData:data:", data);
 	//允许下拉刷新或者上拉加载更多
 	home_data.data[type].allow_loaddata = true;
+	//收起下拉刷新
+	if(element != undefined) {
+		$(element).pullToRefreshDone();
+	}
 	if(data.RspCode == 0) {
 		if(submitData.pageIndex == 1) {
 			//下拉刷新或者获取第一页的内容
 			home_data.data[type].data = data.RspData.Data;
-			//收起下拉刷新
-			if(element != undefined) {
-				$(element).pullToRefreshDone();
-			}
 		} else {
 			Array.prototype.push.apply(home_data.data[type].data, data.RspData.Data);
 		}
@@ -933,11 +966,10 @@ function getUserSpace(publisherIds, pageIndex, id, element) {
 		//允许下拉刷新或者上拉加载更多
 		vm_data.allow_loaddata = true;
 		//收起下拉刷新
+		if(element != undefined) {
+			$(element).pullToRefreshDone();
+		}
 		if(data.RspCode == 0) {
-			//收起下拉刷新
-			if(element != undefined) {
-				$(element).pullToRefreshDone();
-			}
 			vm_data.data = data.RspData.Data;
 			vm_data.pageIndex = pageIndex; //当前页数
 			vm_data.TotalPage = data.RspData.TotalPage; //总页数
@@ -1154,3 +1186,63 @@ function addReply(routeAdd, commentContent, trendsValue, replyUserId, commentInd
 		}
 	});
 };
+
+/**
+ * 获取动态的详情
+ * @param {Object} spaceId
+ */
+function getTrendsDetails(spaceId) {
+	$.showLoading('加载中...');
+	var submitData = {
+		userId: mineUserInfo.userid, //用户ID
+		userSpaceId: spaceId, //用户动态ID
+		pageIndex: 1, //评论当前页数
+		pageSize: 999 //评论每页记录数
+	}
+	classCircleProtocol.getUserSpaceByUser(submitData, function(data) {
+		console.log("getTrendsDetails", data);
+		$.hideLoading();
+		if(data.RspCode == 0) {
+			showTrendsDetails(data.RspData.Data);
+		} else {
+			$.alert(data.RspTxt, "加载失败");
+		}
+	})
+}
+
+/**
+ * 回复与我相关列表
+ * @param {Object} routeAdd 路由对象
+ * @param {Object} commentContent 回复内容
+ * @param {Object} valueIndex 与我相关列表内容的序号
+ * @param {Object} spaceId 动态id
+ * @param {Object} tabId 主评论id
+ * @param {Object} replyUserId 回复的id
+ */
+function addRelateReply(routeAdd, commentContent, valueIndex, spaceId, tabId, replyUserId) {
+	console.log("addRelateReply:", commentContent, valueIndex, spaceId, replyUserId);
+	var submitData = {
+		userId: mineUserInfo.userid, //用户ID
+		upperId: tabId, //主评论ID
+		replyUserId: replyUserId, //回复ID
+		userSpaceId: spaceId, //用户空间ID
+		commentContent: commentContent //回复内容
+	}
+	classCircleProtocol.addUserSpaceCommentReply(submitData, function(data) {
+		console.log("新增回复:", data);
+		$.hideLoading();
+		routeAdd.allowBack = true;
+		if(data.RspCode == 0) {
+			$.toast("发布成功");
+			var newReply = {
+				"MsgContent": commentContent,
+				"MsgFrom": mineUserInfo.userid,
+				"MsgTo": replyUserId,
+			}
+			home_data.data[2].data[valueIndex].MsgArray.push(newReply);
+			router.back();
+		} else {
+			$.alert(data.RspTxt, "发布失败");
+		}
+	});
+}

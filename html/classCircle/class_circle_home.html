@@ -21,12 +21,14 @@
 				var wsHeight = window.screen.height;
 				var relate_praise_name = wsWidth - 30 - 40 - 15 - 5 - 5 - 48; //与我相关的人的名称的宽度(赞了我)
 				var relate_comment_name = wsWidth - 30 - 40 - 15 - 5 - 5 - 64 - 10 - 32; //与我相关的人的名称的宽度(评论了我)
+				var relate_trends_content = wsWidth - 30 - 50 - 5; //与我相关动态的内容
 				var style = document.createElement("style");
 				style.type = "text/css";
 				var sstr_0 = ".relate-reply-type-praise .relate-name{max-width: " + relate_praise_name + "px;}";
 				var sstr_1 = ".relate-reply-type-comment .relate-name{max-width: " + relate_comment_name + "px;}";
 				var sstr_2 = ".class-circle-user-space.weui-tab{height: " + (wsHeight + 30) + "px;}"
-				style.innerHTML = sstr_0 + sstr_1 + sstr_2;
+				var sstr_3 = ".relate-to-me .relate-reply-trends-bg .relate-reply-trends-img+.relate-reply-trends {width: " + relate_trends_content + "px;}"
+				style.innerHTML = sstr_0 + sstr_1 + sstr_2 + sstr_3;
 				document.getElementsByTagName('head').item(0).appendChild(style);
 			})();
 		</script>
@@ -47,7 +49,7 @@
 						<home-navbar-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-item="clickItem"></home-navbar-item>
 					</div>
 					<div class="weui-tab__bd">
-						<home-bd-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-person="clickPerson" @click-content="clickContent" @click-function="clickFunction" @click-comment="clickComment"></home-bd-item>
+						<home-bd-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-person="clickPerson" @click-content="clickContent" @click-function="clickFunction" @click-comment="clickComment" @click-relate-content="clickRelateContent" @click-relate-reply="clickRelateReply"></home-bd-item>
 					</div>
 				</div>
 				<div @click="clickAddTrends" class="class-circle-report">+ 发表动态</div>
@@ -114,10 +116,10 @@
 					<div class="weui-panel__bd">
 						<template v-if="value.id=='relate_to_me_2'">
 							<!--与我相关-->
-							<relate-item v-for="(item_value,item_index) in value.data" :key="item_index" :value="item_value"></relate-item>
+							<relate-item v-for="(item_value,item_index) in value.data" :key="item_index" :value="item_value" :index="item_index" @click-person="clickPerson" @click-relate-content="clickRelateContent" @click-relate-reply="clickRelateReply"></relate-item>
 						</template>
 						<template v-else>
-							<trends-item v-for="(item_value,item_index) in value.data" :index="item_index" :key="item_index" :value="item_value" :detail="false" @click-person="clickPerson" @click-content="clickContent" @click-function="clickFunction" @click-comment="clickComment"></trends-item>
+							<trends-item v-for="(item_value,item_index) in value.data" :key="item_index" :value="item_value" :index="item_index" :detail="false" @click-person="clickPerson" @click-content="clickContent" @click-function="clickFunction" @click-comment="clickComment"></trends-item>
 						</template>
 					</div>
 				</div>
@@ -173,21 +175,21 @@
 		</template>
 		<!--与我相关模板-->
 		<template id="temp_relate_to_me">
-			<div class="weui-media-box relate-reply-type-praise">
+			<div class="weui-media-box relate-to-me" :class="{'relate-reply-type-praise':relateType,'relate-reply-type-comment':!relateType}">
 				<div class="weui-media-box_appmsg">
 					<div class="weui-media-box__hd class-circle-headimage-hd">
-						<img class="weui-media-box__thumb class-circle-headimage" @load="headLoad($event)" @error.once="headError($event)" :src="value.UserId|userThumbImage" />
+						<img class="weui-media-box__thumb class-circle-headimage" @load="headLoad($event)" @error.once="headError($event)" @click="clickPerson(value.UserId)" :src="value.UserId|userThumbImage" />
 					</div>
 					<div class="weui-media-box__bd">
 						<div class="class-circle-title">
-							<div class="weui-media-box__title relate-name">{{value.UserId|userName}}</div>
+							<div class="weui-media-box__title relate-name" @click="clickPerson(value.UserId)">{{value.UserId|userName}}</div>
 							<template v-if="value.MsgType == 1">
 								<div class="relate-reply-type">评论了我</div>
-								<div class="relate-reply">回复</div>
+								<div class="relate-reply" @click="clickRelateReply(value.UserId)">回复</div>
 							</template>
 							<template v-else-if="value.MsgType == 2">
 								<div class="relate-reply-type">回复了我</div>
-								<div class="relate-reply">回复</div>
+								<div class="relate-reply" @click="clickRelateReply(value.UserId)">回复</div>
 							</template>
 							<template v-else-if="value.MsgType == 3">
 								<div class="relate-reply-type">赞了我</div>
@@ -196,65 +198,31 @@
 						<div class="weui-media-box__desc">{{value.MsgDate}}</div>
 					</div>
 				</div>
-				<div class="relate-reply-content">
-					<div class="relate-reply-content-img">
-						<img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2760619582,1034521198&fm=11&gp=0.jpg" />
+				<template v-if="value.MsgType != 3">
+					<div @click="clickRelateContent">{{value.Content}}</div>
+				</template>
+				<div class="relate-reply-trends-bg">
+					<div class="relate-reply-trends-img" v-if="value.EncType == 1">
+						<img @load="trendsLoad($event)" @click="clickRelateContent" @error.once="headError($event)" :src="value.UserId|userThumbImage" />
 					</div>
-					<div class="relate-reply-content-text">
+					<div class="relate-reply-trends">
 						<div class="relate-reply-content-limit">
-							<div class="relate-reply-content-name">
-								张一二三四五六七八九十云张一二三四五六七八九十云
-							</div>
-							：一二三四五六七八九十一二三四五六七八九十
+							<div class="relate-reply-content-name" @click="clickPerson(value.UserOwnerId)">{{value.UserOwnerId|userName}}</div>
+							<span @click="clickRelateContent">：{{value.MsgContent}}</span>
 						</div>
 					</div>
 				</div>
-			</div>
-		</template>
-		<!--与我相关模板-->
-		<template id="temp_relate_to_me_comment">
-			<div class="weui-media-box relate-reply-type-comment">
-				<div class="weui-media-box_appmsg">
-					<div class="weui-media-box__hd class-circle-headimage-hd">
-						<img class="weui-media-box__thumb class-circle-headimage" src="../../image/config/func_actssm.jpg" />
-					</div>
-					<div class="weui-media-box__bd">
-						<div class="class-circle-title">
-							<div class="weui-media-box__title relate-name">
-								标题一标题一标一标标题一标题一标题一标
-							</div>
-							<div class="relate-reply-type">评论了我</div>
-							<div class="relate-reply">回复</div>
-						</div>
-						<div class="weui-media-box__desc">2017-8-14 09:14:42</div>
-					</div>
-				</div>
-				<div>一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十</div>
-				<div class="relate-reply-content">
-					<div class="relate-reply-content-img">
-						<img src="http://www.w3school.com.cn/i/bg_flower_small.gif" />
-					</div>
-					<div class="relate-reply-content-text">
-						<div class="relate-reply-content-limit">
-							<div class="relate-reply-content-name">
-								张一
-							</div>
-							：一二三四五六七八九十一二三四五六七八九十
+				<template v-if="value.MsgArray.length > 0">
+					<div class="class-circle-comment-bg">
+						<div class="class-circle-comment-item" v-for="(msg_value,mesg_index) in value.MsgArray" v-if="mesg_index < 20">
+							<div class="class-circle-comment-name" @click="clickPerson(msg_value.MsgFrom)">{{msg_value.MsgFrom|userName}}</div>
+							<div class="class-circle-comment-content">回复</div>
+							<div class="class-circle-comment-name" @click="clickPerson(msg_value.MsgTo)">{{msg_value.MsgTo|userName}}</div>
+							<div class="class-circle-comment-content" @click="clickRelateReply(msg_value.MsgFrom)">：{{msg_value.MsgContent}}</div>
 						</div>
 					</div>
-				</div>
-				<div class="class-circle-comment-bg">
-					<div class="class-circle-comment-item">
-						<div class="class-circle-comment-name">壹</div>
-						<div class="class-circle-comment-content">：一二三四 </div>
-					</div>
-					<div class="class-circle-comment-item">
-						<div class="class-circle-comment-name">贰</div>
-						<div class="class-circle-comment-content">回复</div>
-						<div class="class-circle-comment-name">壹</div>
-						<div class="class-circle-comment-content">：一二三四五六七八九十</div>
-					</div>
-				</div>
+					<div class="class-circle-show-all" v-if="value.MsgArray.length > 20" @click="clickRelateContent">查看全部</div>
+				</template>
 			</div>
 		</template>
 		<!--评论组件-->
@@ -308,7 +276,6 @@
 			</div>
 		</template>
 		<script type="text/javascript">
-//			document.write("<s" + "cript type='text/javascript' src='../../js/mui.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-2.1.4.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-weui.js?" + Math.random() + "'></s" + "cript>");
@@ -321,7 +288,7 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_vue.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_protocol.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_home.js?" + Math.random() + "'></s" + "cript>");
-//			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_temp_data.js?" + Math.random() + "'></s" + "cript>");
+			//document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_temp_data.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 	</body>
 

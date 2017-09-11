@@ -53,19 +53,19 @@ var home_data = {
 var space_data = {}; //空间的所有数据
 
 window.onload = function() {
-//	mui.init({
-//		beforeback: function() {
-//			console.log("beforeback:");
-//			router.back();
-//			return false;
-//		}
-//	});
+	//	mui.init({
+	//		beforeback: function() {
+	//			console.log("beforeback:");
+	//			router.back();
+	//			return false;
+	//		}
+	//	});
 
 	//console.log("href:" + window.location.href);
 	$.showLoading('正在加载');
 	initRouter();
 	//获取我的信息
-	getUserInfo("");
+	getMineInfo();
 
 	//$.hideLoading();
 	//temp_data = null;
@@ -74,7 +74,7 @@ window.onload = function() {
 	//	//禁止全部动态列表进行下拉刷新和上拉加载中
 	//	home_data.data[0].allow_loaddata = false;
 	//	//获取与我相关
-	//getHomeTrends(2, 1);
+	//getHomeTrends(0, 1);
 }
 
 //设置路由
@@ -286,6 +286,7 @@ function initRouter() {
 						console.log("trends_add:trendsValue:" + vm.$route.params.trendsValue);
 					}
 					vm.allowBack = true;
+					vm.$refs.add.cleanContent(); //清理内容
 					if(vm.$route.params.id == "addTrend") {
 						//发布动态
 						vm.showMedia = true;
@@ -526,30 +527,18 @@ function initRouter() {
 			path: '/home',
 			name: 'home',
 			component: class_circle_home,
-			mate: {
-				keepAlive: true
-			}
 		}, {
 			path: '/trends_add',
 			name: 'add',
 			component: trends_add,
-			mate: {
-				keepAlive: false
-			}
 		}, {
 			path: '/trends_details/:id',
 			name: 'details',
 			component: trends_details,
-			mate: {
-				keepAlive: true
-			}
 		}, {
 			path: '/user_space/:id',
 			name: 'space',
 			component: user_space,
-			mate: {
-				keepAlive: true
-			}
 		}]
 	});
 
@@ -673,25 +662,21 @@ function userSpaceToBeforePosition(timeId, id, scrollTop) {
 }
 
 /**
- * 获取用户的信息
- * @param {Object} id
+ * 获取我的信息
  */
-function getUserInfo(id) {
+function getMineInfo() {
 	var tempData = {
 		cmd: 'userinfo',
 		type: 'findpage',
-		colv: id
+		colv: ""
 	}
 	unitWebsitePro(tempData, function(data) {
-		console.log('getUserInfo:', data);
-		if(data.RspCode == 0 && data.RspData.userid != undefined) {
-			if(id == "") {
-				//成功获取我的信息
-				mineUserInfo = data.RspData;
-				//获取我所属的部门的所有成员
-				temp_data = 0;
-				getDepartmentMember(mineUserInfo.department[temp_data]);
-			}
+		console.log('getMineInfo:', data);
+		if(data.RspCode == 0) {
+			mineUserInfo = JSON.parse(data.RspData);
+			//获取我所属的部门的所有成员
+			temp_data = 0;
+			getDepartmentMember(mineUserInfo.department[temp_data]);
 		} else {
 			$.hideLoading();
 			$.alert(data.RspTxt, "加载失败");

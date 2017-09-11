@@ -158,6 +158,9 @@ Vue.component("add-trends", {
 		 */
 		submitData: function() {
 			this.$emit("submit-data");
+		},
+		cleanContent: function() {
+			this.com_content = "";
 		}
 	},
 	watch: {

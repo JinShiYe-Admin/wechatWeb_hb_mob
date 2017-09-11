@@ -36,9 +36,8 @@
 		<!--班级圈路由-->
 		<div id="router_class_circle_app">
 			<keep-alive>
-				<router-view v-if="$route.meta.keepAlive"></router-view>
+				<router-view></router-view>
 			</keep-alive>
-			<router-view v-if="!$route.meta.keepAlive"></router-view>
 		</div>
 		<!--路由--班级圈主页-->
 		<template id="router_class_circle_home">
@@ -56,7 +55,7 @@
 		</template>
 		<!--路由--发布动态或者评论-->
 		<template id="router_add_trends">
-			<add-trends :content="content" :show-media="showMedia" :maxlength="maxlength" :placeholder="placeholder" @add-media="addMedia" @submit-data="submitData" @content-change="contentChange"></add-trends>
+			<add-trends :content="content" :show-media="showMedia" :maxlength="maxlength" :placeholder="placeholder" @add-media="addMedia" @submit-data="submitData" @content-change="contentChange" ref="add"></add-trends>
 		</template>
 		<!--路由--动态详情-->
 		<template id="router_trends_details">
@@ -322,7 +321,7 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_vue.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_protocol.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_home.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_temp_data.js?" + Math.random() + "'></s" + "cript>");
+//			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_temp_data.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 	</body>
 

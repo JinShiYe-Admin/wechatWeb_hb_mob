@@ -189,10 +189,14 @@ function initRouter() {
 		 */
 		beforeRouteLeave: function(to, from, next) {
 			console.log("路由-班级圈主页-离开之前:from:" + from.path + " to:" + to.path);
-			this.data[this.is_on].scrollTop = $("#" + this.data[this.is_on].id).scrollTop();
-			this.data[0].leave = true;
-			this.data[1].leave = true;
-			this.data[2].leave = true;
+			if("/" == to.path) { //离开班级圈APP
+				router.back();
+			} else {
+				this.data[this.is_on].scrollTop = $("#" + this.data[this.is_on].id).scrollTop();
+				this.data[0].leave = true;
+				this.data[1].leave = true;
+				this.data[2].leave = true;
+			}
 			next();
 		}
 	};

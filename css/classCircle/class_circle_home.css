@@ -526,9 +526,14 @@ body {
 	color: #47BDFF;
 }
 
-#router_class_circle_app .error-refresh{
+#router_class_circle_app .error-refresh {
 	height: 100%;
 }
-.class-circle-error{
+
+.class-circle-error {
 	margin-top: 20px;
+}
+
+#router_class_circle_app .class-circle-error.error-refresh {
+	margin-top: 0px;
 }

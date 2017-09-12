@@ -61,16 +61,16 @@ var space_data = {}; //空间的所有数据
 
 window.onload = function() {
 	//console.log("href:" + window.location.href);
-	//$.showLoading('加载中...');
+	$.showLoading('加载中...');
 	initRouter();
 	//获取我的信息
-	//getMineInfo();
+	getMineInfo();
 
 	//---假数据---start---
-	show_class_circle_app = true; //是否显示班级圈app
-	temp_data = null;
-	router.push('home');
-	getHomeTrends(0, 1);
+//	show_class_circle_app = true; //是否显示班级圈app
+//	temp_data = null;
+//	router.push('home');
+//	getHomeTrends(0, 1);
 	//---假数据---end---
 }
 

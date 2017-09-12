@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<title>课程表</title>
+		<link href="../../css/weui.css" rel="stylesheet" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/custom-textarea.css" rel="stylesheet" />
+		<link href="../../css/utils/iconfont.css" rel="stylesheet" />
+		<link href="../../css/publish-answer.css" rel="stylesheet" />
+
+	</head>
+
+	<body>
+		<div class="mui-content" id="homework" style="background-color: white;">
+			<div class="weui-cell">
+				<div class="weui-cell__hd"><label class="weui-label">科目</label></div>
+				<div class="weui-cell__bd">
+					<input onclick="selectSubject(this)" class="weui-input" placeholder="请选择科目" :value="subject.currSubject.name" v-model="subject.currSubject.name">
+				</div>
+			</div>
+			<div class="weui-cell">
+				<div class="weui-cell__hd"><label class="weui-label">班级</label></div>
+				<div class="weui-cell__bd">
+					<input onclick="selectClass(this)" class="weui-input" placeholder="请选择班级" :value="classes.currClass.name" v-model="classes.currClass.name">
+				</div>
+			</div>
+			<div class="weui-cell">
+				<div class="weui-cell__hd"><label class="weui-label">内容</label></div>
+
+			</div>
+
+			<form class="mui-input-group">
+				<div class="input-erea">
+					<textarea id="publish-content" style="border-bottom-color: gray;margin-left: 0px;width: 100%;border-color: red;border-width: 10px;height: 200px;" class="publish-content" maxlength="500" placeholder="输入你要布置的作业内容,最多500字！"></textarea>
+					<!--一期隐藏拍照、相机、录音功能-->
+					<div class="publish-extras" style="margin-left: 10px;">
+						<!--<a id="getRecord" class="mui-icon iconfont icon-yuyin"></a>-->
+						<a id="getImg" class="mui-icon iconfont icon-xiangji1"></a>
+						<a id="get_gallery" class="mui-icon iconfont icon-tuku"></a>
+
+
+					</div>
+					<hr style="margin-top: 5px; height:1px;border:none;border-top:1px solid #e4e4e4;" />
+
+				</div>
+				<div class="online-container" style="padding: 10px">
+					<p class="submit-label" style="width: 200px;font-size: 16px;margin-bottom: -5px;">需学生在线提交</p>
+					<div id="onlineSwitch" class="mui-switch mui-active mui-switch-green online-switch  mui-pull-right" style="margin-top: -20px;">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</div>
+				<hr style="margin-top: 5px; height:1px;border:none;border-top:1px solid #e4e4e4;" />
+
+				<p class="extra-info" style="margin:10px"><span class="mui-icon mui-icon-info"></span>开启在线提交后，学生需提交文字反馈</p>
+				<div id="pictures" class="img-container imgs-extras"></div>
+				<button class="weui-btn weui-btn_primary" style="margin-top: -150px;">提交</button>
+
+			</form>
+
+		</div>
+
+		<!--<div id="contentDiv" class="mui-content" style="background-color: white;">
+			<div id="inputDiv" class="input-content" style="margin-top: -20px;border-color: white;height: 20rem;">
+				<textarea id="input-content" placeholder="请输入内容（最多2000字）" style="border-color: white;height: 15rem;"></textarea>
+				<div id="take_pic" class="take_pic">
+					<a class="mui-icon iconfont icon-xiangji1"></a>
+				</div>
+
+				<div id="get_gallery" class="get_gallery">
+					<a class="mui-icon iconfont icon-tuku"></a>
+				</div>
+				<div id="get_record" class="get_record">
+					<a class="mui-icon iconfont icon-yuyin3"></a>
+				</div>
+				<div id="take_camero" class="take_camero">
+					<a class="mui-icon iconfont icon-shipin"></a>
+				</div>
+
+			</div>
+			<hr style="margin-top: 5px; height:1px;border:none;border-top:1px solid #e4e4e4;" />
+			<div id="pictures" style="width: 100%;"></div>
+
+		</div>-->
+		<script src="../../js/utils/consts.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/utils/request.js"></script>
+		<script src="../../js/demoCssJs/vue.min.js"></script>
+		<script src="../../js/vue-router.js"></script>
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/appWeb/choose-singlePerson.js"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/mui.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-weui.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/weui.min.js?" + Math.random() + "'></s" + "cript>");
+			var vm = new Vue({
+				el: '#homework',
+				data: {
+					subject: {
+						currSubject: {
+							name: '',
+							id: ''
+						},
+						subjects: []
+					},
+					classes: {
+						currClass: {
+							name: '',
+							id: ''
+						},
+						classes: []
+					}
+				},
+				methods: {}
+			})
+
+			function selectClass(input_item) {
+				document.activeElement.blur();
+				var self = input_item;
+				weui.picker([{
+					label: '一年级一班',
+					value: 0
+				}, {
+					label: '一年级二班',
+					value: 1
+				}, {
+					label: '一年级三班',
+					value: 2
+				}], {
+					onChange: function(result) {
+						//						console.log(result);
+					},
+					onConfirm: function(result) {
+						vm.classes.currClass.name = result[0].label;
+						//						console.log(result);
+					}
+				});
+			}
+
+			function selectSubject(input_item) {
+				document.activeElement.blur();
+				var self = input_item;
+				weui.picker([{
+					label: '语文',
+					value: 0
+				}, {
+					label: '数学',
+					value: 1
+				}, {
+					label: '英语',
+					value: 2
+				}, {
+					label: '物理',
+					disabled: true,
+					value: 3
+				}, {
+					label: '其他',
+					value: 4
+				}], {
+					onChange: function(result) {
+						//						console.log(result);
+					},
+					onConfirm: function(result) {
+						vm.subject.currSubject.name = result[0].label;
+						//						console.log(result);
+					}
+				});
+			}
+		</script>
+
+	</body>
+
+</html>

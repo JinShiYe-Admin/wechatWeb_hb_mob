@@ -7,14 +7,12 @@ var departUserInfo = {
 };
 var temp_data; //临时变量;用于查询我所处部门的所有成员
 var show_class_circle_app = false; //是否显示班级圈app
-//---假数据---start---
-//var show_class_circle_app = true; //是否显示班级圈app
-//---假数据--end---
 var router; //路由
 var router_user_space; //个人空间路由
 //班级圈主页数据
 var home_data = {
 	is_on: 0, //当前显示的列表
+	allow_back: true, //是否允许返回
 	data: [{
 		id: "all_trends_0", //tab列表的id
 		title: "全部动态", //tab的名称
@@ -63,9 +61,10 @@ window.onload = function() {
 	getMineInfo();
 
 	//---假数据---start---
-	//temp_data = null;
-	//router.push('home');
-	//getHomeTrends(0, 1);
+//	show_class_circle_app = true; //是否显示班级圈app
+//	temp_data = null;
+//	router.push('home');
+//	getHomeTrends(0, 1);
 	//---假数据---end---
 }
 
@@ -133,6 +132,14 @@ function initRouter() {
 						showAddComments(trendsValue);
 						break;
 					case 2:
+						this.allow_back = false;
+						deleteMineTrends({
+							route: this,
+							userSpaceId: trendsValue.TabId,
+							pageType: "home",
+							listIndex: listIndex,
+							valueIndex: valueIndex
+						});
 						break;
 				}
 			},
@@ -220,15 +227,19 @@ function initRouter() {
 		 */
 		beforeRouteLeave: function(to, from, next) {
 			console.log("路由-班级圈主页-离开之前:from:" + from.path + " to:" + to.path);
-			if("/" == to.path) { //离开班级圈APP
-				router.back();
+			if(this.allow_back) {
+				if("/" == to.path) { //离开班级圈APP
+					router.back();
+				} else {
+					this.data[this.is_on].scrollTop = $("#" + this.data[this.is_on].id).scrollTop();
+					this.data[0].leave = true;
+					this.data[1].leave = true;
+					this.data[2].leave = true;
+				}
+				next();
 			} else {
-				this.data[this.is_on].scrollTop = $("#" + this.data[this.is_on].id).scrollTop();
-				this.data[0].leave = true;
-				this.data[1].leave = true;
-				this.data[2].leave = true;
+				next(this.allow_back);
 			}
-			next();
 		}
 	};
 
@@ -238,7 +249,7 @@ function initRouter() {
 		data: function() {
 			console.log("trends_add:data:")
 			return {
-				allowBack: false, //允许返回
+				allow_back: false, //允许返回
 				content: "", //文字，
 				showMedia: false, //是否显示添加图片，视频功能
 				images: [], //图片，限制9张
@@ -267,7 +278,7 @@ function initRouter() {
 					return false;
 				} else {
 					$.showLoading('加载中...');
-					this.allowBack = false;
+					this.allow_back = false;
 					switch(this.$route.params.id) {
 						case "addTrend":
 							//发布动态
@@ -317,7 +328,7 @@ function initRouter() {
 				next(function(vm) {
 					console.log("trends_add:id:" + vm.$route.params.id);
 					console.log("trends_add:params:", vm.$route.params);
-					vm.allowBack = true;
+					vm.allow_back = true;
 					vm.$refs.add.cleanContent(); //清理内容
 					if(vm.$route.params.id == "addTrend") {
 						//发布动态
@@ -339,7 +350,7 @@ function initRouter() {
 		},
 		beforeRouteLeave: function(to, from, next) {
 			console.log("路由-发布动态或评论-离开之前:from:" + from.path + " to:" + to.path);
-			next(this.allowBack);
+			next(this.allow_back);
 		}
 	};
 
@@ -348,7 +359,7 @@ function initRouter() {
 		template: "#router_trends_details",
 		data: function() {
 			return {
-				allowBack: false,
+				allow_back: false,
 				data: []
 			}
 		},
@@ -364,6 +375,15 @@ function initRouter() {
 					case 1:
 						showAddComments(trendsValue);
 						break;
+					case 2:
+						this.allow_back = false;
+						deleteMineTrends({
+							route: this,
+							userSpaceId: trendsValue.TabId,
+							pageType: "details",
+							valueIndex: valueIndex
+						});
+						break;
 				}
 
 			},
@@ -378,7 +398,7 @@ function initRouter() {
 				showClassCircleApp(next);
 			} else {
 				next(function(vm) {
-					vm.allowBack = true;
+					vm.allow_back = true;
 					console.log("vm.$route.params:", vm.$route.params)
 					if(vm.$route.params.data != undefined) {
 						vm.data = [vm.$route.params.data]
@@ -388,7 +408,7 @@ function initRouter() {
 		},
 		beforeRouteLeave: function(to, from, next) {
 			console.log("路由-动态详情-离开之前:from:" + from.path + " to:" + to.path);
-			next(this.allowBack);
+			next(this.allow_back);
 		}
 	}
 
@@ -552,6 +572,21 @@ function initRouter() {
 		}
 	}
 
+	var error_page = {
+		template: "#router_error",
+		data: function() {
+			return {}
+		},
+		beforeRouteEnter: function(to, from, next) {
+			console.log("路由-异常页面-显示之前:from:" + from.path + " to:" + to.path);
+			next();
+		},
+		beforeRouteLeave: function(to, from, next) {
+			console.log("路由-异常页面-离开之前:from:" + from.path + " to:" + to.path);
+			next();
+		}
+	}
+
 	//配置路由
 	router = new VueRouter({
 		routes: [{
@@ -570,6 +605,10 @@ function initRouter() {
 			path: '/user_space/:id',
 			name: 'space',
 			component: user_space,
+		}, {
+			path: '/error_page',
+			name: 'error',
+			component: error_page,
 		}]
 	});
 
@@ -709,8 +748,11 @@ function getMineInfo() {
 			temp_data = 0;
 			getDepartmentMember(mineUserInfo.department[temp_data]);
 		} else {
+			console.log("getMineInfo:error:")
 			$.hideLoading();
-			$.alert(data.RspTxt, "加载失败");
+			router.push({
+				name: "error"
+			});
 		}
 	});
 }
@@ -726,12 +768,12 @@ function disposeMemberData(data) {
 			if(departUserInfo.value[data.RspData[i].userid] === undefined) {
 				var userId = data.RspData[i].userid.toString();
 				departUserInfo.key.push(userId);
-				var avatar = departUserInfo[i].avatar;
+				var avatar = data.RspData[i].avatar;
 				if(avatar != "" && "/" != avatar[avatar.length - 1]) {
 					var k = avatar.split("").reverse().join("").indexOf("/");
 					if(k != 0) {
 						avatar = avatar.substring(0, avatar.length - k);
-						departUserInfo[i].avatar = avatar;
+						data.RspData[i].avatar = avatar;
 					}
 				}
 				departUserInfo.value[userId] = $.extend({}, data.RspData[i]);
@@ -1081,7 +1123,7 @@ function addTrend(routeAdd, submitData) {
 	classCircleProtocol.addUserSpace(submitData, function(data) {
 		console.log("新增动态:", data);
 		$.hideLoading();
-		routeAdd.allowBack = true;
+		routeAdd.allow_back = true;
 		if(data.RspCode == 0 && data.RspData.Result != 0) {
 			$.toast("发布成功");
 			var newTrends = {
@@ -1129,7 +1171,7 @@ function addComment(routeAdd, commentContent, trendsValue) {
 	classCircleProtocol.addUserSpaceComment(submitData, function(data) {
 		console.log("新增评论:", data);
 		$.hideLoading();
-		routeAdd.allowBack = true;
+		routeAdd.allow_back = true;
 		if(data.RspCode == 0) {
 			$.toast("发布成功");
 			var newComment = {
@@ -1170,7 +1212,7 @@ function addReply(routeAdd, commentContent, trendsValue, replyUserId, commentInd
 	classCircleProtocol.addUserSpaceCommentReply(submitData, function(data) {
 		console.log("新增回复:", data);
 		$.hideLoading();
-		routeAdd.allowBack = true;
+		routeAdd.allow_back = true;
 		if(data.RspCode == 0) {
 			$.toast("发布成功");
 			var newReply = {
@@ -1233,7 +1275,7 @@ function addRelateReply(routeAdd, commentContent, valueIndex, spaceId, tabId, re
 	classCircleProtocol.addUserSpaceCommentReply(submitData, function(data) {
 		console.log("新增回复:", data);
 		$.hideLoading();
-		routeAdd.allowBack = true;
+		routeAdd.allow_back = true;
 		if(data.RspCode == 0) {
 			$.toast("发布成功");
 			var newReply = {
@@ -1252,21 +1294,38 @@ function addRelateReply(routeAdd, commentContent, valueIndex, spaceId, tabId, re
 /**
  * 删除我的动态
  * @param {Object} delData
+ * @param {Object} delData.route 路由
  * @param {Number} delData.userSpaceId 用户空间ID
  * @param {String} delData.pageType 页面类型
  */
 function deleteMineTrends(delData) {
-
-	$.showLoading('加载中...');
-	var submitData = {
-		userSpaceId: delData.userSpaceId
-	}
-	classCircleProtocol.delUserSpaceById(submitData, function(data) {
-		console.log("delUserSpaceById:", data);
-		if(data.RspCode == 0 && data.RspData.Result == 1) {
-			$.toast("删除成功");
-		} else {
-			$.alert(data.RspTxt, "删除失败");
+	$.confirm({
+		title: '提示',
+		text: '确定删除？',
+		onOK: function() {
+			//点击确认
+			console.log("onOK");
+			$.showLoading('加载中...');
+			var submitData = {
+				userSpaceId: trendsValue.userSpaceId
+			}
+			classCircleProtocol.delUserSpaceById(submitData, function(data) {
+				console.log("delUserSpaceById:", data);
+				delData.route.allow_back = true;
+				if(data.RspCode == 0 && data.RspData.Result == 1) {
+					$.toast("删除成功");
+					if(delData.pageType == "home") {
+						delData.route.data[delData.listIndex].data.splice(delData.valueIndex, 1);
+					} else if(delData.pageType == "details") {
+						delData.route.data.splice(delData.valueIndex, 1);
+					}
+				} else {
+					$.alert(data.RspTxt, "删除失败");
+				}
+			});
+		},
+		onCancel: function() {
+			delData.route.allow_back = true;
 		}
 	});
 }

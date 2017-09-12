@@ -122,6 +122,13 @@ Vue.component("home-bd-item", {
 			return {
 				'weui-tab__bd-item--active': this.index == this.is_on //计算显示的列表
 			}
+		},
+		showError: function() {
+			if(this.value.show_error == true && this.value.data.length == 0) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	},
 	methods: {
@@ -411,6 +418,23 @@ Vue.component("praiser-item", {
 		 */
 		clickName: function(userId) {
 			this.$emit("click-name", userId);
+		}
+	}
+});
+//异常
+Vue.component("error-item", {
+	template: "#temp_error_com",
+	props: ["type"],
+	methods: {
+		clickRefresh: function() {
+			this.$emit("click-refresh");
+		}
+	},
+	computed: {
+		classObject: function() {
+			return {
+				"error-refresh": this.type == 0
+			}
 		}
 	}
 });

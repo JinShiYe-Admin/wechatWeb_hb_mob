@@ -2,6 +2,10 @@ body {
 	word-break: break-all;
 }
 
+#router_class_circle_app {
+	height: 100%;
+}
+
 .weui-tab__bd-item {
 	width: 100%;
 }
@@ -335,6 +339,7 @@ body {
 	font-size: 0;
 	background-color: #F2F2F2;
 	height: 50px;
+	overflow: hidden;
 }
 
 .relate-reply-type-praise .relate-reply-trends-bg {
@@ -500,4 +505,30 @@ body {
 
 .relate-to-me .class-circle-comment-bg {
 	margin-top: 10px;
+}
+
+.class-circle-error {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+.class-circle-error img {
+	width: 50%;
+}
+
+.class-circle-error-text {
+	color: #999999;
+}
+
+.class-circle-error-text span {
+	color: #47BDFF;
+}
+
+#router_class_circle_app .error-refresh{
+	height: 100%;
+}
+.class-circle-error{
+	margin-top: 20px;
 }

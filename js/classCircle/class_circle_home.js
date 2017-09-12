@@ -726,12 +726,12 @@ function disposeMemberData(data) {
 			if(departUserInfo.value[data.RspData[i].userid] === undefined) {
 				var userId = data.RspData[i].userid.toString();
 				departUserInfo.key.push(userId);
-				var avatar = departUserInfoArray[i].avatar;
+				var avatar = departUserInfo[i].avatar;
 				if(avatar != "" && "/" != avatar[avatar.length - 1]) {
 					var k = avatar.split("").reverse().join("").indexOf("/");
 					if(k != 0) {
 						avatar = avatar.substring(0, avatar.length - k);
-						departUserInfoArray[i].avatar = avatar;
+						departUserInfo[i].avatar = avatar;
 					}
 				}
 				departUserInfo.value[userId] = $.extend({}, data.RspData[i]);

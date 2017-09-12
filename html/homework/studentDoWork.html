@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>做作业</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<script type="text/javascript">
+			document.write('<link rel="stylesheet" href="../../js/demoCssJs/weui.min.css?' + Math.random() + '" />');
+			document.write('<link rel="stylesheet" href="../../js/demoCssJs/jquery-weui.css?' + Math.random() + '" />');
+			document.write('<link rel="stylesheet" href="../../js/demoCssJs/demos.css?' + Math.random() + '" />');
+			document.write('<link rel="stylesheet" href="../../css/utils/iconfont.css?' + Math.random() + '" />');
+			document.write('<link rel="stylesheet" href="../../css/classCircle/class_circle_home.css?' + Math.random() + '" />');
+		</script>
+	</head>
+
+	<body>
+		<textarea name="MSG" cols=0 rows=4 autofocus="" placeholder="根据老师的要求来完成作业吧">
+		</textarea>
+		<!--发布动态组件-->
+		<template id="temp_add_trends_com">
+			<div class="class-circle-add">
+				<textarea class="weui-textarea" v-model="com_content" :placeholder="placeholder" rows="6" :maxlength="maxlength"></textarea>
+				<div class="class-circle-add-media" v-if="showMedia">
+					<div class="iconfont icon-tuku" @click="addMedia(0)"></div>
+					<div class="iconfont icon-xiangji2" @click="addMedia(1)"></div>
+				</div>
+				<div class="class-circle-add-line"></div>
+				<button class="weui-btn weui-btn_primary" @click="submitData">提交</button>
+			</div>
+		</template>
+		<script src="../../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init()
+		</script>
+	</body>
+
+</html>

@@ -12,7 +12,7 @@ Vue.filter('userName', function(userId) {
 Vue.filter('userImage', function(userId) {
 	var userInfo = departUserInfo.value[userId];
 	if(userInfo != undefined && userInfo.avatar != "") {
-		return userInfo.avatar;
+		return userInfo.avatar + "0";
 	} else {
 		return utils.updateHeadImage("", 2);
 	}
@@ -31,7 +31,11 @@ Vue.filter('imagesArray', function(imagePaths) {
 	var images = imagePaths.split('|');
 	return images;
 });
-
+//显示与我相关的图片的过滤器
+Vue.filter('relateImage', function(imagePaths) {
+	var images = imagePaths.split('|');
+	return images[0];
+});
 //显示评论的过滤器
 Vue.filter('commentArray', function(commentArray) {
 	var limit = 20; //只显示前20条
@@ -132,6 +136,19 @@ Vue.component("home-bd-item", {
 		},
 		clickComment: function(valueIndex, commentIndex, replysIndex) {
 			this.$emit("click-comment", this.index, valueIndex, commentIndex, replysIndex);
+		},
+		/**
+		 * 点击与我相关的内容
+		 */
+		clickRelateContent: function(spaceId) {
+			this.$emit("click-relate-content", spaceId);
+		},
+		/**
+		 * 点击与我相关的回复或者回复的内容
+		 * @param {Object} replyUserId 回复的id
+		 */
+		clickRelateReply: function(valueIndex, spaceId, tabId, replyUserId) {
+			this.$emit("click-relate-reply", valueIndex, spaceId, tabId, replyUserId);
 		}
 	}
 });
@@ -158,6 +175,9 @@ Vue.component("add-trends", {
 		 */
 		submitData: function() {
 			this.$emit("submit-data");
+		},
+		cleanContent: function() {
+			this.com_content = "";
 		}
 	},
 	watch: {
@@ -268,7 +288,16 @@ Vue.component("trends-item", {
 //与我相关组件
 Vue.component("relate-item", {
 	template: "#temp_relate_to_me",
-	props: ["value"],
+	props: ["value", "index"],
+	computed: {
+		relateType: function() {
+			if(this.value.MsgType == 3) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	},
 	methods: {
 		/**
 		 * 头像加载成功
@@ -284,11 +313,44 @@ Vue.component("relate-item", {
 			}
 		},
 		/**
+		 * 动态图片加载成功
+		 * @param {Object} e
+		 */
+		trendsLoad: function(e) {
+			console.log("trendsLoad:")
+			var img = e.target;
+			var imgWidth = img.width;
+			var imgHeight = img.height;
+			if(imgWidth > imgHeight) {
+				img.style.height = "50px";
+				img.style.width = 'initial';
+			}
+		},
+		/**
 		 * 头像加载失败
 		 * @param {Object} e
 		 */
 		headError: function(e, level) {
 			e.target.src = utils.updateHeadImage("", level);
+		},
+		/**
+		 * 点击用户头像或名称
+		 * @param {Object} userId 用户的id
+		 */
+		clickPerson: function(userId) {
+			this.$emit("click-person", userId);
+		},
+		/**
+		 * 点击内容
+		 */
+		clickRelateContent: function() {
+			this.$emit("click-relate-content", this.value.SpaceId);
+		},
+		/**
+		 * 点击回复或者回复的内容
+		 */
+		clickRelateReply: function(replyUserId) {
+			this.$emit("click-relate-reply", this.index, this.value.SpaceId, this.value.TabId, replyUserId);
 		}
 	}
 });

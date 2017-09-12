@@ -323,6 +323,10 @@ body {
 }
 
 .relate-reply-content {
+	margin-top: 10px;
+}
+
+.relate-reply-trends-bg {
 	/*与我相关原始内容区域*/
 	position: relative;
 	display: block;
@@ -333,11 +337,11 @@ body {
 	height: 50px;
 }
 
-.relate-reply-type-praise .relate-reply-content {
-	margin: 5px 0;
+.relate-reply-type-praise .relate-reply-trends-bg {
+	margin-top: 5px;
 }
 
-.relate-reply-content-img {
+.relate-reply-trends-img {
 	/*与我相关原始内容图片*/
 	height: 50px;
 	width: 50px;
@@ -349,15 +353,16 @@ body {
 	float: left;
 }
 
-.relate-reply-content-img img {
+.relate-reply-trends-img img {
 	/*与我相关原始内容图片*/
 	width: 100%;
 }
 
-.relate-reply-content-text {
+.relate-reply-trends {
 	/*与我相关原始内容文字*/
 	font-size: 16px;
 	line-height: 50px;
+	float: left;
 }
 
 .relate-reply-content-name {
@@ -371,7 +376,7 @@ body {
 	/*与我相关原始内容限制一行*/
 	overflow: hidden;
 	text-overflow: ellipsis;
-	display: -webkit-box;
+	display: -webkit-inline-box;
 	-webkit-line-clamp: 1;
 	-webkit-box-orient: vertical;
 }
@@ -477,6 +482,7 @@ body {
 	margin-top: 0px;
 }
 
+
 /*.class-circle-user-space .weui-pull-to-refresh__layer {
 	margin-top: -30px;
 }*/
@@ -486,6 +492,12 @@ body {
 	top: -30px;
 	bottom: 0;
 }
+
+
 /*.class-circle-user-space .weui-tab__bd .weui-tab__bd-item{
 	overflow: visible;
 }*/
+
+.relate-to-me .class-circle-comment-bg {
+	margin-top: 10px;
+}

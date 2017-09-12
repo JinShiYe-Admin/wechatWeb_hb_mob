@@ -132,6 +132,8 @@ function initRouter() {
 					case 1:
 						showAddComments(trendsValue);
 						break;
+					case 2:
+						break;
 				}
 			},
 			/**
@@ -264,7 +266,7 @@ function initRouter() {
 					$.toast("请输入内容", "forbidden");
 					return false;
 				} else {
-					$.showLoading('正在上传数据');
+					$.showLoading('加载中...');
 					this.allowBack = false;
 					switch(this.$route.params.id) {
 						case "addTrend":
@@ -1243,6 +1245,28 @@ function addRelateReply(routeAdd, commentContent, valueIndex, spaceId, tabId, re
 			router.back();
 		} else {
 			$.alert(data.RspTxt, "发布失败");
+		}
+	});
+}
+
+/**
+ * 删除我的动态
+ * @param {Object} delData
+ * @param {Number} delData.userSpaceId 用户空间ID
+ * @param {String} delData.pageType 页面类型
+ */
+function deleteMineTrends(delData) {
+
+	$.showLoading('加载中...');
+	var submitData = {
+		userSpaceId: delData.userSpaceId
+	}
+	classCircleProtocol.delUserSpaceById(submitData, function(data) {
+		console.log("delUserSpaceById:", data);
+		if(data.RspCode == 0 && data.RspData.Result == 1) {
+			$.toast("删除成功");
+		} else {
+			$.alert(data.RspTxt, "删除失败");
 		}
 	});
 }

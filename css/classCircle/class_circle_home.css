@@ -475,33 +475,11 @@ body {
 	padding-bottom: 0;
 }
 
-.weui-tab.class-circle-user-space {
-	bottom: 0;
-}
-
-.class-circle-user-space .weui-tab__bd {
-	padding-bottom: 0;
-}
-
-.class-circle-user-space .weui-panel {
-	margin-top: 0px;
-}
-
-
-/*.class-circle-user-space .weui-pull-to-refresh__layer {
-	margin-top: -30px;
-}*/
-
 .class-circle-user-space.weui-tab {
 	width: 100%;
-	top: -30px;
+	top: -40px;
 	bottom: 0;
 }
-
-
-/*.class-circle-user-space .weui-tab__bd .weui-tab__bd-item{
-	overflow: visible;
-}*/
 
 .relate-to-me .class-circle-comment-bg {
 	margin-top: 10px;

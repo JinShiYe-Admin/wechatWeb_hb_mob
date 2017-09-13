@@ -20,12 +20,12 @@ var home_data = {
 		leave: false, //是否离开
 		init_getData: false, //首次显示列表时是否获取数据
 		allow_loaddata: false, //允许下刷新或者加载中
-		init_loadmore: true, //是否初始化加载更多
 		show_loadmore: true, //是否显示加载中
 		show_loadmore_loading: true, //是否显示加载中的转圈图标
 		show_loadmore_content: "加载中", //加载中元素的文字
 		show_error: false, //是否显示失败或者无数据
-		error_type: 1, //失败类型
+		show_no_more: false, //失败类型
+		allow_loadmore: false, //允许加载更多
 		data: [] //tab列表的数据
 	}, {
 		id: "mine_trends_1",
@@ -34,12 +34,12 @@ var home_data = {
 		leave: false,
 		init_getData: true, //首次显示列表时是否获取数据
 		allow_loaddata: false, //允许下刷新或者加载中
-		init_loadmore: true, //是否初始化加载更多
 		show_loadmore: true, //是否显示加载中
 		show_loadmore_loading: true, //是否显示加载中的转圈图标
 		show_loadmore_content: "加载中", //加载中元素的文字
 		show_error: false, //是否显示失败或者无数据
-		error_type: 1, //失败类型
+		show_no_more: false, //失败类型
+		allow_loadmore: false, //允许加载更多
 		data: []
 	}, {
 		id: "relate_to_me_2",
@@ -48,22 +48,20 @@ var home_data = {
 		leave: false,
 		init_getData: true, //首次显示列表时是否获取数据
 		allow_loaddata: false, //允许下刷新或者加载中
-		init_loadmore: true, //是否初始化加载更多
 		show_loadmore: true, //是否显示加载中
 		show_loadmore_loading: true, //是否显示加载中的转圈图标
 		show_loadmore_content: "加载中", //加载中元素的文字
 		show_error: false, //是否显示失败或者无数据
-		error_type: 1, //失败类型
+		show_no_more: false, //失败类型
+		allow_loadmore: false, //允许加载更多
 		data: []
 	}]
 };
 var space_data = {}; //空间的所有数据
 
 window.onload = function() {
-	//console.log("href:" + window.location.href);
 	$.showLoading('加载中...');
 	initRouter();
-	//获取我的信息
 	getMineInfo();
 
 	//---假数据---start---
@@ -214,7 +212,6 @@ function initRouter() {
 		 */
 		beforeRouteEnter: function(to, from, next) {
 			console.log("路由-班级圈主页-显示之前:from:" + from.path + " to:" + to.path);
-			console.log("allow_back:" + this.allow_back);
 			if(show_class_circle_app) {
 				next(function() {
 					//初始化滚动
@@ -421,15 +418,6 @@ function initRouter() {
 	 */
 	var user_space = {
 		template: "#router_user_space",
-		computed: {
-			showError: function() {
-				if(this.show_error == true && this.data.length == 0) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-		},
 		methods: {
 			/**
 			 * 头像加载成功
@@ -509,7 +497,6 @@ function initRouter() {
 			/**
 			 * 初始化数据
 			 * @param {Object} id 个人空间数据的id
-			 * @param {Object} update 是否是复用
 			 */
 			initData: function(id, leave) {
 				console.log("initData:id:", id);
@@ -521,22 +508,20 @@ function initRouter() {
 					temp_leave = space_data[id].leave;
 					this.userId = space_data[id].userId;
 					this.allow_loaddata = space_data[id].allow_loaddata;
-					this.init_loadmore = space_data[id].init_loadmore;
 					this.show_loadmore = space_data[id].show_loadmore;
 					this.show_loadmore_loading = space_data[id].show_loadmore_loading;
 					this.show_loadmore_content = space_data[id].show_loadmore_content;
 					this.show_error = space_data[id].show_error;
-					this.error_type = space_data[id].error_type;
-
-					if(space_data[id].data == undefined) {
+					this.show_no_more = space_data[id].show_no_more;
+					initSpacePullToRefresh(id);
+					if(space_data[id].getData) {
+						space_data[id].getData = false;
 						//未获取数据则获取空间数据
 						getUserSpace(space_data[id].userId, 1, id);
-					} else {
-						this.data = space_data[id].data;
 					}
-					initSpacePullToRefresh(id);
+					this.data = space_data[id].data;
 				}
-				if(leave) {
+				if(space_data[id].leave) {
 					//复用并且返回上一个页面
 					space_data[id].leave = false;
 					var timeId = setInterval(function() {
@@ -549,16 +534,16 @@ function initRouter() {
 		},
 		data: function() {
 			return {
-				userId: "",
+				userId: "", //用户id
 				allow_back: true, //允许返回
 				allow_loaddata: false, //允许下刷新或者加载中
-				init_loadmore: true, //是否初始化加载更多
+				allow_loadmore: false, //是否允许加载更多
 				show_loadmore: true, //是否显示加载中
 				show_loadmore_loading: true, //是否显示加载中的转圈图标
 				show_loadmore_content: "加载中", //加载中元素的文字
-				show_error: false, //
-				error_type: 1,
-				data: []
+				show_error: false, //是否显示异常
+				show_no_more: false, //是否显示没有更多
+				data: [] //数据
 			};
 		},
 		beforeRouteUpdate: function(to, from, next) {
@@ -571,11 +556,10 @@ function initRouter() {
 			//记录原页面的滚动距离
 			var from_data = space_data[from.params.id];
 			if(from_data != undefined) {
-				from_data.scrollTop = $(".class-circle-user-space #user_space_" + from.params.id + ".weui-tab__bd-item").scrollTop();
+				from_data.scrollTop = $(".class-circle-user-space .weui-tab__bd-item").scrollTop();
 				from_data.leave = true;
 			}
-			var leave = space_data[to.params.id]
-			this.initData(to.params.id, leave);
+			this.initData(to.params.id);
 			next();
 		},
 		beforeRouteEnter: function(to, from, next) {
@@ -595,12 +579,21 @@ function initRouter() {
 					//回到主页清空空间数据
 					space_data = null;
 					space_data = {};
+					this.userId = ""; //用户id
+					this.allow_back = true; //允许返回
+					this.allow_loaddata = false; //允许下刷新或者加载中
+					this.allow_loadmore = false; //是否初始化加载更多
+					this.show_loadmore = true; //是否显示加载中
+					this.show_loadmore_loading = true; //是否显示加载中的转圈图标
+					this.show_loadmore_content = "加载中"; //加载中元素的文字
+					this.show_error = false; //是否显示异常
+					this.show_no_more = false; //是否显示没有更多
+					this.data = []; //数据
 				}
 				next();
 			} else {
 				next(this.allow_back);
 			}
-
 		}
 	}
 
@@ -681,17 +674,12 @@ function initHomePullToRefresh() {
 		}
 		console.log("主页下拉刷新:" + listId);
 		home_data.data[listId].allow_loaddata = false;
-		home_data.data[listId].init_loadmore = true;
 		initHomeLoadmore(this.id);
 		getHomeTrends(listId, 1, this);
 	});
 
 	for(var i = 0; i < home_data.data.length; i++) {
-		if(home_data.data[i].init_loadmore) {
-			initHomeLoadmore(home_data.data[i].id);
-		} else {
-			$("#" + home_data.data[i].id + ".weui-tab__bd-item").destroyInfinite();
-		}
+		initHomeLoadmore(home_data.data[i].id);
 	}
 }
 
@@ -703,7 +691,7 @@ function initHomeLoadmore(id) {
 	$("#" + id + ".weui-tab__bd-item").infinite().on("infinite", function() {
 		var listIds = this.id.split("_");
 		var listId = listIds[listIds.length - 1] * 1;
-		if(!home_data.data[listId].allow_loaddata) {
+		if(!home_data.data[listId].allow_loaddata || !home_data.data[listId].allow_loadmore) {
 			return false;
 		}
 		console.log("上拉加载更多:" + listId);
@@ -719,33 +707,30 @@ function initHomeLoadmore(id) {
 function initSpacePullToRefresh(spaceId) {
 	console.log("initSpacePullToRefresh:" + spaceId);
 	//初始化下拉刷新
-	$(".class-circle-user-space #user_space_" + spaceId + ".weui-tab__bd-item").pullToRefresh();
-	$(".class-circle-user-space #user_space_" + spaceId + ".weui-tab__bd-item").on("pull-to-refresh", function() {
-		var ids = this.id.split("_");
-		var id = ids[ids.length - 1];
+	$(".class-circle-user-space .weui-tab__bd-item").pullToRefresh();
+	$(".class-circle-user-space .weui-tab__bd-item").on("pull-to-refresh", function() {
+		var id = router_user_space.$route.params.id;
 		if(!space_data[id].allow_loaddata) {
-			$(this).pullToRefreshDone();
 			return false;
 		}
 		console.log("个人空间下拉刷新:" + id);
 		space_data[id].allow_loaddata = false;
-		space_data[id].init_loadmore = true;
 		getUserSpace(space_data[id].userId, 1, id, this);
-
 	});
-	if(space_data[spaceId].init_loadmore) {
-		$(".class-circle-user-space #user_space_" + spaceId + ".weui-tab__bd-item").infinite();
-		$(".class-circle-user-space #user_space_" + spaceId + ".weui-tab__bd-item").infinite().on("infinite", function() {
-			var ids = this.id.split("_");
-			var id = ids[ids.length - 1];
-			if(!space_data[id].allow_loaddata) {
-				return false;
-			}
-			console.log("个人空间加载更多");
-			space_data[id].allow_loaddata = false;
-			getUserSpace(space_data[id].userId, space_data[id].pageIndex + 1, id, this);
-		});
-	}
+
+	$(".class-circle-user-space .weui-tab__bd-item").infinite();
+	$(".class-circle-user-space .weui-tab__bd-item").infinite().on("infinite", function() {
+		var id = router_user_space.$route.params.id;
+		console.log("allow_loaddata:" + space_data[id].allow_loaddata);
+		console.log("allow_loadmore:" + space_data[id].allow_loadmore);
+		if(!space_data[id].allow_loaddata || !space_data[id].allow_loadmore) {
+			return false;
+		}
+		console.log("个人空间加载更多:" + id);
+		space_data[id].allow_loaddata = false;
+		getUserSpace(space_data[id].userId, space_data[id].pageIndex + 1, id);
+	});
+
 }
 
 /**
@@ -772,7 +757,7 @@ function homeToBeforePosition(timeId, index) {
  */
 function userSpaceToBeforePosition(timeId, id, scrollTop) {
 	console.log("userSpaceToBeforePosition:" + id);
-	var ele = $(".class-circle-user-space #user_space_" + id + ".weui-tab__bd-item");
+	var ele = $(".class-circle-user-space .weui-tab__bd-item");
 	if(ele.length != 0) {
 		ele.scrollTop(scrollTop);
 		clearInterval(timeId);
@@ -905,11 +890,15 @@ function showPersonTrends(userId) {
 			userId: userId, //用户id
 			scrollTop: 0, //滚动距离
 			allow_loaddata: false, //允许下刷新或者加载中
-			init_loadmore: true, //是否初始化加载更多
+			allow_loadmore: false, //是否初始化加载更多
 			show_loadmore: true, //是否显示加载中
 			show_loadmore_loading: true, //是否显示加载中的转圈图标
 			show_loadmore_content: "加载中", //加载中元素的文字
-			leave: false //是否
+			leave: false, //是否
+			getData: true, //是否发送获取数据的请求
+			show_error: false,
+			show_no_more: false,
+			data: []
 		}
 		space_data[model.id] = model;
 		router.push({
@@ -1023,40 +1012,44 @@ function disposeHomeData(type, submitData, element, data) {
 	if(element != undefined) {
 		$(element).pullToRefreshDone();
 	}
+
 	if(data.RspCode == 0) {
-		home_data.data[type].show_error = false;
-		home_data.data[type].show_loadmore = true;
 		if(submitData.pageIndex == 1) {
 			//下拉刷新或者获取第一页的内容
 			home_data.data[type].data = data.RspData.Data;
-			if(home_data.data[type].data.length == 0) {
-				//内容为空
-				home_data.data[type].error_type = 2;
-				home_data.data[type].show_error = true;
-				home_data.data[type].show_loadmore = false;
-			}
 		} else {
 			Array.prototype.push.apply(home_data.data[type].data, data.RspData.Data);
 		}
+		if(submitData.pageIndex == 1 && home_data.data[type].data.length == 0) {
+			//内容为空
+			home_data.data[type].show_no_more = true;
+			home_data.data[type].show_error = false;
+			home_data.data[type].show_loadmore = false;
+		} else {
+			home_data.data[type].show_no_more = false;
+			home_data.data[type].show_loadmore = true;
+		}
+
 		home_data.data[type].pageIndex = submitData.pageIndex; //当前页数
 		home_data.data[type].TotalPage = data.RspData.TotalPage; //总页数
 		if(home_data.data[type].pageIndex >= home_data.data[type].TotalPage) {
 			console.log("没有下一页")
 			//没有下一页
 			//调整插件信息
-			home_data.data[type].init_loadmore = false;
 			home_data.data[type].show_loadmore_loading = false;
 			home_data.data[type].show_loadmore_content = "没有更多了";
-			//销毁插件
-			$("#" + home_data.data[type].id + ".weui-tab__bd-item").destroyInfinite();
+			home_data.data[type].allow_loadmore = false;
+		} else {
+			home_data.data[type].allow_loadmore = true;
+			home_data.data[type].show_loadmore_loading = true;
+			home_data.data[type].show_loadmore_content = "加载中";
 		}
 	} else {
 		$.alert(data.RspTxt, "加载失败");
-		home_data.data[type].show_loadmore = false;
-		home_data.data[type].error_type = 1;
-		home_data.data[type].show_error = true;
-		//销毁插件
-		$("#" + home_data.data[type].id + ".weui-tab__bd-item").destroyInfinite();
+		if(submitData.pageIndex == 1 && home_data.data[type].show_no_more == false && home_data.data[type].data.length == 0) {
+			home_data.data[type].show_error = true;
+			home_data.data[type].show_loadmore = false;
+		}
 	}
 	console.log("home_data", home_data);
 }
@@ -1077,71 +1070,59 @@ function getUserSpace(publisherIds, pageIndex, id, element) {
 	}
 	classCircleProtocol.getAllUserSpacesByUser(submitData, function(data) {
 		console.log("getUserSpace:", data);
-		var vm_data = {};
 		//允许下拉刷新或者上拉加载更多
-		vm_data.allow_loaddata = true;
-		vm_data.data = [];
+		space_data[id].allow_loaddata = true;
 		//收起下拉刷新
 		if(element != undefined) {
 			$(element).pullToRefreshDone();
 		}
 		if(data.RspCode == 0) {
-			vm_data.show_error = false;
-			vm_data.show_loadmore = true;
 			if(pageIndex == 1 && data.RspData.Data.length == 0) {
 				//内容为空
-				vm_data.error_type = 2;
-				vm_data.show_error = true;
-				vm_data.show_loadmore = false;
+				space_data[id].show_no_more = true;
+				space_data[id].show_loadmore = false;
+				space_data[id].show_error = false;
+			} else {
+				space_data[id].show_loadmore = true;
+				space_data[id].show_no_more = false;
 			}
-			vm_data.data = data.RspData.Data;
-			vm_data.pageIndex = pageIndex; //当前页数
-			vm_data.TotalPage = data.RspData.TotalPage; //总页数
-			if(vm_data.pageIndex >= vm_data.TotalPage) {
+			if(pageIndex == 1) {
+				//下拉刷新或者获取第一页的内容
+				space_data[id].data = data.RspData.Data;
+			} else {
+				Array.prototype.push.apply(space_data[id].data, data.RspData.Data);
+			}
+			space_data[id].pageIndex = pageIndex; //当前页数
+			space_data[id].TotalPage = data.RspData.TotalPage; //总页数
+			if(space_data[id].pageIndex >= space_data[id].TotalPage) {
 				console.log("没有下一页")
 				//没有下一页
-				//调整插件信息
-				vm_data.init_loadmore = false;
-				vm_data.show_loadmore_loading = false;
-				vm_data.show_loadmore_content = "没有更多了";
-				//销毁插件
-				$(".class-circle-user-space #user_space_" + id + ".weui-tab__bd-item").destroyInfinite();
+				space_data[id].allow_loadmore = false;
+				space_data[id].show_loadmore_loading = false;
+				space_data[id].show_loadmore_content = "没有更多了";
+			} else {
+				space_data[id].allow_loadmore = true;
+				space_data[id].show_loadmore_loading = true;
+				space_data[id].show_loadmore_content = "加载中";
 			}
 		} else {
 			$.alert(data.RspTxt, "加载失败");
-			vm_data.show_loadmore = false;
-			vm_data.error_type = 1;
-			vm_data.show_error = true;
-			$(".class-circle-user-space #user_space_" + id + ".weui-tab__bd-item").destroyInfinite();
+			if(pageIndex == 1 && space_data[id].show_no_more == false && space_data[id].data.length == 0) {
+				//第一页加载失败
+				space_data[id].show_error = true;
+				space_data[id].show_loadmore = false;
+			}
 		}
 		try {
-			if(space_data[id] != undefined) {
-				space_data[id].pageIndex = vm_data.pageIndex;
-				space_data[id].TotalPage = vm_data.TotalPage;
-				space_data[id].allow_loaddata = vm_data.allow_loaddata;
-				space_data[id].init_loadmore = vm_data.init_loadmore;
-				space_data[id].show_error = vm_data.show_error;
-				space_data[id].error_type = vm_data.error_type;
-				space_data[id].show_loadmore = vm_data.show_loadmore;
-				space_data[id].show_loadmore_loading = vm_data.show_loadmore_loading;
-				space_data[id].show_loadmore_content = vm_data.show_loadmore_content;
-				if(submitData.pageIndex == 1) {
-					//下拉刷新或者获取第一页的内容
-					space_data[id].data = vm_data.data;
-				} else {
-					Array.prototype.push.apply(space_data[id].data, vm_data.data);
-				}
-			}
 			if(id == router_user_space.$route.params.id) {
 				router_user_space.allow_loaddata = space_data[id].allow_loaddata;
-				router_user_space.init_loadmore = space_data[id].init_loadmore;
+				router_user_space.allow_loadmore = space_data[id].allow_loadmore;
 				router_user_space.show_loadmore = space_data[id].show_loadmore;
+				router_user_space.show_no_more = space_data[id].show_no_more;
 				router_user_space.show_error = space_data[id].show_error;
-				router_user_space.error_type = space_data[id].error_type;
 				router_user_space.show_loadmore_loading = space_data[id].show_loadmore_loading;
 				router_user_space.show_loadmore_content = space_data[id].show_loadmore_content;
 				router_user_space.data = space_data[id].data;
-				console.log("router_user_space.show_loadmore:" + router_user_space.show_loadmore)
 			}
 		} catch(e) {
 			console.log("error:" + e.message);

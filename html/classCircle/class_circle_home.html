@@ -43,14 +43,12 @@
 		</div>
 		<!--路由--班级圈主页-->
 		<template id="router_class_circle_home">
-			<div>
-				<div id="class_circle_home" class="weui-tab">
-					<div class="weui-navbar">
-						<home-navbar-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-item="clickItem"></home-navbar-item>
-					</div>
-					<div class="weui-tab__bd">
-						<home-bd-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-person="clickPerson" @click-content="clickContent" @click-function="clickFunction" @click-comment="clickComment" @click-relate-content="clickRelateContent" @click-relate-reply="clickRelateReply"></home-bd-item>
-					</div>
+			<div id="class_circle_home" class="weui-tab">
+				<div class="weui-navbar">
+					<home-navbar-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-item="clickItem"></home-navbar-item>
+				</div>
+				<div class="weui-tab__bd">
+					<home-bd-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-person="clickPerson" @click-content="clickContent" @click-function="clickFunction" @click-comment="clickComment" @click-relate-content="clickRelateContent" @click-relate-reply="clickRelateReply"></home-bd-item>
 				</div>
 				<div @click="clickAddTrends" class="class-circle-report">+ 发表动态</div>
 			</div>
@@ -69,7 +67,7 @@
 		<template id="router_user_space">
 			<div class="weui-tab class-circle-user-space">
 				<div class="weui-tab__bd">
-					<div :id="'user_space_'+$route.params.id" class="weui-tab__bd-item weui-tab__bd-item--active">
+					<div class="weui-tab__bd-item weui-tab__bd-item--active">
 						<div class="weui-pull-to-refresh__layer">
 							<div class="weui-pull-to-refresh__arrow"></div>
 							<div class="weui-pull-to-refresh__preloader"></div>
@@ -88,7 +86,8 @@
 								<trends-item v-for="(item_value,item_index) in data" :index="item_index" :key="item_index" :value="item_value" :detail="false" @click-person="clickPerson" @click-function="clickFunction" @click-comment="clickComment" @click-content="clickContent"></trends-item>
 							</div>
 						</div>
-						<error-item v-if="showError" :type="error_type"></error-item>
+						<error-item v-if="show_no_more" :type="2"></error-item>
+						<error-item v-if="show_error" :type="1"></error-item>
 						<div class="weui-loadmore" v-show="show_loadmore">
 							<i class="weui-loading" v-show="show_loadmore_loading"></i>
 							<span class="weui-loadmore__tips">{{show_loadmore_content}}</span>
@@ -127,7 +126,8 @@
 						</template>
 					</div>
 				</div>
-				<error-item v-if="showError" :type="value.error_type"></error-item>
+				<error-item v-if="value.show_no_more" :type="2"></error-item>
+				<error-item v-if="value.show_error" :type="1"></error-item>
 				<div :id="'loadmore_' + value.id" class="weui-loadmore" v-show="value.show_loadmore">
 					<i class="weui-loading" v-show="value.show_loadmore_loading"></i>
 					<span class="weui-loadmore__tips">{{value.show_loadmore_content}}</span>
@@ -281,7 +281,7 @@
 			</div>
 		</template>
 		<template id="temp_error_com">
-			<div class="class-circle-error":class="classObject">
+			<div class="class-circle-error" :class="classObject">
 				<template v-if="type==0">
 					<img src="../../image/classCircle/error.png" />
 					<div class="class-circle-error-text">加载失败,请点击<span @click="clickRefresh">刷新</span></div>
@@ -301,7 +301,7 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-2.1.4.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-weui.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/swiper.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/weui.min.js?" + Math.random() + "'></s" + "cript>");
+			//document.write("<s" + "cript type='text/javascript' src='../../js/weui.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/vue.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/vue-router.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/vconsole/vconsole.min.js?" + Math.random() + "'></s" + "cript>");

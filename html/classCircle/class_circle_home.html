@@ -41,23 +41,22 @@
 				<router-view></router-view>
 			</keep-alive>
 		</div>
+		<input id="qnInput" style="display: none;" />
 		<!--路由--班级圈主页-->
 		<template id="router_class_circle_home">
-			<div>
-				<div id="class_circle_home" class="weui-tab">
-					<div class="weui-navbar">
-						<home-navbar-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-item="clickItem"></home-navbar-item>
-					</div>
-					<div class="weui-tab__bd">
-						<home-bd-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-person="clickPerson" @click-content="clickContent" @click-function="clickFunction" @click-comment="clickComment" @click-relate-content="clickRelateContent" @click-relate-reply="clickRelateReply"></home-bd-item>
-					</div>
+			<div id="class_circle_home" class="weui-tab">
+				<div class="weui-navbar">
+					<home-navbar-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-item="clickItem"></home-navbar-item>
+				</div>
+				<div class="weui-tab__bd">
+					<home-bd-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-person="clickPerson" @click-content="clickContent" @click-function="clickFunction" @click-comment="clickComment" @click-relate-content="clickRelateContent" @click-relate-reply="clickRelateReply"></home-bd-item>
 				</div>
 				<div @click="clickAddTrends" class="class-circle-report">+ 发表动态</div>
 			</div>
 		</template>
 		<!--路由--发布动态或者评论-->
 		<template id="router_add_trends">
-			<add-trends :content="content" :show-media="showMedia" :maxlength="maxlength" :placeholder="placeholder" @add-media="addMedia" @submit-data="submitData" @content-change="contentChange" ref="add"></add-trends>
+			<add-trends @input-change="inputChange" @click-del-image="clickDelImage" @click-show-image="clickShowImage" @click-image="clickImage" :show-image="showImage" :content="content" :show-media="showMedia" :maxlength="maxlength" :placeholder="placeholder" @add-media="addMedia" @submit-data="submitData" @content-change="contentChange" ref="add" :images="images"></add-trends>
 		</template>
 		<!--路由--动态详情-->
 		<template id="router_trends_details">
@@ -69,7 +68,7 @@
 		<template id="router_user_space">
 			<div class="weui-tab class-circle-user-space">
 				<div class="weui-tab__bd">
-					<div :id="'user_space_'+$route.params.id" class="weui-tab__bd-item weui-tab__bd-item--active">
+					<div class="weui-tab__bd-item weui-tab__bd-item--active">
 						<div class="weui-pull-to-refresh__layer">
 							<div class="weui-pull-to-refresh__arrow"></div>
 							<div class="weui-pull-to-refresh__preloader"></div>
@@ -88,7 +87,8 @@
 								<trends-item v-for="(item_value,item_index) in data" :index="item_index" :key="item_index" :value="item_value" :detail="false" @click-person="clickPerson" @click-function="clickFunction" @click-comment="clickComment" @click-content="clickContent"></trends-item>
 							</div>
 						</div>
-						<error-item v-if="showError" :type="error_type"></error-item>
+						<error-item v-if="show_no_more" :type="2"></error-item>
+						<error-item v-if="show_error" :type="1"></error-item>
 						<div class="weui-loadmore" v-show="show_loadmore">
 							<i class="weui-loading" v-show="show_loadmore_loading"></i>
 							<span class="weui-loadmore__tips">{{show_loadmore_content}}</span>
@@ -127,7 +127,8 @@
 						</template>
 					</div>
 				</div>
-				<error-item v-if="showError" :type="value.error_type"></error-item>
+				<error-item v-if="value.show_no_more" :type="2"></error-item>
+				<error-item v-if="value.show_error" :type="1"></error-item>
 				<div :id="'loadmore_' + value.id" class="weui-loadmore" v-show="value.show_loadmore">
 					<i class="weui-loading" v-show="value.show_loadmore_loading"></i>
 					<span class="weui-loadmore__tips">{{value.show_loadmore_content}}</span>
@@ -252,11 +253,42 @@
 		<template id="temp_add_trends_com">
 			<div class="class-circle-add">
 				<textarea class="weui-textarea" v-model="com_content" :placeholder="placeholder" rows="6" :maxlength="maxlength"></textarea>
-				<div class="class-circle-add-media" v-if="showMedia">
-					<div class="iconfont icon-tuku" @click="addMedia(0)"></div>
-					<div class="iconfont icon-xiangji2" @click="addMedia(1)"></div>
-				</div>
 				<div class="class-circle-add-line"></div>
+				<div class="class-circle-add-media" v-if="showMedia">
+					<div class="weui-cell">
+						<div class="weui-cell__bd">
+							<div class="weui-uploader">
+								<div class="weui-uploader__hd">
+									<p class="weui-uploader__title">图片上传</p>
+									<div class="weui-uploader__info">{{images.length}}/9</div>
+								</div>
+								<div class="weui-uploader__bd">
+									<ul class="weui-uploader__files">
+										<li class="weui-uploader__file" @click="cilckImage(image_index)" :class="{'weui-uploader__file_status':image_value.uploading}" v-for="(image_value,image_index) in images" :style="{backgroundImage:'url('+image_value.filePath+')'}">
+											<div class="weui-uploader__file-content">
+												{{image_value.process}}
+												<i class="weui-icon-waiting" v-show="image_value.state==0"></i>
+												<i class="weui-icon-success" v-show="image_value.state==1"></i>
+												<i class="weui-icon-warn" v-show="image_value.state==2"></i>
+											</div>
+										</li>
+									</ul>
+									<div class="weui-uploader__input-box" v-show="images.length < 9">
+										<input id="uploaderInput" class="weui-uploader__input" accept="image/*" type="file" @change="inputChange">
+									</div>
+								</div>
+							</div>
+							<div class="weui-gallery" :style="showGallery">
+								<span class="weui-gallery__img" @click="clickShowImage" :style="{backgroundImage:'url('+showImagePath+')'}"></span>
+								<div class="weui-gallery__opr">
+									<a class="weui-gallery__del">
+										<i @click="clickDelImage" class="weui-icon-delete weui-icon_gallery-delete"></i>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 				<button class="weui-btn weui-btn_primary" @click="submitData">提交</button>
 			</div>
 		</template>
@@ -281,7 +313,7 @@
 			</div>
 		</template>
 		<template id="temp_error_com">
-			<div class="class-circle-error":class="classObject">
+			<div class="class-circle-error" :class="classObject">
 				<template v-if="type==0">
 					<img src="../../image/classCircle/error.png" />
 					<div class="class-circle-error-text">加载失败,请点击<span @click="clickRefresh">刷新</span></div>
@@ -301,15 +333,22 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-2.1.4.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-weui.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/swiper.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/weui.min.js?" + Math.random() + "'></s" + "cript>");
+			//document.write("<s" + "cript type='text/javascript' src='../../js/weui.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/vue.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/vue-router.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/vconsole/vconsole.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_vue.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_protocol.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/qiniu/qiniu.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cryption.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cloudutil.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/compress.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/pluploadutil.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_home.js?" + Math.random() + "'></s" + "cript>");
-			//document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_temp_data.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_temp_data.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 	</body>
 

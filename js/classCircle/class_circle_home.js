@@ -24,6 +24,8 @@ var home_data = {
 		show_loadmore: true, //是否显示加载中
 		show_loadmore_loading: true, //是否显示加载中的转圈图标
 		show_loadmore_content: "加载中", //加载中元素的文字
+		show_error: false, //是否显示失败或者无数据
+		error_type: 1, //失败类型
 		data: [] //tab列表的数据
 	}, {
 		id: "mine_trends_1",
@@ -36,6 +38,8 @@ var home_data = {
 		show_loadmore: true, //是否显示加载中
 		show_loadmore_loading: true, //是否显示加载中的转圈图标
 		show_loadmore_content: "加载中", //加载中元素的文字
+		show_error: false, //是否显示失败或者无数据
+		error_type: 1, //失败类型
 		data: []
 	}, {
 		id: "relate_to_me_2",
@@ -48,6 +52,8 @@ var home_data = {
 		show_loadmore: true, //是否显示加载中
 		show_loadmore_loading: true, //是否显示加载中的转圈图标
 		show_loadmore_content: "加载中", //加载中元素的文字
+		show_error: false, //是否显示失败或者无数据
+		error_type: 1, //失败类型
 		data: []
 	}]
 };
@@ -113,7 +119,7 @@ function initRouter() {
 			 */
 			clickContent: function(listIndex, valueIndex) {
 				console.log("clickContent:" + listIndex + ":" + valueIndex);
-				showTrendsDetails(this.data[listIndex].data[valueIndex])
+				showTrendsDetails(this.data[listIndex].data[valueIndex], this.data[listIndex]);
 			},
 			/**
 			 * 点击动态的赞，评论，删除按钮
@@ -208,6 +214,7 @@ function initRouter() {
 		 */
 		beforeRouteEnter: function(to, from, next) {
 			console.log("路由-班级圈主页-显示之前:from:" + from.path + " to:" + to.path);
+			console.log("allow_back:" + this.allow_back);
 			if(show_class_circle_app) {
 				next(function() {
 					//初始化滚动
@@ -227,19 +234,15 @@ function initRouter() {
 		 */
 		beforeRouteLeave: function(to, from, next) {
 			console.log("路由-班级圈主页-离开之前:from:" + from.path + " to:" + to.path);
-			if(this.allow_back) {
-				if("/" == to.path) { //离开班级圈APP
-					router.back();
-				} else {
-					this.data[this.is_on].scrollTop = $("#" + this.data[this.is_on].id).scrollTop();
-					this.data[0].leave = true;
-					this.data[1].leave = true;
-					this.data[2].leave = true;
-				}
-				next();
+			if("/" == to.path) { //离开班级圈APP
+				window.close();
 			} else {
-				next(this.allow_back);
+				this.data[this.is_on].scrollTop = $("#" + this.data[this.is_on].id).scrollTop();
+				this.data[0].leave = true;
+				this.data[1].leave = true;
+				this.data[2].leave = true;
 			}
+			next();
 		}
 	};
 
@@ -381,7 +384,8 @@ function initRouter() {
 							route: this,
 							userSpaceId: trendsValue.TabId,
 							pageType: "details",
-							valueIndex: valueIndex
+							valueIndex: valueIndex,
+							list: this.$route.params.list
 						});
 						break;
 				}
@@ -417,6 +421,15 @@ function initRouter() {
 	 */
 	var user_space = {
 		template: "#router_user_space",
+		computed: {
+			showError: function() {
+				if(this.show_error == true && this.data.length == 0) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		},
 		methods: {
 			/**
 			 * 头像加载成功
@@ -455,7 +468,7 @@ function initRouter() {
 			 */
 			clickContent: function(valueIndex) {
 				console.log("showTrendsDetails:" + valueIndex);
-				showTrendsDetails(space_data[this.$route.params.id].data[valueIndex]);
+				showTrendsDetails(space_data[this.$route.params.id].data[valueIndex], space_data[this.$route.params.id]);
 			},
 			/**
 			 * 点击动态的赞，评论，删除按钮
@@ -471,6 +484,15 @@ function initRouter() {
 						break;
 					case 1:
 						showAddComments(trendsValue);
+						break;
+					case 2:
+						this.allow_back = false;
+						deleteMineTrends({
+							route: this,
+							userSpaceId: trendsValue.TabId,
+							pageType: "space",
+							valueIndex: valueIndex,
+						});
 						break;
 				}
 			},
@@ -503,6 +525,9 @@ function initRouter() {
 					this.show_loadmore = space_data[id].show_loadmore;
 					this.show_loadmore_loading = space_data[id].show_loadmore_loading;
 					this.show_loadmore_content = space_data[id].show_loadmore_content;
+					this.show_error = space_data[id].show_error;
+					this.error_type = space_data[id].error_type;
+
 					if(space_data[id].data == undefined) {
 						//未获取数据则获取空间数据
 						getUserSpace(space_data[id].userId, 1, id);
@@ -525,17 +550,24 @@ function initRouter() {
 		data: function() {
 			return {
 				userId: "",
+				allow_back: true, //允许返回
 				allow_loaddata: false, //允许下刷新或者加载中
 				init_loadmore: true, //是否初始化加载更多
 				show_loadmore: true, //是否显示加载中
 				show_loadmore_loading: true, //是否显示加载中的转圈图标
 				show_loadmore_content: "加载中", //加载中元素的文字
+				show_error: false, //
+				error_type: 1,
 				data: []
 			};
 		},
 		beforeRouteUpdate: function(to, from, next) {
 			console.log("路由-用户空间-复用:from.path:" + from.path);
 			console.log("路由-用户空间-复用:to.path:" + to.path);
+			if(from.params.id > to.params.id && !this.allow_back) {
+				//返回上一个空间
+				return false
+			}
 			//记录原页面的滚动距离
 			var from_data = space_data[from.params.id];
 			if(from_data != undefined) {
@@ -544,11 +576,6 @@ function initRouter() {
 			}
 			var leave = space_data[to.params.id]
 			this.initData(to.params.id, leave);
-			//if(from.params.id > to.params.id) {
-			//返回上一个空间
-			//如果上一个页面的请求还未完成，删除数据会导致赋值异常
-			//	delete space_data[from.params.id];
-			//}
 			next();
 		},
 		beforeRouteEnter: function(to, from, next) {
@@ -563,27 +590,48 @@ function initRouter() {
 		},
 		beforeRouteLeave: function(to, from, next) {
 			console.log("路由-用户空间-离开之前:from:" + from.path + " to:" + to.path);
-			if("/home" == to.path) {
-				//回到主页清空空间数据
-				space_data = null;
-				space_data = {};
+			if(this.allow_back) {
+				if("/home" == to.path) {
+					//回到主页清空空间数据
+					space_data = null;
+					space_data = {};
+				}
+				next();
+			} else {
+				next(this.allow_back);
 			}
-			next();
+
 		}
 	}
 
+	//获取我的信息，部门成员信息失败
 	var error_page = {
 		template: "#router_error",
 		data: function() {
 			return {}
 		},
+		methods: {
+			clickRefresh: function() {
+				console.log("clickRefresh");
+				window.location.reload();
+			}
+		},
 		beforeRouteEnter: function(to, from, next) {
 			console.log("路由-异常页面-显示之前:from:" + from.path + " to:" + to.path);
-			next();
+			console.log("id:" + to.params.id);
+			if(to.params.id == undefined) {
+				next(false);
+			} else {
+				next();
+			}
 		},
 		beforeRouteLeave: function(to, from, next) {
 			console.log("路由-异常页面-离开之前:from:" + from.path + " to:" + to.path);
-			next();
+			if("/" == to.path) { //离开班级圈APP
+				window.close();
+			} else {
+				next();
+			}
 		}
 	}
 
@@ -750,8 +798,12 @@ function getMineInfo() {
 		} else {
 			console.log("getMineInfo:error:")
 			$.hideLoading();
+			$.alert(data.RspTxt, "加载失败");
 			router.push({
-				name: "error"
+				name: "error",
+				params: {
+					id: 0
+				}
 			});
 		}
 	});
@@ -795,6 +847,12 @@ function disposeMemberData(data) {
 			getHomeTrends(0, 1);
 		} else {
 			$.alert(data.RspTxt, "加载失败");
+			router.push({
+				name: "error",
+				params: {
+					id: 1
+				}
+			});
 		}
 	} else {
 		temp_data++;
@@ -821,13 +879,14 @@ function getDepartmentMember(id) {
  * 进入动态的详情
  * @param {Object} trendsValue 动态详情的数据
  */
-function showTrendsDetails(trendsValue) {
+function showTrendsDetails(trendsValue, list) {
 	console.log("showTrendsDetails:", trendsValue);
 	router.push({
 		name: 'details',
 		params: {
 			id: new Date().getTime().toString(),
-			data: trendsValue
+			data: trendsValue,
+			list: list
 		}
 	});
 }
@@ -965,9 +1024,17 @@ function disposeHomeData(type, submitData, element, data) {
 		$(element).pullToRefreshDone();
 	}
 	if(data.RspCode == 0) {
+		home_data.data[type].show_error = false;
+		home_data.data[type].show_loadmore = true;
 		if(submitData.pageIndex == 1) {
 			//下拉刷新或者获取第一页的内容
 			home_data.data[type].data = data.RspData.Data;
+			if(home_data.data[type].data.length == 0) {
+				//内容为空
+				home_data.data[type].error_type = 2;
+				home_data.data[type].show_error = true;
+				home_data.data[type].show_loadmore = false;
+			}
 		} else {
 			Array.prototype.push.apply(home_data.data[type].data, data.RspData.Data);
 		}
@@ -985,6 +1052,11 @@ function disposeHomeData(type, submitData, element, data) {
 		}
 	} else {
 		$.alert(data.RspTxt, "加载失败");
+		home_data.data[type].show_loadmore = false;
+		home_data.data[type].error_type = 1;
+		home_data.data[type].show_error = true;
+		//销毁插件
+		$("#" + home_data.data[type].id + ".weui-tab__bd-item").destroyInfinite();
 	}
 	console.log("home_data", home_data);
 }
@@ -1005,15 +1077,23 @@ function getUserSpace(publisherIds, pageIndex, id, element) {
 	}
 	classCircleProtocol.getAllUserSpacesByUser(submitData, function(data) {
 		console.log("getUserSpace:", data);
-
 		var vm_data = {};
 		//允许下拉刷新或者上拉加载更多
 		vm_data.allow_loaddata = true;
+		vm_data.data = [];
 		//收起下拉刷新
 		if(element != undefined) {
 			$(element).pullToRefreshDone();
 		}
 		if(data.RspCode == 0) {
+			vm_data.show_error = false;
+			vm_data.show_loadmore = true;
+			if(pageIndex == 1 && data.RspData.Data.length == 0) {
+				//内容为空
+				vm_data.error_type = 2;
+				vm_data.show_error = true;
+				vm_data.show_loadmore = false;
+			}
 			vm_data.data = data.RspData.Data;
 			vm_data.pageIndex = pageIndex; //当前页数
 			vm_data.TotalPage = data.RspData.TotalPage; //总页数
@@ -1029,6 +1109,10 @@ function getUserSpace(publisherIds, pageIndex, id, element) {
 			}
 		} else {
 			$.alert(data.RspTxt, "加载失败");
+			vm_data.show_loadmore = false;
+			vm_data.error_type = 1;
+			vm_data.show_error = true;
+			$(".class-circle-user-space #user_space_" + id + ".weui-tab__bd-item").destroyInfinite();
 		}
 		try {
 			if(space_data[id] != undefined) {
@@ -1036,6 +1120,9 @@ function getUserSpace(publisherIds, pageIndex, id, element) {
 				space_data[id].TotalPage = vm_data.TotalPage;
 				space_data[id].allow_loaddata = vm_data.allow_loaddata;
 				space_data[id].init_loadmore = vm_data.init_loadmore;
+				space_data[id].show_error = vm_data.show_error;
+				space_data[id].error_type = vm_data.error_type;
+				space_data[id].show_loadmore = vm_data.show_loadmore;
 				space_data[id].show_loadmore_loading = vm_data.show_loadmore_loading;
 				space_data[id].show_loadmore_content = vm_data.show_loadmore_content;
 				if(submitData.pageIndex == 1) {
@@ -1049,9 +1136,12 @@ function getUserSpace(publisherIds, pageIndex, id, element) {
 				router_user_space.allow_loaddata = space_data[id].allow_loaddata;
 				router_user_space.init_loadmore = space_data[id].init_loadmore;
 				router_user_space.show_loadmore = space_data[id].show_loadmore;
+				router_user_space.show_error = space_data[id].show_error;
+				router_user_space.error_type = space_data[id].error_type;
 				router_user_space.show_loadmore_loading = space_data[id].show_loadmore_loading;
 				router_user_space.show_loadmore_content = space_data[id].show_loadmore_content;
 				router_user_space.data = space_data[id].data;
+				console.log("router_user_space.show_loadmore:" + router_user_space.show_loadmore)
 			}
 		} catch(e) {
 			console.log("error:" + e.message);
@@ -1307,16 +1397,20 @@ function deleteMineTrends(delData) {
 			console.log("onOK");
 			$.showLoading('加载中...');
 			var submitData = {
-				userSpaceId: trendsValue.userSpaceId
+				userSpaceId: delData.userSpaceId
 			}
 			classCircleProtocol.delUserSpaceById(submitData, function(data) {
 				console.log("delUserSpaceById:", data);
 				delData.route.allow_back = true;
+				$.hideLoading();
 				if(data.RspCode == 0 && data.RspData.Result == 1) {
 					$.toast("删除成功");
 					if(delData.pageType == "home") {
 						delData.route.data[delData.listIndex].data.splice(delData.valueIndex, 1);
 					} else if(delData.pageType == "details") {
+						delData.list.data.splice(delData.valueIndex, 1);
+						router.back();
+					} else if(delData.pageType == "space") {
 						delData.route.data.splice(delData.valueIndex, 1);
 					}
 				} else {

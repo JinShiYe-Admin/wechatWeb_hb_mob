@@ -88,6 +88,7 @@
 								<trends-item v-for="(item_value,item_index) in data" :index="item_index" :key="item_index" :value="item_value" :detail="false" @click-person="clickPerson" @click-function="clickFunction" @click-comment="clickComment" @click-content="clickContent"></trends-item>
 							</div>
 						</div>
+						<error-item v-if="showError" :type="error_type"></error-item>
 						<div class="weui-loadmore" v-show="show_loadmore">
 							<i class="weui-loading" v-show="show_loadmore_loading"></i>
 							<span class="weui-loadmore__tips">{{show_loadmore_content}}</span>
@@ -97,9 +98,7 @@
 			</div>
 		</template>
 		<template id="router_error">
-			<div>
-				<div>加载失败</div>
-			</div>
+			<error-item @click-refresh="clickRefresh" :type="0"></error-item>
 		</template>
 		<!--班级圈主页--顶部导航-->
 		<template id="temp_trends_navbar_item">
@@ -128,6 +127,7 @@
 						</template>
 					</div>
 				</div>
+				<error-item v-if="showError" :type="value.error_type"></error-item>
 				<div :id="'loadmore_' + value.id" class="weui-loadmore" v-show="value.show_loadmore">
 					<i class="weui-loading" v-show="value.show_loadmore_loading"></i>
 					<span class="weui-loadmore__tips">{{value.show_loadmore_content}}</span>
@@ -278,6 +278,22 @@
 			<div class="class-circle-praise-bg">
 				<div class="class-circle-praiser" v-for="(value,index) in likers.showArray" @click="clickName(value.userId)">{{value.userId|userName}}</div>
 				<div class="class-circle-praiser" v-if="likers.num > 20">等{{likers.num}}人觉得很赞</div>
+			</div>
+		</template>
+		<template id="temp_error_com">
+			<div class="class-circle-error":class="classObject">
+				<template v-if="type==0">
+					<img src="../../image/classCircle/error.png" />
+					<div class="class-circle-error-text">加载失败,请点击<span @click="clickRefresh">刷新</span></div>
+				</template>
+				<template v-else-if="type==1">
+					<img src="../../image/classCircle/error.png" />
+					<div class="class-circle-error-text">加载失败</div>
+				</template>
+				<template v-else-if="type==2">
+					<img src="../../image/classCircle/nodata.png" />
+					<div class="class-circle-error-text">暂无内容</div>
+				</template>
 			</div>
 		</template>
 		<script type="text/javascript">

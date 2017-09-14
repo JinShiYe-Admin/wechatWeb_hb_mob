@@ -31,7 +31,7 @@
 									<li v-for="file of uploadedFiles" v-bind:class="['weui-uploader__file']" v-bind:style="{'background-image':'url('+file.imgurl+')'}"></li>
 								</ul>
 								<div class="weui-uploader__input-box">
-									<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" v-on:change="selectFile($event)">
+									<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" @click="addFileBtn()" v-on:change="selectFile($event)">
 								</div>
 							</div>
 						</div>
@@ -40,34 +40,32 @@
 			</div>
 			<a href="javascript:;" class="weui-btn weui-btn_primary" @click="clickSubmitBtn()">提交</a>
 		</div>
-		<input id="inputDiv"/>
+		<input id="qnInput" style="display: none;" />
 		<script src="../../js/mui.min.js"></script>
 		<script src="../../js/demoCssJs/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/appweb/choose-file.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../../js/utils/compress.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/demoCssJs/jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/demoCssJs/jquery-weui.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/utils/consts.js"></script>
 		<script src="../../js/utils/events.js"></script>
 		<script src="../../js/lib/vconsole/vconsole.min.js"></script>
-		<script src="../../js/utils/storageutil.js"></script>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/qiniu/qiniu.min.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cloudutil.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cryption.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cloudutil.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/compress.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/pluploadutil.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 		<script type="text/javascript">
 			mui.init();
 			var uptokenData;
-			var bannerUploader;
+			var qnFileUploader; //七牛上传控件对象
 			window.onload = function() {
 				console.log('onload');
-				initUploader();
+				initQNUploader();
 			}
 			var submitHomework = new Vue({
 				el: '#submitHomework',
@@ -76,19 +74,17 @@
 					uploadedFiles: []
 				},
 				methods: {
-					selectFile: function(event) {
+					selectFile: function(event) {//从手机中选择图片后到界面的回调
 						var com = this;
 						console.log('111111');
 						if(event.target.value) {
-							console.log("选中的文件路径：" + event.target.value);
-							console.log(JSON.stringify(event.target.files));
-//							var file = event.target.files[0];
-							var file = event.target.value;
-							console.log('file：'+file);
-							bannerUploader.addFile(event.target.files[0], event.target.files[0].name);
+							qnFileUploader.addFile(event.target.files[0], event.target.files[0].name);
 						}
 					},
-					clickSubmitBtn: function() {
+					addFileBtn: function() {//点击添加按钮
+						console.log('dianji addFileBtn');
+					},
+					clickSubmitBtn: function() {//提交按钮
 						if(submitHomework.workTitle.length == 0 && submitHomework.uploadedFiles.length == 0) {
 							alert('请作答后再提交');
 							return;
@@ -130,85 +126,80 @@
 					}
 				}
 			});
-			
+
 			/**
 			 * 初始化上传
 			 */
-			function initUploader() {
-				var bannerOption = {
-					disable_statistics_report: true, // 禁止自动发送上传统计信息到七牛，默认允许发送
+			function initQNUploader() {
+				qnFileUploader = Qiniu.uploader({
+					disable_statistics_report: false, // 禁止自动发送上传统计信息到七牛，默认允许发送
 					runtimes: 'html5,flash,html4', // 上传模式,依次退化
-					browse_button: 'inputDiv', // 上传选择的点选按钮，**必需**
-					uptoken_func: function(file) { // 在需要获取 uptoken 时，该方法会被调用 
-						console.log("uptoken_func:" + JSON.stringify(file));
+					browse_button: 'qnInput', // 上传选择的点选按钮，**必需**
+					uptoken_func: function(file) { // 在需要获取 uptoken 时，该方法会被调用
 						uptokenData = null;
 						uptokenData = getQNUpToken(file);
-						console.log("获取uptoken回调:" + JSON.stringify(uptokenData));
-						if(uptokenData && uptokenData.code) { //成功   
+						//console.log("获取uptoken回调:" + JSON.stringify(uptokenData));
+						if(uptokenData && uptokenData.code) { //成功
 							return uptokenData.data.Data[0].Token;
 						} else {
-							bannerUploader.stop();
-							var dialog = weui.dialog({
-								title: "上传失败",
-								content: uptokenData.message,
-								className: "custom-classname",
-								buttons: [{
-									label: "确定",
-									type: "primary",
-									onClick: function() {
-										dialog.hide();
-									}
-								}]
-							});
+							qnFileUploader.stop();
 						}
 					},
 					unique_names: false, // 默认 false，key 为文件名。若开启该选项，JS-SDK 会为每个文件自动生成key（文件名）
 					save_key: false, // 默认 false。若在服务端生成 uptoken 的上传策略中指定了 `save_key`，则开启，SDK在前端将不对key进行任何处理
 					get_new_uptoken: true, // 设置上传文件的时候是否每次都重新获取新的 uptoken
 					domain: storageutil.QNPBDOMAIN, // bucket 域名，下载资源时用到，如：'http://xxx.bkt.clouddn.com/' **必需**
-					max_file_size: '10mb', // 最大文件体积限制
+					max_file_size: '4mb', // 最大文件体积限制
 					flash_swf_url: '../../js/lib/plupload/Moxie.swf', //引入 flash,相对路径
 					max_retries: 0, // 上传失败最大重试次数
 					dragdrop: false, // 开启可拖曳上传
 					chunk_size: '4mb', // 分块上传时，每块的体积
 					auto_start: true, // 选择文件后自动上传，若关闭需要自己绑定事件触发上传,
-//					filters: {
-//						mime_types: [ //只允许上传图片和zip文件
-//							{
-//								title: "Image files",
-//								extensions: "jpg,png"
-//							}
-//						]
-//					},
 					init: {
 						'FilesAdded': function(up, files) {
 							plupload.each(files, function(file) {
-							console.log("6666666");
 								// 文件添加进队列后,处理相关的事情
-								imgName = JSON.stringify(file.name)
-								var img = imgName.substring(-1, (imgName - 1)); 
-								//document.getElementById('Priimgname0').value = imgName;
-								console.log("FilesAdded:" + JSON.stringify(file));
+								console.log("FilesAdded:", file);
 							});
 						},
+						'BeforeUpload': function(up, file) {
+							// 每个文件上传前,处理相关的事情
+							console.log("BeforeUpload:");
+						},
 						'UploadProgress': function(up, file) {
-							console.log("555555555");
+							// 每个文件上传时,处理相关的事情
+							console.log("UploadProgress:" + file.percent);
 						},
 						'FileUploaded': function(up, file, info) {
-							console.log("4444444");
+							// 每个文件上传成功后,处理相关的事情
+							console.log("FileUploaded:");
+							if(info.status == 200) {
+								var tempModel = {
+									imgurl:storageutil.QNPBDOMAIN + JSON.parse(info["response"]).key
+								}
+								submitHomework.uploadedFiles.push(tempModel);
+								console.log("success:" + storageutil.QNPBDOMAIN + JSON.parse(info["response"]).key);
+								console.log("success:" + storageutil.QNPBDOMAIN +','+ JSON.stringify(info));
+							}
 						},
-						'Error': function(up, err, errTip) { 
-							console.log("111111111",err, errTip);
+						'Error': function(up, err, errTip) {
+							//上传出错时,处理相关的事情
+							console.log("Error:", err, errTip);
 						},
 						'UploadComplete': function() {
-							console.log("22222222");
+							//队列文件处理完毕后,处理相关的事情
+							console.log("UploadComplete:");
 						},
 						'Key': function(up, file) {
-							console.log("33333333");
+							// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
+							// 该配置必须要在 unique_names: false , save_key: false 时才生效
+							if(uptokenData && uptokenData.code) { //成功
+								console.log('得到token:'+JSON.stringify(uptokenData));
+								return uptokenData.data.Data[0].Key;
+							}
 						}
 					}
-				}
-				bannerUploader = Qiniu.uploader(bannerOption);
+				});
 			}
 			/**
 			 * 获取七牛上传token
@@ -230,7 +221,6 @@
 				cloudutil.getFileUpTokens(getTokenData, function(data) {
 					upToken = data;
 				});
-				console.log("gettokendata" + JSON.stringify(getTokenData))
 				return upToken;
 			}
 		</script>

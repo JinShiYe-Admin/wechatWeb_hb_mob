@@ -9,6 +9,7 @@ var temp_data; //临时变量;用于查询我所处部门的所有成员
 var show_class_circle_app = false; //是否显示班级圈app
 var router; //路由
 var router_user_space; //个人空间路由
+var router_add_trends; //上传图片时使用的发布路由
 //班级圈主页数据
 var home_data = {
 	is_on: 0, //当前显示的列表
@@ -59,6 +60,8 @@ var home_data = {
 };
 var space_data = {}; //空间的所有数据
 var qnFileUploader; //七牛上传控件对象
+var uptokenData; //当前token
+var uploadImageIndex; //正在上传的图片的序号
 
 window.onload = function() {
 	$.showLoading('加载中...');
@@ -66,14 +69,14 @@ window.onload = function() {
 	getMineInfo();
 
 	//---假数据---start---
-//	initQNUploader();
-//		show_class_circle_app = true; //是否显示班级圈app
-//		temp_data = null;
-//		initRouter();
-//		router.push({
-//			name: "home"
-//		});
-//		getHomeTrends(0, 1);
+	//		initQNUploader();
+	//		show_class_circle_app = true; //是否显示班级圈app
+	//		temp_data = null;
+	//		initRouter();
+	//		router.push({
+	//			name: "home"
+	//		});
+	//		getHomeTrends(0, 1);
 	//---假数据---end---
 }
 
@@ -237,14 +240,15 @@ function initRouter() {
 		beforeRouteLeave: function(to, from, next) {
 			console.log("路由-班级圈主页-离开之前:from:" + from.path + " to:" + to.path);
 			if("/" == to.path) { //离开班级圈APP
-				window.close();
+				next();
+				router.back();
 			} else {
 				this.data[this.is_on].scrollTop = $("#" + this.data[this.is_on].id).scrollTop();
 				this.data[0].leave = true;
 				this.data[1].leave = true;
 				this.data[2].leave = true;
+				next();
 			}
-			next();
 		}
 	};
 
@@ -257,17 +261,7 @@ function initRouter() {
 				allow_back: false, //允许返回
 				content: "", //文字，
 				showMedia: false, //是否显示添加图片，视频功能
-				images: [{
-					filePath: "../../image/add.png",
-					uploading: false,
-					process: "",
-					state: null
-				}, {
-					filePath: "../../image/mineIndex.png",
-					uploading: false,
-					process: "",
-					state: null
-				}], //图片，限制9张
+				images: [], //图片，限制9张
 				showImage: false,
 				showImagePath: "",
 				maxlength: 200, //动态限制6000字，评论回复限制200
@@ -312,7 +306,19 @@ function initRouter() {
 								pubScopes: [1], //发布范围
 								pubArea: "" //发布区域
 							}
-							addTrend(this, submitData);
+							if(this.images.length == 0) {
+								//没有图片
+								addTrend(this, submitData);
+							} else {
+								router_add_trends = this;
+								for(var i = 0; i < router_add_trends.images.length; i++) {
+									if(router_add_trends.images[i].state == 2) {
+										//上传失败的图片
+										router_add_trends.images[i].uploaded = false;
+									}
+								};
+								upLoadImages();
+							}
 							break;
 						case "addComment":
 							//发布评论
@@ -358,6 +364,22 @@ function initRouter() {
 			clickDelImage: function() {
 				this.allow_back = true;
 				this.showImage = false;
+				var temp_array = [];
+				if(this.images[this.showImageIndex].url != undefined) {
+					temp_array.push(this.images[this.showImageIndex].url);
+				}
+				if(this.images[this.showImageIndex].cropUrl != undefined) {
+					temp_array.push(this.images[this.showImageIndex].cropUrl);
+				}
+				if(temp_array.length != 0) {
+					cloudutil.delCloudFiles({
+						appId: storageutil.QNQYWXKID,
+						urls: temp_array
+					}, function(data) {
+						console.log("delCloudFiles:", data);
+					});
+				}
+
 				this.images.splice(this.showImageIndex, 1);
 			},
 			/**
@@ -366,7 +388,28 @@ function initRouter() {
 			inputChange: function(value, files) {
 				console.log("inputChange:value:", value);
 				console.log("inputChange:files:", files);
-				initFileUpload(files[0]);
+				//initFileUpload(files[0]);
+				var types = files[0].type.toLowerCase().split("/");
+				var self = this;
+				console.log("types:" + types);
+				if(types[1] == "png" || types[1] == "jpg" || types[1] == "jpeg") {
+					//显示文件
+					var reader = new FileReader();
+					reader.onload = function() {
+						var newImage = {
+							filePath: this.result, //文件路径
+							uploading: false, //是否正在上传
+							process: "", //进度
+							state: null, //状态
+							file: files[0], //文件对象
+							uploaded: false //是否上传过
+						}
+						self.images.push(newImage);
+					}
+					reader.readAsDataURL(files[0]);
+				} else {
+					$.alert("请选择png,jpg,jpeg类型的图片", "选择失败");
+				}
 			}
 		},
 		beforeRouteEnter: function(to, from, next) {
@@ -378,10 +421,11 @@ function initRouter() {
 					console.log("trends_add:id:" + vm.$route.params.id);
 					console.log("trends_add:params:", vm.$route.params);
 					vm.allow_back = true;
+					vm.images = []; //图片
 					vm.$refs.add.cleanContent(); //清理内容
 					if(vm.$route.params.id == "addTrend" || vm.$route.params.id == undefined) {
 						//发布动态
-						vm.showMedia = false;
+						vm.showMedia = true;
 						vm.maxlength = 6000;
 						vm.placeholder = "动态:不能为空,最多6000字!";
 					} else if(vm.$route.params.id == "addComment") {
@@ -399,7 +443,31 @@ function initRouter() {
 		},
 		beforeRouteLeave: function(to, from, next) {
 			console.log("路由-发布动态或评论-离开之前:from:" + from.path + " to:" + to.path);
-			next(this.allow_back);
+			if(this.allow_back) {
+				if(this.images.length != 0) {
+					var temp_array = [];
+					for(var i = 0; i < this.images.length; i++) {
+						if(this.images[i].url != undefined) {
+							temp_array.push(this.images[i].url);
+						}
+						if(this.images[i].cropUrl != undefined) {
+							temp_array.push(this.images[i].cropUrl);
+						}
+					}
+					if(temp_array.length != 0) {
+						cloudutil.delCloudFiles({
+							appId: storageutil.QNQYWXKID,
+							urls: temp_array
+						}, function(data) {
+							console.log("delCloudFiles:", data);
+						});
+					}
+				}
+				next();
+			} else {
+				next(this.allow_back);
+			}
+
 		}
 	};
 
@@ -767,7 +835,7 @@ function initSpacePullToRefresh(spaceId) {
 		getUserSpace(space_data[id].userId, 1, id, this);
 	});
 
-	$(".class-circle-user-space .weui-tab__bd-item").infinite();
+	$(".class-circle-user-space .weui-tab__bd-item").infinite(100);
 	$(".class-circle-user-space .weui-tab__bd-item").infinite().on("infinite", function() {
 		var id = router_user_space.$route.params.id;
 		console.log("allow_loaddata:" + space_data[id].allow_loaddata);
@@ -1254,12 +1322,12 @@ function addTrend(routeAdd, submitData) {
 				"Comments": [],
 				"MsgContent": submitData.msgContent,
 				"EncTypeStr": "",
-				"EncType": 3,
-				"EncAddr": "",
+				"EncType": submitData.encType,
+				"EncAddr": submitData.encAddr,
 				"NoteType": 2,
 				"MsgContentTxt": submitData.msgContent,
 				"PublisherId": submitData.userId,
-				"EncImgAddr": "",
+				"EncImgAddr": submitData.encImg,
 				"InShow": 0,
 				"NoteTypeStr": "",
 				"EncIntro": "",
@@ -1270,6 +1338,8 @@ function addTrend(routeAdd, submitData) {
 			}
 			home_data.data[0].data.unshift($.extend({}, newTrends));
 			home_data.data[1].data.unshift($.extend({}, newTrends));
+			routeAdd.images = [];
+			routeAdd.$refs.add.cleanContent(); //清理内容
 			router.back();
 		} else {
 			$.alert(data.RspTxt, "发布失败");
@@ -1455,7 +1525,6 @@ function deleteMineTrends(delData) {
 		}
 	});
 }
-var uptokenData;
 
 function initQNUploader() {
 	qnFileUploader = Qiniu.uploader({
@@ -1465,23 +1534,24 @@ function initQNUploader() {
 		uptoken_func: function(file) { // 在需要获取 uptoken 时，该方法会被调用
 			uptokenData = null;
 			uptokenData = getQNUpToken(file);
-			//console.log("获取uptoken回调:" + JSON.stringify(uptokenData));
+			console.log("uptokenData:", uptokenData);
 			if(uptokenData && uptokenData.code) { //成功
 				return uptokenData.data.Data[0].Token;
 			} else {
 				qnFileUploader.stop();
+				uploadImageError(uptokenData.message);
 			}
 		},
 		unique_names: false, // 默认 false，key 为文件名。若开启该选项，JS-SDK 会为每个文件自动生成key（文件名）
 		save_key: false, // 默认 false。若在服务端生成 uptoken 的上传策略中指定了 `save_key`，则开启，SDK在前端将不对key进行任何处理
 		get_new_uptoken: true, // 设置上传文件的时候是否每次都重新获取新的 uptoken
 		domain: storageutil.QNPBDOMAIN, // bucket 域名，下载资源时用到，如：'http://xxx.bkt.clouddn.com/' **必需**
-		max_file_size: '4mb', // 最大文件体积限制
+		max_file_size: '100mb', // 最大文件体积限制
 		flash_swf_url: '../../js/lib/plupload/Moxie.swf', //引入 flash,相对路径
 		max_retries: 0, // 上传失败最大重试次数
 		dragdrop: false, // 开启可拖曳上传
 		chunk_size: '4mb', // 分块上传时，每块的体积
-		auto_start: false, // 选择文件后自动上传，若关闭需要自己绑定事件触发上传,
+		auto_start: true, // 选择文件后自动上传，若关闭需要自己绑定事件触发上传,
 		init: {
 			'FilesAdded': function(up, files) {
 				plupload.each(files, function(file) {
@@ -1496,21 +1566,37 @@ function initQNUploader() {
 			'UploadProgress': function(up, file) {
 				// 每个文件上传时,处理相关的事情
 				console.log("UploadProgress:" + file.percent);
+				router_add_trends.images[uploadImageIndex].process = file.percent + "%";
 			},
 			'FileUploaded': function(up, file, info) {
 				// 每个文件上传成功后,处理相关的事情
-				console.log("FileUploaded:");
+				console.log("FileUploaded:", info);
 				if(info.status == 200) {
-					console.log("success:" + storageutil.QNPBDOMAIN + JSON.parse(info["response"]).key)
+					console.log("uploadImageSuccess:");
+					var response = JSON.parse(info["response"]);
+					var imageOb = router_add_trends.images[uploadImageIndex];
+					imageOb.process = "";
+					imageOb.state = 1;
+					imageOb.url = storageutil.QNPBDOMAIN + response.key;
+					imageOb.cropUrl = uptokenData.data.Data[0].OtherKey[uptokenData.thumbKey[0]];
+					console.log("images:", router_add_trends.images);
+				} else {
+					uploadImageError(JSON.stringify(info));
 				}
 			},
 			'Error': function(up, err, errTip) {
 				//上传出错时,处理相关的事情
 				console.log("Error:", err, errTip);
+				uploadImageError(errTip);
 			},
 			'UploadComplete': function() {
 				//队列文件处理完毕后,处理相关的事情
 				console.log("UploadComplete:");
+				upLoadImages();
+			},
+			'FilesRemoved ': function() {
+				//文件移出队列
+				console.log("FilesRemoved:");
 			},
 			'Key': function(up, file) {
 				// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
@@ -1528,14 +1614,17 @@ function initQNUploader() {
 function getQNUpToken(file) {
 	var myDate = new Date();
 	var fileName = myDate.getTime() + "" + parseInt(Math.random() * 1000);
-	var types = file.name.split(".");
+	var types = file.name.toLowerCase().split(".");
 	fileName = fileName + "." + types[types.length - 1];
 	var getTokenData = {
 		appId: storageutil.QNQYWXKID,
 		mainSpace: storageutil.QNPUBSPACE,
-		saveSpace: storageutil.QNSSPACEWEBCON,
+		saveSpace: storageutil.QNSSPACECLASSCIRCLE,
 		fileArray: [{
 			qnFileName: fileName,
+			qnCmdOption: {
+				type: 2
+			}
 		}]
 	}
 	var upToken;
@@ -1545,32 +1634,115 @@ function getQNUpToken(file) {
 	return upToken;
 }
 
-function initFileUpload(file) {
-	console.log("initFileUpload:", file);
-	//qnFileUploader.addFile(file, file.name);
-	var maxSize = 2 * 1024 * 1024;
-	var reader = new FileReader();
-	reader.onload = function() {
-		var result = this.result;
-		var formData = new FormData();
-		compress.getImgInfo(result, function(img, imgInfo) {
-			console.log("获取的文件信息：" + JSON.stringify(imgInfo));
-			console.log("原图尺寸：" + result.length);
-			//			if(result.length > maxSize) {
-			var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)));
+/**
+ * 压缩图片文件并传给七牛上传对象
+ * @param {Object} filePath
+ */
+function initFileUpload(filePath, file) {
+	console.log("initFileUpload:");
+	var maxSize = 1 * 1024 * 1024;
+	compress.getImgInfo(filePath, function(img, imgInfo) {
+		console.log("获取的文件信息：" + JSON.stringify(imgInfo));
+		console.log("原图尺寸：" + filePath.length);
+
+		if(filePath.length > maxSize) {
+			console.log("initFileUpload:>:");
+			var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(filePath.length / maxSize)));
 			var blob = compress.base64ToBlob(newDataUrl, 'image/png');
-			console.log("blob.type:" + blob.type);
-			console.log('要传递的文件大小：' + blob.size);
+			blob.lastModifiedDate = new Date();
 			var newFile = new File([blob], Date.now() + '.png');
-			formData.append('image', blob, Date.now() + '.png');
-			console.log("formData:", formData);
-			console.log("newFile:", newFile);
 			qnFileUploader.addFile(newFile, newFile.name);
-			//			} else {
-			//				formData.append('image', file);
-			//			}
-			//			mod.postFile(formData, callback);
-		})
+			//			var formData = new FormData();
+			//			formData.append('image', blob, Date.now() + '.png');
+			//			qnFileUploader.addFile(formData, formData.name);
+		} else {
+			qnFileUploader.addFile(file, file.name);
+		}
+	});
+}
+
+/**
+ * 上传图片
+ */
+function upLoadImages() {
+	var index = null; //选取需要上传的文件序号
+	var images = router_add_trends.images;
+	var hasError = false;
+	var errTip = "";
+	for(var i = 0; i < images.length; i++) {
+		var item = images[i];
+		if(!item.uploaded && index == null) { //没有上传过
+			if(item.state == null || item.state == 0) {
+				//未上传或者正在等待
+				item.state = 0;
+				index = i;
+			} else if(item.state == 2) {
+				//上传失败
+				index = i;
+			}
+		}
+		if(item.state == 2) {
+			//有上传失败的文件
+			hasError = true;
+			errTip = item.errTip;
+		}
+		item.uploading = true;
 	}
-	reader.readAsDataURL(file);
+	if(index != null) {
+		console.log("uploadImageIndex:" + index);
+		uploadImageIndex = index;
+		var imageOb = images[uploadImageIndex];
+		imageOb.state = null;
+		imageOb.process = "0%";
+		imageOb.uploaded = true;
+		initFileUpload(imageOb.filePath, imageOb.file);
+	} else {
+		console.log("上传完成:", images);
+		if(hasError) {
+			$.alert(errTip, "上传失败");
+			$.hideLoading();
+			router_add_trends.allow_back = true;
+		} else {
+			addImagesTrends();
+		}
+	}
+}
+
+/**
+ * 上传图片失败
+ */
+function uploadImageError(errTip) {
+	console.log("uploadImageError:");
+	router_add_trends.images[uploadImageIndex].process = "";
+	router_add_trends.images[uploadImageIndex].state = 2;
+	router_add_trends.images[uploadImageIndex].errTip = errTip;
+	qnFileUploader.splice(0, 1); //移除当前队列文件
+}
+
+/**
+ * 发布带有图片的动态
+ */
+function addImagesTrends() {
+	var submitDataContent = $.trim(router_add_trends.content);
+	var encAddr = [];
+	var encImg = [];
+	for(var i = 0; i < router_add_trends.images.length; i++) {
+		encAddr.push(router_add_trends.images[i].url);
+		encImg.push(router_add_trends.images[i].cropUrl);
+	};
+	var submitData = {
+		userId: mineUserInfo.userid, //用户ID
+		msgTitle: "", //记事标题
+		msgContent: submitDataContent, //记事内容
+		encType: 1, //附件类型;1图片;2视频;3仅文字;4音频;5图文混排
+		encLen: 0, //音视频时长
+		encAddr: encAddr.join("|"), //附件地址
+		encImg: encImg.join("|"), //附件缩略图地址
+		encIntro: "", //附件简介
+		noteType: 2, //信息类型
+		userIds: [], //推送用户ID
+		pubScopes: [1], //发布范围
+		pubArea: "" //发布区域
+	}
+	addTrend(router_add_trends, submitData);
 }

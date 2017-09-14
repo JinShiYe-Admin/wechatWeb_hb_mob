@@ -16,8 +16,8 @@
 	</head>
 
 	<body>
-		<div id="submitHomework">
-			<div class="mui-content" id="homework" style="background-color: white;">
+		<div id="homework">
+			<div class="mui-content"  style="background-color: white;">
 				<div class="weui-cell">
 					<div class="weui-cell__hd"><label class="weui-label">科目</label></div>
 					<div class="weui-cell__bd">
@@ -90,8 +90,8 @@
 					console.log('onload');
 					initQNUploader();
 				}
-				var submitHomework = new Vue({
-					el: '#submitHomework',
+				var homework = new Vue({
+					el: '#homework',
 					data: {
 						sub_array: [],
 						depart_array:[],
@@ -125,7 +125,7 @@
 							console.log('dianji addFileBtn');
 						},
 						clickSubmitBtn: function() { //提交按钮
-							if(submitHomework.workTitle.length == 0 && submitHomework.uploadedFiles.length == 0) {
+							if(homework.workTitle.length == 0 && homework.uploadedFiles.length == 0) {
 								alert('内容不能为空');
 								return;
 							}
@@ -134,16 +134,16 @@
 								cmd: 'work',
 								type: 'add',
 //								touser: '@all',
-								toparty: submitHomework.classes.currClass.id,
+								toparty: homework.classes.currClass.id,
 //								totag: '',
 								msgtype: 'textcard',
 								safe: 0,
 								content: '1',
 //								tousername: '1',
-								topartyname: submitHomework.classes.currClass.name,
+								topartyname: homework.classes.currClass.name,
 //								totagname: 1,
-								subid: submitHomework.subject.currSubject.id,
-								subname: submitHomework.subject.currSubject.name,
+								subid: homework.subject.currSubject.id,
+								subname: homework.subject.currSubject.name,
 								subimg: '',
 								encs: '',
 								issend: 0
@@ -209,7 +209,7 @@
 									var tempModel = {
 										imgurl: storageutil.QNPBDOMAIN + JSON.parse(info["response"]).key
 									}
-									submitHomework.uploadedFiles.push(tempModel);
+									homework.uploadedFiles.push(tempModel);
 									console.log("success:" + storageutil.QNPBDOMAIN + JSON.parse(info["response"]).key);
 									console.log("success:" + storageutil.QNPBDOMAIN + ',' + JSON.stringify(info));
 								}
@@ -267,9 +267,9 @@
 					unitWebsitePro(tempData, function(data) {
 						console.log('科目:' + JSON.stringify(data));
 						if(data.RspCode == 0) {
-							submitHomework.sub_array = data.RspData.dt;
-							for(var i = 0; i < submitHomework.sub_array.length; i++) {
-								var model = submitHomework.sub_array[i];
+							homework.sub_array = data.RspData.dt;
+							for(var i = 0; i < homework.sub_array.length; i++) {
+								var model = homework.sub_array[i];
 								model.value = model.subid;
 								model.label = model.cname;
 							}
@@ -288,9 +288,9 @@
 					unitWebsitePro(tempData, function(data) {
 						console.log('部门:' + JSON.stringify(data));
 						if(data.RspCode == 0) {
-							submitHomework.depart_array = data.RspData.dt;
-							for(var i = 0; i < submitHomework.depart_array.length; i++) {
-								var model = submitHomework.depart_array[i];
+							homework.depart_array = data.RspData.dt;
+							for(var i = 0; i < homework.depart_array.length; i++) {
+								var model = homework.depart_array[i];
 								model.value = model.value;
 								model.label = model.title;
 							}
@@ -304,13 +304,13 @@
 				function selectClass(input_item) {
 					document.activeElement.blur();
 					var self = input_item;
-					weui.picker(submitHomework.depart_array, {
+					weui.picker(homework.depart_array, {
 						onChange: function(result) {
 							//						console.log(result);
 						},
 						onConfirm: function(result) {
-							submitHomework.classes.currClass.name = result[0].label;
-							submitHomework.classes.currClass.id = result[0].value;
+							homework.classes.currClass.name = result[0].label;
+							homework.classes.currClass.id = result[0].value;
 							//						console.log(result);
 						}
 					});
@@ -319,13 +319,13 @@
 				function selectSubject(input_item) {
 					document.activeElement.blur();
 					var self = input_item;
-					weui.picker(submitHomework.sub_array, {
+					weui.picker(homework.sub_array, {
 						onChange: function(result) {
 							//						console.log(result);
 						},
 						onConfirm: function(result) {
-							submitHomework.subject.currSubject.name = result[0].label;
-							submitHomework.subject.currSubject.id = result[0].value;
+							homework.subject.currSubject.name = result[0].label;
+							homework.subject.currSubject.id = result[0].value;
 							//						console.log(result);
 						}
 					});

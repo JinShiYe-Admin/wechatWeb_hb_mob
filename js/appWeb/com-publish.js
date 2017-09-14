@@ -28,9 +28,10 @@ Vue.component("com-publish", {
 		}
 	},
 	template: '<div>' +
-		'<slot></slot>' +
-		'<textarea v-if="msgType<1" v-model.trim.lazy="content" v-bind:rows=10 v-bind:style="{width:\'100%\'}"></textarea>' +
+		'<input placeholder="请输入标题" v-model="title">' +
+		'<textarea  v-model.trim.lazy="description" v-bind:rows=10 v-bind:style="{width:\'100%\'}"></textarea>' +
 		'<slot name="choose-file"></slot>' +
+		'<slot></slot>' +
 		'<a v-bind:class="[\'weui-btn\', \'weui-btn_primary\']" v-on:click="publishMethod">发布</a></div>',
 	watch: {
 		'$route' (to, from) {

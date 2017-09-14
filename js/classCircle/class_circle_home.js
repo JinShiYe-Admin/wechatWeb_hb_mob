@@ -69,14 +69,14 @@ window.onload = function() {
 	getMineInfo();
 
 	//---假数据---start---
-	//		initQNUploader();
-	//		show_class_circle_app = true; //是否显示班级圈app
-	//		temp_data = null;
-	//		initRouter();
-	//		router.push({
-	//			name: "home"
-	//		});
-	//		getHomeTrends(0, 1);
+	//	initQNUploader();
+	//	show_class_circle_app = true; //是否显示班级圈app
+	//	temp_data = null;
+	//	initRouter();
+	//	router.push({
+	//		name: "home"
+	//	});
+	//	getHomeTrends(0, 1);
 	//---假数据---end---
 }
 
@@ -1640,7 +1640,7 @@ function getQNUpToken(file) {
  */
 function initFileUpload(filePath, file) {
 	console.log("initFileUpload:");
-	var maxSize = 1 * 1024 * 1024;
+	var maxSize = 2 * 1024 * 1024;
 	compress.getImgInfo(filePath, function(img, imgInfo) {
 		console.log("获取的文件信息：" + JSON.stringify(imgInfo));
 		console.log("原图尺寸：" + filePath.length);
@@ -1648,12 +1648,12 @@ function initFileUpload(filePath, file) {
 		if(filePath.length > maxSize) {
 			console.log("initFileUpload:>:");
 			var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(filePath.length / maxSize)));
-			var blob = compress.base64ToBlob(newDataUrl, 'image/png');
+			var blob = compress.base64ToBlob(newDataUrl, 'image/jpeg');
 			blob.lastModifiedDate = new Date();
-			var newFile = new File([blob], Date.now() + '.png');
+			var newFile = new File([blob], Date.now() + '.jpg');
 			qnFileUploader.addFile(newFile, newFile.name);
 			//			var formData = new FormData();
-			//			formData.append('image', blob, Date.now() + '.png');
+			//			formData.append('image', blob, Date.now() + '.jpeg');
 			//			qnFileUploader.addFile(formData, formData.name);
 		} else {
 			qnFileUploader.addFile(file, file.name);

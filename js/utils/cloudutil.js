@@ -38,14 +38,14 @@ var cloudutil = (function(mod) {
 			case 1: //等比缩放生成缩略图
 				var thumbSpace = data.saveSpace + storageutil.QNTHUMB;
 				var fileNames = data.qnFileName.split(".");
-				returnData.thumbKey = Qiniu.URLSafeBase64Encode(data.mainSpace + ":" + thumbSpace + fileNames[0] + ".png");
-				returnData.ops = "imageView2/0/format/png|saveas/" + returnData.thumbKey;
+				returnData.thumbKey = Qiniu.URLSafeBase64Encode(data.mainSpace + ":" + thumbSpace + fileNames[0] + ".jpg");
+				returnData.ops = "imageView2/0/format/jpeg|saveas/" + returnData.thumbKey;
 				break;
 			case 2: //居中裁剪生成图片
 				var thumbSpace = data.saveSpace + storageutil.QNCROP;
 				var fileNames = data.qnFileName.split(".");
-				returnData.thumbKey = Qiniu.URLSafeBase64Encode(data.mainSpace + ":" + thumbSpace + fileNames[0] + ".png");
-				returnData.ops = "imageView2/1/w/200/h/200/format/png|saveas/" + returnData.thumbKey;
+				returnData.thumbKey = Qiniu.URLSafeBase64Encode(data.mainSpace + ":" + thumbSpace + fileNames[0] + ".jpg");
+				returnData.ops = "imageView2/1/w/200/h/200/format/jpeg|saveas/" + returnData.thumbKey;
 				break;
 			default:
 				break;

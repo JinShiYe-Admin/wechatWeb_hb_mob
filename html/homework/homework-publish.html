@@ -73,6 +73,8 @@
 		</div>
 
 		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/weui.min.js" type="text/javascript" charset="utf-8"></script>
+
 		<script src="../../js/demoCssJs/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/appweb/choose-file.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/demoCssJs/jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
@@ -96,9 +98,12 @@
 			var qnFileUploader; //七牛上传控件对象
 			window.onload = function() {
 				console.log('onload');
-				$.showLoading('加载中...');
+				getSub();
+				getDepart();
+				//				$.showLoading('加载中...');
 				initQNUploader();
-				findWork();
+
+				//				findWork();
 			}
 			var homework = new Vue({
 				el: '#homework',
@@ -180,12 +185,12 @@
 							}
 							tempEncs.push(tempModel);
 						}
-						$.showLoading('加载中...');
 						//提交按钮
 						if(homework.workTitle.length == 0 && homework.uploadedFiles.length == 0) {
 							alert('内容不能为空');
 							return;
 						}
+						$.showLoading('加载中...');
 
 						var tempData = {
 							cmd: 'work',
@@ -213,29 +218,6 @@
 							}
 
 						})
-
-						//14.作业管理
-						var tempData = {
-							cmd: 'work', //14.作业管理
-							type: 'studo', //学生做作业
-							colid: '53', //workdoid
-							colv: homework.workTitle, //作答内容
-							encs: tempEncs //作答附件
-						}
-						unitWebsitePro(tempData, function(data) {
-							if(data.RspCode == 0) {
-								console.log('成功');
-								$.hideLoading();
-								mui.toast('成功');
-								//如果为第一次提交作业，提交后，将状态改为修改
-								if(homework.stat == 0) {
-									homework.stat = 1;
-									homework.submitBtnTitle = '修改';
-								}
-							} else {
-								alert(data.RspTxt);
-							}
-						});
 					}
 				}
 			});

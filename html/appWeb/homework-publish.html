@@ -34,12 +34,12 @@
 
 			</div>
 			<textarea name="MSG" cols=0 rows=8 placeholder="请输入作业内容"></textarea>
-							<div class="online-container">
-					<p class="submit-label" style="width: 200px;font-size: 16px;margin-left: 10px;">需学生在线提交</p>
-					<div id="onlineSwitch" class="mui-switch mui-active mui-switch-green online-switch  mui-pull-right" style="margin-top: -40px;">
-						<div class="mui-switch-handle"></div>
-					</div>
+			<div class="online-container">
+				<p class="submit-label" style="width: 200px;font-size: 16px;margin-left: 10px;">需学生在线提交</p>
+				<div id="onlineSwitch" class="mui-switch mui-active mui-switch-green online-switch  mui-pull-right" style="margin-top: -40px;">
+					<div class="mui-switch-handle"></div>
 				</div>
+			</div>
 			<div class="weui-cells weui-cells_form" id="homework">
 				<div class="weui-cell">
 					<div class="weui-cell__bd">
@@ -62,17 +62,19 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<script src="../../js/mui.min.js"></script>
 			<script src="../../js/demoCssJs/vue.min.js" type="text/javascript" charset="utf-8"></script>
 			<script src="../../js/appweb/choose-file.js" type="text/javascript" charset="utf-8"></script>
 			<script src="../../js/utils/compress.js" type="text/javascript" charset="utf-8"></script>
 			<script src="../../js/demoCssJs/jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
 			<script src="../../js/demoCssJs/jquery-weui.js" type="text/javascript" charset="utf-8"></script>
+			<script src="../../js/PublicProtocol.js" type="text/javascript" charset="utf-8"></script>
 			<script src="../../js/utils/consts.js"></script>
 			<script src="../../js/utils/events.js"></script>
 			<script type="text/javascript">
 				mui.init();
+				getDepart();
 				var vm = new Vue({
 					el: '#homework',
 					data: {
@@ -139,106 +141,117 @@
 						}
 					}
 				})
+
 				function getSub() {
-				var tempData = {
-					cmd: 'sub',
-					type: 'findpage',
-					pagesize: 10,
-					pageindex: 1,
-					stat: '1'
+					var tempData = {
+						cmd: 'sub',
+						type: 'findpage',
+						pagesize: 10,
+						pageindex: 1,
+						stat: '1'
+					}
+					unitWebsitePro(tempData, function(data) {
+						console.log('科目:' + JSON.stringify(data));
+						if(data.RspCode == 0) {} else {
+							mui.toast(data.RspTxt)
+						}
+					})
 				}
-				unitWebsitePro(tempData, function(data) {
-					console.log('科目:' + JSON.stringify(data));
-					if(data.RspCode == 0) {} else {
-						mui.toast(data.RspTxt)
+
+				function getDepart() {
+
+					var tempData = {
+						cmd: 'persondeparts',
+						type: 'findpage',
 					}
-				})
-			}
+					unitWebsitePro(tempData, function(data) {
+						console.log('部门:' + JSON.stringify(data));
+						if(data.RspCode == 0) {} else {
+							mui.toast(data.RspTxt)
+						}
+					})
+
+				}
 				//			function getSub() {
-			//				var tempData = {
-			//					cmd: 'work',
-			//					type: 'add',
-			//					touser: '',
-			//					toparty: '',
-			//					totag: '',
-			//					msgtype: 'text',
-			//					safe: 0,
-			//					content: '1',
-			//					tousername: '1'
-			//					topartyname: 10,
-			//					totagname: 1,
-			//					subid: '1',
-			//					subname: '1',
-			//					subimg: 10,
-			//					encs: 1,
-			//					issend: '1'
-			//				}
-			//				unitWebsitePro(tempData, function(data) {
-			//					console.log('科目:' + JSON.stringify(data));
-			//					if(data.RspCode == 0) {} else {
-			//						mui.toast(data.RspTxt)
-			//					}
-			//				})
-			//			}
+				//				var tempData = {
+				//					cmd: 'work',
+				//					type: 'add',
+				//					touser: '',
+				//					toparty: '',
+				//					totag: '',
+				//					msgtype: 'text',
+				//					safe: 0,
+				//					content: '1',
+				//					tousername: '1'
+				//					topartyname: 10,
+				//					totagname: 1,
+				//					subid: '1',
+				//					subname: '1',
+				//					subimg: 10,
+				//					encs: 1,
+				//					issend: '1'
+				//				}
+				//				unitWebsitePro(tempData, function(data) {
+				//					console.log('科目:' + JSON.stringify(data));
+				//					if(data.RspCode == 0) {} else {
+				//						mui.toast(data.RspTxt)
+				//					}
+				//				})
+				//			}
 
-			function selectClass(input_item) {
-				document.activeElement.blur();
-				var self = input_item;
-				weui.picker([{
-					label: '一年级一班',
-					value: 0
-				}, {
-					label: '一年级二班',
-					value: 1
-				}, {
-					label: '一年级三班',
-					value: 2
-				}], {
-					onChange: function(result) {
-						//						console.log(result);
-					},
-					onConfirm: function(result) {
-						vm.classes.currClass.name = result[0].label;
-						//						console.log(result);
-					}
-				});
-			}
+				function selectClass(input_item) {
+					document.activeElement.blur();
+					var self = input_item;
+					weui.picker([{
+						label: '一年级一班',
+						value: 0
+					}, {
+						label: '一年级二班',
+						value: 1
+					}, {
+						label: '一年级三班',
+						value: 2
+					}], {
+						onChange: function(result) {
+							//						console.log(result);
+						},
+						onConfirm: function(result) {
+							vm.classes.currClass.name = result[0].label;
+							//						console.log(result);
+						}
+					});
+				}
 
-			function selectSubject(input_item) {
-				document.activeElement.blur();
-				var self = input_item;
-				weui.picker([{
-					label: '语文',
-					value: 0
-				}, {
-					label: '数学',
-					value: 1
-				}, {
-					label: '英语',
-					value: 2
-				}, {
-					label: '物理',
-					disabled: true,
-					value: 3
-				}, {
-					label: '其他',
-					value: 4
-				}], {
-					onChange: function(result) {
-						//						console.log(result);
-					},
-					onConfirm: function(result) {
-						vm.subject.currSubject.name = result[0].label;
-						//						console.log(result);
-					}
-				});
-			}
+				function selectSubject(input_item) {
+					document.activeElement.blur();
+					var self = input_item;
+					weui.picker([{
+						label: '语文',
+						value: 0
+					}, {
+						label: '数学',
+						value: 1
+					}, {
+						label: '英语',
+						value: 2
+					}, {
+						label: '物理',
+						disabled: true,
+						value: 3
+					}, {
+						label: '其他',
+						value: 4
+					}], {
+						onChange: function(result) {
+							//						console.log(result);
+						},
+						onConfirm: function(result) {
+							vm.subject.currSubject.name = result[0].label;
+							//						console.log(result);
+						}
+					});
+				}
 			</script>
 	</body>
 
 </html>
-
-
-
-
-

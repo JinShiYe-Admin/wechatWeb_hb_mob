@@ -58,17 +58,22 @@ var home_data = {
 	}]
 };
 var space_data = {}; //空间的所有数据
+var qnFileUploader; //七牛上传控件对象
 
 window.onload = function() {
-	$.showLoading('加载中...');
-	initRouter();
-	getMineInfo();
+	//	$.showLoading('加载中...');
+	//	initRouter();
+	//	getMineInfo();
 
 	//---假数据---start---
-//	show_class_circle_app = true; //是否显示班级圈app
-//	temp_data = null;
-//	router.push('home');
-//	getHomeTrends(0, 1);
+	initQNUploader();
+	show_class_circle_app = true; //是否显示班级圈app
+	temp_data = null;
+	initRouter();
+	router.push({
+		name: "home"
+	});
+	//getHomeTrends(0, 1);
 	//---假数据---end---
 }
 
@@ -252,8 +257,19 @@ function initRouter() {
 				allow_back: false, //允许返回
 				content: "", //文字，
 				showMedia: false, //是否显示添加图片，视频功能
-				images: [], //图片，限制9张
-				video: '', //视频，限制一个
+				images: [{
+					filePath: "../../image/add.png",
+					uploading: false,
+					process: "",
+					state: null
+				}, {
+					filePath: "../../image/mineIndex.png",
+					uploading: false,
+					process: "",
+					state: null
+				}], //图片，限制9张
+				showImage: false,
+				showImagePath: "",
 				maxlength: 200, //动态限制6000字，评论回复限制200
 				placeholder: "不能为空" //输入框提示语
 			};
@@ -318,6 +334,39 @@ function initRouter() {
 			 */
 			contentChange: function(val) {
 				this.content = val; //组件内外content双向绑定
+			},
+			/**
+			 * 点击列表中的图片
+			 * @param {Object} imageIndex
+			 */
+			clickImage: function(imageIndex) {
+				console.log("clickImage:" + imageIndex);
+				this.allow_back = false;
+				this.showImageIndex = imageIndex;
+				this.showImage = true;
+			},
+			/**
+			 * 点击显示的图片
+			 */
+			clickShowImage: function() {
+				this.allow_back = true;
+				this.showImage = false;
+			},
+			/**
+			 * 删除显示的图片
+			 */
+			clickDelImage: function() {
+				this.allow_back = true;
+				this.showImage = false;
+				this.images.splice(this.showImageIndex, 1);
+			},
+			/**
+			 * 添加新的图片
+			 */
+			inputChange: function(value, files) {
+				console.log("inputChange:value:", value);
+				console.log("inputChange:files:", files);
+				initFileUpload(files[0]);
 			}
 		},
 		beforeRouteEnter: function(to, from, next) {
@@ -330,7 +379,7 @@ function initRouter() {
 					console.log("trends_add:params:", vm.$route.params);
 					vm.allow_back = true;
 					vm.$refs.add.cleanContent(); //清理内容
-					if(vm.$route.params.id == "addTrend") {
+					if(vm.$route.params.id == "addTrend" || vm.$route.params.id == undefined) {
 						//发布动态
 						vm.showMedia = true;
 						vm.maxlength = 6000;
@@ -825,7 +874,9 @@ function disposeMemberData(data) {
 			temp_data = null;
 			show_class_circle_app = true;
 			//显示班级圈主页
-			router.push('home');
+			router.push({
+				name: "home"
+			});
 			//禁止全部动态列表进行下拉刷新和上拉加载中
 			home_data.data[0].allow_loaddata = false;
 			//获取全部动态
@@ -1403,4 +1454,123 @@ function deleteMineTrends(delData) {
 			delData.route.allow_back = true;
 		}
 	});
+}
+var uptokenData;
+
+function initQNUploader() {
+	qnFileUploader = Qiniu.uploader({
+		disable_statistics_report: false, // 禁止自动发送上传统计信息到七牛，默认允许发送
+		runtimes: 'html5,flash,html4', // 上传模式,依次退化
+		browse_button: 'qnInput', // 上传选择的点选按钮，**必需**
+		uptoken_func: function(file) { // 在需要获取 uptoken 时，该方法会被调用
+			uptokenData = null;
+			uptokenData = getQNUpToken(file);
+			//console.log("获取uptoken回调:" + JSON.stringify(uptokenData));
+			if(uptokenData && uptokenData.code) { //成功
+				return uptokenData.data.Data[0].Token;
+			} else {
+				qnFileUploader.stop();
+			}
+		},
+		unique_names: false, // 默认 false，key 为文件名。若开启该选项，JS-SDK 会为每个文件自动生成key（文件名）
+		save_key: false, // 默认 false。若在服务端生成 uptoken 的上传策略中指定了 `save_key`，则开启，SDK在前端将不对key进行任何处理
+		get_new_uptoken: true, // 设置上传文件的时候是否每次都重新获取新的 uptoken
+		domain: storageutil.QNPBDOMAIN, // bucket 域名，下载资源时用到，如：'http://xxx.bkt.clouddn.com/' **必需**
+		max_file_size: '4mb', // 最大文件体积限制
+		flash_swf_url: '../../js/lib/plupload/Moxie.swf', //引入 flash,相对路径
+		max_retries: 0, // 上传失败最大重试次数
+		dragdrop: false, // 开启可拖曳上传
+		chunk_size: '4mb', // 分块上传时，每块的体积
+		auto_start: true, // 选择文件后自动上传，若关闭需要自己绑定事件触发上传,
+		init: {
+			'FilesAdded': function(up, files) {
+				plupload.each(files, function(file) {
+					// 文件添加进队列后,处理相关的事情
+					console.log("FilesAdded:", file);
+				});
+			},
+			'BeforeUpload': function(up, file) {
+				// 每个文件上传前,处理相关的事情
+				console.log("BeforeUpload:");
+			},
+			'UploadProgress': function(up, file) {
+				// 每个文件上传时,处理相关的事情
+				console.log("UploadProgress:"+file.percent);
+			},
+			'FileUploaded': function(up, file, info) {
+				// 每个文件上传成功后,处理相关的事情
+				console.log("FileUploaded:");
+				if(info.status == 200) {
+					console.log("success:"+storageutil.QNPBDOMAIN + JSON.parse(info["response"]).key)
+				}
+			},
+			'Error': function(up, err, errTip) {
+				//上传出错时,处理相关的事情
+				console.log("Error:", err, errTip);
+			},
+			'UploadComplete': function() {
+				//队列文件处理完毕后,处理相关的事情
+				console.log("UploadComplete:");
+			},
+			'Key': function(up, file) {
+				// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
+				// 该配置必须要在 unique_names: false , save_key: false 时才生效
+				if(uptokenData && uptokenData.code) { //成功
+					return uptokenData.data.Data[0].Key;
+				}
+			}
+		}
+	});
+}
+/**
+ * 获取七牛上传token
+ */
+function getQNUpToken(file) {
+	var myDate = new Date();
+	var fileName = myDate.getTime() + "" + parseInt(Math.random() * 1000);
+	var types = file.name.split(".");
+	fileName = fileName + "." + types[types.length - 1];
+	var getTokenData = {
+		appId: storageutil.QNQYWXKID,
+		mainSpace: storageutil.QNPUBSPACE,
+		saveSpace: storageutil.QNSSPACEWEBCON,
+		fileArray: [{
+			qnFileName: fileName,
+		}]
+	}
+	var upToken;
+	cloudutil.getFileUpTokens(getTokenData, function(data) {
+		upToken = data;
+	});
+	return upToken;
+}
+
+function initFileUpload(file) {
+	//	console.log("initFileUpload:",file);
+	qnFileUploader.addFile(file, file.name);
+	//	var reader = new FileReader();
+	//	reader.onload = function() {
+	//		console.log("initFileUpload:onload:");
+	//		var result = this.result;
+	//		//var formData = new FormData();
+	//		compress.getImgInfo(result, function(img, imgInfo) {
+	////			console.log("获取的文件信息：" + JSON.stringify(imgInfo));
+	////			console.log("原图尺寸：" + result.length);
+	//
+	//			if(result.length > 2 * 1024 * 1024) {
+	//				var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)));
+	//				var blob = compress.base64ToBlob(newDataUrl, 'image/png');
+	////				console.log("blob.type:" + blob.type);
+	////				console.log('要传递的文件大小：' + blob.size);
+	//				//					var newFile = new File([blob], Date.now() + '.png');
+	//				//formData.append('image', blob, Date.now() + '.png');
+	//				console.log("")
+	//				qnFileUploader.addFile(blob, file.name);
+	//			} else {
+	//				//formData.append('image', file);
+	//				qnFileUploader.addFile(file, file.name);
+	//			}
+	//		})
+	//	}
+	//	reader.readAsDataURL(file);
 }

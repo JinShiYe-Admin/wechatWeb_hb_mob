@@ -153,13 +153,28 @@ Vue.component("home-bd-item", {
 	}
 });
 
-//添加动态组件
+//添加动态，评论，回复组件
 Vue.component("add-trends", {
 	template: "#temp_add_trends_com",
-	props: ["showMedia", "maxlength", "placeholder"],
+	props: ["showMedia", "maxlength", "placeholder", "images", "showImage"],
 	data: function() {
 		return {
-			com_content: "" //组件内的content
+			com_content: "", //组件内的content
+			showImagePath: "", //显示的图片的路径
+			inputValue: "" //input的value
+		}
+	},
+	computed: {
+		showGallery: function() {
+			if(this.showImage) {
+				return {
+					display: 'block'
+				}
+			} else {
+				return {
+					display: 'none'
+				}
+			}
 		}
 	},
 	methods: {
@@ -176,8 +191,43 @@ Vue.component("add-trends", {
 		submitData: function() {
 			this.$emit("submit-data");
 		},
+		/**
+		 * 清理输入框内容
+		 */
 		cleanContent: function() {
 			this.com_content = "";
+		},
+		/**
+		 * 点击图片
+		 * @param {Object} image_index
+		 */
+		cilckImage: function(image_index) {
+			this.showImagePath = this.images[image_index].filePath
+			this.$emit("click-image", image_index);
+		},
+		/**
+		 * 点击当前显示的图片
+		 */
+		clickShowImage: function() {
+			this.showImagePath = "";
+			this.$emit("click-show-image");
+		},
+		/**
+		 * 点击删除图片
+		 */
+		clickDelImage: function() {
+			var self = this;
+			$.confirm({
+				title: '提示',
+				text: '确定删除？',
+				onOK: function() {
+					self.$emit("click-del-image");
+				}
+			});
+		},
+		inputChange: function(e) {
+			this.$emit("input-change", e.target.value, $.extend({}, e.target.files));
+//			$('#uploaderInput').val('');
 		}
 	},
 	watch: {

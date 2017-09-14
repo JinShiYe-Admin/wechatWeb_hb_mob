@@ -16,29 +16,31 @@
 	</head>
 
 	<body>
-		<textarea name="MSG" cols=0 rows=4 placeholder="根据老师的要求来完成作业吧"></textarea>
-		<div class="weui-cells weui-cells_form" id="tempVue">
-			<div class="weui-cell">
-				<div class="weui-cell__bd">
-					<div class="weui-uploader">
-						<div class="weui-uploader__hd">
-							<p class="weui-uploader__title">上传照片</p>
-							<div class="weui-uploader__info">0/1</div>
-						</div>
-						<div class="weui-uploader__bd">
-							<ul class="weui-uploader__files" id="uploaderFiles">
-								<!--<li class="weui-uploader__file weui-uploader__file_status" style="background-image:url(./images/pic_160.png)">
-									<div class="weui-uploader__file-content">50%</div>
-								</li>-->
-							</ul>
-							<div class="weui-uploader__input-box">
-								<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" v-on:change="selectFile($event)">
+		<div id="submitHomework">
+			<textarea name="MSG" cols=0 rows=4 placeholder="根据老师的要求来完成作业吧">{{workTitle}}</textarea>
+			<div class="weui-cells weui-cells_form">
+				<div class="weui-cell">
+					<div class="weui-cell__bd">
+						<div class="weui-uploader">
+							<div class="weui-uploader__hd">
+								<p class="weui-uploader__title">上传照片</p>
+								<!--<div class="weui-uploader__info">0/1</div>-->
+							</div>
+							<div class="weui-uploader__bd">
+								<ul class="weui-uploader__files" id="uploaderFiles">
+									<li v-for="file of uploadedFiles" v-bind:class="['weui-uploader__file']" v-bind:style="{'background-image':'url('+file.imgurl+')'}"></li>
+								</ul>
+								<div class="weui-uploader__input-box">
+									<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" v-on:change="selectFile($event)">
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+			<a href="javascript:;" class="weui-btn weui-btn_primary" @click="clickSubmitBtn()">提交</a>
 		</div>
+		<input id="inputDiv"/>
 		<script src="../../js/mui.min.js"></script>
 		<script src="../../js/demoCssJs/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/appweb/choose-file.js" type="text/javascript" charset="utf-8"></script>
@@ -47,61 +49,190 @@
 		<script src="../../js/demoCssJs/jquery-weui.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/utils/consts.js"></script>
 		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/lib/vconsole/vconsole.min.js"></script>
+		<script src="../../js/utils/storageutil.js"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/qiniu/qiniu.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cloudutil.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cryption.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/pluploadutil.js?" + Math.random() + "'></s" + "cript>");
+		</script>
 		<script type="text/javascript">
 			mui.init();
-			var tempVue = new Vue({
-				el: '#tempVue',
+			var uptokenData;
+			var bannerUploader;
+			window.onload = function() {
+				console.log('onload');
+				initUploader();
+			}
+			var submitHomework = new Vue({
+				el: '#submitHomework',
 				data: {
-
+					workTitle: '',
+					uploadedFiles: []
 				},
 				methods: {
 					selectFile: function(event) {
 						var com = this;
 						console.log('111111');
-
-						//						var file = event.target.files[0];
-						//						if(window.FileReader) {
-						//							var reader = new FileReader();
-						//							reader.readAsDataURL(file);
-						//							//监听文件读取结束后事件    
-						//							reader.onloadend = function(e) {
-						//								$(".img").attr("src", e.target.result); //e.target.result就是最后的路径地址
-						//								console.log('path:'+e.target.result);
-						//								console.log('path,value:'+e.target.value);
-						//								compress.uploadImg(e.target.result, 2, function(response) {
-						//														console.log("已上傳的文件！" + JSON.stringify(response))
-						//														alert('12112:' + response.RspCode);
-						//														if(response.RspCode == 0) {
-						//															com.uploadedFiles = [response.RspData];
-						//						
-						//															com.$emit('uploadFile', response.RspData);
-						//														} else {
-						//															console.log("发生错误！" + JSON.stringify(response));
-						//														}
-						//													});
-						//							};
-						//						}
-
 						if(event.target.value) {
 							console.log("选中的文件路径：" + event.target.value);
-							alert('wenjian:' + event.target.value);
 							console.log(JSON.stringify(event.target.files));
-							var file = event.target.files[0];
-							compress.uploadImg(file, 2, function(response) {
-								console.log("已上傳的文件！" + JSON.stringify(response))
-								alert('12112:' + response.RspCode);
-								if(response.RspCode == 0) {
-									com.uploadedFiles = [response.RspData];
-
-									com.$emit('uploadFile', response.RspData);
-								} else {
-									console.log("发生错误！" + JSON.stringify(response));
-								}
-							});
+//							var file = event.target.files[0];
+							var file = event.target.value;
+							console.log('file：'+file);
+							bannerUploader.addFile(event.target.files[0], event.target.files[0].name);
 						}
+					},
+					clickSubmitBtn: function() {
+						if(submitHomework.workTitle.length == 0 && submitHomework.uploadedFiles.length == 0) {
+							alert('请作答后再提交');
+							return;
+						}
+						//14.作业管理
+						var tempData = {
+							cmd: 'work', //14.作业管理
+							type: 'studo', //学生做作业
+							colid: '', //workdoid
+							colv: submitHomework.workTitle, //作答内容
+							encs: '' //作答附件
+						}
+						unitWebsitePro(tempData, function(data) {
+							if(data.RspCode == 0) {
+
+								if(data.RspData.dt.length > 0) {
+									//塞入页码、加载状态等自定义参数
+									for(var tempItem in data.RspData.dt) {
+										data.RspData.dt[tempItem].newsPage = 1; //获取新闻的页码
+										data.RspData.dt[tempItem].newsFlag = 0; //0刷新，1加载更多
+										data.RspData.dt[tempItem].newsArray = []; //栏目对应的新闻列表
+										if(tempItem == 0) {
+											data.RspData.dt[tempItem].active = true;
+										} else {
+											data.RspData.dt[tempItem].active = false;
+										}
+									}
+									columnData.items = data.RspData.dt;
+									newsColumn = columnData.items[0];
+									//获取索引为0的栏目新闻列表
+									getNewsList(columnData.items[0]);
+								} else {
+									alert('暂时还没有栏目');
+								}
+							} else {
+								alert(data.RspTxt);
+							}
+						});
 					}
 				}
 			});
+			
+			/**
+			 * 初始化上传
+			 */
+			function initUploader() {
+				var bannerOption = {
+					disable_statistics_report: true, // 禁止自动发送上传统计信息到七牛，默认允许发送
+					runtimes: 'html5,flash,html4', // 上传模式,依次退化
+					browse_button: 'inputDiv', // 上传选择的点选按钮，**必需**
+					uptoken_func: function(file) { // 在需要获取 uptoken 时，该方法会被调用 
+						console.log("uptoken_func:" + JSON.stringify(file));
+						uptokenData = null;
+						uptokenData = getQNUpToken(file);
+						console.log("获取uptoken回调:" + JSON.stringify(uptokenData));
+						if(uptokenData && uptokenData.code) { //成功   
+							return uptokenData.data.Data[0].Token;
+						} else {
+							bannerUploader.stop();
+							var dialog = weui.dialog({
+								title: "上传失败",
+								content: uptokenData.message,
+								className: "custom-classname",
+								buttons: [{
+									label: "确定",
+									type: "primary",
+									onClick: function() {
+										dialog.hide();
+									}
+								}]
+							});
+						}
+					},
+					unique_names: false, // 默认 false，key 为文件名。若开启该选项，JS-SDK 会为每个文件自动生成key（文件名）
+					save_key: false, // 默认 false。若在服务端生成 uptoken 的上传策略中指定了 `save_key`，则开启，SDK在前端将不对key进行任何处理
+					get_new_uptoken: true, // 设置上传文件的时候是否每次都重新获取新的 uptoken
+					domain: storageutil.QNPBDOMAIN, // bucket 域名，下载资源时用到，如：'http://xxx.bkt.clouddn.com/' **必需**
+					max_file_size: '10mb', // 最大文件体积限制
+					flash_swf_url: '../../js/lib/plupload/Moxie.swf', //引入 flash,相对路径
+					max_retries: 0, // 上传失败最大重试次数
+					dragdrop: false, // 开启可拖曳上传
+					chunk_size: '4mb', // 分块上传时，每块的体积
+					auto_start: true, // 选择文件后自动上传，若关闭需要自己绑定事件触发上传,
+//					filters: {
+//						mime_types: [ //只允许上传图片和zip文件
+//							{
+//								title: "Image files",
+//								extensions: "jpg,png"
+//							}
+//						]
+//					},
+					init: {
+						'FilesAdded': function(up, files) {
+							plupload.each(files, function(file) {
+							console.log("6666666");
+								// 文件添加进队列后,处理相关的事情
+								imgName = JSON.stringify(file.name)
+								var img = imgName.substring(-1, (imgName - 1)); 
+								//document.getElementById('Priimgname0').value = imgName;
+								console.log("FilesAdded:" + JSON.stringify(file));
+							});
+						},
+						'UploadProgress': function(up, file) {
+							console.log("555555555");
+						},
+						'FileUploaded': function(up, file, info) {
+							console.log("4444444");
+						},
+						'Error': function(up, err, errTip) { 
+							console.log("111111111",err, errTip);
+						},
+						'UploadComplete': function() {
+							console.log("22222222");
+						},
+						'Key': function(up, file) {
+							console.log("33333333");
+						}
+					}
+				}
+				bannerUploader = Qiniu.uploader(bannerOption);
+			}
+			/**
+			 * 获取七牛上传token
+			 */
+			function getQNUpToken(file) {
+				var myDate = new Date();
+				var fileName = myDate.getTime() + "" + parseInt(Math.random() * 1000);
+				var types = file.name.split(".");
+				fileName = fileName + "." + types[types.length - 1];
+				var getTokenData = {
+					appId: storageutil.QNQYWXKID,
+					mainSpace: storageutil.QNPUBSPACE,
+					saveSpace: storageutil.QNSSPACEWEBCON,
+					fileArray: [{
+						qnFileName: fileName,
+					}]
+				}
+				var upToken;
+				cloudutil.getFileUpTokens(getTokenData, function(data) {
+					upToken = data;
+				});
+				console.log("gettokendata" + JSON.stringify(getTokenData))
+				return upToken;
+			}
 		</script>
 	</body>
 

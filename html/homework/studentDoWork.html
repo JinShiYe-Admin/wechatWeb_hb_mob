@@ -41,7 +41,7 @@
 			<input id="qnInput" style="display: none;" />
 			<!--<div class="weui-gallery" style="display: block">-->
 			<div class="weui-gallery" :style="displayGallery">
-				<span class="weui-gallery__img" @click="clickGigImg" style="background-image: url({{selectModel.ImgUrl}});"></span>
+				<span class="weui-gallery__img" @click="clickGigImg" :style="{backgroundImage:'url('+selectImgPath+')'}"></span>
 				<div class="weui-gallery__opr">
 					<a href="javascript:" class="weui-gallery__del">
 						<i class="weui-icon-delete weui-icon_gallery-delete" @click="deleteImg"></i>
@@ -88,7 +88,7 @@
 						display: 'none'
 					},
 					selectIndex: 0,
-					selectModel: {},
+					selectImgPath: '',
 					uploadedFiles: []
 				},
 				methods: {
@@ -103,14 +103,14 @@
 						console.log('dianji addFileBtn');
 					},
 					clickImg: function(index) { //点击列表中的附件，给别的地方赋值
-						this.selectIndex = index;
-						this.selectModel = this.uploadedFiles[index].ImgUrl;
-						this.displayGallery = {
+						submitHomework.selectIndex = index;
+						submitHomework.selectImgPath = submitHomework.uploadedFiles[index].ImgUrl;
+						submitHomework.displayGallery = {
 							display: 'block'
 						};
 					},
 					clickGigImg: function() { //点击放大后的图片，隐藏显示
-						this.displayGallery = {
+						submitHomework.displayGallery = {
 							display: 'none'
 						};
 					},
@@ -119,10 +119,10 @@
 							title: '提示',
 							text: '确认删除？',
 							onOK: function() {
-								this.displayGallery = {
+								submitHomework.displayGallery = {
 									display: 'none'
 								};
-								this.uploadedFiles.splice(this.selectIndex, 1);
+								submitHomework.uploadedFiles.splice(submitHomework.selectIndex, 1);
 							}
 						});
 					},
@@ -155,9 +155,9 @@
 							encs: tempEncs //作答附件
 						}
 						unitWebsitePro(tempData, function(data) {
+							$.hideLoading();
 							if(data.RspCode == 0) {
 								console.log('成功');
-								$.hideLoading();
 								mui.toast('成功');
 								//如果为第一次提交作业，提交后，将状态改为修改
 								if (submitHomework.stat == 0) {
@@ -234,6 +234,7 @@
 					init: {
 						'FilesAdded': function(up, files) {
 							plupload.each(files, function(file) {
+								$.showLoading('加载中...');
 								// 文件添加进队列后,处理相关的事情
 								console.log("FilesAdded:", file);
 							});

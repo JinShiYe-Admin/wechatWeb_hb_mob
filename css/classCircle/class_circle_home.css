@@ -2,6 +2,10 @@ body {
 	word-break: break-all;
 }
 
+#router_class_circle_app {
+	height: 100%;
+}
+
 .weui-tab__bd-item {
 	width: 100%;
 }
@@ -49,7 +53,7 @@ body {
 }
 
 .weui-media-box_appmsg .weui-media-box__hd {
-	margin-right: 15px;
+	margin-right: 10px;
 	height: 40px;
 	width: 40px;
 }
@@ -59,13 +63,13 @@ body {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	flex-direction: column;
 	overflow: hidden;
 }
 
 .class-circle-headimage {
 	/*发布者头像*/
-	height: initial;
-	max-height: none !important;
+	width: 100%;
 }
 
 .weui-media-box__bd {
@@ -275,9 +279,10 @@ body {
 	padding-bottom: 46px;
 }
 
-.weui-photo-browser-modal .photo-container {
-	/*查看图片时的背景*/
-	justify-content: center;
+.weui-photo-browser-modal .photo-container img{
+	max-width: 70%;
+	margin-left: 15%;
+	margin-top: 0px;
 }
 
 .weui-photo-browser-modal {
@@ -323,6 +328,10 @@ body {
 }
 
 .relate-reply-content {
+	margin-top: 10px;
+}
+
+.relate-reply-trends-bg {
 	/*与我相关原始内容区域*/
 	position: relative;
 	display: block;
@@ -331,13 +340,14 @@ body {
 	font-size: 0;
 	background-color: #F2F2F2;
 	height: 50px;
+	overflow: hidden;
 }
 
-.relate-reply-type-praise .relate-reply-content {
-	margin: 5px 0;
+.relate-reply-type-praise .relate-reply-trends-bg {
+	margin-top: 5px;
 }
 
-.relate-reply-content-img {
+.relate-reply-trends-img {
 	/*与我相关原始内容图片*/
 	height: 50px;
 	width: 50px;
@@ -349,15 +359,16 @@ body {
 	float: left;
 }
 
-.relate-reply-content-img img {
+.relate-reply-trends-img img {
 	/*与我相关原始内容图片*/
 	width: 100%;
 }
 
-.relate-reply-content-text {
+.relate-reply-trends {
 	/*与我相关原始内容文字*/
 	font-size: 16px;
 	line-height: 50px;
+	float: left;
 }
 
 .relate-reply-content-name {
@@ -371,7 +382,7 @@ body {
 	/*与我相关原始内容限制一行*/
 	overflow: hidden;
 	text-overflow: ellipsis;
-	display: -webkit-box;
+	display: -webkit-inline-box;
 	-webkit-line-clamp: 1;
 	-webkit-box-orient: vertical;
 }
@@ -389,35 +400,30 @@ body {
 }
 
 .class-circle-add .weui-textarea {
-	margin: 2% 4%;
+	margin: 2% 15px;
 	width: 92%;
 }
 
+
 .class-circle-add .class-circle-add-media {
 	display: block;
-	padding-left: 4%;
-	height: 30px;
 }
-
+.class-circle-add .class-circle-add-media .weui-uploader__file-content{
+	font-size: 15px;
+}
 .class-circle-add-line {
 	height: 1px;
 	width: 100%;
 	background: gainsboro;
 }
 
-.class-circle-add .class-circle-add-media div {
-	font-size: 30px;
-	color: #B2B2B2;
-	display: inline-block;
-	line-height: 1;
-}
 
 .class-circle-add .weui-btn_primary {
 	margin-left: 5%;
 	width: 90%;
 	background-color: #46BDFF;
 	border-color: #46BDFF;
-	margin-top: 50px;
+	margin-top: 10px;
 }
 
 .weui-btn_primary:not(.weui-btn_disabled):active {
@@ -442,18 +448,66 @@ body {
 	background-repeat: no-repeat;
 }
 
-.class-circle-user-space-bg img {
+.class-circle-user-space-headimage {
 	width: 80px;
-	min-height: 80px;
+	height: 80px;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+.class-circle-user-space-headimage img {
+	width: 100%;
+	/*height: inherit;*/
 }
 
 .class-circle-user-space-bg div {
 	margin-top: 5px;
 }
 
-.class-circle-user-space.weui-pull-to-refresh {
-	margin-top: -30px;
+.class-circle-user-space .weui-loadmore {
+	padding-bottom: 0;
 }
-.class-circle-user-space .weui-loadmore{
-	padding-bottom:0 ;
+
+.class-circle-user-space.weui-tab {
+	width: 100%;
+	top: -40px;
+	bottom: 0;
+}
+
+.relate-to-me .class-circle-comment-bg {
+	margin-top: 10px;
+}
+
+.class-circle-error {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+.class-circle-error img {
+	width: 50%;
+}
+
+.class-circle-error-text {
+	color: #999999;
+}
+
+.class-circle-error-text span {
+	color: #47BDFF;
+}
+
+#router_class_circle_app .error-refresh {
+	height: 100%;
+}
+
+.class-circle-error {
+	margin-top: 20px;
+}
+
+#router_class_circle_app .class-circle-error.error-refresh {
+	margin-top: 0px;
 }

@@ -2,7 +2,7 @@ Vue.component('choose-file', {
 	props: {
 		msgType: {
 			type: Number,
-			default: 1
+			default: 2
 		},
 		uploadReal: {
 			type: Boolean,

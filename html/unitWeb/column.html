@@ -97,6 +97,15 @@
 						</div>
 					</div>
 				</div>
+
+				<div>
+					<div class="weui-cell weui-cell_switch">
+						<div class="weui-cell__bd">{{istop.title}}</div>
+						<div class="weui-cell__ft">
+							<input  class="weui-switch" type="checkbox" v-model="istop.check">
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="weui-btn-area">
 				<button id="submit" v-on:click="submitClick" class="weui-btn weui-btn_primary">{{editName}}</button>
@@ -124,6 +133,7 @@
 					vm.linkurl.message = detail.linkurl;
 					vm.islink.check = detail.islink == 1 ? true : false;
 					vm.iswrite.check = detail.iswrite == 1 ? true : false;
+					vm.istop.check = detail.istop == 1 ? true : false;
 					vm.note.message = detail.note
 					for(var item in vm.$data) {
 						(function addwatch(key) {
@@ -168,6 +178,10 @@
 					},
 					iswrite: {
 						title: "是否允许投稿",
+						check: false
+					},
+					istop: {
+						title: "是否显示首页",
 						check: false
 					},
 					note: {

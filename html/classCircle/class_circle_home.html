@@ -18,13 +18,17 @@
 			//动态设置样式
 			(function() {
 				var wsWidth = window.screen.width;
+				var wsHeight = window.screen.height;
 				var relate_praise_name = wsWidth - 30 - 40 - 15 - 5 - 5 - 48; //与我相关的人的名称的宽度(赞了我)
 				var relate_comment_name = wsWidth - 30 - 40 - 15 - 5 - 5 - 64 - 10 - 32; //与我相关的人的名称的宽度(评论了我)
+				var relate_trends_content = wsWidth - 30 - 50 - 5; //与我相关动态的内容
 				var style = document.createElement("style");
 				style.type = "text/css";
 				var sstr_0 = ".relate-reply-type-praise .relate-name{max-width: " + relate_praise_name + "px;}";
 				var sstr_1 = ".relate-reply-type-comment .relate-name{max-width: " + relate_comment_name + "px;}";
-				style.innerHTML = sstr_0 + sstr_1;
+				var sstr_2 = ".class-circle-user-space.weui-tab{height: " + (wsHeight + 30) + "px;}"
+				var sstr_3 = ".relate-to-me .relate-reply-trends-bg .relate-reply-trends-img+.relate-reply-trends {width: " + relate_trends_content + "px;}"
+				style.innerHTML = sstr_0 + sstr_1 + sstr_2 + sstr_3;
 				document.getElementsByTagName('head').item(0).appendChild(style);
 			})();
 		</script>
@@ -37,23 +41,22 @@
 				<router-view></router-view>
 			</keep-alive>
 		</div>
+		<input id="qnInput" style="display: none;" />
 		<!--路由--班级圈主页-->
 		<template id="router_class_circle_home">
-			<div>
-				<div class="weui-tab">
-					<div class="weui-navbar">
-						<home-navbar-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-item="clickItem"></home-navbar-item>
-					</div>
-					<div class="weui-tab__bd">
-						<home-bd-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-person="showPersonTrends" @click-content="showTrendsDetails" @click-function="clickFunction" @click-comment="clickComment"></home-bd-item>
-					</div>
+			<div id="class_circle_home" class="weui-tab">
+				<div class="weui-navbar">
+					<home-navbar-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-item="clickItem"></home-navbar-item>
+				</div>
+				<div class="weui-tab__bd">
+					<home-bd-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-person="clickPerson" @click-content="clickContent" @click-function="clickFunction" @click-comment="clickComment" @click-relate-content="clickRelateContent" @click-relate-reply="clickRelateReply"></home-bd-item>
 				</div>
 				<div @click="clickAddTrends" class="class-circle-report">+ 发表动态</div>
 			</div>
 		</template>
 		<!--路由--发布动态或者评论-->
 		<template id="router_add_trends">
-			<add-trends :content="content" :show-media="showMedia" @add-media="addMedia" @submitData="submitData" @content-change="contentChange"></add-trends>
+			<add-trends @input-change="inputChange" @click-del-image="clickDelImage" @click-show-image="clickShowImage" @click-image="clickImage" :show-image="showImage" :content="content" :show-media="showMedia" :maxlength="maxlength" :placeholder="placeholder" @add-media="addMedia" @submit-data="submitData" @content-change="contentChange" ref="add" :images="images"></add-trends>
 		</template>
 		<!--路由--动态详情-->
 		<template id="router_trends_details">
@@ -63,24 +66,39 @@
 		</template>
 		<!--路由-用户个人空间-->
 		<template id="router_user_space">
-			<div class="class-circle-user-space">
-				<div class="weui-pull-to-refresh__layer">
-					<div class='weui-pull-to-refresh__arrow'></div>
-					<div class='weui-pull-to-refresh__preloader'></div>
-					<div class="down">下拉刷新</div>
-					<div class="up">释放刷新</div>
-					<div class="refresh">正在刷新</div>
-				</div>
-				<div class="class-circle-user-space-bg">
-					<img :src="userId|userImage" />
-					<div>{{userId|userName}}</div>
-				</div>
-				<trends-item v-for="(item_value,item_index) in data" :index="item_index" :key="item_index" :value="item_value" :detail="false" @click-person="showPersonTrends" @click-content="showTrendsDetails" @click-function="clickFunction" @click-comment="clickComment"></trends-item>
-				<div class="weui-loadmore">
-					<i class="weui-loading"></i>
-					<span class="weui-loadmore__tips">正在加载</span>
+			<div class="weui-tab class-circle-user-space">
+				<div class="weui-tab__bd">
+					<div class="weui-tab__bd-item weui-tab__bd-item--active">
+						<div class="weui-pull-to-refresh__layer">
+							<div class="weui-pull-to-refresh__arrow"></div>
+							<div class="weui-pull-to-refresh__preloader"></div>
+							<div class="down">下拉刷新</div>
+							<div class="up">释放刷新</div>
+							<div class="refresh">正在刷新</div>
+						</div>
+						<div class="weui-panel weui-panel_access">
+							<div class="weui-panel__bd">
+								<div class="class-circle-user-space-bg">
+									<div class="class-circle-user-space-headimage">
+										<img :src="userId|userImage" @load="headLoad($event)" @error.once="headError($event)" />
+									</div>
+									<div>{{userId|userName}}</div>
+								</div>
+								<trends-item v-for="(item_value,item_index) in data" :index="item_index" :key="item_index" :value="item_value" :detail="false" @click-person="clickPerson" @click-function="clickFunction" @click-comment="clickComment" @click-content="clickContent"></trends-item>
+							</div>
+						</div>
+						<error-item v-if="show_no_more" :type="2"></error-item>
+						<error-item v-if="show_error" :type="1"></error-item>
+						<div class="weui-loadmore" v-show="show_loadmore">
+							<i class="weui-loading" v-show="show_loadmore_loading"></i>
+							<span class="weui-loadmore__tips">{{show_loadmore_content}}</span>
+						</div>
+					</div>
 				</div>
 			</div>
+		</template>
+		<template id="router_error">
+			<error-item @click-refresh="clickRefresh" :type="0"></error-item>
 		</template>
 		<!--班级圈主页--顶部导航-->
 		<template id="temp_trends_navbar_item">
@@ -102,13 +120,15 @@
 					<div class="weui-panel__bd">
 						<template v-if="value.id=='relate_to_me_2'">
 							<!--与我相关-->
-							<relate-item v-for="(item_value,item_index) in value.data" :key="item_index" :value="item_value"></relate-item>
+							<relate-item v-for="(item_value,item_index) in value.data" :key="item_index" :value="item_value" :index="item_index" @click-person="clickPerson" @click-relate-content="clickRelateContent" @click-relate-reply="clickRelateReply"></relate-item>
 						</template>
 						<template v-else>
-							<trends-item v-for="(item_value,item_index) in value.data" :index="item_index" :key="item_index" :value="item_value" :detail="false" @click-person="clickPerson" @click-content="clickContent" @click-function="clickFunction" @click-comment="clickComment"></trends-item>
+							<trends-item v-for="(item_value,item_index) in value.data" :key="item_index" :value="item_value" :index="item_index" :detail="false" @click-person="clickPerson" @click-content="clickContent" @click-function="clickFunction" @click-comment="clickComment"></trends-item>
 						</template>
 					</div>
 				</div>
+				<error-item v-if="value.show_no_more" :type="2"></error-item>
+				<error-item v-if="value.show_error" :type="1"></error-item>
 				<div :id="'loadmore_' + value.id" class="weui-loadmore" v-show="value.show_loadmore">
 					<i class="weui-loading" v-show="value.show_loadmore_loading"></i>
 					<span class="weui-loadmore__tips">{{value.show_loadmore_content}}</span>
@@ -130,7 +150,7 @@
 						<div class="weui-media-box__desc">{{value.PublishDate}}</div>
 					</div>
 				</div>
-				<div class="class-circle-content-limit" @click="clickContent" :class="{'class-circle-content-limit-break':detail}">{{value.MsgContent}}</div>
+				<div class="class-circle-content-limit" @click="clickContent" :class="{'class-circle-content-limit-break':detail}">{{value.MsgContentTxt}}</div>
 				<template v-if="value.EncType == 1">
 					<image-item :images="value.EncAddr|imagesArray" :images-thumb="value.EncImgAddr|imagesArray"></image-item>
 				</template>
@@ -142,16 +162,18 @@
 				</div>
 				<div class="class-circle-praise-comment" v-if="showPraiseComment">
 					<div class="class-circle-triangle"></div>
-					<div class="class-circle-praise-bg">
-						<div class="class-circle-praiser" v-for="(praise_value,praise_index) in value.LikeUsers">
-							{{praise_value.userId|userName}}
-						</div>
-					</div>
-					<div class="class-circle-praise-comment-line" v-if="showLine"></div>
 					<template v-if="detail">
+						<div class="class-circle-praise-bg">
+							<div class="class-circle-praiser" v-for="(praiser_value,praiser_index) in value.LikeUsers" @click="clickName(praiser_value.userId)">
+								{{praiser_value.userId|userName}}
+							</div>
+						</div>
+						<div class="class-circle-praise-comment-line" v-if="showLine"></div>
 						<comments-item :value="value.Comments" :show="false" @click-comment="clickComment" @click-show-all="clickShowAll" @click-name="clickName"></comments-item>
 					</template>
 					<template v-else>
+						<praiser-item :likers="value.LikeUsers|praiserArray" @click-name="clickName"></praiser-item>
+						<div class="class-circle-praise-comment-line" v-if="showLine"></div>
 						<comments-item :value="value.Comments|commentArray" :show="value.Comments|showAllButton" @click-comment="clickComment" @click-show-all="clickShowAll" @click-name="clickName"></comments-item>
 					</template>
 				</div>
@@ -159,80 +181,54 @@
 		</template>
 		<!--与我相关模板-->
 		<template id="temp_relate_to_me">
-			<div class="weui-media-box relate-reply-type-praise">
+			<div class="weui-media-box relate-to-me" :class="{'relate-reply-type-praise':relateType,'relate-reply-type-comment':!relateType}">
 				<div class="weui-media-box_appmsg">
 					<div class="weui-media-box__hd class-circle-headimage-hd">
-						<img class="weui-media-box__thumb class-circle-headimage" src="../../image/config/func_actssm.jpg" />
+						<img class="weui-media-box__thumb class-circle-headimage" @load="headLoad($event)" @error.once="headError($event)" @click="clickPerson(value.UserId)" :src="value.UserId|userThumbImage" />
 					</div>
 					<div class="weui-media-box__bd">
 						<div class="class-circle-title">
-							<div class="weui-media-box__title relate-name">
-								标题一标题一标题一标
-							</div>
-							<div class="relate-reply-type">赞了我</div>
+							<div class="weui-media-box__title relate-name" @click="clickPerson(value.UserId)">{{value.UserId|userName}}</div>
+							<template v-if="value.MsgType == 1">
+								<div class="relate-reply-type">评论了我</div>
+								<div class="relate-reply" @click="clickRelateReply(value.UserId)">回复</div>
+							</template>
+							<template v-else-if="value.MsgType == 2">
+								<div class="relate-reply-type">回复了我</div>
+								<div class="relate-reply" @click="clickRelateReply(value.UserId)">回复</div>
+							</template>
+							<template v-else-if="value.MsgType == 3">
+								<div class="relate-reply-type">赞了我</div>
+							</template>
 						</div>
-						<div class="weui-media-box__desc">2017-8-14 09:14:42</div>
+						<div class="weui-media-box__desc">{{value.MsgDate}}</div>
 					</div>
 				</div>
-				<div class="relate-reply-content">
-					<div class="relate-reply-content-img">
-						<img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2760619582,1034521198&fm=11&gp=0.jpg" />
+				<template v-if="value.MsgType != 3">
+					<div @click="clickRelateContent">{{value.Content}}</div>
+				</template>
+				<div class="relate-reply-trends-bg">
+					<div class="relate-reply-trends-img" v-if="value.EncType == 1">
+						<img @load="trendsLoad($event)" @click="clickRelateContent" @error.once="headError($event)" :src="value.UserId|userThumbImage" />
 					</div>
-					<div class="relate-reply-content-text">
+					<div class="relate-reply-trends">
 						<div class="relate-reply-content-limit">
-							<div class="relate-reply-content-name">
-								张一二三四五六七八九十云张一二三四五六七八九十云
-							</div>
-							：一二三四五六七八九十一二三四五六七八九十
+							<div class="relate-reply-content-name" @click="clickPerson(value.UserOwnerId)">{{value.UserOwnerId|userName}}</div>
+							<span @click="clickRelateContent">：{{value.MsgContent}}</span>
 						</div>
 					</div>
 				</div>
-			</div>
-		</template>
-		<!--与我相关模板-->
-		<template id="temp_relate_to_me_comment">
-			<div class="weui-media-box relate-reply-type-comment">
-				<div class="weui-media-box_appmsg">
-					<div class="weui-media-box__hd class-circle-headimage-hd">
-						<img class="weui-media-box__thumb class-circle-headimage" src="../../image/config/func_actssm.jpg" />
-					</div>
-					<div class="weui-media-box__bd">
-						<div class="class-circle-title">
-							<div class="weui-media-box__title relate-name">
-								标题一标题一标一标
-							</div>
-							<div class="relate-reply-type">评论了我</div>
-							<div class="relate-reply">回复</div>
-						</div>
-						<div class="weui-media-box__desc">2017-8-14 09:14:42</div>
-					</div>
-				</div>
-				<div>一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十</div>
-				<div class="relate-reply-content">
-					<div class="relate-reply-content-img">
-						<img src="http://www.w3school.com.cn/i/bg_flower_small.gif" />
-					</div>
-					<div class="relate-reply-content-text">
-						<div class="relate-reply-content-limit">
-							<div class="relate-reply-content-name">
-								张一
-							</div>
-							：一二三四五六七八九十一二三四五六七八九十
+				<template v-if="value.MsgArray.length > 0">
+					<div class="class-circle-comment-bg">
+						<div class="class-circle-comment-item" v-for="(msg_value,mesg_index) in value.MsgArray" v-if="mesg_index < 20">
+							<div class="class-circle-comment-name" @click="clickPerson(msg_value.MsgFrom)">{{msg_value.MsgFrom|userName}}</div>
+							<div class="class-circle-comment-content">回复</div>
+							<div class="class-circle-comment-name" @click="clickPerson(msg_value.MsgTo)">{{msg_value.MsgTo|userName}}</div>
+							<div class="class-circle-comment-content" @click="clickRelateReply(msg_value.MsgFrom)">：{{msg_value.MsgContent}}</div>
 						</div>
 					</div>
-				</div>
-				<div class="class-circle-comment-bg">
-					<div class="class-circle-comment-item">
-						<div class="class-circle-comment-name">壹</div>
-						<div class="class-circle-comment-content">：一二三四 </div>
-					</div>
-					<div class="class-circle-comment-item">
-						<div class="class-circle-comment-name">贰</div>
-						<div class="class-circle-comment-content">回复</div>
-						<div class="class-circle-comment-name">壹</div>
-						<div class="class-circle-comment-content">：一二三四五六七八九十</div>
-					</div>
-				</div>
+					<div class="class-circle-show-all" v-if="value.MsgArray.length > 20" @click="clickRelateContent">查看全部</div>
+				</template>
 			</div>
 		</template>
 		<!--评论组件-->
@@ -244,9 +240,9 @@
 						<div class="class-circle-comment-content">：{{comment_value.CommentContent}}</div>
 					</div>
 					<div class="weui-cell weui-cell_access class-circle-comment-item" v-for="(replys_value,replys_index) in comment_value.Replys" @click="clickComment(comment_index,replys_index)">
-						<div class="class-circle-comment-name" @click.stop="clickName(replys_value.ReplyId)">{{replys_value.ReplyId|userName}}</div>
-						<div class="class-circle-comment-content">回复</div>
 						<div class="class-circle-comment-name" @click.stop="clickName(replys_value.UserId)">{{replys_value.UserId|userName}}</div>
+						<div class="class-circle-comment-content">回复</div>
+						<div class="class-circle-comment-name" @click.stop="clickName(replys_value.ReplyId)">{{replys_value.ReplyId|userName}}</div>
 						<div class="class-circle-comment-content">：{{replys_value.CommentContent}}</div>
 					</div>
 				</div>
@@ -256,12 +252,43 @@
 		<!--发布动态组件-->
 		<template id="temp_add_trends_com">
 			<div class="class-circle-add">
-				<textarea class="weui-textarea" v-model="com_content" placeholder="不能为空" rows="6" maxlength="6000"></textarea>
-				<div class="class-circle-add-media" v-if="showMedia">
-					<div class="iconfont icon-tuku" @click="addMedia(0)"></div>
-					<div class="iconfont icon-xiangji2" @click="addMedia(1)"></div>
-				</div>
+				<textarea class="weui-textarea" v-model="com_content" :placeholder="placeholder" rows="6" :maxlength="maxlength"></textarea>
 				<div class="class-circle-add-line"></div>
+				<div class="class-circle-add-media" v-if="showMedia">
+					<div class="weui-cell">
+						<div class="weui-cell__bd">
+							<div class="weui-uploader">
+								<div class="weui-uploader__hd">
+									<p class="weui-uploader__title">图片上传</p>
+									<div class="weui-uploader__info">{{images.length}}/9</div>
+								</div>
+								<div class="weui-uploader__bd">
+									<ul class="weui-uploader__files">
+										<li class="weui-uploader__file" @click="cilckImage(image_index)" :class="{'weui-uploader__file_status':image_value.uploading}" v-for="(image_value,image_index) in images" :style="{backgroundImage:'url('+image_value.filePath+')'}">
+											<div class="weui-uploader__file-content">
+												{{image_value.process}}
+												<i class="weui-icon-waiting" v-show="image_value.state==0"></i>
+												<i class="weui-icon-success" v-show="image_value.state==1"></i>
+												<i class="weui-icon-warn" v-show="image_value.state==2"></i>
+											</div>
+										</li>
+									</ul>
+									<div class="weui-uploader__input-box" v-show="images.length < 9">
+										<input id="uploaderInput" class="weui-uploader__input" accept="image/*" type="file" @change="inputChange">
+									</div>
+								</div>
+							</div>
+							<div class="weui-gallery" :style="showGallery">
+								<span class="weui-gallery__img" @click="clickShowImage" :style="{backgroundImage:'url('+showImagePath+')'}"></span>
+								<div class="weui-gallery__opr">
+									<a class="weui-gallery__del">
+										<i @click="clickDelImage" class="weui-icon-delete weui-icon_gallery-delete"></i>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 				<button class="weui-btn weui-btn_primary" @click="submitData">提交</button>
 			</div>
 		</template>
@@ -278,8 +305,30 @@
 				</div>
 			</div>
 		</template>
+		<!--点赞列表-->
+		<template id="temp_praiser_list">
+			<div class="class-circle-praise-bg">
+				<div class="class-circle-praiser" v-for="(value,index) in likers.showArray" @click="clickName(value.userId)">{{value.userId|userName}}</div>
+				<div class="class-circle-praiser" v-if="likers.num > 20">等{{likers.num}}人觉得很赞</div>
+			</div>
+		</template>
+		<template id="temp_error_com">
+			<div class="class-circle-error" :class="classObject">
+				<template v-if="type==0">
+					<img src="../../image/classCircle/error.png" />
+					<div class="class-circle-error-text">加载失败,请点击<span @click="clickRefresh">刷新</span></div>
+				</template>
+				<template v-else-if="type==1">
+					<img src="../../image/classCircle/error.png" />
+					<div class="class-circle-error-text">加载失败</div>
+				</template>
+				<template v-else-if="type==2">
+					<img src="../../image/classCircle/nodata.png" />
+					<div class="class-circle-error-text">暂无内容</div>
+				</template>
+			</div>
+		</template>
 		<script type="text/javascript">
-//			document.write("<s" + "cript type='text/javascript' src='../../js/mui.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-2.1.4.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-weui.js?" + Math.random() + "'></s" + "cript>");
@@ -291,8 +340,15 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_vue.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_protocol.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/qiniu/qiniu.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cryption.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cloudutil.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/compress.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/pluploadutil.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_home.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_temp_data.js?" + Math.random() + "'></s" + "cript>");
+			//document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_temp_data.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 	</body>
 

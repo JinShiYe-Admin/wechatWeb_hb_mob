@@ -61,19 +61,19 @@ var space_data = {}; //空间的所有数据
 var qnFileUploader; //七牛上传控件对象
 
 window.onload = function() {
-	//	$.showLoading('加载中...');
-	//	initRouter();
-	//	getMineInfo();
+	$.showLoading('加载中...');
+	initRouter();
+	getMineInfo();
 
 	//---假数据---start---
-	initQNUploader();
-	show_class_circle_app = true; //是否显示班级圈app
-	temp_data = null;
-	initRouter();
-	router.push({
-		name: "home"
-	});
-	//getHomeTrends(0, 1);
+//	initQNUploader();
+//		show_class_circle_app = true; //是否显示班级圈app
+//		temp_data = null;
+//		initRouter();
+//		router.push({
+//			name: "home"
+//		});
+//		getHomeTrends(0, 1);
 	//---假数据---end---
 }
 
@@ -381,7 +381,7 @@ function initRouter() {
 					vm.$refs.add.cleanContent(); //清理内容
 					if(vm.$route.params.id == "addTrend" || vm.$route.params.id == undefined) {
 						//发布动态
-						vm.showMedia = true;
+						vm.showMedia = false;
 						vm.maxlength = 6000;
 						vm.placeholder = "动态:不能为空,最多6000字!";
 					} else if(vm.$route.params.id == "addComment") {
@@ -1481,7 +1481,7 @@ function initQNUploader() {
 		max_retries: 0, // 上传失败最大重试次数
 		dragdrop: false, // 开启可拖曳上传
 		chunk_size: '4mb', // 分块上传时，每块的体积
-		auto_start: true, // 选择文件后自动上传，若关闭需要自己绑定事件触发上传,
+		auto_start: false, // 选择文件后自动上传，若关闭需要自己绑定事件触发上传,
 		init: {
 			'FilesAdded': function(up, files) {
 				plupload.each(files, function(file) {
@@ -1495,13 +1495,13 @@ function initQNUploader() {
 			},
 			'UploadProgress': function(up, file) {
 				// 每个文件上传时,处理相关的事情
-				console.log("UploadProgress:"+file.percent);
+				console.log("UploadProgress:" + file.percent);
 			},
 			'FileUploaded': function(up, file, info) {
 				// 每个文件上传成功后,处理相关的事情
 				console.log("FileUploaded:");
 				if(info.status == 200) {
-					console.log("success:"+storageutil.QNPBDOMAIN + JSON.parse(info["response"]).key)
+					console.log("success:" + storageutil.QNPBDOMAIN + JSON.parse(info["response"]).key)
 				}
 			},
 			'Error': function(up, err, errTip) {
@@ -1546,31 +1546,31 @@ function getQNUpToken(file) {
 }
 
 function initFileUpload(file) {
-	//	console.log("initFileUpload:",file);
-	qnFileUploader.addFile(file, file.name);
-	//	var reader = new FileReader();
-	//	reader.onload = function() {
-	//		console.log("initFileUpload:onload:");
-	//		var result = this.result;
-	//		//var formData = new FormData();
-	//		compress.getImgInfo(result, function(img, imgInfo) {
-	////			console.log("获取的文件信息：" + JSON.stringify(imgInfo));
-	////			console.log("原图尺寸：" + result.length);
-	//
-	//			if(result.length > 2 * 1024 * 1024) {
-	//				var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)));
-	//				var blob = compress.base64ToBlob(newDataUrl, 'image/png');
-	////				console.log("blob.type:" + blob.type);
-	////				console.log('要传递的文件大小：' + blob.size);
-	//				//					var newFile = new File([blob], Date.now() + '.png');
-	//				//formData.append('image', blob, Date.now() + '.png');
-	//				console.log("")
-	//				qnFileUploader.addFile(blob, file.name);
-	//			} else {
-	//				//formData.append('image', file);
-	//				qnFileUploader.addFile(file, file.name);
-	//			}
-	//		})
-	//	}
-	//	reader.readAsDataURL(file);
+	console.log("initFileUpload:", file);
+	//qnFileUploader.addFile(file, file.name);
+	var maxSize = 2 * 1024 * 1024;
+	var reader = new FileReader();
+	reader.onload = function() {
+		var result = this.result;
+		var formData = new FormData();
+		compress.getImgInfo(result, function(img, imgInfo) {
+			console.log("获取的文件信息：" + JSON.stringify(imgInfo));
+			console.log("原图尺寸：" + result.length);
+			//			if(result.length > maxSize) {
+			var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)));
+			var blob = compress.base64ToBlob(newDataUrl, 'image/png');
+			console.log("blob.type:" + blob.type);
+			console.log('要传递的文件大小：' + blob.size);
+			var newFile = new File([blob], Date.now() + '.png');
+			formData.append('image', blob, Date.now() + '.png');
+			console.log("formData:", formData);
+			console.log("newFile:", newFile);
+			qnFileUploader.addFile(newFile, newFile.name);
+			//			} else {
+			//				formData.append('image', file);
+			//			}
+			//			mod.postFile(formData, callback);
+		})
+	}
+	reader.readAsDataURL(file);
 }

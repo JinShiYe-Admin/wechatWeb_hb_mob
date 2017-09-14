@@ -422,6 +422,7 @@ body {
 	width: 90%;
 	background-color: #46BDFF;
 	border-color: #46BDFF;
+	margin-top: 10px;
 }
 
 .weui-btn_primary:not(.weui-btn_disabled):active {

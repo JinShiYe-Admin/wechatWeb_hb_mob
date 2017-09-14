@@ -1,6 +1,16 @@
 Vue.component('select-choose', {
-	props: ['chosedPersen', 'msgType'],
+	props: ['chosedPersen','msgType'],
 	template: '<div v-bind:class="[\'weui-cells\']">' +
+		'<div v-bind:class="[\'weui-cell\',\'weui-cell_select\',\'weui-cell_select-after\']">' +
+		'<div v-bind:class="[\'weui-cell__hd\']">' +
+		'<label for v-bind:class="[\'weui-label\']">消息类型</label>' +
+		'</div>' +
+		'<div v-bind:class="[\'weui-cell__bd\']">' +
+		'<select v-bind:class="[\'weui-select\']" name="select" v-on:change="getType($event)">' +
+		'<option   v-for="(msgStyle,index) of msgStyles" v-bind:selected="msgStyle.typeNo===msgType" v-bind:value="msgStyle.typeNo">{{msgStyle.typeName}}</option>' +
+		'</select>' +
+		'</div>' +
+		'</div>' +
 		'<div v-bind:class="[\'weui-cell\',\'weui-cell_access\']" v-on:click="routeToPersen">' +
 		'<div v-bind:class="[\'weui-cell__bd\']">' +
 		'人员选择' +
@@ -9,19 +19,11 @@ Vue.component('select-choose', {
 		'{{chosedPersen.length>99?"99+":chosedPersen.length}}' +
 		'</div>' +
 		'</div>' +
-		'<div v-bind:class="[\'weui-cell\',\'weui-cell_switch\']">' +
-		'<div v-bind:class="[\'weui-cell__bd\']">' +
-		'是否短信同步' +
-		'</div>' +
-		'<div v-bind:class="[\'weui-cell__ft\']">' +
-		'<input v-bind:class="[\'weui-switch\']" type="checkbox"/>' +
-		'</div>' +
-		'</div>' +
 		'</div>',
 	data: function() {
 		return {
 			msgStyles: consts.MESSAGE_STYLES,
-			thisMsgType: this.msgType
+			thisMsgType:this.msgType
 		}
 	},
 	watch: {

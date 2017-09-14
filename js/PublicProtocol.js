@@ -41,7 +41,7 @@ var jQAjaxPost = function(url, data, callback) {
 		url: url,
 		type: "POST",
 		data: data,
-		timeout: 1000,
+		timeout: 10000,
 		dataType: "json",
 		async: true,
 		success: function(success_data) { //请求成功的回调

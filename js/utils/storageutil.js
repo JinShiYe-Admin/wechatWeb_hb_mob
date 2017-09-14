@@ -30,7 +30,9 @@ var storageutil = (function(mod) {
 	mod.QNQYWXKEY = "jsy927@"; //企业微信密钥
 	mod.QNQYWXFN = "wechat/"; //企业微信第一前缀名
 	mod.QNTHUMB = "thumb/"; //缩略图的第三前缀
+	mod.QNCROP = "crop/"; //裁剪图的第三前缀
 	mod.QNSSPACEWEBCON = "webcon/"; //网站配置空间(第二前缀名)
+	mod.QNSSPACECLASSCIRCLE = "classcircle/"; //网站配置空间(第二前缀名)
 	//---七牛key值---end---
 
 	mod.WEBSITECONFIG = 'websiteconfig' //网站配置

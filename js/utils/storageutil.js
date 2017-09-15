@@ -3,7 +3,7 @@ var storageutil = (function(mod) {
 	mod.KEY = 0; //0,开发;1,测试;2,外网
 	if(mod.KEY == 0) {
 		//开发
-		mod.QNPBDOMAIN = 'http://qn-kfpb.jiaobaowang.net/'; //七牛公开空间域名
+		mod.QNPBDOMAIN = 'http://qn-cspb.jiaobaowang.net/'; //七牛公开空间域名
 		mod.QNGETUPLOADTOKEN = 'https://jbyc.jiaobaowang.net:8445/Api/QiNiu/GetUpLoadToKen'; //七牛获取上传token的url
 		mod.QNGETDOWNLOADTOKEN = 'https://jbyc.jiaobaowang.net:8445/Api/QiNiu/GetAccess'; //七牛获取下载token的url
 		mod.QNGETDELETEFILES = 'https://jbyc.jiaobaowang.net:8445/Api/QiNiu/Delete'; //获取批量删除七牛文件的token的url

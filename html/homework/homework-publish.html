@@ -51,8 +51,9 @@
 								<ul class="weui-uploader__files" id="uploaderFiles">
 									<li v-for="(file,index) of uploadedFiles" @click="clickImg(index)" v-bind:class="['weui-uploader__file']" v-bind:style="{'background-image':'url('+file.ImgUrl+')'}"></li>
 								</ul>
-								<div class="weui-uploader__input-box">
-									<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" @click="addFileBtn()" v-on:change="selectFile($event)">
+								<div class="weui-uploader__input-box" :style="displayAddBtn">
+									<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" v-on:change="selectFile($event)">
+
 								</div>
 							</div>
 						</div>
@@ -126,6 +127,10 @@
 					displayGallery: {
 						display: 'none'
 					},
+					displayAddBtn: {
+						display: 'block'
+					},
+
 					selectIndex: 0,
 					selectImgPath: '',
 					uploadedFiles: []
@@ -138,9 +143,7 @@
 							qnFileUploader.addFile(event.target.files[0], event.target.files[0].name);
 						}
 					},
-					addFileBtn: function() { //点击添加按钮
-						console.log('dianji addFileBtn');
-					},
+
 					clickImg: function(index) { //点击列表中的附件，给别的地方赋值
 						homework.selectIndex = index;
 						homework.selectImgPath = homework.uploadedFiles[index].ImgUrl;
@@ -162,8 +165,10 @@
 									display: 'none'
 								};
 								homework.uploadedFiles.splice(homework.selectIndex, 1);
+								displayAddBtnFun();
 							}
 						});
+
 					},
 					clickSubmitBtn: function() { //提交按钮
 						if(homework.workTitle.length == 0 && homework.uploadedFiles.length == 0) {
@@ -213,9 +218,10 @@
 						}
 						console.log(JSON.stringify(tempData))
 						unitWebsitePro(tempData, function(data) {
+							$.hideLoading();
 							if(data.RspCode == 0) {
 								console.log('成功');
-								$.hideLoading();
+								
 								mui.toast('成功');
 							}
 
@@ -312,6 +318,7 @@
 									FileSize: file.size
 								}
 								homework.uploadedFiles.push(tempModel);
+								displayAddBtnFun();
 								console.log("success:" + storageutil.QNPBDOMAIN + JSON.parse(info["response"]).key);
 								console.log("success:" + storageutil.QNPBDOMAIN + ',' + JSON.stringify(info));
 								console.log("success:" + JSON.stringify(file));
@@ -358,6 +365,18 @@
 					upToken = data;
 				});
 				return upToken;
+			}
+			//判断照片添加按钮是否显示，大于9张时隐藏
+			function displayAddBtnFun() {
+				if(homework.uploadedFiles.length >= 9) {
+					homework.displayAddBtn = {
+						display: 'none'
+					};
+				} else {
+					homework.displayAddBtn = {
+						display: 'block'
+					};
+				}
 			}
 
 			function getSub() {

@@ -29,8 +29,8 @@
 								<ul class="weui-uploader__files" id="uploaderFiles">
 									<li v-for="(file,index) of uploadedFiles" @click="clickImg(index)" v-bind:class="['weui-uploader__file']" v-bind:style="{'background-image':'url('+file.ImgUrl+')'}"></li>
 								</ul>
-								<div class="weui-uploader__input-box">
-									<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" @click="addFileBtn()" v-on:change="selectFile($event)">
+								<div class="weui-uploader__input-box" :style="displayAddBtn">
+									<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" v-on:change="selectFile($event)">
 								</div>
 							</div>
 						</div>
@@ -70,6 +70,7 @@
 		</script>
 		<script type="text/javascript">
 			mui.init();
+			var workId; //作业id
 			var uptokenData;
 			var qnFileUploader; //七牛上传控件对象
 			window.onload = function() {
@@ -87,6 +88,9 @@
 					displayGallery: {
 						display: 'none'
 					},
+					displayAddBtn: {
+						display: 'block'
+					},
 					selectIndex: 0,
 					selectImgPath: '',
 					uploadedFiles: []
@@ -98,9 +102,6 @@
 						if(event.target.value) {
 							qnFileUploader.addFile(event.target.files[0], event.target.files[0].name);
 						}
-					},
-					addFileBtn: function() { //点击添加按钮
-						console.log('dianji addFileBtn');
 					},
 					clickImg: function(index) { //点击列表中的附件，给别的地方赋值
 						submitHomework.selectIndex = index;
@@ -123,6 +124,7 @@
 									display: 'none'
 								};
 								submitHomework.uploadedFiles.splice(submitHomework.selectIndex, 1);
+								displayAddBtnFun();
 							}
 						});
 					},
@@ -150,7 +152,7 @@
 						var tempData = {
 							cmd: 'work', //14.作业管理
 							type: 'studo', //学生做作业
-							colid: '53', //workdoid
+							colid: workId, //workdoid
 							colv: submitHomework.workTitle, //作答内容
 							encs: tempEncs //作答附件
 						}
@@ -160,7 +162,7 @@
 								console.log('成功');
 								mui.toast('成功');
 								//如果为第一次提交作业，提交后，将状态改为修改
-								if (submitHomework.stat == 0) {
+								if(submitHomework.stat == 0) {
 									submitHomework.stat = 1;
 									submitHomework.submitBtnTitle = '修改';
 								}
@@ -178,7 +180,7 @@
 				var tempData = {
 					cmd: 'work', //14.作业管理
 					type: 'stufind', //学生分页查找作业
-					workdoid: '53', //做作业ID,workdoid,见获取作业列表中的workdoid
+					workdoid: workId, //做作业ID,workdoid,见获取作业列表中的workdoid
 					pagesize: '1', //作答内容
 					pageindex: '1' //作答附件
 				}
@@ -260,9 +262,8 @@
 									FileSize: file.size
 								}
 								submitHomework.uploadedFiles.push(tempModel);
+								displayAddBtnFun();
 								console.log("success:" + storageutil.QNPBDOMAIN + JSON.parse(info["response"]).key);
-								console.log("success:" + storageutil.QNPBDOMAIN + ',' + JSON.stringify(info));
-								console.log("success:" + JSON.stringify(file));
 							}
 						},
 						'Error': function(up, err, errTip) {
@@ -284,6 +285,19 @@
 						}
 					}
 				});
+			}
+
+			//判断照片添加按钮是否显示，大于9张时隐藏
+			function displayAddBtnFun() {
+				if(submitHomework.uploadedFiles.length >= 9) {
+					submitHomework.displayAddBtn = {
+						display: 'none'
+					};
+				} else {
+					submitHomework.displayAddBtn = {
+						display: 'block'
+					};
+				}
 			}
 			/**
 			 * 获取七牛上传token

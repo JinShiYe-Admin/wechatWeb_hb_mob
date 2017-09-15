@@ -279,9 +279,10 @@ body {
 	padding-bottom: 46px;
 }
 
-.weui-photo-browser-modal .photo-container {
-	/*查看图片时的背景*/
-	justify-content: center;
+.weui-photo-browser-modal .photo-container img{
+	max-width: 70%;
+	margin-left: 15%;
+	margin-top: 0px;
 }
 
 .weui-photo-browser-modal {

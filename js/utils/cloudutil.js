@@ -38,16 +38,14 @@ var cloudutil = (function(mod) {
 			case 1: //等比缩放生成缩略图
 				var thumbSpace = data.saveSpace + storageutil.QNTHUMB;
 				var fileNames = data.qnFileName.split(".");
-				var width = 100; //缩略图的长边
-				var height = 100; //缩略图的短边
-				if(utils.checkData(data.option.width)) {
-					width = data.option.width;
-				}
-				if(utils.checkData(data.option.height)) {
-					height = data.option.height;
-				}
-				returnData.thumbKey = Qiniu.URLSafeBase64Encode(data.mainSpace + ":" + thumbSpace + fileNames[0] + ".png");
-				returnData.ops = "imageView2/0/w/" + width + "/h/" + height + "/format/png|saveas/" + returnData.thumbKey;
+				returnData.thumbKey = Qiniu.URLSafeBase64Encode(data.mainSpace + ":" + thumbSpace + fileNames[0] + ".jpg");
+				returnData.ops = "imageView2/0/format/jpeg|saveas/" + returnData.thumbKey;
+				break;
+			case 2: //居中裁剪生成图片
+				var thumbSpace = data.saveSpace + storageutil.QNCROP;
+				var fileNames = data.qnFileName.split(".");
+				returnData.thumbKey = Qiniu.URLSafeBase64Encode(data.mainSpace + ":" + thumbSpace + fileNames[0] + ".jpg");
+				returnData.ops = "imageView2/1/w/200/h/200/format/jpeg|saveas/" + returnData.thumbKey;
 				break;
 			default:
 				break;
@@ -118,7 +116,7 @@ var cloudutil = (function(mod) {
 				setQNCmdData.option = data.fileArray[i].qnCmdOption;
 			} else {
 				//默认使用data.qnCmdType的命令类型
-				setQNCmdData.option = qnCmdOption;
+				setQNCmdData.option = qnCmdOption; //默认只传原件
 			}
 			var opsData = mod.setQNCmd(setQNCmdData);
 
@@ -142,6 +140,7 @@ var cloudutil = (function(mod) {
 				callBack({
 					code: 1,
 					data: tokenData.data,
+					thumbKey:configure.thumbKey,
 					message: tokenData.message
 				});
 			} else {

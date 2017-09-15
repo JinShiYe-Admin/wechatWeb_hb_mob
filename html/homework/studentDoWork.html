@@ -5,13 +5,12 @@
 		<meta charset="UTF-8">
 		<title>做作业</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
 		<script type="text/javascript">
 			document.write('<link rel="stylesheet" href="../../js/demoCssJs/weui.min.css?' + Math.random() + '" />');
 			document.write('<link rel="stylesheet" href="../../js/demoCssJs/jquery-weui.css?' + Math.random() + '" />');
 			document.write('<link rel="stylesheet" href="../../js/demoCssJs/demos.css?' + Math.random() + '" />');
 			document.write('<link rel="stylesheet" href="../../css/utils/iconfont.css?' + Math.random() + '" />');
-			//			document.write('<link rel="stylesheet" href="../../css/classCircle/class_circle_home.css?' + Math.random() + '" />');
 		</script>
 	</head>
 
@@ -38,6 +37,7 @@
 				</div>
 			</div>
 			<a href="javascript:;" class="weui-btn weui-btn_primary" @click="clickSubmitBtn()">{{submitBtnTitle}}</a>
+			<a href="javascript:;" class="weui-btn weui-btn_primary" @click="clickSubmitBtn2()">宋-老师发布作业</a>
 			<input id="qnInput" style="display: none;" />
 			<!--<div class="weui-gallery" style="display: block">-->
 			<div class="weui-gallery" :style="displayGallery">
@@ -49,7 +49,6 @@
 				</div>
 			</div>
 		</div>
-
 		<script src="../../js/mui.min.js"></script>
 		<script src="../../js/demoCssJs/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/appweb/choose-file.js" type="text/javascript" charset="utf-8"></script>
@@ -71,8 +70,7 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/pluploadutil.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 		<script type="text/javascript">
-			mui.init();
-			var workId; //作业id
+			var workId = 53; //作业id
 			var uptokenData;
 			var qnFileUploader; //七牛上传控件对象
 			window.onload = function() {
@@ -130,6 +128,9 @@
 							}
 						});
 					},
+					clickSubmitBtn2: function() { //提交按钮
+						mui.openWindow("../homework/homework-publish.html?abc=" + Math.random(), "homework-publish.html" + Math.random());
+					},
 					clickSubmitBtn: function() { //提交按钮
 						if(submitHomework.workTitle.length == 0 && submitHomework.uploadedFiles.length == 0) {
 							alert('请作答后再提交');
@@ -162,7 +163,7 @@
 							$.hideLoading();
 							if(data.RspCode == 0) {
 								console.log('成功');
-								mui.toast('成功');
+								$.toast("成功");
 								//如果为第一次提交作业，提交后，将状态改为修改
 								if(submitHomework.stat == 0) {
 									submitHomework.stat = 1;
@@ -218,7 +219,7 @@
 					uptoken_func: function(file) { // 在需要获取 uptoken 时，该方法会被调用
 						uptokenData = null;
 						uptokenData = getQNUpToken(file);
-						//console.log("获取uptoken回调:" + JSON.stringify(uptokenData));
+						console.log("获取uptoken回调:" + JSON.stringify(uptokenData));
 						if(uptokenData && uptokenData.code) { //成功
 							return uptokenData.data.Data[0].Token;
 						} else {
@@ -237,6 +238,7 @@
 					auto_start: true, // 选择文件后自动上传，若关闭需要自己绑定事件触发上传,
 					init: {
 						'FilesAdded': function(up, files) {
+							console.log("FilesAdded0:", file);
 							plupload.each(files, function(file) {
 								$.showLoading('加载中...');
 								// 文件添加进队列后,处理相关的事情
@@ -278,6 +280,7 @@
 							console.log("UploadComplete:");
 						},
 						'Key': function(up, file) {
+							console.log('得到token0:' + JSON.stringify(uptokenData));
 							// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
 							// 该配置必须要在 unique_names: false , save_key: false 时才生效
 							if(uptokenData && uptokenData.code) { //成功

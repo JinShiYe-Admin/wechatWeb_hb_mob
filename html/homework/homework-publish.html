@@ -412,7 +412,7 @@
 				unitWebsitePro(tempData, function(data) {
 					console.log('部门:' + JSON.stringify(data));
 					if(data.RspCode == 0) {
-						homework.depart_array = data.RspData.dt;
+						homework.depart_array = data.RspData;
 						for(var i = 0; i < homework.depart_array.length; i++) {
 							getPerson(model.value, i)
 							var model = homework.depart_array[i];
@@ -438,7 +438,7 @@
 				unitWebsitePro(tempData, function(data) {
 					console.log('部门:' + JSON.stringify(data));
 					if(data.RspCode == 0) {
-						homework.depart_array[index].persons = data.RspData.dt;
+						homework.depart_array[index].persons = data.RspData;
 					} else {
 						mui.toast(data.RspTxt)
 					}

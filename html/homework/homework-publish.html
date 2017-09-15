@@ -99,7 +99,6 @@
 			var qnFileUploader; //七牛上传控件对象
 			window.onload = function() {
 				console.log('onload');
-				$.showLoading('加载中...');
 				initQNUploader();
 				getSub();
 				getDepart();
@@ -387,7 +386,9 @@
 					pageindex: 1,
 					stat: '1'
 				}
+				$.showLoading('加载中...');
 				unitWebsitePro(tempData, function(data) {
+					$.hideLoading();
 					console.log('科目:' + JSON.stringify(data));
 					if(data.RspCode == 0) {
 						homework.sub_array = data.RspData.dt;

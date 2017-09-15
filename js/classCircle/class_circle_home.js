@@ -742,7 +742,8 @@ function initRouter() {
 		beforeRouteLeave: function(to, from, next) {
 			console.log("路由-异常页面-离开之前:from:" + from.path + " to:" + to.path);
 			if("/" == to.path) { //离开班级圈APP
-				window.close();
+				next();
+				router.back();
 			} else {
 				next();
 			}

@@ -48,7 +48,7 @@
 			</div>
 			<div class="weui-tab__bd" id="newsData">
 				<div id="contentCell" class="content-padded">
-					<a class="weui-cell weui-cell_access" href="javascript:;" v-for="(newsModel,index) in item.newsArray">
+					<a class="weui-cell weui-cell_access" @click="click(newsModel,index)" v-for="(newsModel,index) in item.newsArray" :data-index="index">
 						<div class="weui-cell__bd">
 							<span style='width:350px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;' class="Prizs">标题：{{newsModel.topic}}</span>
 							<button id="{{newsModel.newsid}}" style="float:right" class="weui-btn weui-btn_mini weui-btn_primary" @click="clickDel(newsModel,1,index)">{{newsModel.Prizt}}</button>
@@ -76,6 +76,15 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 		<script>
+			function click(newsModel, index) {
+				//			mui('.content-padded').on('tap', '.weui-cell weui-cell_access', function() {
+				//var index = this.getAttribute('data-index');
+				//alert(index)
+				//var tempData = newsData.columns[index];
+				newsModel.type = 'edit'
+				utils.wOpenWithData("../unitWeb/addnews.html", newsModel);
+				//			})
+			}
 			var newsFlag = 0; //0刷新，1加载更多
 			var newsPage = 1; //加载当当前新闻的页码
 			//所属栏目下拉框
@@ -86,17 +95,47 @@
 				},
 				methods: {}
 			});
+			//新闻数据列表
 			var newsData = new Vue({
 				el: '#newsData',
 				data: {
-					item: {} //列表信息流数据
+					item: {
+						newsArray: [{
+								chnid: 1,
+								subtopic: 'Prisubtopic1',
+								topic: 'PriTopic1',
+								content: '<section><h3></h3><p>7月27-29日，中国?德州京津冀鲁资本技术交易大会在山东德州市举行。共有来自京津冀鲁多地的650余家高等院校、科研院所、科技服务机构、投资机构、证券公司、基金公司和相关企业负责人1500余人，围绕协同发展示范区建设和科技金融“双引擎”服务新旧动能转换展开广泛交流研讨和精准对接。我校应邀组团参加本次大会，李光红副校长带队，由合作发展处组织了我校新材料、新能源、装备制造、生物医药、节能环保、现代农业、公共管理等领域的15位专家教授和研究生参加了大会的开幕式、成果发布、项目路演、现场考察、合作签约等系列活动。</p><p><img src=http://qn-kfpb.jiaobaowang.net/wechat/webcon/1504508793527323.jpg alt=\"\"></p></section><section><h3></h3><p>7月27-29日，中国?德州京津冀鲁资本技术交易大会在山东德州市举行。共有来自京津冀鲁多地的650余家高等院校、科研院所、科技服务机构、投资机构、证券公司、基金公司和相关企业负责人1500余人，围绕协同发展示范区建设和科技金融“双引擎”服务新旧动能转换展开广泛交流研讨和精准对接。我校应邀组团参加本次大会，李光红副校长带队，由合作发展处组织了我校新材料、新能源、装备制造、生物医药、节能环保、现代农业、公共管理等领域的15位专家教授和研究生参加了大会的开幕式、成果发布、项目路演、现场考察、合作签约等系列活动。</p><p><img src=http://qn-kfpb.jiaobaowang.net/wechat/webcon/1504508793527323.jpg alt=\"\"></p></section><section><h3></h3><p>7月27-29日，中国?德州京津冀鲁资本技术交易大会在山东德州市举行。共有来自京津冀鲁多地的650余家高等院校、科研院所、科技服务机构、投资机构、证券公司、基金公司和相关企业负责人1500余人，围绕协同发展示范区建设和科技金融“双引擎”服务新旧动能转换展开广泛交流研讨和精准对接。我校应邀组团参加本次大会，李光红副校长带队，由合作发展处组织了我校新材料、新能源、装备制造、生物医药、节能环保、现代农业、公共管理等领域的15位专家教授和研究生参加了大会的开幕式、成果发布、项目路演、现场考察、合作签约等系列活动。</p><p><img src=http://qn-kfpb.jiaobaowang.net/wechat/webcon/1504508793527323.jpg alt=\"\"></p></section>',
+								summas: 'PriSummas1',
+								encs: 'FileDataArray1',
+								isquo: 'PriIsquo1',
+								quourl: 'PriQuourl1',
+								isreply: 'PriIsReply1',
+								imgurl:'http://qn-kfpb.jiaobaowang.net/wechat/webcon/1504574982107544.png?imageView2/3/w/100/h/100/q/100/format/png',
+								stat: 1,
+								Prizt:1
+							},							{
+								chnid: 2,
+								subtopic: 'Prisubtopic2',
+								topic: 'PriTopic2',
+								content: '<section><h3></h3><p>7月27-29日，中国?德州京津冀鲁资本技术交易大会在山东德州市举行。共有来自京津冀鲁多地的650余家高等院校、科研院所、科技服务机构、投资机构、证券公司、基金公司和相关企业负责人1500余人，围绕协同发展示范区建设和科技金融“双引擎”服务新旧动能转换展开广泛交流研讨和精准对接。我校应邀组团参加本次大会，李光红副校长带队，由合作发展处组织了我校新材料、新能源、装备制造、生物医药、节能环保、现代农业、公共管理等领域的15位专家教授和研究生参加了大会的开幕式、成果发布、项目路演、现场考察、合作签约等系列活动。</p><p><img src=http://qn-kfpb.jiaobaowang.net/wechat/webcon/1504508793527323.jpg alt=\"\"></p></section>',
+								summas: 'PriSummas2',
+								encs: 'FileDataArray2',
+								isquo: 'PriIsquo2',
+								quourl: 'PriQuourl2',
+								isreply: 'PriIsReply2',
+								imgurl:'http://qn-kfpb.jiaobaowang.net/wechat/webcon/1504574982107544.png?imageView2/3/w/100/h/100/q/100/format/png',
+								stat: 1,
+								Prizt:1
+							}
+						]
+					}
 				},
 				updated: function() {
 					var tempVVV = document.getElementById("newsData");
 					console.log('tempVVV:' + tempVVV.innerHTML);
 				},
 				methods: {
-					clickDel: function(model, Pribs,index) {
+					clickDel: function(model, Pribs, index) {
 						var colid = model.newsid; //新闻id
 						//确认框confirm	  
 						if(Pribs == 0) {
@@ -107,18 +146,17 @@
 									type: 'del', //分页查找文章列表
 									colid: colid
 								}
-								 
 								unitWebsitePro(tempData, function(data) {
 									console.log(JSON.stringify(data));
-									if(data.RspCode == 0000) {  
-											if(newsData.item.newsArray[index].newsid == colid) {
-												newsData.item.newsArray.splice(index,1);
-											} 
+									if(data.RspCode == 0000) {
+										if(newsData.item.newsArray[index].newsid == colid) {
+											newsData.item.newsArray.splice(index, 1);
+										}
 									}
-								}); 
+								});
 							}, function() {});
-						} else if(Pribs == 1) { 
-							SetStat(model, colid); 
+						} else if(Pribs == 1) {
+							SetStat(model, colid);
 						}
 					}
 				}
@@ -165,7 +203,6 @@
 				newsData.item.newsFlag = 1; //0刷新，1加载更多
 				getNewsList(newsData.item);
 			});
-
 			$("body").pullToRefresh().on("pull-to-refresh", function() {
 				var self = this;
 				if(loading) return;
@@ -198,12 +235,11 @@
 				var tempData = {
 					cmd: 'chn', //网站栏目
 					type: 'findpage', //分页查找栏目列表
-					pagesize: 999, //每页条数
-					pageindex: 1 //页码
+					pagesize: 999, //每页条数 
+					pageindex: 1 //页码 
 				}
 				unitWebsitePro(tempData, function(data) {
-					console.log(JSON.stringify(data.RspData.dt));
-					//塞入页码、加载状态等自定义参数
+					//塞入页码、加载状态等自定义参数 
 					for(var tempItem in data.RspData.dt) {
 						data.RspData.dt[tempItem].newsPage = 1; //获取新闻的页码
 						data.RspData.dt[tempItem].newsFlag = 0; //0刷新，1加载更多
@@ -243,7 +279,6 @@
 				$(".weui-pull-to-refresh").pullToRefreshDone();
 			})
 			//获取栏目对应的新闻
-
 			function getNewsList(columnModel) {
 				console.log('获取新闻列表');
 				var tempData = {
@@ -253,7 +288,7 @@
 					pageindex: columnModel.newsPage, //页码
 					chnid: columnModel.chnid //某个栏目下的文章，栏目id
 				}
-				//alert(columnModel.chnid);
+				//				//alert(columnModel.chnid);
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
 						if(data.RspData.dt.length > 0) {
@@ -268,7 +303,6 @@
 								if(tempModel.stat == 0)
 									//data.RspData.dt[i]["stat"]=Prizt = "否"; 
 									tempModel.Prizt = "通过";
-
 							}
 							//判断是刷新0，还是加载更多1
 							if(columnModel.newsFlag == 0) {

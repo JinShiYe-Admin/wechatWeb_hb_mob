@@ -99,9 +99,9 @@
 			var qnFileUploader; //七牛上传控件对象
 			window.onload = function() {
 				console.log('onload');
-				$.showLoading('加载中...');
 				initQNUploader();
-				findWork();
+				getSub();
+				getDepart();
 			}
 			var homework = new Vue({
 				el: '#homework',
@@ -386,7 +386,9 @@
 					pageindex: 1,
 					stat: '1'
 				}
+				$.showLoading('加载中...');
 				unitWebsitePro(tempData, function(data) {
+					$.hideLoading();
 					console.log('科目:' + JSON.stringify(data));
 					if(data.RspCode == 0) {
 						homework.sub_array = data.RspData.dt;
@@ -410,7 +412,7 @@
 				unitWebsitePro(tempData, function(data) {
 					console.log('部门:' + JSON.stringify(data));
 					if(data.RspCode == 0) {
-						homework.depart_array = data.RspData.dt;
+						homework.depart_array = data.RspData;
 						for(var i = 0; i < homework.depart_array.length; i++) {
 							getPerson(model.value, i)
 							var model = homework.depart_array[i];
@@ -436,7 +438,7 @@
 				unitWebsitePro(tempData, function(data) {
 					console.log('部门:' + JSON.stringify(data));
 					if(data.RspCode == 0) {
-						homework.depart_array[index].persons = data.RspData.dt;
+						homework.depart_array[index].persons = data.RspData;
 					} else {
 						mui.toast(data.RspTxt)
 					}

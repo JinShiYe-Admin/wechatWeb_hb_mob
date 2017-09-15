@@ -10,7 +10,7 @@
     "icons": {
         "72": "icon.png"
     },
-    "launch_path": "html/homework/studentDoWork.html",/*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
+    "launch_path": "html/homework/homework-publish.html",/*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
     "developer": {
         "name": "",/*开发者名称*/
         "email": "",/*开发者邮箱地址*/
@@ -456,6 +456,36 @@
 					"js/demoCssJs/jquery-weui.js",
 					"js/utils/pluploadutil.js",
 					"css/utils/iconfont.css",
+					"js/utils/consts.js",
+					"js/demoCssJs/weui.min.css",
+					"js/importJS.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/homework/homework-publish.html": {
+				"resources": [
+					"js/demoCssJs/jquery-weui.css",
+					"js/utils/cryption.js",
+					"js/utils/utils.js",
+					"js/demoCssJs/jquery-2.1.4.js",
+					"js/PublicProtocol.js",
+					"js/utils/events.js",
+					"js/lib/plupload/plupload.full.min.js",
+					"js/lib/plupload/moxie.min.js",
+					"js/utils/storageutil.js",
+					"js/utils/cloudutil.js",
+					"js/lib/vconsole/vconsole.min.js",
+					"js/demoCssJs/vue.min.js",
+					"js/lib/qiniu/qiniu.min.js",
+					"js/mui.min.js",
+					"js/demoCssJs/demos.css",
+					"js/utils/compress.js",
+					"css/mui.min.css",
+					"js/demoCssJs/jquery-weui.js",
+					"js/utils/pluploadutil.js",
+					"css/utils/iconfont.css",
+					"js/weui.min.js",
 					"js/utils/consts.js",
 					"js/demoCssJs/weui.min.css",
 					"js/importJS.js"

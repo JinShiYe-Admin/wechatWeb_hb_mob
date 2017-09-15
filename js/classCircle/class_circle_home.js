@@ -397,20 +397,51 @@ function initRouter() {
 				var self = this;
 				console.log("types:" + types);
 				if(types[1] == "png" || types[1] == "jpg" || types[1] == "jpeg") {
-					//显示文件
-					var reader = new FileReader();
-					reader.onload = function() {
-						var newImage = {
-							filePath: this.result, //文件路径
-							uploading: false, //是否正在上传
-							process: "", //进度
-							state: null, //状态
-							file: files[0], //文件对象
-							uploaded: false //是否上传过
+					self.allow_back = false;
+					$.showLoading('处理中...');
+					try {
+						//显示文件
+						var reader = new FileReader();
+						reader.onload = function() {
+							var result = this.result;
+							var maxSize = 2 * 1024 * 1024;
+							compress.getImgInfo(result, function(img, imgInfo) {
+								console.log("获取的文件信息：" + JSON.stringify(imgInfo));
+								console.log("原图尺寸：" + result.length);
+								var fileOb;
+								if(result.length > maxSize) {
+									console.log("需要压缩");
+									var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)));
+									var blob = compress.base64ToBlob(newDataUrl, 'image/png');
+									console.log("blob.type:" + blob.type);
+									console.log('要传递的文件大小：' + blob.size);
+									blob.lastModifiedDate = new Date();
+									fileOb = blob;
+								} else {
+									fileOb = files[0];
+								}
+								var newImage = {
+									filePath: result, //文件路径
+									uploading: false, //是否正在上传
+									process: "", //进度
+									state: null, //状态
+									file: fileOb, //文件对象
+									fileName: Date.now() + '.jpg',
+									uploaded: false //是否上传过
+								}
+								self.images.push(newImage);
+								$.hideLoading();
+								$('#uploaderInput').val('');
+							});
 						}
-						self.images.push(newImage);
-					}
-					reader.readAsDataURL(files[0]);
+						reader.readAsDataURL(files[0]);
+					} catch(e) {
+						self.allow_back = true;
+						$.hideLoading();
+						$('#uploaderInput').val('');
+						$.alert(e.message, "添加失败");
+					};
+
 				} else {
 					$.alert("请选择png,jpg,jpeg类型的图片", "选择失败");
 				}
@@ -742,7 +773,8 @@ function initRouter() {
 		beforeRouteLeave: function(to, from, next) {
 			console.log("路由-异常页面-离开之前:from:" + from.path + " to:" + to.path);
 			if("/" == to.path) { //离开班级圈APP
-				window.close();
+				next();
+				router.back();
 			} else {
 				next();
 			}
@@ -1137,16 +1169,18 @@ function disposeHomeData(type, submitData, element, data) {
 	}
 
 	if(data.RspCode == 0) {
+		home_data.data[type].show_error = false;
 		if(submitData.pageIndex == 1) {
 			//下拉刷新或者获取第一页的内容
 			home_data.data[type].data = data.RspData.Data;
 		} else {
-			Array.prototype.push.apply(home_data.data[type].data, data.RspData.Data);
+			for(var i = 0; i < data.RspData.Data.length; i++) {
+				home_data.data[type].data.push(data.RspData.Data[i])
+			}
 		}
 		if(submitData.pageIndex == 1 && home_data.data[type].data.length == 0) {
 			//内容为空
 			home_data.data[type].show_no_more = true;
-			home_data.data[type].show_error = false;
 			home_data.data[type].show_loadmore = false;
 		} else {
 			home_data.data[type].show_no_more = false;
@@ -1200,11 +1234,11 @@ function getUserSpace(publisherIds, pageIndex, id, element) {
 			$(element).pullToRefreshDone();
 		}
 		if(data.RspCode == 0) {
+			space_data[id].show_error = false;
 			if(pageIndex == 1 && data.RspData.Data.length == 0) {
 				//内容为空
 				space_data[id].show_no_more = true;
 				space_data[id].show_loadmore = false;
-				space_data[id].show_error = false;
 			} else {
 				space_data[id].show_loadmore = true;
 				space_data[id].show_no_more = false;
@@ -1213,7 +1247,9 @@ function getUserSpace(publisherIds, pageIndex, id, element) {
 				//下拉刷新或者获取第一页的内容
 				space_data[id].data = data.RspData.Data;
 			} else {
-				Array.prototype.push.apply(space_data[id].data, data.RspData.Data);
+				for(var i = 0; i < data.RspData.Data.length; i++) {
+					space_data[id].data.push(data.RspData.Data[i]);
+				}
 			}
 			space_data[id].pageIndex = pageIndex; //当前页数
 			space_data[id].TotalPage = data.RspData.TotalPage; //总页数
@@ -1437,7 +1473,7 @@ function getTrendsDetails(spaceId) {
 		userId: mineUserInfo.userid, //用户ID
 		userSpaceId: spaceId, //用户动态ID
 		pageIndex: 1, //评论当前页数
-		pageSize: 999 //评论每页记录数
+		pageSize: 9999 //评论每页记录数
 	}
 	classCircleProtocol.getUserSpaceByUser(submitData, function(data) {
 		console.log("getTrendsDetails", data);
@@ -1639,29 +1675,6 @@ function getQNUpToken(file) {
 }
 
 /**
- * 压缩图片文件并传给七牛上传对象
- * @param {Object} filePath
- */
-function initFileUpload(filePath, file) {
-	console.log("initFileUpload:");
-	var maxSize = 1 * 1024 * 1024;
-	compress.getImgInfo(filePath, function(img, imgInfo) {
-		console.log("获取的文件信息：" + JSON.stringify(imgInfo));
-		console.log("原图尺寸：" + filePath.length);
-
-		if(filePath.length > maxSize) {
-			console.log("initFileUpload:>:");
-			var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(filePath.length / maxSize)));
-			var blob = compress.base64ToBlob(newDataUrl, 'image/jpeg');
-			blob.lastModifiedDate = new Date();
-			qnFileUploader.addFile(blob, Date.now() + '.jpg');
-		} else {
-			qnFileUploader.addFile(file, file.name);
-		}
-	});
-}
-
-/**
  * 上传图片
  */
 function upLoadImages() {
@@ -1671,14 +1684,18 @@ function upLoadImages() {
 	var errTip = "";
 	for(var i = 0; i < images.length; i++) {
 		var item = images[i];
-		if(!item.uploaded && index == null) { //没有上传过
+		if(!item.uploaded) { //没有上传过
 			if(item.state == null || item.state == 0) {
 				//未上传或者正在等待
 				item.state = 0;
-				index = i;
+				if(index == null) {
+					index = i;
+				}
 			} else if(item.state == 2) {
 				//上传失败
-				index = i;
+				if(index == null) {
+					index = i;
+				}
 			}
 		}
 		if(item.state == 2) {
@@ -1695,7 +1712,7 @@ function upLoadImages() {
 		imageOb.state = null;
 		imageOb.process = "0%";
 		imageOb.uploaded = true;
-		initFileUpload(imageOb.filePath, imageOb.file);
+		qnFileUploader.addFile(imageOb.file, imageOb.fileName);
 	} else {
 		console.log("上传完成:", images);
 		if(hasError) {

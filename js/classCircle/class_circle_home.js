@@ -1137,16 +1137,18 @@ function disposeHomeData(type, submitData, element, data) {
 	}
 
 	if(data.RspCode == 0) {
+		home_data.data[type].show_error = false;
 		if(submitData.pageIndex == 1) {
 			//下拉刷新或者获取第一页的内容
 			home_data.data[type].data = data.RspData.Data;
 		} else {
-			Array.prototype.push.apply(home_data.data[type].data, data.RspData.Data);
+			for(var i = 0; i < data.RspData.Data.length; i++) {
+				home_data.data[type].data.push(data.RspData.Data[i])
+			}
 		}
 		if(submitData.pageIndex == 1 && home_data.data[type].data.length == 0) {
 			//内容为空
 			home_data.data[type].show_no_more = true;
-			home_data.data[type].show_error = false;
 			home_data.data[type].show_loadmore = false;
 		} else {
 			home_data.data[type].show_no_more = false;
@@ -1200,11 +1202,11 @@ function getUserSpace(publisherIds, pageIndex, id, element) {
 			$(element).pullToRefreshDone();
 		}
 		if(data.RspCode == 0) {
+			space_data[id].show_error = false;
 			if(pageIndex == 1 && data.RspData.Data.length == 0) {
 				//内容为空
 				space_data[id].show_no_more = true;
 				space_data[id].show_loadmore = false;
-				space_data[id].show_error = false;
 			} else {
 				space_data[id].show_loadmore = true;
 				space_data[id].show_no_more = false;
@@ -1213,7 +1215,9 @@ function getUserSpace(publisherIds, pageIndex, id, element) {
 				//下拉刷新或者获取第一页的内容
 				space_data[id].data = data.RspData.Data;
 			} else {
-				Array.prototype.push.apply(space_data[id].data, data.RspData.Data);
+				for(var i = 0; i < data.RspData.Data.length; i++) {
+					space_data[id].data.push(data.RspData.Data[i]);
+				}
 			}
 			space_data[id].pageIndex = pageIndex; //当前页数
 			space_data[id].TotalPage = data.RspData.TotalPage; //总页数
@@ -1437,7 +1441,7 @@ function getTrendsDetails(spaceId) {
 		userId: mineUserInfo.userid, //用户ID
 		userSpaceId: spaceId, //用户动态ID
 		pageIndex: 1, //评论当前页数
-		pageSize: 999 //评论每页记录数
+		pageSize: 9999 //评论每页记录数
 	}
 	classCircleProtocol.getUserSpaceByUser(submitData, function(data) {
 		console.log("getTrendsDetails", data);

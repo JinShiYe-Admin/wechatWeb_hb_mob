@@ -296,7 +296,7 @@
 		<template id="temp_show_image">
 			<div>
 				<template v-if="imagesThumb.length == 1">
-					<img class="class-circle-content-img" :src="imagesThumb[0]" @click="showImage(0)" />
+					<img class="class-circle-content-img" :src="images[0]" @click="showImage(0)" />
 				</template>
 				<div v-else-if="imagesThumb.length > 1" class="class-circle-grids">
 					<div class="class-circle-grids-item" v-for="(img_value,img_index) in imagesThumb" @click="showImage(img_index)">

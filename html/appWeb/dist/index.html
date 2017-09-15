@@ -18,6 +18,13 @@
 		<script type=text/javascript src=./static/js/manifest.df8341c8dcc45fbb22a0.js></script>
 		<script type=text/javascript src=./static/js/vendor.a2322a192722c2dd43c4.js></script>
 		<script type=text/javascript src=./static/js/app.b9be3ed297710010f50f.js></script>
+		<script type="text/javascript">
+			window.onunload = function() {
+				console.log("清空数据事件")
+				sessionStorage.clear()
+			}
+		</script>
+		</script>
 	</body>
 
 </html>

@@ -66,6 +66,7 @@ var uploadImageIndex; //正在上传的图片的序号
 window.onload = function() {
 	$.showLoading('加载中...');
 	initRouter();
+	initQNUploader();
 	getMineInfo();
 
 	//---假数据---start---
@@ -942,7 +943,7 @@ function disposeMemberData(data) {
 			temp_data = null;
 			show_class_circle_app = true;
 			//显示班级圈主页
-			router.push({
+			router.replace({
 				name: "home"
 			});
 			//禁止全部动态列表进行下拉刷新和上拉加载中
@@ -951,7 +952,7 @@ function disposeMemberData(data) {
 			getHomeTrends(0, 1);
 		} else {
 			$.alert(data.RspTxt, "加载失败");
-			router.push({
+			router.replace({
 				name: "error",
 				params: {
 					id: 1

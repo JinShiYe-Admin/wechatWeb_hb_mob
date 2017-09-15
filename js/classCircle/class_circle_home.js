@@ -397,20 +397,51 @@ function initRouter() {
 				var self = this;
 				console.log("types:" + types);
 				if(types[1] == "png" || types[1] == "jpg" || types[1] == "jpeg") {
-					//显示文件
-					var reader = new FileReader();
-					reader.onload = function() {
-						var newImage = {
-							filePath: this.result, //文件路径
-							uploading: false, //是否正在上传
-							process: "", //进度
-							state: null, //状态
-							file: files[0], //文件对象
-							uploaded: false //是否上传过
+					self.allow_back = false;
+					$.showLoading('处理中...');
+					try {
+						//显示文件
+						var reader = new FileReader();
+						reader.onload = function() {
+							var result = this.result;
+							var maxSize = 2 * 1024 * 1024;
+							compress.getImgInfo(result, function(img, imgInfo) {
+								console.log("获取的文件信息：" + JSON.stringify(imgInfo));
+								console.log("原图尺寸：" + result.length);
+								var fileOb;
+								if(result.length > maxSize) {
+									console.log("需要压缩");
+									var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)));
+									var blob = compress.base64ToBlob(newDataUrl, 'image/png');
+									console.log("blob.type:" + blob.type);
+									console.log('要传递的文件大小：' + blob.size);
+									blob.lastModifiedDate = new Date();
+									fileOb = blob;
+								} else {
+									fileOb = files[0];
+								}
+								var newImage = {
+									filePath: result, //文件路径
+									uploading: false, //是否正在上传
+									process: "", //进度
+									state: null, //状态
+									file: fileOb, //文件对象
+									fileName: Date.now() + '.jpg',
+									uploaded: false //是否上传过
+								}
+								self.images.push(newImage);
+								$.hideLoading();
+								$('#uploaderInput').val('');
+							});
 						}
-						self.images.push(newImage);
-					}
-					reader.readAsDataURL(files[0]);
+						reader.readAsDataURL(files[0]);
+					} catch(e) {
+						self.allow_back = true;
+						$.hideLoading();
+						$('#uploaderInput').val('');
+						$.alert(e.message, "添加失败");
+					};
+
 				} else {
 					$.alert("请选择png,jpg,jpeg类型的图片", "选择失败");
 				}
@@ -1644,29 +1675,6 @@ function getQNUpToken(file) {
 }
 
 /**
- * 压缩图片文件并传给七牛上传对象
- * @param {Object} filePath
- */
-function initFileUpload(filePath, file) {
-	console.log("initFileUpload:");
-	var maxSize = 1 * 1024 * 1024;
-	compress.getImgInfo(filePath, function(img, imgInfo) {
-		console.log("获取的文件信息：" + JSON.stringify(imgInfo));
-		console.log("原图尺寸：" + filePath.length);
-
-		if(filePath.length > maxSize) {
-			console.log("initFileUpload:>:");
-			var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(filePath.length / maxSize)));
-			var blob = compress.base64ToBlob(newDataUrl, 'image/jpeg');
-			blob.lastModifiedDate = new Date();
-			qnFileUploader.addFile(blob, Date.now() + '.jpg');
-		} else {
-			qnFileUploader.addFile(file, file.name);
-		}
-	});
-}
-
-/**
  * 上传图片
  */
 function upLoadImages() {
@@ -1676,14 +1684,18 @@ function upLoadImages() {
 	var errTip = "";
 	for(var i = 0; i < images.length; i++) {
 		var item = images[i];
-		if(!item.uploaded && index == null) { //没有上传过
+		if(!item.uploaded) { //没有上传过
 			if(item.state == null || item.state == 0) {
 				//未上传或者正在等待
 				item.state = 0;
-				index = i;
+				if(index == null) {
+					index = i;
+				}
 			} else if(item.state == 2) {
 				//上传失败
-				index = i;
+				if(index == null) {
+					index = i;
+				}
 			}
 		}
 		if(item.state == 2) {
@@ -1700,7 +1712,7 @@ function upLoadImages() {
 		imageOb.state = null;
 		imageOb.process = "0%";
 		imageOb.uploaded = true;
-		initFileUpload(imageOb.filePath, imageOb.file);
+		qnFileUploader.addFile(imageOb.file, imageOb.fileName);
 	} else {
 		console.log("上传完成:", images);
 		if(hasError) {

@@ -226,8 +226,8 @@ Vue.component("add-trends", {
 			});
 		},
 		inputChange: function(e) {
-			this.$emit("input-change", e.target.value, $.extend({}, e.target.files));
-			$('#uploaderInput').val('');
+			this.$emit("input-change", e.target.value, e.target.files);
+			//$('#uploaderInput').val('');
 		}
 	},
 	watch: {

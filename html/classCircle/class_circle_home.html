@@ -97,6 +97,7 @@
 				</div>
 			</div>
 		</template>
+		<!--路由-错误页面-->
 		<template id="router_error">
 			<error-item @click-refresh="clickRefresh" :type="0"></error-item>
 		</template>
@@ -209,7 +210,7 @@
 				</template>
 				<div class="relate-reply-trends-bg">
 					<div class="relate-reply-trends-img" v-if="value.EncType == 1">
-						<img @load="trendsLoad($event)" @click="clickRelateContent" @error.once="headError($event)" :src="value.UserId|userThumbImage" />
+						<img @load="trendsLoad($event)" @click="clickRelateContent" :src="value.EncImgAddr|relateImage" />
 					</div>
 					<div class="relate-reply-trends">
 						<div class="relate-reply-content-limit">

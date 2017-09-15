@@ -389,7 +389,7 @@ function initRouter() {
 			inputChange: function(value, files) {
 				console.log("inputChange:value:", value);
 				console.log("inputChange:files:", files);
-				if(files[0].size == 0) {
+				if(files[0].size == 0 || files[0].name == "/") {
 					console.log("未选择图片")
 					return false;
 				}
@@ -1575,11 +1575,17 @@ function initQNUploader() {
 			uptokenData = null;
 			uptokenData = getQNUpToken(file);
 			console.log("uptokenData:", uptokenData);
-			if(uptokenData && uptokenData.code) { //成功
-				return uptokenData.data.Data[0].Token;
+			if(uptokenData) {
+				if(uptokenData.code) {
+					//成功
+					return uptokenData.data.Data[0].Token;
+				} else {
+					qnFileUploader.stop();
+					uploadImageError(uptokenData.message);
+				}
 			} else {
 				qnFileUploader.stop();
-				uploadImageError(uptokenData.message);
+				uploadImageError("上传失败");
 			}
 		},
 		unique_names: false, // 默认 false，key 为文件名。若开启该选项，JS-SDK 会为每个文件自动生成key（文件名）

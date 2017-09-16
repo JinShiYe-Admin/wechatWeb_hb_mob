@@ -130,6 +130,7 @@
 					displayAddBtn: {
 						display: 'block'
 					},
+					depart_array:[],
 
 					selectIndex: 0,
 					selectImgPath: '',
@@ -412,10 +413,10 @@
 				unitWebsitePro(tempData, function(data) {
 					console.log('部门:' + JSON.stringify(data));
 					if(data.RspCode == 0) {
-						homework.depart_array = data.RspData;
+						homework.depart_array = JSON.parse(data.RspData);
 						for(var i = 0; i < homework.depart_array.length; i++) {
 							var model = homework.depart_array[i];
-							console.log(JSON.stringify(model))
+							console.log("model="+JSON.stringify(model))
 							getPerson(model.value, i)
 							model.value = model.value;
 							model.label = model.title;

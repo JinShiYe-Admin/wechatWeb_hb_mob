@@ -673,6 +673,13 @@ function initRouter() {
 						space_data[id].getData = false;
 						//未获取数据则获取空间数据
 						getUserSpace(space_data[id].userId, 1, id);
+						//设置某个人的空间为已读，增加动态的浏览人数
+						classCircleProtocol.setUserSpaceReadByUser({
+							userId: mineUserInfo.userid,
+							publisherIds: [space_data[id].userId]
+						}, function(data) {
+							console.log("setUserSpaceReadByUser:", data);
+						});
 					}
 					this.data = space_data[id].data;
 				}
@@ -840,7 +847,7 @@ function initHomePullToRefresh() {
 }
 
 /**
- * 初始化列表加载更多
+ * 初始化主页列表加载更多
  */
 function initHomeLoadmore(id) {
 	$("#" + id + ".weui-tab__bd-item").infinite();

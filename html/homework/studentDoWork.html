@@ -205,6 +205,9 @@
 						if(data.RspData.dt.length > 0) {
 							var tempWork = data.RspData.dt[0];
 							submitHomework.workTitle = tempWork.DoContent;
+							if (submitHomework.workTitle == null) {
+								submitHomework.workTitle = '';
+							}
 							submitHomework.stat = tempWork.stat;
 							submitHomework.uploadedFiles = data.RspData.dt2;
 							if(tempWork.stat == 0) {
@@ -251,7 +254,6 @@
 						'FilesAdded': function(up, files) {
 							console.log("FilesAdded0:", files);
 							plupload.each(files, function(file) {
-								$.showLoading('加载中...');
 								// 文件添加进队列后,处理相关的事情
 								console.log("FilesAdded:", file);
 							});

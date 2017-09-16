@@ -97,10 +97,21 @@
 				},
 				methods: {
 					selectFile: function(event) { //从手机中选择图片后到界面的回调
-						var com = this;
 						console.log('111111');
-						if(event.target.value) {
-							qnFileUploader.addFile(event.target.files[0], event.target.files[0].name);
+						// 如果没有选中文件，直接返回  
+						var files = event.target.files;
+						if(files.length === 0) {
+							return;
+						}
+						for(var i = 0; i < files.length; i++) {
+							if(submitHomework.uploadedFiles.length + i > 8) {
+								$.alert("最多只能上传9张照片");
+								break;
+							} else {
+								if(event.target.value) {
+									qnFileUploader.addFile(files[i], files[i].name);
+								}
+							}
 						}
 					},
 					clickImg: function(index) { //点击列表中的附件，给别的地方赋值
@@ -246,6 +257,7 @@
 							});
 						},
 						'BeforeUpload': function(up, file) {
+							$.showLoading('加载中...');
 							// 每个文件上传前,处理相关的事情
 							console.log("BeforeUpload:");
 						},

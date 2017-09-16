@@ -130,7 +130,7 @@
 					displayAddBtn: {
 						display: 'block'
 					},
-					depart_array:[],
+					depart_array: [],
 
 					selectIndex: 0,
 					selectImgPath: '',
@@ -204,13 +204,13 @@
 							type: 'add',
 							touser: idArr.join('|'),
 							toparty: homework.classes.currClass.id,
-							//								totag: '',
+							totag: '',
 							msgtype: 'textcard',
 							safe: 0,
 							content: homework.workTitle,
 							tousername: nameArr.join('|'),
 							topartyname: homework.classes.currClass.name,
-							//								totagname: 1,
+							totagname: '',
 							subid: homework.subject.currSubject.id,
 							subname: homework.subject.currSubject.name,
 							subimg: '',
@@ -416,7 +416,7 @@
 						homework.depart_array = JSON.parse(data.RspData);
 						for(var i = 0; i < homework.depart_array.length; i++) {
 							var model = homework.depart_array[i];
-							console.log("model="+JSON.stringify(model))
+							console.log("model=" + JSON.stringify(model))
 							getPerson(model.value, i)
 							model.value = model.value;
 							model.label = model.title;
@@ -429,7 +429,7 @@
 			}
 
 			function getPerson(colid, index) {
-				if(colid==-1){
+				if(colid == -1) {
 					return;
 				}
 
@@ -465,10 +465,11 @@
 						for(var i = 0; i < homework.depart_array.length; i++) {
 							var model = homework.depart_array[i];
 							if(model.value == result[0].value) {
-								if(model.value==-1){
+								if(model.value == -1) {
 									homework.classes.currClass.persons = homework.classes.allPersons
+								} else {
+									homework.classes.currClass.persons = model.persons;
 								}
-								homework.classes.currClass.persons = model.persons;
 
 							}
 						}

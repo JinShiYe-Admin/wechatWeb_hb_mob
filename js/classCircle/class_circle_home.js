@@ -415,7 +415,7 @@ function initRouter() {
 								if(result.length > maxSize) {
 									console.log("需要压缩");
 									var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)));
-									var blob = compress.base64ToBlob(newDataUrl, 'image/png');
+									var blob = compress.base64ToBlob(newDataUrl, 'image/jpeg');
 									console.log("blob.type:" + blob.type);
 									console.log('要传递的文件大小：' + blob.size);
 									blob.lastModifiedDate = new Date();
@@ -1686,6 +1686,10 @@ function getQNUpToken(file) {
 				type: 2
 			}
 		}]
+	}
+	if(router_add_trends.images.length == 1) {
+		//只上传一张图片
+		getTokenData.fileArray[0].qnCmdOption.type = 1;
 	}
 	var upToken;
 	cloudutil.getFileUpTokens(getTokenData, function(data) {

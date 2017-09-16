@@ -14,7 +14,7 @@ var compress = (function(mod) {
 				console.log("原图尺寸：" + result.length);
 				if(result.length > maxSize) {
 					var newDataUrl = mod.getCanvasDataUrl(img, mod.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)));
-					var blob = mod.base64ToBlob(newDataUrl, 'image/png');
+					var blob = mod.base64ToBlob(newDataUrl, 'image/jpeg');
 					console.log("blob.type:" + blob.type);
 					console.log('要传递的文件大小：' + blob.size);
 					//					var newFile = new File([blob], Date.now() + '.png');
@@ -61,7 +61,7 @@ var compress = (function(mod) {
 	}
 	mod.getCanvasDataUrl = function(img, suitableSize) {
 		console.log("*****重绘图片的宽高******");
-		var imageType = 'image/png',
+		var imageType = 'image/jpeg',
 			imageArgu = 0.7;
 		var canvas = document.createElement('canvas');
 		canvas.width = suitableSize.width;
@@ -90,7 +90,7 @@ var compress = (function(mod) {
 	}
 
 	mod.base64ToBlob = function(base64Url, mime) {
-		var base64 = base64Url.replace(/^data:image\/(png|jpg);base64,/, "");
+		var base64 = base64Url.replace(/^data:image\/(png|jpeg);base64,/, "");
 		//		console.log("处理后的database64:" + base64);
 		var sliceSize = 1024;
 		var byteChars = window.atob(base64);

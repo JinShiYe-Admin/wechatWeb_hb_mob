@@ -62,7 +62,8 @@ var space_data = {}; //空间的所有数据
 var qnFileUploader; //七牛上传控件对象
 var uptokenData; //当前token
 var uploadImageIndex; //正在上传的图片的序号
-
+var allUploader = {}; //上传对象对应的图片列表序号
+var uploadError; //本次上传是否出错
 window.onload = function() {
 	$.showLoading('加载中...');
 	initRouter();
@@ -1577,6 +1578,9 @@ function initQNUploader() {
 			console.log("uptokenData:", uptokenData);
 			if(uptokenData) {
 				if(uptokenData.code) {
+					var imageOb = router_add_trends.images[uploadImageIndex];
+					imageOb.url = uptokenData.data.Data[0].Domain + uptokenData.data.Data[0].Key
+					imageOb.cropUrl = uptokenData.data.Data[0].OtherKey[uptokenData.thumbKey[0]];
 					//成功
 					return uptokenData.data.Data[0].Token;
 				} else {
@@ -1608,24 +1612,22 @@ function initQNUploader() {
 			'BeforeUpload': function(up, file) {
 				// 每个文件上传前,处理相关的事情
 				console.log("BeforeUpload:");
+				allUploader[up.id] = uploadImageIndex;
 			},
 			'UploadProgress': function(up, file) {
 				// 每个文件上传时,处理相关的事情
 				console.log("UploadProgress:" + file.percent);
-				router_add_trends.images[uploadImageIndex].process = file.percent + "%";
+				router_add_trends.images[allUploader[up.id]].process = file.percent + "%";
 			},
 			'FileUploaded': function(up, file, info) {
 				// 每个文件上传成功后,处理相关的事情
 				console.log("FileUploaded:", info);
 				if(info.status == 200) {
 					console.log("uploadImageSuccess:");
-					var response = JSON.parse(info["response"]);
-					var imageOb = router_add_trends.images[uploadImageIndex];
+					var imageOb = router_add_trends.images[allUploader[up.id]];
 					imageOb.process = "";
 					imageOb.state = 1;
-					imageOb.url = storageutil.QNPBDOMAIN + response.key;
-					imageOb.cropUrl = uptokenData.data.Data[0].OtherKey[uptokenData.thumbKey[0]];
-					console.log("images:", router_add_trends.images);
+					upLoadImages();
 				} else {
 					uploadImageError(JSON.stringify(info));
 				}
@@ -1635,14 +1637,18 @@ function initQNUploader() {
 				console.log("Error:", err, errTip);
 				uploadImageError(errTip);
 			},
-			'UploadComplete': function() {
+			'UploadComplete': function(up) {
 				//队列文件处理完毕后,处理相关的事情
 				console.log("UploadComplete:");
-				upLoadImages();
+				delete allUploader[up.id];
 			},
 			'FilesRemoved ': function() {
 				//文件移出队列
 				console.log("FilesRemoved:");
+				if(uploadError) {
+					uploadError = false;
+					upLoadImages();
+				}
 			},
 			'Key': function(up, file) {
 				// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
@@ -1739,6 +1745,7 @@ function uploadImageError(errTip) {
 	router_add_trends.images[uploadImageIndex].process = "";
 	router_add_trends.images[uploadImageIndex].state = 2;
 	router_add_trends.images[uploadImageIndex].errTip = errTip;
+	uploadError = true;
 	qnFileUploader.splice(0, 1); //移除当前队列文件
 }
 

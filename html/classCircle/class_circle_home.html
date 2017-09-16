@@ -301,7 +301,7 @@
 				</template>
 				<div v-else-if="imagesThumb.length > 1" class="class-circle-grids">
 					<div class="class-circle-grids-item" v-for="(img_value,img_index) in imagesThumb" @click="showImage(img_index)">
-						<img :src="img_value" />
+						<img :src="img_value" @load="imageLoad($event)" @error.once="imageError($event,img_index)" />
 					</div>
 				</div>
 			</div>

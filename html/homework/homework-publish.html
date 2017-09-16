@@ -130,6 +130,7 @@
 					displayAddBtn: {
 						display: 'block'
 					},
+					depart_array:[],
 
 					selectIndex: 0,
 					selectImgPath: '',
@@ -415,7 +416,7 @@
 						homework.depart_array = data.RspData;
 						for(var i = 0; i < homework.depart_array.length; i++) {
 							var model = homework.depart_array[i];
-							console.log(JSON.stringify(model))
+							console.log("model="+JSON.stringify(model))
 							getPerson(model.value, i)
 							model.value = model.value;
 							model.label = model.title;

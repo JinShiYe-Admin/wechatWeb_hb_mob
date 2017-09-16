@@ -413,7 +413,7 @@
 				unitWebsitePro(tempData, function(data) {
 					console.log('部门:' + JSON.stringify(data));
 					if(data.RspCode == 0) {
-						homework.depart_array = data.RspData;
+						homework.depart_array = JSON.parse(data.RspData);
 						for(var i = 0; i < homework.depart_array.length; i++) {
 							var model = homework.depart_array[i];
 							console.log("model="+JSON.stringify(model))

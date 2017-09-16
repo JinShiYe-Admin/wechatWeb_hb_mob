@@ -874,13 +874,14 @@ function initSpacePullToRefresh(spaceId) {
 	$(".class-circle-user-space .weui-tab__bd-item").on("pull-to-refresh", function() {
 		var id = router_user_space.$route.params.id;
 		if(!space_data[id].allow_loaddata) {
+			$(this).pullToRefreshDone();
 			return false;
 		}
 		console.log("个人空间下拉刷新:" + id);
 		space_data[id].allow_loaddata = false;
 		getUserSpace(space_data[id].userId, 1, id, this);
 	});
-
+	//初始化上拉加载更多
 	$(".class-circle-user-space .weui-tab__bd-item").infinite(100);
 	$(".class-circle-user-space .weui-tab__bd-item").infinite().on("infinite", function() {
 		var id = router_user_space.$route.params.id;

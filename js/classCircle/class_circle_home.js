@@ -319,6 +319,8 @@ function initRouter() {
 										router_add_trends.images[i].uploaded = false;
 									}
 								};
+								allUploader = null;
+								allUploader = {};
 								upLoadImages();
 							}
 							break;
@@ -1173,6 +1175,7 @@ function disposeHomeData(type, submitData, element, data) {
 		home_data.data[type].show_error = false;
 		if(submitData.pageIndex == 1) {
 			//下拉刷新或者获取第一页的内容
+			home_data.data[type].data = [];
 			home_data.data[type].data = data.RspData.Data;
 		} else {
 			for(var i = 0; i < data.RspData.Data.length; i++) {
@@ -1282,6 +1285,10 @@ function getUserSpace(publisherIds, pageIndex, id, element) {
 				router_user_space.show_error = space_data[id].show_error;
 				router_user_space.show_loadmore_loading = space_data[id].show_loadmore_loading;
 				router_user_space.show_loadmore_content = space_data[id].show_loadmore_content;
+				if(pageIndex == 1) {
+					//下拉刷新
+					router_user_space.data = [];
+				}
 				router_user_space.data = space_data[id].data;
 			}
 		} catch(e) {
@@ -1627,20 +1634,20 @@ function initQNUploader() {
 					var imageOb = router_add_trends.images[allUploader[up.id]];
 					imageOb.process = "";
 					imageOb.state = 1;
+					delete allUploader[up.id];
 					upLoadImages();
 				} else {
-					uploadImageError(JSON.stringify(info));
+					uploadImageError(JSON.stringify(info), up.id);
 				}
 			},
 			'Error': function(up, err, errTip) {
 				//上传出错时,处理相关的事情
 				console.log("Error:", err, errTip);
-				uploadImageError(errTip);
+				uploadImageError(errTip, up.id);
 			},
 			'UploadComplete': function(up) {
 				//队列文件处理完毕后,处理相关的事情
 				console.log("UploadComplete:");
-				delete allUploader[up.id];
 			},
 			'FilesRemoved ': function() {
 				//文件移出队列
@@ -1664,6 +1671,7 @@ function initQNUploader() {
  * 获取七牛上传token
  */
 function getQNUpToken(file) {
+	console.log("getQNUpToken:", file)
 	var myDate = new Date();
 	var fileName = myDate.getTime() + "" + parseInt(Math.random() * 1000);
 	var types = file.name.toLowerCase().split(".");
@@ -1740,13 +1748,16 @@ function upLoadImages() {
 /**
  * 上传图片失败
  */
-function uploadImageError(errTip) {
+function uploadImageError(errTip, upId) {
 	console.log("uploadImageError:");
 	router_add_trends.images[uploadImageIndex].process = "";
 	router_add_trends.images[uploadImageIndex].state = 2;
 	router_add_trends.images[uploadImageIndex].errTip = errTip;
 	uploadError = true;
 	qnFileUploader.splice(0, 1); //移除当前队列文件
+	if(upId != undefined) {
+		delete allUploader[upId];
+	}
 }
 
 /**

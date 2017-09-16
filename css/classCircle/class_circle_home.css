@@ -278,7 +278,7 @@ body {
 	padding-bottom: 46px;
 }
 
-.weui-photo-browser-modal .photo-container img{
+.weui-photo-browser-modal .photo-container img {
 	max-width: 70%;
 	margin-left: 15%;
 	margin-top: 0px;
@@ -403,19 +403,19 @@ body {
 	width: 92%;
 }
 
-
 .class-circle-add .class-circle-add-media {
 	display: block;
 }
-.class-circle-add .class-circle-add-media .weui-uploader__file-content{
+
+.class-circle-add .class-circle-add-media .weui-uploader__file-content {
 	font-size: 15px;
 }
+
 .class-circle-add-line {
 	height: 1px;
 	width: 100%;
 	background: gainsboro;
 }
-
 
 .class-circle-add .weui-btn_primary {
 	margin-left: 5%;
@@ -509,4 +509,8 @@ body {
 
 #router_class_circle_app .class-circle-error.error-refresh {
 	margin-top: 0px;
+}
+
+.weui-tab__bd {
+	-webkit-overflow-scrolling: touch;
 }

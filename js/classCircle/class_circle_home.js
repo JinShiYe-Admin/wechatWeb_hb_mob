@@ -840,7 +840,7 @@ function initHomePullToRefresh() {
 }
 
 /**
- * 初始化列表加载更多
+ * 初始化主页列表加载更多
  */
 function initHomeLoadmore(id) {
 	$("#" + id + ".weui-tab__bd-item").infinite();

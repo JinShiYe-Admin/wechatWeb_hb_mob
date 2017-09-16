@@ -447,6 +447,21 @@ Vue.component("image-item", {
 				items: this.images
 			});
 			pb.open();
+		},
+		imageError: function(e, index) {
+			console.log("imageError")
+			e.target.src = this.images[index];
+		},
+		imageLoad: function(e) {
+			var img = e.target;
+			var imgWidth = img.width;
+			var imgHeight = img.height;
+			if(imgWidth > imgHeight) {
+				img.style.height = imgWidth + "px";
+				img.style.width = imgWidth * imgWidth / imgHeight + "px";
+				img.style.transform = "translate(-25%,-50%)";
+				img.style.WebkitTransform = "translate(-25%,-50%)";
+			}
 		}
 	}
 });

@@ -10,6 +10,11 @@ body {
 	width: 100%;
 }
 
+.weui-navbar__item:after,
+.weui-navbar:after {
+	border: none;
+}
+
 .weui-navbar {
 	background: #F2F2F2;
 }
@@ -35,12 +40,12 @@ body {
 	border-bottom: 2px solid deepskyblue;
 }
 
-.weui-tab__bd-item.weui-pull-to-refresh {
-	top: 60px;
+#class_circle_home .weui-tab__bd-item.weui-pull-to-refresh {
+	top: 40px;
 	bottom: 46px;
 }
 
-.weui-pull-to-refresh {
+#class_circle_home .weui-pull-to-refresh {
 	margin-top: -60px;
 }
 
@@ -269,13 +274,13 @@ body {
 	width: 100%;
 	position: absolute;
 	top: 0px;
-	bottom: 46px;
+	bottom: 36px;
 }
 
 .weui-tab__bd,
 .weui-loadmore {
 	/*加载更多*/
-	padding-bottom: 46px;
+	padding-bottom: 36px;
 }
 
 .weui-photo-browser-modal .photo-container img {
@@ -472,8 +477,18 @@ body {
 
 .class-circle-user-space.weui-tab {
 	width: 100%;
-	top: -40px;
+	top: 0;
 	bottom: 0;
+	margin-top: -60px;
+}
+
+.class-circle-user-space .weui-tab__bd {
+	padding-bottom: 0;
+}
+
+.class-circle-user-space .weui-tab__bd-item.weui-pull-to-refresh {
+	top: 0;
+	margin-top: 0;
 }
 
 .relate-to-me .class-circle-comment-bg {

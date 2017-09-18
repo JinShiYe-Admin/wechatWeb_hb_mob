@@ -284,8 +284,8 @@ body {
 }
 
 .weui-photo-browser-modal .photo-container img {
-	max-width: 70%;
-	margin-left: 15%;
+	max-width: 90%;
+	margin-left: 5%;
 	margin-top: 0px;
 }
 

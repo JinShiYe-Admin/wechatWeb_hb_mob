@@ -433,6 +433,7 @@ function initRouter() {
 									uploaded: false //是否上传过
 								}
 								self.images.push(newImage);
+								self.allow_back = true;
 								$.hideLoading();
 								$('#uploaderInput').val('');
 							});
@@ -459,8 +460,6 @@ function initRouter() {
 					console.log("trends_add:id:" + vm.$route.params.id);
 					console.log("trends_add:params:", vm.$route.params);
 					vm.allow_back = true;
-					vm.images = []; //图片
-					vm.$refs.add.cleanContent(); //清理内容
 					if(vm.$route.params.id == "addTrend" || vm.$route.params.id == undefined) {
 						//发布动态
 						vm.showMedia = true;
@@ -672,8 +671,6 @@ function initRouter() {
 					initSpacePullToRefresh(id);
 					if(space_data[id].getData) {
 						space_data[id].getData = false;
-						//未获取数据则获取空间数据
-						getUserSpace(space_data[id].userId, 1, id);
 						//设置某个人的空间为已读，增加动态的浏览人数
 						classCircleProtocol.setUserSpaceReadByUser({
 							userId: mineUserInfo.userid,
@@ -681,6 +678,8 @@ function initRouter() {
 						}, function(data) {
 							console.log("setUserSpaceReadByUser:", data);
 						});
+						//未获取数据则获取空间数据
+						getUserSpace(space_data[id].userId, 1, id);
 					}
 					this.data = space_data[id].data;
 				}
@@ -748,16 +747,6 @@ function initRouter() {
 					$(".class-circle-user-space .weui-tab__bd-item").destroyInfinite();
 					space_data = null;
 					space_data = {};
-					this.userId = ""; //用户id
-					this.allow_back = true; //允许返回
-					this.allow_loaddata = false; //允许下刷新或者加载中
-					this.allow_loadmore = false; //是否初始化加载更多
-					this.show_loadmore = true; //是否显示加载中
-					this.show_loadmore_loading = true; //是否显示加载中的转圈图标
-					this.show_loadmore_content = "加载中"; //加载中元素的文字
-					this.show_error = false; //是否显示异常
-					this.show_no_more = false; //是否显示没有更多
-					this.data = []; //数据
 				}
 				next();
 			} else {
@@ -804,22 +793,37 @@ function initRouter() {
 			path: '/home',
 			name: 'home',
 			component: class_circle_home,
+			meta: {
+				keepAlive: false
+			}
 		}, {
 			path: '/trends_add',
 			name: 'add',
 			component: trends_add,
+			meta: {
+				keepAlive: false
+			}
 		}, {
 			path: '/trends_details/:id',
 			name: 'details',
 			component: trends_details,
+			meta: {
+				keepAlive: true
+			}
 		}, {
 			path: '/user_space/:id',
 			name: 'space',
 			component: user_space,
+			meta: {
+				keepAlive: false
+			}
 		}, {
 			path: '/error_page',
 			name: 'error',
 			component: error_page,
+			meta: {
+				keepAlive: false
+			}
 		}]
 	});
 
@@ -1402,7 +1406,6 @@ function addTrend(routeAdd, submitData) {
 			home_data.data[0].data.unshift($.extend({}, newTrends));
 			home_data.data[1].data.unshift($.extend({}, newTrends));
 			routeAdd.images = [];
-			routeAdd.$refs.add.cleanContent(); //清理内容
 			router.back();
 		} else {
 			$.alert(data.RspTxt, "发布失败");

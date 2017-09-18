@@ -26,7 +26,7 @@
 				style.type = "text/css";
 				var sstr_0 = ".relate-reply-type-praise .relate-name{max-width: " + relate_praise_name + "px;}";
 				var sstr_1 = ".relate-reply-type-comment .relate-name{max-width: " + relate_comment_name + "px;}";
-				var sstr_2 = ".class-circle-user-space.weui-tab{height: " + (wsHeight + 30) + "px;}"
+				var sstr_2 = ".class-circle-user-space.weui-tab{height: " + (wsHeight + 60) + "px;}"
 				var sstr_3 = ".relate-to-me .relate-reply-trends-bg .relate-reply-trends-img+.relate-reply-trends {width: " + relate_trends_content + "px;}"
 				style.innerHTML = sstr_0 + sstr_1 + sstr_2 + sstr_3;
 				document.getElementsByTagName('head').item(0).appendChild(style);
@@ -66,7 +66,7 @@
 		</template>
 		<!--路由-用户个人空间-->
 		<template id="router_user_space">
-			<div class="weui-tab class-circle-user-space">
+			<div class="class-circle-user-space weui-tab">
 				<div class="weui-tab__bd">
 					<div class="weui-tab__bd-item weui-tab__bd-item--active">
 						<div class="weui-pull-to-refresh__layer">
@@ -77,15 +77,15 @@
 							<div class="refresh">正在刷新</div>
 						</div>
 						<div class="weui-panel weui-panel_access">
-							<div class="weui-panel__bd">
-								<div class="class-circle-user-space-bg">
-									<div class="class-circle-user-space-headimage">
-										<img :src="userId|userImage" @load="headLoad($event)" @error.once="headError($event)" />
-									</div>
-									<div>{{userId|userName}}</div>
+							<!--<div class="weui-panel__bd">-->
+							<div class="class-circle-user-space-bg">
+								<div class="class-circle-user-space-headimage">
+									<img :src="userId|userImage" @load="headLoad($event)" @error.once="headError($event)" />
 								</div>
-								<trends-item v-for="(item_value,item_index) in data" :index="item_index" :key="item_index" :value="item_value" :detail="false" @click-person="clickPerson" @click-function="clickFunction" @click-comment="clickComment" @click-content="clickContent"></trends-item>
+								<div>{{userId|userName}}</div>
 							</div>
+							<trends-item v-for="(item_value,item_index) in data" :index="item_index" :key="item_index" :value="item_value" :detail="false" @click-person="clickPerson" @click-function="clickFunction" @click-comment="clickComment" @click-content="clickContent"></trends-item>
+							<!--</div>-->
 						</div>
 						<error-item v-if="show_no_more" :type="2"></error-item>
 						<error-item v-if="show_error" :type="1"></error-item>
@@ -97,6 +97,7 @@
 				</div>
 			</div>
 		</template>
+		<!--路由-错误页面-->
 		<template id="router_error">
 			<error-item @click-refresh="clickRefresh" :type="0"></error-item>
 		</template>
@@ -209,7 +210,7 @@
 				</template>
 				<div class="relate-reply-trends-bg">
 					<div class="relate-reply-trends-img" v-if="value.EncType == 1">
-						<img @load="trendsLoad($event)" @click="clickRelateContent" @error.once="headError($event)" :src="value.UserId|userThumbImage" />
+						<img @load="trendsLoad($event)" @click="clickRelateContent" :src="value.EncImgAddr|relateImage" />
 					</div>
 					<div class="relate-reply-trends">
 						<div class="relate-reply-content-limit">
@@ -300,7 +301,7 @@
 				</template>
 				<div v-else-if="imagesThumb.length > 1" class="class-circle-grids">
 					<div class="class-circle-grids-item" v-for="(img_value,img_index) in imagesThumb" @click="showImage(img_index)">
-						<img :src="img_value" />
+						<img :src="img_value" @load="imageLoad($event)" @error.once="imageError($event,img_index)" />
 					</div>
 				</div>
 			</div>
@@ -329,26 +330,27 @@
 			</div>
 		</template>
 		<script type="text/javascript">
-			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-2.1.4.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-weui.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/swiper.js?" + Math.random() + "'></s" + "cript>");
-			//document.write("<s" + "cript type='text/javascript' src='../../js/weui.min.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/vue.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/vue-router.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/lib/vconsole/vconsole.min.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_vue.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_protocol.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.min.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/lib/qiniu/qiniu.min.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cryption.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cloudutil.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/utils/compress.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/utils/pluploadutil.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_home.js?" + Math.random() + "'></s" + "cript>");
-			//document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_temp_data.js?" + Math.random() + "'></s" + "cript>");
+			var mathRandom = Math.random();
+			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + mathRandom + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-2.1.4.js?" + mathRandom + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-weui.js?" + mathRandom + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/swiper.js?" + mathRandom + "'></s" + "cript>");
+			//document.write("<s" + "cript type='text/javascript' src='../../js/weui.min.js?" + mathRandom + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/vue.js?" + mathRandom + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/vue-router.js?" + mathRandom + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/vconsole/vconsole.min.js?" + mathRandom + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js?" + mathRandom + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_vue.js?" + mathRandom + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_protocol.js?" + mathRandom + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.min.js?" + mathRandom + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js?" + mathRandom + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/qiniu/qiniu.min.js?" + mathRandom + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cryption.js?" + mathRandom + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cloudutil.js?" + mathRandom + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/compress.js?" + mathRandom + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/pluploadutil.js?" + mathRandom + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_home.js?" + mathRandom + "'></s" + "cript>");
+			//document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_temp_data.js?" + mathRandom + "'></s" + "cript>");
 		</script>
 	</body>
 

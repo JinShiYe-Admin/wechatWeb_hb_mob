@@ -62,18 +62,20 @@ var space_data = {}; //空间的所有数据
 var qnFileUploader; //七牛上传控件对象
 var uptokenData; //当前token
 var uploadImageIndex; //正在上传的图片的序号
-
+var allUploader = {}; //上传对象对应的图片列表序号
+var uploadError; //本次上传是否出错
 window.onload = function() {
 	$.showLoading('加载中...');
 	initRouter();
+	initQNUploader();
 	getMineInfo();
 
 	//---假数据---start---
-	//	initQNUploader();
 	//	show_class_circle_app = true; //是否显示班级圈app
 	//	temp_data = null;
 	//	initRouter();
-	//	router.push({
+	//	initQNUploader();
+	//	router.replace({
 	//		name: "home"
 	//	});
 	//	getHomeTrends(0, 1);
@@ -317,6 +319,8 @@ function initRouter() {
 										router_add_trends.images[i].uploaded = false;
 									}
 								};
+								allUploader = null;
+								allUploader = {};
 								upLoadImages();
 							}
 							break;
@@ -388,25 +392,59 @@ function initRouter() {
 			inputChange: function(value, files) {
 				console.log("inputChange:value:", value);
 				console.log("inputChange:files:", files);
-				//initFileUpload(files[0]);
+				if(files[0].size == 0 || files[0].name == "/") {
+					console.log("未选择图片")
+					return false;
+				}
 				var types = files[0].type.toLowerCase().split("/");
 				var self = this;
 				console.log("types:" + types);
 				if(types[1] == "png" || types[1] == "jpg" || types[1] == "jpeg") {
-					//显示文件
-					var reader = new FileReader();
-					reader.onload = function() {
-						var newImage = {
-							filePath: this.result, //文件路径
-							uploading: false, //是否正在上传
-							process: "", //进度
-							state: null, //状态
-							file: files[0], //文件对象
-							uploaded: false //是否上传过
+					self.allow_back = false;
+					$.showLoading('处理中...');
+					try {
+						//显示文件
+						var reader = new FileReader();
+						reader.onload = function() {
+							var result = this.result;
+							var maxSize = 2 * 1024 * 1024;
+							compress.getImgInfo(result, function(img, imgInfo) {
+								console.log("获取的文件信息：" + JSON.stringify(imgInfo));
+								console.log("原图尺寸：" + result.length);
+								var fileOb;
+								if(result.length > maxSize) {
+									console.log("需要压缩");
+									var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)));
+									var blob = compress.base64ToBlob(newDataUrl, 'image/jpeg');
+									console.log("blob.type:" + blob.type);
+									console.log('要传递的文件大小：' + blob.size);
+									blob.lastModifiedDate = new Date();
+									fileOb = blob;
+								} else {
+									fileOb = files[0];
+								}
+								var newImage = {
+									filePath: result, //文件路径
+									uploading: false, //是否正在上传
+									process: "", //进度
+									state: null, //状态
+									file: fileOb, //文件对象
+									fileName: Date.now() + '.jpg',
+									uploaded: false //是否上传过
+								}
+								self.images.push(newImage);
+								$.hideLoading();
+								$('#uploaderInput').val('');
+							});
 						}
-						self.images.push(newImage);
-					}
-					reader.readAsDataURL(files[0]);
+						reader.readAsDataURL(files[0]);
+					} catch(e) {
+						self.allow_back = true;
+						$.hideLoading();
+						$('#uploaderInput').val('');
+						$.alert(e.message, "添加失败");
+					};
+
 				} else {
 					$.alert("请选择png,jpg,jpeg类型的图片", "选择失败");
 				}
@@ -565,6 +603,7 @@ function initRouter() {
 				if(userId == this.userId) {
 					return false;
 				}
+				$(".class-circle-user-space .weui-tab__bd-item").destroyInfinite();
 				showPersonTrends(userId);
 			},
 			/**
@@ -635,6 +674,13 @@ function initRouter() {
 						space_data[id].getData = false;
 						//未获取数据则获取空间数据
 						getUserSpace(space_data[id].userId, 1, id);
+						//设置某个人的空间为已读，增加动态的浏览人数
+						classCircleProtocol.setUserSpaceReadByUser({
+							userId: mineUserInfo.userid,
+							publisherIds: [space_data[id].userId]
+						}, function(data) {
+							console.log("setUserSpaceReadByUser:", data);
+						});
 					}
 					this.data = space_data[id].data;
 				}
@@ -646,6 +692,7 @@ function initRouter() {
 					}, 100);
 				} else {
 					$(".class-circle-user-space .weui-tab__bd-item").scrollTop(0);
+					$(document.body).scrollTop(0);
 				}
 			}
 		},
@@ -666,15 +713,19 @@ function initRouter() {
 		beforeRouteUpdate: function(to, from, next) {
 			console.log("路由-用户空间-复用:from.path:" + from.path);
 			console.log("路由-用户空间-复用:to.path:" + to.path);
-			if(from.params.id > to.params.id && !this.allow_back) {
-				//返回上一个空间
-				return false
-			}
-			//记录原页面的滚动距离
-			var from_data = space_data[from.params.id];
-			if(from_data != undefined) {
-				from_data.scrollTop = $(".class-circle-user-space .weui-tab__bd-item").scrollTop();
-				from_data.leave = true;
+			if(from.params.id > to.params.id) {
+				//返回上一个空间&&禁止返回
+				if(!this.allow_back) {
+					return false
+				}
+				$(".class-circle-user-space .weui-tab__bd-item").destroyInfinite();
+			} else {
+				//记录原页面的滚动距离
+				var from_data = space_data[from.params.id];
+				if(from_data != undefined) {
+					from_data.scrollTop = $(".class-circle-user-space .weui-tab__bd-item").scrollTop();
+					from_data.leave = true;
+				}
 			}
 			this.initData(to.params.id);
 			next();
@@ -694,6 +745,7 @@ function initRouter() {
 			if(this.allow_back) {
 				if("/home" == to.path) {
 					//回到主页清空空间数据
+					$(".class-circle-user-space .weui-tab__bd-item").destroyInfinite();
 					space_data = null;
 					space_data = {};
 					this.userId = ""; //用户id
@@ -738,7 +790,8 @@ function initRouter() {
 		beforeRouteLeave: function(to, from, next) {
 			console.log("路由-异常页面-离开之前:from:" + from.path + " to:" + to.path);
 			if("/" == to.path) { //离开班级圈APP
-				window.close();
+				next();
+				router.back();
 			} else {
 				next();
 			}
@@ -801,7 +854,7 @@ function initHomePullToRefresh() {
 }
 
 /**
- * 初始化列表加载更多
+ * 初始化主页列表加载更多
  */
 function initHomeLoadmore(id) {
 	$("#" + id + ".weui-tab__bd-item").infinite();
@@ -828,14 +881,15 @@ function initSpacePullToRefresh(spaceId) {
 	$(".class-circle-user-space .weui-tab__bd-item").on("pull-to-refresh", function() {
 		var id = router_user_space.$route.params.id;
 		if(!space_data[id].allow_loaddata) {
+			$(this).pullToRefreshDone();
 			return false;
 		}
 		console.log("个人空间下拉刷新:" + id);
 		space_data[id].allow_loaddata = false;
 		getUserSpace(space_data[id].userId, 1, id, this);
 	});
-
-	$(".class-circle-user-space .weui-tab__bd-item").infinite(100);
+	//初始化上拉加载更多
+	$(".class-circle-user-space .weui-tab__bd-item").infinite(130);
 	$(".class-circle-user-space .weui-tab__bd-item").infinite().on("infinite", function() {
 		var id = router_user_space.$route.params.id;
 		console.log("allow_loaddata:" + space_data[id].allow_loaddata);
@@ -847,7 +901,6 @@ function initSpacePullToRefresh(spaceId) {
 		space_data[id].allow_loaddata = false;
 		getUserSpace(space_data[id].userId, space_data[id].pageIndex + 1, id);
 	});
-
 }
 
 /**
@@ -942,7 +995,7 @@ function disposeMemberData(data) {
 			temp_data = null;
 			show_class_circle_app = true;
 			//显示班级圈主页
-			router.push({
+			router.replace({
 				name: "home"
 			});
 			//禁止全部动态列表进行下拉刷新和上拉加载中
@@ -951,7 +1004,7 @@ function disposeMemberData(data) {
 			getHomeTrends(0, 1);
 		} else {
 			$.alert(data.RspTxt, "加载失败");
-			router.push({
+			router.replace({
 				name: "error",
 				params: {
 					id: 1
@@ -1133,16 +1186,19 @@ function disposeHomeData(type, submitData, element, data) {
 	}
 
 	if(data.RspCode == 0) {
+		home_data.data[type].show_error = false;
 		if(submitData.pageIndex == 1) {
 			//下拉刷新或者获取第一页的内容
+			home_data.data[type].data = [];
 			home_data.data[type].data = data.RspData.Data;
 		} else {
-			Array.prototype.push.apply(home_data.data[type].data, data.RspData.Data);
+			for(var i = 0; i < data.RspData.Data.length; i++) {
+				home_data.data[type].data.push(data.RspData.Data[i])
+			}
 		}
 		if(submitData.pageIndex == 1 && home_data.data[type].data.length == 0) {
 			//内容为空
 			home_data.data[type].show_no_more = true;
-			home_data.data[type].show_error = false;
 			home_data.data[type].show_loadmore = false;
 		} else {
 			home_data.data[type].show_no_more = false;
@@ -1196,11 +1252,11 @@ function getUserSpace(publisherIds, pageIndex, id, element) {
 			$(element).pullToRefreshDone();
 		}
 		if(data.RspCode == 0) {
+			space_data[id].show_error = false;
 			if(pageIndex == 1 && data.RspData.Data.length == 0) {
 				//内容为空
 				space_data[id].show_no_more = true;
 				space_data[id].show_loadmore = false;
-				space_data[id].show_error = false;
 			} else {
 				space_data[id].show_loadmore = true;
 				space_data[id].show_no_more = false;
@@ -1209,7 +1265,9 @@ function getUserSpace(publisherIds, pageIndex, id, element) {
 				//下拉刷新或者获取第一页的内容
 				space_data[id].data = data.RspData.Data;
 			} else {
-				Array.prototype.push.apply(space_data[id].data, data.RspData.Data);
+				for(var i = 0; i < data.RspData.Data.length; i++) {
+					space_data[id].data.push(data.RspData.Data[i]);
+				}
 			}
 			space_data[id].pageIndex = pageIndex; //当前页数
 			space_data[id].TotalPage = data.RspData.TotalPage; //总页数
@@ -1219,6 +1277,7 @@ function getUserSpace(publisherIds, pageIndex, id, element) {
 				space_data[id].allow_loadmore = false;
 				space_data[id].show_loadmore_loading = false;
 				space_data[id].show_loadmore_content = "没有更多了";
+				$(".class-circle-user-space .weui-tab__bd-item").destroyInfinite();
 			} else {
 				space_data[id].allow_loadmore = true;
 				space_data[id].show_loadmore_loading = true;
@@ -1241,6 +1300,10 @@ function getUserSpace(publisherIds, pageIndex, id, element) {
 				router_user_space.show_error = space_data[id].show_error;
 				router_user_space.show_loadmore_loading = space_data[id].show_loadmore_loading;
 				router_user_space.show_loadmore_content = space_data[id].show_loadmore_content;
+				if(pageIndex == 1) {
+					//下拉刷新
+					router_user_space.data = [];
+				}
 				router_user_space.data = space_data[id].data;
 			}
 		} catch(e) {
@@ -1433,7 +1496,7 @@ function getTrendsDetails(spaceId) {
 		userId: mineUserInfo.userid, //用户ID
 		userSpaceId: spaceId, //用户动态ID
 		pageIndex: 1, //评论当前页数
-		pageSize: 999 //评论每页记录数
+		pageSize: 9999 //评论每页记录数
 	}
 	classCircleProtocol.getUserSpaceByUser(submitData, function(data) {
 		console.log("getTrendsDetails", data);
@@ -1535,11 +1598,20 @@ function initQNUploader() {
 			uptokenData = null;
 			uptokenData = getQNUpToken(file);
 			console.log("uptokenData:", uptokenData);
-			if(uptokenData && uptokenData.code) { //成功
-				return uptokenData.data.Data[0].Token;
+			if(uptokenData) {
+				if(uptokenData.code) {
+					var imageOb = router_add_trends.images[uploadImageIndex];
+					imageOb.url = uptokenData.data.Data[0].Domain + uptokenData.data.Data[0].Key
+					imageOb.cropUrl = uptokenData.data.Data[0].OtherKey[uptokenData.thumbKey[0]];
+					//成功
+					return uptokenData.data.Data[0].Token;
+				} else {
+					qnFileUploader.stop();
+					uploadImageError(uptokenData.message);
+				}
 			} else {
 				qnFileUploader.stop();
-				uploadImageError(uptokenData.message);
+				uploadImageError("上传失败");
 			}
 		},
 		unique_names: false, // 默认 false，key 为文件名。若开启该选项，JS-SDK 会为每个文件自动生成key（文件名）
@@ -1562,41 +1634,43 @@ function initQNUploader() {
 			'BeforeUpload': function(up, file) {
 				// 每个文件上传前,处理相关的事情
 				console.log("BeforeUpload:");
+				allUploader[up.id] = uploadImageIndex;
 			},
 			'UploadProgress': function(up, file) {
 				// 每个文件上传时,处理相关的事情
 				console.log("UploadProgress:" + file.percent);
-				router_add_trends.images[uploadImageIndex].process = file.percent + "%";
+				router_add_trends.images[allUploader[up.id]].process = file.percent + "%";
 			},
 			'FileUploaded': function(up, file, info) {
 				// 每个文件上传成功后,处理相关的事情
 				console.log("FileUploaded:", info);
 				if(info.status == 200) {
 					console.log("uploadImageSuccess:");
-					var response = JSON.parse(info["response"]);
-					var imageOb = router_add_trends.images[uploadImageIndex];
+					var imageOb = router_add_trends.images[allUploader[up.id]];
 					imageOb.process = "";
 					imageOb.state = 1;
-					imageOb.url = storageutil.QNPBDOMAIN + response.key;
-					imageOb.cropUrl = uptokenData.data.Data[0].OtherKey[uptokenData.thumbKey[0]];
-					console.log("images:", router_add_trends.images);
+					delete allUploader[up.id];
+					upLoadImages();
 				} else {
-					uploadImageError(JSON.stringify(info));
+					uploadImageError(JSON.stringify(info), up.id);
 				}
 			},
 			'Error': function(up, err, errTip) {
 				//上传出错时,处理相关的事情
 				console.log("Error:", err, errTip);
-				uploadImageError(errTip);
+				uploadImageError(errTip, up.id);
 			},
-			'UploadComplete': function() {
+			'UploadComplete': function(up) {
 				//队列文件处理完毕后,处理相关的事情
 				console.log("UploadComplete:");
-				upLoadImages();
 			},
 			'FilesRemoved ': function() {
 				//文件移出队列
 				console.log("FilesRemoved:");
+				if(uploadError) {
+					uploadError = false;
+					upLoadImages();
+				}
 			},
 			'Key': function(up, file) {
 				// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
@@ -1612,6 +1686,7 @@ function initQNUploader() {
  * 获取七牛上传token
  */
 function getQNUpToken(file) {
+	console.log("getQNUpToken:", file)
 	var myDate = new Date();
 	var fileName = myDate.getTime() + "" + parseInt(Math.random() * 1000);
 	var types = file.name.toLowerCase().split(".");
@@ -1627,38 +1702,15 @@ function getQNUpToken(file) {
 			}
 		}]
 	}
+	if(router_add_trends.images.length == 1) {
+		//只上传一张图片
+		getTokenData.fileArray[0].qnCmdOption.type = 1;
+	}
 	var upToken;
 	cloudutil.getFileUpTokens(getTokenData, function(data) {
 		upToken = data;
 	});
 	return upToken;
-}
-
-/**
- * 压缩图片文件并传给七牛上传对象
- * @param {Object} filePath
- */
-function initFileUpload(filePath, file) {
-	console.log("initFileUpload:");
-	var maxSize = 2 * 1024 * 1024;
-	compress.getImgInfo(filePath, function(img, imgInfo) {
-		console.log("获取的文件信息：" + JSON.stringify(imgInfo));
-		console.log("原图尺寸：" + filePath.length);
-
-		if(filePath.length > maxSize) {
-			console.log("initFileUpload:>:");
-			var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(filePath.length / maxSize)));
-			var blob = compress.base64ToBlob(newDataUrl, 'image/jpeg');
-			blob.lastModifiedDate = new Date();
-			var newFile = new File([blob], Date.now() + '.jpg');
-			qnFileUploader.addFile(newFile, newFile.name);
-			//			var formData = new FormData();
-			//			formData.append('image', blob, Date.now() + '.jpeg');
-			//			qnFileUploader.addFile(formData, formData.name);
-		} else {
-			qnFileUploader.addFile(file, file.name);
-		}
-	});
 }
 
 /**
@@ -1671,14 +1723,18 @@ function upLoadImages() {
 	var errTip = "";
 	for(var i = 0; i < images.length; i++) {
 		var item = images[i];
-		if(!item.uploaded && index == null) { //没有上传过
+		if(!item.uploaded) { //没有上传过
 			if(item.state == null || item.state == 0) {
 				//未上传或者正在等待
 				item.state = 0;
-				index = i;
+				if(index == null) {
+					index = i;
+				}
 			} else if(item.state == 2) {
 				//上传失败
-				index = i;
+				if(index == null) {
+					index = i;
+				}
 			}
 		}
 		if(item.state == 2) {
@@ -1695,7 +1751,7 @@ function upLoadImages() {
 		imageOb.state = null;
 		imageOb.process = "0%";
 		imageOb.uploaded = true;
-		initFileUpload(imageOb.filePath, imageOb.file);
+		qnFileUploader.addFile(imageOb.file, imageOb.fileName);
 	} else {
 		console.log("上传完成:", images);
 		if(hasError) {
@@ -1711,12 +1767,16 @@ function upLoadImages() {
 /**
  * 上传图片失败
  */
-function uploadImageError(errTip) {
+function uploadImageError(errTip, upId) {
 	console.log("uploadImageError:");
 	router_add_trends.images[uploadImageIndex].process = "";
 	router_add_trends.images[uploadImageIndex].state = 2;
 	router_add_trends.images[uploadImageIndex].errTip = errTip;
+	uploadError = true;
 	qnFileUploader.splice(0, 1); //移除当前队列文件
+	if(upId != undefined) {
+		delete allUploader[upId];
+	}
 }
 
 /**

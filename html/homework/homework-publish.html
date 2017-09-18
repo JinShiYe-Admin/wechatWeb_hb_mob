@@ -3,15 +3,15 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<title>发布作业</title>
+		<title>做作业</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="https://jsypay.jiaobaowang.net/suitetest/css/mui.min.css" rel="stylesheet" />
 		<script type="text/javascript">
-			document.write('<link rel="stylesheet" href="../../js/demoCssJs/weui.min.css?' + Math.random() + '" />');
-			document.write('<link rel="stylesheet" href="../../js/demoCssJs/jquery-weui.css?' + Math.random() + '" />');
-			document.write('<link rel="stylesheet" href="../../js/demoCssJs/demos.css?' + Math.random() + '" />');
-			document.write('<link rel="stylesheet" href="../../css/utils/iconfont.css?' + Math.random() + '" />');
-			//			document.write('<link rel="stylesheet" href="../../css/classCircle/class_circle_home.css?' + Math.random() + '" />');
+			document.write('<link rel="stylesheet" href="https://jsypay.jiaobaowang.net/suitetest/js/demoCssJs/weui.min.css?' + Math.random() + '" />');
+			document.write('<link rel="stylesheet" href="https://jsypay.jiaobaowang.net/suitetest/js/demoCssJs/jquery-weui.css?' + Math.random() + '" />');
+			document.write('<link rel="stylesheet" href="https://jsypay.jiaobaowang.net/suitetest/js/demoCssJs/demos.css?' + Math.random() + '" />');
+			document.write('<link rel="stylesheet" href="https://jsypay.jiaobaowang.net/suitetest/css/utils/iconfont.css?' + Math.random() + '" />');
+			//			document.write('<link rel="stylesheet" href="https://jsypay.jiaobaowang.net/suitetest/css/classCircle/class_circle_home.css?' + Math.random() + '" />');
 		</script>
 	</head>
 
@@ -51,8 +51,9 @@
 								<ul class="weui-uploader__files" id="uploaderFiles">
 									<li v-for="(file,index) of uploadedFiles" @click="clickImg(index)" v-bind:class="['weui-uploader__file']" v-bind:style="{'background-image':'url('+file.ImgUrl+')'}"></li>
 								</ul>
-								<div class="weui-uploader__input-box">
-									<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" @click="addFileBtn()" v-on:change="selectFile($event)">
+								<div class="weui-uploader__input-box" :style="displayAddBtn">
+									<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" v-on:change="selectFile($event)">
+
 								</div>
 							</div>
 						</div>
@@ -63,7 +64,7 @@
 			<input id="qnInput" style="display: none;" />
 			<!--<div class="weui-gallery" style="display: block">-->
 			<div class="weui-gallery" :style="displayGallery">
-				<span class="weui-gallery__img" @click="clickGigImg" style="background-image: url({{selectModel.ImgUrl}});"></span>
+				<span class="weui-gallery__img" @click="clickGigImg" :style="{backgroundImage:'url('+selectImgPath+')'}"></span>
 				<div class="weui-gallery__opr">
 					<a href="javascript:" class="weui-gallery__del">
 						<i class="weui-icon-delete weui-icon_gallery-delete" @click="deleteImg"></i>
@@ -72,25 +73,25 @@
 			</div>
 		</div>
 
-		<script src="../../js/mui.min.js"></script>
-		<script src="../../js/weui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="https://jsypay.jiaobaowang.net/suitetest/js/mui.min.js"></script>
+		<script src="https://jsypay.jiaobaowang.net/suitetest/js/weui.min.js" type="text/javascript" charset="utf-8"></script>
 
-		<script src="../../js/demoCssJs/vue.min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../../js/appweb/choose-file.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../../js/demoCssJs/jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../../js/demoCssJs/jquery-weui.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../../js/utils/consts.js"></script>
-		<script src="../../js/utils/events.js"></script>
-		<script src="../../js/lib/vconsole/vconsole.min.js"></script>
+		<script src="https://jsypay.jiaobaowang.net/suitetest/js/demoCssJs/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="https://jsypay.jiaobaowang.net/suitetest/js/appweb/choose-file.js" type="text/javascript" charset="utf-8"></script>
+		<script src="https://jsypay.jiaobaowang.net/suitetest/js/demoCssJs/jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
+		<script src="https://jsypay.jiaobaowang.net/suitetest/js/demoCssJs/jquery-weui.js" type="text/javascript" charset="utf-8"></script>
+		<script src="https://jsypay.jiaobaowang.net/suitetest/js/utils/consts.js"></script>
+		<script src="https://jsypay.jiaobaowang.net/suitetest/js/utils/events.js"></script>
+		<script src="https://jsypay.jiaobaowang.net/suitetest/js/lib/vconsole/vconsole.min.js"></script>
 		<script type="text/javascript">
-			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.min.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/lib/qiniu/qiniu.min.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cryption.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cloudutil.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/utils/compress.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/utils/pluploadutil.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/importJS.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/lib/plupload/moxie.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/lib/qiniu/qiniu.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/utils/cryption.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/utils/cloudutil.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/utils/compress.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/utils/pluploadutil.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 		<script type="text/javascript">
 			mui.init();
@@ -98,12 +99,9 @@
 			var qnFileUploader; //七牛上传控件对象
 			window.onload = function() {
 				console.log('onload');
+				initQNUploader();
 				getSub();
 				getDepart();
-				//				$.showLoading('加载中...');
-				initQNUploader();
-
-				//				findWork();
 			}
 			var homework = new Vue({
 				el: '#homework',
@@ -118,9 +116,10 @@
 					classes: {
 						currClass: {
 							name: '',
-							id: ''
+							id: '',
+							persons: []
 						},
-						classes: []
+						allPersons: []
 					},
 					workTitle: '',
 					stat: 0,
@@ -128,30 +127,44 @@
 					displayGallery: {
 						display: 'none'
 					},
+					displayAddBtn: {
+						display: 'block'
+					},
+					depart_array: [],
+
 					selectIndex: 0,
-					selectModel: {},
+					selectImgPath: '',
 					uploadedFiles: []
 				},
 				methods: {
 					selectFile: function(event) { //从手机中选择图片后到界面的回调
-						var com = this;
-						console.log('111111');
-						if(event.target.value) {
-							qnFileUploader.addFile(event.target.files[0], event.target.files[0].name);
+												// 如果没有选中文件，直接返回  
+						var files = event.target.files;
+						if(files.length === 0) {
+							return;
 						}
+						for(var i = 0; i < files.length; i++) {
+							if(homework.uploadedFiles.length + i > 8) {
+								$.alert("最多只能上传9张照片");
+								break;
+							} else {
+								if(event.target.value) {
+									qnFileUploader.addFile(files[i], files[i].name);
+								}
+							}
+							}
+
 					},
-					addFileBtn: function() { //点击添加按钮
-						console.log('dianji addFileBtn');
-					},
+
 					clickImg: function(index) { //点击列表中的附件，给别的地方赋值
-						this.selectIndex = index;
-						this.selectModel = this.uploadedFiles[index].ImgUrl;
-						this.displayGallery = {
+						homework.selectIndex = index;
+						homework.selectImgPath = homework.uploadedFiles[index].ImgUrl;
+						homework.displayGallery = {
 							display: 'block'
 						};
 					},
 					clickGigImg: function() { //点击放大后的图片，隐藏显示
-						this.displayGallery = {
+						homework.displayGallery = {
 							display: 'none'
 						};
 					},
@@ -160,12 +173,14 @@
 							title: '提示',
 							text: '确认删除？',
 							onOK: function() {
-								this.displayGallery = {
+								homework.displayGallery = {
 									display: 'none'
 								};
-								this.uploadedFiles.splice(this.selectIndex, 1);
+								homework.uploadedFiles.splice(homework.selectIndex, 1);
+								displayAddBtnFun();
 							}
 						});
+
 					},
 					clickSubmitBtn: function() { //提交按钮
 						if(homework.workTitle.length == 0 && homework.uploadedFiles.length == 0) {
@@ -185,35 +200,39 @@
 							}
 							tempEncs.push(tempModel);
 						}
-						//提交按钮
-						if(homework.workTitle.length == 0 && homework.uploadedFiles.length == 0) {
-							alert('内容不能为空');
-							return;
-						}
 						$.showLoading('加载中...');
+						var idArr = [];
+						var nameArr = [];
+						for(var i = 0; i < homework.classes.currClass.persons.length; i++) {
+							var model = homework.classes.currClass.persons[i];
+							idArr.push(model.userid);
+							nameArr.push(model.name);
+
+						}
 
 						var tempData = {
 							cmd: 'work',
 							type: 'add',
-							//								touser: '@all',
+							touser: idArr.join('|'),
 							toparty: homework.classes.currClass.id,
-							//								totag: '',
+							totag: '',
 							msgtype: 'textcard',
 							safe: 0,
-							content: '1',
-							//								tousername: '1',
+							content: homework.workTitle,
+							tousername: nameArr.join('|'),
 							topartyname: homework.classes.currClass.name,
-							//								totagname: 1,
+							totagname: '',
 							subid: homework.subject.currSubject.id,
 							subname: homework.subject.currSubject.name,
 							subimg: '',
 							encs: tempEncs,
-							issend: 0
+							issend: 1
 						}
+						console.log(JSON.stringify(tempData))
 						unitWebsitePro(tempData, function(data) {
+							$.hideLoading();
 							if(data.RspCode == 0) {
 								console.log('成功');
-								$.hideLoading();
 								mui.toast('成功');
 							}
 
@@ -276,7 +295,7 @@
 					get_new_uptoken: true, // 设置上传文件的时候是否每次都重新获取新的 uptoken
 					domain: storageutil.QNPBDOMAIN, // bucket 域名，下载资源时用到，如：'http://xxx.bkt.clouddn.com/' **必需**
 					max_file_size: '4mb', // 最大文件体积限制
-					flash_swf_url: '../../js/lib/plupload/Moxie.swf', //引入 flash,相对路径
+					flash_swf_url: 'https://jsypay.jiaobaowang.net/suitetest/js/lib/plupload/Moxie.swf', //引入 flash,相对路径
 					max_retries: 0, // 上传失败最大重试次数
 					dragdrop: false, // 开启可拖曳上传
 					chunk_size: '4mb', // 分块上传时，每块的体积
@@ -284,6 +303,7 @@
 					init: {
 						'FilesAdded': function(up, files) {
 							plupload.each(files, function(file) {
+								$.showLoading('加载中...');
 								// 文件添加进队列后,处理相关的事情
 								console.log("FilesAdded:", file);
 							});
@@ -309,6 +329,7 @@
 									FileSize: file.size
 								}
 								homework.uploadedFiles.push(tempModel);
+								displayAddBtnFun();
 								console.log("success:" + storageutil.QNPBDOMAIN + JSON.parse(info["response"]).key);
 								console.log("success:" + storageutil.QNPBDOMAIN + ',' + JSON.stringify(info));
 								console.log("success:" + JSON.stringify(file));
@@ -356,6 +377,18 @@
 				});
 				return upToken;
 			}
+			//判断照片添加按钮是否显示，大于9张时隐藏
+			function displayAddBtnFun() {
+				if(homework.uploadedFiles.length >= 9) {
+					homework.displayAddBtn = {
+						display: 'none'
+					};
+				} else {
+					homework.displayAddBtn = {
+						display: 'block'
+					};
+				}
+			}
 
 			function getSub() {
 				var tempData = {
@@ -365,7 +398,9 @@
 					pageindex: 1,
 					stat: '1'
 				}
+				$.showLoading('加载中...');
 				unitWebsitePro(tempData, function(data) {
+					$.hideLoading();
 					console.log('科目:' + JSON.stringify(data));
 					if(data.RspCode == 0) {
 						homework.sub_array = data.RspData.dt;
@@ -389,12 +424,38 @@
 				unitWebsitePro(tempData, function(data) {
 					console.log('部门:' + JSON.stringify(data));
 					if(data.RspCode == 0) {
-						homework.depart_array = data.RspData.dt;
+						homework.depart_array = JSON.parse(data.RspData);
 						for(var i = 0; i < homework.depart_array.length; i++) {
 							var model = homework.depart_array[i];
+							console.log("model=" + JSON.stringify(model))
+							getPerson(model.value, i)
 							model.value = model.value;
 							model.label = model.title;
 						}
+					} else {
+						mui.toast(data.RspTxt)
+					}
+				})
+
+			}
+
+			function getPerson(colid, index) {
+				if(colid == -1) {
+					return;
+				}
+
+				var tempData = {
+					cmd: 'departpersons',
+					type: 'findpage',
+					colid: colid,
+					colv: 0,
+					callcol: 'base',
+				}
+				unitWebsitePro(tempData, function(data) {
+					console.log('人员:' + JSON.stringify(data));
+					if(data.RspCode == 0) {
+						homework.depart_array[index].persons = data.RspData;
+						homework.classes.allPersons = homework.classes.allPersons.concat(data.RspData);
 					} else {
 						mui.toast(data.RspTxt)
 					}
@@ -412,6 +473,17 @@
 					onConfirm: function(result) {
 						homework.classes.currClass.name = result[0].label;
 						homework.classes.currClass.id = result[0].value;
+						for(var i = 0; i < homework.depart_array.length; i++) {
+							var model = homework.depart_array[i];
+							if(model.value == result[0].value) {
+								if(model.value == -1) {
+									homework.classes.currClass.persons = homework.classes.allPersons
+								} else {
+									homework.classes.currClass.persons = model.persons;
+								}
+
+							}
+						}
 						//						console.log(result);
 					}
 				});

@@ -603,6 +603,7 @@ function initRouter() {
 				if(userId == this.userId) {
 					return false;
 				}
+				$(".class-circle-user-space .weui-tab__bd-item").destroyInfinite();
 				showPersonTrends(userId);
 			},
 			/**
@@ -691,6 +692,7 @@ function initRouter() {
 					}, 100);
 				} else {
 					$(".class-circle-user-space .weui-tab__bd-item").scrollTop(0);
+					$(document.body).scrollTop(0);
 				}
 			}
 		},
@@ -711,15 +713,19 @@ function initRouter() {
 		beforeRouteUpdate: function(to, from, next) {
 			console.log("路由-用户空间-复用:from.path:" + from.path);
 			console.log("路由-用户空间-复用:to.path:" + to.path);
-			if(from.params.id > to.params.id && !this.allow_back) {
-				//返回上一个空间
-				return false
-			}
-			//记录原页面的滚动距离
-			var from_data = space_data[from.params.id];
-			if(from_data != undefined) {
-				from_data.scrollTop = $(".class-circle-user-space .weui-tab__bd-item").scrollTop();
-				from_data.leave = true;
+			if(from.params.id > to.params.id) {
+				//返回上一个空间&&禁止返回
+				if(!this.allow_back) {
+					return false
+				}
+				$(".class-circle-user-space .weui-tab__bd-item").destroyInfinite();
+			} else {
+				//记录原页面的滚动距离
+				var from_data = space_data[from.params.id];
+				if(from_data != undefined) {
+					from_data.scrollTop = $(".class-circle-user-space .weui-tab__bd-item").scrollTop();
+					from_data.leave = true;
+				}
 			}
 			this.initData(to.params.id);
 			next();
@@ -739,6 +745,7 @@ function initRouter() {
 			if(this.allow_back) {
 				if("/home" == to.path) {
 					//回到主页清空空间数据
+					$(".class-circle-user-space .weui-tab__bd-item").destroyInfinite();
 					space_data = null;
 					space_data = {};
 					this.userId = ""; //用户id
@@ -882,7 +889,7 @@ function initSpacePullToRefresh(spaceId) {
 		getUserSpace(space_data[id].userId, 1, id, this);
 	});
 	//初始化上拉加载更多
-	$(".class-circle-user-space .weui-tab__bd-item").infinite(100);
+	$(".class-circle-user-space .weui-tab__bd-item").infinite(130);
 	$(".class-circle-user-space .weui-tab__bd-item").infinite().on("infinite", function() {
 		var id = router_user_space.$route.params.id;
 		console.log("allow_loaddata:" + space_data[id].allow_loaddata);
@@ -894,7 +901,6 @@ function initSpacePullToRefresh(spaceId) {
 		space_data[id].allow_loaddata = false;
 		getUserSpace(space_data[id].userId, space_data[id].pageIndex + 1, id);
 	});
-
 }
 
 /**
@@ -1271,6 +1277,7 @@ function getUserSpace(publisherIds, pageIndex, id, element) {
 				space_data[id].allow_loadmore = false;
 				space_data[id].show_loadmore_loading = false;
 				space_data[id].show_loadmore_content = "没有更多了";
+				$(".class-circle-user-space .weui-tab__bd-item").destroyInfinite();
 			} else {
 				space_data[id].allow_loadmore = true;
 				space_data[id].show_loadmore_loading = true;

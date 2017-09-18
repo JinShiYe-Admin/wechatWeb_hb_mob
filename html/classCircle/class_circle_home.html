@@ -26,7 +26,7 @@
 				style.type = "text/css";
 				var sstr_0 = ".relate-reply-type-praise .relate-name{max-width: " + relate_praise_name + "px;}";
 				var sstr_1 = ".relate-reply-type-comment .relate-name{max-width: " + relate_comment_name + "px;}";
-				var sstr_2 = ".class-circle-user-space.weui-tab{height: " + (wsHeight + 30) + "px;}"
+				var sstr_2 = ".class-circle-user-space.weui-tab{height: " + (wsHeight + 60) + "px;}"
 				var sstr_3 = ".relate-to-me .relate-reply-trends-bg .relate-reply-trends-img+.relate-reply-trends {width: " + relate_trends_content + "px;}"
 				style.innerHTML = sstr_0 + sstr_1 + sstr_2 + sstr_3;
 				document.getElementsByTagName('head').item(0).appendChild(style);
@@ -66,7 +66,7 @@
 		</template>
 		<!--路由-用户个人空间-->
 		<template id="router_user_space">
-			<div class="weui-tab class-circle-user-space">
+			<div class="class-circle-user-space weui-tab">
 				<div class="weui-tab__bd">
 					<div class="weui-tab__bd-item weui-tab__bd-item--active">
 						<div class="weui-pull-to-refresh__layer">
@@ -77,15 +77,15 @@
 							<div class="refresh">正在刷新</div>
 						</div>
 						<div class="weui-panel weui-panel_access">
-							<div class="weui-panel__bd">
-								<div class="class-circle-user-space-bg">
-									<div class="class-circle-user-space-headimage">
-										<img :src="userId|userImage" @load="headLoad($event)" @error.once="headError($event)" />
-									</div>
-									<div>{{userId|userName}}</div>
+							<!--<div class="weui-panel__bd">-->
+							<div class="class-circle-user-space-bg">
+								<div class="class-circle-user-space-headimage">
+									<img :src="userId|userImage" @load="headLoad($event)" @error.once="headError($event)" />
 								</div>
-								<trends-item v-for="(item_value,item_index) in data" :index="item_index" :key="item_index" :value="item_value" :detail="false" @click-person="clickPerson" @click-function="clickFunction" @click-comment="clickComment" @click-content="clickContent"></trends-item>
+								<div>{{userId|userName}}</div>
 							</div>
+							<trends-item v-for="(item_value,item_index) in data" :index="item_index" :key="item_index" :value="item_value" :detail="false" @click-person="clickPerson" @click-function="clickFunction" @click-comment="clickComment" @click-content="clickContent"></trends-item>
+							<!--</div>-->
 						</div>
 						<error-item v-if="show_no_more" :type="2"></error-item>
 						<error-item v-if="show_error" :type="1"></error-item>

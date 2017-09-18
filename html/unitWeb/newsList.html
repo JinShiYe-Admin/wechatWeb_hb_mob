@@ -48,7 +48,7 @@
 			</div>
 			<div class="weui-tab__bd" id="newsData">
 				<div id="contentCell" class="content-padded">
-					<a class="weui-cell weui-cell_access" @click="click(newsModel,index)" v-for="(newsModel,index) in item.newsArray" :data-index="index">
+					<a class="weui-cell weui-cell_access" @click="click(newsModel,index,item.cname )" v-for="(newsModel,index) in item.newsArray" :data-index="index">
 						<div class="weui-cell__bd">
 							<span style='width:350px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;' class="Prizs">标题：{{newsModel.topic}}</span>
 							<button id="{{newsModel.newsid}}" style="float:right" class="weui-btn weui-btn_mini weui-btn_primary" @click="clickDel(newsModel,1,index)">{{newsModel.Prizt}}</button>
@@ -76,12 +76,14 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 		<script>
-			function click(newsModel, index) {
+			function click(newsModel, index, cname) {
 				//			mui('.content-padded').on('tap', '.weui-cell weui-cell_access', function() {
 				//var index = this.getAttribute('data-index');
 				//alert(index)
 				//var tempData = newsData.columns[index];
-				newsModel.type = 'edit'
+
+				newsModel.type = 'edit';
+				newsModel.cname = cname;
 				utils.wOpenWithData("../unitWeb/addnews.html", newsModel);
 				//			})
 			}
@@ -100,34 +102,7 @@
 				el: '#newsData',
 				data: {
 					item: {
-						newsArray: [{
-								chnid: 1,
-								subtopic: 'Prisubtopic1',
-								topic: 'PriTopic1',
-								content: '<section><h3></h3><p>7月27-29日，中国?德州京津冀鲁资本技术交易大会在山东德州市举行。共有来自京津冀鲁多地的650余家高等院校、科研院所、科技服务机构、投资机构、证券公司、基金公司和相关企业负责人1500余人，围绕协同发展示范区建设和科技金融“双引擎”服务新旧动能转换展开广泛交流研讨和精准对接。我校应邀组团参加本次大会，李光红副校长带队，由合作发展处组织了我校新材料、新能源、装备制造、生物医药、节能环保、现代农业、公共管理等领域的15位专家教授和研究生参加了大会的开幕式、成果发布、项目路演、现场考察、合作签约等系列活动。</p><p><img src=http://qn-kfpb.jiaobaowang.net/wechat/webcon/1504508793527323.jpg alt=\"\"></p></section><section><h3></h3><p>7月27-29日，中国?德州京津冀鲁资本技术交易大会在山东德州市举行。共有来自京津冀鲁多地的650余家高等院校、科研院所、科技服务机构、投资机构、证券公司、基金公司和相关企业负责人1500余人，围绕协同发展示范区建设和科技金融“双引擎”服务新旧动能转换展开广泛交流研讨和精准对接。我校应邀组团参加本次大会，李光红副校长带队，由合作发展处组织了我校新材料、新能源、装备制造、生物医药、节能环保、现代农业、公共管理等领域的15位专家教授和研究生参加了大会的开幕式、成果发布、项目路演、现场考察、合作签约等系列活动。</p><p><img src=http://qn-kfpb.jiaobaowang.net/wechat/webcon/1504508793527323.jpg alt=\"\"></p></section><section><h3></h3><p>7月27-29日，中国?德州京津冀鲁资本技术交易大会在山东德州市举行。共有来自京津冀鲁多地的650余家高等院校、科研院所、科技服务机构、投资机构、证券公司、基金公司和相关企业负责人1500余人，围绕协同发展示范区建设和科技金融“双引擎”服务新旧动能转换展开广泛交流研讨和精准对接。我校应邀组团参加本次大会，李光红副校长带队，由合作发展处组织了我校新材料、新能源、装备制造、生物医药、节能环保、现代农业、公共管理等领域的15位专家教授和研究生参加了大会的开幕式、成果发布、项目路演、现场考察、合作签约等系列活动。</p><p><img src=http://qn-kfpb.jiaobaowang.net/wechat/webcon/1504508793527323.jpg alt=\"\"></p></section>',
-								summas: 'PriSummas1',
-								encs: 'FileDataArray1',
-								isquo: 'PriIsquo1',
-								quourl: 'PriQuourl1',
-								isreply: 'PriIsReply1',
-								imgurl:'http://qn-kfpb.jiaobaowang.net/wechat/webcon/1504574982107544.png?imageView2/3/w/100/h/100/q/100/format/png',
-								stat: 1,
-								Prizt:1
-							},							{
-								chnid: 2,
-								subtopic: 'Prisubtopic2',
-								topic: 'PriTopic2',
-								content: '<section><h3></h3><p>7月27-29日，中国?德州京津冀鲁资本技术交易大会在山东德州市举行。共有来自京津冀鲁多地的650余家高等院校、科研院所、科技服务机构、投资机构、证券公司、基金公司和相关企业负责人1500余人，围绕协同发展示范区建设和科技金融“双引擎”服务新旧动能转换展开广泛交流研讨和精准对接。我校应邀组团参加本次大会，李光红副校长带队，由合作发展处组织了我校新材料、新能源、装备制造、生物医药、节能环保、现代农业、公共管理等领域的15位专家教授和研究生参加了大会的开幕式、成果发布、项目路演、现场考察、合作签约等系列活动。</p><p><img src=http://qn-kfpb.jiaobaowang.net/wechat/webcon/1504508793527323.jpg alt=\"\"></p></section>',
-								summas: 'PriSummas2',
-								encs: 'FileDataArray2',
-								isquo: 'PriIsquo2',
-								quourl: 'PriQuourl2',
-								isreply: 'PriIsReply2',
-								imgurl:'http://qn-kfpb.jiaobaowang.net/wechat/webcon/1504574982107544.png?imageView2/3/w/100/h/100/q/100/format/png',
-								stat: 1,
-								Prizt:1
-							}
-						]
+						 
 					}
 				},
 				updated: function() {

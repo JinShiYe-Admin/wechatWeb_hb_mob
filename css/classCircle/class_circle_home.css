@@ -27,12 +27,12 @@ body {
 }
 
 .weui-navbar__item div {
-	padding: 6px;
+	padding: 8px 6px;
 }
 
 .weui-navbar__item.weui-bar__item--on {
 	font-size: 15px;
-	color: #323232;
+	color: #000000;
 	background: #F2F2F2;
 }
 
@@ -41,7 +41,7 @@ body {
 }
 
 #class_circle_home .weui-tab__bd-item.weui-pull-to-refresh {
-	top: 40px;
+	top: 44px;
 	bottom: 46px;
 }
 
@@ -49,12 +49,13 @@ body {
 	margin-top: -60px;
 }
 
-.weui-media-box:before {
-	left: 0px;
+#class_circle_home .weui-navbar+.weui-tab__bd {
+	padding-top: 44px;
+	padding-bottom: 44px;
 }
 
-.weui-media-box__title {
-	color: #46BDFF;
+.weui-media-box:before {
+	left: 0px;
 }
 
 .weui-media-box_appmsg .weui-media-box__hd {
@@ -86,6 +87,8 @@ body {
 	float: left;
 	max-width: 100%;
 	padding-right: 5px;
+	color: #46BDFF;
+	font-size: 15px;
 }
 
 .class-circle-mark {
@@ -111,6 +114,8 @@ body {
 	/*发布时间*/
 	display: block;
 	width: 100%;
+	font-size: 12px;
+	color: #999999;
 }
 
 .class-circle-grids {
@@ -161,12 +166,24 @@ body {
 	max-height: 300px;
 }
 
+.class-circle-content-all-img {
+	line-height: 1;
+}
+
+.class-circle-content-all-img+.class-circle-function {
+	margin-top: 5px;
+}
+
 .class-circle-function {
 	/*功能区域*/
-	color: #BBBBBB;
+	color: #CCCCCC;
 	display: block;
-	height: 25px;
-	margin-top: 10px
+	height: 21px;
+	font-size: 13px;
+}
+
+.class-circle-function .iconfont {
+	font-size: 13px;
 }
 
 .class-circle-function .class-circle-views {
@@ -217,11 +234,15 @@ body {
 	margin-right: 6px;
 }
 
+.class-circle-praise-bg {
+	line-height: 1;
+}
+
 .class-circle-praise-bg .class-circle-praiser:nth-child(1):before {
 	/*第一个点赞人*/
 	content: "\e63c";
 	font-family: "iconfont" !important;
-	font-size: 16px;
+	font-size: 13px;
 	font-style: normal;
 	-webkit-font-smoothing: antialiased;
 	color: #46BDFF;
@@ -232,6 +253,7 @@ body {
 	/*点赞人和评论人的名字*/
 	display: inline;
 	color: #46BDFF;
+	font-size: 13px;
 }
 
 .class-circle-comment-content {
@@ -255,7 +277,11 @@ body {
 .class-circle-comment-name,
 .class-circle-comment-content {
 	/*评论人的名称和评论内容*/
-	font-size: 16px;
+	font-size: 13px;
+}
+
+.class-circle-comment-content {
+	color: #505050;
 }
 
 .class-circle-report {
@@ -265,7 +291,7 @@ body {
 	width: 100%;
 	text-align: center;
 	background-color: white;
-	padding: 10px 0;
+	padding: 9px 0;
 	border-top: 1px solid gainsboro;
 	color: #46BDFF;
 }
@@ -301,6 +327,9 @@ body {
 	display: -webkit-box;
 	-webkit-line-clamp: 8;
 	-webkit-box-orient: vertical;
+	font-size: 13px;
+	color: #505050;
+	margin: 5px 0;
 }
 
 .class-circle-content-limit-break {
@@ -323,12 +352,15 @@ body {
 	float: right;
 	color: #46BDFF;
 	margin-left: 10px;
+	font-size: 15px;
 }
 
 .relate-reply-type {
 	/*与我相关类型*/
 	float: left;
 	padding-left: 5px;
+	font-size: 15px;
+	color: #505050;
 }
 
 .relate-reply-content {
@@ -380,6 +412,12 @@ body {
 	color: #46BDFF;
 	display: inline;
 	margin-left: 5px;
+	font-size: 13px;
+}
+
+.relate-reply-content-limit span {
+	font-size: 13px;
+	color: #505050;
 }
 
 .relate-reply-content-limit {
@@ -528,4 +566,11 @@ body {
 
 .weui-tab__bd {
 	-webkit-overflow-scrolling: touch;
+}
+
+.relate-comment-content {
+	font-size: 13px;
+	color: #505050;
+	line-height: 1;
+	margin: 5px 0;
 }

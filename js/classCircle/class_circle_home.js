@@ -1362,12 +1362,14 @@ function clickCommentFunction(clickRoute, trendsValue, commentIndex, replysIndex
 	clickRoute.allow_back = false;
 	var actions = [];
 	var mineTrends = false; //是否是我发的动态
+	var mineComment = false; //是否是我的评论
+	var showDel = false;
+	var showComment = false;
 	if(trendsValue.PublisherId === mineUserInfo.userid) {
 		//我发的动态
 		mineTrends = true;
 	}
 	var Comment;
-	var mineComment = false; //是否是我的评论
 	if(replysIndex == undefined) {
 		//点击评论
 		Comment = trendsValue.Comments[commentIndex];
@@ -1389,6 +1391,7 @@ function clickCommentFunction(clickRoute, trendsValue, commentIndex, replysIndex
 				delCommentFun(clickRoute, trendsValue, Comment.TabId, commentIndex, replysIndex);
 			}
 		});
+		showDel = true;
 	}
 	if(!mineComment && departUserInfo.value[Comment.UserId] !== undefined) {
 		//不是我的评论&&评论者有资料
@@ -1398,17 +1401,29 @@ function clickCommentFunction(clickRoute, trendsValue, commentIndex, replysIndex
 				addReplyFun(clickRoute, trendsValue, Comment.UserId, commentIndex, replysIndex);
 			}
 		});
+		showComment = true;
 	}
-	if(actions.length != 0) {
-		utils.actions({
-			actions: actions,
-			onClose: function() {
-				//点击遮罩，点击取消按钮
-				clickRoute.allow_back = true;
+	switch(actions.length) {
+		case 1:
+			if(showDel) {
+				delCommentFun(clickRoute, trendsValue, Comment.TabId, commentIndex, replysIndex);
 			}
-		});
-	} else {
-		clickRoute.allow_back = true;
+			if(showComment) {
+				addReplyFun(clickRoute, trendsValue, Comment.UserId, commentIndex, replysIndex);
+			}
+			break;
+		case 2:
+			utils.actions({
+				actions: actions,
+				onClose: function() {
+					//点击遮罩，点击取消按钮
+					clickRoute.allow_back = true;
+				}
+			});
+			break;
+		default:
+			clickRoute.allow_back = true;
+			break;
 	}
 }
 

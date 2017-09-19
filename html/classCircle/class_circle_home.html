@@ -209,7 +209,7 @@
 					</div>
 				</div>
 				<template v-if="value.MsgType != 3">
-					<div @click="clickRelateContent">{{value.Content}}</div>
+					<div class="relate-comment-content" @click="clickRelateContent">{{value.Content}}</div>
 				</template>
 				<div class="relate-reply-trends-bg">
 					<div class="relate-reply-trends-img" v-if="value.EncType == 1">
@@ -298,7 +298,7 @@
 		</template>
 		<!--显示图片的组件-->
 		<template id="temp_show_image">
-			<div>
+			<div class="class-circle-content-all-img">
 				<img v-if="imagesThumb.length == 1" class="class-circle-content-img" :src="imagesThumb[0]" @error.once="imageError($event,0)" @click="showImage(0)" />
 				<div v-else-if="imagesThumb.length > 1" class="class-circle-grids">
 					<div class="class-circle-grids-item" v-for="(img_value,img_index) in imagesThumb" @click="showImage(img_index)">

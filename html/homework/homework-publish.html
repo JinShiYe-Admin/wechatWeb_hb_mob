@@ -84,7 +84,9 @@
 		<script src="https://jsypay.jiaobaowang.net/suitetest/js/utils/events.js"></script>
 		<script src="https://jsypay.jiaobaowang.net/suitetest/js/lib/vconsole/vconsole.min.js"></script>
 		<script type="text/javascript">
-			document.write("<s" + "cript type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/importJS.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/PublicProtocol.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/storageutil.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/lib/plupload/moxie.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/lib/qiniu/qiniu.min.js?" + Math.random() + "'></s" + "cript>");
@@ -138,7 +140,7 @@
 				},
 				methods: {
 					selectFile: function(event) { //从手机中选择图片后到界面的回调
-												// 如果没有选中文件，直接返回  
+						// 如果没有选中文件，直接返回  
 						var files = event.target.files;
 						if(files.length === 0) {
 							return;
@@ -152,7 +154,7 @@
 									qnFileUploader.addFile(files[i], files[i].name);
 								}
 							}
-							}
+						}
 
 					},
 

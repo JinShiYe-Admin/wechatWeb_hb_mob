@@ -367,7 +367,6 @@ Vue.component("relate-item", {
 		 * @param {Object} e
 		 */
 		trendsLoad: function(e) {
-			console.log("trendsLoad:")
 			var img = e.target;
 			var imgWidth = img.width;
 			var imgHeight = img.height;
@@ -449,7 +448,6 @@ Vue.component("image-item", {
 			pb.open();
 		},
 		imageError: function(e, index) {
-			console.log("imageError")
 			e.target.src = this.images[index];
 		},
 		imageLoad: function(e) {

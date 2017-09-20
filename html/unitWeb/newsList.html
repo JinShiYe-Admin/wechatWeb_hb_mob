@@ -15,8 +15,7 @@
 		<style>
 			.weui-navbar {
 				top: 20px;
-			}
-			
+			} 
 			.weui-navbar+.weui-tab__bd {
 				padding-top: 60px;
 			}
@@ -76,16 +75,12 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 		<script>
-			function click(newsModel, index, cname) {
-				//			mui('.content-padded').on('tap', '.weui-cell weui-cell_access', function() {
-				//var index = this.getAttribute('data-index');
-				//alert(index)
-				//var tempData = newsData.columns[index];
-
-				newsModel.type = 'edit';
-				newsModel.cname = cname;
-				utils.wOpenWithData("../unitWeb/addnews.html", newsModel);
-				//			})
+			function click(newsModel, index, cname) {  
+				var newslist = new Object(); 
+                newslist.cname = cname; 
+                newslist.type = "edit"; 
+                newslist.newsid = newsModel.newsid;   
+				utils.wOpenWithData("../unitWeb/addnews.html", newslist);  
 			}
 			var newsFlag = 0; //0刷新，1加载更多
 			var newsPage = 1; //加载当当前新闻的页码
@@ -101,8 +96,7 @@
 			var newsData = new Vue({
 				el: '#newsData',
 				data: {
-					item: {
-						 
+					item: {  
 					}
 				},
 				updated: function() {

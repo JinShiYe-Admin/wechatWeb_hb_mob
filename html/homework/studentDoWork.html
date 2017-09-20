@@ -58,6 +58,7 @@
 		<script src="../../js/utils/events.js"></script>
 		<script src="../../js/lib/vconsole/vconsole.min.js"></script>
 		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/exif/exif.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/PublicProtocol.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/storageutil.js?" + Math.random() + "'></s" + "cript>");
@@ -83,7 +84,7 @@
 				el: '#submitHomework',
 				data: {
 					workTitle: '',
-					stat: 3,
+					stat: 1,
 					submitBtnTitle: '提交',
 					displayGallery: {
 						display: 'none'
@@ -97,22 +98,12 @@
 				},
 				methods: {
 					selectFile: function(event) { //从手机中选择图片后到界面的回调
-						console.log('111111');
 						// 如果没有选中文件，直接返回  
 						var files = event.target.files;
 						if(files.length === 0) {
 							return;
 						}
-						for(var i = 0; i < files.length; i++) {
-							if(submitHomework.uploadedFiles.length + i > 8) {
-								$.alert("最多只能上传9张照片");
-								break;
-							} else {
-								if(event.target.value) {
-									qnFileUploader.addFile(files[i], files[i].name);
-								}
-							}
-						}
+						uploadFiles(0,files);
 					},
 					clickImg: function(index) { //点击列表中的附件，给别的地方赋值
 						submitHomework.selectIndex = index;
@@ -187,6 +178,41 @@
 					}
 				}
 			});
+
+			//从相册中选择照片后，上传
+			function uploadFiles(index, files) {
+				if(index < files.length) {
+					$.showLoading('加载中...');
+					var file = files[index];
+					EXIF.getData(file, function() {
+						var orientation = EXIF.getTag(this, 'Orientation'); //获取旋转信息
+						console.log('orientation:' + JSON.stringify(orientation));
+						//显示文件
+						var reader = new FileReader();
+						reader.onload = function() {
+							var result = this.result;
+							var maxSize = 2 * 1024 * 1024;
+							compress.getImgInfo(result, function(img, imgInfo) {
+								console.log("获取的文件信息：" + JSON.stringify(imgInfo));
+								console.log("原图尺寸：" + result.length);
+								var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)), orientation);
+								var blob = compress.base64ToBlob(newDataUrl, 'image/jpeg');
+								console.log("blob.type:" + blob.type);
+								console.log('要传递的文件大小：' + blob.size);
+								blob.lastModifiedDate = new Date();
+								qnFileUploader.addFile(blob, Date.now() + '.jpg');
+								if(submitHomework.uploadedFiles.length + index > 8) {
+									$.alert("最多只能上传9张照片");
+								}else{
+									index++;
+									uploadFiles(index,files);
+								}
+							});
+						}
+						reader.readAsDataURL(file);
+					});
+				}
+			}
 
 			//获取回答的作业
 			function findWork() {

@@ -140,7 +140,7 @@ body {
 .class-circle-grids .class-circle-grids-item:nth-child(5),
 .class-circle-grids .class-circle-grids-item:nth-child(8) {
 	/*多张图片*/
-	margin: 0 2%;
+	margin: 0 1%;
 }
 
 .class-circle-grids .class-circle-grids-item:nth-child(4),
@@ -150,13 +150,14 @@ body {
 .class-circle-grids .class-circle-grids-item:nth-child(8),
 .class-circle-grids .class-circle-grids-item:nth-child(9) {
 	/*多张图片*/
-	margin-top: 2%;
+	margin-top: 1%;
 }
 
 .class-circle-grids-item img {
 	/*多张图片*/
 	width: 100%;
 	position: relative;
+	transform: translateY(-50%);
 	-webkit-transform: translateY(-50%);
 }
 

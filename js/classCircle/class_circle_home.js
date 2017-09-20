@@ -166,7 +166,7 @@ function initRouter() {
 			 */
 			clickComment: function(listIndex, valueIndex, commentIndex, replysIndex) {
 				console.log("clickComment:" + listIndex + " " + valueIndex + " " + commentIndex + " " + replysIndex);
-				addReplys(this.data[listIndex].data[valueIndex], commentIndex, replysIndex);
+				clickCommentFunction(this, this.data[listIndex].data[valueIndex], commentIndex, replysIndex);
 			},
 			/**
 			 * 点击发布动态
@@ -402,7 +402,8 @@ function initRouter() {
 				if(types[1] == "png" || types[1] == "jpg" || types[1] == "jpeg") {
 					self.allow_back = false;
 					$.showLoading('处理中...');
-					try {
+					EXIF.getData(files[0], function() {
+						var orientation = EXIF.getTag(this, 'Orientation'); //获取旋转信息
 						//显示文件
 						var reader = new FileReader();
 						reader.onload = function() {
@@ -411,24 +412,18 @@ function initRouter() {
 							compress.getImgInfo(result, function(img, imgInfo) {
 								console.log("获取的文件信息：" + JSON.stringify(imgInfo));
 								console.log("原图尺寸：" + result.length);
-								var fileOb;
-								if(result.length > maxSize) {
-									console.log("需要压缩");
-									var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)));
-									var blob = compress.base64ToBlob(newDataUrl, 'image/jpeg');
-									console.log("blob.type:" + blob.type);
-									console.log('要传递的文件大小：' + blob.size);
-									blob.lastModifiedDate = new Date();
-									fileOb = blob;
-								} else {
-									fileOb = files[0];
-								}
+								var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)), orientation);
+								var blob = compress.base64ToBlob(newDataUrl, 'image/jpeg');
+								console.log("blob.type:" + blob.type);
+								console.log('要传递的文件大小：' + blob.size);
+								blob.lastModifiedDate = new Date();
+								fileOb = blob;
 								var newImage = {
-									filePath: result, //文件路径
+									filePath: newDataUrl, //文件路径
 									uploading: false, //是否正在上传
 									process: "", //进度
 									state: null, //状态
-									file: fileOb, //文件对象
+									file: blob, //文件对象
 									fileName: Date.now() + '.jpg',
 									uploaded: false //是否上传过
 								}
@@ -439,13 +434,7 @@ function initRouter() {
 							});
 						}
 						reader.readAsDataURL(files[0]);
-					} catch(e) {
-						self.allow_back = true;
-						$.hideLoading();
-						$('#uploaderInput').val('');
-						$.alert(e.message, "添加失败");
-					};
-
+					});
 				} else {
 					$.alert("请选择png,jpg,jpeg类型的图片", "选择失败");
 				}
@@ -544,7 +533,7 @@ function initRouter() {
 			},
 			clickComment: function(valueIndex, commentIndex, replysIndex) {
 				console.log("clickComment:" + valueIndex + " " + commentIndex + ' ' + replysIndex);
-				addReplys(this.data[valueIndex], commentIndex, replysIndex);
+				clickCommentFunction(this, this.data[valueIndex], commentIndex, replysIndex);
 			}
 		},
 		beforeRouteEnter: function(to, from, next) {
@@ -647,7 +636,7 @@ function initRouter() {
 			 */
 			clickComment: function(valueIndex, commentIndex, replysIndex) {
 				console.log("clickComment:" + valueIndex + " " + commentIndex + " " + replysIndex);
-				addReplys(space_data[this.$route.params.id].data[valueIndex], commentIndex, replysIndex);
+				clickCommentFunction(this, space_data[this.$route.params.id].data[valueIndex], commentIndex, replysIndex);
 			},
 			/**
 			 * 初始化数据
@@ -1194,12 +1183,31 @@ function disposeHomeData(type, submitData, element, data) {
 		if(submitData.pageIndex == 1) {
 			//下拉刷新或者获取第一页的内容
 			home_data.data[type].data = [];
-			home_data.data[type].data = data.RspData.Data;
-		} else {
-			for(var i = 0; i < data.RspData.Data.length; i++) {
-				home_data.data[type].data.push(data.RspData.Data[i])
+		}
+		var readUserId = {
+			key: [],
+			value: {}
+		};
+		for(var i = 0; i < data.RspData.Data.length; i++) {
+			home_data.data[type].data.push(data.RspData.Data[i]);
+			if(type == 0) {
+				//获取全部动态的发布者
+				if(readUserId[data.RspData.Data[i].PublisherId] === undefined) {
+					readUserId.key.push(data.RspData.Data[i].PublisherId);
+					readUserId[data.RspData.Data[i].PublisherId] = data.RspData.Data[i].PublisherId;
+				}
 			}
 		}
+		if(readUserId.key.length != 0) {
+			//设置某个人的空间为已读，增加动态的浏览人数
+			classCircleProtocol.setUserSpaceReadByUser({
+				userId: mineUserInfo.userid,
+				publisherIds: readUserId.key
+			}, function(data) {
+				console.log("setUserSpaceReadByUser:", data);
+			});
+		}
+		readUserId = null;
 		if(submitData.pageIndex == 1 && home_data.data[type].data.length == 0) {
 			//内容为空
 			home_data.data[type].show_no_more = true;
@@ -1332,13 +1340,24 @@ function showAddComments(trendsValue) {
 }
 
 /**
- * 进入回复页面
+ * 点击评论或回复的功能
+ * @param {Object} clickRoute 当前点击的route
  * @param {Number} trendsValue 动态
  * @param {Object} commentIndex 评论的序号
  * @param {Object} replysIndex 回复的序号
  */
-function addReplys(trendsValue, commentIndex, replysIndex) {
-	console.log("addReplys:", trendsValue);
+function clickCommentFunction(clickRoute, trendsValue, commentIndex, replysIndex) {
+	console.log("clickCommentFunction:", trendsValue);
+	clickRoute.allow_back = false;
+	var actions = [];
+	var mineTrends = false; //是否是我发的动态
+	var mineComment = false; //是否是我的评论
+	var showDel = false;
+	var showComment = false;
+	if(trendsValue.PublisherId === mineUserInfo.userid) {
+		//我发的动态
+		mineTrends = true;
+	}
 	var Comment;
 	if(replysIndex == undefined) {
 		//点击评论
@@ -1349,23 +1368,111 @@ function addReplys(trendsValue, commentIndex, replysIndex) {
 	}
 	console.log("Comment:", Comment);
 	if(Comment.UserId == mineUserInfo.userid) {
-		//评论者是自己
-		console.log("评论者是自己");
-		return false;
+		//我发的评论
+		mineComment = true;
 	}
-	if(departUserInfo.value[Comment.UserId] == undefined) {
-		//评论者没有对应资料
-		console.log("无此人资料");
-		return false;
+	if(mineTrends || mineComment) {
+		//允许删除
+		actions.push({
+			text: "删除",
+			className: "color-danger",
+			onClick: function() {
+				delCommentFun(clickRoute, trendsValue, Comment.TabId, commentIndex, replysIndex);
+			}
+		});
+		showDel = true;
 	}
+	if(!mineComment && departUserInfo.value[Comment.UserId] !== undefined) {
+		//不是我的评论&&评论者有资料
+		actions.unshift({
+			text: "回复",
+			onClick: function() {
+				addReplyFun(clickRoute, trendsValue, Comment.UserId, commentIndex, replysIndex);
+			}
+		});
+		showComment = true;
+	}
+	switch(actions.length) {
+		case 1:
+			if(showDel) {
+				delCommentFun(clickRoute, trendsValue, Comment.TabId, commentIndex, replysIndex);
+			}
+			if(showComment) {
+				addReplyFun(clickRoute, trendsValue, Comment.UserId, commentIndex, replysIndex);
+			}
+			break;
+		case 2:
+			utils.actions({
+				actions: actions,
+				onClose: function() {
+					//点击遮罩，点击取消按钮
+					clickRoute.allow_back = true;
+				}
+			});
+			break;
+		default:
+			clickRoute.allow_back = true;
+			break;
+	}
+}
+
+/**
+ * 跳转到评论或回复页面
+ * @param {Object} clickRoute
+ * @param {Object} trendsValue
+ * @param {Object} replyUserId
+ * @param {Object} commentIndex
+ * @param {Object} replysIndex
+ */
+function addReplyFun(clickRoute, trendsValue, replyUserId, commentIndex, replysIndex) {
+	clickRoute.allow_back = true;
 	router.push({
 		name: 'add',
 		params: {
 			id: 'addReply',
 			trendsValue: trendsValue, //动态
-			replyUserId: Comment.UserId, //回复人id
+			replyUserId: replyUserId, //回复人id
 			commentIndex: commentIndex, //评论的序号
 			replysIndex: replysIndex, //回复的序号
+		}
+	});
+}
+
+/**
+ * 删除评论功能
+ * @param {Object} clickRoute
+ * @param {Object} trendsValue
+ * @param {Object} commentId
+ * @param {Object} commentIndex
+ * @param {Object} replysIndex
+ */
+function delCommentFun(clickRoute, trendsValue, commentId, commentIndex, replysIndex) {
+	$.confirm({
+		title: '提示',
+		text: '确定删除？',
+		onOK: function() {
+			var submitData = {
+				userSpaceCommentId: commentId
+			}
+			classCircleProtocol.delUserSpaceCommentById(submitData, function(data) {
+				console.log("delUserSpaceCommentById:", data);
+				clickRoute.allow_back = true;
+				if(data.RspCode == 0 && data.RspData.Result == 1) {
+					$.toast("操作成功");
+					if(replysIndex == undefined) {
+						//点击评论
+						trendsValue.Comments.splice(commentIndex, 1)
+					} else {
+						//点击回复
+						trendsValue.Comments[commentIndex].Replys.splice(replysIndex, 1);
+					}
+				} else {
+					$.alert(data.RspTxt, "操作失败");
+				}
+			})
+		},
+		onCancel: function() {
+			clickRoute.allow_back = true;
 		}
 	});
 }
@@ -1592,6 +1699,9 @@ function deleteMineTrends(delData) {
 	});
 }
 
+/**
+ * 初始化七牛上传对象
+ */
 function initQNUploader() {
 	qnFileUploader = Qiniu.uploader({
 		disable_statistics_report: false, // 禁止自动发送上传统计信息到七牛，默认允许发送

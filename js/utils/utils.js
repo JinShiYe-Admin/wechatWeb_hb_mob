@@ -148,5 +148,100 @@ var utils = (function(mod) {
 		return clock;
 	}
 
+	/**
+	 * 自定义actions，在jQuery-weui的基础上进行修改
+	 * 1.增加:点击遮罩,点击取消按钮触发onClose
+	 * 2.取消:点击传入的选项触发onClose
+	 *
+	 * @author 莫尚霖
+	 * @param {Object} params
+	 *
+	 */
+	mod.actions = function(params) {
+		//用法示例:
+		/*utils.actions({
+			actions: [{
+				text: "回复",
+				onClick: function() {
+					console.log("回复");
+				}
+			}, {
+				text: "删除",
+				className: "color-danger",
+				onClick: function() {
+					console.log("删除");
+				}
+			}],
+			onClose: function() {
+				//点击遮罩，点击取消按钮
+				console.log("onClose:");
+			}
+		});*/
+		var defaults = {
+			title: undefined,
+			onClose: undefined,
+		}
+		params = $.extend({}, defaults, params);
+		var mask = $("<div class='weui-mask weui-actions_mask'></div>").appendTo(document.body);
+		var actions = params.actions || [];
+		var actionsHtml = actions.map(function(d, i) {
+			return '<div class="weui-actionsheet__cell ' + (d.className || "") + '">' + d.text + '</div>';
+		}).join("");
+		var titleHtml = "";
+		if(params.title) {
+			titleHtml = '<div class="weui-actionsheet__title">' + params.title + '</div>';
+		}
+		var tpl = '<div class="weui-actionsheet " id="weui-actionsheet">' +
+			titleHtml +
+			'<div class="weui-actionsheet__menu">' +
+			actionsHtml +
+			'</div>' +
+			'<div class="weui-actionsheet__action">' +
+			'<div class="weui-actionsheet__cell weui-actionsheet_cancel">取消</div>' +
+			'</div>' +
+			'</div>';
+		var dialog = $(tpl).appendTo(document.body);
+		//点击传入的选项
+		dialog.find(".weui-actionsheet__menu .weui-actionsheet__cell").each(function(i, e) {
+			$(e).click(function() {
+				hide();
+				if(actions[i] && actions[i].onClick) {
+					actions[i].onClick();
+				}
+			})
+		});
+		//点击取消按钮
+		dialog.find(".weui-actionsheet__action .weui-actionsheet__cell").each(function(i, e) {
+			$(e).click(function() {
+				hide();
+				if(params.onClose) {
+					params.onClose();
+				}
+			})
+		});
+		//点击遮罩
+		$(document).on("click", ".weui-actions_mask", function() {
+			hide();
+			if(params.onClose) {
+				params.onClose();
+			}
+		});
+		//显示的动画
+		mask.show();
+		dialog.show();
+		//显示actions
+		mask.addClass("weui-mask--visible");
+		dialog.addClass("weui-actionsheet_toggle");
+		//隐藏和移除actions
+		var hide = function() {
+			$(".weui-mask").removeClass("weui-mask--visible").transitionEnd(function() {
+				$(this).remove();
+			});
+			$(".weui-actionsheet").removeClass("weui-actionsheet_toggle").transitionEnd(function() {
+				$(this).remove();
+			});
+		}
+	};
+
 	return mod;
 })(window.utils || {});

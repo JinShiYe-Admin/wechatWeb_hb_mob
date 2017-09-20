@@ -1,104 +1,173 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="worktecsend.aspx.cs" Inherits="Jsy.Weixin.QY.Suite.appschweb.app.worktecsend" %>
+
 <!doctype html>
 <html>
 
 	<head>
 		<meta charset="UTF-8">
-		<title>做作业</title>
+		<title>作业发布</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<link href="https://jsypay.jiaobaowang.net/suitetest/css/mui.min.css" rel="stylesheet" />
-		<script type="text/javascript">
-			document.write('<link rel="stylesheet" href="https://jsypay.jiaobaowang.net/suitetest/js/demoCssJs/weui.min.css?' + Math.random() + '" />');
-			document.write('<link rel="stylesheet" href="https://jsypay.jiaobaowang.net/suitetest/js/demoCssJs/jquery-weui.css?' + Math.random() + '" />');
-			document.write('<link rel="stylesheet" href="https://jsypay.jiaobaowang.net/suitetest/js/demoCssJs/demos.css?' + Math.random() + '" />');
-			document.write('<link rel="stylesheet" href="https://jsypay.jiaobaowang.net/suitetest/css/utils/iconfont.css?' + Math.random() + '" />');
-			//			document.write('<link rel="stylesheet" href="https://jsypay.jiaobaowang.net/suitetest/css/classCircle/class_circle_home.css?' + Math.random() + '" />');
-		</script>
+		<link rel="stylesheet" href="lib/weui.min.css" />
+		<link rel="stylesheet" href="css/jquery-weui.css" />
+		<link rel="stylesheet" href="css/demos.css" />
+		<link rel="stylesheet" href="https://jsypay.jiaobaowang.net/suitetest/css/utils/iconfont.css" />
+		<style>
+			.wrap {
+				width: 30px;
+				position: relative;
+			}
+			
+			.img {
+				width: 27px;
+				height: 27px;
+			}
+			
+			.notice {
+				width: 15px;
+				height: 15px;
+				line-height: 15px;
+				font-size: 10px;
+				color: #fff;
+				text-align: center;
+				background-color: #f00;
+				border-radius: 50%;
+				position: absolute;
+				right: -7px;
+				top: -7px;
+			}
+			
+			.lines {
+				height: 1px;
+				border-top: 10px solid #f5f1f1;
+				text-align: center;
+				margin: 10px 0px 0px 0px;
+			}
+		</style>
 	</head>
 
 	<body>
-		<div id="homework" v-if="stat<2">
-			<div class="weui-cell">
-				<div class="weui-cell__hd"><label class="weui-label">科目</label></div>
-				<div class="weui-cell__bd">
-					<input onclick="selectSubject(this)" class="weui-input" placeholder="请选择科目" :value="subject.currSubject.name" v-model="subject.currSubject.name">
-				</div>
-			</div>
-			<div class="weui-cell">
-				<div class="weui-cell__hd"><label class="weui-label">班级</label></div>
-				<div class="weui-cell__bd">
-					<input onclick="selectClass(this)" class="weui-input" placeholder="请选择班级" :value="classes.currClass.name" v-model="classes.currClass.name">
-				</div>
-			</div>
-			<div class="weui-cell">
-				<div class="weui-cell__hd"><label class="weui-label">内容</label></div>
-
-			</div>
-			<textarea name="MSG" cols=0 rows=4 placeholder="根据老师的要求来完成作业吧" v-model="workTitle">{{workTitle}}</textarea>
-			<div style="margin: -20px 0px">
-				<div class="weui-cell weui-cell_switch">
-					<div class="weui-cell__bd">是否发送通知</div>
-					<div class="weui-cell__ft">
-						<input class="weui-switch" type="checkbox" v-model="issend">
-					</div>
-				</div>
-			</div>
-			<div class="weui-cells weui-cells_form">
-				<div class="weui-cell">
-					<div class="weui-cell__bd">
-						<div class="weui-uploader">
-							<div class="weui-uploader__hd">
-								<p class="weui-uploader__title">上传照片</p>
+		<div class="weui-tab">
+			<div class="weui-tab__bd">
+				<div class="weui-tab__bd-item weui-tab__bd-item--active">
+					<div id="homework" v-if="stat<2">
+						<div class="weui-cell">
+							<div class="weui-cell__hd"><label class="weui-label">科目</label></div>
+							<div class="weui-cell__bd">
+								<input onclick="selectSubject(this)" class="weui-input" placeholder="请选择科目" :value="subject.currSubject.name" v-model="subject.currSubject.name">
 							</div>
-							<div class="weui-uploader__bd">
-								<ul class="weui-uploader__files" id="uploaderFiles">
-									<li v-for="(file,index) of uploadedFiles" @click="clickImg(index)" v-bind:class="['weui-uploader__file']" v-bind:style="{'background-image':'url('+file.ImgUrl+')'}"></li>
-								</ul>
-								<div class="weui-uploader__input-box" :style="displayAddBtn">
-									<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" v-on:change="selectFile($event)">
-
+						</div>
+						<div class="weui-cell">
+							<div class="weui-cell__hd"><label class="weui-label">班级</label></div>
+							<div class="weui-cell__bd">
+								<input onclick="selectClass(this)" class="weui-input" placeholder="请选择班级" :value="classes.currClass.name" v-model="classes.currClass.name">
+							</div>
+						</div>
+						<div class="weui-cells__title">内容</div>
+						<div class="weui-cells">
+							<div class="weui-cell">
+								<div class="weui-cell__bd">
+									<textarea style="width:100%" name="MSG" cols=0 rows=4 placeholder="作业内容" v-model="workTitle">{{workTitle}}</textarea>
+									<div class="weui-textarea-counter"><span>0</span>/200</div>
 								</div>
+							</div>
+						</div>
+						<div style="margin: -20px 0px">
+							<div class="weui-cell weui-cell_switch">
+								<div class="weui-cell__bd">是否发送通知</div>
+								<div class="weui-cell__ft">
+									<input class="weui-switch" type="checkbox" v-model="issend">
+								</div>
+							</div>
+						</div>
+
+						<div class="weui-cells weui-cells_form">
+							<div class="weui-cell">
+								<div class="weui-cell__bd">
+									<div class="weui-uploader">
+										<div class="weui-uploader__hd">
+											<p class="weui-uploader__title">上传照片</p>
+										</div>
+										<div class="weui-uploader__bd">
+											<ul class="weui-uploader__files" id="uploaderFiles">
+												<li v-for="(file,index) of uploadedFiles" @click="clickImg(index)" v-bind:class="['weui-uploader__file']" v-bind:style="{'background-image':'url('+file.ImgUrl+')'}"></li>
+											</ul>
+											<div class="weui-uploader__input-box" :style="displayAddBtn">
+												<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" v-on:change="selectFile($event)">
+
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<a href="javascript:;" class="weui-btn weui-btn_primary" @click="clickSubmitBtn()">{{submitBtnTitle}}</a>
+						<input id="qnInput" style="display: none;" />
+						<!--<div class="weui-gallery" style="display: block">-->
+						<div class="weui-gallery" :style="displayGallery">
+							<span class="weui-gallery__img" @click="clickGigImg" :style="{backgroundImage:'url('+selectImgPath+')'}"></span>
+							<div class="weui-gallery__opr">
+								<a href="javascript:" class="weui-gallery__del">
+									<i class="weui-icon-delete weui-icon_gallery-delete" @click="deleteImg"></i>
+								</a>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<a href="javascript:;" class="weui-btn weui-btn_primary" @click="clickSubmitBtn()">{{submitBtnTitle}}</a>
-			<input id="qnInput" style="display: none;" />
-			<!--<div class="weui-gallery" style="display: block">-->
-			<div class="weui-gallery" :style="displayGallery">
-				<span class="weui-gallery__img" @click="clickGigImg" :style="{backgroundImage:'url('+selectImgPath+')'}"></span>
-				<div class="weui-gallery__opr">
-					<a href="javascript:" class="weui-gallery__del">
-						<i class="weui-icon-delete weui-icon_gallery-delete" @click="deleteImg"></i>
-					</a>
-				</div>
-			</div>
 		</div>
 
-		<script src="https://jsypay.jiaobaowang.net/suitetest/js/mui.min.js"></script>
+		<div class="weui_tab footer-menu">
+			<div class="weui-tabbar">
+				<a href="index.aspx" class="weui-tabbar__item">
+					<div class="wrap">
+						<img class="img" src="images/pic_ico_index0.png" alt="">
+						<div class="notice">8</div>
+					</div>
+					<p class="weui-tabbar__label">微校园</p>
+				</a>
+				<a href="worktecsend.aspx" class="weui-tabbar__item weui-bar__item--on">
+					<div class="wrap">
+						<img class="img" src="images/pic_ico_worksend.png" alt="">
+						<div class="notice">12</div>
+					</div>
+					<p class="weui-tabbar__label">作业发布</p>
+				</a>
+				<a href="#" class="weui-tabbar__item">
+					<div class="wrap">
+						<img class="img" src="images/pic_ico_workindex0.png" alt="">
+						<div class="notice">12</div>
+					</div>
+					<p class="weui-tabbar__label">作业管理</p>
+				</a>
+				<a href="workmine.aspx" class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
+						<img class="img" src="images/pic_ico_workmine0.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">我的作业</p>
+				</a>
+			</div>
+		</div>
 		<script src="https://jsypay.jiaobaowang.net/suitetest/js/weui.min.js" type="text/javascript" charset="utf-8"></script>
 
 		<script src="https://jsypay.jiaobaowang.net/suitetest/js/demoCssJs/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="https://jsypay.jiaobaowang.net/suitetest/js/appweb/choose-file.js" type="text/javascript" charset="utf-8"></script>
-		<script src="https://jsypay.jiaobaowang.net/suitetest/js/demoCssJs/jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
-		<script src="https://jsypay.jiaobaowang.net/suitetest/js/demoCssJs/jquery-weui.js" type="text/javascript" charset="utf-8"></script>
+		<script src="lib/jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery-weui.js" type="text/javascript" charset="utf-8"></script>
 		<script src="https://jsypay.jiaobaowang.net/suitetest/js/utils/consts.js"></script>
 		<script src="https://jsypay.jiaobaowang.net/suitetest/js/utils/events.js"></script>
 		<script src="https://jsypay.jiaobaowang.net/suitetest/js/lib/vconsole/vconsole.min.js"></script>
+		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/PublicProtocol.js'></script>
+		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/utils/utils.js'></script>
+		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/utils/storageutil.js'></script>
+		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/lib/plupload/moxie.min.js'></script>
+		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/lib/plupload/plupload.full.min.js'></script>
+		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/lib/qiniu/qiniu.min.js'></script>
+		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/utils/cryption.js'></script>
+		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/utils/cloudutil.js'></script>
+		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/utils/compress.js'></script>
+		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/utils/pluploadutil.js'></script>
+
 		<script type="text/javascript">
-			document.write("<s" + "cript type='text/javascript' src='../../js/PublicProtocol.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/utils/storageutil.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/lib/plupload/moxie.min.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/lib/qiniu/qiniu.min.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/utils/cryption.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/utils/cloudutil.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/utils/compress.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/utils/pluploadutil.js?" + Math.random() + "'></s" + "cript>");
-		</script>
-		<script type="text/javascript">
-			mui.init();
 			var uptokenData;
 			var qnFileUploader; //七牛上传控件对象
 			window.onload = function() {
@@ -106,6 +175,13 @@
 				initQNUploader();
 				getSub();
 				getDepart();
+				//对按钮进行监听
+				document.getElementById("notice").addEventListener('toggle', function(event) {
+					homework.issend = homework.issend == 0 ? 1 : 0;
+					console.log(homework.issend);
+					//alert(isManual);
+				});
+
 			}
 			var homework = new Vue({
 				el: '#homework',
@@ -125,10 +201,10 @@
 						},
 						allPersons: []
 					},
-					issend: true,
 					workTitle: '',
 					stat: 0,
-					submitBtnTitle: '提交',
+					issend: true,
+					submitBtnTitle: '发布',
 					displayGallery: {
 						display: 'none'
 					},
@@ -188,12 +264,12 @@
 
 					},
 					clickSubmitBtn: function() { //提交按钮
-						var issend = homework.issend ? 1 : 0;
-						console.log(issend)
 						if(homework.workTitle.length == 0 && homework.uploadedFiles.length == 0) {
-							alert('请作答后再提交');
+							alert('请填写具体内容后再发布');
 							return;
 						}
+						var issend = homework.issend ? 1 : 0;
+
 						//附件数组
 						var tempEncs = [];
 						for(var i = 0; i < homework.uploadedFiles.length; i++) {
@@ -240,45 +316,13 @@
 							$.hideLoading();
 							if(data.RspCode == 0) {
 								console.log('成功');
-								mui.toast('成功');
+								$.toptip('回复成功', 'success');
 							}
 
 						})
 					}
 				}
 			});
-
-			//获取回答的作业
-			function findWork() {
-				//学生分页查找作业
-				var tempData = {
-					cmd: 'work', //14.作业管理
-					type: 'stufind', //学生分页查找作业
-					workdoid: '53', //做作业ID,workdoid,见获取作业列表中的workdoid
-					pagesize: '1', //作答内容
-					pageindex: '1' //作答附件
-				}
-				unitWebsitePro(tempData, function(data) {
-					$.hideLoading();
-					if(data.RspCode == 0) {
-						console.log('成功获取作业:' + JSON.stringify(data));
-						if(data.RspData.dt.length > 0) {
-							var tempWork = data.RspData.dt[0];
-							homework.workTitle = tempWork.DoContent;
-							homework.stat = tempWork.stat;
-							homework.uploadedFiles = data.RspData.dt2;
-							if(tempWork.stat == 0) {
-								homework.submitBtnTitle = '提交';
-							} else {
-								homework.submitBtnTitle = '修改';
-							}
-						}
-					} else {
-						alert(data.RspTxt);
-					}
-				});
-			}
-
 			/**
 			 * 初始化上传
 			 */
@@ -435,7 +479,7 @@
 						for(var i = 0; i < homework.depart_array.length; i++) {
 							var model = homework.depart_array[i];
 							console.log("model=" + JSON.stringify(model))
-							//									getPerson(model.value, i)
+							//							getPerson(model.value, i)
 							model.value = model.value;
 							model.label = model.title;
 						}
@@ -474,6 +518,7 @@
 						} else {
 							homework.classes.allPersons = homework.classes.allPersons.concat(data.RspData);
 						}
+
 					} else {
 						mui.toast(data.RspTxt)
 					}
@@ -502,18 +547,7 @@
 							getPerson(result[0].value, -1)
 
 						}
-//						for(var i = 0; i < homework.depart_array.length; i++) {
-//							var model = homework.depart_array[i];
-//							if(model.value == result[0].value) {
-//								if(model.value == -1) {
-//									homework.classes.currClass.persons = homework.classes.allPersons
-//								} else {
-//									homework.classes.currClass.persons = model.persons;
-//								}
-//
-//							}
-//						}
-						//						console.log(result);
+
 					}
 				});
 			}
@@ -532,6 +566,30 @@
 					}
 				});
 			}
+		</script>
+		<script>
+			var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
+			var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
+			$('.weui-tab__bd').css({
+				'height': (allheight - barheight) * 100 / allheight + '%'
+			});
+			//有红点提示的宽度调整
+			var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
+			$('.wrap').css({
+				'left': (tabar_width - 30) * 50 / tabar_width + '%'
+			});
+			window.addEventListener("resize", function() {
+				var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
+				var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
+				$('.weui-tab__bd').css({
+					'height': (allheight - barheight) * 100 / allheight + '%'
+				});
+
+				var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
+				$('.wrap').css({
+					'left': (tabar_width - 30) * 50 / tabar_width + '%'
+				});
+			}, false);
 		</script>
 	</body>
 

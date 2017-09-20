@@ -402,7 +402,8 @@ function initRouter() {
 				if(types[1] == "png" || types[1] == "jpg" || types[1] == "jpeg") {
 					self.allow_back = false;
 					$.showLoading('处理中...');
-					try {
+					EXIF.getData(files[0], function() {
+						var orientation = EXIF.getTag(this, 'Orientation'); //获取旋转信息
 						//显示文件
 						var reader = new FileReader();
 						reader.onload = function() {
@@ -411,24 +412,18 @@ function initRouter() {
 							compress.getImgInfo(result, function(img, imgInfo) {
 								console.log("获取的文件信息：" + JSON.stringify(imgInfo));
 								console.log("原图尺寸：" + result.length);
-								var fileOb;
-								if(result.length > maxSize) {
-									console.log("需要压缩");
-									var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)));
-									var blob = compress.base64ToBlob(newDataUrl, 'image/jpeg');
-									console.log("blob.type:" + blob.type);
-									console.log('要传递的文件大小：' + blob.size);
-									blob.lastModifiedDate = new Date();
-									fileOb = blob;
-								} else {
-									fileOb = files[0];
-								}
+								var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)), orientation);
+								var blob = compress.base64ToBlob(newDataUrl, 'image/jpeg');
+								console.log("blob.type:" + blob.type);
+								console.log('要传递的文件大小：' + blob.size);
+								blob.lastModifiedDate = new Date();
+								fileOb = blob;
 								var newImage = {
-									filePath: result, //文件路径
+									filePath: newDataUrl, //文件路径
 									uploading: false, //是否正在上传
 									process: "", //进度
 									state: null, //状态
-									file: fileOb, //文件对象
+									file: blob, //文件对象
 									fileName: Date.now() + '.jpg',
 									uploaded: false //是否上传过
 								}
@@ -439,13 +434,7 @@ function initRouter() {
 							});
 						}
 						reader.readAsDataURL(files[0]);
-					} catch(e) {
-						self.allow_back = true;
-						$.hideLoading();
-						$('#uploaderInput').val('');
-						$.alert(e.message, "添加失败");
-					};
-
+					});
 				} else {
 					$.alert("请选择png,jpg,jpeg类型的图片", "选择失败");
 				}

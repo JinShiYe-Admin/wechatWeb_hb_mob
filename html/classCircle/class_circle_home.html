@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1, user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<title>班级圈</title>
@@ -44,7 +44,7 @@
 			<router-view v-if="!$route.meta.keepAlive">
 			</router-view>
 		</div>
-		<input id="qnInput" style="display: none;" />
+		<div id="qnInput" style="display: none;" /></div>
 		<!--路由--班级圈主页-->
 		<template id="router_class_circle_home">
 			<div id="class_circle_home" class="weui-tab">
@@ -350,6 +350,7 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cloudutil.js?" + mathRandom + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/compress.js?" + mathRandom + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/pluploadutil.js?" + mathRandom + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/exif/exif.min.js?" + mathRandom + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_home.js?" + mathRandom + "'></s" + "cript>");
 			//document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_temp_data.js?" + mathRandom + "'></s" + "cript>");
 		</script>

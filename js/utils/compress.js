@@ -59,7 +59,14 @@ var compress = (function(mod) {
 				console.log("complete!");
 			});
 	}
-	mod.getCanvasDataUrl = function(img, suitableSize) {
+
+	/**
+	 * 生成一张图片
+	 * @param {Object} img 原始图片元素
+	 * @param {Object} suitableSize 压缩的配置
+	 * @param {Object} orientation 旋转角度
+	 */
+	mod.getCanvasDataUrl = function(img, suitableSize, orientation) {
 		console.log("*****重绘图片的宽高******");
 		var imageType = 'image/jpeg',
 			imageArgu = 0.7;
@@ -67,6 +74,26 @@ var compress = (function(mod) {
 		canvas.width = suitableSize.width;
 		canvas.height = suitableSize.height;
 		var ctx = canvas.getContext('2d');
+		switch(orientation) {
+			case 6: //需要顺时针（向左）90度旋转
+				canvas.width = suitableSize.height;
+				canvas.height = suitableSize.width;
+				ctx.translate(suitableSize.height, 0);
+				ctx.rotate(90 * Math.PI / 180);
+				break;
+			case 8: //需要逆时针（向右）90度旋转
+				canvas.width = suitableSize.height;
+				canvas.height = suitableSize.width;
+				ctx.translate(0, suitableSize.width);
+				ctx.rotate(-90 * Math.PI / 180);
+				break;
+			case 3: //需要180度旋转
+				ctx.translate(suitableSize.width, suitableSize.height);
+				ctx.rotate(-180 * Math.PI / 180);
+				break;
+			default:
+				break;
+		}
 		ctx.drawImage(img, 0, 0, suitableSize.width, suitableSize.height);
 		return canvas.toDataURL(imageType, imageArgu);
 	}

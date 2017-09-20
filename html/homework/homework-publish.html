@@ -34,10 +34,12 @@
 
 			</div>
 			<textarea name="MSG" cols=0 rows=4 placeholder="根据老师的要求来完成作业吧" v-model="workTitle">{{workTitle}}</textarea>
-			<div class="online-container">
-				<p class="submit-label" style="width: 200px;font-size: 16px;margin-left: 10px;">需学生在线提交</p>
-				<div id="onlineSwitch" class="mui-switch mui-active mui-switch-green online-switch  mui-pull-right" style="margin-top: -40px;">
-					<div class="mui-switch-handle"></div>
+			<div style="margin: -20px 0px">
+				<div class="weui-cell weui-cell_switch">
+					<div class="weui-cell__bd">是否发送通知</div>
+					<div class="weui-cell__ft">
+						<input class="weui-switch" type="checkbox" v-model="issend">
+					</div>
 				</div>
 			</div>
 			<div class="weui-cells weui-cells_form">
@@ -123,6 +125,7 @@
 						},
 						allPersons: []
 					},
+					issend: true,
 					workTitle: '',
 					stat: 0,
 					submitBtnTitle: '提交',
@@ -185,6 +188,8 @@
 
 					},
 					clickSubmitBtn: function() { //提交按钮
+						var issend = homework.issend ? 1 : 0;
+						console.log(issend)
 						if(homework.workTitle.length == 0 && homework.uploadedFiles.length == 0) {
 							alert('请作答后再提交');
 							return;
@@ -228,7 +233,7 @@
 							subname: homework.subject.currSubject.name,
 							subimg: '',
 							encs: tempEncs,
-							issend: 1
+							issend: issend
 						}
 						console.log(JSON.stringify(tempData))
 						unitWebsitePro(tempData, function(data) {
@@ -430,7 +435,7 @@
 						for(var i = 0; i < homework.depart_array.length; i++) {
 							var model = homework.depart_array[i];
 							console.log("model=" + JSON.stringify(model))
-							getPerson(model.value, i)
+							//									getPerson(model.value, i)
 							model.value = model.value;
 							model.label = model.title;
 						}
@@ -456,8 +461,19 @@
 				unitWebsitePro(tempData, function(data) {
 					console.log('人员:' + JSON.stringify(data));
 					if(data.RspCode == 0) {
-						homework.depart_array[index].persons = data.RspData;
-						homework.classes.allPersons = homework.classes.allPersons.concat(data.RspData);
+
+						if(index == -1) {
+							for(var i = 0; i < homework.depart_array.length; i++) {
+								var model = homework.depart_array[i];
+								console.log("model=" + JSON.stringify(model))
+								if(model.value == colid) {
+									model.persons = data.RspData;
+								}
+							}
+
+						} else {
+							homework.classes.allPersons = homework.classes.allPersons.concat(data.RspData);
+						}
 					} else {
 						mui.toast(data.RspTxt)
 					}
@@ -475,17 +491,28 @@
 					onConfirm: function(result) {
 						homework.classes.currClass.name = result[0].label;
 						homework.classes.currClass.id = result[0].value;
-						for(var i = 0; i < homework.depart_array.length; i++) {
-							var model = homework.depart_array[i];
-							if(model.value == result[0].value) {
-								if(model.value == -1) {
-									homework.classes.currClass.persons = homework.classes.allPersons
-								} else {
-									homework.classes.currClass.persons = model.persons;
-								}
+						if(result[0].value == -1) {
+							for(var i = 0; i < homework.depart_array.length; i++) {
+								var model = homework.depart_array[i];
+								console.log("model=" + JSON.stringify(model))
+								getPerson(model.value, i)
 
 							}
+						} else {
+							getPerson(result[0].value, -1)
+
 						}
+//						for(var i = 0; i < homework.depart_array.length; i++) {
+//							var model = homework.depart_array[i];
+//							if(model.value == result[0].value) {
+//								if(model.value == -1) {
+//									homework.classes.currClass.persons = homework.classes.allPersons
+//								} else {
+//									homework.classes.currClass.persons = model.persons;
+//								}
+//
+//							}
+//						}
 						//						console.log(result);
 					}
 				});

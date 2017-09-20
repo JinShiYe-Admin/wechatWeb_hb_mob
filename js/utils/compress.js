@@ -68,6 +68,7 @@ var compress = (function(mod) {
 	 */
 	mod.getCanvasDataUrl = function(img, suitableSize, orientation) {
 		console.log("*****重绘图片的宽高******");
+		console.log("orientation:" + orientation);
 		var imageType = 'image/jpeg',
 			imageArgu = 0.7;
 		var canvas = document.createElement('canvas');

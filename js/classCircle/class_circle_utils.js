@@ -441,6 +441,9 @@ Vue.component("image-item", {
 		 * @param {Object} index 需要显示的图片的序号
 		 */
 		showImage: function(index) {
+			if(index > this.imagesThumb.length - 1) {
+				return false;
+			}
 			var pb = $.photoBrowser({
 				initIndex: index,
 				items: this.images
@@ -452,13 +455,11 @@ Vue.component("image-item", {
 		},
 		imageLoad: function(e) {
 			var img = e.target;
-			var imgWidth = img.width;
-			var imgHeight = img.height;
+			var imgWidth = img.offsetWidth;
+			var imgHeight = img.offsetHeight;
 			if(imgWidth > imgHeight) {
 				img.style.height = imgWidth + "px";
 				img.style.width = imgWidth * imgWidth / imgHeight + "px";
-				img.style.transform = "translate(-25%,-50%)";
-				img.style.WebkitTransform = "translate(-25%,-50%)";
 			}
 		}
 	}

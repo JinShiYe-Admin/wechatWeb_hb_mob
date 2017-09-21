@@ -22,13 +22,15 @@
 				var relate_praise_name = wsWidth - 30 - 40 - 15 - 5 - 5 - 48; //与我相关的人的名称的宽度(赞了我)
 				var relate_comment_name = wsWidth - 30 - 40 - 15 - 5 - 5 - 64 - 10 - 32; //与我相关的人的名称的宽度(评论了我)
 				var relate_trends_content = wsWidth - 30 - 50 - 5; //与我相关动态的内容
+				var grids_item = Math.floor((wsWidth - 30 - 12) / 3); //图片外框的高度
 				var style = document.createElement("style");
 				style.type = "text/css";
 				var sstr_0 = ".relate-reply-type-praise .relate-name{max-width: " + relate_praise_name + "px;}";
 				var sstr_1 = ".relate-reply-type-comment .relate-name{max-width: " + relate_comment_name + "px;}";
-				var sstr_2 = ".class-circle-user-space.weui-tab{height: " + (wsHeight + 60) + "px;}"
+				var sstr_2 = ".class-circle-user-space.weui-tab{height: " + (wsHeight + 60) + "px;}";
 				var sstr_3 = ".relate-to-me .relate-reply-trends-bg .relate-reply-trends-img+.relate-reply-trends {width: " + relate_trends_content + "px;}"
-				style.innerHTML = sstr_0 + sstr_1 + sstr_2 + sstr_3;
+				var sstr_4 = ".class-circle-grids-item{height: " + grids_item + "px;}";
+				style.innerHTML = sstr_0 + sstr_1 + sstr_2 + sstr_3 + sstr_4;
 				document.getElementsByTagName('head').item(0).appendChild(style);
 			})();
 		</script>
@@ -300,11 +302,45 @@
 		<template id="temp_show_image">
 			<div class="class-circle-content-all-img">
 				<img v-if="imagesThumb.length == 1" class="class-circle-content-img" :src="imagesThumb[0]" @error.once="imageError($event,0)" @click="showImage(0)" />
-				<div v-else-if="imagesThumb.length > 1" class="class-circle-grids">
-					<div class="class-circle-grids-item" v-for="(img_value,img_index) in imagesThumb" @click="showImage(img_index)">
-						<img :src="img_value" @load="imageLoad($event)" @error.once="imageError($event,img_index)" />
+				<template v-else-if="imagesThumb.length > 1">
+					<div class="class-circle-grids">
+						<div class="class-circle-grids-item" @click="showImage(0)">
+							<img :src="imagesThumb[0]" @load="imageLoad($event)" @error.once="imageError($event,0)" />
+						</div>
+						<div class="class-circle-grids-item class-circle-grids-item-second" @click="showImage(1)">
+							<img :src="imagesThumb[1]" @load="imageLoad($event)" @error.once="imageError($event,1)" />
+						</div>
+						<div class="class-circle-grids-item" @click="showImage(2)">
+							<img :src="imagesThumb[2]" @load="imageLoad($event)" @error.once="imageError($event,2)" />
+						</div>
 					</div>
-				</div>
+					<template v-if="imagesThumb.length > 3">
+						<div class="class-circle-grids class-circle-grids-notfirst">
+							<div class="class-circle-grids-item" @click="showImage(3)">
+								<img :src="imagesThumb[3]" @load="imageLoad($event)" @error.once="imageError($event,3)" />
+							</div>
+							<div class="class-circle-grids-item class-circle-grids-item-second" @click="showImage(4)">
+								<img :src="imagesThumb[4]" @load="imageLoad($event)" @error.once="imageError($event,4)" />
+							</div>
+							<div class="class-circle-grids-item" @click="showImage(5)">
+								<img :src="imagesThumb[5]" @load="imageLoad($event)" @error.once="imageError($event,5)" />
+							</div>
+						</div>
+					</template>
+					<template v-if="imagesThumb.length > 6">
+						<div class="class-circle-grids class-circle-grids-notfirst">
+							<div class="class-circle-grids-item" @click="showImage(6)">
+								<img :src="imagesThumb[6]" @load="imageLoad($event)" @error.once="imageError($event,6)" />
+							</div>
+							<div class="class-circle-grids-item class-circle-grids-item-second" @click="showImage(7)">
+								<img :src="imagesThumb[7]" @load="imageLoad($event)" @error.once="imageError($event,7)" />
+							</div>
+							<div class="class-circle-grids-item" @click="showImage(8)">
+								<img :src="imagesThumb[8]" @load="imageLoad($event)" @error.once="imageError($event,8)" />
+							</div>
+						</div>
+					</template>
+				</template>
 			</div>
 		</template>
 		<!--点赞列表-->
@@ -332,25 +368,23 @@
 		</template>
 		<script type="text/javascript">
 			var mathRandom = Math.random();
-			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + mathRandom + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/PublicProtocol.js?" + mathRandom + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js?" + mathRandom + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/storageutil.js?" + mathRandom + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-2.1.4.js?" + mathRandom + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-weui.js?" + mathRandom + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/swiper.js?" + mathRandom + "'></s" + "cript>");
-			//document.write("<s" + "cript type='text/javascript' src='../../js/weui.min.js?" + mathRandom + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/vue.js?" + mathRandom + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/vue-router.js?" + mathRandom + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/vconsole/vconsole.min.js?" + mathRandom + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js?" + mathRandom + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_vue.js?" + mathRandom + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_protocol.js?" + mathRandom + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.min.js?" + mathRandom + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js?" + mathRandom + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/qiniu/qiniu.min.js?" + mathRandom + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cryption.js?" + mathRandom + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cloudutil.js?" + mathRandom + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/compress.js?" + mathRandom + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/utils/pluploadutil.js?" + mathRandom + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/exif/exif.min.js?" + mathRandom + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_utils.js?" + mathRandom + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_home.js?" + mathRandom + "'></s" + "cript>");
 			//document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_temp_data.js?" + mathRandom + "'></s" + "cript>");
 		</script>

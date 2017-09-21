@@ -251,7 +251,7 @@
 							<div class="weui-cell__bd">
 								<input id="summas" v-model.lazy="newszy.message" class="weui-input" type="text" :placeholder="'请输入'+newszy.title">
 							</div>
-						</div>
+						</div>	
 					</div>
 				</div>
 			</div>
@@ -282,6 +282,7 @@
 						</div>
 					</div>
 				</div>
+				 
 			</div>
 			<div class="weui-btn-area">
 				<button id="submit" v-on:click="submitClick" class="weui-btn weui-btn_primary">{{editName}}</button>
@@ -600,6 +601,7 @@
 					isreply: PriIsReply,
 					stat: 1
 				};
+				alert(JSON.stringify(comData))
 				console.log('comData=========================:' + JSON.stringify(comData));
 				unitWebsitePro(comData, function(data) {
 					if(data.RspCode == 0) {
@@ -630,8 +632,7 @@
 				var id1 = id + i; 
 				if(vm.type == 'edit') {
 					if(id == 'chni') { 
-						var Chnid = $("#chnid option:selected").val();
-						alert(Chnid)
+						var Chnid = $("#chnid option:selected").val(); 
 						var para = {
 							cmd: 'news',
 							type: 'edit',
@@ -701,7 +702,7 @@
 					unique_names: false, // 默认 false，key 为文件名。若开启该选项，JS-SDK 会为每个文件自动生成key（文件名）
 					save_key: false, // 默认 false。若在服务端生成 uptoken 的上传策略中指定了 `save_key`，则开启，SDK在前端将不对key进行任何处理
 					get_new_uptoken: true, // 设置上传文件的时候是否每次都重新获取新的 uptoken
-					domain: 'http://qn-kfpb.jiaobaowang.net/', // bucket 域名，下载资源时用到，如：'http://xxx.bkt.clouddn.com/' **必需**
+					domain: storageutil.QNPBDOMAIN, // bucket 域名，下载资源时用到，如：'http://xxx.bkt.clouddn.com/' **必需**
 					max_file_size: '10mb', // 最大文件体积限制
 					flash_swf_url: '../../js/lib/plupload/Moxie.swf', //引入 flash,相对路径
 					max_retries: 0, // 上传失败最大重试次数
@@ -712,7 +713,7 @@
 						mime_types: [ //只允许上传图片和zip文件
 							{
 								title: "Image files",
-								extensions: "jpg,png"
+								extensions: "jpg,png,jpeg,gif,bmp"
 							}
 						]
 					},
@@ -735,7 +736,8 @@
 							console.log("文件:info:" + JSON.stringify(info));
 							if(info.status == 200) {
 								var cc = eval("(" + info.response + ")");
-								imgurl = 'http://qn-kfpb.jiaobaowang.net/' + cc.key;
+								imgurl = storageutil.QNPBDOMAIN + cc.key;
+								console.log("imgurl:" + imgurl);
 								var imgLink = Qiniu.imageView2({
 									mode: 3, // 缩略模式，共6种[0-5]
 									w: 100, // 具体含义由缩略模式决定 

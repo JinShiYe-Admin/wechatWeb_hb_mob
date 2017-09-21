@@ -10,7 +10,7 @@
     "icons": {
         "72": "icon.png"
     },
-    "launch_path": "html/homework/homework-publish.html",/*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
+    "launch_path": "html/unitWeb/newsList.html",/*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
     "developer": {
         "name": "",/*开发者名称*/
         "email": "",/*开发者邮箱地址*/
@@ -230,7 +230,8 @@
 					"js/demoCssJs/iscroll.js",
 					"js/demoCssJs/weui.min.css",
 					"js/utils/storageutil.js",
-					"js/importJS.js"
+					"js/importJS.js",
+					"html/unitWeb/addnews.html"
 				],
 				"refer": [],
 				"priority": 0
@@ -325,7 +326,8 @@
 					"html/appWeb/schedule.html",
 					"html/appWeb/home-publish.html",
 					"html/appWeb/courses-table.html",
-					"html/unitWeb/column-home.html"
+					"html/unitWeb/column-home.html",
+					"html/unitWeb/addnews.html"
 				],
 				"priority": 0
 			},
@@ -492,6 +494,30 @@
 				],
 				"refer": [],
 				"priority": 0
+			},
+			"html/unitWeb/addnews.html": {
+				"resources": [
+					"js/utils/cloudutil.js",
+					"js/lib/qiniu/qiniu.min.js",
+					"js/utils/cryption.js",
+					"js/utils/utils.js",
+					"js/PublicProtocol.js",
+					"css/mui.min.css",
+					"js/utils/pluploadutil.js",
+					"css/weui.min.css",
+					"js/lib/plupload/plupload.full.min.js",
+					"js/lib/plupload/moxie.min.js",
+					"js/utils/storageutil.js",
+					"js/importJS.js",
+					"js/jquery.min.js",
+					"js/jweixin.js",
+					"js/vue.min.js",
+					"js/mui.min.js",
+					"image/add.png",
+					"js/weui.min.js"
+				],
+				"refer": [],
+				"priority": 0
 			}
 		},
 		"idle": {
@@ -501,7 +527,6 @@
 				"html/unitWeb/teacher_faculty.html",
 				"js/configuration/website_config.js",
 				"js/lib/plupload/plupload.dev.js",
-				"html/unitWeb/addnews.html",
 				"html/appWeb/testB.html",
 				"js/demoCssJs/zepto.js",
 				"js/demoCssJs/swiper.js",

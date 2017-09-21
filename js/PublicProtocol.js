@@ -58,3 +58,48 @@ var jQAjaxPost = function(url, data, callback) {
 		}
 	});
 }
+
+/**
+ * 发送 XMLHttpRequest post 的请求
+ * @param {Object} url 路径
+ * @param {Object} data 数据
+ * @param {Object} callback 回调
+ */
+var xhrPost = function(url, data, callback) {
+	console.log('XHRP-Url:', url);
+	console.log('XHRP-Data:', data);
+	var xhr = new XMLHttpRequest();
+	xhr.open("POST", url, true);
+	xhr.timeout = 10000; //10秒超时
+	xhr.onload = function(e) {
+		console.log("XHRP:onload:", e);
+		if(this.readyState === 4 && this.status === 200) {
+			var success_data = JSON.parse(this.responseText);
+			console.log('XHRP-Success:', success_data);
+			callback(success_data);
+		} else {
+			callback({
+				RspCode: 404,
+				RspData: null,
+				RspTxt: "网络连接失败,请重新尝试一下"
+			});
+		}
+	}
+	xhr.ontimeout = function(e) {
+		console.log("XHRP:ontimeout:", e);
+		callback({
+			RspCode: 404,
+			RspData: null,
+			RspTxt: "网络连接失败,请重新尝试一下"
+		});
+	};
+	xhr.onerror = function(e) {
+		console.log("XHRP:onerror:", e);
+		callback({
+			RspCode: 404,
+			RspData: null,
+			RspTxt: "网络连接失败,请重新尝试一下"
+		});
+	};
+	xhr.send(data);
+}

@@ -503,112 +503,113 @@ Vue.component("error-item", {
 var classCircleProtocol = (function(mod) {
 	//模块
 	mod.USERSPACE = "userSpace/";
-	//公共参数，必传
-	mod.PUBDATA = {
-		uuid: "",
-		appid: "",
-		token: "",
-		sign: ""
-	}
 
 	//1.（用户空间）获取用户针对某用户的空间列表
 	mod.getUserSpacesByUserForPublisher = function(data, callback) {
-		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "getUserSpacesByUserForPublisher", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+		mod.setRequest(mod.USERSPACE + "getUserSpacesByUserForPublisher", data, callback);
 	}
 
 	//2.（用户空间）获取用户某条用户空间是否点赞
 	mod.getIsLikeUserSpaceByUser = function(data, callback) {
-		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "getIsLikeUserSpaceByUser", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+		mod.setRequest(mod.USERSPACE + "getIsLikeUserSpaceByUser", data, callback);
 	}
 
 	//3.（用户空间）获取用户空间所有点赞用户
 	mod.getIsLikeUsersById = function(data, callback) {
-		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "getIsLikeUsersById", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+		mod.setRequest(mod.USERSPACE + "getIsLikeUsersById", data, callback);
 	}
 
 	//4.（用户空间）获取多用户空间列表
 	mod.getUserSpacesByUser = function(data, callback) {
-		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "getUserSpacesByUser", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+		mod.setRequest(mod.USERSPACE + "getUserSpacesByUser", data, callback);
 	}
 
 	//5.（用户空间）新增某用户空间信息
 	mod.addUserSpace = function(data, callback) {
-		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "addUserSpace", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+		mod.setRequest(mod.USERSPACE + "addUserSpace", data, callback);
 	}
 
 	//6.（用户空间）新增某用户某用户空间评论
 	mod.addUserSpaceComment = function(data, callback) {
-		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "addUserSpaceComment", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+		mod.setRequest(mod.USERSPACE + "addUserSpaceComment", data, callback);
 	}
 
 	//7.（用户空间）新增某用户某用户空间评论回复
 	mod.addUserSpaceCommentReply = function(data, callback) {
-		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "addUserSpaceCommentReply", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+		mod.setRequest(mod.USERSPACE + "addUserSpaceCommentReply", data, callback);
 	}
 
 	//8.（用户空间）修改某用户针对某发布用户的空间阅读状态为已读
 	mod.setUserSpaceReadByUser = function(data, callback) {
-		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "setUserSpaceReadByUser", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+		mod.setRequest(mod.USERSPACE + "setUserSpaceReadByUser", data, callback);
 	}
 
 	//9.（用户空间）修改某用户某用户空间点赞状态为点赞
 	mod.setUserSpaceLikeByUser = function(data, callback) {
-		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "setUserSpaceLikeByUser", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+		mod.setRequest(mod.USERSPACE + "setUserSpaceLikeByUser", data, callback);
 	}
 
 	//10.（用户空间）删除某用户空间
 	mod.delUserSpaceById = function(data, callback) {
-		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "delUserSpaceById", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+		mod.setRequest(mod.USERSPACE + "delUserSpaceById", data, callback);
 	}
 
 	//11.（用户空间）删除某条用户空间评论
 	mod.delUserSpaceCommentById = function(data, callback) {
-		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "delUserSpaceCommentById", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+		mod.setRequest(mod.USERSPACE + "delUserSpaceCommentById", data, callback);
 	}
 
 	//12.（用户空间）获取与我相关
 	mod.getAboutMe = function(data, callback) {
-		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "getAboutMe", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+		mod.setRequest(mod.USERSPACE + "getAboutMe", data, callback);
 	}
 
 	//13.（用户空间）修改某用户评论、回复、留言状态为已读
 	mod.setCommentMsgReadByUser = function(data, callback) {
-		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "setCommentMsgReadByUser", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+		mod.setRequest(mod.USERSPACE + "setCommentMsgReadByUser", data, callback);
 	}
 
 	//14.（用户空间）新增用户空间
 	mod.addNewUserSpaceInfo = function(data, callback) {
-		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "addNewUserSpaceInfo", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+		mod.setRequest(mod.USERSPACE + "addNewUserSpaceInfo", data, callback);
 	}
 
 	//15.（用户空间）获取用户空间所有已读用户
 	mod.getReadUserBySpaceId = function(data, callback) {
-		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "getReadUserBySpaceId", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+		mod.setRequest(mod.USERSPACE + "getReadUserBySpaceId", data, callback);
 	}
 
 	//16.（用户空间）删除某用户某用户空间点赞
 	mod.delUserSpaceLikeByUser = function(data, callback) {
-		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "delUserSpaceLikeByUser", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+		mod.setRequest(mod.USERSPACE + "delUserSpaceLikeByUser", data, callback);
 	}
 
-	/**
-	 * 17.（用户空间）获取多用户空间所有用户动态列表
-	 * @param {Object} data
-	 * @param {Object} callback
-	 */
+	//17.（用户空间）获取多用户空间所有用户动态列表
 	mod.getAllUserSpacesByUser = function(data, callback) {
-		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "getAllUserSpacesByUser", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+		mod.setRequest(mod.USERSPACE + "getAllUserSpacesByUser", data, callback);
 	}
 
 	//18.（用户空间）获取多班级多用户空间所有用户未读数
 	mod.getNoReadCntForClassByUser = function(data, callback) {
-		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "getNoReadCntForClassByUser", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+		mod.setRequest(mod.USERSPACE + "getNoReadCntForClassByUser", data, callback);
 	}
 
 	//19.（用户空间）获取用户针对某条空间详情
 	mod.getUserSpaceByUser = function(data, callback) {
-		jQAjaxPost(storageutil.CLASSCIRCLEMAIN + mod.USERSPACE + "getUserSpaceByUser", JSON.stringify($.extend(data, mod.PUBDATA)), callback);
+		mod.setRequest(mod.USERSPACE + "getUserSpaceByUser", data, callback);
+	}
+
+	//发送请求
+	mod.setRequest = function(url, data, callback) {
+		//公共参数，必传
+		data.uuid = "";
+		data.appid = "";
+		data.token = "";
+		data.sign = "";
+		url = storageutil.CLASSCIRCLEMAIN + url;
+		xhrPost(url, JSON.stringify(data), callback);
 	}
 
 	return mod;
+
 })(window.classCircleProtocol || {});

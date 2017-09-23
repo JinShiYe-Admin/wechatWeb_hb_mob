@@ -708,12 +708,7 @@ function initRouter() {
 				}
 				$(".class-circle-user-space .weui-tab__bd-item").destroyInfinite();
 			} else {
-				//记录原页面的滚动距离
-				var from_data = space_data[from.params.id];
-				if(from_data != undefined) {
-					from_data.scrollTop = $(".class-circle-user-space .weui-tab__bd-item").scrollTop();
-					from_data.leave = true;
-				}
+				setUserSpaceBeforePosition(from.params.id);
 			}
 			this.initData(to.params.id);
 			next();
@@ -736,6 +731,8 @@ function initRouter() {
 					$(".class-circle-user-space .weui-tab__bd-item").destroyInfinite();
 					space_data = null;
 					space_data = {};
+				} else {
+					setUserSpaceBeforePosition(from.params.id);
 				}
 				next();
 			} else {
@@ -910,6 +907,18 @@ function homeToBeforePosition(timeId, index) {
 		$("#" + home_data.data[index].id).scrollTop(home_data.data[index].scrollTop);
 	} else {
 		clearInterval(timeId);
+	}
+}
+
+/**
+ * 记录个人空间原页面的滚动距离
+ * @param {Object} id
+ */
+function setUserSpaceBeforePosition(id) {
+	var from_data = space_data[id];
+	if(from_data != undefined) {
+		from_data.scrollTop = $(".class-circle-user-space .weui-tab__bd-item").scrollTop();
+		from_data.leave = true;
 	}
 }
 

@@ -731,6 +731,8 @@ function initRouter() {
 					$(".class-circle-user-space .weui-tab__bd-item").destroyInfinite();
 					space_data = null;
 					space_data = {};
+					this.userId = "";
+					this.data = [];
 				} else {
 					setUserSpaceBeforePosition(from.params.id);
 				}

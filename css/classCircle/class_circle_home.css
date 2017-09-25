@@ -555,3 +555,7 @@ body {
 .class-circle-grids-notfirst {
 	margin-top: 6px;
 }
+
+.weui-mask.weui-mask--visible {
+	opacity: 0.5;
+}

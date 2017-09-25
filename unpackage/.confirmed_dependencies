@@ -297,7 +297,9 @@
 			"css/utils/iconfont.css",
 			"js/utils/consts.js",
 			"js/demoCssJs/weui.min.css",
-			"js/importJS.js"
+			"js/importJS.js",
+			"js/appweb/choose-file.js",
+			"js/lib/exif/exif.min.js"
 		],
 		"refer": []
 	},

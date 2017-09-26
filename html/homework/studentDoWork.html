@@ -29,7 +29,7 @@
 									<li v-for="(file,index) of uploadedFiles" @click="clickImg(index)" v-bind:class="['weui-uploader__file']" v-bind:style="{'background-image':'url('+file.ImgUrl+')'}"></li>
 								</ul>
 								<div class="weui-uploader__input-box" :style="displayAddBtn">
-									<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" multiple="2" v-on:change="selectFile($event)">
+									<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" multiple="" v-on:change="selectFile($event)">
 								</div>
 							</div>
 						</div>
@@ -101,9 +101,10 @@
 						// 如果没有选中文件，直接返回  
 						var files = event.target.files;
 						if(files.length === 0) {
+							console.log('没有选择照片');
 							return;
 						}
-						uploadFiles(0,files);
+						uploadFiles(0, files, submitHomework.uploadedFiles.length);
 					},
 					clickImg: function(index) { //点击列表中的附件，给别的地方赋值
 						submitHomework.selectIndex = index;
@@ -180,7 +181,8 @@
 			});
 
 			//从相册中选择照片后，上传
-			function uploadFiles(index, files) {
+			//index--从相册选择照片回调里面，照片的索引，files--选择的照片信息，filesSum--选择照片之前，现存的照片张数
+			function uploadFiles(index, files, filesSum) {
 				if(index < files.length) {
 					$.showLoading('加载中...');
 					var file = files[index];
@@ -201,11 +203,11 @@
 								console.log('要传递的文件大小：' + blob.size);
 								blob.lastModifiedDate = new Date();
 								qnFileUploader.addFile(blob, Date.now() + '.jpg');
-								if(submitHomework.uploadedFiles.length + index > 8) {
+								if(filesSum + index > 8) {
 									$.alert("最多只能上传9张照片");
-								}else{
+								} else {
 									index++;
-									uploadFiles(index,files);
+									uploadFiles(index, files, filesSum);
 								}
 							});
 						}
@@ -241,6 +243,7 @@
 							} else {
 								submitHomework.submitBtnTitle = '修改';
 							}
+							displayAddBtnFun();
 						}
 					} else {
 						alert(data.RspTxt);

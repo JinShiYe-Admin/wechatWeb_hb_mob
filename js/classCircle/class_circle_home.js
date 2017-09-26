@@ -881,7 +881,7 @@ function initSpacePullToRefresh(spaceId) {
 		getUserSpace(space_data[id].userId, 1, id, this);
 	});
 	//初始化上拉加载更多
-	$(".class-circle-user-space .weui-tab__bd-item").infinite(130);
+	$(".class-circle-user-space .weui-tab__bd-item").infinite(190);
 	$(".class-circle-user-space .weui-tab__bd-item").infinite().on("infinite", function() {
 		var id = router_user_space.$route.params.id;
 		console.log("allow_loaddata:" + space_data[id].allow_loaddata);

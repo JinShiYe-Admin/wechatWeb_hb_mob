@@ -25,7 +25,7 @@ var sendConfigPro = function(configmsg, apiList) {
 
 //发送对应的网站协议，根据页面传送的data
 var unitWebsitePro = function(data0, callback) {
-	jQAjaxPost('https://jsypay.jiaobaowang.net/wxth/appschweb/schwebapi.aspx', JSON.stringify(data0), callback);
+	xhrPost('https://jsypay.jiaobaowang.net/wxth/appschweb/schwebapi.aspx', JSON.stringify(data0), callback);
 }
 
 /**

@@ -357,8 +357,7 @@
 				var detail = utils.getDataFromUrl(window.location.href); 
 				vm.type = detail.type;
 				PriNewsId = detail.newsid;
-				var insertText; 
-				vm.type='edit';
+				var insertText;  
 				if(vm.type == 'edit') {
 					var tempData = {
 						cmd: 'news', //网站栏目

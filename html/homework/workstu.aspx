@@ -161,10 +161,10 @@
 				},
 				methods: {
 					selectFile: function(event) { //从手机中选择图片后到界面的回调
-						console.log('111111');
 						// 如果没有选中文件，直接返回  
 						var files = event.target.files;
 						if(files.length === 0) {
+							$.hideLoading();
 							return;
 						} else {
 							uploadFiles(0, files, submitHomework.uploadedFiles.length);
@@ -245,35 +245,35 @@
 			//index--从相册选择照片回调里面，照片的索引，files--选择的照片信息，filesSum--选择照片之前，现存的照片张数
 			function uploadFiles(index, files, filesSum) {
 				if(index < files.length) {
-					$.showLoading('加载中...');
-					var file = files[index];
-					EXIF.getData(file, function() {
-						var orientation = EXIF.getTag(this, 'Orientation'); //获取旋转信息
-						console.log('orientation:' + JSON.stringify(orientation));
-						//显示文件
-						var reader = new FileReader();
-						reader.onload = function() {
-							var result = this.result;
-							var maxSize = 2 * 1024 * 1024;
-							compress.getImgInfo(result, function(img, imgInfo) {
-								console.log("获取的文件信息：" + JSON.stringify(imgInfo));
-								console.log("原图尺寸：" + result.length);
-								var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)), orientation);
-								var blob = compress.base64ToBlob(newDataUrl, 'image/jpeg');
-								console.log("blob.type:" + blob.type);
-								console.log('要传递的文件大小：' + blob.size);
-								blob.lastModifiedDate = new Date();
-								qnFileUploader.addFile(blob, Date.now() + '.jpg');
-								if(filesSum + index > 8) {
-									$.alert("最多只能上传9张照片");
-								} else {
+					if(filesSum + index > 8) {
+						$.alert("最多只能上传9张照片");
+					} else {
+						var file = files[index];
+						EXIF.getData(file, function() {
+							$.showLoading('加载中...');
+							var orientation = EXIF.getTag(this, 'Orientation'); //获取旋转信息
+							console.log('orientation:' + JSON.stringify(orientation));
+							//显示文件
+							var reader = new FileReader();
+							reader.onload = function() {
+								var result = this.result;
+								var maxSize = 2 * 1024 * 1024;
+								compress.getImgInfo(result, function(img, imgInfo) {
+									console.log("获取的文件信息：" + JSON.stringify(imgInfo));
+									console.log("原图尺寸：" + result.length);
+									var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)), orientation);
+									var blob = compress.base64ToBlob(newDataUrl, 'image/jpeg');
+									console.log("blob.type:" + blob.type);
+									console.log('要传递的文件大小：' + blob.size);
+									blob.lastModifiedDate = new Date();
+									qnFileUploader.addFile(blob, Date.now() + '.jpg');
 									index++;
 									uploadFiles(index, files, filesSum);
-								}
-							});
-						}
-						reader.readAsDataURL(file);
-					});
+								});
+							}
+							reader.readAsDataURL(file);
+						});
+					}
 				}
 			}
 
@@ -297,7 +297,6 @@
 							if(submitHomework.workTitle == null) {
 								submitHomework.workTitle = '';
 							}
-							submitHomework.stat = tempWork.stat;
 							submitHomework.uploadedFiles = data.RspData.dt2;
 							if(tempWork.stat == 0) {
 								submitHomework.submitBtnTitle = '提交';
@@ -305,6 +304,7 @@
 								submitHomework.submitBtnTitle = '修改';
 							}
 							displayAddBtnFun();
+							submitHomework.stat = tempWork.stat;
 						}
 					} else {
 						$.alert(data.RspTxt);

@@ -559,14 +559,3 @@ body {
 .weui-mask.weui-mask--visible {
 	opacity: 0.5;
 }
-
-.transition-home-enter-active,
-.transition-home-leave-active {
-	transition: opacity .2s;
-	-webkit-transition: opacity .2s;
-}
-
-.transition-home-enter,
-.transition-home-leave-to {
-	opacity: 0
-}

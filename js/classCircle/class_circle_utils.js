@@ -44,13 +44,11 @@ Vue.filter('commentArray', function(commentArray) {
 		if(limit == 0) {
 			break;
 		}
-		//console.log("commentArray[" + i + "]:" + JSON.stringify(commentArray[i]));
 		limit--;
 		filterArray.push($.extend(true, {}, commentArray[i]));
 		filterArray[i].Replys = [];
 
 		for(var j = 0; j < commentArray[i].Replys.length; j++) {
-			//console.log("commentArray[" + i + "].Replys[" + j + "]:" + JSON.stringify(commentArray[i].Replys[j]));
 			if(limit == 0) {
 				break;
 			}
@@ -451,7 +449,6 @@ Vue.component("image-item", {
 			pb.open();
 		},
 		imageError: function(e, index) {
-			console.log("imageError:");
 			e.target.src = this.images[index];
 		},
 		imageLoad: function(e) {

@@ -49,68 +49,60 @@
 		<div id="qnInput" style="display: none;" /></div>
 		<!--路由--班级圈主页-->
 		<template id="router_class_circle_home">
-			<transition name="transition-home">
-				<div id="class_circle_home" class="weui-tab">
-					<div class="weui-navbar">
-						<home-navbar-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-item="clickItem"></home-navbar-item>
-					</div>
-					<div class="weui-tab__bd">
-						<home-bd-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-person="clickPerson" @click-content="clickContent" @click-function="clickFunction" @click-comment="clickComment" @click-relate-content="clickRelateContent" @click-relate-reply="clickRelateReply"></home-bd-item>
-					</div>
-					<div @click="clickAddTrends" class="class-circle-report">+ 发表动态</div>
+			<div id="class_circle_home" class="weui-tab">
+				<div class="weui-navbar">
+					<home-navbar-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-item="clickItem"></home-navbar-item>
 				</div>
-			</transition>
+				<div class="weui-tab__bd">
+					<home-bd-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-person="clickPerson" @click-content="clickContent" @click-function="clickFunction" @click-comment="clickComment" @click-relate-content="clickRelateContent" @click-relate-reply="clickRelateReply"></home-bd-item>
+				</div>
+				<div @click="clickAddTrends" class="class-circle-report">+ 发表动态</div>
+			</div>
 		</template>
 		<!--路由--发布动态或者评论-->
 		<template id="router_add_trends">
-			<transition name="transition-home">
-				<add-trends @input-change="inputChange" @click-del-image="clickDelImage" @click-show-image="clickShowImage" @click-image="clickImage" :show-image="showImage" :content="content" :show-media="showMedia" :maxlength="maxlength" :placeholder="placeholder" @add-media="addMedia" @submit-data="submitData" @content-change="contentChange" :images="images"></add-trends>
-			</transition>
+			<add-trends @input-change="inputChange" @click-del-image="clickDelImage" @click-show-image="clickShowImage" @click-image="clickImage" :show-image="showImage" :content="content" :show-media="showMedia" :maxlength="maxlength" :placeholder="placeholder" @add-media="addMedia" @submit-data="submitData" @content-change="contentChange" :images="images"></add-trends>
 		</template>
 		<!--路由--动态详情-->
 		<template id="router_trends_details">
-			<transition name="transition-home">
+			<div>
 				<trends-item v-for="(item_value,item_index) in data" :index="item_index" :key="item_index" :value="item_value" :detail="true" @click-person="clickPerson" @click-function="clickFunction" @click-comment="clickComment"></trends-item>
-			</transition>
+			</div>
 		</template>
 		<!--路由-用户个人空间-->
 		<template id="router_user_space">
-			<transition name="transition-home">
-				<div class="class-circle-user-space weui-tab">
-					<div class="weui-tab__bd">
-						<div class="weui-tab__bd-item weui-tab__bd-item--active">
-							<div class="weui-pull-to-refresh__layer">
-								<div class="weui-pull-to-refresh__arrow"></div>
-								<div class="weui-pull-to-refresh__preloader"></div>
-								<div class="down">下拉刷新</div>
-								<div class="up">释放刷新</div>
-								<div class="refresh">正在刷新</div>
-							</div>
-							<div class="weui-panel weui-panel_access">
-								<div class="class-circle-user-space-bg">
-									<div class="class-circle-user-space-headimage">
-										<img :src="userId|userImage" @load="headLoad($event)" @error="headError($event)" />
-									</div>
-									<div>{{userId|userName}}</div>
+			<div class="class-circle-user-space weui-tab">
+				<div class="weui-tab__bd">
+					<div class="weui-tab__bd-item weui-tab__bd-item--active">
+						<div class="weui-pull-to-refresh__layer">
+							<div class="weui-pull-to-refresh__arrow"></div>
+							<div class="weui-pull-to-refresh__preloader"></div>
+							<div class="down">下拉刷新</div>
+							<div class="up">释放刷新</div>
+							<div class="refresh">正在刷新</div>
+						</div>
+						<div class="weui-panel weui-panel_access">
+							<div class="class-circle-user-space-bg">
+								<div class="class-circle-user-space-headimage">
+									<img :src="userId|userImage" @load="headLoad($event)" @error="headError($event)" />
 								</div>
-								<trends-item v-for="(item_value,item_index) in data" :index="item_index" :key="item_index" :value="item_value" :detail="false" @click-person="clickPerson" @click-function="clickFunction" @click-comment="clickComment" @click-content="clickContent"></trends-item>
+								<div>{{userId|userName}}</div>
 							</div>
-							<error-item v-if="show_no_more" :type="2"></error-item>
-							<error-item v-if="show_error" :type="1"></error-item>
-							<div class="weui-loadmore" v-show="show_loadmore">
-								<i class="weui-loading" v-show="show_loadmore_loading"></i>
-								<span class="weui-loadmore__tips">{{show_loadmore_content}}</span>
-							</div>
+							<trends-item v-for="(item_value,item_index) in data" :index="item_index" :key="item_index" :value="item_value" :detail="false" @click-person="clickPerson" @click-function="clickFunction" @click-comment="clickComment" @click-content="clickContent"></trends-item>
+						</div>
+						<error-item v-if="show_no_more" :type="2"></error-item>
+						<error-item v-if="show_error" :type="1"></error-item>
+						<div class="weui-loadmore" v-show="show_loadmore">
+							<i class="weui-loading" v-show="show_loadmore_loading"></i>
+							<span class="weui-loadmore__tips">{{show_loadmore_content}}</span>
 						</div>
 					</div>
 				</div>
-			</transition>
+			</div>
 		</template>
 		<!--路由-错误页面-->
 		<template id="router_error">
-			<transition name="transition-home">
-				<error-item @click-refresh="clickRefresh" :type="0"></error-item>
-			</transition>
+			<error-item @click-refresh="clickRefresh" :type="0"></error-item>
 		</template>
 		<!--班级圈主页--顶部导航-->
 		<template id="temp_trends_navbar_item">
@@ -311,7 +303,7 @@
 				<template v-else-if="imagesThumb.length > 1">
 					<div class="class-circle-grids">
 						<div class="class-circle-grids-item" @click="showImage(0)">
-							<img id="1234" :src="imagesThumb[0]" @load="imageLoad($event)" @error.once="imageError($event,0)" />
+							<img :src="imagesThumb[0]" @load="imageLoad($event)" @error.once="imageError($event,0)" />
 						</div>
 						<div class="class-circle-grids-item class-circle-grids-item-second" @click="showImage(1)">
 							<img :src="imagesThumb[1]" @load="imageLoad($event)" @error.once="imageError($event,1)" />

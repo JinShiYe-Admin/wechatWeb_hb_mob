@@ -579,8 +579,8 @@ function initRouter() {
 			 * 头像加载失败
 			 * @param {Object} e
 			 */
-			headError: function(e, level) {
-				e.target.src = utils.updateHeadImage("", level);
+			headError: function(e) {
+				e.target.src = utils.updateHeadImage("");
 			},
 			/**
 			 * 点击发布动态者的头像或者名称或者评论者(回复者)的名称
@@ -881,7 +881,7 @@ function initSpacePullToRefresh(spaceId) {
 		getUserSpace(space_data[id].userId, 1, id, this);
 	});
 	//初始化上拉加载更多
-	$(".class-circle-user-space .weui-tab__bd-item").infinite(130);
+	$(".class-circle-user-space .weui-tab__bd-item").infinite(190);
 	$(".class-circle-user-space .weui-tab__bd-item").infinite().on("infinite", function() {
 		var id = router_user_space.$route.params.id;
 		console.log("allow_loaddata:" + space_data[id].allow_loaddata);

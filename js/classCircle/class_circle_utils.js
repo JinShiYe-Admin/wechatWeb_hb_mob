@@ -330,8 +330,8 @@ Vue.component("trends-item", {
 		 * 头像加载失败
 		 * @param {Object} e
 		 */
-		headError: function(e, level) {
-			e.target.src = utils.updateHeadImage("", level);
+		headError: function(e) {
+			e.target.src = utils.updateHeadImage("");
 		}
 	}
 });
@@ -379,8 +379,8 @@ Vue.component("relate-item", {
 		 * 头像加载失败
 		 * @param {Object} e
 		 */
-		headError: function(e, level) {
-			e.target.src = utils.updateHeadImage("", level);
+		headError: function(e) {
+			e.target.src = utils.updateHeadImage("");
 		},
 		/**
 		 * 点击用户头像或名称
@@ -451,6 +451,7 @@ Vue.component("image-item", {
 			pb.open();
 		},
 		imageError: function(e, index) {
+			console.log("imageError:");
 			e.target.src = this.images[index];
 		},
 		imageLoad: function(e) {

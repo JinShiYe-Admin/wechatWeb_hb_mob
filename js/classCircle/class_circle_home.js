@@ -579,8 +579,8 @@ function initRouter() {
 			 * 头像加载失败
 			 * @param {Object} e
 			 */
-			headError: function(e, level) {
-				e.target.src = utils.updateHeadImage("", level);
+			headError: function(e) {
+				e.target.src = utils.updateHeadImage("");
 			},
 			/**
 			 * 点击发布动态者的头像或者名称或者评论者(回复者)的名称

@@ -503,6 +503,7 @@ function initRouter() {
 		data: function() {
 			return {
 				allow_back: false,
+				scroll_top: 0,
 				data: []
 			}
 		},
@@ -543,16 +544,22 @@ function initRouter() {
 			} else {
 				next(function(vm) {
 					vm.allow_back = true;
-					console.log("vm.$route.params:", vm.$route.params)
+					console.log("vm.$route.params:", vm.$route.params);
 					if(vm.$route.params.data != undefined) {
 						vm.data = [vm.$route.params.data]
 					}
+					$(document.body).scrollTop(vm.scroll_top);
 				});
 			}
 		},
 		beforeRouteLeave: function(to, from, next) {
 			console.log("路由-动态详情-离开之前:from:" + from.path + " to:" + to.path);
-			next(this.allow_back);
+			if(this.allow_back) {
+				this.scroll_top = $(document.body).scrollTop();
+				next();
+			} else {
+				next(this.allow_back);
+			}
 		}
 	}
 
@@ -816,6 +823,7 @@ function initRouter() {
 	});
 
 	var class_circle_app = new Vue({
+		mode: 'history',
 		router: router
 	}).$mount('#router_class_circle_app');
 }

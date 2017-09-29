@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html> 
+<html>
+
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
@@ -7,7 +8,7 @@
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<title>新闻添加</title>
 		<link rel="stylesheet" href="../../css/weui.min.css" />
-		<link href="../../css/mui.min.css" rel="stylesheet" /> 
+		<link href="../../css/mui.min.css" rel="stylesheet" />
 		<style>
 			.dropdown:before,
 			.dropdown:after {
@@ -167,7 +168,7 @@
 	</head>
 
 	<body>
-		<div class="weui-cells weui-cells_form"> 
+		<div class="weui-cells weui-cells_form">
 			<div class="weui-cells__title">所属栏目</div>
 			<div class="weui-cells">
 				<div>
@@ -251,7 +252,7 @@
 							<div class="weui-cell__bd">
 								<input id="summas" v-model.lazy="newszy.message" class="weui-input" type="text" :placeholder="'请输入'+newszy.title">
 							</div>
-						</div>	
+						</div>
 					</div>
 				</div>
 			</div>
@@ -282,7 +283,7 @@
 						</div>
 					</div>
 				</div>
-				 
+
 			</div>
 			<div class="weui-btn-area">
 				<button id="submit" v-on:click="submitClick" class="weui-btn weui-btn_primary">{{editName}}</button>
@@ -309,7 +310,8 @@
 			function delDiv() {
 				$("#insert").empty();
 				count1 = 0;
-			} 
+			}
+
 			function addDiv() {
 				//创建一个div
 				var div = document.createElement('div');
@@ -354,58 +356,35 @@
 				initUploader();
 				//添加一个段落
 				addDiv();
-				var detail = utils.getDataFromUrl(window.location.href); 
+				var detail = utils.getDataFromUrl(window.location.href);
 				vm.type = detail.type;
 				PriNewsId = detail.newsid;
-				var insertText;  
+				var insertText;
 				if(vm.type == 'edit') {
 					var tempData = {
 						cmd: 'news', //网站栏目
 						type: 'findpage', //分页查找栏目列表
-						newsid: PriNewsId,//文章id
+						newsid: PriNewsId, //文章id
 						pagesize: 999, //每页条数  
 						pageindex: 1 //页码 
-					}  
-					var dt=[
-					   {  
-					   	  	newsid:60, 
-                          	corpid:"wx6c4528c675d4a9c9",
-                          	chnid:5,
-                          	topic:"我校信息化建设三年规划专家论证会召开",
-                          	subtopic:"来源：信息办作者：陈晓宁，郭玉娇",
-                          	summas:"老同志们纷纷表示，杜慧芳书记一行参加离休干部学习",
-                          	content:"<section><h3></h3><p>随后，杜慧芳将新任的校党委副书记、纪委书记沈志超同志介绍给大家，并介绍了校领导班子的分工，通报了筹备65周年校庆、校党代会召开以及迎接本科教学审核评估等近期重点工作情况。</p><p><img src=http://qn-kfpb.jiaobaowang.net/wechat/webcon/1505897096774589.png></p></section><section><h3></h3><p>徐汇校区提升规划的介绍，感受到学校发展的劲头。大家表示，一定要更加紧密地团结在以习近平同志为核心的党中央周围，积极发挥正能量，喜迎党的十九大召开，同时希望能在建党100周年之时亲身见证我校各项规划由蓝图变现实。</p><p><img src=http://qn-kfpb.jiaobaowang.net/wechat/webcon/150589710425348.png></p></section>",
-                          	recuser:"liuyang",
-                          	rectname:"刘洋",
-     	                    rectime:"2017-09-20T16:47:13.783",
-                          	recip:"120.192.29.16",
-                          	stat:1,
-                            clicked:13,
-                          	isquo:0,
-                          	quourl:"on",
-                          	isreply:1,
-                          	chkuser:null,
-                          	chktime:null,
-                          	chktname:null,
-                          	isenc:1,
-                          	imgurl:"http://qn-kfpb.jiaobaowang.net/wechat/webcon/1505897075706466.png?imageView2/3/w/100/h/100/q/100/format/png",
-                          	ROWSTAT:null 
-					   }
-					   ];
-					unitWebsitePro(tempData, function(data) { 
+					}
+				 
+					unitWebsitePro(tempData, function(data) {
 						vm.editName = '保存';
 						$("#chnid option:selected").val(PriNewsId);
-						$("#chnid option:selected").text(detail.cname) 
+						$("#chnid option:selected").text(detail.cname)
 						vm.cname.message = data.RspData.dt[0].topic;
 						vm.fname.message = data.RspData.dt[0].subtopic;
 						vm.linkurl.message = data.RspData.dt[0].quourl;
-						vm.isReply.check =data.RspData.dt[0].isreply;
+						vm.isReply.check = data.RspData.dt[0].isreply;
 						vm.islink.check = data.RspData.dt[0].isquo;
 						vm.newszy.message = data.RspData.dt[0].summas;
-						document.getElementById("filename").value = data.RspData.dt[0].imgurl; 
+						document.getElementById("filename").value = data.RspData.dt[0].imgurl;
 						insertText = data.RspData.dt[0].content;
 						var n = (insertText.split('<section>')).length - 1;
-						for(var i = 0; i < n - 1; i++) { addDiv();}
+						for(var i = 0; i < n - 1; i++) {
+							addDiv();
+						}
 						var k = insertText.replace(/<section>/g, "</section>");
 						var ss = k.split('</section>');
 						for(var i = 0; i < ss.length; i++) {
@@ -413,7 +392,7 @@
 								ss.splice(i, 1);
 								i = i - 1;
 							}
-						} 
+						}
 						if(ss.length > 0) {
 							//准备创建控件,多少纬就创建多少个段落控件
 							var duanluokongjian = '';
@@ -441,13 +420,13 @@
 						for(var item in vm.$data) {
 							(function addwatch(key) {
 								vm.$watch(key + '.message', function(newVal, oldVal) {
-									edit(oldVal, newVal, key,zfc)
+									edit(oldVal, newVal, key, zfc)
 								})
 								vm.$watch(key + '.check', function(newVal, oldVal) {
-									edit(oldVal, newVal, key,zfc)
+									edit(oldVal, newVal, key, zfc)
 								})
 							})(item)
-						} 
+						}
 					});
 				}
 				/**
@@ -460,7 +439,7 @@
 				}
 				unitWebsitePro(tempData, function(data) {
 					console.log('配置为:' + JSON.stringify(data));
-					if(data.RspCode == 0) { 
+					if(data.RspCode == 0) {
 						if(data.RspData.length > 0) {
 							webConfig = data.RspData[0];
 							if(webConfig.isreply == 0) //0表示禁止回复，并隐藏回复功能
@@ -498,39 +477,56 @@
 						alert(data.RspTxt);
 					}
 				});
-			} 
-			function edit(oldVal, newVal, key,zfc) {
+			}
+
+			function edit(oldVal, newVal, key, zfc) {
 				console.log('key=' + key + '--oldVal=' + oldVal + '--newVal=' + newVal)
 				if(vm.type == "add" && key == 'islink') {
 					if(newVal == true) {
 						$("#linkurl").focus();
 						vm.iswrite.check = false;
 					}
-					return; 
-				} 
-				if(key == 'islink' && newVal == true) { 
+					return;
+				}
+				if(key == 'islink' && newVal == true) {
 					$("#linkurl").focus();
 					vm.iswrite.check = false;
 				}
-				 
-				if(newVal == oldVal) {return;}
-				if(key == 'cname') {key = 'topic';}
-				if(key == 'fname') {key = 'subtopic';}
-				if(key == 'summas'){key = 'summas';}
-				if(key == 'fname') {key = 'content';}
-				if(key == 'chnid') {key = 'chnid';}
-				if(key == 'islink') {key = 'islink';}
-				if(key == 'quourl') {key = 'quourl';}
+
+				if(newVal == oldVal) {
+					return;
+				}
+				if(key == 'cname') {
+					key = 'topic';
+				}
+				if(key == 'fname') {
+					key = 'subtopic';
+				}
+				if(key == 'summas') {
+					key = 'summas';
+				}
+				if(key == 'fname') {
+					key = 'content';
+				}
+				if(key == 'chnid') {
+					key = 'chnid';
+				}
+				if(key == 'islink') {
+					key = 'islink';
+				}
+				if(key == 'quourl') {
+					key = 'quourl';
+				}
 				var para = {
 					cmd: 'news',
 					type: 'edit',
 					colid: PriNewsId,
 					callcol: key,
 					colv: boolToInt(newVal)
-				} 
-				unitWebsitePro(para, function(data) { 
-				});
-			} 
+				}
+				unitWebsitePro(para, function(data) {});
+			}
+
 			function boolToInt(value) {
 				if(value == true) {
 					return 1;
@@ -584,7 +580,7 @@
 				}
 			})
 			//按钮监听
-			document.getElementById('submit').addEventListener('tap', function() { 
+			document.getElementById('submit').addEventListener('tap', function() {
 				bannerUploader.start();
 				/**
 				 * 文章附件管理添加
@@ -626,7 +622,7 @@
 					quourl: PriQuourl,
 					isreply: PriIsReply,
 					stat: 1
-				};
+				}; 
 				alert(JSON.stringify(comData))
 				console.log('comData=========================:' + JSON.stringify(comData));
 				unitWebsitePro(comData, function(data) {
@@ -653,42 +649,51 @@
 				});
 			});
 			//编辑段落内容
-			function upperCase(x, i) { 
-				var id = x.substring(0, x.length - 1); 
-				var id1 = id + i; 
+			function upperCase(x, i) {
+				var id = x.substring(0, x.length - 1);
+				var id1 = id + i;
 				if(vm.type == 'edit') {
-					if(id == 'chni') { 
-						var Chnid = $("#chnid option:selected").val(); 
+					if(id == 'chni') {
+						var Chnid = $("#chnid option:selected").val();
 						var para = {
 							cmd: 'news',
 							type: 'edit',
 							colid: PriNewsId,
 							callcol: 'chnid',
 							colv: Chnid
+						}
+						unitWebsitePro(para, function(data) {});
+					} else {
+						var updateConten = "";
+						var allInputst1 = $("*[name='dlt']");
+						var allInputsc1 = $("*[name='dlc']");
+						var allInputse1 = $("*[name='dle']");
+						for(var i = 0; i < allInputst1.length; i++) {
+							updateConten += '<section><h3>' + allInputst1[i].value + '</h3><p>' + allInputsc1[i].value + '</p><p><img src=' + allInputse1[i].value + '></p></section>';
 						} 
-						unitWebsitePro(para, function(data) { 
-						});
-					}else{ 
-							var updateConten = "";
-							var allInputst1 = $("*[name='dlt']");
-							var allInputsc1 = $("*[name='dlc']");
-							var allInputse1 = $("*[name='dle']");
-							for(var i = 0; i < allInputst1.length; i++) {
-								updateConten += '<section><h3>' + allInputst1[i].value + '</h3><p>' + allInputsc1[i].value + '</p><p><img src=' + allInputse1[i].value + '></p></section>';
-							} 
-							alert(updateConten)
-							alert(JSON.stringify(FileDataArray))
-							var para = {
-								cmd: 'news', 
-								type: 'edit',
-								colid: PriNewsId,
-								callcol: 'content',
-								encs: FileDataArray,
-								colv: updateConten
+						if(FileDataArray == '') {
+							for(var i = 0; i < allInputse1.length; i++) { 
+								var newsname = allInputse1[i].value.substring(45); 
+								var person2 = new Object();
+								person2.newsid = PriNewsId; //文章id
+								person2.saveurl = allInputse1[i].value; //图片地址
+								person2.imgurl = allInputse1[i].value;
+								person2.oldname = ''; 
+								person2.newname = newsname;
+								person2.filesize = '45';
+								FileDataArray.push(person2);
 							}
-							console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' + JSON.stringify(para))
-							unitWebsitePro(para, function(data) { 
-							});
+						} 
+						var para = {
+							cmd: 'news',
+							type: 'edit',
+							colid: PriNewsId,
+							callcol: 'content',
+							encs: FileDataArray,
+							colv: updateConten
+						}  
+						console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' + JSON.stringify(para))
+						unitWebsitePro(para, function(data) {});
 					}
 				}
 			}
@@ -785,11 +790,11 @@
 											//如果有重复则移除原来的
 											FileDataArray.splice(i, 1);
 										}
-									} 
+									}
 									//添加新的附件
-									
-									FileDataArray.push(person); 
-									
+
+									FileDataArray.push(person);
+
 									objArray.push([imgurl]);
 								} else {
 									document.getElementById('filename').value = imgurl;

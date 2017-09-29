@@ -50,13 +50,14 @@
 			</div>
 			<div class="weui-tab__bd" id="newsData">
 				<div id="contentCell" class="content-padded">
-					<a class="weui-cell weui-cell_access" @click="click(newsModel,index,item.cname )" v-for="(newsModel,index) in item.newsArray" :data-index="index">
-						<div class="weui-cell__bd">
+					<a class="weui-cell weui-cell_access"  v-for="(newsModel,index) in item.newsArray" :data-index="index">
+						<div class="weui-cell__bd" >
 							<span style='width:350px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;' class="Prizs">标题：{{newsModel.topic}}</span>
 							<button id="{{newsModel.newsid}}" style="float:right" class="weui-btn weui-btn_mini weui-btn_primary" @click="clickDel(newsModel,1,index)">{{newsModel.Prizt}}</button>
 							<p style='width:350px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;'>副标题：{{newsModel.subtopic}}</p>
 							<button style="float:right" class="weui-btn weui-btn_mini weui-btn_warn" @click="clickDel(newsModel,0,index)">删除</button>
 							<p style='width:350px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;'>内容：{{newsModel.content}}</p>
+							<button style="float:right" class="weui-btn weui-btn_mini weui-btn_primary" @click="click(newsModel,index,item.cname )">编辑</button>
 						</div>
 					</a>
 				</div>
@@ -100,35 +101,7 @@
 				el: '#newsData',
 				data: {
 					item: { 
-					   newsArray:[
-					   {
-					   	
-					   	
-					   	  	newsid:60, 
-                          	corpid:"wx6c4528c675d4a9c9",
-                          	chnid:5,
-                          	topic:"我校信息化建设三年规划专家论证会召开",
-                          	subtopic:"来源：信息办作者：陈晓宁，郭玉娇",
-                          	summas:"老同志们纷纷表示，杜慧芳书记一行参加离休干部学习",
-                          	content:"<section><h3></h3><p>随后，杜慧芳将新任的校党委副书记、纪委书记沈志超同志介绍给大家，并介绍了校领导班子的分工，通报了筹备65周年校庆、校党代会召开以及迎接本科教学审核评估等近期重点工作情况。</p><p><img src=http://qn-kfpb.jiaobaowang.net/wechat/webcon/1505897096774589.png></p></section><section><h3></h3><p>徐汇校区提升规划的介绍，感受到学校发展的劲头。大家表示，一定要更加紧密地团结在以习近平同志为核心的党中央周围，积极发挥正能量，喜迎党的十九大召开，同时希望能在建党100周年之时亲身见证我校各项规划由蓝图变现实。</p><p><img src=http://qn-kfpb.jiaobaowang.net/wechat/webcon/150589710425348.png></p></section>",
-                          	recuser:"liuyang",
-                          	rectname:"刘洋",
-                          	rectime:"2017-09-20T16:47:13.783",
-                          	recip:"120.192.29.16",
-                          	stat:1,
-                            clicked:13,
-                          	isquo:0,
-                          	quourl:"on",
-                          	isreply:1,
-                          	chkuser:null,
-                          	chktime:null,
-                          	chktname:null,
-                          	isenc:1,
-                          	imgurl:"http://qn-kfpb.jiaobaowang.net/wechat/webcon/1505897075706466.png?imageView2/3/w/100/h/100/q/100/format/png",
-                          	ROWSTAT:null
-					   	
-					   }
-					   ]
+					   
 					}
 				},
 				updated: function() {

@@ -450,7 +450,7 @@
 							if(webConfig.isfileup == 0) //0表示禁止上传，并隐藏回复功能
 								document.getElementById('onisfileup').style.display = "none";
 						} else {
-							weui.alert('没有获取到配置信息')
+							weui.alert('没有获取到配置信息')	
 						}
 					} else {
 						weui.alert(data.RspTxt);
@@ -466,7 +466,7 @@
 					iswrite: '1',
 					stat: '1',
 					pageindex: 1 //页码  
-				}
+				} 
 				var datalm;
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
@@ -625,8 +625,7 @@
 					quourl: PriQuourl,
 					isreply: PriIsReply,
 					stat: 1
-				}; 
-				alert(JSON.stringify(comData))
+				};  
 				console.log('comData=========================:' + JSON.stringify(comData));
 				unitWebsitePro(comData, function(data) {
 					if(data.RspCode == 0) {

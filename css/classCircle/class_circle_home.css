@@ -263,10 +263,14 @@ body {
 	padding-bottom: 36px;
 }
 
+.weui-photo-browser-modal .photo-container {
+	justify-content: center;
+}
+
 .weui-photo-browser-modal .photo-container img {
 	max-width: 90%;
-	margin-left: 5%;
-	margin-top: 0px;
+	/*margin-left: 5%;
+	margin-top: 0px;*/
 }
 
 .weui-photo-browser-modal {

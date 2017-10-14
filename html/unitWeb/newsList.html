@@ -96,6 +96,7 @@
 				},
 				methods: {}
 			});
+			
 			//新闻数据列表
 			var newsData = new Vue({
 				el: '#newsData',
@@ -136,7 +137,7 @@
 				}
 			});
 			//修改审核状态
-			function SetStat(model, colid) {
+			function SetStat(model, colid) {	
 				var stat = "";
 				if(model.stat == 0)
 					stat = 1;
@@ -148,7 +149,7 @@
 					callcol: 'chk',
 					colid: colid,
 					colv: stat //状态
-				}
+				} 
 				unitWebsitePro(tempData, function(data) {
 					console.log(JSON.stringify(data));
 					if(data.RspCode == 0000 && stat == 1) {
@@ -173,7 +174,7 @@
 				console.log(self);
 				loading = true;
 				console.log(self);
-				console.log('我是加载的新内容');
+				console.log('我是加载的新内容'); 
 				newsData.item.newsFlag = 1; //0刷新，1加载更多
 				getNewsList(newsData.item);
 			});

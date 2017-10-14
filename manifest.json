@@ -328,7 +328,8 @@
 					"html/appWeb/courses-table.html",
 					"html/unitWeb/column-home.html",
 					"html/unitWeb/addnews.html",
-					"html/unitWeb/newsList.html"
+					"html/unitWeb/newsList.html",
+					"html/unitWeb/addCourse.html"
 				],
 				"priority": 0
 			},
@@ -519,6 +520,21 @@
 					"image/add.png",
 					"js/weui.min.js",
 					"html/unitWeb/newsList.html"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/unitWeb/addCourse.html": {
+				"resources": [
+					"js/demoCssJs/jquery-weui.css",
+					"js/utils/utils.js",
+					"js/demoCssJs/demos.css",
+					"js/PublicProtocol.js",
+					"js/demoCssJs/jquery-weui.js",
+					"js/vue.min.js",
+					"js/demoCssJs/weui.min.css",
+					"js/utils/storageutil.js",
+					"js/importJS.js"
 				],
 				"refer": [],
 				"priority": 0

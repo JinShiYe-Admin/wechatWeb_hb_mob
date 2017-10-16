@@ -4,6 +4,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
+		<meta name="renderer" content="webkit|ie-comp|ie-stand">
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../../css/mui.min.css" rel="stylesheet" />
 	</head>
@@ -39,16 +40,6 @@
 				<li class="mui-table-view-cell" id="manageSubject">
 					<a class="mui-navigate-right">
 						课程表管理
-					</a>
-				</li>
-				<li class="mui-table-view-cell" id="sendMsg">
-					<a class="mui-navigate-right">
-						群发消息
-					</a>
-				</li>
-				<li class="mui-table-view-cell" id="testSendMsg">
-					<a class="mui-navigate-right">
-						测试单选人员
 					</a>
 				</li>
 			</ul>
@@ -92,12 +83,6 @@
 							break;
 						case 'manageSubject':
 							utils.mOpenWithData("../../html/appWeb/schedule.html", "schedulesubject_timetable.html");
-							break;
-						case 'sendMsg':
-							utils.mOpenWithData("../../html/appWeb/home-publish.html", "home-publish.html");
-							break;
-						case 'testSendMsg':
-							utils.mOpenWithData("../../html/appWeb/dist/index.html", "courses-table.html");
 							break;
 						default:
 							break;

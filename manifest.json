@@ -519,7 +519,10 @@
 					"js/mui.min.js",
 					"image/add.png",
 					"js/weui.min.js",
-					"html/unitWeb/newsList.html"
+					"html/unitWeb/newsList.html",
+					"js/demoCssJs/jquery-weui.js",
+					"js/demoCssJs/jquery-2.1.4.js",
+					"js/demoCssJs/iscroll.js"
 				],
 				"refer": [],
 				"priority": 0

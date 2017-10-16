@@ -84,7 +84,9 @@
 			"html/appWeb/schedule.html",
 			"html/appWeb/home-publish.html",
 			"html/appWeb/courses-table.html",
-			"html/unitWeb/addnews.html"
+			"html/unitWeb/addnews.html",
+			"html/unitWeb/newsList.html",
+			"html/unitWeb/addCourse.html"
 		]
 	},
 	"html/unitWeb/column-home.html": {
@@ -351,8 +353,27 @@
 			"js/vue.min.js",
 			"js/mui.min.js",
 			"image/add.png",
-			"js/weui.min.js"
+			"js/weui.min.js",
+			"html/unitWeb/newsList.html",
+			"js/demoCssJs/jquery-weui.js",
+			"js/demoCssJs/jquery-2.1.4.js",
+			"js/demoCssJs/iscroll.js"
 		],
-		"refer": []
+		"refer": [
+			"html/unitWeb/newsList.html"
+		]
+	},
+	"html/unitWeb/addCourse.html": {
+		"resources": [
+			"js/demoCssJs/jquery-weui.css",
+			"js/utils/utils.js",
+			"js/demoCssJs/demos.css",
+			"js/PublicProtocol.js",
+			"js/demoCssJs/jquery-weui.js",
+			"js/vue.min.js",
+			"js/demoCssJs/weui.min.css",
+			"js/utils/storageutil.js",
+			"js/importJS.js"
+		]
 	}
 }

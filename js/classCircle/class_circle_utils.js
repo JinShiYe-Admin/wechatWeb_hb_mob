@@ -147,6 +147,9 @@ Vue.component("home-bd-item", {
 		 */
 		clickRelateReply: function(valueIndex, spaceId, tabId, replyUserId) {
 			this.$emit("click-relate-reply", valueIndex, spaceId, tabId, replyUserId);
+		},
+		clickImage: function(index, images) {
+			this.$emit("click-image", index, images);
 		}
 	}
 });
@@ -330,6 +333,10 @@ Vue.component("trends-item", {
 		 */
 		headError: function(e) {
 			e.target.src = utils.updateHeadImage("");
+		},
+		clickImage: function(index, images) {
+			console.log("clickImage-trends-item");
+			this.$emit("click-image", index, images);
 		}
 	}
 });
@@ -442,11 +449,7 @@ Vue.component("image-item", {
 			if(index > this.imagesThumb.length - 1) {
 				return false;
 			}
-			var pb = $.photoBrowser({
-				initIndex: index,
-				items: this.images
-			});
-			pb.open();
+			this.$emit("click-image", index, this.images);
 		},
 		imageError: function(e, index) {
 			e.target.src = this.images[index];

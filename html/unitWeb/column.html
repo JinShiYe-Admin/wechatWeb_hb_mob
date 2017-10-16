@@ -29,7 +29,8 @@
 		<!--<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 		</header>-->
-		<div id="conetent" class="weui-cells weui-cells_form">
+		<!--<template>-->
+		<div id="conetent" class="weui-cells weui-cells_form mui-hidden">
 			<!--输入列表-->
 			<div id="input_list">
 				<div>
@@ -111,6 +112,7 @@
 				<button id="submit" v-on:click="submitClick" class="weui-btn weui-btn_primary">{{editName}}</button>
 			</div>
 		</div>
+		<!--</template>-->
 		<script src="../../js/mui.min.js"></script>
 		<script type="text/javascript" src="../../js/weui.min.js"></script>
 		<script type="text/javascript" src="../../js/vue.min.js"></script>
@@ -123,7 +125,7 @@
 			window.onload = function() {
 				getWebsitConfig();
 				var detail = utils.getDataFromUrl(window.location.href);
-				alert("detail " + JSON.stringify(detail));
+//				alert("detail " + JSON.stringify(detail));
 				vm.type = detail.type;
 				if(vm.type == 'edit') {
 					vm.editName = '删除'
@@ -153,6 +155,7 @@
 						edit(oldVal, newVal, 'islink')
 					})
 				}
+				document.getElementById("conetent").className = "weui-cells weui-cells_form"
 
 			}
 			var vm = new Vue({
@@ -205,6 +208,7 @@
 								note: vm.note.message,
 								orderid: vm.orderid.message,
 								pid: 0,
+								istop:boolToInt(vm.istop.check)
 							}
 							alert(JSON.stringify(para))
 							unitWebsitePro(para, function(data) {

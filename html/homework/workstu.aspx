@@ -249,30 +249,40 @@
 						$.alert("最多只能上传9张照片");
 					} else {
 						var file = files[index];
-						EXIF.getData(file, function() {
-							$.showLoading('加载中...');
-							var orientation = EXIF.getTag(this, 'Orientation'); //获取旋转信息
-							console.log('orientation:' + JSON.stringify(orientation));
-							//显示文件
-							var reader = new FileReader();
-							reader.onload = function() {
-								var result = this.result;
-								var maxSize = 2 * 1024 * 1024;
-								compress.getImgInfo(result, function(img, imgInfo) {
-									console.log("获取的文件信息：" + JSON.stringify(imgInfo));
-									console.log("原图尺寸：" + result.length);
-									var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)), orientation);
-									var blob = compress.base64ToBlob(newDataUrl, 'image/jpeg');
-									console.log("blob.type:" + blob.type);
-									console.log('要传递的文件大小：' + blob.size);
-									blob.lastModifiedDate = new Date();
-									qnFileUploader.addFile(blob, Date.now() + '.jpg');
-									index++;
-									uploadFiles(index, files, filesSum);
-								});
+						var types = file.type.toLowerCase().split("/");
+						console.log("types:" + types);
+						if(types[1] == "png" || types[1] == "jpg" || types[1] == "jpeg") {
+							EXIF.getData(file, function() {
+								$.showLoading('加载中...');
+								var orientation = EXIF.getTag(this, 'Orientation'); //获取旋转信息
+								console.log('orientation:' + JSON.stringify(orientation));
+								//显示文件
+								var reader = new FileReader();
+								reader.onload = function() {
+									var result = this.result;
+									var maxSize = 2 * 1024 * 1024;
+									compress.getImgInfo(result, function(img, imgInfo) {
+										console.log("获取的文件信息：" + JSON.stringify(imgInfo));
+										console.log("原图尺寸：" + result.length);
+										var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)), orientation);
+										var blob = compress.base64ToBlob(newDataUrl, 'image/jpeg');
+										console.log("blob.type:" + blob.type);
+										console.log('要传递的文件大小：' + blob.size);
+										blob.lastModifiedDate = new Date();
+										qnFileUploader.addFile(blob, Date.now() + '.jpg');
+										index++;
+										uploadFiles(index, files, filesSum);
+									});
+								}
+								reader.readAsDataURL(file);
+							});
+						} else {
+							if(index + 1 < filesSum.length) {
+								index++;
+								uploadFiles(index, files, filesSum);
 							}
-							reader.readAsDataURL(file);
-						});
+							$.toast("请选择png,jpg,jpeg类型的图片");
+						}
 					}
 				}
 			}

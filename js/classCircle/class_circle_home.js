@@ -97,7 +97,7 @@ function initRouter() {
 		 */
 		beforeRouteEnter: function(to, from, next) {
 			console.log("路由-班级圈登录页-显示之前:from:" + from.path + " to:" + to.path);
-			if("/home" == from.path||"/error_page" == from.path) {
+			if("/home" == from.path || "/error_page" == from.path) {
 				//从主页返回这个页面
 				console.log("退出班级圈");
 				router.back();

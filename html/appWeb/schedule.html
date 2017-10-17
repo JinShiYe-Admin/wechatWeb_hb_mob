@@ -43,7 +43,11 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 		<script type="text/javascript">
-			mui.init();
+			mui.init({
+				mui('.mui-scroll-wrapper').scroll({
+					indicators: true, //是否显示滚动条
+				});
+			});
 			var schedule = new Vue({
 				el: '#schedule',
 				data: {

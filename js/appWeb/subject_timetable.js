@@ -1,10 +1,10 @@
 var table_data = {
-	tempFlag:0,
+	tempFlag: 0,
 	type: 0,
 	flag: 0,
 	isCreated: 0,
-	rowIndex:0,
-	colIndex:0,
+	rowIndex: 0,
+	colIndex: 0,
 	edulename: "",
 	departname: "",
 	departid: "",
@@ -23,25 +23,25 @@ Vue.component("time-table", {
 		if(table_data.isCreated == 0) {
 			table_data.isCreated = 1;
 		} else {
-			if(table_data.type==1&&table_data.tempFlag==1){
-				table_data.tempFlag=0;
-							
+			if(table_data.type == 1 && table_data.tempFlag == 1) {
+				table_data.tempFlag = 0;
+
 				// 多列选择器
 				weui.picker(table_data.sub_array, {
 					defaultValue: [],
 					onChange: function onChange(result) {
-//						console.log(result);
+						//						console.log(result);
 					},
 					onConfirm: function onConfirm(result) {
 						console.log(result);
 						var index = table_data.rowIndex;
 						var colIndex = table_data.colIndex
 						var model = table_data.items_array[index]
-						model[colIndex+'subname'] = result[0].label;
-						
+						model[colIndex + 'subname'] = result[0].label;
+
 						var uname = table_data.items_array[index][colIndex + "uname"];
 						var uid = table_data.items_array[index][colIndex + "uid"];
-						var colv = result[0].value+'|'+result[0].label+'|'+uid+'|'+uname
+						var colv = result[0].value + '|' + result[0].label + '|' + uid + '|' + uname
 						var colid = model.weekrowid
 						editEduleweek(colv, colIndex, colid);
 					},
@@ -62,7 +62,7 @@ Vue.component("time-table", {
 					daytype = "下午"
 				}
 				var item = {
-					orderid:i+1,
+					orderid: i + 1,
 					daytype: daytype,
 					timespan: "8:00-9:00",
 					monsubname: "选择课程",
@@ -137,7 +137,7 @@ Vue.component("time-table", {
 				}], {
 					defaultValue: ['上午'],
 					onChange: function onChange(result) {
-//						console.log(result);
+						//						console.log(result);
 					},
 					onConfirm: function onConfirm(result) {
 						console.log(result);
@@ -180,7 +180,7 @@ Vue.component("time-table", {
 				}], minutes, {
 					defaultValue: ['08', ":", '00', "到", "08", ":", "00"],
 					onChange: function onChange(result) {
-//						console.log(result);
+						//						console.log(result);
 					},
 					onConfirm: function onConfirm(result) {
 						console.log(JSON.stringify(result));
@@ -292,6 +292,22 @@ function editEduleweek(colv, callcol, colid) {
 }
 
 function addEdule() {
+	if(table_data.edulename == "") {
+		alert('请输入课程表名称');
+		return;
+	}
+	if(table_data.departid == "") {
+		alert('请输入部门名称');
+		return;
+	}
+	if(table_data.timespanb == "") {
+		alert('请输入开始时间');
+		return;
+	}
+	if(table_data.timespane == "") {
+		alert('请输入结束时间');
+		return;
+	}
 	var tempData = {
 		cmd: 'edule',
 		type: 'add',
@@ -303,6 +319,7 @@ function addEdule() {
 		edulerows: table_data.items_array
 
 	}
+
 	unitWebsitePro(tempData, function(data) {
 		console.log('添加课程表:' + JSON.stringify(data));
 		if(data.RspCode == 0) {

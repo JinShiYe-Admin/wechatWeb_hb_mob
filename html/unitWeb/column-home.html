@@ -77,7 +77,7 @@
 				var tempData = {
 					type: 'add'
 				}
-				utils.wOpenWithData("../unitWeb/column.html", tempData);
+				utils.mOpenWithData("../unitWeb/column.html", tempData);
 			}
 			var vm = new Vue({
 				el: '#conetent',
@@ -90,7 +90,7 @@
 				var index = this.getAttribute('data-index');
 				var tempData = vm.columns[index];
 				tempData.type = 'edit'
-				utils.wOpenWithData("../unitWeb/column.html", tempData);
+				utils.mOpenWithData("../unitWeb/column.html", tempData);
 
 			})
 		</script>

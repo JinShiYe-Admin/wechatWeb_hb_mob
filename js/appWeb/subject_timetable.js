@@ -62,6 +62,7 @@ Vue.component("time-table", {
 					daytype = "下午"
 				}
 				var item = {
+					orderid:i+1,
 					daytype: daytype,
 					timespan: "8:00-9:00",
 					monsubname: "选择课程",
@@ -304,7 +305,9 @@ function addEdule() {
 	}
 	unitWebsitePro(tempData, function(data) {
 		console.log('添加课程表:' + JSON.stringify(data));
-		if(data.RspCode == 0) {} else {
+		if(data.RspCode == 0) {
+			alert(data.RspTxt)
+		} else {
 			mui.toast(data.RspTxt)
 		}
 	})

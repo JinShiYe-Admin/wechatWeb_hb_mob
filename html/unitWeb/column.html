@@ -63,7 +63,7 @@
 					<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
-								<input v-model.lazy="orderid.message" class="weui-input" type="text" :placeholder="'请输入'+orderid.title+'，越小越前'">
+								<input v-model.lazy="orderid.message" class="weui-input" type="number" :placeholder="'请输入'+orderid.title+'，越小越前'">
 							</div>
 						</div>
 					</div>
@@ -103,7 +103,7 @@
 					<div class="weui-cell weui-cell_switch">
 						<div class="weui-cell__bd">{{istop.title}}</div>
 						<div class="weui-cell__ft">
-							<input  class="weui-switch" type="checkbox" v-model="istop.check">
+							<input class="weui-switch" type="checkbox" v-model="istop.check">
 						</div>
 					</div>
 				</div>
@@ -125,7 +125,7 @@
 			window.onload = function() {
 				getWebsitConfig();
 				var detail = utils.getDataFromUrl(window.location.href);
-//				alert("detail " + JSON.stringify(detail));
+				//				alert("detail " + JSON.stringify(detail));
 				vm.type = detail.type;
 				if(vm.type == 'edit') {
 					vm.editName = '删除'
@@ -208,9 +208,17 @@
 								note: vm.note.message,
 								orderid: vm.orderid.message,
 								pid: 0,
-								istop:boolToInt(vm.istop.check)
+								istop: boolToInt(vm.istop.check)
 							}
-							alert(JSON.stringify(para))
+							var reg = /^[1-9]\d*$/
+								var numFlag = reg.test(vm.orderid.message);
+								if(numFlag == false) {
+									alert('请输入正确排序ID')
+									return;
+								}
+							
+							
+							//							alert(JSON.stringify(para))
 							unitWebsitePro(para, function(data) {
 								if(data.RspCode == 0) {
 									vm.resetData();
@@ -224,7 +232,7 @@
 								type: 'del',
 								colid: vm.colid
 							}
-							alert(JSON.stringify(para))
+							//							alert(JSON.stringify(para))
 							unitWebsitePro(para, function(data) {
 								if(data.RspCode == 0) {
 									vm.resetData();
@@ -271,6 +279,13 @@
 
 			function edit(oldVal, newVal, key) {
 				console.log('key=' + key + '--oldVal=' + oldVal + '--newVal=' + newVal)
+				if(vm.type == "orderid") {
+					var numFlag = newVal.test('^[0-9]*$');
+					console.log(numFlag)
+					if(numFlag == false) {
+						console.log('请输入正确的数字')
+					}
+				}
 				if(vm.type == "add" && key == 'islink') {
 					if(newVal == true) {
 						$("#linkurl").focus();

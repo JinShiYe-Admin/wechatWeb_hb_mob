@@ -12,36 +12,36 @@
 		<link rel="stylesheet" href="css/demos.css" />
 		<link rel="stylesheet" href="https://jsypay.jiaobaowang.net/suitetest/css/utils/iconfont.css" />
 		<style>
-			.wrap {
-				width: 30px;
-				position: relative;
-			}
-			
-			.img {
-				width: 27px;
-				height: 27px;
-			}
-			
-			.notice {
-				width: 15px;
-				height: 15px;
-				line-height: 15px;
-				font-size: 10px;
-				color: #fff;
-				text-align: center;
-				background-color: #f00;
-				border-radius: 50%;
-				position: absolute;
-				right: -7px;
-				top: -7px;
-			}
-			
-			.lines {
-				height: 1px;
-				border-top: 10px solid #f5f1f1;
-				text-align: center;
-				margin: 10px 0px 0px 0px;
-			}
+		    .wrap {
+		        width: 30px;
+		        position: relative;
+		    }
+
+		    .img {
+		        width: 27px;
+		        height: 27px;
+		    }
+
+		    .notice {
+		        width: 15px;
+		        height: 15px;
+		        line-height: 15px;
+		        font-size: 10px;
+		        color: #fff;
+		        text-align: center;
+		        background-color: #f00;
+		        border-radius: 50%;
+		        position: absolute;
+		        right: -7px;
+		        top: -7px;
+		    }
+
+		    .lines {
+		        height: 1px;
+		        border-top: 10px solid #f5f1f1;
+		        text-align: center;
+		        margin: 10px 0px 0px 0px;
+		    }
 		</style>
 	</head>
 
@@ -164,8 +164,7 @@
 		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/utils/compress.js'></script>
 		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/utils/pluploadutil.js'></script>
 
-		<script type="text/javascript">
-		    var winHeight = $(window).height(); //获取当前页面高度
+		<script type="text/javascript">var winHeight = $(window).height(); //获取当前页面高度
 		    $(window).resize(function () {
 		        var thisHeight = $(this).height();
 		        if (winHeight - thisHeight > 50) {
@@ -173,7 +172,7 @@
 		            //当软键盘弹出，在这里面操作
 
 		        } else {
-		            document.getElementById("bottomView").style.display = "inline-block"
+		            document.getElementById("bottomView").style.display = "table"
 		            //当软键盘收起，在此处操作
 
 		        }
@@ -295,7 +294,7 @@
 		                    }
 		                    tempEncs.push(tempModel);
 		                }
-		                $.showLoading('加载中...');
+
 		                var idArr = [];
 		                var nameArr = [];
 		                for (var i = 0; i < homework.classes.currClass.persons.length; i++) {
@@ -304,7 +303,11 @@
 		                    nameArr.push(model.name);
 
 		                }
-
+		                if (idArr.length == 0) {
+		                    alert('此部门暂无人员');
+		                    return;
+		                }
+		                $.showLoading('加载中...');
 		                var tempData = {
 		                    cmd: 'work',
 		                    type: 'add',
@@ -368,52 +371,42 @@
 
 		    //从相册中选择照片后，上传
 		    function uploadFiles(index, files, filesSum) {
-				if(index < files.length) {
-					if(filesSum + index > 8) {
-						$.alert("最多只能上传9张照片");
-					} else {
-						var file = files[index];
-						var types = file.type.toLowerCase().split("/");
-						console.log("types:" + types);
-						if(types[1] == "png" || types[1] == "jpg" || types[1] == "jpeg") {
-							EXIF.getData(file, function() {
-								$.showLoading('加载中...');
-								var orientation = EXIF.getTag(this, 'Orientation'); //获取旋转信息
-								console.log('orientation:' + JSON.stringify(orientation));
-								//显示文件
-								var reader = new FileReader();
-								reader.onload = function() {
-									var result = this.result;
-									var maxSize = 2 * 1024 * 1024;
-									compress.getImgInfo(result, function(img, imgInfo) {
-										console.log("获取的文件信息：" + JSON.stringify(imgInfo));
-										console.log("原图尺寸：" + result.length);
-										var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)), orientation);
-										var blob = compress.base64ToBlob(newDataUrl, 'image/jpeg');
-										console.log("blob.type:" + blob.type);
-										console.log('要传递的文件大小：' + blob.size);
-										blob.lastModifiedDate = new Date();
-										qnFileUploader.addFile(blob, Date.now() + '.jpg');
-										index++;
-										uploadFiles(index, files, filesSum);
-									});
-								}
-								reader.readAsDataURL(file);
-							});
-						} else {
-							if(index + 1 < filesSum.length) {
-								index++;
-								uploadFiles(index, files, filesSum);
-							}
-							$.toast("请选择png,jpg,jpeg类型的图片");
-						}
-					}
-				}
-			}
+		        if (index < files.length) {
+		            if (filesSum + index > 8) {
+		                $.alert("最多只能上传9张照片");
+		            } else {
+		                var file = files[index];
+		                EXIF.getData(file, function () {
+		                    $.showLoading('加载中...');
+		                    var orientation = EXIF.getTag(this, 'Orientation'); //获取旋转信息
+		                    console.log('orientation:' + JSON.stringify(orientation));
+		                    //显示文件
+		                    var reader = new FileReader();
+		                    reader.onload = function () {
+		                        var result = this.result;
+		                        var maxSize = 2 * 1024 * 1024;
+		                        compress.getImgInfo(result, function (img, imgInfo) {
+		                            console.log("获取的文件信息：" + JSON.stringify(imgInfo));
+		                            console.log("原图尺寸：" + result.length);
+		                            var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)), orientation);
+		                            var blob = compress.base64ToBlob(newDataUrl, 'image/jpeg');
+		                            console.log("blob.type:" + blob.type);
+		                            console.log('要传递的文件大小：' + blob.size);
+		                            blob.lastModifiedDate = new Date();
+		                            qnFileUploader.addFile(blob, Date.now() + '.jpg');
+		                            index++;
+		                            uploadFiles(index, files, filesSum);
+		                        });
+		                    }
+		                    reader.readAsDataURL(file);
+		                });
+		            }
+		        }
+		    }
 
 		    /**
-			 * 初始化上传
-			 */
+             * 初始化上传
+             */
 		    function initQNUploader() {
 		        qnFileUploader = Qiniu.uploader({
 		            disable_statistics_report: false, // 禁止自动发送上传统计信息到七牛，默认允许发送
@@ -495,8 +488,8 @@
 		        });
 		    }
 		    /**
-			 * 获取七牛上传token
-			 */
+             * 获取七牛上传token
+             */
 		    function getQNUpToken(file) {
 		        var myDate = new Date();
 		        var fileName = myDate.getTime() + "" + parseInt(Math.random() * 1000);
@@ -636,10 +629,8 @@
 		                //						console.log(result);
 		            }
 		        });
-		    }
-		</script>
-		<script>
-		    var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
+		    }</script>
+		<script>var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
 		    var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
 		    $('.weui-tab__bd').css({
 		        'height': (allheight - barheight) * 100 / allheight + '%'
@@ -660,8 +651,7 @@
 		        $('.wrap').css({
 		            'left': (tabar_width - 30) * 50 / tabar_width + '%'
 		        });
-		    }, false);
-		</script>
+		    }, false);</script>
 	</body>
 
 </html>

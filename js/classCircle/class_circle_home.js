@@ -59,12 +59,15 @@ var home_data = {
 	}]
 };
 var space_data = {}; //空间的所有数据
+var detail_data = {}; //详情的所有数据
 var qnFileUploader; //七牛上传控件对象
 var uptokenData; //当前token
 var uploadImageIndex; //正在上传的图片的序号
 var allUploader = {}; //上传对象对应的图片列表序号
 var uploadError; //本次上传是否出错
+
 window.onload = function() {
+	console.log("window.onload");
 	$.showLoading('加载中...');
 	initRouter();
 	initQNUploader();
@@ -75,15 +78,41 @@ window.onload = function() {
 	//	temp_data = null;
 	//	initRouter();
 	//	initQNUploader();
-	//	router.replace({
-	//		name: "home"
-	//	});
+	//	setTimeout(function() {
+	//		router.push({
+	//			name: "home"
+	//		});
+	//	}, 100);
 	//	getHomeTrends(0, 1);
 	//---假数据---end---
 }
 
 //设置路由
 function initRouter() {
+	//班级圈登录页
+	var class_circle_welcome = {
+		template: "#router_welcome",
+		/**
+		 * 组件显示之前
+		 */
+		beforeRouteEnter: function(to, from, next) {
+			console.log("路由-班级圈登录页-显示之前:from:" + from.path + " to:" + to.path);
+			if("/home" == from.path || "/error_page" == from.path) {
+				//从主页返回这个页面
+				console.log("退出班级圈");
+				router.back();
+			}
+			next();
+		},
+		/**
+		 * 组件离开之前
+		 */
+		beforeRouteLeave: function(to, from, next) {
+			console.log("路由-班级圈登录页-离开之前:from:" + from.path + " to:" + to.path);
+			next();
+		}
+	}
+
 	//班级圈主页
 	var class_circle_home = {
 		template: "#router_class_circle_home",
@@ -215,6 +244,14 @@ function initRouter() {
 						replyUserId: replyUserId, //回复的id
 					}
 				});
+			},
+			/**
+			 * 点击图片
+			 * @param {Object} index 图片序号
+			 * @param {Object} images 所有图片
+			 */
+			clickImage: function(index, images) {
+				showImages(this, index, images);
 			}
 		},
 		/**
@@ -222,7 +259,9 @@ function initRouter() {
 		 */
 		beforeRouteEnter: function(to, from, next) {
 			console.log("路由-班级圈主页-显示之前:from:" + from.path + " to:" + to.path);
-			if(show_class_circle_app) {
+			if("/" == from.path) {
+				showClassCircleApp(next);
+			} else {
 				next(function() {
 					//初始化滚动
 					initHomePullToRefresh();
@@ -232,8 +271,6 @@ function initRouter() {
 					}
 					home_data.data[home_data.is_on].leave = false;
 				});
-			} else {
-				next(false);
 			}
 		},
 		/**
@@ -241,15 +278,20 @@ function initRouter() {
 		 */
 		beforeRouteLeave: function(to, from, next) {
 			console.log("路由-班级圈主页-离开之前:from:" + from.path + " to:" + to.path);
-			if("/" == to.path) { //离开班级圈APP
+			if(this.allow_back) {
+				if("/welcome" != to.path) {
+					//不是离开班级圈APP
+					this.data[this.is_on].scrollTop = $("#" + this.data[this.is_on].id).scrollTop();
+					this.data[0].leave = true;
+					this.data[1].leave = true;
+					this.data[2].leave = true;
+				}
 				next();
-				router.back();
 			} else {
-				this.data[this.is_on].scrollTop = $("#" + this.data[this.is_on].id).scrollTop();
-				this.data[0].leave = true;
-				this.data[1].leave = true;
-				this.data[2].leave = true;
-				next();
+				if(this.photo_browser) {
+					this.photo_browser.close();
+				}
+				next(this.allow_back);
 			}
 		}
 	};
@@ -503,7 +545,6 @@ function initRouter() {
 		data: function() {
 			return {
 				allow_back: false,
-				scroll_top: 0,
 				data: []
 			}
 		},
@@ -526,7 +567,7 @@ function initRouter() {
 							userSpaceId: trendsValue.TabId,
 							pageType: "details",
 							valueIndex: valueIndex,
-							list: this.$route.params.list
+							list: detail_data[this.$route.params.id].list
 						});
 						break;
 				}
@@ -535,6 +576,15 @@ function initRouter() {
 			clickComment: function(valueIndex, commentIndex, replysIndex) {
 				console.log("clickComment:" + valueIndex + " " + commentIndex + ' ' + replysIndex);
 				clickCommentFunction(this, this.data[valueIndex], commentIndex, replysIndex);
+			},
+			/**
+			 * 点击图片
+			 * @param {Object} index 图片序号
+			 * @param {Object} images 所有图片
+			 */
+			clickImage: function(index, images) {
+				this.scroll_top = $(".class-circle-trends-details").scrollTop();
+				showImages(this, index, images);
 			}
 		},
 		beforeRouteEnter: function(to, from, next) {
@@ -545,19 +595,33 @@ function initRouter() {
 				next(function(vm) {
 					vm.allow_back = true;
 					console.log("vm.$route.params:", vm.$route.params);
-					if(vm.$route.params.data != undefined) {
-						vm.data = [vm.$route.params.data]
+					console.log("detail_data[" + vm.$route.params.id + "]:", detail_data[vm.$route.params.id]);
+					vm.data = [detail_data[vm.$route.params.id].data];
+					var scroll_top = detail_data[vm.$route.params.id].scroll;
+					if(scroll_top != undefined) {
+						var timeId = setInterval(function() {
+							detailToBeforePosition(timeId, scroll_top);
+						}, 100);
+					} else {
+						$(".class-circle-trends-details").scrollTop(0);
 					}
-					$(document.body).scrollTop(vm.scroll_top);
 				});
 			}
 		},
 		beforeRouteLeave: function(to, from, next) {
 			console.log("路由-动态详情-离开之前:from:" + from.path + " to:" + to.path);
 			if(this.allow_back) {
-				this.scroll_top = $(document.body).scrollTop();
+				if("/home" == to.path) {
+					detail_data = null;
+					detail_data = {};
+				} else {
+					detail_data[this.$route.params.id].scroll = $(".class-circle-trends-details").scrollTop();
+				}
 				next();
 			} else {
+				if(this.photo_browser) {
+					this.photo_browser.close();
+				}
 				next(this.allow_back);
 			}
 		}
@@ -689,6 +753,14 @@ function initRouter() {
 					$(".class-circle-user-space .weui-tab__bd-item").scrollTop(0);
 					$(document.body).scrollTop(0);
 				}
+			},
+			/**
+			 * 点击图片
+			 * @param {Object} index 图片序号
+			 * @param {Object} images 所有图片
+			 */
+			clickImage: function(index, images) {
+				showImages(this, index, images);
 			}
 		},
 		data: function() {
@@ -708,17 +780,21 @@ function initRouter() {
 		beforeRouteUpdate: function(to, from, next) {
 			console.log("路由-用户空间-复用:from.path:" + from.path);
 			console.log("路由-用户空间-复用:to.path:" + to.path);
-			if(from.params.id > to.params.id) {
-				//返回上一个空间&&禁止返回
-				if(!this.allow_back) {
-					return false
+			if(this.allow_back) {
+				if(from.params.id > to.params.id) {
+					//返回上一个空间
+					$(".class-circle-user-space .weui-tab__bd-item").destroyInfinite();
+				} else {
+					setUserSpaceBeforePosition(from.params.id);
 				}
-				$(".class-circle-user-space .weui-tab__bd-item").destroyInfinite();
+				this.initData(to.params.id);
+				next();
 			} else {
-				setUserSpaceBeforePosition(from.params.id);
+				if(this.photo_browser) {
+					this.photo_browser.close();
+				}
+				next(this.allow_back);
 			}
-			this.initData(to.params.id);
-			next();
 		},
 		beforeRouteEnter: function(to, from, next) {
 			console.log("路由-用户空间-显示之前:from:" + from.path + " to:" + to.path);
@@ -745,6 +821,9 @@ function initRouter() {
 				}
 				next();
 			} else {
+				if(this.photo_browser) {
+					this.photo_browser.close();
+				}
 				next(this.allow_back);
 			}
 		}
@@ -785,40 +864,29 @@ function initRouter() {
 	//配置路由
 	router = new VueRouter({
 		routes: [{
+			path: '/welcome',
+			name: 'welcome',
+			component: class_circle_welcome,
+		}, {
 			path: '/home',
 			name: 'home',
 			component: class_circle_home,
-			meta: {
-				keepAlive: false
-			}
 		}, {
 			path: '/trends_add',
 			name: 'add',
 			component: trends_add,
-			meta: {
-				keepAlive: false
-			}
 		}, {
 			path: '/trends_details/:id',
 			name: 'details',
 			component: trends_details,
-			meta: {
-				keepAlive: true
-			}
 		}, {
 			path: '/user_space/:id',
 			name: 'space',
 			component: user_space,
-			meta: {
-				keepAlive: false
-			}
 		}, {
 			path: '/error_page',
 			name: 'error',
 			component: error_page,
-			meta: {
-				keepAlive: false
-			}
 		}]
 	});
 
@@ -826,6 +894,10 @@ function initRouter() {
 		mode: 'history',
 		router: router
 	}).$mount('#router_class_circle_app');
+
+	router.replace({
+		name: "welcome"
+	});
 }
 
 /**
@@ -912,9 +984,24 @@ function homeToBeforePosition(timeId, index) {
 	console.log("homeToBeforePosition:" + index);
 	var scrollTop_0 = $("#" + home_data.data[index].id).scrollTop();
 	var scrollTop_1 = home_data.data[index].scrollTop;
-	if(scrollTop_0 == 0 && scrollTop_0 != scrollTop_1) {
+	if(scrollTop_0 != scrollTop_1) {
 		//之前设置回滚到初始位置无效
 		$("#" + home_data.data[index].id).scrollTop(home_data.data[index].scrollTop);
+	} else {
+		clearInterval(timeId);
+	}
+}
+
+/**
+ * 动态详情滚动到原来的位置
+ * @param {Object} timeId
+ * @param {Object} scrollTop
+ */
+function detailToBeforePosition(timeId, scrollTop) {
+	var scrollTop_0 = $(".class-circle-trends-details").scrollTop();
+	if(scrollTop_0 != scrollTop) {
+		//之前设置回滚到初始位置无效
+		$(".class-circle-trends-details").scrollTop(scrollTop);
 	} else {
 		clearInterval(timeId);
 	}
@@ -1007,7 +1094,7 @@ function disposeMemberData(data) {
 			temp_data = null;
 			show_class_circle_app = true;
 			//显示班级圈主页
-			router.replace({
+			router.push({
 				name: "home"
 			});
 			//禁止全部动态列表进行下拉刷新和上拉加载中
@@ -1016,7 +1103,7 @@ function disposeMemberData(data) {
 			getHomeTrends(0, 1);
 		} else {
 			$.alert(data.RspTxt, "加载失败");
-			router.replace({
+			router.push({
 				name: "error",
 				params: {
 					id: 1
@@ -1050,13 +1137,15 @@ function getDepartmentMember(id) {
  */
 function showTrendsDetails(trendsValue, list) {
 	console.log("showTrendsDetails:", trendsValue);
+	var detail = {
+		id: new Date().getTime().toString(),
+		data: trendsValue,
+		list: list
+	}
+	detail_data[detail.id] = detail;
 	router.push({
 		name: 'details',
-		params: {
-			id: new Date().getTime().toString(),
-			data: trendsValue,
-			list: list
-		}
+		params: detail
 	});
 }
 
@@ -1144,7 +1233,7 @@ function changePraise(trendsValue) {
 function showClassCircleApp(next) {
 	if(show_class_circle_app) {
 		next({
-			path: '/home'
+			path: '/welcome'
 		});
 	} else {
 		next(false);
@@ -1702,7 +1791,9 @@ function deleteMineTrends(delData) {
 					if(delData.pageType == "home") {
 						delData.route.data[delData.listIndex].data.splice(delData.valueIndex, 1);
 					} else if(delData.pageType == "details") {
-						delData.list.data.splice(delData.valueIndex, 1);
+						if(delData.list != undefined) {
+							delData.list.data.splice(delData.valueIndex, 1);
+						}
 						router.back();
 					} else if(delData.pageType == "space") {
 						delData.route.data.splice(delData.valueIndex, 1);
@@ -1937,4 +2028,27 @@ function addImagesTrends() {
 		pubArea: "" //发布区域
 	}
 	addTrend(router_add_trends, submitData);
+}
+
+/**
+ * 查看图片
+ * @param {Object} page 当前路由
+ * @param {Object} index 图片序号
+ * @param {Object} images 图片数组
+ */
+function showImages(page, index, images) {
+	console.log("clickImage");
+	var pb = $.photoBrowser({
+		initIndex: index,
+		items: images,
+		onOpen: function() {
+			page.allow_back = false;
+		},
+		onClose: function() {
+			page.allow_back = true;
+			page.photo_browser = null;
+		}
+	});
+	page.photo_browser = pb;
+	pb.open();
 }

@@ -238,8 +238,9 @@
 
 						</div>
 						<div align="center">
-							<img src="../../image/add.png" width="50px" height="40px" id="x" onclick="addDiv()" />
-							<img src="../../image/add.png" width="50px" height="40px" id="x" onclick="delDiv()" />
+							<button onclick="addDiv()" style=" color: #FFFFFF;  font-size:18px; width: 160px; height: 50px; background-color: #09BB07;">添加段落</button>
+							<button onclick="delDiv()" style=" color: #FFFFFF; font-size:18px; width: 160px; height: 50px; background-color: #E64340;">删除段落</button>
+
 						</div>
 						<!--<img src="../../image/20170808120135.png" width="100%" height="40px" />-->
 					</div>
@@ -285,19 +286,26 @@
 				</div>
 
 			</div>
-				
+
 		</div>
-			<div class="weui-btn-area">
-				<button id="submit" v-on:click="submitClick" class="weui-btn weui-btn_primary">保存</button>
-				 
-			</div>
-		
-	 
+		<div class="weui-btn-area">
+			<button id="submit" v-on:click="submitClick" class="weui-btn weui-btn_primary">保存</button>
+
+		</div>
+
 		<script src="../../js/mui.min.js"></script>
 		<script type="text/javascript" src="../../js/weui.min.js"></script>
 		<script type="text/javascript" src="../../js/vue.min.js"></script>
 		<script type="text/javascript" src="../../js/jweixin.js"></script>
 		<script type="text/javascript" src="../../js/jquery.min.js"></script>
+
+		<!--<script src="../../js/demoCssJs/jquery-weui.js"></script>
+		<script src="../../js/demoCssJs/jquery-2.1.4.js"></script>
+		<script src="../../js/demoCssJs/iscroll.js"></script>
+		
+		<script src="../../js/demoCssJs/jquery-weui.js"></script>
+		
+		-->
 		<script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
@@ -310,19 +318,80 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/pluploadutil.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 		<script>
+			var count1 = 0;
+
 			function delDiv() {
-				$("#insert").empty();
-				count1 = 0;
+				var btnArray = ['取消', '确认'];
+				mui.confirm('确认移除段落？', '段落移除', btnArray, function(e) {
+					if(e.index == 1) {
+						if(count1 == 1) {
+							alert('不能再删除了');
+							return;
+						}
+						if(count1 == 2) {
+							$("#yc1").empty();
+							count1 = count1 - 1;
+						} else if(count1 == 3) {
+							$("#yc2").empty();
+							count1 = count1 - 1;
+						} else if(count1 == 4) {
+							$("#yc3").empty();
+							count1 = count1 - 1;
+						} else if(count1 == 5) {
+							$("#yc4").empty();
+							count1 = count1 - 1;
+						}
+						var updateConten = "";
+						var allInputst1 = $("*[name='dlt']");
+						var allInputsc1 = $("*[name='dlc']");
+						var allInputse1 = $("*[name='dle']");
+						for(var i = 0; i < allInputst1.length; i++) {
+							updateConten += '<section><h3>' + allInputst1[i].value + '</h3><p>' + allInputsc1[i].value + '</p><p><img src=' + allInputse1[i].value + '></p></section>';
+						}
+						if(FileDataArray == '') {
+							for(var i = 0; i < allInputse1.length; i++) {
+								var newsname = allInputse1[i].value.substring(45);
+								var person2 = new Object();
+								person2.newsid = PriNewsId; //文章id
+								person2.saveurl = allInputse1[i].value; //图片地址
+								person2.imgurl = allInputse1[i].value;
+								person2.oldname = '';
+								person2.newname = newsname;
+								person2.filesize = '45';
+								FileDataArray.push(person2);
+							}
+						}
+						var para = {
+							cmd: 'news', 
+							type: 'edit',
+							colid: PriNewsId,
+							callcol: 'content',
+							encs: FileDataArray,
+							colv: updateConten
+						}
+						console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' + JSON.stringify(para))
+						unitWebsitePro(para, function(data) {});
+						
+						
+						
+						
+					} else {
+						info.innerText = ' '
+					}
+				})
+
+				//确定删除
+
 			}
 
 			function addDiv() {
-				//创建一个div
+				//创建一个div 
 				var div = document.createElement('div');
 				div.className = "italic";
 				var ic = count1 + 1;
 				if(ic <= 5) {
 					for(var i = 0; i < ic; i++) {
-						div.innerHTML = '<input name=\"dlt\" id=\"title' + i + '\" placeholder="请输入节标题" onchange=\"upperCase(this.id,' + i + ')\"  type="text"  ><input name=\"dlc\" id=\"conten' + i + '\"   v-model.lazy=\"newscontent.message\" class=\"weui-input\" placeholder=\"请输入新闻内容\" onchange=\"upperCase(this.id,' + i + ')\" style=\"border-color: white;height: 7rem;\ /"><div class=\"kuan\"><input name=\"dle\" id=\"Priimgname' + i + '\" type=\"text\"   onpropertychange=\"upperCase(this.id,' + i + ')\" /></div><div class=\"an\"><a href=\"#\" style=\"float:right\" class=\"a-upload\"><input id=\"Prifile' + i + '\" type=\"file\"  />上传图片</a></div>';
+						div.innerHTML = '<div id=\"yc' + count1 + '\"><input name=\"dlt\" id=\"title' + i + '\" placeholder="请输入节标题" onchange=\"upperCase(this.id,' + i + ')\"  type="text"  ><input name=\"dlc\" id=\"conten' + i + '\"   v-model.lazy=\"newscontent.message\" class=\"weui-input\" placeholder=\"请输入新闻内容\" onchange=\"upperCase(this.id,' + i + ')\" style=\"border-color: white;height: 7rem;\ /"><div class=\"kuan\"><input name=\"dle\" id=\"Priimgname' + i + '\" type=\"text\"   onpropertychange=\"upperCase(this.id,' + i + ')\" /></div><div class=\"an\"><a href=\"#\" style=\"float:right\" class=\"a-upload\"><input id=\"Prifile' + i + '\" type=\"file\"  />上传图片</a></div></div>';
 					}
 				} else {
 					alert('不能再增加了');
@@ -335,6 +404,7 @@
 				var Priimgname = "Priimgname" + count1;
 				initUploader(Priid, Priimgname);
 				count1++;
+			 
 			}
 			var vm_loading; //等待框
 			var fileUploader; //上传logo七牛对象
@@ -344,7 +414,7 @@
 			var FileDataArray = new Array(); //附件参数
 			var imgName;
 			var PriNewsId;
-			var count1 = 0;
+
 			var objArray = new Array();
 			//所属栏目下拉框
 			var vue_input = new Vue({
@@ -352,11 +422,11 @@
 				data: {
 					items: []
 				}
-			}); 
+			});
 			//初始化页面
 			window.onload = function() {
 				//初始化上传控件
-				initUploader();
+				initUploaderfj();
 				//添加一个段落
 				addDiv();
 				var detail = utils.getDataFromUrl(window.location.href);
@@ -371,7 +441,7 @@
 						pagesize: 999, //每页条数  
 						pageindex: 1 //页码 
 					}
-				 
+
 					unitWebsitePro(tempData, function(data) {
 						vm.editName = '保存';
 						$("#chnid option:selected").val(PriNewsId);
@@ -450,7 +520,7 @@
 							if(webConfig.isfileup == 0) //0表示禁止上传，并隐藏回复功能
 								document.getElementById('onisfileup').style.display = "none";
 						} else {
-							weui.alert('没有获取到配置信息')	
+							weui.alert('没有获取到配置信息')
 						}
 					} else {
 						weui.alert(data.RspTxt);
@@ -466,7 +536,7 @@
 					iswrite: '1',
 					stat: '1',
 					pageindex: 1 //页码  
-				} 
+				}
 				var datalm;
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
@@ -625,7 +695,8 @@
 					quourl: PriQuourl,
 					isreply: PriIsReply,
 					stat: 1
-				};  
+				};
+				 
 				console.log('comData=========================:' + JSON.stringify(comData));
 				unitWebsitePro(comData, function(data) {
 					if(data.RspCode == 0) {
@@ -672,20 +743,20 @@
 						var allInputse1 = $("*[name='dle']");
 						for(var i = 0; i < allInputst1.length; i++) {
 							updateConten += '<section><h3>' + allInputst1[i].value + '</h3><p>' + allInputsc1[i].value + '</p><p><img src=' + allInputse1[i].value + '></p></section>';
-						} 
+						}
 						if(FileDataArray == '') {
-							for(var i = 0; i < allInputse1.length; i++) { 
-								var newsname = allInputse1[i].value.substring(45); 
+							for(var i = 0; i < allInputse1.length; i++) {
+								var newsname = allInputse1[i].value.substring(45);
 								var person2 = new Object();
 								person2.newsid = PriNewsId; //文章id
 								person2.saveurl = allInputse1[i].value; //图片地址
 								person2.imgurl = allInputse1[i].value;
-								person2.oldname = ''; 
+								person2.oldname = '';
 								person2.newname = newsname;
 								person2.filesize = '45';
 								FileDataArray.push(person2);
 							}
-						} 
+						}
 						var para = {
 							cmd: 'news',
 							type: 'edit',
@@ -693,7 +764,7 @@
 							callcol: 'content',
 							encs: FileDataArray,
 							colv: updateConten
-						}  
+						}
 						console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' + JSON.stringify(para))
 						unitWebsitePro(para, function(data) {});
 					}
@@ -703,10 +774,11 @@
 			 * 初始化上传
 			 */
 			function initUploader(priid, Priimgname) {
+
 				var bannerOption = {
 					disable_statistics_report: true, // 禁止自动发送上传统计信息到七牛，默认允许发送
 					runtimes: 'html5,flash,html4', // 上传模式,依次退化
-					browse_button: ['upload', priid], // 上传选择的点选按钮，**必需**
+					browse_button: priid, // 上传选择的点选按钮，**必需** 
 					uptoken_func: function(file) { // 在需要获取 uptoken 时，该方法会被调用 
 						console.log("uptoken_func:" + JSON.stringify(file));
 						uptokenData = null;
@@ -778,6 +850,7 @@
 								}, cc.key);
 								//Pridl=Priimgname.substring(9,10)
 								if(Priimgname != undefined) {
+
 									document.getElementById(Priimgname).value = imgurl;
 									var person = new Object();
 									person.encid = priid; //控件id
@@ -801,6 +874,154 @@
 								} else {
 									document.getElementById('filename').value = imgurl;
 								}
+								//vm_loading.isShow = false;  
+							} else {
+								var dialog = weui.dialog({
+									title: "上传失败",
+									content: JSON.stringify(info),
+									className: "custom-classname",
+									buttons: [{
+										label: "确定",
+										type: "primary",
+										onClick: function() {
+											dialog.hide();
+										}
+									}]
+								});
+							}
+						},
+						'Error': function(up, err, errTip) {
+							var dialog = weui.dialog({
+								title: "操作失败",
+								content: pluploadutil.errMes(err.code, errTip),
+								className: "custom-classname",
+								buttons: [{
+									label: "确定",
+									type: "primary",
+									onClick: function() {
+										dialog.hide();
+									}
+								}]
+							});
+						},
+						'UploadComplete': function() {
+							//队列文件处理完毕后,处理相关的事情
+							//console.log("UploadComplete");
+						},
+						'Key': function(up, file) {
+							// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
+							// 该配置必须要在 unique_names: false , save_key: false 时才生效
+							if(uptokenData && uptokenData.code) { //成功
+								return uptokenData.data.Data[0].Key;
+							}
+						}
+					}
+				}
+				bannerUploader = Qiniu.uploader(bannerOption);
+			}
+
+			/**
+			 * 初始化上传
+			 */
+			function initUploaderfj() {
+
+				var bannerOption = {
+					disable_statistics_report: true, // 禁止自动发送上传统计信息到七牛，默认允许发送
+					runtimes: 'html5,flash,html4', // 上传模式,依次退化
+					browse_button: 'upload', // 上传选择的点选按钮，**必需** 
+					uptoken_func: function(file) { // 在需要获取 uptoken 时，该方法会被调用 
+						console.log("uptoken_func:" + JSON.stringify(file));
+						uptokenData = null;
+						uptokenData = getQNUpToken(file);
+						console.log("获取uptoken回调:" + JSON.stringify(uptokenData));
+						if(uptokenData && uptokenData.code) { //成功   
+							return uptokenData.data.Data[0].Token;
+						} else {
+							bannerUploader.stop();
+							var dialog = weui.dialog({
+								title: "上传失败",
+								content: uptokenData.message,
+								className: "custom-classname",
+								buttons: [{
+									label: "确定",
+									type: "primary",
+									onClick: function() {
+										dialog.hide();
+									}
+								}]
+							});
+						}
+					},
+					unique_names: false, // 默认 false，key 为文件名。若开启该选项，JS-SDK 会为每个文件自动生成key（文件名）
+					save_key: false, // 默认 false。若在服务端生成 uptoken 的上传策略中指定了 `save_key`，则开启，SDK在前端将不对key进行任何处理
+					get_new_uptoken: true, // 设置上传文件的时候是否每次都重新获取新的 uptoken
+					domain: storageutil.QNPBDOMAIN, // bucket 域名，下载资源时用到，如：'http://xxx.bkt.clouddn.com/' **必需**
+					max_file_size: '10mb', // 最大文件体积限制
+					flash_swf_url: '../../js/lib/plupload/Moxie.swf', //引入 flash,相对路径
+					max_retries: 0, // 上传失败最大重试次数
+					dragdrop: false, // 开启可拖曳上传
+					chunk_size: '4mb', // 分块上传时，每块的体积
+					auto_start: true, // 选择文件后自动上传，若关闭需要自己绑定事件触发上传,
+					filters: {
+						mime_types: [ //只允许上传图片和zip文件
+							{
+								title: "Image files",
+								extensions: "jpg,png,jpeg,gif,bmp"
+							}
+						]
+					},
+					init: {
+						'FilesAdded': function(up, files) {
+							plupload.each(files, function(file) {
+								// 文件添加进队列后,处理相关的事情
+								imgName = JSON.stringify(file.name)
+								var img = imgName.substring(-1, (imgName - 1));
+								//document.getElementById('Priimgname0').value = imgName;
+								console.log("FilesAdded:" + JSON.stringify(file));
+							});
+						},
+						'UploadProgress': function(up, file) {
+							// 每个文件上传时,处理相关的事情  
+							//vm_loading.content = "上传中 " + file.percent + "%";
+						},
+						'FileUploaded': function(up, file, info) {
+							// 每个文件上传成功后,处理相关的事情 
+							console.log("文件:info:" + JSON.stringify(info));
+							if(info.status == 200) {
+								var cc = eval("(" + info.response + ")");
+								imgurl = storageutil.QNPBDOMAIN + cc.key;
+								console.log("imgurl:" + imgurl);
+								var imgLink = Qiniu.imageView2({
+									mode: 3, // 缩略模式，共6种[0-5]
+									w: 100, // 具体含义由缩略模式决定 
+									h: 100, // 具体含义由缩略模式决定
+									q: 100, // 新图的图像质量，取值范围：1-100
+									format: 'png' // 新图的输出格式，取值范围：jpg，gif，png，webp等
+								}, cc.key);
+								//Pridl=Priimgname.substring(9,10)
+
+								var person = new Object();
+								//person.encid = priid; //控件id
+								person.saveurl = imgurl; //图片地址
+								person.imgurl = imgLink;
+								person.oldname = file.name;
+								person.newname = cc.key;
+								person.filesize = file.size;
+								//循环附件数组，判断id是否有重复
+								for(var i = 0; i < FileDataArray.length; i++) {
+									if(FileDataArray[i].id == priid) {
+										//如果有重复则移除原来的
+										FileDataArray.splice(i, 1);
+									}
+								}
+								//添加新的附件
+
+								FileDataArray.push(person);
+
+								objArray.push([imgurl]);
+
+								document.getElementById('filename').value = imgurl;
+
 								//vm_loading.isShow = false;  
 							} else {
 								var dialog = weui.dialog({

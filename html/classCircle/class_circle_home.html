@@ -1,3 +1,8 @@
+<!--
+	作者：444811716@qq.com
+	时间：2017-10-16
+	描述：班级圈
+-->
 <!DOCTYPE html>
 <html>
 
@@ -39,14 +44,14 @@
 	<body>
 		<!--班级圈路由-->
 		<div id="router_class_circle_app">
-			<keep-alive>
-				<router-view v-if="$route.meta.keepAlive">
-				</router-view>
-			</keep-alive>
-			<router-view v-if="!$route.meta.keepAlive">
+			<router-view>
 			</router-view>
 		</div>
 		<div id="qnInput" style="display: none;" /></div>
+		<!--路由-欢迎页-->
+		<template id="router_welcome">
+			<div></div>
+		</template>
 		<!--路由--班级圈主页-->
 		<template id="router_class_circle_home">
 			<div id="class_circle_home" class="weui-tab">
@@ -54,7 +59,7 @@
 					<home-navbar-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-item="clickItem"></home-navbar-item>
 				</div>
 				<div class="weui-tab__bd">
-					<home-bd-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-person="clickPerson" @click-content="clickContent" @click-function="clickFunction" @click-comment="clickComment" @click-relate-content="clickRelateContent" @click-relate-reply="clickRelateReply"></home-bd-item>
+					<home-bd-item v-for="(value,index) in data" :key="index" :value="value" :index="index" :is_on="is_on" @click-person="clickPerson" @click-content="clickContent" @click-function="clickFunction" @click-comment="clickComment" @click-relate-content="clickRelateContent" @click-relate-reply="clickRelateReply" @click-image="clickImage"></home-bd-item>
 				</div>
 				<div @click="clickAddTrends" class="class-circle-report">+ 发表动态</div>
 			</div>
@@ -65,8 +70,8 @@
 		</template>
 		<!--路由--动态详情-->
 		<template id="router_trends_details">
-			<div>
-				<trends-item v-for="(item_value,item_index) in data" :index="item_index" :key="item_index" :value="item_value" :detail="true" @click-person="clickPerson" @click-function="clickFunction" @click-comment="clickComment"></trends-item>
+			<div class="class-circle-trends-details">
+				<trends-item v-for="(item_value,item_index) in data" :index="item_index" :key="item_index" :value="item_value" :detail="true" @click-person="clickPerson" @click-function="clickFunction" @click-comment="clickComment" @click-image="clickImage"></trends-item>
 			</div>
 		</template>
 		<!--路由-用户个人空间-->
@@ -88,7 +93,7 @@
 								</div>
 								<div>{{userId|userName}}</div>
 							</div>
-							<trends-item v-for="(item_value,item_index) in data" :index="item_index" :key="item_index" :value="item_value" :detail="false" @click-person="clickPerson" @click-function="clickFunction" @click-comment="clickComment" @click-content="clickContent"></trends-item>
+							<trends-item v-for="(item_value,item_index) in data" :index="item_index" :key="item_index" :value="item_value" :detail="false" @click-person="clickPerson" @click-function="clickFunction" @click-comment="clickComment" @click-content="clickContent" @click-image="clickImage"></trends-item>
 						</div>
 						<error-item v-if="show_no_more" :type="2"></error-item>
 						<error-item v-if="show_error" :type="1"></error-item>
@@ -127,7 +132,7 @@
 							<relate-item v-for="(item_value,item_index) in value.data" :key="item_index" :value="item_value" :index="item_index" @click-person="clickPerson" @click-relate-content="clickRelateContent" @click-relate-reply="clickRelateReply"></relate-item>
 						</template>
 						<template v-else>
-							<trends-item v-for="(item_value,item_index) in value.data" :key="item_index" :value="item_value" :index="item_index" :detail="false" @click-person="clickPerson" @click-content="clickContent" @click-function="clickFunction" @click-comment="clickComment"></trends-item>
+							<trends-item v-for="(item_value,item_index) in value.data" :key="item_index" :value="item_value" :index="item_index" :detail="false" @click-person="clickPerson" @click-content="clickContent" @click-function="clickFunction" @click-comment="clickComment" @click-image="clickImage"></trends-item>
 						</template>
 					</div>
 				</div>
@@ -156,7 +161,7 @@
 				</div>
 				<div class="class-circle-content-limit" @click="clickContent" :class="{'class-circle-content-limit-break':detail}">{{value.MsgContentTxt}}</div>
 				<template v-if="value.EncType == 1">
-					<image-item :images="value.EncAddr|imagesArray" :images-thumb="value.EncImgAddr|imagesArray"></image-item>
+					<image-item :images="value.EncAddr|imagesArray" :images-thumb="value.EncImgAddr|imagesArray" @click-image="clickImage"></image-item>
 				</template>
 				<div class="class-circle-function">
 					<div class="class-circle-views">浏览数 {{value.ReadCnt}}</div>
@@ -374,7 +379,7 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/swiper.min.js?" + mathRandom + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/vue.js?" + mathRandom + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/vue-router.js?" + mathRandom + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/lib/vconsole/vconsole.min.js?" + mathRandom + "'></s" + "cript>");
+			//document.write("<s" + "cript type='text/javascript' src='../../js/lib/vconsole/vconsole.min.js?" + mathRandom + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.min.js?" + mathRandom + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js?" + mathRandom + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/qiniu/qiniu.min.js?" + mathRandom + "'></s" + "cript>");

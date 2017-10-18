@@ -162,7 +162,7 @@ Vue.component("time-table", {
 					hours.push(obj)
 				}
 				var minutes = [];
-				for(var i = 0; i < 59; i++) {
+				for(var i = 0; i < 60; i++) {
 					var obj = {};
 					obj.label = obj.value = i > 9 ? i : '0' + i;
 					minutes.push(obj)
@@ -392,11 +392,12 @@ function selectDepart(input_item) {
 function selectDate(input_item) {
 	document.activeElement.blur();
 	var self = input_item;
+	var myDate = new Date();
 	weui.datePicker({
 		start: '2016-12-29',
 		end: '2030-12-29',
-		cron: '* */2 0',
-		defaultValue: [2017, 7, 9],
+//		cron: '* */2 0',
+		defaultValue: [myDate.getFullYear(), myDate.getMonth()+1, myDate.getDate()],
 		onChange: function onChange(result) {
 			//	            console.log(result);
 		},

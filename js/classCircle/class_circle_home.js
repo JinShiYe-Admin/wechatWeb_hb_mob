@@ -392,7 +392,6 @@ function initRouter() {
 			 * @param {Object} imageIndex
 			 */
 			clickImage: function(imageIndex) {
-				console.log("clickImage:" + imageIndex);
 				this.allow_back = false;
 				this.showImageIndex = imageIndex;
 				this.showImage = true;
@@ -1285,7 +1284,6 @@ function disposeHomeData(type, submitData, element, data) {
 	if(element != undefined) {
 		$(element).pullToRefreshDone();
 	}
-
 	if(data.RspCode == 0) {
 		home_data.data[type].show_error = false;
 		if(submitData.pageIndex == 1) {
@@ -1618,8 +1616,18 @@ function addTrend(routeAdd, submitData) {
 				"IsLike": 0,
 				"PublishDate": utils.getCurentTime()
 			}
-			home_data.data[0].data.unshift($.extend({}, newTrends));
-			home_data.data[1].data.unshift($.extend({}, newTrends));
+			for(var i = 0; i < 2; i++) {
+				if(home_data.data[i].data.length == 0) {
+					//内容为空
+					home_data.data[i].show_no_more = false;
+					home_data.data[i].show_error = false;
+					home_data.data[i].show_loadmore = true;
+					home_data.data[i].allow_loadmore = false;
+					home_data.data[i].show_loadmore_loading = false;
+					home_data.data[i].show_loadmore_content = "没有更多了";
+				}
+				home_data.data[i].data.unshift($.extend({}, newTrends));
+			}
 			routeAdd.images = [];
 			router.back();
 		} else {

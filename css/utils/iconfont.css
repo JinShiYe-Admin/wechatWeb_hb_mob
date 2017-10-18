@@ -137,6 +137,8 @@
 
 .icon-huxiangguanzhu:before { content: "\e641"; }
 
+.icon-shanchu21:before { content: "\e648"; }
+
 .icon-renren:before { content: "\e609"; }
 
 .icon-dongtai1:before { content: "\e671"; }
@@ -196,6 +198,8 @@
 .icon-zhengzhi:before { content: "\e61f"; }
 
 .icon-jiaobaoyuntubiao:before { content: "\e610"; }
+
+.icon-pinglun1:before { content: "\e643"; }
 
 .icon-excel:before { content: "\e8aa"; }
 
@@ -316,3 +320,5 @@
 .icon-lishijilu1:before { content: "\e670"; }
 
 .icon-jinggao-copy:before { content: "\e65e4"; }
+
+.icon-dianzan2:before { content: "\e645"; }

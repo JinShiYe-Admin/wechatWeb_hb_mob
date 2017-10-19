@@ -220,7 +220,7 @@ Vue.component("time-table", {
 		}
 	},
 	updated: function() {
-		//		console.log('刷新数据:' + JSON.stringify(this.$data))
+		//		console.log('刷新数据:' + JSON.stringify(this.$data)) 
 		//		var div = document.getElementById("time_table");
 		//		console.log(div.innerHTML)
 
@@ -229,7 +229,7 @@ Vue.component("time-table", {
 
 function getSub() {
 	var tempData = {
-		cmd: 'sub',
+		cmd: 'subadmin',
 		type: 'findpage',
 		pagesize: 10,
 		pageindex: 1,

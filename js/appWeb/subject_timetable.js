@@ -10,6 +10,8 @@ var table_data = {
 	departid: "",
 	timespanb: "",
 	timespane: "",
+	timespanbValue:"",
+	timespaneValue:"",
 	items_array: [],
 	sub_array: [],
 	list_array: ["daytype", "timespan", "mon", "tues", "wed", "thur", "fri", "sat", "sun"]
@@ -314,8 +316,8 @@ function addEdule() {
 		edulename: table_data.edulename,
 		departid: table_data.departid,
 		departname: table_data.departname,
-		timespanb: table_data.timespanb,
-		timespane: table_data.timespane,
+		timespanb: table_data.timespanbValue,
+		timespane: table_data.timespaneValue,
 		edulerows: table_data.items_array
 
 	}
@@ -404,7 +406,10 @@ function selectDate(input_item) {
 		onConfirm: function onConfirm(result) {
 			console.log(self.id)
 			console.log(JSON.stringify(result));
-			table_data[self.id] = result[0].label + result[1].label + result[2].label;
+			table_data[self.id] = result[0].label + result[1].label;
+			table_data[self.id+"Value"] = result[0].value +""+ result[1].value;
+			console.log(table_data[self.id+"Value"])
+			
 			//	            console.log(result);
 		},
 		id: 'datePicker'

@@ -6,6 +6,8 @@ var departUserInfo = {
 	value: {}
 };
 var temp_data; //临时变量;用于查询我所处部门的所有成员
+var temp_number; //临时变量;用于处理选取的图片
+var temp_string; //临时变量;用于处理选取的图片
 var show_class_circle_app = false; //是否显示班级圈app
 var router; //路由
 var router_user_space; //个人空间路由
@@ -433,52 +435,7 @@ function initRouter() {
 			inputChange: function(value, files) {
 				console.log("inputChange:value:", value);
 				console.log("inputChange:files:", files);
-				if(files[0].size == 0 || files[0].name == "/") {
-					console.log("未选择图片")
-					return false;
-				}
-				var types = files[0].type.toLowerCase().split("/");
-				var self = this;
-				console.log("types:" + types);
-				if(types[1] == "png" || types[1] == "jpg" || types[1] == "jpeg") {
-					self.allow_back = false;
-					$.showLoading('处理中...');
-					EXIF.getData(files[0], function() {
-						var orientation = EXIF.getTag(this, 'Orientation'); //获取旋转信息
-						//显示文件
-						var reader = new FileReader();
-						reader.onload = function() {
-							var result = this.result;
-							var maxSize = 2 * 1024 * 1024;
-							compress.getImgInfo(result, function(img, imgInfo) {
-								console.log("获取的文件信息：" + JSON.stringify(imgInfo));
-								console.log("原图尺寸：" + result.length);
-								var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)), orientation);
-								var blob = compress.base64ToBlob(newDataUrl, 'image/jpeg');
-								console.log("blob.type:" + blob.type);
-								console.log('要传递的文件大小：' + blob.size);
-								blob.lastModifiedDate = new Date();
-								fileOb = blob;
-								var newImage = {
-									filePath: newDataUrl, //文件路径
-									uploading: false, //是否正在上传
-									process: "", //进度
-									state: null, //状态
-									file: blob, //文件对象
-									fileName: Date.now() + '.jpg',
-									uploaded: false //是否上传过
-								}
-								self.images.push(newImage);
-								self.allow_back = true;
-								$.hideLoading();
-								$('#uploaderInput').val('');
-							});
-						}
-						reader.readAsDataURL(files[0]);
-					});
-				} else {
-					$.alert("请选择png,jpg,jpeg类型的图片", "选择失败");
-				}
+				disposeAllFiles(this, files);
 			}
 		},
 		beforeRouteEnter: function(to, from, next) {
@@ -2059,4 +2016,94 @@ function showImages(page, index, images) {
 	});
 	page.photo_browser = pb;
 	pb.open();
+}
+
+/**
+ * 处理选取的文件
+ * @param {Object} self
+ * @param {Object} files
+ */
+function disposeAllFiles(self, files) {
+	if(files.length == 1 && (files[0].size == 0 || files[0].name == "/")) {
+		console.log("未选择图片");
+		return false;
+	}
+	temp_number = 0;
+	temp_string = "";
+	self.allow_back = false;
+	$.showLoading('处理中...');
+	disposeFile(self, files);
+}
+
+/**
+ * 处理单个文件
+ * @param {Object} self
+ * @param {Object} files
+ */
+function disposeFile(self, files) {
+	var types = files[temp_number].type.toLowerCase().split("/");
+	console.log("types:" + types);
+	if(types[1] == "png" || types[1] == "jpg" || types[1] == "jpeg") {
+		EXIF.getData(files[temp_number], function() {
+			var orientation = EXIF.getTag(this, 'Orientation'); //获取旋转信息
+			//显示文件
+			var reader = new FileReader();
+			reader.onload = function() {
+				var result = this.result;
+				var maxSize = 2 * 1024 * 1024;
+				compress.getImgInfo(result, function(img, imgInfo) {
+					console.log("获取的文件信息：" + JSON.stringify(imgInfo));
+					console.log("原图尺寸：" + result.length);
+					var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)), orientation);
+					var blob = compress.base64ToBlob(newDataUrl, 'image/jpeg');
+					console.log("blob.type:" + blob.type);
+					console.log('要传递的文件大小：' + blob.size);
+					blob.lastModifiedDate = new Date();
+					fileOb = blob;
+					var newImage = {
+						filePath: newDataUrl, //文件路径
+						uploading: false, //是否正在上传
+						process: "", //进度
+						state: null, //状态
+						file: blob, //文件对象
+						fileName: Date.now() + '.jpg',
+						uploaded: false //是否上传过
+					}
+					self.images.push(newImage);
+					disposeFileNextFile(self, files);
+				});
+			}
+			reader.readAsDataURL(files[temp_number]);
+		});
+	} else {
+		temp_string = "请选择png,jpg,jpeg类型的图片";
+		disposeFileNextFile(self, files);
+	}
+}
+
+function disposeFileNextFile(self, files) {
+	var finish = false;
+	if(temp_number == files.length - 1) {
+		//所有文件已经处理完
+		finish = true;
+	} else {
+		if(self.images.length == 9) {
+			finish = true;
+			temp_string = "最多只能上传9张照片";
+		}
+	}
+
+	if(finish) {
+		self.allow_back = true;
+		$.hideLoading();
+		$('#uploaderInput').val('');
+		if(temp_string != "") {
+			$.alert(temp_string, "选择失败");
+		}
+		temp_number = null;
+		temp_string = null;
+	} else {
+		temp_number++;
+		disposeFile(self, files);
+	}
 }

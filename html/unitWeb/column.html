@@ -128,6 +128,21 @@
 				//				alert("detail " + JSON.stringify(detail));
 				vm.type = detail.type;
 				if(vm.type == 'edit') {
+								var tempData = {
+				cmd: 'chn',
+				type: 'findpage',
+				pagesize: '1',
+				pageindex: '1',
+				chnid: detail.chnid
+				//				cname: '',
+				//				stat: '',
+				//				iswrite: '',
+				//				islink: ''
+			}
+			unitWebsitePro(tempData, function(data) {
+				//				alert(JSON.stringify(data));
+				if(data.RspCode == 0) {
+					detail= data.RspData.dt[0];
 					vm.editName = '删除'
 					vm.colid = detail.chnid;
 					vm.cname.message = detail.cname;
@@ -148,6 +163,11 @@
 						})(item)
 
 					}
+				} else {
+					alert(data.RspTxt);
+				}
+			});
+
 
 				} else {
 					vm.editName = '添加'
@@ -222,7 +242,8 @@
 							unitWebsitePro(para, function(data) {
 								if(data.RspCode == 0) {
 									vm.resetData();
-									mui.back()
+									vm.editName = '添加'
+//									mui.back()
 								}
 								//								alert(JSON.stringify(data));
 							});

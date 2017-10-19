@@ -335,7 +335,6 @@ Vue.component("trends-item", {
 			e.target.src = utils.updateHeadImage("");
 		},
 		clickImage: function(index, images) {
-			console.log("clickImage-trends-item");
 			this.$emit("click-image", index, images);
 		}
 	}

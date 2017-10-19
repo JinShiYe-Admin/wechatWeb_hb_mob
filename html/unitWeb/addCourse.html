@@ -142,6 +142,7 @@
 					if(data.RspCode == 0) {
 						courseData.subIndex = 1;
 						courseData.subFlag = 0;
+						courseData.newCourse = '';
 						//获取科目列表
 						getSubArray();
 					} else {
@@ -222,7 +223,7 @@
 				var tempFlag = 0;
 				for(var i = 0; i < courseData.courseArray.length; i++) {
 					var tempModel = courseData.courseArray[i];
-					if(tempModel.text == text) {
+					if(tempModel.cname == text) {
 						tempFlag++;
 					}
 				}

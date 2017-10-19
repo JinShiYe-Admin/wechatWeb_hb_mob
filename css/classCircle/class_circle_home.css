@@ -132,17 +132,30 @@ body {
 	/*功能区域*/
 	color: #CCCCCC;
 	display: block;
-	height: 21px;
+	height: 25px;
 	font-size: 13px;
 }
 
 .class-circle-function .iconfont {
-	font-size: 13px;
+	font-size: 16px;
 }
 
 .class-circle-function .class-circle-views {
 	/*浏览数*/
 	float: left;
+	line-height: 25px;
+}
+
+.icon-dianzan:before {
+	content: "\e645";
+}
+
+.icon-newmessage:before {
+	content: "\e643";
+}
+
+.icon-trash:before {
+	content: "\e648";
 }
 
 .class-circle-function .icon-dianzan,
@@ -150,7 +163,7 @@ body {
 .class-circle-function .icon-trash {
 	/*点赞，评论，删除按钮*/
 	float: right;
-	margin: 0 5px;
+	margin: 0 5px 0 9px;
 }
 
 .class-circle-praise-comment {

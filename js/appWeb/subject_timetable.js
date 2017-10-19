@@ -10,8 +10,8 @@ var table_data = {
 	departid: "",
 	timespanb: "",
 	timespane: "",
-	timespanbValue:"",
-	timespaneValue:"",
+	timespanbValue: "",
+	timespaneValue: "",
 	items_array: [],
 	sub_array: [],
 	list_array: ["daytype", "timespan", "mon", "tues", "wed", "thur", "fri", "sat", "sun"]
@@ -398,8 +398,8 @@ function selectDate(input_item) {
 	weui.datePicker({
 		start: '2016-12-29',
 		end: '2030-12-29',
-//		cron: '* */2 0',
-		defaultValue: [myDate.getFullYear(), myDate.getMonth()+1, myDate.getDate()],
+		//		cron: '* */2 0',
+		defaultValue: [myDate.getFullYear(), myDate.getMonth() + 1, myDate.getDate()],
 		onChange: function onChange(result) {
 			//	            console.log(result);
 		},
@@ -407,9 +407,21 @@ function selectDate(input_item) {
 			console.log(self.id)
 			console.log(JSON.stringify(result));
 			table_data[self.id] = result[0].label + result[1].label;
-			table_data[self.id+"Value"] = result[0].value +""+ result[1].value;
-			console.log(table_data[self.id+"Value"])
-			
+			if(result[1].value < 10) {
+				result[1].value = "0" + result[1].value;
+			}
+
+			table_data[self.id + "Value"] = result[0].value + "" + result[1].value;
+			console.log(table_data[self.id + "Value"])
+			if(table_data['timespanbValue'] != "" && table_data['timespaneValue'] != "") {
+				if(table_data['timespanbValue'] > table_data['timespaneValue']) {
+					table_data[self.id + "Value"] = "";
+					table_data[self.id] = "";
+					alert("开始时间不能大于结束时间");
+					return;
+				}
+			}
+
 			//	            console.log(result);
 		},
 		id: 'datePicker'

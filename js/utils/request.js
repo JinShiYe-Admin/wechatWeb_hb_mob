@@ -11,7 +11,7 @@ var request = (function(mod) {
 	}
 	mod.getDepartList = function(callback) {
 		mod.postData(consts.MAINURL, JSON.stringify({
-			cmd: 'persondeparts',
+			cmd: 'persondepartsadmin',
 			type: 'findpage'
 		}), function(response) {
 			console.log("获取的部门列表值：" + JSON.stringify(response));
@@ -31,7 +31,7 @@ var request = (function(mod) {
 			id = id.value;
 		}
 		mod.postData(consts.MAINURL, JSON.stringify({
-			cmd: "departpersons",
+			cmd: "departpersonsadmin",
 			type: 'findpage',
 			colid: id,
 			colv: colv,

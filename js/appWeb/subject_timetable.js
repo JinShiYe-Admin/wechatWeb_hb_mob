@@ -10,6 +10,8 @@ var table_data = {
 	departid: "",
 	timespanb: "",
 	timespane: "",
+	timespanbValue: "",
+	timespaneValue: "",
 	items_array: [],
 	sub_array: [],
 	list_array: ["daytype", "timespan", "mon", "tues", "wed", "thur", "fri", "sat", "sun"]
@@ -220,7 +222,7 @@ Vue.component("time-table", {
 		}
 	},
 	updated: function() {
-		//		console.log('刷新数据:' + JSON.stringify(this.$data))
+		//		console.log('刷新数据:' + JSON.stringify(this.$data)) 
 		//		var div = document.getElementById("time_table");
 		//		console.log(div.innerHTML)
 
@@ -229,7 +231,7 @@ Vue.component("time-table", {
 
 function getSub() {
 	var tempData = {
-		cmd: 'sub',
+		cmd: 'subadmin',
 		type: 'findpage',
 		pagesize: 10,
 		pageindex: 1,
@@ -314,8 +316,8 @@ function addEdule() {
 		edulename: table_data.edulename,
 		departid: table_data.departid,
 		departname: table_data.departname,
-		timespanb: table_data.timespanb,
-		timespane: table_data.timespane,
+		timespanb: table_data.timespanbValue,
+		timespane: table_data.timespaneValue,
 		edulerows: table_data.items_array
 
 	}
@@ -396,15 +398,30 @@ function selectDate(input_item) {
 	weui.datePicker({
 		start: '2016-12-29',
 		end: '2030-12-29',
-//		cron: '* */2 0',
-		defaultValue: [myDate.getFullYear(), myDate.getMonth()+1, myDate.getDate()],
+		//		cron: '* */2 0',
+		defaultValue: [myDate.getFullYear(), myDate.getMonth() + 1, myDate.getDate()],
 		onChange: function onChange(result) {
 			//	            console.log(result);
 		},
 		onConfirm: function onConfirm(result) {
 			console.log(self.id)
 			console.log(JSON.stringify(result));
-			table_data[self.id] = result[0].label + result[1].label + result[2].label;
+			table_data[self.id] = result[0].label + result[1].label;
+			if(result[1].value < 10) {
+				result[1].value = "0" + result[1].value;
+			}
+
+			table_data[self.id + "Value"] = result[0].value + "" + result[1].value;
+			console.log(table_data[self.id + "Value"])
+			if(table_data['timespanbValue'] != "" && table_data['timespaneValue'] != "") {
+				if(table_data['timespanbValue'] > table_data['timespaneValue']) {
+					table_data[self.id + "Value"] = "";
+					table_data[self.id] = "";
+					alert("开始时间不能大于结束时间");
+					return;
+				}
+			}
+
 			//	            console.log(result);
 		},
 		id: 'datePicker'

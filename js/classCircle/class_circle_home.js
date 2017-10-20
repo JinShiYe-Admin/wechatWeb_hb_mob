@@ -618,7 +618,7 @@ function initRouter() {
 				if(userId == this.userId) {
 					return false;
 				}
-				$(".class-circle-user-space .weui-tab__bd-item").destroyInfinite();
+				$(document.body).destroyInfinite();
 				showPersonTrends(userId);
 			},
 			/**
@@ -706,7 +706,6 @@ function initRouter() {
 						userSpaceToBeforePosition(timeId, id, temp_scrollTop);
 					}, 100);
 				} else {
-					$(".class-circle-user-space .weui-tab__bd-item").scrollTop(0);
 					$(document.body).scrollTop(0);
 				}
 			},
@@ -739,7 +738,7 @@ function initRouter() {
 			if(this.allow_back) {
 				if(from.params.id > to.params.id) {
 					//返回上一个空间
-					$(".class-circle-user-space .weui-tab__bd-item").destroyInfinite();
+					$(document.body).destroyInfinite();
 				} else {
 					setUserSpaceBeforePosition(from.params.id);
 				}
@@ -767,7 +766,6 @@ function initRouter() {
 			if(this.allow_back) {
 				if("/home" == to.path) {
 					//回到主页清空空间数据
-					$(".class-circle-user-space .weui-tab__bd-item").destroyInfinite();
 					space_data = null;
 					space_data = {};
 					this.userId = "";
@@ -775,6 +773,15 @@ function initRouter() {
 				} else {
 					setUserSpaceBeforePosition(from.params.id);
 				}
+				$(document.body).removeClass("refreshing");
+				$(document.body).removeClass("touching");
+				$(document.body).removeClass("pull-down");
+				$(document.body).removeClass("pull-up");
+				$(document.body).removeClass("weui-pull-to-refresh");
+				$(document.body).unbind($.touchEvents.start);
+				$(document.body).unbind($.touchEvents.move);
+				$(document.body).unbind($.touchEvents.end);
+				$(document.body).destroyInfinite();
 				next();
 			} else {
 				if(this.photo_browser) {
@@ -905,8 +912,8 @@ function initHomeLoadmore(id) {
 function initSpacePullToRefresh(spaceId) {
 	console.log("initSpacePullToRefresh:" + spaceId);
 	//初始化下拉刷新
-	$(".class-circle-user-space .weui-tab__bd-item").pullToRefresh();
-	$(".class-circle-user-space .weui-tab__bd-item").on("pull-to-refresh", function() {
+	$(document.body).pullToRefresh();
+	$(document.body).on("pull-to-refresh", function() {
 		var id = router_user_space.$route.params.id;
 		if(!space_data[id].allow_loaddata) {
 			$(this).pullToRefreshDone();
@@ -917,8 +924,8 @@ function initSpacePullToRefresh(spaceId) {
 		getUserSpace(space_data[id].userId, 1, id, this);
 	});
 	//初始化上拉加载更多
-	$(".class-circle-user-space .weui-tab__bd-item").infinite(190);
-	$(".class-circle-user-space .weui-tab__bd-item").infinite().on("infinite", function() {
+	$(document.body).infinite();
+	$(document.body).infinite().on("infinite", function() {
 		var id = router_user_space.$route.params.id;
 		console.log("allow_loaddata:" + space_data[id].allow_loaddata);
 		console.log("allow_loadmore:" + space_data[id].allow_loadmore);
@@ -970,7 +977,7 @@ function detailToBeforePosition(timeId, scrollTop) {
 function setUserSpaceBeforePosition(id) {
 	var from_data = space_data[id];
 	if(from_data != undefined) {
-		from_data.scrollTop = $(".class-circle-user-space .weui-tab__bd-item").scrollTop();
+		from_data.scrollTop = $(document.body).scrollTop();
 		from_data.leave = true;
 	}
 }
@@ -982,7 +989,7 @@ function setUserSpaceBeforePosition(id) {
  */
 function userSpaceToBeforePosition(timeId, id, scrollTop) {
 	console.log("userSpaceToBeforePosition:" + id);
-	var ele = $(".class-circle-user-space .weui-tab__bd-item");
+	var ele = $(document.body);
 	if(ele.length != 0) {
 		ele.scrollTop(scrollTop);
 		clearInterval(timeId);
@@ -1352,7 +1359,7 @@ function getUserSpace(publisherIds, pageIndex, id, element) {
 				space_data[id].allow_loadmore = false;
 				space_data[id].show_loadmore_loading = false;
 				space_data[id].show_loadmore_content = "没有更多了";
-				$(".class-circle-user-space .weui-tab__bd-item").destroyInfinite();
+				$(document.body).destroyInfinite();
 			} else {
 				space_data[id].allow_loadmore = true;
 				space_data[id].show_loadmore_loading = true;

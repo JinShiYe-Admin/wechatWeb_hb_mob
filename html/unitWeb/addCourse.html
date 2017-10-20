@@ -108,7 +108,7 @@
 			//获取科目列表
 			var getSubArray = function() {
 				var tempData = {
-					cmd: 'sub',
+					cmd: 'subadmin',
 					type: 'findpage',
 					pagesize: 999,
 					pageindex: courseData.subIndex
@@ -134,7 +134,7 @@
 			//添加课程
 			var addSub = function(subName) {
 				var tempData = {
-					cmd: 'sub',
+					cmd: 'subadmin',
 					type: 'add',
 					cname: subName
 				}
@@ -153,7 +153,7 @@
 			//重新编辑课程名称
 			var editSub = function(model, newName) {
 				var tempData = {
-					cmd: 'sub',
+					cmd: 'subadmin',
 					type: 'edit',
 					callcol: 'cname',
 					colid: model.subid,
@@ -174,7 +174,7 @@
 			//删除课程
 			var delSub = function(model, index) {
 				var tempData = {
-					cmd: 'sub',
+					cmd: 'subadmin',
 					type: 'del',
 					colid: model.subid
 				}
@@ -195,7 +195,7 @@
 					tempFlag = 1;
 				}
 				var tempData = {
-					cmd: 'sub',
+					cmd: 'subadmin',
 					type: 'edit',
 					colid: model.subid,
 					callcol: 'stat',

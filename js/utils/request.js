@@ -7,11 +7,19 @@ var request = (function(mod) {
 		jQuery.getJSON(url, data, callback);
 	}
 	mod.postData = function(url, data, callback) {
-		jQuery.post(url, data, callback);
+		jQuery.post(url, data, function(data) {
+			if(data.RspCode == 13) {
+				alert("用户没有登录或已超时，关闭当前页面，从新从企业管理端登录")
+			} else if(data.RspCode == 0) {
+				callback(data)
+			} else {
+				alert(data.RspTxt);
+			}
+		});
 	}
 	mod.getDepartList = function(callback) {
 		mod.postData(consts.MAINURL, JSON.stringify({
-			cmd: 'persondeparts',
+			cmd: 'persondepartsadmin',
 			type: 'findpage'
 		}), function(response) {
 			console.log("获取的部门列表值：" + JSON.stringify(response));
@@ -21,17 +29,17 @@ var request = (function(mod) {
 		})
 	}
 	mod.getDepartPersons = function(id, colv, callcol, callback) {
-//		if(callcol) {
-//			callcol = 'info';
-//		} else {
-//			callcol = 'base';
-//		}
+		//		if(callcol) {
+		//			callcol = 'info';
+		//		} else {
+		//			callcol = 'base';
+		//		}
 		callcol = 'info';
 		if(typeof(id.value) !== "undefined") {
 			id = id.value;
 		}
 		mod.postData(consts.MAINURL, JSON.stringify({
-			cmd: "departpersons",
+			cmd: "departpersonsadmin",
 			type: 'findpage',
 			colid: id,
 			colv: colv,

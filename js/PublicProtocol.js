@@ -76,7 +76,11 @@ var xhrPost = function(url, data, callback) {
 		if(this.readyState === 4 && this.status === 200) {
 			var success_data = JSON.parse(this.responseText);
 			console.log('XHRP-Success:', success_data);
-			callback(success_data);
+			if (success_data.RspCode == 0013) {
+				alert('用户没有登录或超时,关闭当前页,重新从企业管理端登录.');
+			} else{
+				callback(success_data);
+			}
 		} else {
 			callback({
 				RspCode: 404,

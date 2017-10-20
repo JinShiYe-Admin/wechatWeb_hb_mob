@@ -11,6 +11,7 @@
 		<link rel="stylesheet" href="css/jquery-weui.css" />
 		<link rel="stylesheet" href="css/demos.css" />
 		<link rel="stylesheet" href="https://jsypay.jiaobaowang.net/suitetest/css/utils/iconfont.css" />
+		<link rel="stylesheet" href="https://jsypay.jiaobaowang.net/suitetest/css/mui.min.css" />
 		<style>
 		    .wrap {
 		        width: 30px;
@@ -62,7 +63,7 @@
 								<input onclick="selectClass(this)" class="weui-input" placeholder="请选择班级" :value="classes.currClass.name" v-model="classes.currClass.name">
 							</div>
 						</div>
-						<div class="weui-cells__title">内容</div>
+						<div class="weui-cells__title" style="color: black;font-size: 17px;">内容</div>
 						<div class="weui-cells">
 							<div class="weui-cell">
 								<div class="weui-cell__bd">

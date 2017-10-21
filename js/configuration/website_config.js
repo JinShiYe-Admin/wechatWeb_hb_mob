@@ -1,187 +1,4 @@
-//输入框组件
-Vue.component('input-item', {
-	props: ['value', 'index'],
-	template: '<div>\
-					<div class="weui-cells__title">{{value.title}}</div>\
-					<div class="weui-cells">\
-						<div class="weui-cell">\
-							<div class="weui-cell__bd">\
-								<input class="weui-input" v-model="value.message" :maxlength="value.maxlength" :type="value.type" :placeholder="\'请输入\'+value.title" @input="oninput(index);" @blur="onblur(index);">\
-							</div>\
-						</div>\
-					</div>\
-				</div>',
-	methods: {
-		oninput: function(index) { //输入时的监听，0中文名，1英文名，2单位联系方式
-			//console.log("oninput " + index + " " + vm_input.inputArray[index].message);
-			switch(index) {
-				case 0: //中文名
-					vm_input.inputArray[index].message = vm_input.inputArray[index].message.replace(/[^\u4E00-\u9FA5| ]/g, "").replace(/(^\s*)|(\s*$)/g, "");
-					break;
-				case 1: //英文名
-					vm_input.inputArray[index].message = vm_input.inputArray[index].message.replace(/[^a-zA-Z| ]/g, "").replace(/(^\s*)|(\s*$)/g, "");
-					break;
-				case 2: //单位联系方式
-					vm_input.inputArray[index].message = vm_input.inputArray[index].message.replace(/[^\d]/g, "")
-					break;
-				default:
-					break;
-			}
-		},
-		onblur: function(index) { //失去焦点时的监听，0中文名，1英文名，2单位联系方式
-			//console.log("onblur " + index);
-			if(vm_input.inputArray[index].message != webConfig[vm_input.inputArray[index].callcol]) {
-				//有改变
-				if(vm_input.inputArray[index].message == "") {
-					//为空
-					vm_input.inputArray[index].message = webConfig[vm_input.inputArray[index].callcol];
-				} else {
-					vm_loading.isShow = true;
-					var data = {
-						type: 0,
-						index: index,
-						callcol: vm_input.inputArray[index].callcol,
-						colv: vm_input.inputArray[index].message
-					}
-					changeWebsiteConfig(data);
-				}
-			}
-		}
-	}
-});
-//皮肤选项组件
-Vue.component('skin-item', {
-	props: ['value'],
-	template: '<div>\
-					<div class="weui-cells__title">皮肤</div>\
-					<div class="weui-cells">\
-						<a class="weui-cell weui-cell_access"  @click="onclick(value);">\
-							<div class="weui-cell__bd">\
-								<p>{{value}}</p>\
-							</div>\
-							<div class="weui-cell__ft"></div>\
-						</a>\
-					</div>\
-				</div>',
-	methods: {
-		onclick: function(value) {
-			//console.log("skin " + value);
-			var dialog = weui.dialog({
-				title: "操作失败",
-				content: "修改皮肤功能暂未开放",
-				className: "custom-classname",
-				buttons: [{
-					label: "确定",
-					type: "primary",
-					onClick: function() {
-						dialog.hide();
-					}
-				}]
-			});
-			//			utils.mOpenWithData("Skin.html", {
-			//				skinid: value
-			//			});
-		}
-	}
-});
-//图片组件
-Vue.component("image-item", {
-	props: ['value', 'index'],
-	template: '<div>\
-					<div class="weui-cells__title">{{value.title}}</div>\
-					<div class="weui-cells">\
-						<div class="weui-cell">\
-							<div class="weui-cell__bd" :id="value.parid">\
-								<div class="website-image" :style="{backgroundImage:\'url(\'+ value.imageurl+\')\'}" @click="showImage(index,true);"></div>\
-								<button class="weui-btn weui-btn_mini weui-btn_primary" :id="value.id">修改</button>\
-								<div class="website-file-type">(JPG,PNG|10M)</div>\
-								<div class="website-upload-image" v-show="value.showupload">\
-									<div class="website-image" :style="{backgroundImage:\'url(\'+ value.fbase+\')\'}" @click="showLocalImage(index,true);"></div>\
-									<div>文件:</div>\
-									<div>{{value.fname}}</div>\
-									<div>大小:</div>\
-									<div>{{value.fsize}}</div>\
-									<button class="weui-btn weui-btn_mini weui-btn_primary" @click="upLoadFile(index);">上传</button>\
-								</div>\
-							</div>\
-						</div>\
-					</div>\
-					<div class="weui-gallery" v-if="value.showimage" @click="showImage(index,false);">\
-						<span class="weui-gallery__img" :style="{backgroundImage:\'url(\'+ value.imageurl+\')\'}"></span>\
-					</div>\
-					<div class="weui-gallery" v-if="value.showlocalimage" @click="showLocalImage(index,false);">\
-						<span class="weui-gallery__img" :style="{backgroundImage:\'url(\'+ value.fbase+\')\'}"></span>\
-					</div>\
-				</div>',
-	methods: {
-		showImage: function(index, type) {
-			//console.log("showImage:" + index + " " + type);
-			vm_image.imageArray[index].showimage = type;
-		},
-		showLocalImage: function(index, type) {
-			//console.log("showLocalImage:" + index + " " + type);
-			vm_image.imageArray[index].showlocalimage = type;
-		},
-		upLoadFile: function(index) {
-			//console.log("upLoadFile:" + index);
-			vm_loading.content = "上传中 0%";
-			vm_loading.isShow = true;
-			if(index == 0) {
-				logoUploader.start();
-			} else {
-				bannerUploader.start();
-			}
-		}
-	}
-});
-
-//开关组件
-Vue.component('switch-item', {
-	props: ['value', 'index'],
-	template: '<div>\
-					<div class="weui-cell weui-cell_switch">\
-						<div class="weui-cell__bd">{{value.title}}</div>\
-						<div class="weui-cell__ft">\
-							<input class="weui-switch" type="checkbox" v-model="value.check" @change="onchange(index);">\
-						</div>\
-					</div>\
-				</div>',
-	methods: {
-		onchange: function(index) {
-			//console.log("onchange " + index + " " + vm_switch.switchArray[index].check);
-			if(vm_switch.switchArray[index].check != webConfig[vm_switch.switchArray[index].callcol]) {
-				vm_loading.isShow = true;
-				var data = {
-					type: 1,
-					index: index,
-					callcol: vm_switch.switchArray[index].callcol,
-					colv: vm_switch.switchArray[index].check * 1
-				}
-				changeWebsiteConfig(data);
-			}
-		}
-	}
-});
-
 var webConfig = {}; //网站配置的数据
-//---假数据---start---
-//webConfig = {};
-//webConfig.cname = '中文名';
-//webConfig.ename = 'yingwenming';
-//webConfig.corptel = '110';
-//webConfig.logourl = 'http://ojhtju24r.bkt.clouddn.com/wechat/webcon/1500367775004956.png';
-//webConfig.bannerurl = '';
-//webConfig.stat = 0;
-//webConfig.isreply = 0;
-//webConfig.isnewchk = 0;
-//webConfig.isnewreplychk = 0;
-//webConfig.isfileup = 0;
-//webConfig.isfiledown = 0;
-//webConfig.iswrite = 0;
-//webConfig.isass = 0;
-//webConfig.skinid = 0;
-//---假数据---end---
-
 var vm_loading; //等待框
 var vm_input; //输入框
 var vm_skin; //皮肤选项
@@ -193,14 +10,12 @@ var uptokenData; //上传的token
 
 window.onload = function() {
 	initVueVM();
-	//initQNUpLoader();
 	initUploader();
-	//initData();
 	getWebsitConfig(); //获取配置
-
-	//initWebsiteConfig(webConfig);
-	//vm_loading.isShow = false;
-
+	//---假数据---start---
+	//	initWebsiteConfig(webConfig);
+	//	vm_loading.isShow = false;
+	//---假数据---end---
 };
 
 /**
@@ -326,22 +141,9 @@ function initVueVM() {
 }
 
 /**
- * 初始化七牛上传控件
- */
-//function initQNUpLoader() {
-//
-//	var logoOption = setQNOption(vm_image.imageArray[0].id, vm_image.imageArray[0].parid);
-//	logoUploader = Qiniu.uploader(logoOption);
-//
-//	var Qiniu2 = new QiniuJsSDK();
-//	var banOption = setQNOption(vm_image.imageArray[1].id, vm_image.imageArray[1].parid);
-//	bannerUploader = Qiniu2.uploader(banOption);
-//}
-
-/**
  * 初始化logo上传
  */
-function initUploader(){
+function initUploader() {
 	var logoOption = {
 		disable_statistics_report: true, // 禁止自动发送上传统计信息到七牛，默认允许发送
 		runtimes: 'html5,flash,html4', // 上传模式,依次退化
@@ -618,44 +420,6 @@ function initUploader(){
 }
 
 /**
- * 初始化数据
- */
-//function initData() {
-//	var webData = JSON.parse(storageutil.getSessionStorage(storageutil.WEBSITECONFIG));
-//	//console.log("webData:" + JSON.stringify(webData));
-//	var getData = true; //获取网站配置
-//	if(webData && webData.open == 0) {
-//		webData.open = 1; //进入了网站配置页面
-//		storageutil.setSessionStorage(storageutil.WEBSITECONFIG, JSON.stringify(webData));
-//	} else if(webData && webData.open == 2) {
-//		if(webData.webCon) { //保存有本地数据
-//			if(webData.changeSkinId && webData.webCon.skinid != webData.changeSkinId) { //修改皮肤ID
-//				//修改皮肤id
-//				//console.log("changeSkinId:" + webData.changeSkinId);
-//				getData = false;
-//				webConfig = webData.webCon;
-//				initWebsiteConfig(webData.webCon);
-//				var data = {
-//					type: 2,
-//					index: 0,
-//					callcol: "skinid",
-//					colv: webData.changeSkinId
-//				}
-//				changeWebsiteConfig(data);
-//			}
-//		}
-//	}
-//	//console.log("getWebsitConfig:" + getData);
-//	if(getData) {
-//		getWebsitConfig(); //获取配置
-//		//-- - 假数据-- - start-- -
-//		//initWebsiteConfig(webConfig);
-//		//vm_loading.isShow = false;
-//		//-- - 假数据-- - end-- -
-//	}
-//}
-
-/**
  * 获取网站配置信息
  */
 function getWebsitConfig() {
@@ -776,31 +540,31 @@ function changeWebsiteConfig(change) {
 		}
 	});
 	//---假数据---start---
-//	if(1) { //成功
-//		if(change.type == 2) { //皮肤id
-//			vm_skin.skinId = commit.colv;
-//		}
-//		if(change.type == 3) { //图片
-//			vm_image.imageArray[change.index].imageurl = commit.colv;
-//			vm_image.imageArray[change.index].showupload = false;
-//			vm_image.imageArray[change.index].fname = "";
-//			vm_image.imageArray[change.index].fsize = "";
-//			vm_image.imageArray[change.index].fbase = "";
-//			delImage({
-//				appId: storageutil.QNQYWXKID,
-//				urls: [webConfig[commit.callcol]]
-//			});
-//		}
-//		vm_loading.isShow = false;
-//		weui.toast("操作成功");
-//		webConfig[commit.callcol] = commit.colv;
-//		setWebConSes(webConfig);
-//	} else {
-//		if(change.type == 1) { //开关
-//			vm_switch.switchArray[change.index].check = !change.colv;
-//		}
-//		weui.alert("修改失败:" + data.RspTxt);
-//	}
+	//	if(1) { //成功
+	//		if(change.type == 2) { //皮肤id
+	//			vm_skin.skinId = commit.colv;
+	//		}
+	//		if(change.type == 3) { //图片
+	//			vm_image.imageArray[change.index].imageurl = commit.colv;
+	//			vm_image.imageArray[change.index].showupload = false;
+	//			vm_image.imageArray[change.index].fname = "";
+	//			vm_image.imageArray[change.index].fsize = "";
+	//			vm_image.imageArray[change.index].fbase = "";
+	//			delImage({
+	//				appId: storageutil.QNQYWXKID,
+	//				urls: [webConfig[commit.callcol]]
+	//			});
+	//		}
+	//		vm_loading.isShow = false;
+	//		weui.toast("操作成功");
+	//		webConfig[commit.callcol] = commit.colv;
+	//		setWebConSes(webConfig);
+	//	} else {
+	//		if(change.type == 1) { //开关
+	//			vm_switch.switchArray[change.index].check = !change.colv;
+	//		}
+	//		weui.alert("修改失败:" + data.RspTxt);
+	//	}
 	//---假数据---end---
 }
 

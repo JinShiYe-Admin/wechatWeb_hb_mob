@@ -40,24 +40,86 @@
 				<switch-item v-for="(value,index) in switchArray" :value="value" :key="index" :index="index" v-show="isShow"></switch-item>
 			</div>
 		</div>
+		<template id="temp_input_item">
+			<div>
+				<div class="weui-cells__title">{{value.title}}</div>
+				<div class="weui-cells">
+					<div class="weui-cell">
+						<div class="weui-cell__bd">
+							<input class="weui-input" v-model="value.message" :maxlength="value.maxlength" :type="value.type" :placeholder="'请输入'+value.title" @input="oninput(index);" @blur="onblur(index);">
+						</div>
+					</div>
+				</div>
+			</div>
+		</template>
+		<template id="temp_skin_item">
+			<div>
+				<div class="weui-cells__title">皮肤</div>
+				<div class="weui-cells">
+					<a class="weui-cell weui-cell_access" @click="onclick(value);">
+						<div class="weui-cell__bd">
+							<p>{{value}}</p>
+						</div>
+						<div class="weui-cell__ft"></div>
+					</a>
+				</div>
+			</div>
+		</template>
+		<template id="temp_image_item">
+			<div>
+				<div class="weui-cells__title">{{value.title}}</div>
+				<div class="weui-cells">
+					<div class="weui-cell">
+						<div class="weui-cell__bd" :id="value.parid">
+							<div class="website-image" :style="{backgroundImage:'url('+ value.imageurl+')'}" @click="showImage(index,true);"></div>
+							<button class="weui-btn weui-btn_mini weui-btn_primary" :id="value.id">修改</button>
+							<div class="website-file-type">(JPG,PNG|10M)</div>
+							<div class="website-upload-image" v-show="value.showupload">
+								<div class="website-image" :style="{backgroundImage:'url('+ value.fbase+')'}" @click="showLocalImage(index,true);"></div>
+								<div>文件:</div>
+								<div>{{value.fname}}</div>
+								<div>大小:</div>
+								<div>{{value.fsize}}</div>
+								<button class="weui-btn weui-btn_mini weui-btn_primary" @click="upLoadFile(index);">上传</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="weui-gallery" v-if="value.showimage" @click="showImage(index,false);">
+					<span class="weui-gallery__img" :style="{backgroundImage:'url('+ value.imageurl+')'}"></span>
+				</div>
+				<div class="weui-gallery" v-if="value.showlocalimage" @click="showLocalImage(index,false);">
+					<span class="weui-gallery__img" :style="{backgroundImage:'url('+ value.fbase+')'}"></span>
+				</div>
+			</div>
+		</template>
+		<template id="temp_switch_item">
+			<div>
+				<div class="weui-cell weui-cell_switch">
+					<div class="weui-cell__bd">{{value.title}}</div>
+					<div class="weui-cell__ft">
+						<input class="weui-switch" type="checkbox" v-model="value.check" @change="onchange(index);">
+					</div>
+				</div>
+			</div>
+		</template>
 
 		<script type="text/javascript">
-			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/PublicProtocol.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/storageutil.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/mui.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/jquery.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/weui.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/vue.min.js?" + Math.random() + "'></s" + "cript>");
-			//			document.write("<s" + "cript type='text/javascript' src='../../js/jweixin.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/qiniu/qiniu.min.js?" + Math.random() + "'></s" + "cript>");
-			//			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.js?" + Math.random() + "'></s" + "cript>");
-			//			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.dev.js?" + Math.random() + "'></s" + "cript>");
-			//			document.write("<s" + "cript type='text/javascript' src='../../js/lib/qiniu/qiniu.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cryption.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cloudutil.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/utils/pluploadutil.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/configuration/website_config_utils.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/configuration/website_config.js?" + Math.random() + "'></s" + "cript>");
+			//document.write("<s" + "cript type='text/javascript' src='../../js/configuration/website_config_temp_data.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 	</body>
 

@@ -12,12 +12,25 @@
 			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css' + WebVersion + '" />');
 			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css' + WebVersion + '" />');
 			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css' + WebVersion + '" />');
-			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css' + WebVersion + '" />');
-			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css' + WebVersion + '" id="skin" />');
+			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css' + WebVersion + '" id="skin" />');
+			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css' + WebVersion + '" />');
 		</script>
 		<style>
-			.operate-cursor {
-				cursor: pointer
+			.operate-edit {
+				text-decoration: none;
+			}
+
+			#column_info .row {
+				margin-left: 0;
+				margin-right: 0;
+			}
+
+			#column_info .submit-button {
+				margin-bottom: 15px;
+			}
+
+			#column_info .input-text[type="number"] {
+				width: 100%;
 			}
 		</style>
 	</head>
@@ -26,16 +39,82 @@
 		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 网站配置 <span class="c-gray en">&gt;</span> 配置栏目
 			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
 		</nav>
-		<div id="colum_table" class="page-container">
+		<div id="column_table" class="page-container">
 			<div class="cl pd-5 bg-1 bk-gray">
 				<span class="l">
 					<a class="btn btn-primary radius" @click="add"><i class="Hui-iconfont"></i> 添加栏目</a>
 				</span>
 			</div>
 			<column-table :value="dt" @click-edit="edit"></column-table>
+			<div id="pages"></div>
+		</div>
+		<div id="column_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content radius">
+					<div class="modal-header">
+						<h3 class="modal-title">{{title}}</h3>
+					</div>
+					<div class="modal-body">
+						<p>{{content}}</p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn" data-dismiss="modal" aria-hidden="true">确定</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="column_info" style="display: none;">
+			<form class="form form-horizontal">
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">栏目名称：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" class="input-text" :value="cname" placeholder="请输入栏目名称">
+					</div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">链接URL：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" class="input-text" :value="linkurl" placeholder="请输入链接URL">
+					</div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">排序ID：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="number" class="input-text" :value="orderid" placeholder="请输入排序ID，越小越前">
+					</div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">备注：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" class="input-text" :value="note" placeholder="请输入备注">
+					</div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">是否允许投稿：</label>
+					<div class="formControls skin-minimal col-xs-8 col-sm-9">
+						<div class="check-box">
+							<input type="checkbox" disabled>
+						</div>
+					</div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">是否显示首页：</label>
+					<div class="formControls skin-minimal col-xs-8 col-sm-9">
+						<div class="check-box">
+							<input type="checkbox" v-model="istop">
+						</div>
+					</div>
+				</div>
+				<div class="row cl submit-button">
+					<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+						<input v-if="type =='添加'" class="btn btn-primary radius" type="button" :value="type">
+						<input v-if="type =='删除'" class="btn btn-danger radius" type="button" :value="type">
+					</div>
+				</div>
+			</form>
 		</div>
 		<!--表格-->
-		<template id="temp_colum_table">
+		<template id="temp_column_table">
 			<table class="table table-border table-bordered table-bg">
 				<thead class="text-c">
 					<tr>
@@ -55,16 +134,12 @@
 						<td>{{item.note}}</td>
 						<td>{{item.istop==1?"是":"否"}}</td>
 						<td class="sorting_1">
-							<u class="text-primary operate-cursor" @click="clickEdit(index)">
-								编辑
-							</u>
+							<a class="operate-edit" @click="clickEdit(index)" title="编辑"><i class="Hui-iconfont"></i></a>
 						</td>
 					</tr>
 				</tbody>
 			</table>
 		</template>
-
-		<div id="demo7"></div>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
@@ -73,8 +148,6 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/layer/2.4/layer.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/static/h-ui/js/H-ui.min.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/static/h-ui.admin/js/H-ui.admin.js" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/My97DatePicker/4.8/WdatePicker.js" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/datatables/1.10.0/jquery.dataTables.min.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/laypage/1.2/laypage.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/vue.min.js" + WebVersion + "'></s" + "cript>");
 		</script>
@@ -82,7 +155,7 @@
 			//栏目表组件
 			Vue.component('column-table', {
 				props: ['value'],
-				template: '#temp_colum_table',
+				template: '#temp_column_table',
 				methods: {
 					/**
 					 * 点击编辑
@@ -93,21 +166,22 @@
 					}
 				}
 			});
+			//栏目表
 			var column_table = new Vue({
-				el: "#colum_table",
+				el: "#column_table",
 				data: {
 					dt: [{
 						cname: "1",
 						linkurl: "2",
 						orderid: "3",
 						note: "4",
-						istop: "5"
+						istop: 1
 					}, {
 						cname: "12",
 						linkurl: "22",
 						orderid: "33",
 						note: "44",
-						istop: "55"
+						istop: 0
 					}]
 				},
 				methods: {
@@ -115,19 +189,131 @@
 					 * 点击添加栏目
 					 */
 					add: function() {
-						console.log("添加栏目");
+						column_info.showAdd();
 					},
 					/**
 					 * 点击编辑
 					 * @param {Object} index 栏目序号
 					 */
 					edit: function(index) {
-						console.log("column_table-edit:" + this.dt[index].cname);
+						column_info.showEdit(this.dt[index]);
+					}
+				}
+			});
+
+			//栏目信息
+			var column_info = new Vue({
+				el: "#column_info",
+				data: {
+					cname: "",
+					linkurl: "",
+					orderid: "",
+					note: "",
+					istop: "",
+					type: ""
+				},
+				methods: {
+					/**
+					 * 显示添加栏目
+					 */
+					showAdd: function() {
+						this.cname = "";
+						this.linkurl = "";
+						this.orderid = "";
+						this.note = "";
+						this.istop = "";
+						this.type = "添加";
+						this.show("添加栏目");
+					},
+					/**
+					 * 显示编辑栏目
+					 */
+					showEdit: function(value) {
+						this.cname = value.cname;
+						this.linkurl = value.linkurl;
+						this.orderid = value.orderid;
+						this.note = value.note;
+						this.istop = value.istop;
+						this.type = "删除";
+						this.show("编辑栏目");
+					},
+					/**
+					 * 显示页面
+					 */
+					show: function(title) {
+						layer.open({
+							type: 1,
+							title: title,
+							area: '500px',
+							content: $('#column_info') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+						});
+					}
+				}
+			});
+
+			//提示的弹出框
+			var column_modal = new Vue({
+				el: "#column_modal",
+				data: {
+					title: "",
+					content: ""
+				},
+				methods: {
+					/**
+					 * 显示弹出框
+					 * @param {Object} title 标题
+					 * @param {Object} content 内容
+					 */
+					show: function(title, content) {
+						this.title = title;
+						this.content = content;
+						$("#column_modal").modal("show");
 					}
 				}
 			});
 			window.onload = function() {
+				//getColumnData(1);
+			}
 
+			/**
+			 * 获取栏目列表
+			 * @param {Object} pageindex 列表序号
+			 */
+			function getColumnData(pageindex) {
+				var tempData = {
+					cmd: 'chn',
+					type: 'findpage',
+					pagesize: '10',
+					pageindex: pageindex
+				}
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						column_table.dt = data.RspData.dt;
+						initLaypage(data.RspData.pg.PageCount, pageindex);
+					} else {
+						column_table.dt = [];
+						column_modal.show("获取数据失败", data.RspTxt);
+					}
+				});
+			}
+
+			/**
+			 * 初始化页码
+			 * @param {Object} pages 通过后台拿到的总页数
+			 * @param {Object} curr 初始化当前页
+			 */
+			function initLaypage(pages, curr) {
+				laypage({
+					cont: 'pages', //容器
+					pages: pages, //通过后台拿到的总页数
+					curr: curr, //初始化当前页
+					jump: function(e, first) { //触发分页后的回调
+						//console.log("jump: " + first + " " + JSON.stringify(e));
+						if(!first) {
+							getColumnData(e.curr);
+						}
+					}
+				});
 			}
 		</script>
 	</body>

@@ -689,6 +689,7 @@ function initRouter() {
 						space_data[id].getData = false;
 						//设置某个人的空间为已读，增加动态的浏览人数
 						classCircleProtocol.setUserSpaceReadByUser({
+							corpId: mineUserInfo.corpid, //单位ID
 							userId: mineUserInfo.userid,
 							publisherIds: [space_data[id].userId]
 						}, function(data) {
@@ -1211,6 +1212,7 @@ function showClassCircleApp(next) {
  */
 function getHomeTrends(type, pageIndex, element) {
 	var submitData = {
+		corpId: mineUserInfo.corpid, //单位ID
 		userId: mineUserInfo.userid, //用户ID
 		pageIndex: pageIndex, //当前页数
 		pageSize: 10 //每页记录数
@@ -1271,6 +1273,7 @@ function disposeHomeData(type, submitData, element, data) {
 		if(readUserId.key.length != 0) {
 			//设置某个人的空间为已读，增加动态的浏览人数
 			classCircleProtocol.setUserSpaceReadByUser({
+				corpId: mineUserInfo.corpid, //单位ID
 				userId: mineUserInfo.userid,
 				publisherIds: readUserId.key
 			}, function(data) {
@@ -1320,6 +1323,7 @@ function disposeHomeData(type, submitData, element, data) {
  */
 function getUserSpace(publisherIds, pageIndex, id, element) {
 	var submitData = {
+		corpId: mineUserInfo.corpid, //单位ID
 		userId: mineUserInfo.userid, //用户ID
 		publisherIds: [publisherIds], //发布者ID
 		pageIndex: pageIndex, //当前页数
@@ -1554,6 +1558,7 @@ function delCommentFun(clickRoute, trendsValue, commentId, commentIndex, replysI
  */
 function addTrend(routeAdd, submitData) {
 	console.log("addTrend:submitData:", submitData);
+	submitData.corpId = mineUserInfo.corpid; //单位ID
 	classCircleProtocol.addUserSpace(submitData, function(data) {
 		console.log("新增动态:", data);
 		$.hideLoading();
@@ -1609,6 +1614,7 @@ function addTrend(routeAdd, submitData) {
 function addComment(routeAdd, commentContent, trendsValue) {
 	console.log("addComment:", commentContent, trendsValue);
 	var submitData = {
+		corpId: mineUserInfo.corpid, //单位ID
 		userId: mineUserInfo.userid, //用户ID
 		userSpaceId: trendsValue.TabId, //用户空间ID
 		commentContent: commentContent //评论内容
@@ -1648,6 +1654,7 @@ function addComment(routeAdd, commentContent, trendsValue) {
 function addReply(routeAdd, commentContent, trendsValue, replyUserId, commentIndex, replysIndex) {
 	console.log("addReply:", commentContent, trendsValue, replyUserId, commentIndex, replysIndex);
 	var submitData = {
+		corpId: mineUserInfo.corpid, //单位ID
 		userId: mineUserInfo.userid, //用户ID
 		upperId: trendsValue.Comments[commentIndex].TabId, //主评论ID
 		replyUserId: replyUserId, //回复ID
@@ -1711,6 +1718,7 @@ function getTrendsDetails(spaceId) {
 function addRelateReply(routeAdd, commentContent, valueIndex, spaceId, tabId, replyUserId) {
 	console.log("addRelateReply:", commentContent, valueIndex, spaceId, replyUserId);
 	var submitData = {
+		corpId: mineUserInfo.corpid, //单位ID
 		userId: mineUserInfo.userid, //用户ID
 		upperId: tabId, //主评论ID
 		replyUserId: replyUserId, //回复ID

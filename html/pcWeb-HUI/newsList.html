@@ -1,10 +1,293 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
+
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
 	</head>
+
 	<body>
-		<p>新闻审核</p>
+		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 新闻 <span class="c-gray en">&gt;</span> 新闻审核
+			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
+		</nav>
+		<div class="page-container">
+			<div id="chnid">
+				<select class="select" id="Prixlk" name="one" style="height: 45px;font-size: 17px;color: #929292;">
+					<option id="selectDropdown" :value='item.chnid' v-for="item in items">{{item.cname}}</option>
+				</select>
+			</div>
+			<div id="newsData">
+
+				<table class="table table-border table-bordered table-bg table-hover table-sort table-responsive">
+					<thead>
+						<tr class="text-c">
+
+							<th width="80">所属栏目</th>
+							<th width="100">新闻标题</th>
+							<th width="100">新闻副标题</th>
+							<th width="120">新闻内容</th>
+							<th width="100">更新时间</th>
+							<th width="50">浏览次数</th>
+							<th width="50">发布状态</th>
+							<th width="120">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="text-c" v-for="(newsModel,index) in item.newsArray" :data-index="index">
+
+							<td>10001</td>
+							<td> {{newsModel.topic}}</td>
+							<td>{{newsModel.subtopic}}</td>
+							<td>{{newsModel.content}}</td>
+							<td>2017-10-21 11:11:42</td>
+							<td>9999</td>
+							<td class="td-status"><span class="label label-success radius">已发布</span></td>
+							<td class="text-l" style="text-align: center;">
+								<button id="{{newsModel.newsid}}" class="btn btn-primary radius" @click="clickDel(newsModel,1,index)">{{newsModel.Prizt}}</button>&nbsp;&nbsp;&nbsp;
+								<button class="btn btn-secondary radius" @click="click(newsModel,index,item.cname )">编辑</button>&nbsp;&nbsp;&nbsp;
+								<button class="btn btn-danger radius" @click="clickDel(newsModel,0,index)">删除</button>&nbsp;&nbsp;&nbsp;
+							</td>
+						</tr>
+
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!--_footer 作为公共模版分离出去-->
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/layer/2.4/layer.js"></script>
+		<!--<script type="text/javascript" src="../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>-->
+		<!--<script type="text/javascript" src="../../js/H-ui.admin/static/h-ui.admin/js/H-ui.admin.js"></script>-->
+		<script src="../../js/demoCssJs/jquery-2.1.4.js"></script>
+		<script src="../../js/demoCssJs/iscroll.js"></script>
+		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/demoCssJs/jquery-weui.js"></script>
+		<script src="../../js/mui.min.js" type="text/javascript"></script>
+		<!--<script src="../../js/lib/WdatePicker.js" ></script>-->
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
+		</script>
+		<!--/_footer 作为公共模版分离出去-->
+
+		<!--请在下方写此页面业务相关的脚本-->
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery.contextmenu/jquery.contextmenu.r2.js"></script>
+		<script type="text/javascript">
+	        function click(newsModel, index, cname) {  
+				var newslist = new Object(); 
+                newslist.cname = cname; 
+                newslist.type = "edit"; 
+                newslist.newsid = newsModel.newsid;   
+				utils.wOpenWithData("../pcWeb-HUI/addnews.html", newslist);  
+			}
+			var newsFlag = 0; //0刷新，1加载更多
+			var newsPage = 1; //加载当当前新闻的页码
+			//所属栏目下拉框
+			var vue_input = new Vue({
+				el: '#chnid',
+				data: {
+					items: [{
+							chnid: 111,
+							cname: '校园动态'
+
+						},
+						{
+							chnid: 222,
+							cname: '师资力量'
+
+						}
+					]
+				},
+				methods: {}
+			});
+			//新闻数据列表
+			var newsData = new Vue({
+				el: '#newsData',
+				data: {
+					item: {
+						newsArray: [{
+								topic: 'test标题111111111111',
+								Prizt: 1,
+								subtopic: 'test副标题111111111111111111',
+								content: 'test内容11111111111111111111111111'
+							},
+							{
+								topic: 'test标题222222222222',
+								Prizt: 1,
+								subtopic: 'test副标题22222222222222',
+								content: 'test内容22222222222222222222222222'
+							}, {
+								topic: 'test标题33333333333',
+								Prizt: 1,
+								subtopic: 'test副标题3333333333333',
+								content: 'test内容333333333333333333333333333'
+							}
+						]
+					}
+				},
+				updated: function() {
+					var tempVVV = document.getElementById("newsData");
+					console.log('tempVVV:' + tempVVV.innerHTML);
+				},
+				methods: {
+					clickDel: function(model, Pribs, index) {
+						var colid = model.newsid; //新闻id
+						//确认框confirm	  
+						if(Pribs == 0) {
+							layer.confirm("确定要删除吗？", function() { 
+								//确定删除
+								var tempData = {
+									cmd: 'news', //文章管理
+									type: 'del', //分页查找文章列表
+									colid: colid
+								}
+								unitWebsitePro(tempData, function(data) {
+									console.log(JSON.stringify(data));
+									if(data.RspCode == 0000) {
+										if(newsData.item.newsArray[index].newsid == colid) {
+											newsData.item.newsArray.splice(index, 1);
+										}
+									}
+								});
+							}, function() {});
+						} else if(Pribs == 1) {
+							SetStat(model, colid);
+						}
+					}
+				}
+			});
+						//修改审核状态
+			function SetStat(model, colid) {	
+				var stat = "";
+				if(model.stat == 0)
+					stat = 1;
+				if(model.stat == 1)
+					stat = 0;
+				var tempData = {
+					cmd: 'news', //文章管理
+					type: 'edit',
+					callcol: 'chk',
+					colid: colid,
+					colv: stat //状态
+				} 
+				unitWebsitePro(tempData, function(data) {
+					console.log(JSON.stringify(data));
+					if(data.RspCode == 0000 && stat == 1) {
+						model.Prizt = '不通过';
+						model.stat = 1;
+					} else if(data.RspCode == 0000 && stat == 0) {
+						model.Prizt = '通过';
+						model.stat = 0;
+					}
+				})
+
+			}
+			window.onload = function() {
+				var tempData = {
+					cmd: 'chn', //网站栏目
+					type: 'findpage', //分页查找栏目列表
+					pagesize: 999, //每页条数 
+					pageindex: 1 //页码 
+				}
+				unitWebsitePro(tempData, function(data) {
+					//塞入页码、加载状态等自定义参数 
+					for(var tempItem in data.RspData.dt) {
+						data.RspData.dt[tempItem].newsPage = 1; //获取新闻的页码
+						data.RspData.dt[tempItem].newsFlag = 0; //0刷新，1加载更多
+						data.RspData.dt[tempItem].newsArray = []; //栏目对应的新闻列表
+						if(tempItem == 0) {
+							data.RspData.dt[tempItem].active = true;
+						} else {
+							data.RspData.dt[tempItem].active = false;
+						}
+					}
+					if(data.RspCode == 0) {
+						if(data.RspData.dt.length > 0) {
+							newsData.item = data.RspData.dt[0];
+							vue_input.items = data.RspData.dt;
+							getNewsList(newsData.item);
+						} else {
+							alert('暂时还没有栏目');
+						}
+					} else {
+						alert(data.RspTxt);
+					}
+				});
+
+			}
+			$("#Prixlk").change(function() {
+				var Chnid = document.getElementById("Prixlk");
+				var PriChnid = Chnid.selectedIndex; // 选中索引
+				console.log(PriChnid);
+				newsData.item = vue_input.items[PriChnid];
+				newsData.item.newsPage = 1; //获取新闻的页码
+				newsData.item.newsFlag = 0; //0刷新，1加载更多
+				newsData.item.newsArray = []; //栏目对应的新闻列表
+				getNewsList(newsData.item);
+
+			})
+			//获取栏目对应的新闻
+			function getNewsList(columnModel) {
+				console.log('获取新闻列表');
+				var tempData = {
+					cmd: 'news', //文章管理
+					type: 'findpage', //分页查找文章列表
+					pagesize: '15', //每页条数
+					pageindex: columnModel.newsPage, //页码
+					chnid: columnModel.chnid //某个栏目下的文章，栏目id
+				}
+				//				//alert(columnModel.chnid);
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						if(data.RspData.dt.length > 0) {
+							columnModel.newsPage++;
+							console.log('columnModel.newsFlag:' + columnModel.newsFlag);
+							//循环审核状态
+							for(var i = 0; i < data.RspData.dt.length; i++) {
+								var tempModel = data.RspData.dt[i];
+								if(tempModel.stat == 1)
+									//data.RspData.dt[i]["stat"]=Prizt = "是"; 
+									tempModel.Prizt = "不通过";
+								if(tempModel.stat == 0)
+									//data.RspData.dt[i]["stat"]=Prizt = "否"; 
+									tempModel.Prizt = "通过";
+							}
+							//判断是刷新0，还是加载更多1
+							if(columnModel.newsFlag == 0) {
+								columnModel.newsArray = [].concat(data.RspData.dt);
+							} else {
+								newsData.item.newsArray = newsData.item.newsArray.concat(data.RspData.dt);
+							}
+							setTimeout(function() {
+								$(".weui-loadmore").hide();
+								loading = false;
+								$(".weui-pull-to-refresh").pullToRefreshDone();
+								delNoMore();
+								if(data.RspData.dt.length < 15) {
+									$(".content-padded").append('<p id="noMore" style="text-align: center;color: darkgray;">--------暂无更多数据--------</p>');
+								}
+							}, 1000); //模拟延迟
+						} else {
+							setTimeout(function() {
+								$(".weui-loadmore").hide();
+								loading = false;
+								$(".weui-pull-to-refresh").pullToRefreshDone();
+							}, 1000); //模拟延迟
+							delNoMore();
+							$(".content-padded").append('<p id="noMore" style="text-align: center;color: darkgray;">--------暂无更多数据--------</p>');
+						}
+						console.log('最终数据:' + JSON.stringify(newsData.item));
+					} else {
+						alert(data.RspTxt);
+					}
+				});
+			}
+		</script>
 	</body>
+
 </html>

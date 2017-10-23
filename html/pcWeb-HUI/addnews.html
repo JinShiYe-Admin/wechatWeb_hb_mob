@@ -69,9 +69,12 @@
 				</template>
 				<br />
 				<span><i class="icon Hui-iconfont Hui-iconfont-more2"></i></span><input type="url" v-model.trim="artical.quourl" class="artical-url input-text size-L" placeholder="请输入原文链接" />
-				<div class="check-box">
-					<label for="checkbox-1">是否可评论</label>
-					<input type="checkbox" id="checkbox-1">
+				<div>
+					<div class="check-box">
+						<label for="checkbox-1">是否可评论</label>
+						<input type="checkbox" id="checkbox-1">
+					</div>
+					<input class="btn btn-primary radius float-right" v-on:click="publishArtical" type="button" value="发送">
 				</div>
 			</div>
 			<div id="dia-delPiece" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -142,6 +145,9 @@
 				}
 			},
 			methods: {
+				publishArtical:function(){//发布文章
+					
+				},
 				getColumns: function() { //获取栏目列表
 					this.columns = data.RspData; //在回调中赋值
 				},

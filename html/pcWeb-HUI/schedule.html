@@ -1,10 +1,182 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="UTF-8">
-		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>课程表管理</title>
+		<script type="text/javascript">
+			var WebVersion = "?" + Math.random();
+			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css' + WebVersion + '" id="skin" />');
+		</script>
+		<style>
+			.operate-cursor {
+				cursor: pointer
+			}
+		</style>
 	</head>
+
 	<body>
-		<p>课程表管理</p>
+		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 课程表 <span class="c-gray en">&gt;</span> 课程表管理
+			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
+		</nav>
+		<div id="colum_table" class="page-container">
+			<div class="cl pd-5 bg-1 bk-gray">
+				<span class="l">
+					<a class="btn btn-primary radius" @click="add"><i class="Hui-iconfont"></i> 添加课程表</a>
+				</span>
+			</div>
+			<course-table :value="items" @click-edit="edit"></course-table>
+		</div>
+		<!--表格-->
+		<template id="temp_course-table">
+			<table class="table table-border table-bordered table-bg">
+				<thead class="text-c">
+					<tr>
+						<th>课程表名称</th>
+						<th>部门</th>
+						<th>开始时间</th>
+						<th>结束时间</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="text-c" v-for="(item,index) in value">
+						<td>{{item.edulename}}</td>
+						<td>{{item.departname}}</td>
+						<td>{{item.timespanb.slice(0,4)+"年"+item.timespanb.slice(4)+"月"}}</td>
+						<td>{{item.timespane.slice(0,4)+"年"+item.timespane.slice(4)+"月"}}</td>
+						<td class="sorting_1">
+							<u class="text-primary operate-cursor" @click="clickEdit(item)">
+								编辑
+							</u>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</template>
+
+		<div id="demo7"></div>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/layer/2.4/layer.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/static/h-ui/js/H-ui.min.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/static/h-ui.admin/js/H-ui.admin.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/My97DatePicker/4.8/WdatePicker.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/datatables/1.10.0/jquery.dataTables.min.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/laypage/1.2/laypage.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/vue.min.js" + WebVersion + "'></s" + "cript>");
+		</script>
+		<script>
+			//栏目表组件
+			Vue.component('course-table', {
+				props: ['value'],
+				template: '#temp_course-table',
+				methods: {
+					/**
+					 * 点击编辑
+					 * @param {Object} index
+					 */
+					clickEdit: function(item) {
+						this.$emit("click-edit", item);
+					}
+				}
+			});
+			var column_table = new Vue({
+				el: "#colum_table",
+				data: {
+					pg: {
+						PageIndex: 1,
+						PageSize: 10,
+						PageCount: 0,
+						RowCount: 0
+					},
+					items: [{
+						edulename: "春季课程表",
+						departname: "开发部",
+						timespanb: "201710",
+						timespane: "201711",
+					}, {
+						edulename: "夏季课程表",
+						departname: "财务部",
+						timespanb: "201710",
+						timespane: "201711",
+					}]
+				},
+				methods: {
+					/**
+					 * 点击添加栏目
+					 */
+					add: function() {
+						var index = layer.open({
+							type: 2,
+							title: "添加课程表",
+							content: "../appWeb/courses-table.html"
+						});
+						layer.full(index);
+
+						console.log("添加课程表");
+					},
+					/**
+					 * 点击编辑
+					 * @param {Object} index 栏目序号
+					 */
+					edit: function(item) {
+						item.flag = 1;
+						var url = "../appWeb/courses-table.html";
+						var ids = url.split("/");
+						var dataStr = JSON.stringify(item);
+						var index = layer.open({
+							type: 2,
+							title: "编辑课程表",
+							content: url + "?v=" + Math.random() + "&data=" + encodeURIComponent(dataStr),
+							end: function() {
+								console.log("刷新")
+								location.reload();
+							}
+						});
+						layer.full(index);
+
+					}
+				}
+			});
+			//获取课程表列表
+			function getscheduleList() {
+				var tempData = {
+					cmd: 'edule', //文章管理
+					type: 'findpage', //分页查找文章列表
+					pagesize: '10', //每页条数
+					pageindex: 1, //页码
+
+				}
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						if(data.RspData.dt.length > 0) {
+							if(schedule.pg.PageIndex == 1) {
+								column_table.items = data.RspData.dt;
+							} else {
+								column_table.items = column_table.items.concat(data.RspData.dt);
+							}
+							column_table.pg = data.RspData.pg
+						}
+					} else {
+						alert(data.RspTxt);
+					}
+				});
+			}
+			window.onload = function() {
+				getscheduleList();
+			}
+		</script>
 	</body>
+
 </html>

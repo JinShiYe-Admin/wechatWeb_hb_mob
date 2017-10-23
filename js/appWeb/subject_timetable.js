@@ -326,7 +326,7 @@ function addEdule() {
 		console.log('添加课程表:' + JSON.stringify(data));
 		if(data.RspCode == 0) {
 			alert(data.RspTxt);
-			mui.back();
+//			mui.back();
 		} else {
 			mui.toast(data.RspTxt)
 		}

@@ -138,7 +138,11 @@
 						var index = layer.open({
 							type: 2,
 							title: "编辑课程表",
-							content: url + "?v=" + Math.random() + "&data=" + encodeURIComponent(dataStr)
+							content: url + "?v=" + Math.random() + "&data=" + encodeURIComponent(dataStr),
+							end: function() {
+								console.log("刷新")
+								location.reload();
+							}
 						});
 						layer.full(index);
 

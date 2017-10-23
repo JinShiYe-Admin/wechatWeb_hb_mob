@@ -1,10 +1,294 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
+
 	<head>
-		<meta charset="UTF-8">
-		<title></title>
+		<meta charset="utf-8">
+		<meta name="renderer" content="webkit|ie-comp|ie-stand">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
+		<title>科目管理</title>
 	</head>
+
 	<body>
-		<p>课程管理</p>
+		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 科目 <span class="c-gray en">&gt;</span> 科目管理
+			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
+		</nav>
+		<div class="page-container" id="courseData">
+			<div class="cl pd-5 bg-1 bk-gray"> <span class="l"> <a href="javascript:;" @click="addCourse()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加科目</a></span></div>
+	<div class="mt-20">
+	<table class="table table-border table-bordered table-hover table-bg">
+		<thead>
+			<tr class="text-c">
+				<th width="100">科目名</th>
+				<th width="70">状态</th>
+				<th width="100">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr class="text-c" v-for='(course,index) in courseArray' v-if="courseArray.length>0">
+				<td><u style="cursor:pointer" class="text-primary">{{course.cname}}</u></td>
+				<td class="td-status"><span :class="course.stat==0?'label label-defaunt radius':'label label-success radius'"><a v-if="course.stat==0">已停用</a><a v-else>已启用</a></span></td>
+				<td class="td-manage">
+					<a style="text-decoration:none" @click.stop="shieldSub(course,index)" href="javascript:;" title="停用"><i class="Hui-iconfont">&#xe631;</i></a>
+					<a title="修改科目名称" href="javascript:;" @click="modifyCourse(course,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>
+					<a title="删除" href="javascript:;" @click.stop="removeCourse(course,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+				</tr>
+				</tbody>
+				</table>
+			</div>
+		</div>
+		<!--_footer 作为公共模版分离出去-->
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/layer/2.4/layer.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/static/h-ui.admin/js/H-ui.admin.js"></script>
+		<!--/_footer 作为公共模版分离出去-->
+
+		<!--请在下方写此页面业务相关的脚本-->
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/laypage/1.2/laypage.js"></script>
+		<!--vue-->
+		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
+		</script>
+		<script type="text/javascript">
+			$(function() {
+				$('.table-sort').dataTable({
+					"aaSorting": [
+						[1, "desc"]
+					], //默认第几个排序
+					"bStateSave": true, //状态保存
+					"aoColumnDefs": [
+						//{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+						{
+							"orderable": false,
+							"aTargets": [0, 8, 9]
+						} // 制定列不参与排序
+					]
+				});
+
+				//获取科目列表
+				getSubArray();
+			});
+
+			var courseData = new Vue({
+				el: "#courseData",
+				data: {
+					subFlag: 0, //0刷新，1加载更多
+					subIndex: 1, //获取第几页数据
+					courseArray: []
+				},
+				methods: {
+					modifyCourse: function(model, index) {
+						layer.prompt({
+							formType: 0,
+							value: model.cname,
+							title: '修改科目名称'
+						}, function(value, index, elem) {
+							layer.close(index);
+							//如果输入之后的值，和之前的值一样，不执行任何操作
+							if(value == model.cname) {
+
+							} else {
+								//重新编辑课程时，判断是否输入了值，有没有重复
+								if(checkInput(value)) {
+									editSub(model, value);
+								}
+							}
+						});
+					},
+					addCourse: function() {
+						layer.prompt({
+							formType: 0,
+							value: '',
+							title: '添加科目名称'
+						}, function(value, index, elem) {
+							layer.close(index);
+							//添加课程时，判断是否输入了值，有没有重复
+							if(checkInput(value)) {
+								//发送添加协议
+								addSub(value);
+							}
+						});
+					},
+					removeCourse: function(model, index) {
+						layer.confirm('确认要删除吗？', function(index) {
+							layer.close(index);
+							var tempData = {
+								cmd: 'subadmin',
+								type: 'del',
+								colid: model.subid
+							}
+							unitWebsitePro(tempData, function(data) {
+								if(data.RspCode == 0) {
+									//获取科目列表
+									getSubArray();
+									layer.msg('已删除!', {
+										icon: 1,
+										time: 1000
+									});
+								} else {
+									alert(data.RspTxt);
+								}
+							});
+						});
+					},
+					shieldSub: function(model, index) {
+						var tempFlag = 0;
+						if(model.stat == 0) {
+							tempFlag = 1;
+						} else {
+							tempFlag = 0;
+						}
+						var tempData = {
+							cmd: 'subadmin',
+							type: 'edit',
+							colid: model.subid,
+							callcol: 'stat',
+							colv: tempFlag
+						}
+						if(tempFlag == 0) {
+							layer.confirm('确认要停用吗？', function(index) {
+								layer.close(index);
+								unitWebsitePro(tempData, function(data) {
+									if(data.RspCode == 0) {
+										//获取科目列表
+										getSubArray();
+										layer.msg('已停用!', {
+											icon: 5,
+											time: 1000
+										});
+									} else {
+										alert(data.RspTxt);
+									}
+								});
+							});
+						} else {
+							layer.confirm('确认要启用吗？', function(index) {
+								layer.close(index);
+								unitWebsitePro(tempData, function(data) {
+									if(data.RspCode == 0) {
+										//获取科目列表
+										getSubArray();
+										layer.msg('已启用!', {
+											icon: 5,
+											time: 1000
+										});
+									} else {
+										alert(data.RspTxt);
+									}
+								});
+							});
+						}
+
+					}
+				}
+			});
+			//获取科目列表
+			var getSubArray = function() {
+				var tempData = {
+					cmd: 'subadmin',
+					type: 'findpage',
+					pagesize: 999,
+					pageindex: courseData.subIndex
+				}
+				console.log('tempData:' + JSON.stringify(tempData));
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						if(data.RspData.dt.length > 0) {
+							if(courseData.subFlag == 0) { //刷新
+								courseData.courseArray = [].concat(data.RspData.dt);
+							} else { //加载更多
+								courseData.courseArray = courseData.courseArray.concat(data.RspData.dt);
+							}
+							courseData.subIndex++;
+						}
+					} else {
+						alert(data.RspTxt);
+					}
+				});
+			};
+			//添加课程
+			var addSub = function(subName) {
+				var tempData = {
+					cmd: 'subadmin',
+					type: 'add',
+					cname: subName
+				}
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						courseData.subIndex = 1;
+						courseData.subFlag = 0;
+						//获取科目列表
+						getSubArray();
+					} else {
+						alert(data.RspTxt);
+					}
+				});
+			};
+			//重新编辑课程名称
+			var editSub = function(model, newName) {
+				var tempData = {
+					cmd: 'subadmin',
+					type: 'edit',
+					callcol: 'cname',
+					colid: model.subid,
+					colv: newName
+				}
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						//						model.cname = newName;
+						courseData.subIndex = 1;
+						courseData.subFlag = 0;
+						//获取科目列表
+						getSubArray();
+					} else {
+						alert(data.RspTxt);
+					}
+				});
+			};
+			//添加课程时，判断是否输入了值，有没有重复
+			var checkInput = function(text) {
+				if(text.length == 0) {
+					alert('不能加入空数据');
+					return false;
+				}
+				if(isNull(text)) {
+					alert('不能加入空数据');
+					return false;
+				}
+				var tempFlag = 0;
+				for(var i = 0; i < courseData.courseArray.length; i++) {
+					var tempModel = courseData.courseArray[i];
+					if(tempModel.cname == text) {
+						tempFlag++;
+					}
+				}
+				if(tempFlag == 0) {
+					return true;
+				} else {
+					alert('不能添加重复课程');
+					return false;
+				}
+			}
+
+			//判断输入字符串是否为空或者全部都是空格
+			function isNull(str) {
+				if(str == "") return true;
+				var regu = "^[ ]+$";
+				var re = new RegExp(regu);
+				return re.test(str);
+			}
+		</script>
 	</body>
+
 </html>

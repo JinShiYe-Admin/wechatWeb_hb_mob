@@ -13,8 +13,8 @@ window.onload = function() {
 	initUploader();
 	getWebsitConfig(); //获取配置
 	//---假数据---start---
-	initWebsiteConfig(webConfig);
-	vm_loading.isShow = false;
+	//initWebsiteConfig(webConfig);
+	//vm_loading.isShow = false;
 	//---假数据---end---
 };
 
@@ -59,7 +59,7 @@ function initVueVM() {
 	});
 	//皮肤选项
 	vm_skin = new Vue({
-		el: '#skin',
+		el: '#skin_change',
 		data: {
 			isShow: false,
 			callcol: "skinid",
@@ -433,7 +433,6 @@ function getWebsitConfig() {
 		if(data.RspCode == 0) {
 			if(data.RspData.length > 0) {
 				webConfig = data.RspData[0];
-				//setWebConSes(webConfig);
 				initWebsiteConfig(webConfig);
 			} else {
 				weui.alert('没有获取到配置信息')
@@ -469,19 +468,6 @@ function initWebsiteConfig(data) {
 	vm_switch.switchArray[7].check = data.isass;
 	//显示列表
 	showList();
-}
-
-/**
- * 保存网站配置临时数据
- * @param {Object} data
- */
-function setWebConSes(data) {
-	//将数据保存到本地
-	var webData = {
-		open: 2,
-		webCon: data
-	}
-	storageutil.setSessionStorage(storageutil.WEBSITECONFIG, JSON.stringify(webData));
 }
 
 /**
@@ -530,42 +516,17 @@ function changeWebsiteConfig(change) {
 			vm_loading.isShow = false;
 			weui.toast("操作成功");
 			webConfig[commit.callcol] = commit.colv;
-			//setWebConSes(webConfig);
 		} else {
 			if(change.type == 1) { //开关
 				vm_switch.switchArray[change.index].check = !change.colv;
 			}
 			vm_loading.isShow = false;
-			weui.alert("修改失败:" + data.RspTxt);
+			weui.dialog({
+				title: "操作失败",
+				content: data.RspTxt
+			});
 		}
 	});
-	//---假数据---start---
-	//	if(1) { //成功
-	//		if(change.type == 2) { //皮肤id
-	//			vm_skin.skinId = commit.colv;
-	//		}
-	//		if(change.type == 3) { //图片
-	//			vm_image.imageArray[change.index].imageurl = commit.colv;
-	//			vm_image.imageArray[change.index].showupload = false;
-	//			vm_image.imageArray[change.index].fname = "";
-	//			vm_image.imageArray[change.index].fsize = "";
-	//			vm_image.imageArray[change.index].fbase = "";
-	//			delImage({
-	//				appId: storageutil.QNQYWXKID,
-	//				urls: [webConfig[commit.callcol]]
-	//			});
-	//		}
-	//		vm_loading.isShow = false;
-	//		weui.toast("操作成功");
-	//		webConfig[commit.callcol] = commit.colv;
-	//		setWebConSes(webConfig);
-	//	} else {
-	//		if(change.type == 1) { //开关
-	//			vm_switch.switchArray[change.index].check = !change.colv;
-	//		}
-	//		weui.alert("修改失败:" + data.RspTxt);
-	//	}
-	//---假数据---end---
 }
 
 /**

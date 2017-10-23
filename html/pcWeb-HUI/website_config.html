@@ -13,8 +13,15 @@
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<title>网站配置</title>
 		<script type="text/javascript">
-			document.write('<link rel="stylesheet" href="../../css/weui.min.css?' + Math.random() + '" />');
-			document.write('<link rel="stylesheet" href="../../css/configuration/website_config.css?' + Math.random() + '" />');
+			var WebVersion = "?v=20171021.1";
+			websiteVersion = Math.random();
+			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css' + WebVersion + '" id="skin" />');
+			document.write('<link rel="stylesheet" href="../../css/weui.min.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../css/configuration/hui_website_config.css' + WebVersion + '" />');
 		</script>
 	</head>
 
@@ -26,11 +33,11 @@
 				<p class="weui-toast__content">{{content}}</p>
 			</div>
 		</div>
-		<div class="weui-cells weui-cells_form">
+		<div class="page-container">
 			<div id="input_list">
 				<input-item v-for="(value,index) in inputArray" :value="value" :key="index" :index="index" v-show="isShow"></input-item>
 			</div>
-			<div id="skin">
+			<div id="skin_change">
 				<skin-item :value="skinId" :key="skinId" v-show="isShow"></skin-item>
 			</div>
 			<div id="image_list">
@@ -41,85 +48,100 @@
 			</div>
 		</div>
 		<template id="temp_input_item">
-			<div>
-				<div class="weui-cells__title">{{value.title}}</div>
-				<div class="weui-cells">
-					<div class="weui-cell">
-						<div class="weui-cell__bd">
-							<input class="weui-input" v-model="value.message" :maxlength="value.maxlength" :type="value.type" :placeholder="'请输入'+value.title" @input="oninput(index);" @blur="onblur(index);">
-						</div>
-					</div>
-				</div>
-			</div>
+			<table class="table table-border table-bordered table-striped">
+				<thead>
+					<tr>
+						<th>{{value.title}}</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><input class="input-text" type="text" v-model="value.message" :maxlength="value.maxlength" :type="value.type" :placeholder="'请输入'+value.title" @input="oninput(index);" @blur="onblur(index);"></td>
+					</tr>
+				</tbody>
+			</table>
 		</template>
 		<template id="temp_skin_item">
-			<div>
-				<div class="weui-cells__title">皮肤</div>
-				<div class="weui-cells">
-					<a class="weui-cell weui-cell_access" @click="onclick(value);">
-						<div class="weui-cell__bd">
-							<p>{{value}}</p>
-						</div>
-						<div class="weui-cell__ft"></div>
-					</a>
-				</div>
-			</div>
+			<table class="table table-border table-bordered table-striped">
+				<thead>
+					<tr>
+						<th>皮肤</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td @click="onclick(value);">{{value}}</td>
+					</tr>
+				</tbody>
+			</table>
 		</template>
 		<template id="temp_image_item">
-			<div>
-				<div class="weui-cells__title">{{value.title}}</div>
-				<div class="weui-cells">
-					<div class="weui-cell">
-						<div class="weui-cell__bd" :id="value.parid">
-							<div class="website-image" :style="{backgroundImage:'url('+ value.imageurl+')'}" @click="showImage(index,true);"></div>
-							<button class="weui-btn weui-btn_mini weui-btn_primary" :id="value.id">修改</button>
-							<div class="website-file-type">(JPG,PNG|10M)</div>
-							<div class="website-upload-image" v-show="value.showupload">
-								<div class="website-image" :style="{backgroundImage:'url('+ value.fbase+')'}" @click="showLocalImage(index,true);"></div>
-								<div>文件:</div>
-								<div>{{value.fname}}</div>
-								<div>大小:</div>
-								<div>{{value.fsize}}</div>
-								<button class="weui-btn weui-btn_mini weui-btn_primary" @click="upLoadFile(index);">上传</button>
+			<table class="table table-border table-bordered table-striped">
+				<thead>
+					<tr>
+						<th>{{value.title}}</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<div class="weui-cells">
+								<div class="weui-cell">
+									<div class="weui-cell__bd" :id="value.parid">
+										<div class="website-image" :style="{backgroundImage:'url('+ value.imageurl+')'}" @click="showImage(index,true);"></div>
+										<button class="btn btn-primary radius" :id="value.id">修改</button>
+										<div class="website-file-type">(JPG,PNG|10M)</div>
+										<div class="website-upload-image" v-show="value.showupload">
+											<div class="website-image" :style="{backgroundImage:'url('+ value.fbase+')'}" @click="showLocalImage(index,true);"></div>
+											<div>文件:</div>
+											<div>{{value.fname}}</div>
+											<div>大小:</div>
+											<div>{{value.fsize}}</div>
+											<button class="btn btn-primary radius" @click="upLoadFile(index);">上传</button>
+										</div>
+									</div>
+								</div>
 							</div>
-						</div>
-					</div>
-				</div>
-				<div class="weui-gallery" v-if="value.showimage" @click="showImage(index,false);">
-					<span class="weui-gallery__img" :style="{backgroundImage:'url('+ value.imageurl+')'}"></span>
-				</div>
-				<div class="weui-gallery" v-if="value.showlocalimage" @click="showLocalImage(index,false);">
-					<span class="weui-gallery__img" :style="{backgroundImage:'url('+ value.fbase+')'}"></span>
-				</div>
-			</div>
+							<div class="weui-gallery" v-if="value.showimage" @click="showImage(index,false);">
+								<span class="weui-gallery__img" :style="{backgroundImage:'url('+ value.imageurl+')'}"></span>
+							</div>
+							<div class="weui-gallery" v-if="value.showlocalimage" @click="showLocalImage(index,false);">
+								<span class="weui-gallery__img" :style="{backgroundImage:'url('+ value.fbase+')'}"></span>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</template>
 		<template id="temp_switch_item">
-			<div>
-				<div class="weui-cell weui-cell_switch">
-					<div class="weui-cell__bd">{{value.title}}</div>
-					<div class="weui-cell__ft">
-						<input class="weui-switch" type="checkbox" v-model="value.check" @change="onchange(index);">
-					</div>
-				</div>
-			</div>
+			<table class="table table-border table-bordered table-striped">
+				<thead>
+					<tr>
+						<th>
+							<div class="check-box">
+								<input type="checkbox" v-model="value.check" @change="onchange(index);">
+								<label>{{value.title}}</label>
+							</div>
+						</th>
+					</tr>
+				</thead>
+			</table>
 		</template>
-
 		<script type="text/javascript">
-			document.write("<s" + "cript type='text/javascript' src='../../js/PublicProtocol.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/utils/storageutil.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/mui.min.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/jquery.min.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/weui.min.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/vue.min.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.min.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/lib/qiniu/qiniu.min.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cryption.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cloudutil.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/configuration/hui_website_config_utils.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/configuration/hui_website_config.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/configuration/website_config_temp_data.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/jquery.min.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/weui.min.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/vue.min.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.min.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/qiniu/qiniu.min.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cryption.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cloudutil.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/configuration/hui_website_config_utils.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/configuration/hui_website_config.js" + WebVersion + "'></s" + "cript>");
+			//document.write("<s" + "cript type='text/javascript' src='../../js/configuration/website_config_temp_data.js" + WebVersion + "'></s" + "cript>");
 		</script>
 	</body>
 

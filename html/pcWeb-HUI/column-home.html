@@ -1,10 +1,135 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="UTF-8">
-		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>配置栏目</title>
+		<script type="text/javascript">
+			var WebVersion = "?" + Math.random();
+			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css' + WebVersion + '" id="skin" />');
+		</script>
+		<style>
+			.operate-cursor {
+				cursor: pointer
+			}
+		</style>
 	</head>
+
 	<body>
-		<p>配置栏目</p>
+		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 网站配置 <span class="c-gray en">&gt;</span> 配置栏目
+			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
+		</nav>
+		<div id="colum_table" class="page-container">
+			<div class="cl pd-5 bg-1 bk-gray">
+				<span class="l">
+					<a class="btn btn-primary radius" @click="add"><i class="Hui-iconfont"></i> 添加栏目</a>
+				</span>
+			</div>
+			<column-table :value="dt" @click-edit="edit"></column-table>
+		</div>
+		<!--表格-->
+		<template id="temp_colum_table">
+			<table class="table table-border table-bordered table-bg">
+				<thead class="text-c">
+					<tr>
+						<th>栏目名称</th>
+						<th>链接地址</th>
+						<th>排序ID</th>
+						<th>备注</th>
+						<th>是否显示首页</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="text-c" v-for="(item,index) in value">
+						<td>{{item.cname}}</td>
+						<td>{{item.linkurl}}</td>
+						<td>{{item.orderid}}</td>
+						<td>{{item.note}}</td>
+						<td>{{item.istop==1?"是":"否"}}</td>
+						<td class="sorting_1">
+							<u class="text-primary operate-cursor" @click="clickEdit(index)">
+								编辑
+							</u>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</template>
+
+		<div id="demo7"></div>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/layer/2.4/layer.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/static/h-ui/js/H-ui.min.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/static/h-ui.admin/js/H-ui.admin.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/My97DatePicker/4.8/WdatePicker.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/datatables/1.10.0/jquery.dataTables.min.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/laypage/1.2/laypage.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/vue.min.js" + WebVersion + "'></s" + "cript>");
+		</script>
+		<script>
+			//栏目表组件
+			Vue.component('column-table', {
+				props: ['value'],
+				template: '#temp_colum_table',
+				methods: {
+					/**
+					 * 点击编辑
+					 * @param {Object} index
+					 */
+					clickEdit: function(index) {
+						this.$emit("click-edit", index);
+					}
+				}
+			});
+			var column_table = new Vue({
+				el: "#colum_table",
+				data: {
+					dt: [{
+						cname: "1",
+						linkurl: "2",
+						orderid: "3",
+						note: "4",
+						istop: "5"
+					}, {
+						cname: "12",
+						linkurl: "22",
+						orderid: "33",
+						note: "44",
+						istop: "55"
+					}]
+				},
+				methods: {
+					/**
+					 * 点击添加栏目
+					 */
+					add: function() {
+						console.log("添加栏目");
+					},
+					/**
+					 * 点击编辑
+					 * @param {Object} index 栏目序号
+					 */
+					edit: function(index) {
+						console.log("column_table-edit:" + this.dt[index].cname);
+					}
+				}
+			});
+			window.onload = function() {
+
+			}
+		</script>
 	</body>
+
 </html>

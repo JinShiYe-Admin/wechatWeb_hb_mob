@@ -2,7 +2,7 @@ Vue.component("select-load-pic", {
 	props:["pictype"],//0 原图 最大2M 1缩略图
 	template: '<span class="btn-upload form-group">' +
 		'<input class="input-text upload-url radius piece" type="text" readonly :placeholder="pictype|placeHolder">' +
-		'<a href="" class="btn btn-primary radius"><i class="Hui-iconfont Hui-iconfont-upload"></i> 浏览文件</a>' +
+		'<a href="" id="upload" class="btn btn-primary radius"><i class="Hui-iconfont Hui-iconfont-upload"></i> 浏览文件</a>' +
 		'<input type="file" accept="image/jpeg,image/png" v-on:change="selectFile($event)"  class="input-file">' +
 		'</span>',
 	data: function() {
@@ -49,6 +49,7 @@ Vue.component("select-load-pic", {
 		},
 		uploadFile:function(file){//上传文件方法
 			console.log("要上传至七牛的文件"+JSON.stringify(file));
+			alert(JSON.stringify(file))
 			//在上传成功回调中使用
 			this.$emit("uploadedFile",fileurl);//通知父组件 上传的图片
 		},

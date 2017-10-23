@@ -153,9 +153,7 @@
 		<script type="text/javascript">
 			var detail = utils.getDataFromUrl(window.location.href);
 			console.log('detail=' + JSON.stringify(detail))
-			if(detail.flag == 0) {
-				table_data.flag = 0
-			} else {
+			if(detail.flag == 1) {
 				table_data.flag = 1
 				table_data.edulename = detail.edulename;
 				table_data.eduleid = detail.eduleid;
@@ -163,6 +161,9 @@
 				table_data.departid = detail.departid;
 				table_data.timespanb = detail.timespanb;
 				table_data.timespane = detail.timespane;
+				
+			} else {
+				table_data.flag = 0
 
 			}
 

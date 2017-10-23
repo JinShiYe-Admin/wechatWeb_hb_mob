@@ -1,10 +1,186 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="UTF-8">
-		<title></title>
+		<title>新闻添加</title>
+		<link href="../H-ui.admin/static/h-ui/css/H-ui.css" rel="stylesheet"></link>
+		<link href="../H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet"></link>
+		<style>
+			.edit_container {
+				margin: 0 auto;
+				width: 1080px;
+			}
+			
+			.input-text:not(.piece) {
+				width: 100%;
+				border: 0;
+				border-bottom: 1px solid #DDDDDD;
+			}
+			
+			.input-text.piece {
+				border: 0;
+			}
+			
+			.float-right {
+				float: right;
+			}
+			
+			.artical-url.input-text {
+				width: 90%;
+				border: none;
+			}
+			
+			.artical-pieces-title {
+				font-size: 18px;
+				padding: 10px 0 0 8px;
+			}
+			.check-box, .radio-box{
+				padding-left: 0px;
+			}
+		</style>
 	</head>
+
 	<body>
-		<p>新闻添加</p>
+		<div id="artical-pub">
+			<div class="edit_container">
+				<span class="select-box">
+				  <select v-model="artical.chind" class="select" size="1" name="demo1">
+				    <option value="-1" >请选择所属栏目</option>
+				    <option v-for="column in columns" value="column.chnid">{{column.cname}}</option>
+				  </select>
+				</span>
+				<input v-model.trim="artical.topic" class="artical-title input-text size-L" type="text" maxlength="64" placeholder="在此输入标题" />
+				<input v-model.trim="artical.subtopic" class="artical-subtitle input-text size-L" type="text" maxlength="64" placeholder="在此输入副标题" />
+				<textarea v-model.trim="artical.summas" class="textarea" placeholder="在此输入新闻摘要"></textarea>
+				<select-load-pic v-bind:pictype="1" v-on:uploadedFile="getHeadImg(picUrl)"></select-load-pic>
+				<p class="artical-pieces-title">新闻内容</p>
+				<template v-for="(piece,index) in pieces">
+					<div class="artical-piece">
+						<input class="piece-title input-text size-L" v-model.trim="piece.title" type="text" maxlength="64" placeholder="在此输入节标题" />
+						<textarea class="piece-container textarea radius" v-model.trim="piece.content" placeholder="在此输入节内容"></textarea>
+					</div>
+					<div>
+						<p v-if="piece.files.lenth>0"></p>
+						<select-load-pic v-bind:pictype="parseInt(0)" v-on:uplaodedFile="getPieceImg(picUrl,index)"></select-load-pic>
+						<input id="add-piece" v-if="pieces.length<5" v-on:click="addPiece(piece,index)" class="btn btn-primary radius float-right" type="button" value="添加段落">
+						<input id="del-piece" v-if="index>0" v-on:click="delPiece(piece,index)" class="btn btn-warning radius float-right" type="button" value="删除段落">
+					</div>
+				</template>
+				<br />
+				<span><i class="icon Hui-iconfont Hui-iconfont-more2"></i></span><input type="url" v-model.trim="artical.quourl" class="artical-url input-text size-L" placeholder="请输入原文链接" />
+				<div class="check-box">
+					<label for="checkbox-1">是否可评论</label>
+					<input type="checkbox" id="checkbox-1">
+				</div>
+			</div>
+			<div id="dia-delPiece" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content radius">
+						<div class="modal-header">
+							<h3 class="modal-title">删除段落</h3>
+							<a class="close" data-dismiss="modal" aria-hidden="true" href="javascript:void();">×</a>
+						</div>
+						<div class="modal-body">
+							<p>确认删除此段落？</p>
+						</div>
+						<div class="modal-footer">
+							<button class="btn btn-primary" v-on:click="sureDelPiece(curPiece.index)">确定</button>
+							<button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</body>
+	<script src="../../js/vue.js"></script>
+	<script src="../../js/pcWeb-HUI/select-load-singPic.js"></script>
+	<script src="../H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+	<script src="../H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
+	<script>
+		var articalPublish = new Vue({
+			el: "#artical-pub",
+			data: {
+				artical: {
+					chind: -1, //所属栏目id
+					topic: "", //标题
+					subtopic: "", //副标题
+					summas: "", //摘要
+					content: "", //内容
+					isquo: 0, //是否引用
+					quourl: "", //引用url
+					isreply: 0, //是否允许回复，
+					encs: [
+						//					{oldname:"",//原名称
+						//					newname:"",//新名称
+						//					saveurl:"",//存储url
+						//					filesize:"",//文件大小
+						//					imgurl:""//缩略图
+						//					}
+					], //附件列表
+					stat: "" //根据配置表设置相应值
+				},
+				pieces: [{
+					title: "",
+					content: "",
+					files: []
+				}],
+				curPiece: {
+					piece: null,
+					index: -1
+				},
+				columns: []
+			},
+			created: function() {
+				//vue 创建时 请求栏目列表
+				this.getColumns();
+			},
+			watch: {
+				pieces: function(newVal, oldVal) { //片段增减的判断
+					console.log("newVal" + JSON.stringify(newVal));
+					console.log("oldVal:" + JSON.stringify(oldVal));
+				}
+			},
+			methods: {
+				getColumns: function() { //获取栏目列表
+					this.columns = data.RspData; //在回调中赋值
+				},
+				addPiece: function(piece, index) { //增加文章片段
+					if(!piece.title || !piece.content) {
+						$.Huimodalalert('段落未添加标题或内容，无法继续添加', 3000)
+						return;
+					}
+					this.pieces.splice(index + 1, 0, {
+						title: "",
+						content: "",
+						files: []
+					})
+				},
+				delPiece: function(piece, index) {
+					if(piece.title || piece.content || piece.files.length > 0) {
+						this.curPiece = {
+							piece: piece,
+							index: index
+						}
+						$("#dia-delPiece").modal("show")
+						return;
+					}
+					console.log("要删除的控件：" + index);
+					this.sureDelPiece(index);
+				},
+				sureDelPiece: function(index) {
+					this.pieces.splice(index, 1);
+					$("#dia-delPiece").modal("hide");
+				},
+				getHeadImg: function(headImg) {
+					console.log("headImg" + headImg);
+				},
+				getContentImg: function(contentImg, index) {
+					console.log("获取的contentImage" + contentImg);
+
+				}
+			}
+		})
+	</script>
+
 </html>

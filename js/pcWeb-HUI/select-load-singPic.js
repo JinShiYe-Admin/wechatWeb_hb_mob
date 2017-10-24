@@ -49,13 +49,17 @@ Vue.component("select-load-pic", {
 		},
 		uploadFile: function() { //上传文件方法
 			var com = this;
-			var type = 0;
+			var thumbOption={
+				type:0
+			};
 			if(com.index == -1) {
-				type = 3
+				thumbOption={
+					type:3,
+					width:300,
+					height:200
+				}
 			}
-			cloudutil.uploadQnSingleImg("upload"+com.index, {
-				type: type
-			}, function(response) {
+			cloudutil.uploadQnSingleImg("upload"+com.index,thumbOption, function(response) {
 				com.originalName=response.OldName;
 				console.log("获取的上传七牛图片信息：" + JSON.stringify(response));
 				com.$emit("uploadedfile", response,com.index); //通知父组件 上传的图片

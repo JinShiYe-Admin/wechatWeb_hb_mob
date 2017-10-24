@@ -319,8 +319,8 @@ var cloudutil = (function(mod) {
 					//					$.hideLoading();
 					if(info.status == 200) {
 						var tempModel = {
-							ImgUrl: getImgUrl(uptokenData),
-							SaveUrl: getImgUrl(uptokenData),
+							ImgUrl: mod.getImgUrl(uptokenData),
+							SaveUrl: mod.getImgUrl(uptokenData),
 							OldName: originalName,
 							NewName: file.name,
 							FileSize: file.size
@@ -349,7 +349,7 @@ var cloudutil = (function(mod) {
 		});
 	}
 
-	function getImgUrl(token) {
+	mod.getImgUrl=function(token) {
 		console.log("*****getImgUrl：" + JSON.stringify(token))
 		if(token.thumbKey.length > 0) {
 			return token.data.Data[0].OtherKey[token.thumbKey[0]]

@@ -1,6 +1,5 @@
 //七牛相关的公共方法
 var cloudutil = (function(mod) {
-
 	/**
 	 * 获取应用对应的密钥
 	 * @param {Object} appId app的id
@@ -263,10 +262,10 @@ var cloudutil = (function(mod) {
 		});
 	}
 	/**
-	 * 
-	 * @param {Object} buttonSelector
-	 * @param {Object} manageOptions
-	 * @param {Object} callback
+	 * 单张图片上传方法
+	 * @param {Object} buttonSelector 选择文件按钮id
+	 * @param {Object} manageOptions 图片处理参数 type width height等
+	 * @param {Object} callback 上传的回调方法
 	 */
 	mod.uploadQnSingleImg = function(buttonSelector, manageOptions, callback) {
 		var originalName = "";
@@ -318,9 +317,10 @@ var cloudutil = (function(mod) {
 					console.log(info)
 					//					$.hideLoading();
 					if(info.status == 200) {
+						var imgUrl=mod.getImgUrl(uptokenData);
 						var tempModel = {
-							ImgUrl: mod.getImgUrl(uptokenData),
-							SaveUrl: mod.getImgUrl(uptokenData),
+							ImgUrl: imgUrl,
+							SaveUrl: imgUrl,
 							OldName: originalName,
 							NewName: file.name,
 							FileSize: file.size
@@ -348,7 +348,10 @@ var cloudutil = (function(mod) {
 			}
 		});
 	}
-
+	/**
+	 * 获取图片在七牛上的地址
+	 * @param {Object} token 上传的token 
+	 */
 	mod.getImgUrl=function(token) {
 		console.log("*****getImgUrl：" + JSON.stringify(token))
 		if(token.thumbKey.length > 0) {
@@ -380,6 +383,17 @@ var cloudutil = (function(mod) {
 			upToken = data;
 		});
 		return upToken;
+	}
+	/**
+	 * 七牛图片信息查询
+	 * @param {String} url 图片地址
+	 */
+	mod.getQNImgInfo=function(url){
+		var request=new XMLHttpRequest();
+		request.open("GET",url+"?imageInfo",false);
+		request.send();
+		console.log(request.response)
+		return request.response;
 	}
 	return mod;
 })(window.cloudutil || {});

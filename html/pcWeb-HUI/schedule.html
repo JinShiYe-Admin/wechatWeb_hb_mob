@@ -161,7 +161,7 @@
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
 						if(data.RspData.dt.length > 0) {
-							if(schedule.pg.PageIndex == 1) {
+							if(column_table.pg.PageIndex == 1) {
 								column_table.items = data.RspData.dt;
 							} else {
 								column_table.items = column_table.items.concat(data.RspData.dt);

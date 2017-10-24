@@ -98,89 +98,23 @@ Vue.component("select-load-pic", {
 						'FilesAdded': function(up, files) {
 							plupload.each(files, function(file) {
 								// 文件添加进队列后,处理相关的事情
-								imgName = JSON.stringify(file.name)
-								var img = imgName.substring(-1, (imgName - 1));
-								//document.getElementById('Priimgname0').value = imgName;
-								console.log("FilesAdded:" + JSON.stringify(file));
+								 
 							});
 						},
 						'UploadProgress': function(up, file) {
 							// 每个文件上传时,处理相关的事情  
-							//vm_loading.content = "上传中 " + file.percent + "%";
+						 
 						},
 						'FileUploaded': function(up, file, info) {
 							// 每个文件上传成功后,处理相关的事情 
-							console.log("文件:info:" + JSON.stringify(info));
-							if(info.status == 200) {
-								var cc = eval("(" + info.response + ")");
-								imgurl = storageutil.QNPBDOMAIN + cc.key;
-								console.log("imgurl:" + imgurl);
-								var imgLink = Qiniu.imageView2({
-									mode: 3, // 缩略模式，共6种[0-5]
-									w: 100, // 具体含义由缩略模式决定 
-									h: 100, // 具体含义由缩略模式决定
-									q: 100, // 新图的图像质量，取值范围：1-100
-									format: 'png' // 新图的输出格式，取值范围：jpg，gif，png，webp等
-								}, cc.key);
-								//Pridl=Priimgname.substring(9,10)
-								if(Priimgname != undefined) {
-
-									document.getElementById(Priimgname).value = imgurl;
-									var person = new Object();
-									person.encid = priid; //控件id
-									person.saveurl = imgurl; //图片地址
-									person.imgurl = imgLink;
-									person.oldname = file.name;
-									person.newname = cc.key;
-									person.filesize = file.size;
-									//循环附件数组，判断id是否有重复
-									for(var i = 0; i < FileDataArray.length; i++) {
-										if(FileDataArray[i].id == priid) {
-											//如果有重复则移除原来的
-											FileDataArray.splice(i, 1);
-										}
-									}
-									//添加新的附件
-
-									FileDataArray.push(person);
-
-									objArray.push([imgurl]);
-								} else {
-									document.getElementById('filename').value = imgurl;
-								}
-								//vm_loading.isShow = false;  
-							} else {
-								var dialog = weui.dialog({
-									title: "上传失败",
-									content: JSON.stringify(info),
-									className: "custom-classname",
-									buttons: [{
-										label: "确定",
-										type: "primary",
-										onClick: function() {
-											dialog.hide();
-										}
-									}]
-								});
-							}
+							 
+							 
 						},
 						'Error': function(up, err, errTip) {
-							var dialog = weui.dialog({
-								title: "操作失败",
-								content: pluploadutil.errMes(err.code, errTip),
-								className: "custom-classname",
-								buttons: [{
-									label: "确定",
-									type: "primary",
-									onClick: function() {
-										dialog.hide();
-									}
-								}]
-							});
+						// 每个文件失败后,处理相关的事情 
 						},
 						'UploadComplete': function() {
-							//队列文件处理完毕后,处理相关的事情
-							//console.log("UploadComplete");
+							//队列文件处理完毕后,处理相关的事情 
 						},
 						'Key': function(up, file) {
 							// 若想在前端对每个文件的key进行个性化处理，可以配置该函数

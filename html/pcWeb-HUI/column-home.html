@@ -19,16 +19,16 @@
 			.operate-edit {
 				text-decoration: none;
 			}
-
+			
 			#column_info .row {
 				margin-left: 0;
 				margin-right: 0;
 			}
-
+			
 			#column_info .submit-button {
 				margin-bottom: 15px;
 			}
-
+			
 			#column_info .input-text[type="number"] {
 				width: 100%;
 			}
@@ -45,7 +45,7 @@
 					<a class="btn btn-primary radius" @click="add"><i class="Hui-iconfont"></i> 添加栏目</a>
 				</span>
 			</div>
-			<column-table :value="dt" @click-edit="edit"></column-table>
+			<column-table :value="dt" @click-edit="edit" @click-del="del"></column-table>
 			<div id="pages"></div>
 		</div>
 		<div id="column_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -134,7 +134,8 @@
 						<td>{{item.note}}</td>
 						<td>{{item.istop==1?"是":"否"}}</td>
 						<td class="sorting_1">
-							<a class="operate-edit" @click="clickEdit(index)" title="编辑"><i class="Hui-iconfont"></i></a>
+							<a class="operate-edit" @click="clickEdit(item)" title="编辑"><i class="Hui-iconfont"></i></a>
+							<a style="text-decoration:none" class="ml-5" @click="clickDel(item)" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
 						</td>
 					</tr>
 				</tbody>
@@ -161,8 +162,11 @@
 					 * 点击编辑
 					 * @param {Object} index
 					 */
-					clickEdit: function(index) {
-						this.$emit("click-edit", index);
+					clickEdit: function(item) {
+						this.$emit("click-edit", item);
+					},
+					clickDel: function(item) {
+						this.$emit("click-del", item);
 					}
 				}
 			});
@@ -189,15 +193,70 @@
 					 * 点击添加栏目
 					 */
 					add: function() {
-						column_info.showAdd();
+						var tempData = {
+							type: 'add'
+						}
+						var url = "../unitWeb/column.html";
+						var ids = url.split("/");
+						var dataStr = JSON.stringify(tempData);
+						var index = layer.open({
+							type: 2,
+							title: "添加栏目",
+							content: url + "?v=" + Math.random() + "&data=" + encodeURIComponent(dataStr),
+							end: function() {
+								console.log("刷新")
+								location.reload();
+							}
+						});
+						layer.full(index);
+
+						//						column_info.showAdd();
 					},
 					/**
 					 * 点击编辑
 					 * @param {Object} index 栏目序号
 					 */
-					edit: function(index) {
-						column_info.showEdit(this.dt[index]);
-					}
+					edit: function(item) {
+						item.type = 'edit';
+						var url = "../unitWeb/column.html";
+						var ids = url.split("/");
+						var dataStr = JSON.stringify(item);
+						var index = layer.open({
+							type: 2,
+							title: "编辑栏目",
+							content: url + "?v=" + Math.random() + "&data=" + encodeURIComponent(dataStr),
+							end: function() {
+								console.log("刷新")
+								location.reload();
+							}
+						});
+						layer.full(index);
+
+						//						column_info.showEdit(this.dt[index]);
+					},
+					del: function(item) { //删除栏目
+						layer.confirm('确认要删除吗？', function(index) {
+							layer.close(index);
+							var para = {
+								cmd: 'chn',
+								type: 'del',
+								colid: item.chnid
+							}
+							//							alert(JSON.stringify(para))
+							unitWebsitePro(para, function(data) {
+								if(data.RspCode == 0) {
+									layer.msg('已删除!', {
+										icon: 1,
+										time: 1000
+									});
+									location.reload();
+								} else {
+									alert(data.RspTxt);
+								}
+							});
+						});
+
+					},
 				}
 			});
 
@@ -272,7 +331,7 @@
 				}
 			});
 			window.onload = function() {
-				//getColumnData(1);
+				getColumnData(1);
 			}
 
 			/**

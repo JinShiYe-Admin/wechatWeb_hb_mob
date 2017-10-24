@@ -219,14 +219,12 @@
 						$.Huimodalalert('段落未添加标题或内容，无法继续添加', 3000)
 						return;
 					}
-					alert(index)
-					alert(JSON.stringify(piece))
 					this.pieces.splice(index + 1, 0, {
-
 						title: "",
 						content: "",
 						files: []
 					})
+//					PriConten += '<section><h3>' + piece.title + '</h3><p>' + piece.content + '</p><p><img src=' +  piece.title+ '></p></section>';
 				},
 				delPiece: function(piece, index) {
 					if(piece.title || piece.content || piece.files.length > 0) {

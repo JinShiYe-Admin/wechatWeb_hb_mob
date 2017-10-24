@@ -352,12 +352,12 @@ function editEdule(oldVal, newVal, callcol) {
 			break;
 		case "timespanb":
 			{
-				colv = table_data.timespanb
+				colv = table_data.timespanbValue
 			}
 			break;
 		case "timespane":
 			{
-				colv = table_data.timespane
+				colv = table_data.timespaneValue
 			}
 			break;
 		default:

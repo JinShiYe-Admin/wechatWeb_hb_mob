@@ -45,7 +45,7 @@
 				</div>
 
 				<div>
-					<div class="weui-cells__title">{{linkurl.title}}</div>
+					<div class="weui-cells__title">{{linkurl.title+" (有链接时，不允许投稿；链接默认打开。)"}}</div>
 					<div class="weui-cell__ft" style="margin-top: -35px;margin-right: 15px;">
 						<input class="weui-switch" type="checkbox" v-model="islink.check">
 					</div>
@@ -108,7 +108,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="weui-btn-area">
+			<div class="weui-btn-area"  v-if="editName =='添加'">
 				<button id="submit" v-on:click="submitClick" class="weui-btn weui-btn_primary">{{editName}}</button>
 			</div>
 		</div>
@@ -257,7 +257,7 @@
 							unitWebsitePro(para, function(data) {
 								if(data.RspCode == 0) {
 									vm.resetData();
-									mui.back()
+//									mui.back()
 								}
 								//								alert(JSON.stringify(data));
 							});

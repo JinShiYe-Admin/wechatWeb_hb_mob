@@ -48,7 +48,6 @@ var cloudutil = (function(mod) {
 				returnData.ops = "imageView2/1/w/200/h/200/format/jpeg|saveas/" + returnData.thumbKey;
 				break;
 			case 3: //居中裁剪 生成缩略图
-				
 				var width = 200;
 				var height;
 				if(data.option.width) {
@@ -92,7 +91,9 @@ var cloudutil = (function(mod) {
 		var mainSpace = data.mainSpace; //文件存放在私有空间或公有空间
 		var saveSpace = data.saveSpace; //文件存放的空间(第二前缀名)
 
-		var qnCmdOption = 0; //七牛的持久化命令类型
+		var qnCmdOption = {
+			type: 0
+		}; //七牛的持久化命令类型
 		if(data.qnCmdOption != undefined) {
 			qnCmdOption = data.qnCmdOption;
 		}
@@ -107,7 +108,6 @@ var cloudutil = (function(mod) {
 		for(var i in data.fileArray) {
 			var param = {}; //文件的配置参数
 			param.Bucket = mainSpace;
-
 			//七牛的文件名
 			var qnFileName;
 			if(utils.checkData(data.fileArray[i].qnFileName)) {
@@ -268,14 +268,14 @@ var cloudutil = (function(mod) {
 	 * @param {Object} manageOptions
 	 * @param {Object} callback
 	 */
-	mod.uploadQnSingleImg = function(buttonSelector,manageOptions,callback) {
-		var originalName="";
+	mod.uploadQnSingleImg = function(buttonSelector, manageOptions, callback) {
+		var originalName = "";
 		qnFileUploader = Qiniu.uploader({
 			disable_statistics_report: false, // 禁止自动发送上传统计信息到七牛，默认允许发送
 			runtimes: 'html5,flash,html4', // 上传模式,依次退化
 			browse_button: buttonSelector, // 上传选择的点选按钮，**必需**
 			uptoken_func: function(file) { // 在需要获取 uptoken 时，该方法会被调用
-				originalName=file.name;
+				originalName = file.name;
 				uptokenData = null;
 				uptokenData = mod.getQNUpToken(file, manageOptions);
 				//console.log("获取uptoken回调:" + JSON.stringify(uptokenData));
@@ -298,7 +298,7 @@ var cloudutil = (function(mod) {
 			init: {
 				'FilesAdded': function(up, files) {
 					plupload.each(files, function(file) {
-//						$.showLoading('加载中...');
+						//						$.showLoading('加载中...');
 						// 文件添加进队列后,处理相关的事情
 						console.log("FilesAdded:", file);
 					});
@@ -316,7 +316,7 @@ var cloudutil = (function(mod) {
 					console.log("FileUploaded:");
 					console.log(file)
 					console.log(info)
-//					$.hideLoading();
+					//					$.hideLoading();
 					if(info.status == 200) {
 						var tempModel = {
 							ImgUrl: getImgUrl(uptokenData),
@@ -331,7 +331,7 @@ var cloudutil = (function(mod) {
 				'Error': function(up, err, errTip) {
 					//上传出错时,处理相关的事情
 					console.log("Error:", err, errTip);
-//					$.hideLoading();
+					//					$.hideLoading();
 				},
 				'UploadComplete': function() {
 					//队列文件处理完毕后,处理相关的事情
@@ -348,12 +348,13 @@ var cloudutil = (function(mod) {
 			}
 		});
 	}
-	function getImgUrl(token){
-		console.log("*****getImgUrl："+JSON.stringify(token))
-		if(token.thumbKey.length>0){
+
+	function getImgUrl(token) {
+		console.log("*****getImgUrl：" + JSON.stringify(token))
+		if(token.thumbKey.length > 0) {
 			return token.data.Data[0].OtherKey[token.thumbKey[0]]
 		}
-		return token.data.Data[0].Domain+token.data.Data[0].Key;
+		return token.data.Data[0].Domain + token.data.Data[0].Key;
 	}
 	/**
 	 * 

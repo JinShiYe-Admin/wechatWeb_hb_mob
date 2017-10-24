@@ -4,8 +4,8 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>新闻添加</title>
-		<link href="../H-ui.admin/static/h-ui/css/H-ui.css" rel="stylesheet"></link>
-		<link href="../H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet"></link>
+				<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css" /> 
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />  
 		<style>
 			.edit_container {
 				margin: 0 auto;
@@ -50,9 +50,9 @@
 					<option v-for="item in items" :value="item.chnid">{{item.cname}}</option>
 				</select>
 			</div>
-				<input v-model.trim="artical.topic" class="artical-title input-text size-L" type="text" maxlength="64" placeholder="在此输入标题" />
-				<input v-model.trim="artical.subtopic" class="artical-subtitle input-text size-L" type="text" maxlength="64" placeholder="在此输入副标题" />
-				<textarea v-model.trim="artical.summas" class="textarea" placeholder="在此输入新闻摘要"></textarea>
+				<input v-model.trim="artical.topic" id="cname" class="artical-title input-text size-L" type="text" maxlength="64" placeholder="在此输入标题" />
+				<input v-model.trim="artical.subtopic" id="fname" class="artical-subtitle input-text size-L" type="text" maxlength="64" placeholder="在此输入副标题" />
+				<textarea v-model.trim="artical.summas" id="summas" class="textarea" placeholder="在此输入新闻摘要"></textarea>
 				<select-load-pic v-bind:pictype="1" v-on:uploadedFile="getHeadImg(picUrl)"></select-load-pic>
 				<p class="artical-pieces-title">新闻内容</p>
 				<template v-for="(piece,index) in pieces">
@@ -68,11 +68,11 @@
 					</div>
 				</template>
 				<br />
-				<span><i class="icon Hui-iconfont Hui-iconfont-more2"></i></span><input type="url" v-model.trim="artical.quourl" class="artical-url input-text size-L" placeholder="请输入原文链接" />
+				<span><i class="icon Hui-iconfont Hui-iconfont-more2"></i></span><input type="url" id="islink" v-model.trim="artical.quourl" class="artical-url input-text size-L" placeholder="请输入原文链接" />
 				<div>
 					<div class="check-box">
 						<label for="checkbox-1">是否可评论</label>
-						<input type="checkbox" id="checkbox-1">
+						<input type="checkbox" id="isReply">
 					</div>
 					<input class="btn btn-primary radius float-right" v-on:click="publishArtical" type="button" value="发送">
 				</div>
@@ -87,7 +87,7 @@
 						<div class="modal-body">
 							<p>确认删除此段落？</p>
 						</div>
-						<div class="modal-footer">
+						<div class="modal-footer"><br />
 							<button class="btn btn-primary" v-on:click="sureDelPiece(curPiece.index)">确定</button>
 							<button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
 						</div>
@@ -98,7 +98,8 @@
 	</body>
 	<script src="../../js/vue.js"></script>
 	<script src="../../js/pcWeb-HUI/select-load-singPic.js"></script>
-	<script src="../H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+		 
 	<script src="../H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
 	<script>
 		var vm_loading; //等待框
@@ -254,7 +255,7 @@
 				});
 			}
 		
-		
+		var PriConten = "";
 		var articalPublish = new Vue({
 			el: "#artical-pub",
 			data: {
@@ -299,8 +300,69 @@
 				}
 			},
 			methods: {
-				publishArtical:function(){//发布文章
-					
+				publishArtical:function(){//发布文章 
+				
+				var allInputst = $("*[name='dlt']");
+				var allInputsc = $("*[name='dlc']");
+				var allInputse = $("*[name='dle']");
+				for(var i = 0; i < allInputst.length; i++) {
+					PriConten += '<section><h3>' + allInputst[i].value + '</h3><p>' + allInputsc[i].value + '</p><p><img src=' + allInputse[i].value + '></p></section>';
+				}
+				var PriIsquo = '';
+				var PriQuourl = '';
+				var comData = '';
+				var PriIsReply = '';
+				var PriTopic = document.getElementById("cname").value; //新闻标题
+				var Prisubtopic = document.getElementById("fname").value; //新闻副标题
+				//var PriConten = document.getElementById("conten0").value; //新闻内容
+				var PriSummas = document.getElementById("summas").value; //新闻摘要
+				//var Chnid = document.getElementById("chnid"); //栏目id
+				//var PriChnid = Chnid.selectedIndex; // 选中索引
+				var PriChnid = $("#chnid option:selected").val();
+				console.log('所属栏目=========================:' + PriChnid);
+				PriIsquo = document.getElementById("islink").checked == true ? 1 : 0;
+				PriIsReply = document.getElementById("isReply").checked == true ? 1 : 0;
+				PriQuourl = document.getElementById("islink").value;
+				console.log('附件=========================:' + JSON.stringify(FileDataArray));
+				var PriFileData = JSON.stringify(FileDataArray);
+				comData = {
+					cmd: 'news', //文章管理
+					type: 'add',
+					chnid: PriChnid,
+					subtopic: Prisubtopic,
+					topic: PriTopic,
+					content: PriConten,
+					summas: PriSummas,
+					encs: FileDataArray,
+					isquo: PriIsquo,
+					quourl: PriQuourl,
+					isreply: PriIsReply,
+					stat: 1
+				};
+				 
+				console.log('comData=========================:' + JSON.stringify(comData));
+				unitWebsitePro(comData, function(data) {
+					if(data.RspCode == 0) {
+						weui.toast("添加成功");
+						//清空数据 
+						document.getElementById("cname").value = ""; //新闻标题
+						//document.getElementById("conten").value = ""; //新闻内容
+						document.getElementById("summas").value = ""; //新闻摘要
+						document.getElementById("chnid").selectedIndex = 0; //栏目id
+						document.getElementById("islink").value = ""; //引用地址
+						document.getElementById("fname").value = "";
+						$('.weui-input').val("");
+						location.reload();
+					} else {
+						weui.toast(data.RspTxt);
+					}
+				});
+				var vue_img = new Vue({
+					el: '#PriImg',
+					data: {
+						imgurl: imgurl
+					}
+				});
 				},
 				getColumns: function() { //获取栏目列表
 					this.columns = data.RspData; //在回调中赋值
@@ -310,7 +372,10 @@
 						$.Huimodalalert('段落未添加标题或内容，无法继续添加', 3000)
 						return;
 					}
+					alert(index)
+					alert(JSON.stringify(piece) )
 					this.pieces.splice(index + 1, 0, {
+						
 						title: "",
 						content: "",
 						files: []

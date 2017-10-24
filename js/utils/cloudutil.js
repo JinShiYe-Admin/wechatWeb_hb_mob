@@ -65,7 +65,7 @@ var cloudutil = (function(mod) {
 	 * @param {Object.fileArray} data.fileArray 必填 文件数组
 	 * @param {Object.fileArray.filePath} data.fileArray.filePath 必填(选填 如果使用自定义的文件名) 文件路径
 	 * @param {Object.fileArray.qnFileName} data.fileArray.qnFileName 选填 自定义七牛的文件名，默认使用文件路径中的文件名
-	 * @param {Object.fileArray.qnCmdType} data.fileArray.qnCmdType 选填 自定义文件处理命令类型，默认使用data.qnCmdType的命令类型
+	 * @param {Object.fileArray.qnCmdOption} data.fileArray.qnCmdOption 选填 自定义文件处理命令类型，默认使用data.qnCmdOption的命令类型
 	 * @param {Object} callback 必填 回调
 	 */
 	mod.getFileUpTokens = function(data, callBack) {

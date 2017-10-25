@@ -126,6 +126,7 @@
 		var uptokenData; //上传的token
 		var imgurl = ""; //圖片地址   
 		var FileDataArray = new Array(); //附件参数
+		var imgList=new Array();
 		var imgName;
 		var dlindex;
 		var PriNewsId;
@@ -276,8 +277,7 @@
 				pieces: [{
 					title: "",
 					content: "",
-					files: ""
-
+					files: "" 
 				}],
 				curPiece: {
 					piece: null,
@@ -296,10 +296,8 @@
 				}
 			},
 			methods: {
-				publishArtical: function() { //发布文章 
-//					var allInputst = $("*[name='dlt']");
-//					var allInputsc = $("*[name='dlc']");
-//					var allInputse = $("*[name='dle']");
+				publishArtical: function() { //发布文章  
+					 
                     var dl=JSON.stringify(articalPublish.pieces); 
 					for(var i = 0; i < articalPublish.pieces.length; i++) { 
 						PriConten += '<section><h3>' + articalPublish.pieces[i].title + '</h3><p>' + articalPublish.pieces[i].content + '</p><p><img src=' + articalPublish.pieces[i].files + '></p></section>';
@@ -414,6 +412,10 @@
 				},
 				getPieceImg: function(contentImg, index) {
 					console.log("*****获取的contentImage:" + JSON.stringify(contentImg) + ",index:" + index);
+					var imgsz = new Object();
+					imgsz.img= contentImg.ImgUrl;
+					imgsz.index=index;
+					imgList.push(imgsz);
                     imgurl = contentImg.ImgUrl;
                     articalPublish.pieces.files=contentImg.ImgUrl;
 					var person = new Object();

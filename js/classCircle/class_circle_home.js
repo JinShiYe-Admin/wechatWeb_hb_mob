@@ -2074,7 +2074,6 @@ function disposeFile(self, files) {
 					console.log("blob.type:" + blob.type);
 					console.log('要传递的文件大小：' + blob.size);
 					blob.lastModifiedDate = new Date();
-					fileOb = blob;
 					var newImage = {
 						filePath: newDataUrl, //文件路径
 						uploading: false, //是否正在上传

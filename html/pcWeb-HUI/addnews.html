@@ -157,21 +157,21 @@
 					pagesize: 999, //每页条数  
 					pageindex: 1 //页码 
 				}
-				//unitWebsitePro(tempData, function(data) {
+				unitWebsitePro(tempData, function(data) {
 				//vm.editName = '保存';
 				$("#chnid option:selected").val(PriNewsId);
 				$("#chnid option:selected").text(detail.cname)
-				articalPublish.artical.chind = 1;
-				articalPublish.artical.topic = "新闻标题测试";
-				articalPublish.artical.subtopic = "新闻副标题测试";
-				articalPublish.artical.summas = "新闻摘要测试";
-				articalPublish.artical.isquo = 0;
-				articalPublish.artical.isreply = 1;
-				//						articalPublish.artical.topic=data.RspData.dt[0].topic;
-				// 						articalPublish.artical.subtopic=data.RspData.dt[0].subtopic; //新闻副标题
-				// 				        articalPublish.artical.summas=data.RspData.dt[0].summas; //新闻摘要
-				// 						articalPublish.artical.isquo=data.RspData.dt[0].quourl;
-				// 				        articalPublish.artical.isreply=data.RspData.dt[0].isreply;
+//				articalPublish.artical.chind = 1;
+//				articalPublish.artical.topic = "新闻标题测试";
+//				articalPublish.artical.subtopic = "新闻副标题测试";
+//				articalPublish.artical.summas = "新闻摘要测试";
+//				articalPublish.artical.isquo = 0;
+//				articalPublish.artical.isreply = 1;
+										articalPublish.artical.topic=data.RspData.dt[0].topic;
+				 						articalPublish.artical.subtopic=data.RspData.dt[0].subtopic; //新闻副标题
+				 				        articalPublish.artical.summas=data.RspData.dt[0].summas; //新闻摘要
+				 						articalPublish.artical.isquo=data.RspData.dt[0].quourl;
+				 				        articalPublish.artical.isreply=data.RspData.dt[0].isreply;
 
 				insertText = "<section><h3>3214123</h3><p>43214312</p><p><img src='  '></p></section>";
 				var n = (insertText.split('<section>')).length - 1;
@@ -219,7 +219,7 @@
 						})
 					})(item)
 				}
-				//});
+				});
 			}
 			/**
 			 * 获取网站配置信息   
@@ -275,12 +275,7 @@
 					content: "",
 					files: []
 
-				}, {
-					title: "",
-					content: "",
-					files: []
-
-				}],
+				} ],
 				curPiece: {
 					piece: null,
 					index: -1

@@ -332,7 +332,7 @@
 							alert('添加成功');
 							location.reload();
 						} else {
-							$.Huimodalalert(data.RspTxt, 1000);
+							//$.Huimodalalert(data.RspTxt, 1000);
 						}
 					});
 				},
@@ -345,9 +345,12 @@
 						stat: '1',
 						pageindex: 1 //页码  
 					}
-					unitWebsitePro(tempData, function(data) {
+					unitWebsitePro(tempData, function(data) { 
+						alert(JSON.stringify(data.RspData.dt))
 						if(data.RspCode == 0) {
+							alert('2')
 							if(data.RspData.dt.length > 0) {
+							    alert('3')
 								vue_input.items = data.RspData.dt;
 							} else {
 								//$.Huimodalalert('暂时还没有栏目', 1000);

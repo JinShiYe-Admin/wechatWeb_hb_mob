@@ -31,7 +31,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr class="text-c" v-for='(course,index) in courseArray' v-if="courseArray.length>0">
+			<tr class="text-c" v-for='(course,index) in courseArray' v-if="flag>0">
 				<td><u style="cursor:pointer" class="text-primary">{{course.cname}}</u></td>
 				<td class="td-status"><span :class="course.stat==0?'label label-defaunt radius':'label label-success radius'"><a v-if="course.stat==0">已停用</a><a v-else>已启用</a></span></td>
 				<td class="td-manage">
@@ -82,6 +82,7 @@
 			var courseData = new Vue({
 				el: "#courseData",
 				data: {
+					flag:0,
 					subFlag: 0, //0刷新，1加载更多
 					subIndex: 1, //获取第几页数据
 					courseArray: []
@@ -133,10 +134,10 @@
 									courseData.subFlag = 0;
 									//获取科目列表
 									getSubArray();
-//									layer.msg('已删除!', {
-//										icon: 1,
-//										time: 1000
-//									});
+									layer.msg('已删除!', {
+										icon: 1,
+										time: 1000
+									});
 								} else {
 									alert(data.RspTxt);
 								}
@@ -166,10 +167,10 @@
 										courseData.subFlag = 0;
 										//获取科目列表
 										getSubArray();
-//										layer.msg('已停用!', {
-//											icon: 5,
-//											time: 1000
-//										});
+										layer.msg('已停用!', {
+											icon: 5,
+											time: 1000
+										});
 									} else {
 										alert(data.RspTxt);
 									}
@@ -184,17 +185,16 @@
 										courseData.subFlag = 0;
 										//获取科目列表
 										getSubArray();
-//										layer.msg('已启用!', {
-//											icon: 5,
-//											time: 1000
-//										});
+										layer.msg('已启用!', {
+											icon: 5,
+											time: 1000
+										});
 									} else {
 										alert(data.RspTxt);
 									}
 								});
 							});
 						}
-
 					}
 				}
 			});
@@ -210,6 +210,7 @@
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
 						if(data.RspData.dt.length > 0) {
+							courseData.flag = 1;
 							if(courseData.subFlag == 0) { //刷新
 								courseData.courseArray = [].concat(data.RspData.dt);
 							} else { //加载更多

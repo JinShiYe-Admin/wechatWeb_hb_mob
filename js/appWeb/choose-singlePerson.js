@@ -19,7 +19,7 @@ Vue.component("single-choose-person", {
 		'<span v-bind:class="[\'weui-icon-checked\']"></span>' +
 		'</div>' +
 		'</label>' +
-		'</template>'
+		'</template>'+
 		'</template>' +
 		'<a v-else v-bind:class="[\'weui-cell\',\'weui-cell_access\']">' +
 		'<div v-bind:class="[\'weui-cell__hd\']">' +

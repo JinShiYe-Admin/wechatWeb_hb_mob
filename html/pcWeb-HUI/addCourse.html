@@ -210,12 +210,12 @@
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
 						if(data.RspData.dt.length > 0) {
-							courseData.flag = 1;
 							if(courseData.subFlag == 0) { //刷新
 								courseData.courseArray = [].concat(data.RspData.dt);
 							} else { //加载更多
 								courseData.courseArray = courseData.courseArray.concat(data.RspData.dt);
 							}
+							courseData.flag = 1;
 //							courseData.subIndex++;
 						}
 					} else {

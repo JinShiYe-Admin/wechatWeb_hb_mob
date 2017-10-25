@@ -95,24 +95,24 @@
 					moduleArray: []
 				}
 			});
-			
+
 			var selectOrder = function(model, index) {
-				var  obj=document.getElementById('select'+model.modid);
-				var  index=obj.selectedIndex;  //序号，取当前选中选项的序号
-				var  val = obj.options[index].value;
+				var obj = document.getElementById('select' + model.modid);
+				var index = obj.selectedIndex; //序号，取当前选中选项的序号
+				var val = obj.options[index].value;
 				model.orderid = val;
 				//先判断，当前的模块，是否为选择状态
-				if (model.flag == 1) {
+				if(model.flag == 1) {
 					var tempData = {
 						cmd: 'corpmod',
 						type: 'edit',
 						colid: model.corpmodid,
-						callcol:'orderid',
-						colv:model.orderid
+						callcol: 'orderid',
+						colv: model.orderid
 					}
 					unitWebsitePro(tempData, function(data) {
 						if(data.RspCode == 0) {
-							
+
 						} else {
 							alert(data.RspTxt);
 						}
@@ -130,8 +130,12 @@
 					}
 					unitWebsitePro(tempData, function(data) {
 						if(data.RspCode == 0) {
-							//改变模块的选择状态
-							model.flag = 0;
+							//获取系统app模块
+							getSumModuleArray();
+//							layer.msg('已删除!', {
+//								icon: 1,
+//								time: 1000
+//							});
 						} else {
 							model.flag = 1;
 							alert(data.RspTxt);
@@ -142,12 +146,16 @@
 						cmd: 'corpmod',
 						type: 'add',
 						modid: model.modid,
-						orderid: orderid
+						orderid: model.orderid
 					}
 					unitWebsitePro(tempData, function(data) {
 						if(data.RspCode == 0) {
-							//改变模块的选择状态
-							model.flag = 1;
+							//获取系统app模块
+							getSumModuleArray();
+//							layer.msg('已添加!', {
+//								icon: 1,
+//								time: 1000
+//							});
 						} else {
 							model.flag = 0;
 							alert(data.RspTxt);
@@ -163,7 +171,7 @@
 					type: 'findpage'
 				}
 				unitWebsitePro(tempData, function(data) {
-					alert('getSumModuleArray:'+JSON.stringify(data));
+					alert('getSumModuleArray:' + JSON.stringify(data));
 					if(data.RspCode == 0) {
 						if(data.RspData.length > 0) {
 							moduleSum.moduleArray = [].concat(data.RspData);
@@ -173,22 +181,22 @@
 								type: 'findpage'
 							}
 							unitWebsitePro(tempData, function(data1) {
-								alert('getSumModule222:'+JSON.stringify(data1));
+								alert('getSumModule222:' + JSON.stringify(data1));
 								if(data1.RspCode == 0) {
 									if(data1.RspData.length > 0) {
 										for(var i = 0; i < moduleSum.moduleArray.length; i++) {
 											var tempModel = moduleSum.moduleArray[i];
 											tempModel.flag = 0; //默认没选择
-											for(var i = 0; i < data1.RspData.length; i++) {
-												var tempModel1 = data1.RspData[i];
+											for(var m = 0; m < data1.RspData.length; m++) {
+												var tempModel1 = data1.RspData[m];
 												if(tempModel.modid == tempModel1.modid) {
-													tempModel1.flag = 1; //如果id一样，则为选择
+													tempModel.flag = 1; //如果id一样，则为选择
 													//合并对象
 													tempModel = $.extend(tempModel, tempModel1);
 												}
 											}
-											alert('合并后：'+JSON.stringify(moduleSum.moduleArray));
 										}
+										alert('合并后：' + JSON.stringify(moduleSum.moduleArray));
 									}
 									moduleSum.flag = 1;
 								} else {

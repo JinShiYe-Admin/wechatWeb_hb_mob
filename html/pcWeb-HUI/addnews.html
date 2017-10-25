@@ -115,7 +115,9 @@
 	<script src="../../js/utils/utils.js"></script>
 	<script src="../../js/pcWeb-HUI/select-load-singPic.js"></script>
 	<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
-
+	<script type="text/javascript">
+		document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
+	</script>
 	<script src="../H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
 	<script>
 		var vm_loading; //等待框
@@ -125,6 +127,7 @@
 		var imgurl = ""; //圖片地址   
 		var FileDataArray = new Array(); //附件参数
 		var imgName;
+		var dlindex;
 		var PriNewsId;
 		var objArray = new Array();
 		//所属栏目下拉框
@@ -145,11 +148,11 @@
 			}
 		});
 		//初始化页面
-		window.onload = function() { 
-			var detail = utils.getDataFromUrl(window.location.href); 
+		window.onload = function() {
+			var detail = utils.getDataFromUrl(window.location.href);
 			PriNewsId = detail.newsid;
-			var insertText; 
-			if(detail.type == 'edit') { 
+			var insertText;
+			if(detail.type == 'edit') {
 				var tempData = {
 					cmd: 'news', //网站栏目
 					type: 'findpage', //分页查找栏目列表
@@ -158,67 +161,67 @@
 					pageindex: 1 //页码 
 				}
 				unitWebsitePro(tempData, function(data) {
-				//vm.editName = '保存';
-				$("#chnid option:selected").val(PriNewsId);
-				$("#chnid option:selected").text(detail.cname)
-//				articalPublish.artical.chind = 1;
-//				articalPublish.artical.topic = "新闻标题测试";
-//				articalPublish.artical.subtopic = "新闻副标题测试";
-//				articalPublish.artical.summas = "新闻摘要测试";
-//				articalPublish.artical.isquo = 0;
-//				articalPublish.artical.isreply = 1;
-										articalPublish.artical.topic=data.RspData.dt[0].topic;
-				 						articalPublish.artical.subtopic=data.RspData.dt[0].subtopic; //新闻副标题
-				 				        articalPublish.artical.summas=data.RspData.dt[0].summas; //新闻摘要
-				 						articalPublish.artical.isquo=data.RspData.dt[0].quourl;
-				 				        articalPublish.artical.isreply=data.RspData.dt[0].isreply;
+					//vm.editName = '保存';
+					$("#chnid option:selected").val(PriNewsId);
+					$("#chnid option:selected").text(detail.cname)
+					//				articalPublish.artical.chind = 1;
+					//				articalPublish.artical.topic = "新闻标题测试";
+					//				articalPublish.artical.subtopic = "新闻副标题测试";
+					//				articalPublish.artical.summas = "新闻摘要测试";
+					//				articalPublish.artical.isquo = 0;
+					//				articalPublish.artical.isreply = 1;
+					articalPublish.artical.topic = data.RspData.dt[0].topic;
+					articalPublish.artical.subtopic = data.RspData.dt[0].subtopic; //新闻副标题
+					articalPublish.artical.summas = data.RspData.dt[0].summas; //新闻摘要
+					articalPublish.artical.isquo = data.RspData.dt[0].quourl;
+					articalPublish.artical.isreply = data.RspData.dt[0].isreply;
 
-				insertText = "<section><h3>3214123</h3><p>43214312</p><p><img src='  '></p></section>";
-				var n = (insertText.split('<section>')).length - 1;
-				for(var i = 0; i < n - 1; i++) {
-					this.addPiece();
-				}
-				var k = insertText.replace(/<section>/g, "</section>");
-				var ss = k.split('</section>');
-				for(var i = 0; i < ss.length; i++) {
-					if(ss[i] == '' || ss[i] == null || typeof(ss[i]) == undefined) {
-						ss.splice(i, 1);
-						i = i - 1;
+					insertText = "<section><h3>3214123</h3><p>43214312</p><p><img src='  '></p></section>";
+					var n = (insertText.split('<section>')).length - 1;
+					for(var i = 0; i < n - 1; i++) {
+						this.addPiece();
 					}
-				}
-				if(ss.length > 0) {
-					//准备创建控件,多少纬就创建多少个段落控件
-					var duanluokongjian = '';
+					var k = insertText.replace(/<section>/g, "</section>");
+					var ss = k.split('</section>');
 					for(var i = 0; i < ss.length; i++) {
-						var p = ss[i].replace(/<p>/g, "</p>"); //将p替换成/p,准备按/p标签拆分
-						var pp = p.split('</p>');
-						var hh = pp[0].replace(/<[^>]+>/g, "");
-						var imgstring = pp[3];
-						var zfc = imgstring.substring(9);
-						zfc = zfc.substring(0, zfc.length - 1);
-						articalPublish.pieces.title = hh;
-						articalPublish.pieces.content = pp[1];
-						articalPublish.pieces.files = zfc;
-						//pp[0]即为h3内容,再同理按h3替换拆h3 
-						duanluokongjian += pp[0] + '-------';
-						var hh = pp[0].replace(/<[^>]+>/g, "");
-						//pp[1]为content内容
-						duanluokongjian += pp[1] + '-------';
-						//pp[3]为img内容,再同理按src特征取到src内的路径
-						duanluokongjian += pp[3] + '-------';
-						//得到三者后创建相应控件并赋值 	 
+						if(ss[i] == '' || ss[i] == null || typeof(ss[i]) == undefined) {
+							ss.splice(i, 1);
+							i = i - 1;
+						}
 					}
-				}
-				for(var item in articalPublish.$data) {
-					(function addwatch(key) {
-						articalPublish.$watch(key + '.message', function(newVal, oldVal) {
-							edit(oldVal, newVal, key, zfc)
-						})
-						articalPublish.$watch(key + '.check', function(newVal, oldVal) {
-							edit(oldVal, newVal, key, zfc)
-						})
-					})(item)
-				}
+					if(ss.length > 0) {
+						//准备创建控件,多少纬就创建多少个段落控件
+						var duanluokongjian = '';
+						for(var i = 0; i < ss.length; i++) {
+							var p = ss[i].replace(/<p>/g, "</p>"); //将p替换成/p,准备按/p标签拆分
+							var pp = p.split('</p>');
+							var hh = pp[0].replace(/<[^>]+>/g, "");
+							var imgstring = pp[3];
+							var zfc = imgstring.substring(9);
+							zfc = zfc.substring(0, zfc.length - 1);
+							articalPublish.pieces.title = hh;
+							articalPublish.pieces.content = pp[1];
+							articalPublish.pieces.files = zfc;
+							//pp[0]即为h3内容,再同理按h3替换拆h3 
+							duanluokongjian += pp[0] + '-------';
+							var hh = pp[0].replace(/<[^>]+>/g, "");
+							//pp[1]为content内容
+							duanluokongjian += pp[1] + '-------';
+							//pp[3]为img内容,再同理按src特征取到src内的路径
+							duanluokongjian += pp[3] + '-------';
+							//得到三者后创建相应控件并赋值 	 
+						}
+					}
+					for(var item in articalPublish.$data) {
+						(function addwatch(key) {
+							articalPublish.$watch(key + '.message', function(newVal, oldVal) {
+								edit(oldVal, newVal, key, zfc)
+							})
+							articalPublish.$watch(key + '.check', function(newVal, oldVal) {
+								edit(oldVal, newVal, key, zfc)
+							})
+						})(item)
+					}
 				});
 			}
 			/**
@@ -273,9 +276,9 @@
 				pieces: [{
 					title: "",
 					content: "",
-					files: []
+					files: ""
 
-				} ],
+				}],
 				curPiece: {
 					piece: null,
 					index: -1
@@ -294,18 +297,20 @@
 			},
 			methods: {
 				publishArtical: function() { //发布文章 
-					var allInputst = $("*[name='dlt']");
-					var allInputsc = $("*[name='dlc']");
-					var allInputse = $("*[name='dle']");
-					for(var i = 0; i < allInputst.length; i++) {
-						PriConten += '<section><h3>' + allInputst[i].value + '</h3><p>' + allInputsc[i].value + '</p><p><img src=' + allInputse[i].value + '></p></section>';
-					} 
+//					var allInputst = $("*[name='dlt']");
+//					var allInputsc = $("*[name='dlc']");
+//					var allInputse = $("*[name='dle']");
+                    var dl=JSON.stringify(articalPublish.pieces); 
+					for(var i = 0; i < articalPublish.pieces.length; i++) { 
+						PriConten += '<section><h3>' + articalPublish.pieces[i].title + '</h3><p>' + articalPublish.pieces[i].content + '</p><p><img src=' + articalPublish.pieces[i].files + '></p></section>';
+					}
+                    alert( PriConten)
 					var comData = '';
 					var PriChnid = $("#chnid option:selected").val();
 					console.log('所属栏目=========================:' + PriChnid);
-				    var	PriIsquo = document.getElementById("islink").checked == true ? 1 : 0;
-				    var	PriIsReply = document.getElementById("isReply").checked == true ? 1 : 0;
-			     	var	PriQuourl = document.getElementById("islink").value;
+					var PriIsquo = document.getElementById("islink").checked == true ? 1 : 0;
+					var PriIsReply = document.getElementById("isReply").checked == true ? 1 : 0;
+					var PriQuourl = document.getElementById("islink").value;
 					console.log('附件=========================:' + JSON.stringify(FileDataArray));
 					var PriFileData = JSON.stringify(FileDataArray);
 					comData = {
@@ -321,12 +326,12 @@
 						quourl: PriQuourl,
 						isreply: PriIsReply,
 						stat: 1
-					}; 
+					};
 					console.log('comData=========================:' + JSON.stringify(comData));
-					$.Huimodalalert('添加成功', 1000); 
 					unitWebsitePro(comData, function(data) {
 						if(data.RspCode == 0) {
-							$.Huimodalalert('添加成功', 1000);
+							//$.Huimodalalert('添加成功', 1000);
+							alert('添加成功');
 							location.reload();
 						} else {
 							$.Huimodalalert(data.RspTxt, 1000);
@@ -341,29 +346,34 @@
 						iswrite: '1',
 						stat: '1',
 						pageindex: 1 //页码  
-					} 
+					}
 					unitWebsitePro(tempData, function(data) {
 						if(data.RspCode == 0) {
 							if(data.RspData.dt.length > 0) {
-								vue_input.items = data.RspData.dt; 
+								vue_input.items = data.RspData.dt;
 							} else {
-							$.Huimodalalert('暂时还没有栏目', 1000);	 
+								//$.Huimodalalert('暂时还没有栏目', 1000);
+								alert('暂时还没有栏目');
 							}
 						} else {
-							$.Huimodalalert(data.RspTxt, 1000);	
+							//$.Huimodalalert(data.RspTxt, 1000);	
+							alert(data.RspTxt);
 						}
-					}); 
+					});
 				},
 				addPiece: function(piece, index) { //增加文章片段
 					if(!piece.title || !piece.content) {
-						$.Huimodalalert('段落未添加标题或内容，无法继续添加', 3000)
+						//$.Huimodalalert('段落未添加标题或内容，无法继续添加', 3000)
+						alert('段落未添加标题或内容，无法继续添加');
 						return;
 					}
 					this.pieces.splice(index + 1, 0, {
 						title: "",
 						content: "",
-						files: []
+						files: ""
 					})
+					dlindex=index;
+					
 				},
 				delPiece: function(piece, index) {
 					if(piece.title || piece.content || piece.files.length > 0) {
@@ -378,16 +388,50 @@
 					this.sureDelPiece(index);
 				},
 				sureDelPiece: function(index) {
+					 
 					this.pieces.splice(index, 1);
 					$("#dia-delPiece").modal("hide");
 				},
 				getHeadImg: function(headImg, index) {
-					console.log("*****获取的headImg:" + JSON.stringify(headImg) + ",index:" + index);
-
+					console.log("*****获取的headImg:" + JSON.stringify(headImg) + ",index:" + index); 
+					imgurl = headImg.ImgUrl;
+					var person = new Object();
+					//person.encid = priid; //控件id
+					person.saveurl = headImg.SaveUrl; //图片地址
+					person.imgurl = headImg.ImgUrl;
+					person.oldname = headImg.OldName;
+					person.newname = headImg.NewName;
+					person.filesize = headImg.FileSize;
+					//循环附件数组，判断id是否有重复
+//					for(var i = 0; i < FileDataArray.length; i++) {
+//						if(FileDataArray[i].id == priid) {
+//							//如果有重复则移除原来的
+//							FileDataArray.splice(i, 1);
+//						}
+//					}
+					//添加新的附件 
+					FileDataArray.push(person); 
 				},
 				getPieceImg: function(contentImg, index) {
 					console.log("*****获取的contentImage:" + JSON.stringify(contentImg) + ",index:" + index);
-
+                    imgurl = contentImg.ImgUrl;
+                    articalPublish.pieces.files=contentImg.ImgUrl;
+					var person = new Object();
+					//person.encid = priid; //控件id
+					person.saveurl = contentImg.SaveUrl; //图片地址
+					person.imgurl = contentImg.ImgUrl;
+					person.oldname = contentImg.OldName;
+					person.newname = contentImg.NewName;
+					person.filesize = contentImg.FileSize;
+					//循环附件数组，判断id是否有重复
+//					for(var i = 0; i < FileDataArray.length; i++) {
+//						if(FileDataArray[i].id == priid) {
+//							//如果有重复则移除原来的
+//							FileDataArray.splice(i, 1);
+//						}
+//					}
+					//添加新的附件 
+					FileDataArray.push(person); 
 				}
 			}
 		})

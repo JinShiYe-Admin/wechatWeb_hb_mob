@@ -19,6 +19,7 @@ var storageutil = (function(mod) {
 	mod.QNCROP = "crop/"; //裁剪图的第三前缀
 	mod.QNSSPACEWEBCON = "webcon/"; //网站配置空间(第二前缀名)
 	mod.QNSSPACECLASSCIRCLE = "classcircle/"; //班级圈空间(第二前缀名)
+	mod.QNBANNERPICTURE = "bannerpicture/"; //横幅图片(第二前缀名)
 	//---七牛key值---end---
 
 	mod.WEBSITECONFIG = 'websiteconfig' //网站配置

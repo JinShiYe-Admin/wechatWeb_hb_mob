@@ -126,7 +126,7 @@
 					var tempData = {
 						cmd: 'corpmod',
 						type: 'del',
-						colid: model.modid
+						colid: model.corpmodid
 					}
 					unitWebsitePro(tempData, function(data) {
 						if(data.RspCode == 0) {
@@ -171,7 +171,7 @@
 					type: 'findpage'
 				}
 				unitWebsitePro(tempData, function(data) {
-					alert('getSumModuleArray:' + JSON.stringify(data));
+//					alert('getSumModuleArray:' + JSON.stringify(data));
 					if(data.RspCode == 0) {
 						if(data.RspData.length > 0) {
 							moduleSum.moduleArray = [].concat(data.RspData);
@@ -181,7 +181,7 @@
 								type: 'findpage'
 							}
 							unitWebsitePro(tempData, function(data1) {
-								alert('getSumModule222:' + JSON.stringify(data1));
+//								alert('getSumModule222:' + JSON.stringify(data1));
 								if(data1.RspCode == 0) {
 									if(data1.RspData.length > 0) {
 										for(var i = 0; i < moduleSum.moduleArray.length; i++) {
@@ -196,7 +196,7 @@
 												}
 											}
 										}
-										alert('合并后：' + JSON.stringify(moduleSum.moduleArray));
+//										alert('合并后：' + JSON.stringify(moduleSum.moduleArray));
 									}
 									moduleSum.flag = 1;
 								} else {

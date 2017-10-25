@@ -105,17 +105,7 @@
 						PageCount: 0,
 						RowCount: 0
 					},
-					items: [{
-						edulename: "春季课程表",
-						departname: "开发部",
-						timespanb: "201710",
-						timespane: "201711",
-					}, {
-						edulename: "夏季课程表",
-						departname: "财务部",
-						timespanb: "201710",
-						timespane: "201711",
-					}]
+					items: []
 				},
 				methods: {
 					/**
@@ -125,7 +115,7 @@
 						var index = layer.open({
 							type: 2,
 							title: "添加课程表",
-							content: "courses-table.html"
+							content: "../appWeb/courses-table.html"
 						});
 						layer.full(index);
 
@@ -137,7 +127,7 @@
 					 */
 					edit: function(item) {
 						item.flag = 1;
-						var url = "courses-table.html";
+						var url = "../appWeb/courses-table.html";
 						var ids = url.split("/");
 						var dataStr = JSON.stringify(item);
 						var index = layer.open({

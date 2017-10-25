@@ -174,19 +174,7 @@
 			var column_table = new Vue({
 				el: "#column_table",
 				data: {
-					dt: [{
-						cname: "1",
-						linkurl: "2",
-						orderid: "3",
-						note: "4",
-						istop: 1
-					}, {
-						cname: "12",
-						linkurl: "22",
-						orderid: "33",
-						note: "44",
-						istop: 0
-					}]
+					dt: []
 				},
 				methods: {
 					/**
@@ -196,7 +184,7 @@
 						var tempData = {
 							type: 'add'
 						}
-						var url = "column.html";
+						var url = "../unitWeb/column.html";
 						var ids = url.split("/");
 						var dataStr = JSON.stringify(tempData);
 						var index = layer.open({
@@ -218,7 +206,7 @@
 					 */
 					edit: function(item) {
 						item.type = 'edit';
-						var url = "column.html";
+						var url = "../unitWeb/column.html";
 						var ids = url.split("/");
 						var dataStr = JSON.stringify(item);
 						var index = layer.open({

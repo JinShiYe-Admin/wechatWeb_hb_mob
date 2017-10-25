@@ -118,14 +118,14 @@
 				<a href="index.aspx" class="weui-tabbar__item">
 					<div class="wrap">
 						<img class="img" src="images/pic_ico_index0.png" alt="">
-						<div class="notice">8</div>
+						<%--<div class="notice">8</div>--%>
 					</div>
 					<p class="weui-tabbar__label">微校园</p>
 				</a>
 				<a href="#" class="weui-tabbar__item weui-bar__item--on">
 					<div class="wrap">
 						<img class="img" src="images/pic_ico_worksend.png" alt="">
-						<div class="notice">12</div>
+						<%--<div class="notice">12</div>--%>
 					</div>
 					<p class="weui-tabbar__label">作业发布</p>
 				</a>
@@ -136,12 +136,12 @@
 					</div>
 					<p class="weui-tabbar__label">作业管理</p>
 				</a>
-				<a href="workmine.aspx" class="weui-tabbar__item">
+				<%--				<a href="workmine.aspx" class="weui-tabbar__item">
 					<div class="weui-tabbar__icon">
 						<img class="img" src="images/pic_ico_workmine0.png" alt="">
 					</div>
 					<p class="weui-tabbar__label">我的作业</p>
-				</a>
+				</a>--%>
 			</div>
 		</div>
 		<script src="https://jsypay.jiaobaowang.net/suitetest/js/weui.min.js" type="text/javascript" charset="utf-8"></script>

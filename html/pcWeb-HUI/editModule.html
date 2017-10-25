@@ -1,0 +1,207 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="renderer" content="webkit|ie-comp|ie-stand">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
+
+		<title>模块设置</title>
+	</head>
+
+	<body>
+		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 网站配置 <span class="c-gray en">&gt;</span> 模块设置
+			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
+		</nav>
+		<div class="page-container" id="moduleSum">
+			<div class="">
+				<table class="table table-border table-bordered table-hover table-bg">
+					<thead>
+						<tr class="text-c">
+							<th width="25"></th>
+							<th width="80">模块名称</th>
+							<th width="100">模块链接</th>
+							<th width="100">模块图片链接</th>
+							<th width="50">排序ID</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="text-c" v-for='(module,index) in moduleArray' v-show="flag>0" style="display: none;">
+							<td><input type="checkbox" value=module.corpmodid name="" v-model=module.flag @change="selectCheckbox(module,index)"></td>
+							<td>{{module.mname}}</td>
+							<td>{{module.murl}}</td>
+							<td>{{module.mimg}}</td>
+							<td>
+								<select :id="'select'+module.modid" @change="selectOrder(module,index)">
+									<template v-for="item in selectArray">
+										<option v-if="item==module.orderid" selected :value="item">{{item}}</option>
+										<option v-else :value="item">{{item}}</option>
+									</template>
+								</select>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!--_footer 作为公共模版分离出去-->
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/layer/2.4/layer.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/static/h-ui.admin/js/H-ui.admin.js"></script>
+		<!--/_footer 作为公共模版分离出去-->
+
+		<!--请在下方写此页面业务相关的脚本-->
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/laypage/1.2/laypage.js"></script>
+		<!--vue-->
+		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
+		</script>
+		<script type="text/javascript">
+			$(function() {
+				$('.table-sort').dataTable({
+					"aaSorting": [
+						[1, "desc"]
+					], //默认第几个排序
+					"bStateSave": true, //状态保存
+					"aoColumnDefs": [
+						//{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+						{
+							"orderable": false,
+							"aTargets": [0, 8, 9]
+						} // 制定列不参与排序
+					]
+				});
+				//获取系统app模块
+				getSumModuleArray();
+			});
+
+			var moduleSum = new Vue({
+				el: "#moduleSum",
+				data: {
+					flag: 0,
+					selectArray: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+					moduleArray: []
+				}
+			});
+			
+			var selectOrder = function(model, index) {
+				var  obj=document.getElementById('select'+model.modid);
+				var  index=obj.selectedIndex;  //序号，取当前选中选项的序号
+				var  val = obj.options[index].value;
+				model.orderid = val;
+				//先判断，当前的模块，是否为选择状态
+				if (model.flag == 1) {
+					var tempData = {
+						cmd: 'corpmod',
+						type: 'edit',
+						colid: model.corpmodid,
+						callcol:'orderid',
+						colv:model.orderid
+					}
+					unitWebsitePro(tempData, function(data) {
+						if(data.RspCode == 0) {
+							
+						} else {
+							alert(data.RspTxt);
+						}
+					});
+				}
+			}
+
+			//选中、取消按钮
+			var selectCheckbox = function(model, index) {
+				if(model.flag == 0) { //删除
+					var tempData = {
+						cmd: 'corpmod',
+						type: 'del',
+						colid: model.modid
+					}
+					unitWebsitePro(tempData, function(data) {
+						if(data.RspCode == 0) {
+							//改变模块的选择状态
+							model.flag = 0;
+						} else {
+							model.flag = 1;
+							alert(data.RspTxt);
+						}
+					});
+				} else { //添加
+					var tempData = {
+						cmd: 'corpmod',
+						type: 'add',
+						modid: model.modid,
+						orderid: orderid
+					}
+					unitWebsitePro(tempData, function(data) {
+						if(data.RspCode == 0) {
+							//改变模块的选择状态
+							model.flag = 1;
+						} else {
+							model.flag = 0;
+							alert(data.RspTxt);
+						}
+					});
+				}
+			}
+
+			//获取系统app模块
+			var getSumModuleArray = function() {
+				var tempData = {
+					cmd: 'sysmod',
+					type: 'findpage'
+				}
+				unitWebsitePro(tempData, function(data) {
+					alert('getSumModuleArray:'+JSON.stringify(data));
+					if(data.RspCode == 0) {
+						if(data.RspData.length > 0) {
+							moduleSum.moduleArray = [].concat(data.RspData);
+							//获取单位app模块，然后将得到的值，进行合并
+							var tempData = {
+								cmd: 'corpmod',
+								type: 'findpage'
+							}
+							unitWebsitePro(tempData, function(data1) {
+								alert('getSumModule222:'+JSON.stringify(data1));
+								if(data1.RspCode == 0) {
+									if(data1.RspData.length > 0) {
+										for(var i = 0; i < moduleSum.moduleArray.length; i++) {
+											var tempModel = moduleSum.moduleArray[i];
+											tempModel.flag = 0; //默认没选择
+											for(var i = 0; i < data1.RspData.length; i++) {
+												var tempModel1 = data1.RspData[i];
+												if(tempModel.modid == tempModel1.modid) {
+													tempModel1.flag = 1; //如果id一样，则为选择
+													//合并对象
+													tempModel = $.extend(tempModel, tempModel1);
+												}
+											}
+											alert('合并后：'+JSON.stringify(moduleSum.moduleArray));
+										}
+									}
+									moduleSum.flag = 1;
+								} else {
+									alert(data1.RspTxt);
+								}
+							});
+						}
+					} else {
+						alert(data.RspTxt);
+					}
+				});
+			};
+		</script>
+	</body>
+
+</html>

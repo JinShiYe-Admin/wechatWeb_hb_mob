@@ -1,7 +1,7 @@
 <!--
 	作者：444811716@qq.com
 	时间：2017-10-24
-	描述：配置图片
+	描述：配置首页轮播图
 -->
 <!DOCTYPE html>
 <html>
@@ -11,7 +11,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
-		<title>配置图片</title>
+		<title>配置首页轮播图</title>
 		<script type="text/javascript">
 			var WebVersion = "?" + Math.random();
 			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css' + WebVersion + '" />');
@@ -74,7 +74,7 @@
 	</head>
 
 	<body>
-		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 网站配置 <span class="c-gray en">&gt;</span> 配置图片
+		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 网站配置 <span class="c-gray en">&gt;</span> 配置首页轮播图
 			<a class="btn btn-success radius r" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
 		</nav>
 		<div id="pictureTable" class="page-container">
@@ -105,20 +105,20 @@
 				<div class="row cl">
 					<label class="form-label col-xs-4 col-sm-3">图片说明：</label>
 					<div class="formControls col-xs-8 col-sm-9">
-						<input type="text" class="input-text" maxlength="20" v-model="bname" placeholder="请输入图片说明">
+						<input type="text" class="input-text" maxlength="20" v-model="bname" @blur="bnameBlur" placeholder="请输入图片说明">
 					</div>
 				</div>
 				<div class="row cl">
 					<label class="form-label col-xs-4 col-sm-3">链接URL：</label>
 					<div class="formControls col-xs-8 col-sm-9">
-						<input type="text" class="input-text" v-model="burl" placeholder="请输入链接URL">
+						<input type="text" class="input-text" v-model="burl" @blur="burlBlur" placeholder="请输入链接URL">
 					</div>
 				</div>
 				<div class="row cl">
 					<label class="form-label col-xs-4 col-sm-3">排序ID：</label>
 					<div class="formControls col-xs-8 col-sm-9">
 						<span class="select-box">
-							<select id="orderidSelect" class="select" size="1" title="请选择排序ID，越小越前">
+							<select id="orderidSelect" class="select" size="1" title="请选择排序ID，越小越前" @change="orderidChange">
 								<option value="0">0</option>
 								<option value="1">1</option>
 								<option value="2">2</option>
@@ -138,7 +138,7 @@
 					<label class="form-label col-xs-4 col-sm-3">是否发布：</label>
 					<div class="formControls skin-minimal col-xs-8 col-sm-9">
 						<div class="check-box">
-							<input type="checkbox" v-model="stat">
+							<input type="checkbox" v-model="stat" @change="statChange">
 						</div>
 					</div>
 				</div>
@@ -148,7 +148,7 @@
 						<div class="check-box">
 							<span class="btn-upload">
 							  <a class="btn btn-primary radius">选取文件</a>
-							  <input id="uploaderInput" type="file" class="input-file" accept="image/png, image/jpeg, image/jpg" @change="inputChange">
+							  <input id="uploaderInput" type="file" class="input-file" accept="image/png, image/jpeg, image/jpg" @change="fileChange">
 							</span>
 							<div v-if="localPath!=''" class="picture-show">
 								<img :src="localPath" />
@@ -220,7 +220,7 @@
 			window.onload = function() {
 				initVue();
 				initUploader();
-				//getPictureData();
+				getPictureData();
 			}
 
 			/**
@@ -229,11 +229,11 @@
 			function getPictureData() {
 				var tempData = {
 					cmd: 'corpban',
-					type: 'findpage',
+					type: 'findpage'
 				}
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
-						pictureTable.dt = data.RspData.dt;
+						pictureTable.dt = data.RspData;
 					} else {
 						pictureTable.dt = [];
 						pictureModal.show("获取数据失败", data.RspTxt);
@@ -263,21 +263,8 @@
 				pictureTable = new Vue({
 					el: "#pictureTable",
 					data: {
-						dt: [{
-							bid: 1,
-							bname: "1",
-							burl: "burl",
-							orderid: 1,
-							bimgurl: "../../image/classCircle/nodata.png",
-							stat: 1
-						}, {
-							bid: 22,
-							bname: "22",
-							burl: "burl2",
-							orderid: 2,
-							bimgurl: "../../image/classCircle/error.png",
-							stat: 0
-						}]
+						dt: [],
+						changeIndex: null
 					},
 					methods: {
 						/**
@@ -291,7 +278,8 @@
 						 * @param {Object} index 图片序号
 						 */
 						edit: function(index) {
-							pictureInfo.showEdit(this.dt[index]);
+							this.changeIndex = index;
+							pictureInfo.showEdit(this.dt[this.changeIndex]);
 						}
 					}
 				});
@@ -300,27 +288,24 @@
 				pictureInfo = new Vue({
 					el: "#pictureInfo",
 					data: {
-						bid: "",
-						bname: "",
-						burl: "",
-						orderid: "",
-						bimgurl: "",
-						stat: "",
-						type: "",
-						localPath: "",
-						localFile: null
+						bname: "", //图片说明
+						burl: "", //图片链接
+						orderid: "", //排序ID
+						bimgurl: "", //图片地址
+						stat: "", //图片状态
+						type: "", //信息类型
+						localPath: "", //文件路径
+						localFile: null //文件对象
 					},
 					methods: {
 						/**
 						 * 显示添加图片
 						 */
 						showAdd: function() {
-							this.bid = "";
 							this.bname = "";
 							this.burl = "";
 							this.orderid = 0;
 							this.bimgurl = "";
-							this.stat = 0;
 							this.type = "添加";
 							this.localPath = "";
 							this.localFile = null;
@@ -331,13 +316,13 @@
 						 * 显示编辑图片
 						 */
 						showEdit: function(value) {
-							this.bid = value.bid;
 							this.bname = value.bname;
 							this.burl = value.burl;
 							this.orderid = value.orderid;
+							this.bimgurl = value.bimgurl;
 							this.stat = value.stat;
 							this.type = "删除";
-							this.localPath = "";
+							this.localPath = value.bimgurl;
 							this.localFile = null;
 							$("#orderidSelect").val(value.orderid);
 							this.show("编辑");
@@ -365,14 +350,21 @@
 								return false;
 							}
 							layer.load(2);
-							pictureUploader.addFile(this.localFile, Date.now() + "" + parseInt(Math.random() * 1000) + ".jpg")
+							pictureUploader.addFile(this.localFile, Date.now() + "" + parseInt(Math.random() * 1000) + ".jpg");
 						},
 						btnDelete: function() {
-							console.log("删除");
+							layer.confirm('确定删除', function(index) {
+								layer.close(index);
+								deletePicture();
+							});
 						},
-						inputChange: function(e) {
-							console.log("inputChange:value", e.target.value);
-							console.log("inputChange:files", e.target.files);
+						/**
+						 * 选取文件
+						 * @param {Object} e
+						 */
+						fileChange: function(e) {
+							console.log("fileChange:value", e.target.value);
+							console.log("fileChange:files", e.target.files);
 							var files = e.target.files;
 							if(files[0].size == 0 || files[0].name == "/") { //"未选择图片"
 								$('#uploaderInput').val('');
@@ -397,11 +389,15 @@
 									if(ratio >= 4 / 3 && ratio < 2) {
 										var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)));
 										var blob = compress.base64ToBlob(newDataUrl, 'image/jpeg');
-										console.log("blob.type:" + blob.type);
-										console.log('要传递的文件大小:' + blob.size);
+										console.log('文件大小:' + blob.size);
 										blob.lastModifiedDate = new Date();
-										pictureInfo.localPath = newDataUrl;
-										pictureInfo.localFile = blob;
+										if(pictureInfo.type == "删除") {
+											layer.load(2);
+											pictureUploader.addFile(blob, Date.now() + "" + parseInt(Math.random() * 1000) + ".jpg");
+										} else {
+											pictureInfo.localPath = newDataUrl;
+											pictureInfo.localFile = blob;
+										}
 									} else {
 										$('#uploaderInput').val('');
 										pictureModal.show("图片选取失败", "请选择宽高比在4:3至2:1范围内的图片");
@@ -409,6 +405,39 @@
 								});
 							}
 							reader.readAsDataURL(files[0]);
+						},
+						/**
+						 * 修改图片说明
+						 */
+						bnameBlur: function() {
+							if(this.type == "删除" && this.bname != pictureTable.dt[pictureTable.changeIndex].bname) {
+								changeOption('bname', this.bname);
+							}
+						},
+						/**
+						 * 修改图片链接
+						 */
+						burlBlur: function() {
+							if(this.type == "删除" && this.burl != pictureTable.dt[pictureTable.changeIndex].burl) {
+								changeOption('burl', this.burl);
+							}
+						},
+						/**
+						 * 修改状态
+						 */
+						statChange: function() {
+							if(this.type == "删除" && this.stat != pictureTable.dt[pictureTable.changeIndex].stat) {
+								changeOption('stat', this.stat * 1);
+							}
+						},
+						/**
+						 * 修改排序ID
+						 */
+						orderidChange: function() {
+							var orderid = $("#orderidSelect").val() * 1;
+							if(this.type == "删除" && orderid != pictureTable.dt[pictureTable.changeIndex].orderid) {
+								changeOption('orderid', orderid);
+							}
 						}
 					}
 				});
@@ -483,7 +512,11 @@
 							if(info.status == 200) {
 								//成功
 								console.log("上传成功");
-								addPicture();
+								if(pictureInfo.type == "删除") {
+									changeOption('bimgurl', uptokenData.data.Data[0].Domain + uptokenData.data.Data[0].Key);
+								} else {
+									addPicture();
+								}
 							} else {
 								layer.closeAll('loading');
 								pictureModal.show("上传失败", JSON.stringify(info));
@@ -545,15 +578,82 @@
 				unitWebsitePro(tempData, function(data) {
 					layer.closeAll('loading');
 					if(data.RspCode == 0) {
-						console.log("添加成功");
+						location.replace(location.href);
 					} else {
+						deleteUploaderFile([uptokenData.data.Data[0].Domain + uptokenData.data.Data[0].Key]);
+						pictureModal.show("添加失败", data.RspTxt);
+					}
+				});
+			}
+
+			/**
+			 * 修改图片的设置
+			 */
+			function changeOption(callcol, colv) {
+				layer.load(2);
+				var tempData = {
+					cmd: 'corpban',
+					type: 'edit',
+					callcol: callcol,
+					colid: pictureTable.dt[pictureTable.changeIndex].bid,
+					colv: colv,
+				}
+				unitWebsitePro(tempData, function(data) {
+					layer.closeAll('loading');
+					if(data.RspCode == 0) {
+						if(callcol == "bimgurl") {
+							pictureInfo.localPath = colv;
+						}
+						pictureTable.dt[pictureTable.changeIndex][callcol] = colv;
+					} else {
+						if(callcol == "bimgurl") {
+							deleteUploaderFile([colv]);
+						} else if(callcol == "orderid") {
+							$("#orderidSelect").val(pictureTable.dt[pictureTable.changeIndex][callcol]);
+						} else if(callcol == "stat") {
+							pictureInfo.stat = !colv;
+						}
+						pictureModal.show("修改失败", data.RspTxt);
+					}
+				});
+			}
+
+			/**
+			 * 删除已经上传的文件
+			 */
+			function deleteUploaderFile(urls) {
+				cloudutil.delCloudFiles({
+					appId: storageutil.QNQYWXKID,
+					urls: urls
+				}, function(data) {
+					console.log("delCloudFiles:", data);
+				});
+				uptokenData = null;
+			}
+
+			/**
+			 * 删除图片文件
+			 */
+			function deletePicture() {
+				layer.load(2);
+				var tempData = {
+					cmd: 'corpban',
+					type: 'del',
+					colid: pictureTable.dt[pictureTable.changeIndex].bid
+				}
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
 						cloudutil.delCloudFiles({
 							appId: storageutil.QNQYWXKID,
-							urls: [uptokenData.data.Data[0].Domain + uptokenData.data.Data[0].Key]
+							urls: [pictureTable.dt[pictureTable.changeIndex].bimgurl]
 						}, function(data) {
 							console.log("delCloudFiles:", data);
+							layer.closeAll('loading');
+							location.replace(location.href);
 						});
-						pictureModal.show("添加失败", data.RspTxt);
+					} else {
+						layer.closeAll('loading');
+						pictureModal.show("删除失败", data.RspTxt);
 					}
 				});
 			}

@@ -1,0 +1,563 @@
+<!--
+	作者：444811716@qq.com
+	时间：2017-10-24
+	描述：配置图片
+-->
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>配置图片</title>
+		<script type="text/javascript">
+			var WebVersion = "?" + Math.random();
+			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css' + WebVersion + '" id="skin" />');
+			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css' + WebVersion + '" />');
+		</script>
+		<style>
+			.operate-edit {
+				text-decoration: none;
+			}
+
+			#pictureInfo .row {
+				margin-left: 0;
+				margin-right: 0;
+			}
+
+			#pictureInfo .submit-button {
+				margin-bottom: 15px;
+			}
+
+			#pictureInfo .input-text[type="number"] {
+				width: 100%;
+			}
+
+			#pictureInfo .check-box {
+				padding-left: 0;
+				cursor: auto;
+			}
+
+			.picture-thumb {
+				width: 200px;
+			}
+
+			.picture-show {
+				width: 100px;
+				height: 100px;
+				overflow: hidden;
+				margin: 15px 0;
+				display: flex;
+				display: -webkit-flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.picture-show img {
+				width: 100%;
+			}
+
+			.breadcrumb .btn-success {
+				line-height: 1.6em;
+				margin-top: 3px;
+			}
+
+			#__vconsole * {
+				z-index: 99999999 !important;
+			}
+		</style>
+	</head>
+
+	<body>
+		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 网站配置 <span class="c-gray en">&gt;</span> 配置图片
+			<a class="btn btn-success radius r" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
+		</nav>
+		<div id="pictureTable" class="page-container">
+			<div class="cl pd-5 bg-1 bk-gray">
+				<span class="l">
+					<a class="btn btn-primary radius" @click="add"><i class="Hui-iconfont"></i> 添加图片</a>
+				</span>
+			</div>
+			<column-table :value="dt" @click-edit="edit"></column-table>
+		</div>
+		<div id="pictureModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content radius">
+					<div class="modal-header">
+						<h3 class="modal-title">{{title}}</h3>
+					</div>
+					<div class="modal-body">
+						<p>{{content}}</p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn" data-dismiss="modal" aria-hidden="true">确定</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="pictureInfo" style="display: none;">
+			<form class="form form-horizontal">
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">图片说明：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" class="input-text" maxlength="20" v-model="bname" placeholder="请输入图片说明">
+					</div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">链接URL：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" class="input-text" v-model="burl" placeholder="请输入链接URL">
+					</div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">排序ID：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<span class="select-box">
+							<select id="orderidSelect" class="select" size="1" title="请选择排序ID，越小越前">
+								<option value="0">0</option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+								<option value="9">9</option>
+								<option value="10">10</option>
+							</select>
+						</span>
+					</div>
+				</div>
+				<div class="row cl" v-if="type =='删除'">
+					<label class="form-label col-xs-4 col-sm-3">是否发布：</label>
+					<div class="formControls skin-minimal col-xs-8 col-sm-9">
+						<div class="check-box">
+							<input type="checkbox" v-model="stat">
+						</div>
+					</div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">图片上传：</label>
+					<div class="formControls skin-minimal col-xs-8 col-sm-9">
+						<div class="check-box">
+							<span class="btn-upload">
+							  <a class="btn btn-primary radius">选取文件</a>
+							  <input id="uploaderInput" type="file" class="input-file" accept="image/png, image/jpeg, image/jpg" @change="inputChange">
+							</span>
+							<div v-if="localPath!=''" class="picture-show">
+								<img :src="localPath" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row cl submit-button">
+					<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+						<input v-if="type =='添加'" class="btn btn-primary radius" type="button" :value="type" @click="btnAdd">
+						<input v-if="type =='删除'" class="btn btn-danger radius" type="button" :value="type" @click="btnDelete">
+					</div>
+				</div>
+			</form>
+		</div>
+		<input id="choosePicture" style="display: none;">
+		<!--表格-->
+		<template id="temp_pictureTable">
+			<table class="table table-border table-bordered table-bg">
+				<thead class="text-c">
+					<tr>
+						<th>图片说明</th>
+						<th>链接url</th>
+						<th>排序ID</th>
+						<th>图片</th>
+						<th>是否发布</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="text-c" v-for="(item,index) in value">
+						<td>{{item.bname}}</td>
+						<td>{{item.burl}}</td>
+						<td>{{item.orderid}}</td>
+						<td>
+							<img class="picture-thumb" :src="item.bimgurl">
+						</td>
+						<td>{{item.stat==1?"是":"否"}}</td>
+						<td class="sorting_1">
+							<a class="operate-edit" @click="clickEdit(index)" title="编辑"><i class="Hui-iconfont"></i></a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</template>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/layer/2.4/layer.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/static/h-ui/js/H-ui.min.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/static/h-ui.admin/js/H-ui.admin.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/vue.min.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.min.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/qiniu/qiniu.min.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cryption.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cloudutil.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/vconsole/vconsole.min.js?" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/compress.js?" + WebVersion + "'></s" + "cript>");
+		</script>
+		<script>
+			var pictureTable; //图片表格
+			var pictureInfo; //图片信息
+			var pictureModal; //提示的弹出框
+			var pictureUploader; //上传图片七牛对象
+			var uptokenData; //上传凭证对象
+			window.onload = function() {
+				initVue();
+				initUploader();
+				//getPictureData();
+			}
+
+			/**
+			 * 获取图片列表
+			 */
+			function getPictureData() {
+				var tempData = {
+					cmd: 'corpban',
+					type: 'findpage',
+				}
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						pictureTable.dt = data.RspData.dt;
+					} else {
+						pictureTable.dt = [];
+						pictureModal.show("获取数据失败", data.RspTxt);
+					}
+				});
+			}
+
+			/**
+			 * 初始化vue
+			 */
+			function initVue() {
+				//图片表组件
+				Vue.component('column-table', {
+					props: ['value'],
+					template: '#temp_pictureTable',
+					methods: {
+						/**
+						 * 点击编辑
+						 * @param {Object} index
+						 */
+						clickEdit: function(item) {
+							this.$emit("click-edit", item);
+						}
+					}
+				});
+				//图片表格
+				pictureTable = new Vue({
+					el: "#pictureTable",
+					data: {
+						dt: [{
+							bid: 1,
+							bname: "1",
+							burl: "burl",
+							orderid: 1,
+							bimgurl: "../../image/classCircle/nodata.png",
+							stat: 1
+						}, {
+							bid: 22,
+							bname: "22",
+							burl: "burl2",
+							orderid: 2,
+							bimgurl: "../../image/classCircle/error.png",
+							stat: 0
+						}]
+					},
+					methods: {
+						/**
+						 * 点击添加图片
+						 */
+						add: function() {
+							pictureInfo.showAdd();
+						},
+						/**
+						 * 点击编辑
+						 * @param {Object} index 图片序号
+						 */
+						edit: function(index) {
+							pictureInfo.showEdit(this.dt[index]);
+						}
+					}
+				});
+
+				//图片信息
+				pictureInfo = new Vue({
+					el: "#pictureInfo",
+					data: {
+						bid: "",
+						bname: "",
+						burl: "",
+						orderid: "",
+						bimgurl: "",
+						stat: "",
+						type: "",
+						localPath: "",
+						localFile: null
+					},
+					methods: {
+						/**
+						 * 显示添加图片
+						 */
+						showAdd: function() {
+							this.bid = "";
+							this.bname = "";
+							this.burl = "";
+							this.orderid = 0;
+							this.bimgurl = "";
+							this.stat = 0;
+							this.type = "添加";
+							this.localPath = "";
+							this.localFile = null;
+							$("#orderidSelect").val(0);
+							this.show("添加图片");
+						},
+						/**
+						 * 显示编辑图片
+						 */
+						showEdit: function(value) {
+							this.bid = value.bid;
+							this.bname = value.bname;
+							this.burl = value.burl;
+							this.orderid = value.orderid;
+							this.stat = value.stat;
+							this.type = "删除";
+							this.localPath = "";
+							this.localFile = null;
+							$("#orderidSelect").val(value.orderid);
+							this.show("编辑");
+						},
+						/**
+						 * 显示页面
+						 */
+						show: function(title) {
+							layer.open({
+								type: 1,
+								title: title,
+								area: '500px',
+								zIndex: 999,
+								content: $('#pictureInfo') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+							});
+						},
+						btnAdd: function() {
+							console.log("添加");
+							if(this.burl == "") {
+								pictureModal.show("添加失败", "请输入链接URL");
+								return false;
+							}
+							if(this.localFile == null) {
+								pictureModal.show("添加失败", "请选取添加的图片");
+								return false;
+							}
+							layer.load(2);
+							pictureUploader.addFile(this.localFile, Date.now() + "" + parseInt(Math.random() * 1000) + ".jpg")
+						},
+						btnDelete: function() {
+							console.log("删除");
+						},
+						inputChange: function(e) {
+							console.log("inputChange:value", e.target.value);
+							console.log("inputChange:files", e.target.files);
+							var files = e.target.files;
+							if(files[0].size == 0 || files[0].name == "/") { //"未选择图片"
+								$('#uploaderInput').val('');
+								return false;
+							}
+							var types = files[0].type.toLowerCase().split("/");
+							if(types[1] != "png" && types[1] != "jpg" && types[1] != "jpeg") {
+								$('#uploaderInput').val('');
+								pictureModal.show("图片选取失败", "请选择png,jpg,jpeg类型的图片");
+								return false;
+							}
+
+							var reader = new FileReader();
+							reader.onload = function() {
+								var result = this.result;
+								var maxSize = 1 * 1024 * 1024;
+								compress.getImgInfo(result, function(img, imgInfo) {
+									console.log("获取的文件信息", imgInfo);
+									console.log("原图尺寸", result.length);
+									var ratio = img.naturalWidth / img.naturalHeight;
+									console.log("ratio", ratio);
+									if(ratio >= 4 / 3 && ratio < 2) {
+										var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)));
+										var blob = compress.base64ToBlob(newDataUrl, 'image/jpeg');
+										console.log("blob.type:" + blob.type);
+										console.log('要传递的文件大小:' + blob.size);
+										blob.lastModifiedDate = new Date();
+										pictureInfo.localPath = newDataUrl;
+										pictureInfo.localFile = blob;
+									} else {
+										$('#uploaderInput').val('');
+										pictureModal.show("图片选取失败", "请选择宽高比在4:3至2:1范围内的图片");
+									}
+								});
+							}
+							reader.readAsDataURL(files[0]);
+						}
+					}
+				});
+
+				//提示的弹出框
+				pictureModal = new Vue({
+					el: "#pictureModal",
+					data: {
+						title: "",
+						content: ""
+					},
+					methods: {
+						/**
+						 * 显示弹出框
+						 * @param {Object} title 标题
+						 * @param {Object} content 内容
+						 */
+						show: function(title, content) {
+							this.title = title;
+							this.content = content;
+							$("#pictureModal").modal("show");
+						}
+					}
+				});
+			}
+
+			/**
+			 * 初始化图片上传
+			 */
+			function initUploader() {
+				var pictureOption = {
+					disable_statistics_report: true, // 禁止自动发送上传统计信息到七牛，默认允许发送
+					runtimes: 'html5,flash,html4', // 上传模式,依次退化
+					browse_button: 'choosePicture', // 上传选择的点选按钮，**必需**
+					uptoken_func: function(file) { // 在需要获取 uptoken 时，该方法会被调用
+						uptokenData = null;
+						uptokenData = getQNUpToken(file);
+						console.log("uptokenData", uptokenData);
+						if(uptokenData && uptokenData.code) { //成功
+							console.log("fileurl:" + uptokenData.data.Data[0].Domain + uptokenData.data.Data[0].Key);
+							return uptokenData.data.Data[0].Token;
+						} else {
+							pictureUploader.stop();
+							layer.closeAll('loading');
+							pictureModal.show("上传失败", "获取凭证失败");
+						}
+					},
+					unique_names: false, // 默认 false，key 为文件名。若开启该选项，JS-SDK 会为每个文件自动生成key（文件名）
+					save_key: false, // 默认 false。若在服务端生成 uptoken 的上传策略中指定了 `save_key`，则开启，SDK在前端将不对key进行任何处理
+					get_new_uptoken: true, // 设置上传文件的时候是否每次都重新获取新的 uptoken
+					domain: storageutil.QNPBDOMAIN, // bucket 域名，下载资源时用到，如：'http://xxx.bkt.clouddn.com/' **必需**
+					max_file_size: '100mb', // 最大文件体积限制
+					flash_swf_url: '../../js/lib/plupload/Moxie.swf', //引入 flash,相对路径
+					max_retries: 0, // 上传失败最大重试次数
+					dragdrop: false, // 开启可拖曳上传
+					chunk_size: '4mb', // 分块上传时，每块的体积
+					auto_start: true, // 选择文件后自动上传，若关闭需要自己绑定事件触发上传,
+					init: {
+						'FilesAdded': function(up, files) {
+							plupload.each(files, function(file) {
+								// 文件添加进队列后,处理相关的事情
+								console.log("FilesAdded:", file);
+							});
+						},
+						'UploadProgress': function(up, file) {
+							// 每个文件上传时,处理相关的事情
+							console.log("UploadProgress:" + file.percent);
+						},
+						'FileUploaded': function(up, file, info) {
+							// 每个文件上传成功后,处理相关的事情
+							console.log("FileUploaded:", info);
+							if(info.status == 200) {
+								//成功
+								console.log("上传成功");
+								addPicture();
+							} else {
+								layer.closeAll('loading');
+								pictureModal.show("上传失败", JSON.stringify(info));
+							}
+						},
+						'Error': function(up, err, errTip) {
+							//上传出错时,处理相关的事情
+							layer.closeAll('loading');
+							pictureModal.show("上传失败", pluploadutil.errMes(err.code, errTip));
+						},
+						'FilesRemoved ': function() {
+							//文件移出队列
+							console.log("FilesRemoved:文件移出队列");
+						},
+						'Key': function(up, file) {
+							// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
+							// 该配置必须要在 unique_names: false , save_key: false 时才生效
+							if(uptokenData && uptokenData.code) { //成功
+								return uptokenData.data.Data[0].Key;
+							}
+						}
+					}
+				}
+				pictureUploader = Qiniu.uploader(pictureOption);
+			}
+
+			/**
+			 * 获取七牛上传token
+			 */
+			function getQNUpToken(file) {
+				console.log("getQNUpToken", file)
+				var getTokenData = {
+					appId: storageutil.QNQYWXKID,
+					mainSpace: storageutil.QNPUBSPACE,
+					saveSpace: storageutil.QNBANNERPICTURE,
+					fileArray: [{
+						qnFileName: file.name,
+					}]
+				}
+				var upToken;
+				cloudutil.getFileUpTokens(getTokenData, function(data) {
+					upToken = data;
+				});
+				return upToken;
+			}
+
+			/**
+			 * 添加图片
+			 */
+			function addPicture() {
+				var tempData = {
+					cmd: 'corpban',
+					type: 'add',
+					bimgurl: uptokenData.data.Data[0].Domain + uptokenData.data.Data[0].Key,
+					bname: pictureInfo.bname,
+					burl: pictureInfo.burl,
+					orderid: $("#orderidSelect").val(),
+				}
+				unitWebsitePro(tempData, function(data) {
+					layer.closeAll('loading');
+					if(data.RspCode == 0) {
+						console.log("添加成功");
+					} else {
+						cloudutil.delCloudFiles({
+							appId: storageutil.QNQYWXKID,
+							urls: [uptokenData.data.Data[0].Domain + uptokenData.data.Data[0].Key]
+						}, function(data) {
+							console.log("delCloudFiles:", data);
+						});
+						pictureModal.show("添加失败", data.RspTxt);
+					}
+				});
+			}
+		</script>
+	</body>
+
+</html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="UTF-8">
 		<title>新闻添加</title>
@@ -51,7 +52,7 @@
 				<div>
 					<select class="select" id="chnid" name="one" style="height: 45px;font-size: 17px;color: #929292;">
 						<option value="">请选择所属栏目....</option>
-						<!--option v-for="item in items" :value="item.chnid">{{item.cname}}</option>-->
+						<option v-for="item in items" :value="item.chnid">{{item.cname}}</option>
 					</select>
 				</div>
 				<input v-model.trim="artical.topic" id="cname" class="artical-title input-text size-L" type="text" maxlength="64" placeholder="在此输入标题" />
@@ -101,172 +102,7 @@
 		</div>
 	</body>
 	<script src="../../js/vue.js"></script>
-<<<<<<< HEAD
-	<script src="../../js/utils/utils.js"></script>
-	<script src="../../js/pcWeb-HUI/select-load-singPic.js"></script>
-	<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
-    
-	<script src="../H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
-	<script>
-		var vm_loading; //等待框
-			var fileUploader; //上传logo七牛对象
-			var bannerUploader; //上传banner七牛对象
-			var uptokenData; //上传的token
-			var imgurl = ""; //圖片地址   
-			var FileDataArray = new Array(); //附件参数
-			var imgName;
-			var PriNewsId; 
-			var objArray = new Array();
-			//所属栏目下拉框
-			var vue_input = new Vue({
-				el: '#chnid',
-				data: {
-					items: [{
-							chnid: 111,
-							cname: '校园动态'
-
-						},
-						{
-							chnid: 222,
-							cname: '师资力量'
-
-						}]
-				}
-			});
-		    //初始化页面
-			window.onload = function() {
-			 
-		 
-				var detail = utils.getDataFromUrl(window.location.href);
-				 
-				PriNewsId = detail.newsid;
-				var insertText;
-				
-				if(detail.type == 'edit') {
-				
-					var tempData = {
-						cmd: 'news', //网站栏目
-						type: 'findpage', //分页查找栏目列表
-						newsid: PriNewsId, //文章id
-						pagesize: 999, //每页条数  
-						pageindex: 1 //页码 
-					} 
-					//unitWebsitePro(tempData, function(data) {
-						//vm.editName = '保存';
-						$("#chnid option:selected").val(PriNewsId);
-						$("#chnid option:selected").text(detail.cname)
-						document.getElementById("cname").value=data.RspData.dt[0].topic;
-						document.getElementById("fname").value=data.RspData.dt[0].subtopic; //新闻副标题
-				        document.getElementById("summas").value=data.RspData.dt[0].summas; //新闻摘要
-						document.getElementById("islink").checked =data.RspData.dt[0].quourl;
-				        document.getElementById("isReply").checked =data.RspData.dt[0].isreply;
-				         
-//						vm.isReply.check = data.RspData.dt[0].isreply; 
-//						 
-					//	document.getElementById("filename").value = data.RspData.dt[0].imgurl;
-						insertText = data.RspData.dt[0].content;
-						var n = (insertText.split('<section>')).length - 1;
-						for(var i = 0; i < n - 1; i++) {
-							addDiv();
-						}
-						var k = insertText.replace(/<section>/g, "</section>");
-						var ss = k.split('</section>');
-						for(var i = 0; i < ss.length; i++) {
-							if(ss[i] == '' || ss[i] == null || typeof(ss[i]) == undefined) {
-								ss.splice(i, 1);
-								i = i - 1;
-							}
-						}
-						if(ss.length > 0) {
-							//准备创建控件,多少纬就创建多少个段落控件
-							var duanluokongjian = '';
-							for(var i = 0; i < ss.length; i++) {
-								var p = ss[i].replace(/<p>/g, "</p>"); //将p替换成/p,准备按/p标签拆分
-								var pp = p.split('</p>');
-								var allInputst1 = $("*[name='dlt']");
-								var hh = pp[0].replace(/<[^>]+>/g, "");
-								var imgstring = pp[3];
-								var zfc = imgstring.substring(9);
-								zfc = zfc.substring(0, zfc.length - 1);
-								document.getElementById("title" + i).value = hh;
-								document.getElementById("conten" + i).value = pp[1];
-								document.getElementById("Priimgname" + i).value = zfc;
-								//pp[0]即为h3内容,再同理按h3替换拆h3 
-								duanluokongjian += pp[0] + '-------';
-								var hh = pp[0].replace(/<[^>]+>/g, "");
-								//pp[1]为content内容
-								duanluokongjian += pp[1] + '-------';
-								//pp[3]为img内容,再同理按src特征取到src内的路径
-								duanluokongjian += pp[3] + '-------';
-								//得到三者后创建相应控件并赋值 	 
-							}
-						}
-						for(var item in vm.$data) {
-							(function addwatch(key) {
-								vm.$watch(key + '.message', function(newVal, oldVal) {
-									edit(oldVal, newVal, key, zfc)
-								})
-								vm.$watch(key + '.check', function(newVal, oldVal) {
-									edit(oldVal, newVal, key, zfc)
-								})
-							})(item)
-						}
-					//});
-				}
-				/**
-				 * 获取网站配置信息   
-				 */
-				var webConfig;
-				var tempData = {
-					cmd: 'webcfg',
-					type: 'find'
-				}
-				unitWebsitePro(tempData, function(data) {
-					console.log('配置为:' + JSON.stringify(data));
-					if(data.RspCode == 0) {
-						if(data.RspData.length > 0) {
-							webConfig = data.RspData[0];
-							if(webConfig.isreply == 0) //0表示禁止回复，并隐藏回复功能
-								document.getElementById('onisReply').style.display = "none";
-							if(webConfig.isfileup == 0) //0表示禁止上传，并隐藏回复功能
-								document.getElementById('onisfileup').style.display = "none";
-						} else {
-							weui.alert('没有获取到配置信息')
-						}
-					} else {
-						weui.alert(data.RspTxt);
-					}
-				});
-				/**
-				 * 获取网站栏目
-				 */
-				var tempData = {
-					cmd: 'chn', //网站栏目
-					type: 'findpage', //分页查找栏目列表 
-					pagesize: 999, //每页条数 
-					iswrite: '1',
-					stat: '1',
-					pageindex: 1 //页码  
-				}
-			 
-				var datalm;
-				unitWebsitePro(tempData, function(data) {
-					if(data.RspCode == 0) {
-						if(data.RspData.dt.length > 0) {
-							vue_input.items = data.RspData.dt;
-							datalm = data.RspData.dt;
-						} else {
-							alert('暂时还没有栏目');
-						}
-					} else {
-						alert(data.RspTxt);
-					}
-				});
-			}
-		
-		var PriConten = "";
-=======
-	<script src="../../js/utils/storageutil.js"></script>
+	<script type="text/javascript" src="../../js/utils/storageutil.js"></script>
 	<script src="../../js/utils/cryption.js"></script>
 	<script src="../../js/utils/utils.js"></script>
 	<script src="../../js/lib/plupload/moxie.min.js"></script>
@@ -276,13 +112,147 @@
 	<script src="../../js/pcWeb-HUI/select-load-singPic.js"></script>
 	<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
 	<script src="../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
+	<script src="../../js/utils/utils.js"></script>
+	<script src="../../js/pcWeb-HUI/select-load-singPic.js"></script>
+	<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+
+	<script src="../H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
 	<script>
->>>>>>> 045bb706fd19e35ad4eddeb9becd4193c8d63f3b
+		var vm_loading; //等待框
+		var fileUploader; //上传logo七牛对象
+		var bannerUploader; //上传banner七牛对象
+		var uptokenData; //上传的token
+		var imgurl = ""; //圖片地址   
+		var FileDataArray = new Array(); //附件参数
+		var imgName;
+		var PriNewsId;
+		var objArray = new Array();
+		//所属栏目下拉框
+		var vue_input = new Vue({
+			el: '#chnid',
+			data: {
+				items: [{
+						chnid: 111,
+						cname: '校园动态'
+
+					},
+					{
+						chnid: 222,
+						cname: '师资力量'
+
+					}
+				]
+			}
+		});
+		//初始化页面
+		window.onload = function() { 
+			var detail = utils.getDataFromUrl(window.location.href); 
+			PriNewsId = detail.newsid;
+			var insertText; 
+			if(detail.type == 'edit') { 
+				var tempData = {
+					cmd: 'news', //网站栏目
+					type: 'findpage', //分页查找栏目列表
+					newsid: PriNewsId, //文章id
+					pagesize: 999, //每页条数  
+					pageindex: 1 //页码 
+				}
+				//unitWebsitePro(tempData, function(data) {
+				//vm.editName = '保存';
+				$("#chnid option:selected").val(PriNewsId);
+				$("#chnid option:selected").text(detail.cname)
+				articalPublish.artical.chind = 1;
+				articalPublish.artical.topic = "新闻标题测试";
+				articalPublish.artical.subtopic = "新闻副标题测试";
+				articalPublish.artical.summas = "新闻摘要测试";
+				articalPublish.artical.isquo = 0;
+				articalPublish.artical.isreply = 1;
+				//						articalPublish.artical.topic=data.RspData.dt[0].topic;
+				// 						articalPublish.artical.subtopic=data.RspData.dt[0].subtopic; //新闻副标题
+				// 				        articalPublish.artical.summas=data.RspData.dt[0].summas; //新闻摘要
+				// 						articalPublish.artical.isquo=data.RspData.dt[0].quourl;
+				// 				        articalPublish.artical.isreply=data.RspData.dt[0].isreply;
+
+				insertText = "<section><h3>3214123</h3><p>43214312</p><p><img src='  '></p></section>";
+				var n = (insertText.split('<section>')).length - 1;
+				for(var i = 0; i < n - 1; i++) {
+					this.addPiece();
+				}
+				var k = insertText.replace(/<section>/g, "</section>");
+				var ss = k.split('</section>');
+				for(var i = 0; i < ss.length; i++) {
+					if(ss[i] == '' || ss[i] == null || typeof(ss[i]) == undefined) {
+						ss.splice(i, 1);
+						i = i - 1;
+					}
+				}
+				if(ss.length > 0) {
+					//准备创建控件,多少纬就创建多少个段落控件
+					var duanluokongjian = '';
+					for(var i = 0; i < ss.length; i++) {
+						var p = ss[i].replace(/<p>/g, "</p>"); //将p替换成/p,准备按/p标签拆分
+						var pp = p.split('</p>');
+						var hh = pp[0].replace(/<[^>]+>/g, "");
+						var imgstring = pp[3];
+						var zfc = imgstring.substring(9);
+						zfc = zfc.substring(0, zfc.length - 1);
+						articalPublish.pieces.title = hh;
+						articalPublish.pieces.content = pp[1];
+						articalPublish.pieces.files = zfc;
+						//pp[0]即为h3内容,再同理按h3替换拆h3 
+						duanluokongjian += pp[0] + '-------';
+						var hh = pp[0].replace(/<[^>]+>/g, "");
+						//pp[1]为content内容
+						duanluokongjian += pp[1] + '-------';
+						//pp[3]为img内容,再同理按src特征取到src内的路径
+						duanluokongjian += pp[3] + '-------';
+						//得到三者后创建相应控件并赋值 	 
+					}
+				}
+				for(var item in articalPublish.$data) {
+					(function addwatch(key) {
+						articalPublish.$watch(key + '.message', function(newVal, oldVal) {
+							edit(oldVal, newVal, key, zfc)
+						})
+						articalPublish.$watch(key + '.check', function(newVal, oldVal) {
+							edit(oldVal, newVal, key, zfc)
+						})
+					})(item)
+				}
+				//});
+			}
+			/**
+			 * 获取网站配置信息   
+			 */
+			//				var webConfig;
+			//				var tempData = {
+			//					cmd: 'webcfg',
+			//					type: 'find'
+			//				}
+			//				unitWebsitePro(tempData, function(data) {
+			//					console.log('配置为:' + JSON.stringify(data));
+			//					if(data.RspCode == 0) {
+			//						if(data.RspData.length > 0) {
+			//							webConfig = data.RspData[0];
+			//							if(webConfig.isreply == 0) //0表示禁止回复，并隐藏回复功能
+			//								document.getElementById('onisReply').style.display = "none";
+			//							if(webConfig.isfileup == 0) //0表示禁止上传，并隐藏回复功能
+			//								document.getElementById('onisfileup').style.display = "none";
+			//						} else {
+			//							weui.alert('没有获取到配置信息')
+			//						}
+			//					} else {
+			//						weui.alert(data.RspTxt);
+			//					}
+			//				});
+
+		}
+		var PriConten = "";
 		var articalPublish = new Vue({
 			el: "#artical-pub",
 			data: {
 				artical: {
-					chind: -1, //所属栏目id
+					//chind: -1, //所属栏目id
 					topic: "", //标题
 					subtopic: "", //副标题
 					summas: "", //摘要
@@ -304,6 +274,12 @@
 					title: "",
 					content: "",
 					files: []
+
+				}, {
+					title: "",
+					content: "",
+					files: []
+
 				}],
 				curPiece: {
 					piece: null,
@@ -328,63 +304,60 @@
 					var allInputse = $("*[name='dle']");
 					for(var i = 0; i < allInputst.length; i++) {
 						PriConten += '<section><h3>' + allInputst[i].value + '</h3><p>' + allInputsc[i].value + '</p><p><img src=' + allInputse[i].value + '></p></section>';
-					}
-					var PriIsquo = '';
-					var PriQuourl = '';
+					} 
 					var comData = '';
-					var PriIsReply = '';
-					var PriTopic = document.getElementById("cname").value; //新闻标题
-					var Prisubtopic = document.getElementById("fname").value; //新闻副标题
-					//var PriConten = document.getElementById("conten0").value; //新闻内容
-					var PriSummas = document.getElementById("summas").value; //新闻摘要
-					//var Chnid = document.getElementById("chnid"); //栏目id
-					//var PriChnid = Chnid.selectedIndex; // 选中索引
 					var PriChnid = $("#chnid option:selected").val();
 					console.log('所属栏目=========================:' + PriChnid);
-					PriIsquo = document.getElementById("islink").checked == true ? 1 : 0;
-					PriIsReply = document.getElementById("isReply").checked == true ? 1 : 0;
-					PriQuourl = document.getElementById("islink").value;
+				    var	PriIsquo = document.getElementById("islink").checked == true ? 1 : 0;
+				    var	PriIsReply = document.getElementById("isReply").checked == true ? 1 : 0;
+			     	var	PriQuourl = document.getElementById("islink").value;
 					console.log('附件=========================:' + JSON.stringify(FileDataArray));
 					var PriFileData = JSON.stringify(FileDataArray);
 					comData = {
 						cmd: 'news', //文章管理
 						type: 'add',
 						chnid: PriChnid,
-						subtopic: Prisubtopic,
-						topic: PriTopic,
-						content: PriConten,
-						summas: PriSummas,
+						subtopic: articalPublish.artical.subtopic,
+						topic: articalPublish.artical.topic,
+						content: articalPublish.artical.content,
+						summas: articalPublish.artical.summas,
 						encs: FileDataArray,
 						isquo: PriIsquo,
 						quourl: PriQuourl,
 						isreply: PriIsReply,
 						stat: 1
-					};
-
+					}; 
 					console.log('comData=========================:' + JSON.stringify(comData));
+					$.Huimodalalert('添加成功', 1000); 
 					unitWebsitePro(comData, function(data) {
 						if(data.RspCode == 0) {
-							weui.toast("添加成功");
-							//清空数据 
-							document.getElementById("cname").value = ""; //新闻标题
-							//document.getElementById("conten").value = ""; //新闻内容
-							document.getElementById("summas").value = ""; //新闻摘要
-							document.getElementById("chnid").selectedIndex = 0; //栏目id
-							document.getElementById("islink").value = ""; //引用地址
-							document.getElementById("fname").value = "";
-							$('.weui-input').val("");
+							$.Huimodalalert('添加成功', 1000);
 							location.reload();
 						} else {
-							weui.toast(data.RspTxt);
+							$.Huimodalalert(data.RspTxt, 1000);
 						}
 					});
 				},
-				getColumns: function() { //获取栏目列表
-<<<<<<< HEAD
-					//this.columns = data.RspData; //在回调中赋值
-=======
-					//					this.columns = data.RspData; //在回调中赋值
->>>>>>> 045bb706fd19e35ad4eddeb9becd4193c8d63f3b
+				getColumns: function() { //获取栏目列表  
+					var tempData = {
+						cmd: 'chn', //网站栏目
+						type: 'findpage', //分页查找栏目列表 
+						pagesize: 999, //每页条数 
+						iswrite: '1',
+						stat: '1',
+						pageindex: 1 //页码  
+					} 
+					unitWebsitePro(tempData, function(data) {
+						if(data.RspCode == 0) {
+							if(data.RspData.dt.length > 0) {
+								vue_input.items = data.RspData.dt; 
+							} else {
+							$.Huimodalalert('暂时还没有栏目', 1000);	 
+							}
+						} else {
+							$.Huimodalalert(data.RspTxt, 1000);	
+						}
+					}); 
 				},
 				addPiece: function(piece, index) { //增加文章片段
 					if(!piece.title || !piece.content) {
@@ -413,12 +386,12 @@
 					this.pieces.splice(index, 1);
 					$("#dia-delPiece").modal("hide");
 				},
-				getHeadImg: function(headImg,index) {
-					console.log("*****获取的headImg:" +JSON.stringify(headImg)+",index:"+index);
-					
+				getHeadImg: function(headImg, index) {
+					console.log("*****获取的headImg:" + JSON.stringify(headImg) + ",index:" + index);
+
 				},
 				getPieceImg: function(contentImg, index) {
-					console.log("*****获取的contentImage:" +JSON.stringify(contentImg)+",index:"+index);
+					console.log("*****获取的contentImage:" + JSON.stringify(contentImg) + ",index:" + index);
 
 				}
 			}

@@ -35,9 +35,9 @@
 				<td><u style="cursor:pointer" class="text-primary">{{course.cname}}</u></td>
 				<td class="td-status"><span :class="course.stat==0?'label label-defaunt radius':'label label-success radius'"><a v-if="course.stat==0">已停用</a><a v-else>已启用</a></span></td>
 				<td class="td-manage">
-					<a style="text-decoration:none" @click.stop="shieldSub(course,index)" href="javascript:;" title="停用"><i class="Hui-iconfont">&#xe631;</i></a>
+					<a style="text-decoration:none" @click="shieldSub(course,index)" href="javascript:;" title="停用"><i class="Hui-iconfont">&#xe631;</i></a>
 					<a title="修改科目名称" href="javascript:;" @click="modifyCourse(course,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>
-					<a title="删除" href="javascript:;" @click.stop="removeCourse(course,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+					<a title="删除" href="javascript:;" @click="removeCourse(course,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
 				</td>
 				</tr>
 				</tbody>
@@ -75,7 +75,6 @@
 						} // 制定列不参与排序
 					]
 				});
-
 				//获取科目列表
 				getSubArray();
 			});
@@ -130,12 +129,14 @@
 							}
 							unitWebsitePro(tempData, function(data) {
 								if(data.RspCode == 0) {
+									courseData.subIndex = 1;
+									courseData.subFlag = 0;
 									//获取科目列表
 									getSubArray();
-									layer.msg('已删除!', {
-										icon: 1,
-										time: 1000
-									});
+//									layer.msg('已删除!', {
+//										icon: 1,
+//										time: 1000
+//									});
 								} else {
 									alert(data.RspTxt);
 								}
@@ -161,12 +162,14 @@
 								layer.close(index);
 								unitWebsitePro(tempData, function(data) {
 									if(data.RspCode == 0) {
+										courseData.subIndex = 1;
+										courseData.subFlag = 0;
 										//获取科目列表
 										getSubArray();
-										layer.msg('已停用!', {
-											icon: 5,
-											time: 1000
-										});
+//										layer.msg('已停用!', {
+//											icon: 5,
+//											time: 1000
+//										});
 									} else {
 										alert(data.RspTxt);
 									}
@@ -177,12 +180,14 @@
 								layer.close(index);
 								unitWebsitePro(tempData, function(data) {
 									if(data.RspCode == 0) {
+										courseData.subIndex = 1;
+										courseData.subFlag = 0;
 										//获取科目列表
 										getSubArray();
-										layer.msg('已启用!', {
-											icon: 5,
-											time: 1000
-										});
+//										layer.msg('已启用!', {
+//											icon: 5,
+//											time: 1000
+//										});
 									} else {
 										alert(data.RspTxt);
 									}
@@ -210,7 +215,7 @@
 							} else { //加载更多
 								courseData.courseArray = courseData.courseArray.concat(data.RspData.dt);
 							}
-							courseData.subIndex++;
+//							courseData.subIndex++;
 						}
 					} else {
 						alert(data.RspTxt);

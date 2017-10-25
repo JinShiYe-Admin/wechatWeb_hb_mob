@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html>
-
 	<head>
 		<meta charset="UTF-8">
 		<title>新闻添加</title>
-				<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css" /> 
-		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />  
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
 		<style>
 			.edit_container {
 				margin: 0 auto;
@@ -35,7 +34,9 @@
 				font-size: 18px;
 				padding: 10px 0 0 8px;
 			}
-			.check-box, .radio-box{
+			
+			.check-box,
+			.radio-box {
 				padding-left: 0px;
 			}
 		</style>
@@ -47,16 +48,16 @@
 		</nav>
 		<div id="artical-pub">
 			<div class="edit_container">
-				<div >
-				<select class="select" id="chnid" name="one" style="height: 45px;font-size: 17px;color: #929292;">
-					<option value="">请选择所属栏目....</option>
-					<option v-for="item in items" :value="item.chnid">{{item.cname}}</option>
-				</select>
-			</div>
+				<div>
+					<select class="select" id="chnid" name="one" style="height: 45px;font-size: 17px;color: #929292;">
+						<option value="">请选择所属栏目....</option>
+						<!--option v-for="item in items" :value="item.chnid">{{item.cname}}</option>-->
+					</select>
+				</div>
 				<input v-model.trim="artical.topic" id="cname" class="artical-title input-text size-L" type="text" maxlength="64" placeholder="在此输入标题" />
 				<input v-model.trim="artical.subtopic" id="fname" class="artical-subtitle input-text size-L" type="text" maxlength="64" placeholder="在此输入副标题" />
 				<textarea v-model.trim="artical.summas" id="summas" class="textarea" placeholder="在此输入新闻摘要"></textarea>
-				<select-load-pic v-bind:pictype="1" v-on:uploadedFile="getHeadImg(picUrl)"></select-load-pic>
+				<select-load-pic v-bind:index="-1" v-on:uploadedfile="getHeadImg"></select-load-pic>
 				<p class="artical-pieces-title">新闻内容</p>
 				<template v-for="(piece,index) in pieces">
 					<div class="artical-piece">
@@ -65,7 +66,7 @@
 					</div>
 					<div>
 						<p v-if="piece.files.lenth>0"></p>
-						<select-load-pic v-bind:pictype="parseInt(0)" v-on:uplaodedFile="getPieceImg(picUrl,index)"></select-load-pic>
+						<select-load-pic :index="index" v-on:uploadedfile="getPieceImg"></select-load-pic>
 						<input id="add-piece" v-if="pieces.length<5" v-on:click="addPiece(piece,index)" class="btn btn-primary radius float-right" type="button" value="添加段落">
 						<input id="del-piece" v-if="index>0" v-on:click="delPiece(piece,index)" class="btn btn-warning radius float-right" type="button" value="删除段落">
 					</div>
@@ -100,6 +101,7 @@
 		</div>
 	</body>
 	<script src="../../js/vue.js"></script>
+<<<<<<< HEAD
 	<script src="../../js/utils/utils.js"></script>
 	<script src="../../js/pcWeb-HUI/select-load-singPic.js"></script>
 	<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
@@ -263,6 +265,19 @@
 			}
 		
 		var PriConten = "";
+=======
+	<script src="../../js/utils/storageutil.js"></script>
+	<script src="../../js/utils/cryption.js"></script>
+	<script src="../../js/utils/utils.js"></script>
+	<script src="../../js/lib/plupload/moxie.min.js"></script>
+	<script src="../../js/lib/plupload/plupload.dev.js"></script>
+	<script src="../../js/lib/qiniu/qiniu.min.js"></script>
+	<script src="../../js/utils/cloudutil.js"></script>
+	<script src="../../js/pcWeb-HUI/select-load-singPic.js"></script>
+	<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+	<script src="../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
+	<script>
+>>>>>>> 045bb706fd19e35ad4eddeb9becd4193c8d63f3b
 		var articalPublish = new Vue({
 			el: "#artical-pub",
 			data: {
@@ -307,83 +322,76 @@
 				}
 			},
 			methods: {
-				publishArtical:function(){//发布文章 
-				
-				var allInputst = $("*[name='dlt']");
-				var allInputsc = $("*[name='dlc']");
-				var allInputse = $("*[name='dle']");
-				for(var i = 0; i < allInputst.length; i++) {
-					PriConten += '<section><h3>' + allInputst[i].value + '</h3><p>' + allInputsc[i].value + '</p><p><img src=' + allInputse[i].value + '></p></section>';
-				}
-				var PriIsquo = '';
-				var PriQuourl = '';
-				var comData = '';
-				var PriIsReply = '';
-				var PriTopic = document.getElementById("cname").value; //新闻标题
-				var Prisubtopic = document.getElementById("fname").value; //新闻副标题
-				//var PriConten = document.getElementById("conten0").value; //新闻内容
-				var PriSummas = document.getElementById("summas").value; //新闻摘要
-				//var Chnid = document.getElementById("chnid"); //栏目id
-				//var PriChnid = Chnid.selectedIndex; // 选中索引
-				var PriChnid = $("#chnid option:selected").val();
-				console.log('所属栏目=========================:' + PriChnid);
-				PriIsquo = document.getElementById("islink").checked == true ? 1 : 0;
-				PriIsReply = document.getElementById("isReply").checked == true ? 1 : 0;
-				PriQuourl = document.getElementById("islink").value;
-				console.log('附件=========================:' + JSON.stringify(FileDataArray));
-				var PriFileData = JSON.stringify(FileDataArray);
-				comData = {
-					cmd: 'news', //文章管理
-					type: 'add',
-					chnid: PriChnid,
-					subtopic: Prisubtopic,
-					topic: PriTopic,
-					content: PriConten,
-					summas: PriSummas,
-					encs: FileDataArray,
-					isquo: PriIsquo,
-					quourl: PriQuourl,
-					isreply: PriIsReply,
-					stat: 1
-				};
-				 
-				console.log('comData=========================:' + JSON.stringify(comData));
-				unitWebsitePro(comData, function(data) {
-					if(data.RspCode == 0) {
-						weui.toast("添加成功");
-						//清空数据 
-						document.getElementById("cname").value = ""; //新闻标题
-						//document.getElementById("conten").value = ""; //新闻内容
-						document.getElementById("summas").value = ""; //新闻摘要
-						document.getElementById("chnid").selectedIndex = 0; //栏目id
-						document.getElementById("islink").value = ""; //引用地址
-						document.getElementById("fname").value = "";
-						$('.weui-input').val("");
-						location.reload();
-					} else {
-						weui.toast(data.RspTxt);
+				publishArtical: function() { //发布文章 
+					var allInputst = $("*[name='dlt']");
+					var allInputsc = $("*[name='dlc']");
+					var allInputse = $("*[name='dle']");
+					for(var i = 0; i < allInputst.length; i++) {
+						PriConten += '<section><h3>' + allInputst[i].value + '</h3><p>' + allInputsc[i].value + '</p><p><img src=' + allInputse[i].value + '></p></section>';
 					}
-				});
-				var vue_img = new Vue({
-					el: '#PriImg',
-					data: {
-						imgurl: imgurl
-					}
-				});
+					var PriIsquo = '';
+					var PriQuourl = '';
+					var comData = '';
+					var PriIsReply = '';
+					var PriTopic = document.getElementById("cname").value; //新闻标题
+					var Prisubtopic = document.getElementById("fname").value; //新闻副标题
+					//var PriConten = document.getElementById("conten0").value; //新闻内容
+					var PriSummas = document.getElementById("summas").value; //新闻摘要
+					//var Chnid = document.getElementById("chnid"); //栏目id
+					//var PriChnid = Chnid.selectedIndex; // 选中索引
+					var PriChnid = $("#chnid option:selected").val();
+					console.log('所属栏目=========================:' + PriChnid);
+					PriIsquo = document.getElementById("islink").checked == true ? 1 : 0;
+					PriIsReply = document.getElementById("isReply").checked == true ? 1 : 0;
+					PriQuourl = document.getElementById("islink").value;
+					console.log('附件=========================:' + JSON.stringify(FileDataArray));
+					var PriFileData = JSON.stringify(FileDataArray);
+					comData = {
+						cmd: 'news', //文章管理
+						type: 'add',
+						chnid: PriChnid,
+						subtopic: Prisubtopic,
+						topic: PriTopic,
+						content: PriConten,
+						summas: PriSummas,
+						encs: FileDataArray,
+						isquo: PriIsquo,
+						quourl: PriQuourl,
+						isreply: PriIsReply,
+						stat: 1
+					};
+
+					console.log('comData=========================:' + JSON.stringify(comData));
+					unitWebsitePro(comData, function(data) {
+						if(data.RspCode == 0) {
+							weui.toast("添加成功");
+							//清空数据 
+							document.getElementById("cname").value = ""; //新闻标题
+							//document.getElementById("conten").value = ""; //新闻内容
+							document.getElementById("summas").value = ""; //新闻摘要
+							document.getElementById("chnid").selectedIndex = 0; //栏目id
+							document.getElementById("islink").value = ""; //引用地址
+							document.getElementById("fname").value = "";
+							$('.weui-input').val("");
+							location.reload();
+						} else {
+							weui.toast(data.RspTxt);
+						}
+					});
 				},
 				getColumns: function() { //获取栏目列表
+<<<<<<< HEAD
 					//this.columns = data.RspData; //在回调中赋值
+=======
+					//					this.columns = data.RspData; //在回调中赋值
+>>>>>>> 045bb706fd19e35ad4eddeb9becd4193c8d63f3b
 				},
 				addPiece: function(piece, index) { //增加文章片段
 					if(!piece.title || !piece.content) {
 						$.Huimodalalert('段落未添加标题或内容，无法继续添加', 3000)
 						return;
 					}
-					alert(index)
-					alert(JSON.stringify(piece) )
-					PriConten += '<section><h3>' + piece.title + '</h3><p>' + piece.content + '</p><p><img src=' +  piece.title+ '></p></section>';
 					this.pieces.splice(index + 1, 0, {
-						
 						title: "",
 						content: "",
 						files: []
@@ -405,189 +413,16 @@
 					this.pieces.splice(index, 1);
 					$("#dia-delPiece").modal("hide");
 				},
-				getHeadImg: function(headImg) {
-					console.log("headImg" + headImg);
+				getHeadImg: function(headImg,index) {
+					console.log("*****获取的headImg:" +JSON.stringify(headImg)+",index:"+index);
+					
 				},
-				getContentImg: function(contentImg, index) {
-					console.log("获取的contentImage" + contentImg);
+				getPieceImg: function(contentImg, index) {
+					console.log("*****获取的contentImage:" +JSON.stringify(contentImg)+",index:"+index);
 
 				}
 			}
 		})
-		
-		
-		
-		/**
-			 * 初始化上传
-			 */
-			function initUploaderfj() {
-
-				var bannerOption = {
-					disable_statistics_report: true, // 禁止自动发送上传统计信息到七牛，默认允许发送
-					runtimes: 'html5,flash,html4', // 上传模式,依次退化
-					browse_button: 'upload', // 上传选择的点选按钮，**必需** 
-					uptoken_func: function(file) { // 在需要获取 uptoken 时，该方法会被调用 
-						console.log("uptoken_func:" + JSON.stringify(file));
-						uptokenData = null;
-						uptokenData = getQNUpToken(file);
-						console.log("获取uptoken回调:" + JSON.stringify(uptokenData));
-						if(uptokenData && uptokenData.code) { //成功   
-							return uptokenData.data.Data[0].Token;
-						} else {
-							bannerUploader.stop();
-							var dialog = weui.dialog({
-								title: "上传失败",
-								content: uptokenData.message,
-								className: "custom-classname",
-								buttons: [{
-									label: "确定",
-									type: "primary",
-									onClick: function() {
-										dialog.hide();
-									}
-								}]
-							});
-						}
-					},
-					unique_names: false, // 默认 false，key 为文件名。若开启该选项，JS-SDK 会为每个文件自动生成key（文件名）
-					save_key: false, // 默认 false。若在服务端生成 uptoken 的上传策略中指定了 `save_key`，则开启，SDK在前端将不对key进行任何处理
-					get_new_uptoken: true, // 设置上传文件的时候是否每次都重新获取新的 uptoken
-					domain: storageutil.QNPBDOMAIN, // bucket 域名，下载资源时用到，如：'http://xxx.bkt.clouddn.com/' **必需**
-					max_file_size: '10mb', // 最大文件体积限制
-					flash_swf_url: '../../js/lib/plupload/Moxie.swf', //引入 flash,相对路径
-					max_retries: 0, // 上传失败最大重试次数
-					dragdrop: false, // 开启可拖曳上传
-					chunk_size: '4mb', // 分块上传时，每块的体积
-					auto_start: true, // 选择文件后自动上传，若关闭需要自己绑定事件触发上传,
-					filters: {
-						mime_types: [ //只允许上传图片和zip文件
-							{
-								title: "Image files",
-								extensions: "jpg,png,jpeg,gif,bmp"
-							}
-						]
-					},
-					init: {
-						'FilesAdded': function(up, files) {
-							plupload.each(files, function(file) {
-								// 文件添加进队列后,处理相关的事情
-								imgName = JSON.stringify(file.name)
-								var img = imgName.substring(-1, (imgName - 1));
-								//document.getElementById('Priimgname0').value = imgName;
-								console.log("FilesAdded:" + JSON.stringify(file));
-							});
-						},
-						'UploadProgress': function(up, file) {
-							// 每个文件上传时,处理相关的事情  
-							//vm_loading.content = "上传中 " + file.percent + "%";
-						},
-						'FileUploaded': function(up, file, info) {
-							// 每个文件上传成功后,处理相关的事情 
-							console.log("文件:info:" + JSON.stringify(info));
-							if(info.status == 200) {
-								var cc = eval("(" + info.response + ")");
-								imgurl = storageutil.QNPBDOMAIN + cc.key;
-								console.log("imgurl:" + imgurl);
-								var imgLink = Qiniu.imageView2({
-									mode: 3, // 缩略模式，共6种[0-5]
-									w: 100, // 具体含义由缩略模式决定 
-									h: 100, // 具体含义由缩略模式决定
-									q: 100, // 新图的图像质量，取值范围：1-100
-									format: 'png' // 新图的输出格式，取值范围：jpg，gif，png，webp等
-								}, cc.key);
-								//Pridl=Priimgname.substring(9,10)
-
-								var person = new Object();
-								//person.encid = priid; //控件id
-								person.saveurl = imgurl; //图片地址
-								person.imgurl = imgLink;
-								person.oldname = file.name;
-								person.newname = cc.key;
-								person.filesize = file.size;
-								//循环附件数组，判断id是否有重复
-								for(var i = 0; i < FileDataArray.length; i++) {
-									if(FileDataArray[i].id == priid) {
-										//如果有重复则移除原来的
-										FileDataArray.splice(i, 1);
-									}
-								}
-								//添加新的附件
-
-								FileDataArray.push(person);
-
-								objArray.push([imgurl]);
-
-								document.getElementById('filename').value = imgurl;
-
-								//vm_loading.isShow = false;  
-							} else {
-								var dialog = weui.dialog({
-									title: "上传失败",
-									content: JSON.stringify(info),
-									className: "custom-classname",
-									buttons: [{
-										label: "确定",
-										type: "primary",
-										onClick: function() {
-											dialog.hide();
-										}
-									}]
-								});
-							}
-						},
-						'Error': function(up, err, errTip) {
-							var dialog = weui.dialog({
-								title: "操作失败",
-								content: pluploadutil.errMes(err.code, errTip),
-								className: "custom-classname",
-								buttons: [{
-									label: "确定",
-									type: "primary",
-									onClick: function() {
-										dialog.hide();
-									}
-								}]
-							});
-						},
-						'UploadComplete': function() {
-							//队列文件处理完毕后,处理相关的事情
-							//console.log("UploadComplete");
-						},
-						'Key': function(up, file) {
-							// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
-							// 该配置必须要在 unique_names: false , save_key: false 时才生效
-							if(uptokenData && uptokenData.code) { //成功
-								return uptokenData.data.Data[0].Key;
-							}
-						}
-					}
-				}
-				bannerUploader = Qiniu.uploader(bannerOption);
-			}
-
-			/**
-			 * 获取七牛上传token
-			 */
-			function getQNUpToken(file) {
-				var myDate = new Date();
-				var fileName = myDate.getTime() + "" + parseInt(Math.random() * 1000);
-				var types = file.name.split(".");
-				fileName = fileName + "." + types[types.length - 1];
-				var getTokenData = {
-					appId: storageutil.QNQYWXKID,
-					mainSpace: storageutil.QNPUBSPACE,
-					saveSpace: storageutil.QNSSPACEWEBCON,
-					fileArray: [{
-						qnFileName: fileName,
-					}]
-				}
-				var upToken;
-				cloudutil.getFileUpTokens(getTokenData, function(data) {
-					upToken = data;
-				});
-				console.log("gettokendata" + JSON.stringify(getTokenData))
-				return upToken;
-			}
 	</script>
 
 </html>

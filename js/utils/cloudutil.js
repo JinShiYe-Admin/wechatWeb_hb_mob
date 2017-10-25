@@ -1,6 +1,5 @@
 //七牛相关的公共方法
 var cloudutil = (function(mod) {
-
 	/**
 	 * 获取应用对应的密钥
 	 * @param {Object} appId app的id
@@ -29,7 +28,7 @@ var cloudutil = (function(mod) {
 	 * @param {Object.qnFileName} data.qnFileName 必填 文件名
 	 */
 	mod.setQNCmd = function(data) {
-		//console.log("setQNCmd:" + JSON.stringify(data));
+		console.log("setQNCmd:" + JSON.stringify(data));
 		var returnData = {};
 		switch(data.option.type) {
 			case 0: //只传原文件，不执行七牛的持久化命令
@@ -47,10 +46,26 @@ var cloudutil = (function(mod) {
 				returnData.thumbKey = Qiniu.URLSafeBase64Encode(data.mainSpace + ":" + thumbSpace + fileNames[0] + ".jpg");
 				returnData.ops = "imageView2/1/w/200/h/200/format/jpeg|saveas/" + returnData.thumbKey;
 				break;
+			case 3: //居中裁剪 生成缩略图
+				var width = 200;
+				var height;
+				if(data.option.width) {
+					width = data.option.width;
+				}
+				if(data.option.height) {
+					height = data.option.height;
+				} else {
+					height = width;
+				}
+				var thumbSpace = data.saveSpace + storageutil.QNCROP;
+				var fileNames = data.qnFileName.split(".");
+				returnData.thumbKey = Qiniu.URLSafeBase64Encode(data.mainSpace + ":" + thumbSpace + fileNames[0] + ".jpg");
+				returnData.ops = "imageView2/1/w/" + width + "/h/" + height + "/format/jpeg|saveas/" + returnData.thumbKey;
+				break;
 			default:
 				break;
 		}
-		//console.log("returnData:" + JSON.stringify(returnData));
+		console.log("returnData:" + JSON.stringify(returnData));
 		return returnData;
 	}
 
@@ -75,7 +90,9 @@ var cloudutil = (function(mod) {
 		var mainSpace = data.mainSpace; //文件存放在私有空间或公有空间
 		var saveSpace = data.saveSpace; //文件存放的空间(第二前缀名)
 
-		var qnCmdOption = 0; //七牛的持久化命令类型
+		var qnCmdOption = {
+			type: 0
+		}; //七牛的持久化命令类型
 		if(data.qnCmdOption != undefined) {
 			qnCmdOption = data.qnCmdOption;
 		}
@@ -90,7 +107,6 @@ var cloudutil = (function(mod) {
 		for(var i in data.fileArray) {
 			var param = {}; //文件的配置参数
 			param.Bucket = mainSpace;
-
 			//七牛的文件名
 			var qnFileName;
 			if(utils.checkData(data.fileArray[i].qnFileName)) {
@@ -245,7 +261,140 @@ var cloudutil = (function(mod) {
 			}
 		});
 	}
-
+	/**
+	 * 单张图片上传方法
+	 * @param {Object} buttonSelector 选择文件按钮id
+	 * @param {Object} manageOptions 图片处理参数 type width height等
+	 * @param {Object} callback 上传的回调方法
+	 */
+	mod.uploadQnSingleImg = function(buttonSelector, manageOptions, callback) {
+		var originalName = "";
+		qnFileUploader = Qiniu.uploader({
+			disable_statistics_report: false, // 禁止自动发送上传统计信息到七牛，默认允许发送
+			runtimes: 'html5,flash,html4', // 上传模式,依次退化
+			browse_button: buttonSelector, // 上传选择的点选按钮，**必需**
+			uptoken_func: function(file) { // 在需要获取 uptoken 时，该方法会被调用
+				originalName = file.name;
+				uptokenData = null;
+				uptokenData = mod.getQNUpToken(file, manageOptions);
+				//console.log("获取uptoken回调:" + JSON.stringify(uptokenData));
+				if(uptokenData && uptokenData.code) { //成功
+					return uptokenData.data.Data[0].Token;
+				} else {
+					qnFileUploader.stop();
+				}
+			},
+			unique_names: false, // 默认 false，key 为文件名。若开启该选项，JS-SDK 会为每个文件自动生成key（文件名）
+			save_key: false, // 默认 false。若在服务端生成 uptoken 的上传策略中指定了 `save_key`，则开启，SDK在前端将不对key进行任何处理
+			get_new_uptoken: true, // 设置上传文件的时候是否每次都重新获取新的 uptoken
+			domain: storageutil.QNPBDOMAIN, // bucket 域名，下载资源时用到，如：'http://xxx.bkt.clouddn.com/' **必需**
+			max_file_size: '4mb', // 最大文件体积限制
+			flash_swf_url: '../../js/lib/plupload/Moxie.swf', //引入 flash,相对路径
+			max_retries: 0, // 上传失败最大重试次数
+			dragdrop: false, // 开启可拖曳上传
+			chunk_size: '4mb', // 分块上传时，每块的体积
+			auto_start: true, // 选择文件后自动上传，若关闭需要自己绑定事件触发上传,
+			init: {
+				'FilesAdded': function(up, files) {
+					plupload.each(files, function(file) {
+						//						$.showLoading('加载中...');
+						// 文件添加进队列后,处理相关的事情
+						console.log("FilesAdded:", file);
+					});
+				},
+				'BeforeUpload': function(up, file) {
+					// 每个文件上传前,处理相关的事情
+					console.log("BeforeUpload:");
+				},
+				'UploadProgress': function(up, file) {
+					// 每个文件上传时,处理相关的事情
+					console.log("UploadProgress:" + file.percent);
+				},
+				'FileUploaded': function(up, file, info) {
+					// 每个文件上传成功后,处理相关的事情
+					console.log("FileUploaded:");
+					console.log(file)
+					console.log(info)
+					//					$.hideLoading();
+					if(info.status == 200) {
+						var imgUrl=mod.getImgUrl(uptokenData);
+						var tempModel = {
+							ImgUrl: imgUrl,
+							SaveUrl: imgUrl,
+							OldName: originalName,
+							NewName: file.name,
+							FileSize: file.size
+						}
+						callback(tempModel);
+					}
+				},
+				'Error': function(up, err, errTip) {
+					//上传出错时,处理相关的事情
+					console.log("Error:", err, errTip);
+					//					$.hideLoading();
+				},
+				'UploadComplete': function() {
+					//队列文件处理完毕后,处理相关的事情
+					console.log("UploadComplete:");
+				},
+				'Key': function(up, file) {
+					// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
+					// 该配置必须要在 unique_names: false , save_key: false 时才生效
+					if(uptokenData && uptokenData.code) { //成功
+						console.log('得到token:' + JSON.stringify(uptokenData));
+						return uptokenData.data.Data[0].Key;
+					}
+				}
+			}
+		});
+	}
+	/**
+	 * 获取图片在七牛上的地址
+	 * @param {Object} token 上传的token 
+	 */
+	mod.getImgUrl=function(token) {
+		console.log("*****getImgUrl：" + JSON.stringify(token))
+		if(token.thumbKey.length > 0) {
+			return token.data.Data[0].OtherKey[token.thumbKey[0]]
+		}
+		return token.data.Data[0].Domain + token.data.Data[0].Key;
+	}
+	/**
+	 * 
+	 * @param {Object} file
+	 * @param {Object} manageOption { type } 0 原图 3 缩略裁剪图
+	 */
+	mod.getQNUpToken = function(file, manageOption) {
+		var myDate = new Date();
+		var fileName = myDate.getTime() + "" + parseInt(Math.random() * 1000);
+		var types = file.name.split(".");
+		fileName = fileName + "." + types[types.length - 1];
+		var getTokenData = {
+			appId: storageutil.QNQYWXKID,
+			mainSpace: storageutil.QNPUBSPACE,
+			saveSpace: storageutil.QNSSPACEWEBCON,
+			qnCmdOption: manageOption,
+			fileArray: [{
+				qnFileName: fileName,
+			}]
+		}
+		var upToken;
+		mod.getFileUpTokens(getTokenData, function(data) {
+			upToken = data;
+		});
+		return upToken;
+	}
+	/**
+	 * 七牛图片信息查询
+	 * @param {String} url 图片地址
+	 */
+	mod.getQNImgInfo=function(url){
+		var request=new XMLHttpRequest();
+		request.open("GET",url+"?imageInfo",false);
+		request.send();
+		console.log(request.response)
+		return request.response;
+	}
 	return mod;
 })(window.cloudutil || {});
 

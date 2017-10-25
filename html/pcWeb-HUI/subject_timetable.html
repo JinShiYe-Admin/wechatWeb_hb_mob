@@ -1,0 +1,132 @@
+<!--
+	作者：444811716@qq.com
+	时间：2017-08-04
+	描述：课程表
+-->
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>课程表</title>
+		<script type="text/javascript">
+			document.write('<link rel="stylesheet" href="../../js/demoCssJs/weui.min.css?' + Math.random() + '" />');
+			document.write('<link rel="stylesheet" href="../../js/demoCssJs/jquery-weui.css?' + Math.random() + '" />');
+		</script>
+		<style>
+			body {
+				word-break: break-word;
+			}
+			
+			.weui-flex {
+				text-align: center;
+			}
+			
+			.time-table-content {
+				padding: 15px;
+			}
+			
+			.time-table {
+				margin: 5px 0;
+			}
+			
+			.time-table .weui-flex__item {
+				border-top: 1px solid black;
+				border-left: 1px solid black;
+			}
+			
+			.time-table .weui-flex .weui-flex__item {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+			}
+			
+			.time-table .weui-flex .weui-flex__item:last-child {
+				border-right: 1px solid black;
+			}
+			
+			.time-table .weui-flex:last-child {
+				border-bottom: 1px solid black;
+			}
+			
+			.time-table-item-del {
+				color: red;
+			}
+		</style>
+	</head>
+
+	<body>
+		<template id="template-table">
+			<div>
+				<div class="weui-cells">
+					<div class="weui-cell">
+						<div class="weui-cell__hd"><label class="weui-label">课程表名称</label></div>
+						<div class="weui-cell__bd">
+							<input class="weui-input" placeholder="请输入课程表名字" :value="edulename" v-model.lazy="edulename">
+						</div>
+					</div>
+					<div class="weui-cell">
+						<div class="weui-cell__hd"><label class="weui-label">部门名称</label></div>
+						<div class="weui-cell__bd">
+							<input id="depart" onclick="selectDepart(this)" class="weui-input" placeholder="请选择部门" :value="departname" v-model.lazy="departname" v->
+						</div>
+					</div>
+					<div class="weui-cell">
+						<div class="weui-cell__hd"><label class="weui-label">开始时间</label></div>
+						<div class="weui-cell__bd">
+							<input id="timespanb" onclick="selectDate(this)" class="weui-input" placeholder="请选择开始时间" :value="timespanb" v-model.lazy="timespanb">
+						</div>
+					</div>
+					<div class="weui-cell">
+						<div class="weui-cell__hd"><label class="weui-label">开始时间</label></div>
+						<div class="weui-cell__bd">
+							<input id="timespane" onclick="selectDate(this)" class="weui-input" placeholder="请选择结束时间" :value="timespane" v-model.lazy="timespane">
+						</div>
+					</div>
+				</div>
+				<div class="time-table">
+					<div class="weui-flex" v-once>
+						<div class="weui-flex__item">类型</div>
+						<div class="weui-flex__item">时间段</div>
+						<div class="weui-flex__item">周一</div>
+						<div class="weui-flex__item">周二</div>
+						<div class="weui-flex__item">周三</div>
+						<div class="weui-flex__item">周四</div>
+						<div class="weui-flex__item">周五</div>
+						<div class="weui-flex__item">周六</div>
+						<div class="weui-flex__item">周日</div>
+					</div>
+					<div class="weui-flex" v-for="(item,index) in items_array">
+						<div :id="index+'-'+list_value" class="weui-flex__item" :class="{'first':list_item==0,'second':list_item==1,'other':list_item!=0&&list_item!=1}" v-for="(list_value,list_item) in list_array">
+							<div v-if="list_value == 'daytype'">{{item.daytype}}</div>
+							<div v-else-if="list_value == 'timespan'">{{item.timespan}}</div>
+							<template v-else>
+								<div>{{item[list_value + 'subname']+item[list_value + 'uname']}}</div>
+							</template>
+						</div>
+					</div>
+				</div>
+				<button v-if="show_submit" @click="clickSubmitButton" class="weui-btn weui-btn_mini weui-btn_primary">提交</button>
+			</div>
+		</template>
+		<div id="time_table" class="time-table-content">
+
+			<time-table @click-submit-button="submitTable" @click-item="clickItem" :items_array="items_array" :show_submit="show_submit"></time-table>
+		</div>
+		<script src="../../js/lib/vconsole/vconsole.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/mui.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-2.1.4.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/demoCssJs/jquery-weui.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/weui.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/vue.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/appweb/subject_timetable.js?" + Math.random() + "'></s" + "cript>");
+		</script>
+	</body>
+
+</html>

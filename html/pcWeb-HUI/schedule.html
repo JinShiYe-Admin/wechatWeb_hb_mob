@@ -125,7 +125,7 @@
 						var index = layer.open({
 							type: 2,
 							title: "添加课程表",
-							content: "../appWeb/courses-table.html"
+							content: "courses-table.html"
 						});
 						layer.full(index);
 
@@ -137,7 +137,7 @@
 					 */
 					edit: function(item) {
 						item.flag = 1;
-						var url = "../appWeb/courses-table.html";
+						var url = "courses-table.html";
 						var ids = url.split("/");
 						var dataStr = JSON.stringify(item);
 						var index = layer.open({

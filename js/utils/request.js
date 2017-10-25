@@ -99,7 +99,6 @@ var request = (function(mod) {
 			console.log("发布消息返回的值：" + JSON.stringify(response));
 			callback(response);
 		})
-
 	}
 	return mod;
 })(request || {})

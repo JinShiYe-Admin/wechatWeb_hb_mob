@@ -2,7 +2,7 @@ Vue.component("single-choose-person", {
 	props: ['depart_id', 'chooseType'],
 	template: '<div v-bind:class="[\'weui-cells\',\'weui-cells_radio\']">' +
 		'<template v-for="(item,index) of listData">' +
-		'<template v-if="chooseType===1">' +
+		'<template v-if="chooseType===1&&item.isleader">' +
 		'<a v-if="item.value" v-bind:class="[\'weui-cell\',\'weui-cell_access\']" v-on:click="clickEvent(item)">' +
 		'<div v-bind:class="[\'weui-cell__bd\']">' +
 		'{{item.title}}' +

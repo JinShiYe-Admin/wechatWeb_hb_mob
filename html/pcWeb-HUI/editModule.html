@@ -34,7 +34,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr class="text-c" v-for='(module,index) in moduleArray'>
+						<tr class="text-c" v-for='(module,index) in moduleArray' v-show="flag>0" style="display: none;">
 							<td><input type="checkbox" value=module.corpmodid name="" v-model=module.flag @change="selectCheckbox(module,index)"></td>
 							<td>{{module.mname}}</td>
 							<td>{{module.murl}}</td>
@@ -92,23 +92,7 @@
 				data: {
 					flag: 0,
 					selectArray: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-					moduleArray: [{
-						flag: 1,
-						modid:1,
-						corpmodid: 1,
-						mname: '模块1',
-						murl: 'www.baidu.com',
-						mimg: 'www.baidupic.com',
-						orderid: 1
-					}, {
-						flag: 0,
-						modid:2,
-						corpmodid: 2,
-						mname: '模块2',
-						murl: 'www.baidu2.com',
-						mimg: 'www.baidupic2.com',
-						orderid: 2
-					}]
+					moduleArray: []
 				}
 			});
 			
@@ -179,31 +163,34 @@
 					type: 'findpage'
 				}
 				unitWebsitePro(tempData, function(data) {
+					alert('getSumModuleArray:'+JSON.stringify(data));
 					if(data.RspCode == 0) {
-						if(data.RspData.dt.length > 0) {
-							courseData.courseArray = [].concat(data.RspData.dt);
+						if(data.RspData.length > 0) {
+							moduleSum.moduleArray = [].concat(data.RspData);
 							//获取单位app模块，然后将得到的值，进行合并
 							var tempData = {
 								cmd: 'corpmod',
 								type: 'findpage'
 							}
 							unitWebsitePro(tempData, function(data1) {
+								alert('getSumModule222:'+JSON.stringify(data1));
 								if(data1.RspCode == 0) {
-									if(data1.RspData.dt.length > 0) {
-										for(var i = 0; i < courseData.courseArray.length; i++) {
-											var tempModel = courseData.courseArray[i];
+									if(data1.RspData.length > 0) {
+										for(var i = 0; i < moduleSum.moduleArray.length; i++) {
+											var tempModel = moduleSum.moduleArray[i];
 											tempModel.flag = 0; //默认没选择
-											for(var i = 0; i < data1.RspData.dt.length; i++) {
-												var tempModel1 = data1.RspData.dt[i];
+											for(var i = 0; i < data1.RspData.length; i++) {
+												var tempModel1 = data1.RspData[i];
 												if(tempModel.modid == tempModel1.modid) {
 													tempModel1.flag = 1; //如果id一样，则为选择
 													//合并对象
 													tempModel = $.extend(tempModel, tempModel1);
 												}
 											}
+											alert('合并后：'+JSON.stringify(moduleSum.moduleArray));
 										}
 									}
-									courseData.flag = 1;
+									moduleSum.flag = 1;
 								} else {
 									alert(data1.RspTxt);
 								}

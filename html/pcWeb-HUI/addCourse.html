@@ -31,7 +31,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr class="text-c" v-for='(course,index) in courseArray' v-if="flag>0">
+			<tr class="text-c" v-for='(course,index) in courseArray' v-show="flag>0" style="display: none;">
 				<td><u style="cursor:pointer" class="text-primary">{{course.cname}}</u></td>
 				<td class="td-status"><span :class="course.stat==0?'label label-defaunt radius':'label label-success radius'"><a v-if="course.stat==0">已停用</a><a v-else>已启用</a></span></td>
 				<td class="td-manage">

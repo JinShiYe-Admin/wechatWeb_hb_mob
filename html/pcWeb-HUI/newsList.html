@@ -10,8 +10,11 @@
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
+		<style>
+ 	</style>
 	</head>
-
+	
+    
 	<body>
 		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 新闻 <span class="c-gray en">&gt;</span> 新闻审核
 			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
@@ -29,22 +32,21 @@
 						<tr class="text-c">
 
 							 
-							<th width="90">新闻标题</th>
-							<th width="90">新闻副标题</th>
-							<th width="100">新闻内容</th>
-							 
-							<th width="120">操作</th>
+							<th width="10"  >新闻标题</th>
+							<th width="100" >新闻副标题</th>
+							<th width="100" >新闻内容</th> 
+							<th  width="100" >操作</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr class="text-c" v-for="(newsModel,index) in item.newsArray" :data-index="index">
 
 							 
-							<td> {{newsModel.topic}}</td>
-							<td>{{newsModel.subtopic}}</td>
-							<td>{{newsModel.content}}</td>
+							<td class="wrap"> {{newsModel.topic}}</td>
+							<td class="wrap">{{newsModel.subtopic}}</td>
+							<td class="wrap">{{newsModel.content}}</td>
 							 
-							<td class="text-l" style="text-align: center;">
+							<td class="wrap" style="text-align: center;">
 								<button id="{{newsModel.newsid}}" class="btn btn-primary radius" @click="clickDel(newsModel,1,index)">{{newsModel.Prizt}}</button>&nbsp;&nbsp;&nbsp;
 								<button class="btn btn-secondary radius" @click="click(newsModel,index,item.cname )">编辑</button>&nbsp;&nbsp;&nbsp;
 								<button class="btn btn-danger radius" @click="clickDel(newsModel,0,index)">删除</button>&nbsp;&nbsp;&nbsp;
@@ -111,13 +113,13 @@
 								topic: 'test标题11111爱的色放撒多付多撒付付付付付付啧啧啧啧啧啧重中之重仄仄仄仄仄1111111',
 								Prizt: 1,
 								subtopic: 'test副标题地方干啥广东佛山规定是割发代首规定是法规111111111111111111',
-								content: 'test内容111111仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄在仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄在11111111111111111111'
+								content: 'test内容111111仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄在仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄在1111111zzzzz1111111111111'
 							},
 							{
 								topic: 'test标题222222222222',
 								Prizt: 1,
 								subtopic: 'test副标题22222222222222',
-								content: 'test内容22222222222222222222222222'
+								content: 'zzzz仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄在仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄仄在'
 							}, {
 								topic: 'test标题33333333333',
 								Prizt: 1,

@@ -95,7 +95,7 @@
 					moduleArray: []
 				}
 			});
-			var selectFalg = true; //判断是否可以勾选
+			var selectFalg = false; //判断是否可以勾选
 
 			var selectOrder = function(model, index) {
 				var obj = document.getElementById('select' + model.modid);
@@ -135,8 +135,7 @@
 						}
 						unitWebsitePro(tempData, function(data) {
 							if(data.RspCode == 0) {
-								//获取系统app模块
-								getSumModuleArray();
+								location.replace(location.href);
 								//							layer.msg('已删除!', {
 								//								icon: 1,
 								//								time: 1000
@@ -156,8 +155,7 @@
 						}
 						unitWebsitePro(tempData, function(data) {
 							if(data.RspCode == 0) {
-								//获取系统app模块
-								getSumModuleArray();
+								location.replace(location.href);
 								//							layer.msg('已添加!', {
 								//								icon: 1,
 								//								time: 1000
@@ -179,7 +177,7 @@
 					type: 'findpage'
 				}
 				unitWebsitePro(tempData, function(data) {
-					//					alert('getSumModuleArray:' + JSON.stringify(data));
+//					alert('getSumModuleArray:' + JSON.stringify(data));
 					if(data.RspCode == 0) {
 						if(data.RspData.length > 0) {
 							moduleSum.moduleArray = [].concat(data.RspData);
@@ -189,7 +187,7 @@
 								type: 'findpage'
 							}
 							unitWebsitePro(tempData, function(data1) {
-								//								alert('getSumModule222:' + JSON.stringify(data1));
+//								alert('getSumModule222:' + JSON.stringify(data1));
 								if(data1.RspCode == 0) {
 									if(data1.RspData.length > 0) {
 										for(var i = 0; i < moduleSum.moduleArray.length; i++) {
@@ -204,7 +202,7 @@
 												}
 											}
 										}
-										//										alert('合并后：' + JSON.stringify(moduleSum.moduleArray));
+//										alert('合并后：' + JSON.stringify(moduleSum.moduleArray));
 									}
 									selectFalg = false;
 									moduleSum.flag = 1;

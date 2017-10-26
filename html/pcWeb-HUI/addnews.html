@@ -125,11 +125,13 @@
 		var bannerUploader; //上传banner七牛对象
 		var uptokenData; //上传的token
 		var imgurl = ""; //圖片地址   
+		var bjimgurl = ""; //圖片地址   
 		var FileDataArray = new Array(); //附件参数
 		var imgList=new Array();
 		var imgName;
 		var dlindex;
 		var PriNewsId;
+		var detail;
 		var objArray = new Array();
 		//所属栏目下拉框
 			var vue_input = new Vue({
@@ -142,7 +144,7 @@
 			});
 		//初始化页面
 		window.onload = function() {
-			var detail = utils.getDataFromUrl(window.location.href);
+			detail = utils.getDataFromUrl(window.location.href);
 			PriNewsId = detail.newsid;
 			alert(PriNewsId)
 			var insertText;
@@ -169,8 +171,9 @@
 					articalPublish.artical.summas = data.RspData.dt[0].summas; //新闻摘要
 					articalPublish.artical.isquo = data.RspData.dt[0].quourl;
 					articalPublish.artical.isreply = data.RspData.dt[0].isreply;
+					bjimgurl= data.RspData.dt[0].imgurl;
 
-					insertText = "<section><h3>3214123</h3><p>43214312</p><p><img src='  '></p></section>";
+					insertText = data.RspData.dt[0].content;
 					var n = (insertText.split('<section>')).length - 1;
 					for(var i = 0; i < n - 1; i++) {
 						this.addPiece();

@@ -95,6 +95,7 @@
 					moduleArray: []
 				}
 			});
+			var selectFalg = true; //判断是否可以勾选
 
 			var selectOrder = function(model, index) {
 				var obj = document.getElementById('select' + model.modid);
@@ -122,45 +123,52 @@
 
 			//选中、取消按钮
 			var selectCheckbox = function(model, index) {
-				if(model.flag == 0) { //删除
-					var tempData = {
-						cmd: 'corpmod',
-						type: 'del',
-						colid: model.corpmodid
-					}
-					unitWebsitePro(tempData, function(data) {
-						if(data.RspCode == 0) {
-							//获取系统app模块
-							getSumModuleArray();
-//							layer.msg('已删除!', {
-//								icon: 1,
-//								time: 1000
-//							});
-						} else {
-							model.flag = 1;
-							alert(data.RspTxt);
+				if(selectFalg) {
+					return;
+				} else {
+					selectFalg = true;
+					if(model.flag == 0) { //删除
+						var tempData = {
+							cmd: 'corpmod',
+							type: 'del',
+							colid: model.corpmodid
 						}
-					});
-				} else { //添加
-					var tempData = {
-						cmd: 'corpmod',
-						type: 'add',
-						modid: model.modid,
-						orderid: model.orderid
-					}
-					unitWebsitePro(tempData, function(data) {
-						if(data.RspCode == 0) {
-							//获取系统app模块
-							getSumModuleArray();
-//							layer.msg('已添加!', {
-//								icon: 1,
-//								time: 1000
-//							});
-						} else {
-							model.flag = 0;
-							alert(data.RspTxt);
+						unitWebsitePro(tempData, function(data) {
+							if(data.RspCode == 0) {
+								//获取系统app模块
+								getSumModuleArray();
+								//							layer.msg('已删除!', {
+								//								icon: 1,
+								//								time: 1000
+								//							});
+							} else {
+								selectFalg = false;
+								model.flag = 1;
+								alert(data.RspTxt);
+							}
+						});
+					} else { //添加
+						var tempData = {
+							cmd: 'corpmod',
+							type: 'add',
+							modid: model.modid,
+							orderid: model.orderid
 						}
-					});
+						unitWebsitePro(tempData, function(data) {
+							if(data.RspCode == 0) {
+								//获取系统app模块
+								getSumModuleArray();
+								//							layer.msg('已添加!', {
+								//								icon: 1,
+								//								time: 1000
+								//							});
+							} else {
+								selectFalg = false;
+								model.flag = 0;
+								alert(data.RspTxt);
+							}
+						});
+					}
 				}
 			}
 
@@ -171,7 +179,7 @@
 					type: 'findpage'
 				}
 				unitWebsitePro(tempData, function(data) {
-//					alert('getSumModuleArray:' + JSON.stringify(data));
+					//					alert('getSumModuleArray:' + JSON.stringify(data));
 					if(data.RspCode == 0) {
 						if(data.RspData.length > 0) {
 							moduleSum.moduleArray = [].concat(data.RspData);
@@ -181,7 +189,7 @@
 								type: 'findpage'
 							}
 							unitWebsitePro(tempData, function(data1) {
-//								alert('getSumModule222:' + JSON.stringify(data1));
+								//								alert('getSumModule222:' + JSON.stringify(data1));
 								if(data1.RspCode == 0) {
 									if(data1.RspData.length > 0) {
 										for(var i = 0; i < moduleSum.moduleArray.length; i++) {
@@ -196,15 +204,18 @@
 												}
 											}
 										}
-//										alert('合并后：' + JSON.stringify(moduleSum.moduleArray));
+										//										alert('合并后：' + JSON.stringify(moduleSum.moduleArray));
 									}
+									selectFalg = false;
 									moduleSum.flag = 1;
 								} else {
+									selectFalg = false;
 									alert(data1.RspTxt);
 								}
 							});
 						}
 					} else {
+						selectFalg = false;
 						alert(data.RspTxt);
 					}
 				});

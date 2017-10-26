@@ -100,7 +100,7 @@
 				el: '#newsData',
 				data: {
 					item: {
-						newsArray: [
+						newsArray: [{topic:'lll'}
 						]
 					}
 				},
@@ -113,8 +113,8 @@
 						var colid = model.newsid; //新闻id
 						//确认框confirm	  
 						if(Pribs == 0) {
-							layer.confirm("确定要删除吗？", function() { 
-								layer.close(index);
+							layer.confirm("确定要删除吗？", function(index) { 
+								layer.close(index); 
 								//确定删除
 								var tempData = {
 									cmd: 'news', //文章管理
@@ -126,6 +126,10 @@
 									if(data.RspCode == 0000) {
 										if(newsData.item.newsArray[index].newsid == colid) {
 											newsData.item.newsArray.splice(index, 1);
+											layer.msg('已删除!', {
+										    icon: 1,
+										    time: 1000
+									});
 										}
 									}
 								});

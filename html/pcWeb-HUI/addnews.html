@@ -51,7 +51,7 @@
 			<div class="edit_container">
 				<div>
 					<select class="select" id="chnid" name="one" style="height: 45px;font-size: 17px;color: #929292;">
-						<option value="">请选择所属栏目....</option>
+					 
 						<option v-for="item in items" :value="item.chnid">{{item.cname}}</option>
 					</select>
 				</div>
@@ -146,7 +146,7 @@
 		window.onload = function() {
 			detail = utils.getDataFromUrl(window.location.href);
 			PriNewsId = detail.newsid;
-			alert(PriNewsId)
+			alert('新闻id'+PriNewsId)
 			var insertText;
 			if(detail.type == 'edit') {
 				var tempData = {
@@ -338,15 +338,12 @@
 					type: 'findpage', //分页查找栏目列表
 					pagesize: 999, //每页条数 
 					pageindex: 1 //页码 
-				}
-					alert('1')
-					unitWebsitePro(tempData, function(data) { 
-						alert(JSON.stringify(data.RspData.dt))
-						if(data.RspCode == 0) {
-							alert('2')
+				} 
+					unitWebsitePro(tempData, function(data) {  
+						if(data.RspCode == 0) { 
 							if(data.RspData.dt.length > 0) {
-							    alert('3')
-								vue_input.items = data.RspData.dt;
+							    alert(JSON.stringify(data.RspData.dt));
+								vue_input.items = data.RspData.dt; 
 							} else {
 								//$.Huimodalalert('暂时还没有栏目', 1000);
 								alert('暂时还没有栏目');

@@ -112,10 +112,7 @@
 	<script src="../../js/pcWeb-HUI/select-load-singPic.js"></script>
 	<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
 	<script src="../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
-	<script src="../../js/utils/utils.js"></script>
-	<script src="../../js/pcWeb-HUI/select-load-singPic.js"></script>
-	<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
-	<script type="text/javascript">
+  	<script type="text/javascript">
 		document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 	</script>
 	<script src="../H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
@@ -178,12 +175,7 @@
 					var n = (insertText.split('<section>')).length - 1;
 				    alert(n)
 					for(var i = 0; i < n - 1; i++) {
-//					 this.pieces.splice(i + 1, 0, {
-//						title: "",
-//						content: "",
-//						files: ""
-					//})
-						 
+						
 					}
 					var k = insertText.replace(/<section>/g, "</section>");
 					var ss = k.split('</section>');
@@ -204,9 +196,9 @@
 							var imgstring = pp[3];
 							var zfc = imgstring.substring(9);
 							zfc = zfc.substring(0, zfc.length - 1);
-							alert('标题'+hh);
-							alert('内容'+pp[1]);
-							alert('图片'+zfc);
+//							alert('标题'+hh);
+//							alert('内容'+pp[1]);
+//							alert('图片'+zfc);
 							calPublish.pieces.title = hh;
 							articalPublish.pieces.content = pp[1];
 							articalPublish.pieces.files = zfc;
@@ -371,6 +363,7 @@
 						alert('段落未添加标题或内容，无法继续添加');
 						return;
 					}
+//					alert()
 					this.pieces.splice(index + 1, 0, {
 						title: "",
 						content: "",

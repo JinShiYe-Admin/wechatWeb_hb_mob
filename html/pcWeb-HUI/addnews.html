@@ -132,26 +132,19 @@
 		var PriNewsId;
 		var objArray = new Array();
 		//所属栏目下拉框
-		var vue_input = new Vue({
-			el: '#chnid',
-			data: {
-				items: [{
-						chnid: 111,
-						cname: '校园动态'
-
-					},
-					{
-						chnid: 222,
-						cname: '师资力量'
-
-					}
-				]
-			}
-		});
+			var vue_input = new Vue({
+				el: '#chnid',
+				data: {
+					items: [ 
+					]
+				},
+				methods: {}
+			});
 		//初始化页面
 		window.onload = function() {
 			var detail = utils.getDataFromUrl(window.location.href);
 			PriNewsId = detail.newsid;
+			alert(PriNewsId)
 			var insertText;
 			if(detail.type == 'edit') {
 				var tempData = {
@@ -332,22 +325,24 @@
 							alert('添加成功');
 							location.reload();
 						} else {
-							$.Huimodalalert(data.RspTxt, 1000);
+							//$.Huimodalalert(data.RspTxt, 1000);
 						}
 					});
 				},
 				getColumns: function() { //获取栏目列表  
-					var tempData = {
-						cmd: 'chn', //网站栏目
-						type: 'findpage', //分页查找栏目列表 
-						pagesize: 999, //每页条数 
-						iswrite: '1',
-						stat: '1',
-						pageindex: 1 //页码  
-					}
-					unitWebsitePro(tempData, function(data) {
+				var tempData = {
+					cmd: 'chn', //网站栏目
+					type: 'findpage', //分页查找栏目列表
+					pagesize: 999, //每页条数 
+					pageindex: 1 //页码 
+				}
+					alert('1')
+					unitWebsitePro(tempData, function(data) { 
+						alert(JSON.stringify(data.RspData.dt))
 						if(data.RspCode == 0) {
+							alert('2')
 							if(data.RspData.dt.length > 0) {
+							    alert('3')
 								vue_input.items = data.RspData.dt;
 							} else {
 								//$.Huimodalalert('暂时还没有栏目', 1000);

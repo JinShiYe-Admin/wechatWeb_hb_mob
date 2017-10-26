@@ -3,14 +3,13 @@ Vue.component("single-choose-person", {
 	template: '<div v-bind:class="[\'weui-cells\',\'weui-cells_radio\']">' +
 		'<template v-for="(item,index) of listData">' +
 		'<template v-if="chooseType===1">' +
-		'<template v-if="item.isleader">'+
 		'<a v-if="item.value" v-bind:class="[\'weui-cell\',\'weui-cell_access\']" v-on:click="clickEvent(item)">' +
 		'<div v-bind:class="[\'weui-cell__bd\']">' +
 		'{{item.title}}' +
 		'</div>' +
 		'<div v-bind:class="[\'weui-cell__ft\']"></div>' +
 		'</a>' +
-		'<label v-else v-bind:class="[\'weui-cell\',\'weui-check__label\']" v-bind:for="item.userid">' +
+		'<label v-else-if="item.userid&&item.isleader" v-bind:class="[\'weui-cell\',\'weui-check__label\']" v-bind:for="item.userid">' +
 		'<div v-bind:class="[\'weui-cell__bd\']">' +
 		'<p>{{item.name}}</p>' +
 		'</div>' +
@@ -20,7 +19,6 @@ Vue.component("single-choose-person", {
 		'</div>' +
 		'</label>' +
 		'</template>'+
-		'</template>' +
 		'<a v-else v-bind:class="[\'weui-cell\',\'weui-cell_access\']">' +
 		'<div v-bind:class="[\'weui-cell__hd\']">' +
 		'<label v-bind:for="item.value">' +

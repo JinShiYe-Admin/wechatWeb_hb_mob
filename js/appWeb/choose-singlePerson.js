@@ -119,7 +119,7 @@ Vue.component("single-choose-person", {
 			} else {
 				id = com.$route.params.id
 			}
-			request.getDepartPersons(id, 0, 0, function(data) {
+			request.getDepartPersons(id, 0, 1, function(data) {
 				console.log("获取的本部门人员:" + JSON.stringify(data));
 				var children = data.concat(departs);
 				com.listData = children;

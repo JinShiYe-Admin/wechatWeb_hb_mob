@@ -528,7 +528,7 @@
 				var tempData = {
 					cmd: 'sub',
 					type: 'findpage',
-					pagesize: 10,
+					pagesize: 100,
 					pageindex: 1,
 					stat: '1'
 				}
@@ -582,7 +582,7 @@
 					type: 'findpage',
 					colid: colid,
 					colv: 0,
-					callcol: 'base',
+					callcol: 'info',
 				}
 				unitWebsitePro(tempData, function(data) {
 					var tempArr = [];

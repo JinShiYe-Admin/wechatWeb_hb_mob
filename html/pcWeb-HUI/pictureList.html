@@ -344,7 +344,8 @@
 						},
 						btnAdd: function() {
 							console.log("添加");
-							if(this.burl == "") {
+							var addBurl = $.trim(this.burl);
+							if(addBurl == "") {
 								pictureModal.show("添加失败", "请输入链接URL");
 								return false;
 							}
@@ -422,6 +423,11 @@
 						 */
 						burlBlur: function() {
 							if(this.type == "删除" && this.burl != pictureTable.dt[pictureTable.changeIndex].burl) {
+								var addBurl = $.trim(this.burl);
+								if(addBurl == "") {
+									pictureModal.show("修改失败", "请输入链接URL");
+									return false;
+								}
 								changeOption('burl', this.burl);
 							}
 						},

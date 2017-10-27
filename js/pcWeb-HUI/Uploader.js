@@ -60,6 +60,7 @@
 						},
 						'UploadProgress': function(up, file) {
 							// 每个文件上传时,处理相关的事情  
+							$.Huimodalalert("上传中 " + file.percent + "%",3000)
 							//vm_loading.content = "上传中 " + file.percent + "%";
 						},
 						'FileUploaded': function(up, file, info) {
@@ -210,7 +211,8 @@
 						},
 						'UploadProgress': function(up, file) {
 							// 每个文件上传时,处理相关的事情  
-							//vm_loading.content = "上传中 " + file.percent + "%";
+							 $.Huimodalalert("上传中 " + file.percent + "%",3000)
+							  
 						},
 						'FileUploaded': function(up, file, info) {
 							// 每个文件上传成功后,处理相关的事情 

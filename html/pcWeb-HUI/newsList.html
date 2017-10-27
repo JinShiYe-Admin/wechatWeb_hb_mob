@@ -27,12 +27,12 @@
 			</div>
 			<div id="newsData">
 
-				<table class="table table-border table-bordered table-bg table-hover table-sort table-responsive">
+				<table style=" table-layout:fixed;" class="table table-border table-bordered table-bg table-hover table-sort table-responsive">
 					<thead>
 						<tr class="text-c"> 
-							<th width="10"  >新闻标题</th>
-							<th width="100" >新闻副标题</th>
-							<th width="100" >新闻内容</th> 
+							<th width="90"  >新闻标题</th>
+							<th width="90" >新闻副标题</th>
+							<th width="120" >新闻内容</th> 
 							<th  width="100" >操作</th>
 						</tr>
 					</thead>
@@ -40,11 +40,11 @@
 						<tr class="text-c" v-for="(newsModel,index) in item.newsArray" :data-index="index">
 
 							 
-							<td class="wrap"> {{newsModel.topic}}</td>
-							<td class="wrap">{{newsModel.subtopic}}</td>
-							<td class="wrap">{{newsModel.content}}</td>
+							<td  style="  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" > {{newsModel.topic}}</td>
+							<td style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" >{{newsModel.subtopic}}</td>
+							<td  style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" >{{newsModel.content}}</td>
 							 
-							<td class="wrap" style="text-align: center;">
+							<td   style="text-align: center;">
 								<button id="{{newsModel.newsid}}" class="btn btn-primary radius" @click="clickDel(newsModel,1,index)">{{newsModel.Prizt}}</button>&nbsp;&nbsp;&nbsp;
 								<button class="btn btn-secondary radius" @click="click(newsModel,index,item.cname )">编辑</button>&nbsp;&nbsp;&nbsp;
 								<button class="btn btn-danger radius" @click="clickDel(newsModel,0,index)">删除</button>&nbsp;&nbsp;&nbsp;
@@ -79,7 +79,6 @@
                 newslist.cname = cname; 
                 newslist.type = "edit"; 
                 newslist.newsid = newsModel.newsid;   
-                alert(newslist)
 				utils.wOpenWithData("../pcWeb-HUI/Test.html", newslist);  
 			}
 			var newsFlag = 0; //0刷新，1加载更多
@@ -189,9 +188,11 @@
 			window.onload = function() {
 				var tempData = {
 					cmd: 'chn', //网站栏目
-					type: 'findpage', //分页查找栏目列表
+					type: 'findpage', //分页查找栏目列表 
 					pagesize: 999, //每页条数 
-					pageindex: 1 //页码 
+					iswrite: '1',
+					stat: '1',
+					pageindex: 1 //页码  
 				}
 				unitWebsitePro(tempData, function(data) {
 					//塞入页码、加载状态等自定义参数 

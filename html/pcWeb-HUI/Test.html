@@ -122,8 +122,8 @@
 				position: relative;
 				cursor: pointer;
 				color: #FFFFFF;
-				background: #007AFF;
-				border: 1px solid #007AFF;
+				background: #5A98DE;
+				border: 1px solid #5A98DE;
 				border-radius: 4px;
 				overflow: hidden;
 				display: inline-block;
@@ -146,8 +146,8 @@
 			
 			.a-upload:hover {
 				color: #FFFFFF;
-				background: #007AFF;
-				border-color: #007AFF;
+				background: #0A6999;
+				border-color: #0A6999;
 				text-decoration: none
 			}
 			
@@ -162,7 +162,7 @@
 			.an input {
 				width: 100px;
 				height: 40px;
-				background: #1AAD19;
+				background: #5A98DE;
 				border: none;
 				float: left
 			}
@@ -212,15 +212,15 @@
 				
 
 				<div id="insert"></div>
-				<div class="row cl" align="center" style="align-content: center;" >
-					<button style="float:right" onClick="addDiv()" class="btn btn-secondary radius" type="button">添加段落</button>
-					<button style="float:right" onClick="delDiv()" class="btn btn-secondary radius" type="button">删除段落</button>
+				<div class="row cl" align="center" style="align-content: center; " >
+					<button style="margin-left: 1000px; " onClick="addDiv()" class="btn btn-secondary radius" type="button">添加段落</button>
+					<button style="margin-left: 5px;" onClick="delDiv()" class="btn btn-secondary radius" type="button">删除段落</button>
 				</div>
 				<div class="row cl">
 					<label class="form-label col-xs-4 col-sm-2">{{newszy.title}}：</label>
 					<div class="formControls col-xs-8 col-sm-9">
-						<textarea id="summas" v-model.lazy="newszy.message" cols="" rows="" class="textarea" placeholder="请输入新闻摘要...最少输入10个字符" datatype="*10-100" dragonfly="true"    ></textarea>
-						<p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
+						<textarea id="summas" v-model.lazy="newszy.message" cols="" rows="" class="textarea" placeholder="请输入新闻摘要" datatype="*10-100" dragonfly="true"    ></textarea>
+						<p class="textarea-numberbar"><em class="textarea-length"></em></p>
 					</div>
 				</div>
 
@@ -242,6 +242,13 @@
 						</div>
 					</div>
 				</div>
+				<div class="row cl" v-if="islink.check" >
+					<label class="form-label col-xs-4 col-sm-2"><span class="c-red"></span>{{linkurl.title}}：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" class="input-text" value="" placeholder="请输入引用地址" id="quourl" v-model.lazy="linkurl.message" >
+					</div>
+				</div>
+				
 				<div class="row cl">
 					<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
 						<button  onclick="submittj()"   class="btn btn-primary radius"  > 保存</button>
@@ -259,7 +266,7 @@
 		<script type="text/javascript"  src="../../js/utils/cloudutil.js"></script>
 		<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
 		<script src="../../js/pcWeb-HUI/Uploader.js"></script>
-		<!--<script src="../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>-->
+		<script src="../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
 				<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.min.js?" + Math.random() + "'></s" + "cript>");
@@ -284,7 +291,15 @@
 			var vue_input = new Vue({
 				el: '#chnid',
 				data: {
-					items: []
+					items: [
+					{
+						cname:'sss',
+						chnid:111
+						},{
+						cname:'aaa',
+						chnid:222
+						}
+					]
 				}
 			});
 			var vm = new Vue({
@@ -466,10 +481,10 @@
 				if(ic <= 5) {
 					for(var i = 0; i < ic; i++) {
 						//div.innerHTML = '<div id=\"yc' + count1 + '\"><input name=\"dlt\" id=\"title' + i + '\" placeholder="请输入节标题" onchange=\"upperCase(this.id,' + i + ')\"  type="text"  ><input name=\"dlc\" id=\"conten' + i + '\"   v-model.lazy=\"newscontent.message\" class=\"weui-input\" placeholder=\"请输入新闻内容\" onchange=\"upperCase(this.id,' + i + ')\" style=\"border-color: white;height: 7rem;\ /"><div class=\"kuan\"><input name=\"dle\" id=\"Priimgname' + i + '\" type=\"text\"   onpropertychange=\"upperCase(this.id,' + i + ')\" /></div><div class=\"an\"><a href=\"#\" style=\"float:right\" class=\"a-upload\"><input id=\"Prifile' + i + '\" type=\"file\"  />上传图片</a></div></div>';
-						div.innerHTML = '<div id=\"yc' + count1 + '\"><div class=\"row cl\"><label class=\"form-label col-xs-4 col-sm-2\">节标题：</label><div class=\"formControls col-xs-8 col-sm-9\"><input type=\"text\" class=\"input-text\" name=\"dlt\" id=\"title' + i + '\" placeholder=\"请输入新闻节标题\" onchange=\"upperCase(this.id,' + i + ')\" ></div></div><div class=\"row cl\"><label class=\"form-label col-xs-4 col-sm-2\">节内容：</label><div class=\"formControls col-xs-8 col-sm-9\"><textarea name=\"dlc\" id=\"conten' + i + '\" cols=\"\" rows=\"\" class=\"textarea\" placeholder=\"请输入新闻节内容\" onchange=\"upperCase(this.id,' + i + ')\"  datatype=\"*10-100\" dragonfly=\"true\" nullmsg=\"备注不能为空！\"></textarea><p class=\"textarea-numberbar\"><em class=\"textarea-length\">0</em>/200</p></div></div><div class=\"row cl\"><label class=\"form-label col-xs-4 col-sm-2\">节图片：</label><div class=\"formControls col-xs-8 col-sm-9\"><input style=\"position: absolute;   width: 800px;\" name=\"dle\" id=\"Priimgname' + i + '\" type=\"text\"   onpropertychange=\"upperCase(this.id,' + i + ')\"  class=\"input-text\"   readonly=\"readonly\"  /><div style=\"margin-left: 800px;\"><div class=\"an\"><image-item href=\"#\" class=\"a-upload\"><input id=\"Prifile' + i + '\" type=\"file\" value=\"搜索\" />图片上传</a></div></div></div></div></div>';
+						div.innerHTML = '<div id=\"yc' + count1 + '\"><div class=\"row cl\"><label class=\"form-label col-xs-4 col-sm-2\">节标题：</label><div class=\"formControls col-xs-8 col-sm-9\"><input type=\"text\" class=\"input-text\" name=\"dlt\" id=\"title' + i + '\" placeholder=\"请输入新闻节标题\" onchange=\"upperCase(this.id,' + i + ')\" ></div></div><div class=\"row cl\"><label class=\"form-label col-xs-4 col-sm-2\">节内容：</label><div class=\"formControls col-xs-8 col-sm-9\"><textarea name=\"dlc\" id=\"conten' + i + '\" cols=\"\" rows=\"\" class=\"textarea\" placeholder=\"请输入新闻节内容\" onchange=\"upperCase(this.id,' + i + ')\"  datatype=\"*10-100\" dragonfly=\"true\" nullmsg=\"备注不能为空！\"></textarea><p class=\"textarea-numberbar\"><em class=\"textarea-length\"></em></p></div></div><div class=\"row cl\"><label class=\"form-label col-xs-4 col-sm-2\">节图片：</label><div class=\"formControls col-xs-8 col-sm-9\"><input style=\"position: absolute;   width: 800px;\" name=\"dle\" id=\"Priimgname' + i + '\" type=\"text\"   onpropertychange=\"upperCase(this.id,' + i + ')\"  class=\"input-text\"   readonly=\"readonly\"  /><div style=\"margin-left: 800px;\"><div class=\"an\"><image-item href=\"#\" class=\"a-upload\"><input id=\"Prifile' + i + '\" type=\"file\" value=\"搜索\" />图片上传</a></div></div></div></div></div>';
 					}
 				} else {
-					alert('不能再增加了');
+					 $.Huimodalalert("段落最多增加5个！",3000)
 					return;
 				} 
 				var Priid = "Prifile" + count1;
@@ -657,13 +672,11 @@
 					quourl: PriQuourl,
 					isreply: PriIsReply,
 					stat: 1
-				};
-				 
-				alert('comData=========================:' + JSON.stringify(comData));
-				return;
+				}; 
+				console.log('comData=========================:' + JSON.stringify(comData)); 
 				unitWebsitePro(comData, function(data) {
 					if(data.RspCode == 0) { 
-						alert('添加成功！');
+						 $.Huimodalalert("新闻添加成功！",3000)
 						//清空数据 
 						document.getElementById("cname").value = ""; //新闻标题
 						//document.getElementById("conten").value = ""; //新闻内容
@@ -682,9 +695,7 @@
 						imgurl: imgurl
 					}
 				});
-			}
-			
-			
+			}  
 		</script>
 		
 	</body>

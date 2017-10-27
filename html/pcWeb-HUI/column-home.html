@@ -45,7 +45,7 @@
 					<a class="btn btn-primary radius" @click="add"><i class="Hui-iconfont"></i> 添加栏目</a>
 				</span>
 			</div>
-			<column-table :value="dt" @click-edit="edit" @click-del="del"></column-table>
+			<column-table :value="dt" @click-edit="edit" @click-del="del" @click-shield="shield"></column-table>
 			<div id="pages"></div>
 		</div>
 		<div id="column_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -124,6 +124,7 @@
 						<th>备注</th>
 						<th>是否显示首页</th>
 						<th>操作</th>
+						<th>状态</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -133,9 +134,12 @@
 						<td>{{item.orderid}}</td>
 						<td>{{item.note}}</td>
 						<td>{{item.istop==1?"是":"否"}}</td>
+						<td class="td-status"><span :class="item.stat==0?'label label-defaunt radius':'label label-success radius'"><a v-if="item.stat==0">已停用</a><a v-else>已启用</a></span></td>
 						<td class="sorting_1">
 							<a class="operate-edit" @click="clickEdit(item)" title="编辑"><i class="Hui-iconfont"></i></a>
 							<a style="text-decoration:none" class="ml-5" @click="clickDel(item)" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+							<a style="text-decoration:none" class="ml-5" @click="clickShield(item)" title="停用"><i class="Hui-iconfont">&#xe631;</i></a>
+
 						</td>
 					</tr>
 				</tbody>
@@ -167,6 +171,9 @@
 					},
 					clickDel: function(item) {
 						this.$emit("click-del", item);
+					},
+					clickShield: function(item) {
+						this.$emit("click-shield", item);
 					}
 				}
 			});
@@ -175,6 +182,7 @@
 				el: "#column_table",
 				data: {
 					dt: []
+
 				},
 				methods: {
 					/**
@@ -222,8 +230,49 @@
 
 						//						column_info.showEdit(this.dt[index]);
 					},
+					shield: function(item) {
+						var tempFlag = 0;
+						var tempStr = ''
+						if(item.stat == 0) {
+							tempFlag = 1;
+							var tempStr = '启用'
+						} else {
+							tempFlag = 0;
+							var tempStr = '停用'
+						}
+						layer.confirm('确认要' + tempStr + '吗？', function(index) {
+							layer.close(index);
+
+							var para = {
+								cmd: 'chn',
+								type: 'edit',
+								colid: item.chnid,
+								callcol: 'stat',
+								colv: tempFlag
+
+							}
+
+							//							alert(JSON.stringify(para))
+							unitWebsitePro(para, function(data) {
+								if(data.RspCode == 0) {
+									layer.msg('已' + tempStr + '!', {
+										icon: 1,
+										time: 1000
+									});
+									if(item.stat == 0) {
+										item.stat = 1;
+									} else {
+										item.stat = 0;
+									}
+								} else {
+									alert(data.RspTxt);
+								}
+							});
+						});
+
+					},
 					del: function(item) { //删除栏目
-						layer.confirm('确认要删除吗？', function(index) {
+						layer.confirm('删除后无法恢复,确认要删除吗？', function(index) {
 							layer.close(index);
 							var para = {
 								cmd: 'chn',

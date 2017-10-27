@@ -313,6 +313,7 @@
 							this.localPath = "";
 							this.localFile = null;
 							$("#orderidSelect").val(0);
+							$('#uploaderInput').val('');
 							this.show("添加图片");
 						},
 						/**
@@ -328,6 +329,7 @@
 							this.localPath = value.bimgurl;
 							this.localFile = null;
 							$("#orderidSelect").val(value.orderid);
+							$('#uploaderInput').val('');
 							this.show("编辑");
 						},
 						/**

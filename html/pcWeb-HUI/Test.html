@@ -6,10 +6,9 @@
 		<meta name="renderer" content="webkit|ie-comp|ie-stand">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
-		<meta http-equiv="Cache-Control" content="no-siteapp" />
-
+		<meta http-equiv="Cache-Control" content="no-siteapp" /> 
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css" />
-		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css" /> 
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/css/skin.css" id="skin" />
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
@@ -176,17 +175,29 @@
 		<article class="page-container">
 			<form class="form form-horizontal" id="form-article-add">
 				<div class="row cl">
-					<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>分类栏目：</label>
+					<label class="form-label col-xs-4 col-sm-2"><span class="c-red"></span>分类栏目：</label>
 					<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select name="articlecolumn"  id="chnid" class="select">
+				<select name="articlecolumn"  id="chnid" class="select" onchange="upperCase(this.id,1)">
 					<option value="">请选择所属栏目....</option>
-								<option v-for="item in items" :value="item.chnid">{{item.cname}}</option>
+					<option v-for="item in items" :value="item.chnid">{{item.cname}}</option>
 				</select>
+				
 				</span> </div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">缩略图：</label>
+					<div class="formControls col-xs-8 col-sm-9"> 
+                        <input style="position: absolute; width: 800px;" placeholder="请选择缩略图文件" type="text" class="input-text" id="filename" readonly="readonly"  />
+                    	<div style="margin-left: 800px;>
+							<div class="an">
+								<image-item href="#" class="a-upload"><input id="upload" type="file" value="搜索" />图片上传</a>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div id="conetent">
 				<div class="row cl">
-					<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>{{cname.title}}：</label>
+					<label class="form-label col-xs-4 col-sm-2"><span class="c-red"></span>{{cname.title}}：</label>
 					<div class="formControls col-xs-8 col-sm-9">
 						<input type="text" class="input-text" value="" placeholder="请输入新闻标题" id="cname" v-model.lazy="cname.message" >
 					</div>
@@ -198,69 +209,68 @@
 					</div>
 				</div>
 
-				<div class="row cl">
-					<label class="form-label col-xs-4 col-sm-2">缩略图：</label>
-					<div class="formControls col-xs-8 col-sm-9">
-						<div style="width: 564px; position: absolute;>
-                             <input type=" text "   class="input-text " placeholder="请输入新闻副标题 " value=" " placeholder=" " id="articletitle2 " name="articletitle2 ">
-                    	</div>
-                    	<div style="margin-left: 564px;>
-							<div class="an">
-								<image-item href="#" class="a-upload"><input id="upload" type="file" value="搜索" />图片上传</a>
-							</div>
-						</div>
-					</div>
-				</div>
+				
 
 				<div id="insert"></div>
-				<div class="row cl">
+				<div class="row cl" align="center" style="align-content: center;" >
 					<button style="float:right" onClick="addDiv()" class="btn btn-secondary radius" type="button">添加段落</button>
 					<button style="float:right" onClick="delDiv()" class="btn btn-secondary radius" type="button">删除段落</button>
 				</div>
 				<div class="row cl">
 					<label class="form-label col-xs-4 col-sm-2">{{newszy.title}}：</label>
 					<div class="formControls col-xs-8 col-sm-9">
-						<textarea name="abstract" cols="" rows="" class="textarea" placeholder="请输入新闻摘要...最少输入10个字符" datatype="*10-100" dragonfly="true" nullmsg="备注不能为空！" onKeyUp="$.Huitextarealength(this,200)"></textarea>
+						<textarea id="summas" v-model.lazy="newszy.message" cols="" rows="" class="textarea" placeholder="请输入新闻摘要...最少输入10个字符" datatype="*10-100" dragonfly="true"    ></textarea>
 						<p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
 					</div>
 				</div>
 
 				<div class="row cl">
-					<label class="form-label col-xs-4 col-sm-2">允许评论：</label>
+					<label class="form-label col-xs-4 col-sm-2">{{isReply.title}}：</label>
 					<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 						<div class="check-box">
-							<input type="checkbox" id="allowcomments" name="allowcomments" value="">
+							<input type="checkbox" id="isReply" v-model="isReply.check" value="">
 							<label for="checkbox-pinglun">&nbsp;</label>
 						</div>
 					</div>
 				</div>
-
+                <div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">{{islink.title}}：</label>
+					<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+						<div class="check-box">
+							<input type="checkbox"  id="islink" v-model="islink.check" value="">
+							<label for="checkbox-pinglun">&nbsp;</label>
+						</div>
+					</div>
+				</div>
 				<div class="row cl">
 					<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
-						<button onClick="article_save_submit();" class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存并提交审核</button>
-						<button onClick="article_save();" class="btn btn-secondary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 保存草稿</button>
-						<button onClick="removeIframe();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+						<button  onclick="submittj()"   class="btn btn-primary radius"  > 保存</button>
+						 
 					</div>
 				</div>
 				</div>
 			</form>
 		</article>
-		<script src="../../js/vue.js"></script>
-		<script type="text/javascript" src="../../js/utils/storageutil.js"></script>
-		<!--<script src="../../js/utils/cryption.js"></script>-->
-		<script src="../../js/utils/utils.js"></script>
-		<!--<script src="../../js/lib/plupload/moxie.min.js"></script>-->
-		<!--<script src="../../js/lib/plupload/plupload.dev.js"></script>-->
-		<!--<script src="../../js/lib/qiniu/qiniu.min.js"></script>-->
-		<!--<script src="../../js/utils/cloudutil.js"></script>-->
+		<script type="text/javascript"  src="../../js/vue.js"></script> 
+		<script type="text/javascript"  src="../../js/utils/cryption.js"></script> 
+		<script type="text/javascript"  src="../../js/lib/plupload/moxie.min.js"></script>
+		<script type="text/javascript"  src="../../js/lib/plupload/plupload.dev.js"></script>
+		<script type="text/javascript"  src="../../js/lib/qiniu/qiniu.min.js"></script> 
+		<script type="text/javascript"  src="../../js/utils/cloudutil.js"></script>
 		<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+		<script src="../../js/pcWeb-HUI/Uploader.js"></script>
 		<!--<script src="../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>-->
-		<!--<script type="text/javascript">
-		document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
-	</script>-->
-		<script type="text/javascript">
-			var vm_loading; //等待框
-
+				<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/qiniu/qiniu.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cloudutil.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cryption.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/pluploadutil.js?" + Math.random() + "'></s" + "cript>");
+		</script>
+		<script type="text/javascript">  
 			var count1 = 0;
 			var fileUploader; //上传logo七牛对象
 			var bannerUploader; //上传banner七牛对象
@@ -268,8 +278,7 @@
 			var imgurl = ""; //圖片地址   
 			var FileDataArray = new Array(); //附件参数
 			var imgName;
-			var PriNewsId;
-
+			var PriNewsId; 
 			var objArray = new Array();
 			//所属栏目下拉框
 			var vue_input = new Vue({
@@ -324,12 +333,12 @@
             			//初始化页面
 			window.onload = function() {
 				//初始化上传控件
-				//initUploaderfj();
+				initUploaderfj();
 				//添加一个段落
 				addDiv();
-				var detail = utils.getDataFromUrl(window.location.href);
+				var detail = utils.getDataFromUrl(window.location.href); 
 				vm.type = detail.type;
-				PriNewsId = detail.newsid;
+				PriNewsId = detail.newsid; 
 				var insertText;
 				if(vm.type == 'edit') {
 					var tempData = {
@@ -338,8 +347,7 @@
 						newsid: PriNewsId, //文章id
 						pagesize: 999, //每页条数  
 						pageindex: 1 //页码 
-					}
-
+					} 
 					unitWebsitePro(tempData, function(data) {
 						vm.editName = '保存';
 						$("#chnid option:selected").val(PriNewsId);
@@ -418,10 +426,10 @@
 							if(webConfig.isfileup == 0) //0表示禁止上传，并隐藏回复功能
 								document.getElementById('onisfileup').style.display = "none";
 						} else {
-							weui.alert('没有获取到配置信息')
+							alert('没有获取到配置信息')
 						}
 					} else {
-						weui.alert(data.RspTxt);
+						alert(data.RspTxt);
 					}
 				});
 				/**
@@ -434,13 +442,11 @@
 					iswrite: '1',
 					stat: '1',
 					pageindex: 1 //页码  
-				}
-				var datalm;
+				} 
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
 						if(data.RspData.dt.length > 0) {
-							vue_input.items = data.RspData.dt;
-							datalm = data.RspData.dt;
+							vue_input.items = data.RspData.dt; 
 						} else {
 							alert('暂时还没有栏目');
 						}
@@ -452,33 +458,28 @@
 
 			function addDiv() {
 				//创建一个div 
-				var bo = document.getElementById("insert");
-
+				var bo = document.getElementById("insert"); 
 				var div = document.createElement('div');
 				bo.insertBefore(div, bo.newnode);
 				div.className = "italic";
-				var ic = count1 + 1;
-
+				var ic = count1 + 1; 
 				if(ic <= 5) {
 					for(var i = 0; i < ic; i++) {
 						//div.innerHTML = '<div id=\"yc' + count1 + '\"><input name=\"dlt\" id=\"title' + i + '\" placeholder="请输入节标题" onchange=\"upperCase(this.id,' + i + ')\"  type="text"  ><input name=\"dlc\" id=\"conten' + i + '\"   v-model.lazy=\"newscontent.message\" class=\"weui-input\" placeholder=\"请输入新闻内容\" onchange=\"upperCase(this.id,' + i + ')\" style=\"border-color: white;height: 7rem;\ /"><div class=\"kuan\"><input name=\"dle\" id=\"Priimgname' + i + '\" type=\"text\"   onpropertychange=\"upperCase(this.id,' + i + ')\" /></div><div class=\"an\"><a href=\"#\" style=\"float:right\" class=\"a-upload\"><input id=\"Prifile' + i + '\" type=\"file\"  />上传图片</a></div></div>';
-						div.innerHTML = '<div id=\"yc' + count1 + '\"><div class=\"row cl\"><label class=\"form-label col-xs-4 col-sm-2\">节标题：</label><div class=\"formControls col-xs-8 col-sm-9\"><input type=\"text\" class=\"input-text\" name=\"dlt\" id=\"title' + i + '\" placeholder=\"请输入新闻节标题\"></div></div><div class=\"row cl\"><label class=\"form-label col-xs-4 col-sm-2\">节内容：</label><div class=\"formControls col-xs-8 col-sm-9\"><textarea name=\"dlc\" id=\"conten' + i + '\" cols=\"\" rows=\"\" class=\"textarea\" placeholder=\"请输入新闻节内容\" datatype=\"*10-100\" dragonfly=\"true\" nullmsg=\"备注不能为空！\"></textarea><p class=\"textarea-numberbar\"><em class=\"textarea-length\">0</em>/200</p></div></div><div class=\"row cl\"><label class=\"form-label col-xs-4 col-sm-2\">缩略图：</label><div class=\"formControls col-xs-8 col-sm-9\"><div style=\"width: 564px; position: absolute;><input type=\" text \"   class=\"input-text \" placeholder=\"请输入新闻副标题\ " value=\"\" placeholder=\" \" name=\"dle\" id=\"Priimgname' + i + '\" ></div><div style=\"margin-left: 564px;\"><div class=\"an\"><image-item href=\"#\" class=\"a-upload\"><input id=\"upload\" type=\"file\" value=\"搜索\" />图片上传</a></div></div></div></div></div>';
+						div.innerHTML = '<div id=\"yc' + count1 + '\"><div class=\"row cl\"><label class=\"form-label col-xs-4 col-sm-2\">节标题：</label><div class=\"formControls col-xs-8 col-sm-9\"><input type=\"text\" class=\"input-text\" name=\"dlt\" id=\"title' + i + '\" placeholder=\"请输入新闻节标题\" onchange=\"upperCase(this.id,' + i + ')\" ></div></div><div class=\"row cl\"><label class=\"form-label col-xs-4 col-sm-2\">节内容：</label><div class=\"formControls col-xs-8 col-sm-9\"><textarea name=\"dlc\" id=\"conten' + i + '\" cols=\"\" rows=\"\" class=\"textarea\" placeholder=\"请输入新闻节内容\" onchange=\"upperCase(this.id,' + i + ')\"  datatype=\"*10-100\" dragonfly=\"true\" nullmsg=\"备注不能为空！\"></textarea><p class=\"textarea-numberbar\"><em class=\"textarea-length\">0</em>/200</p></div></div><div class=\"row cl\"><label class=\"form-label col-xs-4 col-sm-2\">节图片：</label><div class=\"formControls col-xs-8 col-sm-9\"><input style=\"position: absolute;   width: 800px;\" name=\"dle\" id=\"Priimgname' + i + '\" type=\"text\"   onpropertychange=\"upperCase(this.id,' + i + ')\"  class=\"input-text\"   readonly=\"readonly\"  /><div style=\"margin-left: 800px;\"><div class=\"an\"><image-item href=\"#\" class=\"a-upload\"><input id=\"Prifile' + i + '\" type=\"file\" value=\"搜索\" />图片上传</a></div></div></div></div></div>';
 					}
 				} else {
 					alert('不能再增加了');
 					return;
-				}
-				console.log('html:' + div.innerHTML);
-
+				} 
 				var Priid = "Prifile" + count1;
 				var Priimgname = "Priimgname" + count1;
-				//initUploader(Priid, Priimgname);
+				initUploader(Priid, Priimgname);
 				count1++;
 
 			}
 
-			function delDiv() {
-
+			function delDiv() { 
 				if(count1 == 1) {
 					alert('不能再删除了');
 					return;
@@ -502,8 +503,7 @@
 				var allInputse1 = $("*[name='dle']");
 				for(var i = 0; i < allInputst1.length; i++) {
 					updateConten += '<section><h3>' + allInputst1[i].value + '</h3><p>' + allInputsc1[i].value + '</p><p><img src=' + allInputse1[i].value + '></p></section>';
-				}
-				alert(updateConten)
+				} 
 				if(FileDataArray == '') {
 					for(var i = 0; i < allInputse1.length; i++) {
 						var newsname = allInputse1[i].value.substring(45);
@@ -530,7 +530,163 @@
 				//确定删除
 
 			}
+			
+			function edit(oldVal, newVal, key, zfc) {
+				console.log('key=' + key + '--oldVal=' + oldVal + '--newVal=' + newVal)
+				if(vm.type == "add" && key == 'islink') {
+					if(newVal == true) {
+						$("#linkurl").focus();
+						vm.iswrite.check = false;
+					}
+					return;
+				}
+				if(key == 'islink' && newVal == true) {
+					$("#linkurl").focus();
+					vm.iswrite.check = false;
+				}
+
+				if(newVal == oldVal) {
+					return;
+				}
+				if(key == 'cname') {
+					key = 'topic';
+				}
+				if(key == 'fname') {
+					key = 'subtopic';
+				} 
+				if(key == 'fname') {
+					key = 'content';
+				} 
+				var para = {
+					cmd: 'news',
+					type: 'edit',
+					colid: PriNewsId,
+					callcol: key,
+					colv: boolToInt(newVal)
+				}
+				unitWebsitePro(para, function(data) {});
+			}
+			function boolToInt(value) {
+				if(value == true) {
+					return 1;
+				} else if(value == false) {
+					return 0;
+				} else {
+					return value;
+				}
+			}
+			//编辑段落内容
+			function upperCase(x, i) {
+				var id = x.substring(0, x.length - 1);
+				var id1 = id + i;
+				if(vm.type == 'edit') {
+					if(id == 'chni') {
+						var Chnid = $("#chnid option:selected").val();
+						var para = {
+							cmd: 'news',
+							type: 'edit',
+							colid: PriNewsId,
+							callcol: 'chnid',
+							colv: Chnid
+						}
+						unitWebsitePro(para, function(data) {});
+					} else {
+						var updateConten = "";
+						var allInputst1 = $("*[name='dlt']");
+						var allInputsc1 = $("*[name='dlc']");
+						var allInputse1 = $("*[name='dle']");
+						for(var i = 0; i < allInputst1.length; i++) {
+							updateConten += '<section><h3>' + allInputst1[i].value + '</h3><p>' + allInputsc1[i].value + '</p><p><img src=' + allInputse1[i].value + '></p></section>';
+						}
+						if(FileDataArray == '') {
+							for(var i = 0; i < allInputse1.length; i++) {
+								var newsname = allInputse1[i].value.substring(45);
+								var person2 = new Object();
+								person2.newsid = PriNewsId; //文章id
+								person2.saveurl = allInputse1[i].value; //图片地址
+								person2.imgurl = allInputse1[i].value;
+								person2.oldname = '';
+								person2.newname = newsname;
+								person2.filesize = '45';
+								FileDataArray.push(person2);
+							}
+						}
+						var para = {
+							cmd: 'news',
+							type: 'edit',
+							colid: PriNewsId,
+							callcol: 'content',
+							encs: FileDataArray,
+							colv: updateConten
+						} 
+						unitWebsitePro(para, function(data) {});
+					}
+				}
+			}
+			//按钮监听
+			 function submittj() { 
+				bannerUploader.start();
+				/**
+				 * 文章附件管理添加
+				 */
+				var PriConten = "";
+				var allInputst = $("*[name='dlt']");
+				var allInputsc = $("*[name='dlc']");
+				var allInputse = $("*[name='dle']");
+				for(var i = 0; i < allInputst.length; i++) {
+					PriConten += '<section><h3>' + allInputst[i].value + '</h3><p>' + allInputsc[i].value + '</p><p><img src=' + allInputse[i].value + '></p></section>';
+				} 
+				var PriTopic = document.getElementById("cname").value; //新闻标题 
+				var Prisubtopic = document.getElementById("fname").value; //新闻副标题  
+				var PriSummas = document.getElementById("summas").value; //新闻摘要 
+				var PriChnid = $("#chnid option:selected").val(); 
+				var PriIsquo = document.getElementById("islink").checked == true ? 1 : 0; 
+				var PriIsReply = document.getElementById("isReply").checked == true ? 1 : 0; 
+				var PriQuourl = document.getElementById("islink").value; 
+				//alert('附件=========================:' + JSON.stringify(FileDataArray)); 
+				var comData = {
+					cmd: 'news', //文章管理
+					type: 'add',
+					chnid: PriChnid,
+					subtopic: Prisubtopic,
+					topic: PriTopic,
+					content: PriConten,
+					summas: PriSummas,
+					encs: FileDataArray,
+					isquo: PriIsquo,
+					quourl: PriQuourl,
+					isreply: PriIsReply,
+					stat: 1
+				};
+				 
+				alert('comData=========================:' + JSON.stringify(comData));
+				return;
+				unitWebsitePro(comData, function(data) {
+					if(data.RspCode == 0) { 
+						alert('添加成功！');
+						//清空数据 
+						document.getElementById("cname").value = ""; //新闻标题
+						//document.getElementById("conten").value = ""; //新闻内容
+						document.getElementById("summas").value = ""; //新闻摘要
+						document.getElementById("chnid").selectedIndex = 0; //栏目id
+						document.getElementById("islink").value = ""; //引用地址
+						document.getElementById("fname").value = ""; 
+						location.reload();
+					} else {
+						alert(data.RspTxt);
+					}
+				});
+				var vue_img = new Vue({
+					el: '#PriImg',
+					data: {
+						imgurl: imgurl
+					}
+				});
+			}
+			
+			
 		</script>
+		
 	</body>
 
 </html>

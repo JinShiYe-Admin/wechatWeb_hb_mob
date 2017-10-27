@@ -33,6 +33,7 @@
 				</span>
 			</div>
 			<course-table :value="items" @click-edit="edit" @click-del="del"></course-table>
+			<div id="pages"></div>
 		</div>
 		<!--表格-->
 		<template id="temp_course-table">
@@ -169,23 +170,19 @@
 				}
 			});
 			//获取课程表列表
-			function getscheduleList() {
+			function getscheduleList(pageindex) {
 				var tempData = {
 					cmd: 'edule', //文章管理
 					type: 'findpage', //分页查找文章列表
 					pagesize: '10', //每页条数
-					pageindex: 1, //页码
+					pageindex: pageindex, //页码
 
 				}
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
 						if(data.RspData.dt.length > 0) {
-							if(column_table.pg.PageIndex == 1) {
-								column_table.items = data.RspData.dt;
-							} else {
-								column_table.items = column_table.items.concat(data.RspData.dt);
-							}
-							column_table.pg = data.RspData.pg
+							column_table.items = data.RspData.dt;
+						initLaypage(data.RspData.pg.PageCount, pageindex);
 						}
 					} else {
 						alert(data.RspTxt);
@@ -209,7 +206,25 @@
 				});
 			}
 			window.onload = function() {
-				getscheduleList();
+				getscheduleList(1);
+			}
+			/**
+			 * 初始化页码
+			 * @param {Object} pages 通过后台拿到的总页数
+			 * @param {Object} curr 初始化当前页
+			 */
+			function initLaypage(pages, curr) {
+				laypage({
+					cont: 'pages', //容器
+					pages: pages, //通过后台拿到的总页数
+					curr: curr, //初始化当前页
+					jump: function(e, first) { //触发分页后的回调
+//						console.log("jump: " + first + " " + JSON.stringify(e));
+						if(!first) {
+							getscheduleList(e.curr);
+						}
+					}
+				});
 			}
 		</script>
 	</body>

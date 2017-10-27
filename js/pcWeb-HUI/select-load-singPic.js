@@ -3,7 +3,7 @@ Vue.component("select-load-pic", {
 	template: '<span :id="index|idFilter"  class="btn-upload form-group">' +
 		'<input :value="originalName" class="input-text upload-url radius piece" type="text" readonly :placeholder="index|placeHolder">' +
 		'<a href="" id="upload" class="btn btn-primary radius"><i class="Hui-iconfont Hui-iconfont-upload"></i> 浏览文件</a>' +
-		'<input type="file" accept="image/jpeg,image/png" v-on:change="selectFile($event)"  class="input-file">' +
+		'<input type="file" accept="image/jpeg,image/png" value="dsafd" v-on:change="selectFile($event)"  class="input-file">' +
 		'</span>',
 	data: function() {
 		return {
@@ -16,6 +16,10 @@ Vue.component("select-load-pic", {
 	},
 	filters: {
 		placeHolder: function(val) {
+//		    if(val==-1 && detail.type == 'edit' ){
+//		    alert('jinlai')
+////		    return  bjimgurl;
+//		    }
 			console.log("要选择的类型：" + val)
 			if(val >=0 ) {
 				console.log("0")

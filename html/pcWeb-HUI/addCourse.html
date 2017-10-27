@@ -200,6 +200,7 @@
 			});
 			//获取科目列表
 			var getSubArray = function() {
+//				courseData.flag = 0;
 				var tempData = {
 					cmd: 'subadmin',
 					type: 'findpage',
@@ -219,7 +220,7 @@
 //							courseData.subIndex++;
 						}
 					} else {
-						alert(data.RspTxt);
+//						alert(data.RspTxt);
 					}
 				});
 			};

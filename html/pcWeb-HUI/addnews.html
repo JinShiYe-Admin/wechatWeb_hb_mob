@@ -51,7 +51,7 @@
 			<div class="edit_container">
 				<div>
 					<select class="select" id="chnid" name="one" style="height: 45px;font-size: 17px;color: #929292;">
-						<option value="">请选择所属栏目....</option>
+					 
 						<option v-for="item in items" :value="item.chnid">{{item.cname}}</option>
 					</select>
 				</div>
@@ -112,10 +112,7 @@
 	<script src="../../js/pcWeb-HUI/select-load-singPic.js"></script>
 	<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
 	<script src="../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
-	<script src="../../js/utils/utils.js"></script>
-	<script src="../../js/pcWeb-HUI/select-load-singPic.js"></script>
-	<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
-	<script type="text/javascript">
+  	<script type="text/javascript">
 		document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 	</script>
 	<script src="../H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
@@ -125,11 +122,13 @@
 		var bannerUploader; //上传banner七牛对象
 		var uptokenData; //上传的token
 		var imgurl = ""; //圖片地址   
+		var bjimgurl = ""; //圖片地址   
 		var FileDataArray = new Array(); //附件参数
 		var imgList=new Array();
 		var imgName;
 		var dlindex;
 		var PriNewsId;
+		var detail;
 		var objArray = new Array();
 		//所属栏目下拉框
 			var vue_input = new Vue({
@@ -142,8 +141,9 @@
 			});
 		//初始化页面
 		window.onload = function() {
-			var detail = utils.getDataFromUrl(window.location.href);
+			detail = utils.getDataFromUrl(window.location.href);
 			PriNewsId = detail.newsid;
+			alert('新闻id'+PriNewsId)
 			var insertText;
 			if(detail.type == 'edit') {
 				var tempData = {
@@ -153,26 +153,29 @@
 					pagesize: 999, //每页条数  
 					pageindex: 1 //页码 
 				}
-				unitWebsitePro(tempData, function(data) {
+//				unitWebsitePro(tempData, function(data) {
 					//vm.editName = '保存';
 					$("#chnid option:selected").val(PriNewsId);
 					$("#chnid option:selected").text(detail.cname)
-					//				articalPublish.artical.chind = 1;
-					//				articalPublish.artical.topic = "新闻标题测试";
-					//				articalPublish.artical.subtopic = "新闻副标题测试";
-					//				articalPublish.artical.summas = "新闻摘要测试";
-					//				articalPublish.artical.isquo = 0;
-					//				articalPublish.artical.isreply = 1;
-					articalPublish.artical.topic = data.RspData.dt[0].topic;
-					articalPublish.artical.subtopic = data.RspData.dt[0].subtopic; //新闻副标题
-					articalPublish.artical.summas = data.RspData.dt[0].summas; //新闻摘要
-					articalPublish.artical.isquo = data.RspData.dt[0].quourl;
-					articalPublish.artical.isreply = data.RspData.dt[0].isreply;
-
-					insertText = "<section><h3>3214123</h3><p>43214312</p><p><img src='  '></p></section>";
+									articalPublish.artical.chind = 1;
+									articalPublish.artical.topic = "新闻标题测试";
+									articalPublish.artical.subtopic = "新闻副标题测试";
+									articalPublish.artical.summas = "新闻摘要测试";
+									articalPublish.artical.isquo = 0;
+									articalPublish.artical.isreply = 1;
+//					articalPublish.artical.topic = data.RspData.dt[0].topic;
+//					articalPublish.artical.subtopic = data.RspData.dt[0].subtopic; //新闻副标题
+//					articalPublish.artical.summas = data.RspData.dt[0].summas; //新闻摘要
+//					articalPublish.artical.isquo = data.RspData.dt[0].quourl;
+//					articalPublish.artical.isreply = data.RspData.dt[0].isreply;
+//					bjimgurl= data.RspData.dt[0].imgurl;
+                    bjimgurl= "http://qn-cspb.jiaobaowang.net/wechat/webcon/1506580480781460.png";
+					//insertText = data.RspData.dt[0].content;
+					insertText = "<section><h3></h3><p>本网消息（文/李科 图/潇潇）9月27日上午，成都市审计局与成都大学政校合作战略框架协议签字暨成都市审计学会授牌仪式在学术会议室举行。校长王清远、市审计局局长曾军出席仪式并致辞。党委副书记、纪委书记易贤文主持签字授牌仪式。</p><p><img src=http://qn-cspb.jiaobaowang.net/wechat/webcon/1506580422165139.png></p></section><section><h3></h3><p>王清远在致辞中说，当前学校正按照市委市政府提出的“高水平办好成都大学”的总体要求，努力建设高水平应用型综合大学，培养高素质应用型人才，学校教学科研、服务地方、校城融合、协同育人等方面工作不断取得突出进展，办学实力显著增强，呈现出良好发展势头。他表示，希望以此为契机，全面加强与市审???局的全方位、深度合作，发挥综合性大学多学科优势，做好成都市审计学会工作，共同为地方审计业务工作、审计人才培养、审计事业发展贡献更大力量。</p><p><img src=http://qn-cspb.jiaobaowang.net/wechat/webcon/1506580446369615.png></p></section><section><h3></h3><p>曾军说，近年来，国家十分重视审计事业发展，对审计工作的要求越来越高，审计事业迎来新机遇和新挑战，为政校合作创造了空间，此次政校合作协议签订是成都审计事业发展中的一件大事。他表示，地方需要大量交叉型、复合型专业审计人才，成都大学有丰富科研资源和雄厚科研力量，有优秀教育培训专家，双方整合资源，深化合作，积极作为，将为学校审计人才培养，地方审计事业发展作出贡献，为国家中心城市建设舔砖加瓦。</p><p><img src=http://qn-cspb.jiaobaowang.net/wechat/webcon/1506580469701259.png></p></section><section><h3></h3><p>签??及挂牌仪式结束后，召开了成都市审计学会新一届会员代表大会。成都市审计局副局长李永平，副校长彭晓琳，以及双方相关职能部门负责人和成都市各区（市）、县审计局负责人参加相关活动。</p><p><img src=http://qn-cspb.jiaobaowang.net/wechat/webcon/1506580480781460.png></p></section>";
 					var n = (insertText.split('<section>')).length - 1;
+				    alert(n)
 					for(var i = 0; i < n - 1; i++) {
-						this.addPiece();
+						
 					}
 					var k = insertText.replace(/<section>/g, "</section>");
 					var ss = k.split('</section>');
@@ -185,6 +188,7 @@
 					if(ss.length > 0) {
 						//准备创建控件,多少纬就创建多少个段落控件
 						var duanluokongjian = '';
+						alert('ss'+ss.length)
 						for(var i = 0; i < ss.length; i++) {
 							var p = ss[i].replace(/<p>/g, "</p>"); //将p替换成/p,准备按/p标签拆分
 							var pp = p.split('</p>');
@@ -192,12 +196,15 @@
 							var imgstring = pp[3];
 							var zfc = imgstring.substring(9);
 							zfc = zfc.substring(0, zfc.length - 1);
-							articalPublish.pieces.title = hh;
+//							alert('标题'+hh);
+//							alert('内容'+pp[1]);
+//							alert('图片'+zfc);
+							calPublish.pieces.title = hh;
 							articalPublish.pieces.content = pp[1];
 							articalPublish.pieces.files = zfc;
 							//pp[0]即为h3内容,再同理按h3替换拆h3 
 							duanluokongjian += pp[0] + '-------';
-							var hh = pp[0].replace(/<[^>]+>/g, "");
+							//var hh = pp[0].replace(/<[^>]+>/g, "");
 							//pp[1]为content内容
 							duanluokongjian += pp[1] + '-------';
 							//pp[3]为img内容,再同理按src特征取到src内的路径
@@ -215,7 +222,7 @@
 							})
 						})(item)
 					}
-				});
+				//});
 			}
 			/**
 			 * 获取网站配置信息   
@@ -309,7 +316,7 @@
 						chnid: PriChnid,
 						subtopic: articalPublish.artical.subtopic,
 						topic: articalPublish.artical.topic,
-						content: articalPublish.artical.content,
+						content: PriConten,
 						summas: articalPublish.artical.summas,
 						encs: FileDataArray,
 						isquo: PriIsquo,
@@ -334,15 +341,12 @@
 					type: 'findpage', //分页查找栏目列表
 					pagesize: 999, //每页条数 
 					pageindex: 1 //页码 
-				}
-					alert('1')
-					unitWebsitePro(tempData, function(data) { 
-						alert(JSON.stringify(data.RspData.dt))
-						if(data.RspCode == 0) {
-							alert('2')
+				} 
+					unitWebsitePro(tempData, function(data) {  
+						if(data.RspCode == 0) { 
 							if(data.RspData.dt.length > 0) {
-							    alert('3')
-								vue_input.items = data.RspData.dt;
+							    alert(JSON.stringify(data.RspData.dt));
+								vue_input.items = data.RspData.dt; 
 							} else {
 								//$.Huimodalalert('暂时还没有栏目', 1000);
 								alert('暂时还没有栏目');
@@ -359,6 +363,7 @@
 						alert('段落未添加标题或内容，无法继续添加');
 						return;
 					}
+//					alert()
 					this.pieces.splice(index + 1, 0, {
 						title: "",
 						content: "",

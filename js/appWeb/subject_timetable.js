@@ -233,7 +233,7 @@ function getSub() {
 	var tempData = {
 		cmd: 'subadmin',
 		type: 'findpage',
-		pagesize: 10,
+		pagesize: 100,
 		pageindex: 1,
 		stat: '1'
 	}

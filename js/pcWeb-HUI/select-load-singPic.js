@@ -16,9 +16,10 @@ Vue.component("select-load-pic", {
 	},
 	filters: {
 		placeHolder: function(val) {
-		    if(val==-1 && detail.type == 'edit' ){
-		    return  bjimgurl;
-		    }
+//		    if(val==-1 && detail.type == 'edit' ){
+//		    alert('jinlai')
+////		    return  bjimgurl;
+//		    }
 			console.log("要选择的类型：" + val)
 			if(val >=0 ) {
 				console.log("0")

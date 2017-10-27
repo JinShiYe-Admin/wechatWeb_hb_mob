@@ -7,7 +7,7 @@
 		<title>作业发布</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link rel="stylesheet" href="../../css/weui.min.css" />
-		<link rel="stylesheet" href="../../css/jquery-weui.css" />
+		<link rel="stylesheet" href="../../js/demoCssJs/jquery-weui.css" />
 		<link rel="stylesheet" href="../../css/demos.css" />
 		<link rel="stylesheet" href="../../css/utils/iconfont.css" />
 		<link rel="stylesheet" href="../../css/mui.min.css" />
@@ -117,14 +117,14 @@
 				<a href="index.aspx" class="weui-tabbar__item">
 					<div class="wrap">
 						<img class="img" src="images/pic_ico_index0.png" alt="">
-						<div class="notice">8</div>
+						<%--<div class="notice">8</div>--%>
 					</div>
 					<p class="weui-tabbar__label">微校园</p>
 				</a>
 				<a href="#" class="weui-tabbar__item weui-bar__item--on">
 					<div class="wrap">
 						<img class="img" src="images/pic_ico_worksend.png" alt="">
-						<div class="notice">12</div>
+						<%--<div class="notice">12</div>--%>
 					</div>
 					<p class="weui-tabbar__label">作业发布</p>
 				</a>
@@ -135,20 +135,20 @@
 					</div>
 					<p class="weui-tabbar__label">作业管理</p>
 				</a>
-				<a href="workmine.aspx" class="weui-tabbar__item">
+				<%--				<a href="workmine.aspx" class="weui-tabbar__item">
 					<div class="weui-tabbar__icon">
 						<img class="img" src="images/pic_ico_workmine0.png" alt="">
 					</div>
 					<p class="weui-tabbar__label">我的作业</p>
-				</a>
+				</a>--%>
 			</div>
 		</div>
 		<script src="../../js/weui.min.js" type="text/javascript" charset="utf-8"></script>
 
 		<script src="../../js/demoCssJs/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/appweb/choose-file.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../../js/demoCssJs/jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../../js/jquery-weui.js" type="text/javascript" charset="utf-8"></script>
+		<script src="lib/jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery-weui.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/utils/consts.js"></script>
 		<script src="../../js/utils/events.js"></script>
 		<script src="../../js/lib/vconsole/vconsole.min.js"></script>
@@ -295,7 +295,7 @@
 							}
 							tempEncs.push(tempModel);
 						}
-						$.showLoading('加载中...');
+
 						var idArr = [];
 						var nameArr = [];
 						for(var i = 0; i < homework.classes.currClass.persons.length; i++) {
@@ -304,11 +304,11 @@
 							nameArr.push(model.name);
 
 						}
-						if(idArr.length==0){
-						alert('此部门暂无人员');
-						return;
+						if(idArr.length == 0) {
+							alert('此部门暂无人员');
+							return;
 						}
-
+						$.showLoading('加载中...');
 						var tempData = {
 							cmd: 'work',
 							type: 'add',
@@ -404,6 +404,7 @@
 					}
 				}
 			}
+
 			/**
 			 * 初始化上传
 			 */
@@ -526,7 +527,7 @@
 				var tempData = {
 					cmd: 'sub',
 					type: 'findpage',
-					pagesize: 10,
+					pagesize: 100,
 					pageindex: 1,
 					stat: '1'
 				}
@@ -542,7 +543,7 @@
 							model.label = model.cname;
 						}
 					} else {
-//						mui.toast(data.RspTxt)
+						mui.toast(data.RspTxt)
 					}
 				})
 			}
@@ -568,7 +569,7 @@
 						}
 
 					} else {
-//						mui.toast(data.RspTxt)
+						mui.toast(data.RspTxt)
 					}
 				})
 
@@ -580,16 +581,24 @@
 					type: 'findpage',
 					colid: colid,
 					colv: 0,
-					callcol: 'base',
+					callcol: 'info',
 				}
 				unitWebsitePro(tempData, function(data) {
+					var tempArr = [];
 					console.log('人员:' + JSON.stringify(data));
+					for(var i = 0; i < data.RspData.length; i++) {
+						var model = data.RspData[i];
+						if(model.isleader == 0) {
+							tempArr.push(model);
+
+						}
+					}
 					if(data.RspCode == 0) {
 						for(var i = 0; i < homework.depart_array.length; i++) {
 							var model = homework.depart_array[i];
 							console.log("model=" + JSON.stringify(model))
 							if(model.value == colid) {
-								model.persons = data.RspData;
+								model.persons = tempArr;
 								homework.classes.currClass.persons = model.persons;
 							}
 						}
@@ -619,7 +628,41 @@
 			function selectSubject(input_item) {
 				document.activeElement.blur();
 				var self = input_item;
-				weui.picker(homework.sub_array, {
+				weui.picker([{
+					label:'数学',
+					value:1
+				},{
+					label:'英语',
+					value:1
+				},{
+					label:'语文',
+					value:1
+				},{
+					label:'物理',
+					value:1
+				},{
+					label:'化学',
+					value:1
+				},
+				{
+					label:'生物',
+					value:1
+				},{
+					label:'美术',
+					value:1
+				},{
+					label:'音乐',
+					value:1
+				},{
+					label:'地理',
+					value:1
+				},{
+					label:'体育',
+					value:1
+				},{
+					label:'计算机',
+					value:1
+				}], {
 					onChange: function(result) {
 						//						console.log(result);
 					},

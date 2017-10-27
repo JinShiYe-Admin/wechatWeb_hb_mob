@@ -313,6 +313,7 @@
 							this.localPath = "";
 							this.localFile = null;
 							$("#orderidSelect").val(0);
+							$('#uploaderInput').val('');
 							this.show("添加图片");
 						},
 						/**
@@ -328,6 +329,7 @@
 							this.localPath = value.bimgurl;
 							this.localFile = null;
 							$("#orderidSelect").val(value.orderid);
+							$('#uploaderInput').val('');
 							this.show("编辑");
 						},
 						/**
@@ -344,7 +346,8 @@
 						},
 						btnAdd: function() {
 							console.log("添加");
-							if(this.burl == "") {
+							var addBurl = $.trim(this.burl);
+							if(addBurl == "") {
 								pictureModal.show("添加失败", "请输入链接URL");
 								return false;
 							}
@@ -422,6 +425,11 @@
 						 */
 						burlBlur: function() {
 							if(this.type == "删除" && this.burl != pictureTable.dt[pictureTable.changeIndex].burl) {
+								var addBurl = $.trim(this.burl);
+								if(addBurl == "") {
+									pictureModal.show("修改失败", "请输入链接URL");
+									return false;
+								}
 								changeOption('burl', this.burl);
 							}
 						},

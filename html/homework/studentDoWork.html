@@ -36,7 +36,7 @@
 					</div>
 				</div>
 			</div>
-			<a href="javascript:;" class="weui-btn weui-btn_primary" @click="clickSubmitBtn()" v-if="stat<2">{{submitBtnTitle}}</a>
+			<a class="weui-btn weui-btn_primary" @click="clickSubmitBtn()" v-if="stat<2">{{submitBtnTitle}}</a>
 			<a href="javascript:;" class="weui-btn weui-btn_primary" @click="clickSubmitBtn2()" v-if="stat<2">宋-老师发布作业</a>
 			<input id="qnInput" style="display: none;">
 			<!--<div class="weui-gallery" style="display: block">-->
@@ -136,7 +136,7 @@
 						mui.openWindow("../homework/homework-publish.html?abc=" + Math.random(), "homework-publish.html" + Math.random());
 					},
 					clickSubmitBtn: function() { //提交按钮
-						if(submitHomework.workTitle.length == 0 && submitHomework.uploadedFiles.length == 0) {
+						if(submitHomework.workTitle.trim().length == 0 && submitHomework.uploadedFiles.length == 0) {
 							alert('请作答后再提交');
 							return;
 						}

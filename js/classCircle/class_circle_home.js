@@ -672,6 +672,7 @@ function initRouter() {
 			initData: function(id, leave) {
 				console.log("initData:id:", id);
 				console.log("initData:space_data:", space_data);
+				document.body.style.webkitTransform = "translate3d(0px,0px,0px)";
 				router_user_space = this;
 				var temp_scrollTop = 0;
 				if(space_data[id] != undefined) {
@@ -783,6 +784,7 @@ function initRouter() {
 				$(document.body).unbind($.touchEvents.move);
 				$(document.body).unbind($.touchEvents.end);
 				$(document.body).destroyInfinite();
+				document.body.style.webkitTransform = "translate3d(0px,0px,0px)";
 				next();
 			} else {
 				if(this.photo_browser) {

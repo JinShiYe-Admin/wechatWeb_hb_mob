@@ -271,8 +271,7 @@ body {
 	bottom: 36px;
 }
 
-.weui-tab__bd,
-.weui-loadmore {
+#class_circle_home .weui-loadmore {
 	/*加载更多*/
 	padding-bottom: 36px;
 }

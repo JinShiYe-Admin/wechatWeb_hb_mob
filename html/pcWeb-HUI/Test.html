@@ -296,13 +296,7 @@
 				el: '#chnid',
 				data: {
 					items: [
-					{
-						cname:'sss',
-						chnid:111
-						},{
-						cname:'aaa',
-						chnid:222
-						}
+					 
 					]
 				}
 			});
@@ -332,7 +326,7 @@
 					},
 					islink: {
 						title: "是否为引用",
-						check: true
+						check: false
 					},
 					isReply: {
 						title: "是否允许回复",
@@ -660,6 +654,11 @@
 				 if(PriTopic.length>=30){
 				 	alert('新闻标题不能太长')
 				 }
+				 alert(PriTopic)
+				 if(PriTopic==""){
+				 	return;
+				 }
+			 
 				var Prisubtopic = document.getElementById("fname").value; //新闻副标题  
 				var PriSummas = document.getElementById("summas").value; //新闻摘要
 				 
@@ -695,6 +694,8 @@
 						document.getElementById("islink").value = ""; //引用地址
 						document.getElementById("fname").value = ""; 
 						location.reload();
+							 
+			 
 					} else {
 						alert(data.RspTxt);
 					}

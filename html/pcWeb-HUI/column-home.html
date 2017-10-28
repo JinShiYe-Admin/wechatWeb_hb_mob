@@ -5,7 +5,7 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="apple-mobile-web-app-stat-bar-style" content="black">
 		<title>配置栏目</title>
 		<script type="text/javascript">
 			var WebVersion = "?" + Math.random();
@@ -134,7 +134,7 @@
 						<td>{{item.orderid}}</td>
 						<td>{{item.note}}</td>
 						<td>{{item.istop==1?"是":"否"}}</td>
-						<td class="td-status"><span :class="item.status==0?'label label-defaunt radius':'label label-success radius'"><a v-if="item.stat==0">已停用</a><a v-else>已启用</a></span></td>
+						<td class="td-stat"><span :class="item.stat==0?'label label-defaunt radius':'label label-success radius'"><a v-if="item.stat==0">已停用</a><a v-else>已启用</a></span></td>
 						<td class="sorting_1">
 							<a class="operate-edit" @click="clickEdit(item)" title="编辑"><i class="Hui-iconfont"></i></a>
 							<a style="text-decoration:none" class="ml-5" @click="clickDel(item)" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
@@ -234,7 +234,7 @@
 					shield: function(item) {
 						var tempFlag = 0;
 						var tempStr = ''
-						if(item.status == 0) {
+						if(item.stat == 0) {
 							tempFlag = 1;
 							var tempStr = '启用'
 						} else {
@@ -258,10 +258,10 @@
 							//							alert(JSON.stringify(para))
 							unitWebsitePro(para, function(data) {
 								if(data.RspCode == 0) {
-									if(item.status == 0) {
-										item.status = 1;
+									if(item.stat == 0) {
+										item.stat = 1;
 									} else {
-										item.status = 0;
+										item.stat = 0;
 									}
 									console.log('item2:'+JSON.stringify(item))
 									console.log('dt:'+JSON.stringify(column_table.dt))

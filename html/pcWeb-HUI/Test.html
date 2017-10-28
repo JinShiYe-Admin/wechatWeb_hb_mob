@@ -168,11 +168,15 @@
 			}
 		</style>
 
-		<title>新增文章</title>
+		<title>新增操作</title>
 	</head>
 
 	<body>
+		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 新闻 <span class="c-gray en">&gt;</span> 新闻
+			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
+		</nav>
 		<article class="page-container">
+			
 			<form class="form form-horizontal" id="form-article-add">
 				<div class="row cl">
 					<label class="form-label col-xs-4 col-sm-2"><span class="c-red"></span>分类栏目：</label>
@@ -267,7 +271,7 @@
 		<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
 		<script src="../../js/pcWeb-HUI/Uploader.js"></script>
 		<script src="../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
-				<script type="text/javascript">
+		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
@@ -652,9 +656,15 @@
 					PriConten += '<section><h3>' + allInputst[i].value + '</h3><p>' + allInputsc[i].value + '</p><p><img src=' + allInputse[i].value + '></p></section>';
 				} 
 				var PriTopic = document.getElementById("cname").value; //新闻标题 
+				 
+				 if(PriTopic.length>=30){
+				 	alert('新闻标题不能太长')
+				 }
 				var Prisubtopic = document.getElementById("fname").value; //新闻副标题  
-				var PriSummas = document.getElementById("summas").value; //新闻摘要 
+				var PriSummas = document.getElementById("summas").value; //新闻摘要
+				 
 				var PriChnid = $("#chnid option:selected").val(); 
+			 
 				var PriIsquo = document.getElementById("islink").checked == true ? 1 : 0; 
 				var PriIsReply = document.getElementById("isReply").checked == true ? 1 : 0; 
 				var PriQuourl = document.getElementById("islink").value; 
@@ -673,7 +683,7 @@
 					isreply: PriIsReply,
 					stat: 1
 				}; 
-				console.log('comData=========================:' + JSON.stringify(comData)); 
+				alert('comData=========================:' + JSON.stringify(comData)); 
 				unitWebsitePro(comData, function(data) {
 					if(data.RspCode == 0) { 
 						 $.Huimodalalert("新闻添加成功！",3000)

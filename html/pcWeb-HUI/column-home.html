@@ -134,7 +134,7 @@
 						<td>{{item.orderid}}</td>
 						<td>{{item.note}}</td>
 						<td>{{item.istop==1?"是":"否"}}</td>
-						<td class="td-status"><span :class="item.stat==0?'label label-defaunt radius':'label label-success radius'"><a v-if="item.stat==0">已停用</a><a v-else>已启用</a></span></td>
+						<td class="td-status"><span :class="item.status==0?'label label-defaunt radius':'label label-success radius'"><a v-if="item.stat==0">已停用</a><a v-else>已启用</a></span></td>
 						<td class="sorting_1">
 							<a class="operate-edit" @click="clickEdit(item)" title="编辑"><i class="Hui-iconfont"></i></a>
 							<a style="text-decoration:none" class="ml-5" @click="clickDel(item)" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
@@ -234,7 +234,7 @@
 					shield: function(item) {
 						var tempFlag = 0;
 						var tempStr = ''
-						if(item.stat == 0) {
+						if(item.status == 0) {
 							tempFlag = 1;
 							var tempStr = '启用'
 						} else {
@@ -242,7 +242,7 @@
 							var tempStr = '停用'
 						}
 						layer.confirm('确认要' + tempStr + '吗？', function(index) {
-							console.log('item1:'+item)
+							console.log('item1:'+JSON.stringify(item))
 							layer.close(index);
 									
 
@@ -258,12 +258,12 @@
 							//							alert(JSON.stringify(para))
 							unitWebsitePro(para, function(data) {
 								if(data.RspCode == 0) {
-									if(item.stat == 0) {
-										item.stat = 1;
+									if(item.status == 0) {
+										item.status = 1;
 									} else {
-										item.stat = 0;
+										item.status = 0;
 									}
-									console.log('item2:'+item)
+									console.log('item2:'+JSON.stringify(item))
 									console.log('dt:'+JSON.stringify(column_table.dt))
 									layer.msg('已' + tempStr + '!', {
 										icon: 1,

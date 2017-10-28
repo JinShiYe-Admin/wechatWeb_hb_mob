@@ -181,7 +181,8 @@
 			var column_table = new Vue({
 				el: "#column_table",
 				data: {
-					dt: []
+										dt: []
+
 
 				},
 				methods: {
@@ -241,7 +242,9 @@
 							var tempStr = '停用'
 						}
 						layer.confirm('确认要' + tempStr + '吗？', function(index) {
+							console.log('item1:'+item)
 							layer.close(index);
+									
 
 							var para = {
 								cmd: 'chn',
@@ -255,11 +258,17 @@
 							//							alert(JSON.stringify(para))
 							unitWebsitePro(para, function(data) {
 								if(data.RspCode == 0) {
+									if(item.stat == 0) {
+										item.stat = 1;
+									} else {
+										item.stat = 0;
+									}
+									console.log('item2:'+item)
+									console.log('dt:'+JSON.stringify(column_table.dt))
 									layer.msg('已' + tempStr + '!', {
 										icon: 1,
 										time: 1000
 									});
-									location.reload();
 								} else {
 									alert(data.RspTxt);
 								}

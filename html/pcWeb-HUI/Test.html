@@ -263,14 +263,12 @@
 			</form>
 		</article>
 		<script type="text/javascript"  src="../../js/vue.js"></script>   
-		<script type="text/javascript"  src="../../js/lib/plupload/plupload.dev.js"></script> 
+		<!--<script type="text/javascript"  src="../../js/lib/plupload/plupload.dev.js"></script>--> 
 		<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
 		<script type="text/javascript"  src="../../js/weui.min.js"></script> 
-		<script src="../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
-		<script type="text/javascript">
-		 
+		<script src="../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script> 
+		<script type="text/javascript"> 
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
-			
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/qiniu/qiniu.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
@@ -351,7 +349,7 @@
 				vm.type = detail.type;
 				PriNewsId = detail.newsid; 
 				var insertText;
-				if(vm.type == 'edit') {
+				if(vm.type == 'edit') { 
 					var tempData = {
 						cmd: 'news', //网站栏目
 						type: 'findpage', //分页查找栏目列表

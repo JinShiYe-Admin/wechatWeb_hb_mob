@@ -262,18 +262,15 @@
 				</div>
 			</form>
 		</article>
-		<script type="text/javascript"  src="../../js/vue.js"></script> 
-		<script type="text/javascript"  src="../../js/utils/cryption.js"></script> 
-		<script type="text/javascript"  src="../../js/lib/plupload/moxie.min.js"></script>
-		<script type="text/javascript"  src="../../js/lib/plupload/plupload.dev.js"></script>
-		<script type="text/javascript"  src="../../js/lib/qiniu/qiniu.min.js"></script> 
-		<script type="text/javascript"  src="../../js/utils/cloudutil.js"></script>
+		<script type="text/javascript"  src="../../js/vue.js"></script>   
+		<script type="text/javascript"  src="../../js/lib/plupload/plupload.dev.js"></script> 
 		<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
-		<script src="../../js/pcWeb-HUI/Uploader.js"></script>
+		<script type="text/javascript"  src="../../js/weui.min.js"></script> 
 		<script src="../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
 		<script type="text/javascript">
+		 
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.min.js?" + Math.random() + "'></s" + "cript>");
+			
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/qiniu/qiniu.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
@@ -281,6 +278,7 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cryption.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/pluploadutil.js?" + Math.random() + "'></s" + "cript>");
 		</script>
+		<script src="../../js/pcWeb-HUI/Uploader.js"></script>
 		<script type="text/javascript">  
 			var count1 = 0;
 			var fileUploader; //上传logo七牛对象
@@ -434,10 +432,10 @@
 					if(data.RspCode == 0) {
 						if(data.RspData.length > 0) {
 							webConfig = data.RspData[0];
-							if(webConfig.isreply == 0) //0表示禁止回复，并隐藏回复功能
-								document.getElementById('onisReply').style.display = "none";
-							if(webConfig.isfileup == 0) //0表示禁止上传，并隐藏回复功能
-								document.getElementById('onisfileup').style.display = "none";
+//							if(webConfig.isreply == 0) //0表示禁止回复，并隐藏回复功能
+//								document.getElementById('onisReply').style.display = "none";
+//							if(webConfig.isfileup == 0) //0表示禁止上传，并隐藏回复功能
+//								document.getElementById('onisfileup').style.display = "none";
 						} else {
 							alert('没有获取到配置信息')
 						}
@@ -493,20 +491,25 @@
 			}
 
 			function delDiv() { 
+			
 				if(count1 == 1) {
 					alert('不能再删除了');
 					return;
 				}
 				if(count1 == 2) {
+					alert('22222222222====='+count1)
 					$("#yc1").empty();
 					count1 = count1 - 1;
 				} else if(count1 == 3) {
+					alert('33333333333====='+count1)
 					$("#yc2").empty();
 					count1 = count1 - 1;
 				} else if(count1 == 4) {
+					alert('44444444444====='+count1)
 					$("#yc3").empty();
 					count1 = count1 - 1;
 				} else if(count1 == 5) {
+					alert('5555555555====='+count1)
 					$("#yc4").empty();
 					count1 = count1 - 1;
 				}

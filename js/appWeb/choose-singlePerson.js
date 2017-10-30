@@ -19,7 +19,7 @@ Vue.component("single-choose-person", {
 		'</div>' +
 		'</label>' +
 		'</template>'+
-		'<a v-else v-bind:class="[\'weui-cell\',\'weui-cell_access\']">' +
+		'<a v-else v-bind:class="[\'weui-cell\',{\'weui-cell_access\':item.children.length>0}]">' +
 		'<div v-bind:class="[\'weui-cell__hd\']">' +
 		'<label v-bind:for="item.value">' +
 		'<input type="radio" v-bind:class="[\'weui-check\']"  v-bind:id="item.value" v-bind:name="depart_id"' +

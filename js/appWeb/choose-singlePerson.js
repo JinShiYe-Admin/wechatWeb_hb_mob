@@ -1,6 +1,7 @@
 Vue.component("single-choose-person", {
 	props: ['depart_id', 'chooseType'],
-	template: '<div v-bind:class="[\'weui-cells\',\'weui-cells_radio\']">' +
+	template: '<div><a href="" v-on:click="backup()">{{parseInt(depart_id)>0?"返回上级部门":"返回"}}</a>' +
+		'<div v-bind:class="[\'weui-cells\',\'weui-cells_radio\']">' +
 		'<template v-for="(item,index) of listData">' +
 		'<template v-if="chooseType===1">' +
 		'<a v-if="item.value" v-bind:class="[\'weui-cell\',\'weui-cell_access\']" v-on:click="clickEvent(item)">' +
@@ -18,7 +19,7 @@ Vue.component("single-choose-person", {
 		'<span v-bind:class="[\'weui-icon-checked\']"></span>' +
 		'</div>' +
 		'</label>' +
-		'</template>'+
+		'</template>' +
 		'<a v-else v-bind:class="[\'weui-cell\',{\'weui-cell_access\':item.children.length>0}]">' +
 		'<div v-bind:class="[\'weui-cell__hd\']">' +
 		'<label v-bind:for="item.value">' +
@@ -33,7 +34,7 @@ Vue.component("single-choose-person", {
 		'<div v-bind:class="[\'weui-cell__ft\']" v-on:click="clickEvent(item)"></div>' +
 		'</a>' +
 		'</template>' +
-		'</div>',
+		'</div></div>',
 	created: function() {
 		this.setPosition();
 		console.log("当前的部门id:" + this.$route.params.id);
@@ -56,6 +57,9 @@ Vue.component("single-choose-person", {
 		}
 	},
 	methods: {
+		backup: function() {
+			router.go(-1);
+		},
 		getAllListData: function() {
 			console.log("*********getAllListData******");
 			var com = this;

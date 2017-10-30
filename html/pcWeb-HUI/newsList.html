@@ -69,11 +69,12 @@
 				newslist.cname = cname;
 				newslist.type = "edit";
 				newslist.newsid = newsModel.newsid; 
+				 
 				var ids = url.split("/");
 				var index = layer.open({
 					type: 2,
 					title: "编辑文章",
-					content: url + "?v=" + Math.random() + "&data=" + encodeURIComponent(newslist),
+					content: url + "?v=" + Math.random() + "&data=" + encodeURIComponent(JSON.stringify(newslist) ),
 					end: function() {
 						console.log("刷新")
 						location.reload();
@@ -100,6 +101,7 @@
 					item: {
 						newsArray: [
 //						{
+//	                        newsid:222,
 //							topic: '111',
 //							subtopic: '222',
 //							content: "333"

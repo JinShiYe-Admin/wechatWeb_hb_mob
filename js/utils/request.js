@@ -22,7 +22,7 @@ var request = (function(mod) {
 		}), function(response) {
 			console.log("获取的部门列表值：" + JSON.stringify(response));
 			if(response.RspCode == 0) {
-				callback(response.RspData);
+				callback(JSON.parse(response.RspData));
 			}
 		})
 	}

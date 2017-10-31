@@ -58,16 +58,20 @@ Vue.component("single-choose-person", {
 	},
 	methods: {
 		backup: function() {
-			router.go(-1);
+			if(this.$router.params.id==-1){
+				window.history.go(-1);
+			}else{
+				router.go(-1);
+			}
 		},
 		getAllListData: function() {
 			console.log("*********getAllListData******");
 			var com = this;
 			com.isLoading = true;
 			request.getDepartList(function(data) {
-				console.log("getAllListData获取的部门列表：" + JSON.stringify(JSON.parse(data)));
+				console.log("getAllListData获取的部门列表：" + JSON.stringify(data));
 				com.setRealParentValue(data);
-				sessionStorage.setItem(consts.KEY_DEPARTS, data);
+				events.setSessionArray(consts.KEY_DEPARTS, data);
 				com.getCurDeparts();
 			});
 		},

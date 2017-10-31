@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="UTF-8">
 		<title>新闻添加</title>
@@ -174,7 +175,25 @@
 					});
 				},
 				getColumns: function() { //获取栏目列表
-					//					this.columns = data.RspData; //在回调中赋值
+					var tempData = {
+						cmd: 'chn', //网站栏目
+						type: 'findpage', //分页查找栏目列表 
+						pagesize: 999, //每页条数 
+						iswrite: '1',
+						stat: '1',
+						pageindex: 1 //页码  
+					}
+					unitWebsitePro(tempData, function(data) {
+						if(data.RspCode == 0) {
+							if(data.RspData.dt.length > 0) {
+								this.columns = data.RspData.dt; //在回调中赋值
+							} else {
+								alert('暂时还没有栏目');
+							}
+						} else {
+							alert(data.RspTxt);
+						}
+					});
 				},
 				addPiece: function(piece, index) { //增加文章片段
 					if(!piece.title || !piece.content) {
@@ -203,12 +222,12 @@
 					this.pieces.splice(index, 1);
 					$("#dia-delPiece").modal("hide");
 				},
-				getHeadImg: function(headImg,index) {
-					console.log("*****获取的headImg:" +JSON.stringify(headImg)+",index:"+index);
-					
+				getHeadImg: function(headImg, index) {
+					console.log("*****获取的headImg:" + JSON.stringify(headImg) + ",index:" + index);
+
 				},
 				getPieceImg: function(contentImg, index) {
-					console.log("*****获取的contentImage:" +JSON.stringify(contentImg)+",index:"+index);
+					console.log("*****获取的contentImage:" + JSON.stringify(contentImg) + ",index:" + index);
 
 				}
 			}

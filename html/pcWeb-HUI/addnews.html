@@ -253,10 +253,9 @@
 					</div>
 				</div>
 				
-				<div class="row cl">
+				<div class="row cl" id="BCButton">
 					<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
-						<button  onclick="submittj()"   class="btn btn-primary radius"  > 保存</button>
-						 
+						<button  onclick="submittj()"   class="btn btn-primary radius"> 保存</button> 
 					</div>
 				</div>
 				</div>
@@ -291,8 +290,7 @@
 			var vue_input = new Vue({
 				el: '#chnid',
 				data: {
-					items: [ 
-					]
+					items: []
 				}
 			});
 			var vm = new Vue({
@@ -349,6 +347,7 @@
 				var insertText;
 				if(vm.type == 'edit') { 
 				document.getElementById("EleId").style.display="none";
+				document.getElementById("BCButton").style.display="none";
 					var tempData = {
 						cmd: 'news', //网站栏目
 						type: 'findpage', //分页查找栏目列表
@@ -360,13 +359,22 @@
 						vm.editName = '保存';
 						$("#chnid option:selected").val(PriNewsId);
 						$("#chnid option:selected").text(detail.cname)
-						vm.cname.message = data.RspData.dt[0].topic;
-						vm.fname.message = data.RspData.dt[0].subtopic;
-						vm.linkurl.message = data.RspData.dt[0].quourl;
-						vm.isReply.check = data.RspData.dt[0].isreply;
-						vm.islink.check = data.RspData.dt[0].isquo;
-						vm.newszy.message = data.RspData.dt[0].summas; 
-						document.getElementById("filename").value = data.RspData.dt[0].imgurl;
+//						vm.cname.message = data.RspData.dt[0].topic;
+//						vm.fname.message = data.RspData.dt[0].subtopic;
+//						vm.linkurl.message = data.RspData.dt[0].quourl;
+//						vm.isReply.check = data.RspData.dt[0].isreply;
+//						vm.islink.check = data.RspData.dt[0].isquo;
+//						vm.newszy.message = data.RspData.dt[0].summas; 
+//						document.getElementById("filename").value = data.RspData.dt[0].imgurl;
+//						insertText = data.RspData.dt[0].content;
+
+                        vm.cname.message = '测试标题';
+						vm.fname.message = '测试副标题';
+						vm.linkurl.message = '测试连接url';
+						vm.isReply.check =1;
+						vm.islink.check = 0;
+						vm.newszy.message = '测试新闻摘要'; 
+						document.getElementById("filename").value = '测试附件http';
 						insertText = data.RspData.dt[0].content;
 						var n = (insertText.split('<section>')).length - 1;
 						for(var i = 0; i < n - 1; i++) {
@@ -414,36 +422,32 @@
 								})
 							})(item)
 						}
-					});
-					
-					
-					
-					
+					}); 
 				}
 				/**
 				 * 获取网站配置信息   
 				 */
-				var webConfig;
-				var tempData = {
-					cmd: 'webcfg',
-					type: 'find'
-				}
-				unitWebsitePro(tempData, function(data) {
-					console.log('配置为:' + JSON.stringify(data));
-					if(data.RspCode == 0) {
-						if(data.RspData.length > 0) {
-							webConfig = data.RspData[0];
-//							if(webConfig.isreply == 0) //0表示禁止回复，并隐藏回复功能
-//								document.getElementById('onisReply').style.display = "none";
-//							if(webConfig.isfileup == 0) //0表示禁止上传，并隐藏回复功能
-//								document.getElementById('onisfileup').style.display = "none";
-						} else {
-							alert('没有获取到配置信息')
-						}
-					} else {
-						alert(data.RspTxt);
-					}
-				});
+//				var webConfig;
+//				var tempData = {
+//					cmd: 'webcfg',
+//					type: 'find'
+//				}
+//				unitWebsitePro(tempData, function(data) {
+//					console.log('配置为:' + JSON.stringify(data));
+//					if(data.RspCode == 0) {
+//						if(data.RspData.length > 0) {
+//							webConfig = data.RspData[0];
+////							if(webConfig.isreply == 0) //0表示禁止回复，并隐藏回复功能
+////								document.getElementById('onisReply').style.display = "none";
+////							if(webConfig.isfileup == 0) //0表示禁止上传，并隐藏回复功能
+////								document.getElementById('onisfileup').style.display = "none";
+//						} else {
+//							alert('没有获取到配置信息')
+//						}
+//					} else {
+//						alert(data.RspTxt);
+//					}
+//				});
 				/**
 				 * 获取网站栏目
 				 */
@@ -564,10 +568,7 @@
 				}
 				if(key == 'fname') {
 					key = 'subtopic';
-				} 
-				if(key == 'fname') {
-					key = 'content';
-				} 
+				}  
 				var para = {
 					cmd: 'news',
 					type: 'edit',
@@ -688,11 +689,7 @@
 				alert('comData=========================:' + JSON.stringify(comData)); 
 				unitWebsitePro(comData, function(data) {
 					if(data.RspCode == 0) { 
-					
-					
-					
-					
-					
+					 
 						alert("新闻添加成功！")
 						//清空数据 
 						document.getElementById("cname").value = ""; //新闻标题

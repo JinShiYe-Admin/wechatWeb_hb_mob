@@ -60,17 +60,14 @@
 						},
 						'UploadProgress': function(up, file) {
 							// 每个文件上传时,处理相关的事情  
-							$.Huimodalalert("上传中 " + file.percent + "%",3000)
-							//vm_loading.content = "上传中 " + file.percent + "%";
+							$.Huimodalalert("上传中 " + file.percent + "%",3000) 
 						},
 						'FileUploaded': function(up, file, info) {
 							// 每个文件上传成功后,处理相关的事情 
 							console.log("文件:info:" + JSON.stringify(info));
 							if(info.status == 200) {
 								var cc = eval("(" + info.response + ")"); 
-								imgurl = storageutil.QNPBDOMAIN + cc.key; 
-							 
-								//Pridl=Priimgname.substring(9,10)
+								imgurl = storageutil.QNPBDOMAIN + cc.key;  
 								document.getElementById(Priimgname).value = imgurl; 
 								if(Priimgname != undefined) { 
 									var person = new Object();
@@ -87,15 +84,9 @@
 											FileDataArray.splice(i, 1);
 										}
 									}
-									//添加新的附件
-
-									FileDataArray.push(person);
-
-									objArray.push([imgurl]);
-								} else {
-									document.getElementById('filename').value = imgurl;
-								}
-								//vm_loading.isShow = false;  
+									//添加新的附件 
+									FileDataArray.push(person);  
+								}   
 							} else {
 								var dialog = weui.dialog({
 									title: "上传失败",
@@ -221,8 +212,7 @@
 									format: 'png' // 新图的输出格式，取值范围：jpg，gif，png，webp等
 								}, cc.key);
 								//Pridl=Priimgname.substring(9,10)
-                              document.getElementById('filename').value = imgLink;
-						 
+                              document.getElementById('filename').value = imgLink; 
 								var sltfile = new Object();
 								sltfile.encid = 'upload'; //控件id
 								sltfile.saveurl = imgurl; //图片地址
@@ -239,11 +229,7 @@
 										}
 									}
 								//添加新的附件
-                                FileDataArray.push(sltfile); 
-
-								objArray.push([imgurl]); 
-
-								//vm_loading.isShow = false;  
+                                FileDataArray.push(sltfile);   
 							} else {
 								var dialog = weui.dialog({
 									title: "上传失败",

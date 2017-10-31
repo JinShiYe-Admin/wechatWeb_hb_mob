@@ -267,7 +267,8 @@
 		</article>
 		<script type="text/javascript"  src="../../js/vue.js"></script>    
 		<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
-		<script type="text/javascript"  src="../../js/weui.min.js"></script> 
+		<script type="text/javascript"  src="../../js/weui.min.js"></script>  
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/layer/2.4/layer.js"></script>
 		<script src="../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script> 
 		<script type="text/javascript"> 
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
@@ -478,8 +479,7 @@
 				div.className = "italic";
 				var ic = count1 + 1; 
 				if(ic <= 5) {
-					for(var i = 0; i < ic; i++) {
-						//div.innerHTML = '<div id=\"yc' + count1 + '\"><input name=\"dlt\" id=\"title' + i + '\" placeholder="请输入节标题" onchange=\"upperCase(this.id,' + i + ')\"  type="text"  ><input name=\"dlc\" id=\"conten' + i + '\"   v-model.lazy=\"newscontent.message\" class=\"weui-input\" placeholder=\"请输入新闻内容\" onchange=\"upperCase(this.id,' + i + ')\" style=\"border-color: white;height: 7rem;\ /"><div class=\"kuan\"><input name=\"dle\" id=\"Priimgname' + i + '\" type=\"text\"   onpropertychange=\"upperCase(this.id,' + i + ')\" /></div><div class=\"an\"><a href=\"#\" style=\"float:right\" class=\"a-upload\"><input id=\"Prifile' + i + '\" type=\"file\"  />上传图片</a></div></div>';
+					for(var i = 0; i < ic; i++) { 
 						div.innerHTML = '<div id=\"yc' + count1 + '\"><div class=\"row cl\"><label class=\"form-label col-xs-4 col-sm-2\">节标题：</label><div class=\"formControls col-xs-8 col-sm-9\"><input type=\"text\" class=\"input-text\" name=\"dlt\" id=\"title' + i + '\" placeholder=\"请输入新闻节标题\" onchange=\"upperCase(this.id,' + i + ')\" ></div></div><div class=\"row cl\"><label class=\"form-label col-xs-4 col-sm-2\">节内容：</label><div class=\"formControls col-xs-8 col-sm-9\"><textarea name=\"dlc\" id=\"conten' + i + '\" cols=\"\" rows=\"\" class=\"textarea\" placeholder=\"请输入新闻节内容\" onchange=\"upperCase(this.id,' + i + ')\"  datatype=\"*10-100\" dragonfly=\"true\" nullmsg=\"备注不能为空！\"></textarea><p class=\"textarea-numberbar\"><em class=\"textarea-length\"></em></p></div></div><div class=\"row cl\"><label class=\"form-label col-xs-4 col-sm-2\">节图片：</label><div class=\"formControls col-xs-8 col-sm-9\"><input style=\"position: absolute;   width: 800px;\" name=\"dle\" id=\"Priimgname' + i + '\" type=\"text\"   onpropertychange=\"upperCase(this.id,' + i + ')\"  class=\"input-text\"   readonly=\"readonly\"  /><div style=\"margin-left: 800px;\"><div class=\"an\"><image-item href=\"#\" class=\"a-upload\"><input id=\"Prifile' + i + '\" type=\"file\" value=\"搜索\" />图片上传</a></div></div></div></div></div>';
 					}
 				} else {
@@ -496,6 +496,8 @@
 					alert('不能再删除了');
 					return;
 				}
+			layer.confirm('确认要删除吗？', function(index) {
+				layer.close(index); 		
 				if(count1 == 2) {
 					var box = document.getElementById("yc1");  
                     box.parentNode.removeChild(box);   
@@ -542,6 +544,7 @@
 					colv: updateConten
 				}
 				unitWebsitePro(para, function(data) {}); 
+				});
 			}
 			
 			function edit(oldVal, newVal, key, zfc) {
@@ -648,8 +651,12 @@
 				var allInputse = $("*[name='dle']"); 
 				for(var i = 0; i < allInputst.length; i++) { 
 					PriConten += '<section><h3>' + allInputst[i].value + '</h3><p>' + allInputsc[i].value + '</p><p><img src=' + allInputse[i].value + '></p></section>';
-					if(allInputsc[i].value.length>=200){
-				 	 $.Huimodalalert("第"+i+"节内容过长！",3000);
+					if(allInputst[i].value.length>=50){
+				 	 alert("第"+i+"节标题过长！",3000);
+				 	 return false;
+					}
+					if(allInputsc[i].value.length>=200){ 
+				 	 alert("第"+i+"节内容过长！",3000);
 				 	 return false;
 					}
 				}  
@@ -689,8 +696,7 @@
 						//清空数据 
 						document.getElementById("cname").value = ""; //新闻标题
 						//document.getElementById("conten").value = ""; //新闻内容
-						document.getElementById("summas").value = ""; //新闻摘要
-						document.getElementById("chnid").selectedIndex = 0; //栏目id
+						document.getElementById("summas").value = ""; //新闻摘要 
 						document.getElementById("islink").value = ""; //引用地址
 						document.getElementById("fname").value = ""; 
 						location.reload();

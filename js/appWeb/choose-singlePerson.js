@@ -66,9 +66,26 @@ Vue.component("single-choose-person", {
 			com.isLoading = true;
 			request.getDepartList(function(data) {
 				console.log("getAllListData获取的部门列表：" + JSON.stringify(JSON.parse(data)));
+				com.setRealParentValue(data);
 				sessionStorage.setItem(consts.KEY_DEPARTS, data);
 				com.getCurDeparts();
 			});
+		},
+		setRealParentValue: function(list) {
+			if(typeof(list) == "undefined" || list.length == 0) {
+				return;
+			}
+			var map = {},
+				item;
+			for(var i = 0; i < list.length; i++) {
+				item = list[i];
+				map[item.value] = i;
+				if(item.parentvalue > 0) {
+					if(typeof(map[item.parentvalue]) == "undefined") {
+						item.parentvalue = 1;
+					}
+				}
+			}
 		},
 		/**
 		 * 获取当前部门人员

@@ -58,7 +58,7 @@ Vue.component("single-choose-person", {
 	},
 	methods: {
 		backup: function() {
-			if(this.$router.params.id==-1){
+			if(this.$route.params.id==-1){
 				window.history.go(-1);
 			}else{
 				router.go(-1);

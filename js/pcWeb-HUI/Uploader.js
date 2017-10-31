@@ -71,8 +71,7 @@
 								imgurl = storageutil.QNPBDOMAIN + cc.key; 
 							 
 								//Pridl=Priimgname.substring(9,10)
-								document.getElementById(Priimgname).value = imgurl;
-								 
+								document.getElementById(Priimgname).value = imgurl; 
 								if(Priimgname != undefined) { 
 									var person = new Object();
 									person.encid = priid; //控件id
@@ -224,24 +223,23 @@
 								//Pridl=Priimgname.substring(9,10)
                               document.getElementById('filename').value = imgLink;
 						 
-								var person = new Object();
-								//person.encid = priid; //控件id
-								person.saveurl = imgurl; //图片地址
-								person.imgurl = imgLink;
-								person.oldname = file.name;
-								person.newname = cc.key;
-								person.filesize = file.size;
+								var sltfile = new Object();
+								sltfile.encid = 'upload'; //控件id
+								sltfile.saveurl = imgurl; //图片地址
+								sltfile.imgurl = imgLink;
+								sltfile.oldname = file.name;
+								sltfile.newname = cc.key;
+								sltfile.filesize = file.size; 
 								//循环附件数组，判断id是否有重复 
-//								for(var i = 0; i < FileDataArray.length; i++) { 
-//									if(FileDataArray[i].imgurl != imgLink) {
-//										alert(FileDataArray[i].imgurl)
-//										//如果有重复则移除原来的 
-//										FileDataArray.splice(i, 1);
-//									}
-//								}
+									for(var i = 0; i < FileDataArray.length; i++) {
+									alert(FileDataArray[i].encid)
+										if(FileDataArray[i].encid == 'upload') {
+											//如果有重复则移除原来的
+											FileDataArray.splice(i, 1);
+										}
+									}
 								//添加新的附件
-
-								//FileDataArray.push(person);
+                                FileDataArray.push(sltfile); 
 
 								objArray.push([imgurl]); 
 

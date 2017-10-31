@@ -186,6 +186,13 @@ Vue.component("time-table", {
 					},
 					onConfirm: function onConfirm(result) {
 						console.log(JSON.stringify(result));
+						if(result[0].label>result[4].label){
+							alert('开始时间不能大于或等于结束时间')
+							return;
+						}else if(result[0].label==result[4].label&& result[2].label>=result[6].label){
+							alert('开始时间不能或等于大于结束时间')
+							return;
+						}
 						var model = table_data.items_array[index]
 						model.timespan = result[0].label + ":" + result[2].label + "-" + result[4].label + ":" + result[6].label;
 						var callcol = "timespan";
@@ -276,6 +283,7 @@ function editEduleweek(colv, callcol, colid) {
 	if(table_data.flag == 0) {
 		return
 	}
+
 	var tempData = {
 		cmd: 'eduleweek',
 		type: 'edit',
@@ -296,6 +304,10 @@ function editEduleweek(colv, callcol, colid) {
 function addEdule() {
 	if(table_data.edulename == "") {
 		alert('请输入课程表名称');
+		return;
+	}
+	if(table_data.edulename.length>25) {
+		alert('课程表名称不能超过25个字');
 		return;
 	}
 	if(table_data.departid == "") {
@@ -343,6 +355,10 @@ function editEdule(oldVal, newVal, callcol) {
 		case "edulename":
 			{
 				colv = table_data.edulename
+				if(colv.length>25){
+					alert('课程表名称不能大于25个字');
+					return;
+				}
 			}
 			break;
 		case "depart":

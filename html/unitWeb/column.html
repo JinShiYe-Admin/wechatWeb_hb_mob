@@ -230,6 +230,19 @@
 								pid: 0,
 								istop: boolToInt(vm.istop.check)
 							}
+							if(para.cname==""){
+								alert("请输入栏目名称");
+								return;
+							}
+							if(para.islink==1&&para.linkurl==''){
+								alert("请输入链接地址");
+								return;
+							}
+							if(para.note==""){
+								alert("请输入备注");
+								return;
+							}
+
 							var reg = /^[1-9]\d*$/
 								var numFlag = reg.test(vm.orderid.message);
 								if(numFlag == false) {

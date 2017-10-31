@@ -10,6 +10,9 @@ var events = (function(mod) {
 		console.log("获取的本地的值：" + JSON.stringify(arr));
 		sessionStorage.setItem(key, JSON.stringify(mod.toggleValueInArray(arr, value, isAdd)));
 	}
+	mod.setSessionArray(key,arr){
+		sessionStorage.setItem(key,JSON.stringify(arr));
+	}
 	/**
 	 * 数组中删除或添加值
 	 * @param {Object} arr 数组

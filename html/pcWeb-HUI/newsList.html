@@ -25,7 +25,7 @@
 						<tr class="text-c"> 
 							<th width="90"  >新闻标题</th>
 							<th width="90" >新闻副标题</th>
-							<th width="120" >新闻内容</th> 
+							<th width="120" >审核状态</th> 
 							<th  width="100" >操作</th>
 						</tr>
 					</thead>
@@ -33,7 +33,7 @@
 						<tr class="text-c" v-for="(newsModel,index) in item.newsArray" :data-index="index"> 
 							<td  style="  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" > {{newsModel.topic}}</td>
 							<td style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" >{{newsModel.subtopic}}</td>
-							<td  style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" >{{newsModel.content}}</td>
+							<td  style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" ><span :class="newsModel.stat==0?'label label-defaunt radius':'label label-success radius'"><a v-if="newsModel.stat==0">未通过</a><a v-else>已通过</a></span></td>
 							<td   style="text-align: center;">
 								<button id="{{newsModel.newsid}}" class="btn btn-primary radius" @click="clickDel(newsModel,1,index)">{{newsModel.Prizt}}</button>&nbsp;&nbsp;&nbsp;
 								<a class="text-primary operate-cursor" @click="click(newsModel,index,item.cname )" title="编辑"><i class="Hui-iconfont"></i></a>
@@ -93,8 +93,9 @@
 //						chnid:5,
 //						topic:"学校和市审计局启动战略合作",
 //						subtopic:"来源：成都大学新闻网", 
-//						content:"12" 
-//						}
+//						content:"12" ,
+//						stat:1
+//						} 
 						]
 					}
 				},

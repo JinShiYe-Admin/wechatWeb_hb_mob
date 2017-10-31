@@ -75,6 +75,9 @@ Vue.component("single-choose-person", {
 			if(typeof(list) == "undefined" || list.length == 0) {
 				return;
 			}
+			list.sort(function(a, b) {
+				return a.value - b.value;
+			})
 			var map = {},
 				item;
 			for(var i = 0; i < list.length; i++) {

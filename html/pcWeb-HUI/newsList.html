@@ -48,6 +48,7 @@
 		<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
 		<script type="text/javascript" src="../../js/H-ui.admin/lib/layer/2.4/layer.js"></script>  
 		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>  
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/laypage/1.2/laypage.js"></script>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>  
@@ -194,6 +195,8 @@
 				});
 
 			}
+		  
+
 			$("#Prixlk").change(function() {
 				var Chnid = document.getElementById("Prixlk");
 				var PriChnid = Chnid.selectedIndex; // 选中索引
@@ -211,12 +214,13 @@
 				var tempData = {
 					cmd: 'news', //文章管理
 					type: 'findpage', //分页查找文章列表
-					pagesize: '15', //每页条数
+					pagesize: '10', //每页条数
 					pageindex: columnModel.newsPage, //页码
 					chnid: columnModel.chnid //某个栏目下的文章，栏目id
 				} 
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
+					    initLaypage(data.RspData.pg.PageCount, columnModel.newsPage);
 						if(data.RspData.dt.length > 0) {
 							columnModel.newsPage++;
 							console.log('columnModel.newsFlag:' + columnModel.newsFlag);
@@ -255,6 +259,25 @@
 						console.log('最终数据:' + JSON.stringify(newsData.item));
 					} else {
 						alert(data.RspTxt);
+					}
+				});
+			}
+			
+						/**
+			 * 初始化页码
+			 * @param {Object} pages 通过后台拿到的总页数
+			 * @param {Object} curr 初始化当前页
+			 */
+			function initLaypage(pages, curr) {
+				laypage({
+					cont: 'pages', //容器
+					pages: pages, //通过后台拿到的总页数
+					curr: curr, //初始化当前页
+					jump: function(e, first) { //触发分页后的回调
+						//console.log("jump: " + first + " " + JSON.stringify(e));
+						if(!first) {
+							getNewsList(e.curr);
+						}
 					}
 				});
 			}

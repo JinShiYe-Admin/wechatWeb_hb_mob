@@ -215,9 +215,7 @@
 						<input type="text" class="input-text" placeholder="请输入新闻副标题" id="fname" v-model.lazy="fname.message" >
 					</div>
 				</div>
-
 				
-
 				<div id="insert"></div>
 				<div class="row cl" align="center" style="align-content: center; " >
 					<button style="margin-left: 1000px; " onClick="addDiv()" class="btn btn-secondary radius" type="button">添加段落</button>
@@ -230,7 +228,6 @@
 						<p class="textarea-numberbar"><em class="textarea-length"></em></p>
 					</div>
 				</div>
-
 				<div class="row cl">
 					<label class="form-label col-xs-4 col-sm-2">{{isReply.title}}：</label>
 					<div class="formControls col-xs-8 col-sm-9 skin-minimal">
@@ -470,7 +467,6 @@
 					}
 				});
 			}
-
 			function addDiv() {
 				//创建一个div 
 				var bo = document.getElementById("insert"); 
@@ -652,11 +648,11 @@
 				for(var i = 0; i < allInputst.length; i++) { 
 					PriConten += '<section><h3>' + allInputst[i].value + '</h3><p>' + allInputsc[i].value + '</p><p><img src=' + allInputse[i].value + '></p></section>';
 					if(allInputst[i].value.length>=50){
-				 	 alert("第"+i+"节标题过长！",3000);
+				 	 alert("第"+i+"节标题过长！");
 				 	 return false;
 					}
 					if(allInputsc[i].value.length>=200){ 
-				 	 alert("第"+i+"节内容过长！",3000);
+				 	 alert("第"+i+"节内容过长！");
 				 	 return false;
 					}
 				}  
@@ -692,14 +688,19 @@
 				alert('comData=========================:' + JSON.stringify(comData)); 
 				unitWebsitePro(comData, function(data) {
 					if(data.RspCode == 0) { 
-						 $.Huimodalalert("新闻添加成功！",3000)
+					
+					
+					
+					
+					
+						alert("新闻添加成功！")
 						//清空数据 
 						document.getElementById("cname").value = ""; //新闻标题
 						//document.getElementById("conten").value = ""; //新闻内容
 						document.getElementById("summas").value = ""; //新闻摘要 
 						document.getElementById("islink").value = ""; //引用地址
 						document.getElementById("fname").value = ""; 
-						location.reload();
+						//location.reload();
 							 
 			 
 					} else {

@@ -485,12 +485,9 @@
 				var Priid = "Prifile" + count1;
 				var Priimgname = "Priimgname" + count1;
 				initUploader(Priid, Priimgname);
-				count1++;
-
-			}
-
-			function delDiv() { 
-			
+				count1++; 
+			} 
+			function delDiv() {  
 				if(count1 == 1) {
 					alert('不能再删除了');
 					return;
@@ -540,10 +537,7 @@
 					encs: FileDataArray,
 					colv: updateConten
 				}
-				unitWebsitePro(para, function(data) {});
-
-				//确定删除
-
+				unitWebsitePro(para, function(data) {}); 
 			}
 			
 			function edit(oldVal, newVal, key, zfc) {
@@ -558,8 +552,7 @@
 				if(key == 'islink' && newVal == true) {
 					$("#linkurl").focus();
 					vm.iswrite.check = false;
-				}
-
+				} 
 				if(newVal == oldVal) {
 					return;
 				}
@@ -605,8 +598,7 @@
 						}
 						unitWebsitePro(para, function(data) {});
 					} else if(id=='filenam'){
-					alert('更换了缩略图')
-						
+					alert('更换了缩略图') 
 					}else {
 						var updateConten = "";
 						var allInputst1 = $("*[name='dlt']");
@@ -641,28 +633,29 @@
 				}
 			}
 			//按钮监听
-			 function submittj() {  
+			 function submittj()  {  
 				bannerUploader.start();
 				/**
-				 * 文章附件管理添加
-				 */
-				var PriConten = "";
+				 * 文章附件管理添加 
+				 */ 
+				var PriConten = "" ;
 				var allInputst = $("*[name='dlt']");
 				var allInputsc = $("*[name='dlc']");
 				var allInputse = $("*[name='dle']"); 
 				for(var i = 0; i < allInputst.length; i++) { 
 					PriConten += '<section><h3>' + allInputst[i].value + '</h3><p>' + allInputsc[i].value + '</p><p><img src=' + allInputse[i].value + '></p></section>';
 					if(allInputsc[i].value.length>=200){
-				 	 alert("第"+i+"节内容过长！")
-				 	 return;} 
-				} 
+				 	 $.Huimodalalert("第"+i+"节内容过长！",3000);
+				 	 return false;
+					}
+				}  
 				var PriTopic = document.getElementById("cname").value; //新闻标题  
 				 if(PriTopic.length>=30){
 				 	alert('新闻标题不能太长');
-				 	return;
+				 	return false; 
 				 } 
 				 if(PriTopic==""){
-				 	return;
+				 	return false;
 				 } 
 				var Prisubtopic = document.getElementById("fname").value; //新闻副标题  
 				var PriSummas = document.getElementById("summas").value; //新闻摘要 
@@ -684,8 +677,7 @@
 					quourl: PriQuourl,
 					isreply: PriIsReply,
 					stat: 1
-				};  
-//					 
+				};   
 				alert('comData=========================:' + JSON.stringify(comData)); 
 				unitWebsitePro(comData, function(data) {
 					if(data.RspCode == 0) { 

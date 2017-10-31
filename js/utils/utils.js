@@ -12,12 +12,12 @@ window.onerror = function(errorMessage, scriptURI, lineNumber, columnNumber, err
 
 //公共方法
 var utils = (function(mod) {
-
+ 
 	/**
 	 * 获取url中的数据
-	 * @param {String} url
+	 * @param {String} url 
 	 */
-	mod.getDataFromUrl = function(url) {
+	mod.getDataFromUrl = function(url) { 
 		var data = {};
 		var index = url.indexOf("&");
 		if(index != -1) {

@@ -175,7 +175,7 @@
 	</head>
 
 	<body>
-		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 新闻 <span class="c-gray en">&gt;</span> 新闻
+		<nav id="EleId"  class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 新闻 <span class="c-gray en">&gt;</span> 新闻
 			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
 		</nav>
 		<article class="page-container">
@@ -351,6 +351,7 @@
 				PriNewsId = detail.newsid; 
 				var insertText;
 				if(vm.type == 'edit') { 
+				document.getElementById("EleId").style.display="none";
 					var tempData = {
 						cmd: 'news', //网站栏目
 						type: 'findpage', //分页查找栏目列表
@@ -417,6 +418,10 @@
 							})(item)
 						}
 					});
+					
+					
+					
+					
 				}
 				/**
 				 * 获取网站配置信息   

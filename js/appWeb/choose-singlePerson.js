@@ -35,22 +35,20 @@ Vue.component("single-choose-person", {
 		'</a>' +
 		'</template>' +
 		'</div></div>',
-	created: function() {
-		this.setPosition();
-		console.log("当前的部门id:" + this.$route.params.id);
-		this.getAllListData();
-	},
 	data: function() {
 		return {
-			listData: [],
-			curDepartInfo: {
+			curDepartInfo: { //当前部门信息
 				departList: [],
 				personList: []
 			},
-			departsTree: [],
-			path: "0"
-			departId: -1
+			departsTree: [], //部门tree结构
+			path: "0" //路径
+			departId: -1 //部门Id
 		}
+	},
+	created: function() {//组件创建时 的逻辑任务
+		console.log("当前的部门id:" + this.$route.params.id);
+		this.getAllListData();
 	},
 	watch: {
 		'$route' (to, from) {
@@ -62,21 +60,32 @@ Vue.component("single-choose-person", {
 		}
 	},
 	methods: {
+		//返回上级界面
 		backup: function() {
 			router.go(-1);
 		},
+		//保存部门数据
+		setSessionStorage: function() {
+			events.setSessionArray(consts.KEY_DEPARTS, this.departsTree);
+		},
+		/**
+		 * 获取所有部门数据
+		 */
 		getAllListData: function() {
 			console.log("*********getAllListData******");
 			var com = this;
 			com.isLoading = true;
 			com.departsTree = events.getSessionArray(consts.KEY_DEPARTS);
-			if(com.departsTree.length == 0) {
+			if(com.departsTree.length == 0) {//没有部门数据
+				//获取所有部门列表
 				request.getDepartList(function(data) {
 					console.log("getAllListData获取的部门列表：" + JSON.stringify(data));
 					com.departsTree = com.getChildrenTree(data);
+					//获取当前部门信息
 					com.getCurDepartInfo();
 				});
-			} else {
+			} else {//有部门数据
+				//获取当前部门信息
 				com.getCurDepartInfo();
 			}
 		},
@@ -84,13 +93,17 @@ Vue.component("single-choose-person", {
 		 * 获取当前部门信息
 		 */
 		getCurDepartInfo: function() {
-			console.log('****choose-depart****getCurDepartInfo****')
-			var pathArr = this.path.split('-')
+			console.log('****getCurDepartInfo****')
+			var pathArr = this.path.split('-');//路径
 			console.log('获取的路径数组：' + pathArr)
-			this.curDepartInfo = this.getNodeInTree(this.childrenTree, pathArr)
+			//获取当前部门信息
+			this.curDepartInfo = this.getNodeInTree(this.departsTree, pathArr)
 			console.log('获取的本部门数据：' + JSON.stringify(this.curDepartInfo))
 			if(this.chooseType == 1) { //选择人员
-				this.getCurPersen();
+				this.getCurPersen();//获取当前部门人员
+			} else {
+				com.isLoading = false;
+				this.setSessionStorage();
 			}
 		}
 		/**
@@ -147,30 +160,31 @@ Vue.component("single-choose-person", {
 		getCurPersen: function() {
 			console.log("********getCurPersen获取当前部门人员********");
 			var com = this;
-			if(com.curDepartInfo.personList.length == 0) {
-				var id;
-				if(com.departId == -1) {
-					id = 1
-				} else {
-					id = com.departId;
-				}
-				request.getDepartPersons(id, 0, 1, function(data) {
+			if(com.curDepartInfo.personList.length == 0) { //如果人员列表数据为0 重新获取
+				//获取人员信息
+				request.getDepartPersons(com.departId, 0, 1, function(data) {
 					console.log("获取的本部门人员:" + JSON.stringify(data));
-					com.curDepartInfo.personList = com.getLeaderPersen(data);
-					if(com.curDepartInfo.departList.length==0&&com.curDepartInfo.personList.length==0){
+					com.curDepartInfo.personList = com.getLeaderPersen(data); //获取老师列表数据
+					//如果此部门没有子部门和老师，弹出提示框
+					if(com.curDepartInfo.departList.length == 0 && com.curDepartInfo.personList.length == 0) {
 						alert("当前部门无子部门和老师！");
 					}
-					com.isLoading = false;
+					com.isLoading = false; //结束加载状态
+					com.setSessionStorage();
 				})
-			} else {
+			} else { //人员列表数据不为0，直接显示数据
 				com.isLoading = false;
+				com.setSessionStorage();
 			}
 
 		},
 		getLeaderPersen: function(data) {
+			console.log("****getLeaderPersen****")
 			var leaderPersen = data.filter(function(person) {
 				return person.isleader;
 			})
+			console.log("获取的老师列表数据：" + JSON.stringify(leaderPersen));
+			return leaderPersen;
 		}
 		/**
 		 * 列表cell
@@ -193,44 +207,8 @@ Vue.component("single-choose-person", {
 			this.$emit('chosedPerson', item, isAdd);
 			this.routerToTab();
 		},
-		setAsChildren: function() { //将列表数据设置为副部门的children
-			console.log("********setAsChildren将子部门数据保存至本地数组中********");
-			var parentId = this.$route.params.id;
-			if(parentId === 1) {
-				parentId = -1;
-			}
-			var departList = events.getSessionArray(consts.KEY_DEPARTS);
-			departList[this.getDepartIndex(parentId)].children = this.listData;
-			console.log("要保存至本地的列表数据：" + JSON.stringify(departList));
-			//将修改后的数据保存到本地储存列表
-			events.setSessionArray(consts.KEY_DEPARTS, departList);
-		},
-		getDepartIndex: function() { //获取部门再部门列表中的序号
-			console.log("********getDepartIndex获取部门在部门列表中的序号********");
-			var id = this.$route.params.id;
-			var com = this;
-			var departList = JSON.parse(sessionStorage.getItem(consts.KEY_DEPARTS));
-			for(var i in departList) {
-				if(departList[i].value == id) {
-					return i;
-				}
-			}
-		},
-		getLocalChildren: function() { //获取本地的子项
-			console.log("********getLocalChildren获取保存至本地的本部门子部门和人員********");
-			var id = this.$route.params.id;
-			var departList = events.getSessionArray(consts.KEY_DEPARTS);
-
-			var departs = departList.filter(function(depart) {
-				return depart.value == id;
-			});
-			if(departs && departs.length > 0) {
-				return departs[0].children
-			} else {
-				return [];
-			}
-		},
 		routerToTab: function() {
+			console.log("****routerToTab******");
 			router.go(-this.path.split("-").length);
 		},
 		//通过部门id 更新界面

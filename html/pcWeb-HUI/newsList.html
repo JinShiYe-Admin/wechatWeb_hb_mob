@@ -29,7 +29,7 @@
 							<th  width="100" >操作</th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody> 
 						<tr class="text-c" v-for="(newsModel,index) in item.newsArray" :data-index="index"> 
 							<td  style="  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" > {{newsModel.topic}}</td>
 							<td style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" >{{newsModel.subtopic}}</td>
@@ -79,6 +79,8 @@
 				el: '#chnid',
 				data: {
 					items: [ 
+//					{cname:'llll',
+//					chnid:111},{cname:'zzzz',chnid:222}
 					]
 				},
 				methods: {}
@@ -91,7 +93,7 @@
 						newsArray: [ 
 //						{
 //						newsid:102, 
-//						chnid:5,
+//						chnid:111,
 //						topic:"学校和市审计局启动战略合作",
 //						subtopic:"来源：成都大学新闻网", 
 //						content:"12" ,
@@ -119,14 +121,12 @@
 								}
 								unitWebsitePro(tempData, function(data) {
 									console.log(JSON.stringify(data));
-									if(data.RspCode == 0000) {
-										if(newsData.item.newsArray[index].newsid == colid) {
+									if(data.RspCode == 0000) { 
 											newsData.item.newsArray.splice(index, 1);
 											layer.msg('已删除!', {
 										    icon: 1,
 										    time: 1000
-									});
-										}
+									}); 
 									}
 								});
 							}, function() {});
@@ -164,7 +164,7 @@
 			}
 			window.onload = function() {
 				var tempData = {
-					cmd: 'chn', //网站栏目
+					cmd: 'chn', //网站栏目 
 					type: 'findpage', //分页查找栏目列表 
 					pagesize: 999, //每页条数 
 					iswrite: '1',
@@ -175,7 +175,7 @@
 					if(data.RspCode == 0) {
 						if(data.RspData.dt.length > 0) {
 							newsData.item = data.RspData.dt[0];
-							vue_input.items = data.RspData.dt;
+							vue_input.items = data.RspData.dt; 
 							getNewsList(newsData.item);
 						} else {
 							alert('暂时还没有栏目');
@@ -190,23 +190,20 @@
 
 			$("#Prixlk").change(function() {
 				var Chnid = document.getElementById("Prixlk");
-				PriChnid = Chnid.selectedIndex; // 选中索引
-				console.log(PriChnid);
+				PriChnid = Chnid.selectedIndex; // 选中索引  
 				newsData.item = vue_input.items[PriChnid];
-				newsData.item.newsPage = 1; //获取新闻的页码
-				newsData.item.newsFlag = 0; //0刷新，1加载更多
-				newsData.item.newsArray = []; //栏目对应的新闻列表
-				getNewsList(newsData.item);
+				newsData.item.pageindex = 1;   
+				getNewsList(newsData.item); 
 
 			})
 			//获取栏目对应的新闻
-			function getNewsList(columnModel) {
+			function getNewsList(columnModel) { 
 				console.log('获取新闻列表');
 				var tempData = {
 					cmd: 'news', //文章管理
 					type: 'findpage', //分页查找文章列表
 					pagesize: '10', //每页条数
-					pageindex: columnModel.newsPage, //页码
+					pageindex: columnModel.pageindex, //页码
 					chnid: columnModel.chnid //某个栏目下的文章，栏目id
 				} 
 				unitWebsitePro(tempData, function(data) {
@@ -267,7 +264,12 @@
 					jump: function(e, first) { //触发分页后的回调
 						//console.log("jump: " + first + " " + JSON.stringify(e));
 						if(!first) {
-							getNewsList(e.curr);
+							var Chnid = document.getElementById("Prixlk");
+				            PriChnid = Chnid.selectedIndex; // 选中索引  
+				            newsData.item = vue_input.items[PriChnid];
+				            newsData.item.pageindex = e.curr;   
+				            getNewsList(newsData.item); 
+							 
 						}
 					}
 				});

@@ -54,7 +54,6 @@ Vue.component("single-choose-person", {
 	},
 	watch: {
 		'$route' (to, from) {
-
 			this.departId = parseInt(this.$route.params.id);
 			this.path = this.$route.params.path;
 			console.log('路径：' + this.path);
@@ -177,9 +176,12 @@ Vue.component("single-choose-person", {
 
 		},
 		getLeaderPersen: function(data) {
+			console.log("****getLeaderPersen****")
 			var leaderPersen = data.filter(function(person) {
 				return person.isleader;
 			})
+			console.log("返回的值："+JSON.stringify(leaderPersen));
+			return leaderPersen;
 		}
 		/**
 		 * 列表cell
@@ -203,6 +205,7 @@ Vue.component("single-choose-person", {
 			this.routerToTab();
 		},
 		routerToTab: function() {
+			console.log("****routerToTab******");
 			router.go(-this.path.split("-").length);
 		},
 		//通过部门id 更新界面

@@ -186,37 +186,38 @@
 				getStatus: function(e) {
 					var index = e.target.value;
 					if(index >= 0) {
-						var curColumnInfo = culumns[index];
+						var curColumnInfo = this.culumns[index];
 						console.log("选取的column信息：" + JSON.stringify(curColumnInfo));
-					}else{
+						articalPublish.artical.chind = curColumnInfo.chind;
+						articalPublish.artical.stat = curColumnInfo.stat;
+					} else {
 						//未选择
 					}
-
-				}
+				},
 				publishArtical: function() { //发布文章 
-					if(articalPublish.chind >= 0) {
+					if(articalPublish.artical.chind >= 0) {
 						alert('请选择栏目');
 						return false;
 					}
-					if(articalPublish.topic.trim().length == 0) {
+					if(articalPublish.artical.topic.trim().length == 0) {
 						alert('请输入标题');
 						return false;
 					}
-					if(articalPublish.topic.trim().length > 50) {
+					if(articalPublish.artical.topic.trim().length > 50) {
 						alert('标题不能超过50个字');
 						return false;
 					}
-					if(articalPublish.subtopic.trim().length == 0) {
+					if(articalPublish.artical.subtopic.trim().length == 0) {
 						alert('请输入副标题');
 						return false;
 					}
-					if(articalPublish.topic.trim().length > 50) {
+					if(articalPublish.artical.topic.trim().length > 50) {
 						alert('副标题不能超过50个字');
 						return false;
 					}
 					//判断是否为链接
 					var tempQuo = 0;
-					if(articalPublish.quourl.trim().length > 0) {
+					if(articalPublish.artical.quourl.trim().length > 0) {
 						//判断是否为链接
 
 						tempQuo = 1;
@@ -261,29 +262,28 @@
 					var comData = {
 						cmd: 'news', //文章管理
 						type: 'add', //添加文章
-						chnid: articalPublish.chind, //所属栏目ID
-						subtopic: articalPublish.subtopic, //副标题
-						topic: articalPublish.topic, //标题
+						chnid: articalPublish.artical.chind, //所属栏目ID
+						subtopic: articalPublish.artical.subtopic, //副标题
+						topic: articalPublish.artical.topic, //标题
 						content: tempContent1, //内容
-						summas: articalPublish.summas, //摘要
-						encs: articalPublish.encs, //附件列表
+						summas: articalPublish.artical.summas, //摘要
+						encs: articalPublish.artical.encs, //附件列表
 						isquo: tempQuo, //是否为引用,0否1是
-						quourl: articalPublish.quourl.trim(), //引用url
-						isreply: articalPublish.isreply, //是否允许回复,0否1是
-						stat: articalPublish.stat //根据配置表设置相应值
+						quourl: articalPublish.artical.quourl.trim(), //引用url
+						isreply: articalPublish.artical.isreply, //是否允许回复,0否1是
+						stat: articalPublish.artical.stat //根据配置表设置相应值
 					};
-					console.log('comData=========================:' + JSON.stringify(comData));
 					unitWebsitePro(comData, function(data) {
 						if(data.RspCode == 0) {
-							if(articalPublish.) {
-
-							}
 							layer.msg('成功', {
 								icon: 5,
 								time: 1000
 							});
-							//清空数据 
-							location.reload();
+							if(articalPublish.artical.type = 'add') {
+								//清空数据 
+								location.reload();
+							}
+
 						} else {
 							layer.msg('data.RspTxt', {
 								icon: 5,
@@ -406,6 +406,30 @@
 			articalPublish.artical.subtopic = detail.subtopic;
 			articalPublish.artical.summas = detail.summas;
 			articalPublish.artical.content = detail.content;
+			//分解content
+			var tempArr0 = [];
+			var tempArr = tempStr.split('</section>');
+			tempArr.pop(); //移除最后一个数组值
+			//				alert('tempArr----:'+tempArr.length);
+			//
+			for(var i = 0; i < tempArr.length; i++) {
+				tempArr[i] = tempArr[i].replace('<section>', '');
+				tempArr[i] = tempArr[i].replace('<h3>', '<p>');
+				tempArr[i] = tempArr[i].replace('</h3>', '</p>');
+				var tempArr1 = tempArr[i].split('</p>');
+				tempArr1.pop(); //移除最后一个数组值
+				var tempArr3 = tempArr1[2].match(/src=[\S]*\s/g);
+				for(var m = 0; m < tempArr3.length; m++) {
+					tempArr3[m] = tempArr3[m].replace('src=', '');
+				}
+				var tempModel = {
+					title: tempArr1[0].replace(/<.*?>/ig, ""),
+					content: tempArr1[1].replace(/<.*?>/ig, ""),
+					files: tempArr3
+				}
+				tempArr0.push(tempModel);
+			}
+			articalPublish.pieces = tempArr0;
 			articalPublish.artical.isquo = detail.isquo;
 			articalPublish.artical.quourl = detail.quourl;
 			articalPublish.artical.isreply = detail.isreply;

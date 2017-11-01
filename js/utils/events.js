@@ -10,7 +10,7 @@ var events = (function(mod) {
 		console.log("获取的本地的值：" + JSON.stringify(arr));
 		sessionStorage.setItem(key, JSON.stringify(mod.toggleValueInArray(arr, value, isAdd)));
 	}
-	mod.setSessionArray(key,arr){
+	mod.setSessionArray=function(key,arr){
 		sessionStorage.setItem(key,JSON.stringify(arr));
 	}
 	/**

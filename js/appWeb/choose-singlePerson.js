@@ -2,15 +2,15 @@ Vue.component("single-choose-person", {
 	props: ['depart_id', 'chooseType'],
 	template: '<div><a href="" v-on:click="backup()">{{parseInt(depart_id)>0?"返回上级部门":"返回"}}</a>' +
 		'<div v-bind:class="[\'weui-cells\',\'weui-cells_radio\']">' +
-		'<template v-for="(item,index) of listData">' +
-		'<template v-if="chooseType===1">' +
-		'<a v-if="item.value" v-bind:class="[\'weui-cell\',\'weui-cell_access\']" v-on:click="clickEvent(item)">' +
+		'<template>' +
+		'<template v-if="chooseType===1">' + //人員選擇
+		'<a v-for="(item,index) in curDepartInfo.departList" v-if="item.value" v-bind:class="[\'weui-cell\',\'weui-cell_access\']" v-on:click="clickEvent(item,index)">' +
 		'<div v-bind:class="[\'weui-cell__bd\']">' +
 		'{{item.title}}' +
 		'</div>' +
 		'<div v-bind:class="[\'weui-cell__ft\']"></div>' +
 		'</a>' +
-		'<label v-else-if="item.userid&&item.isleader" v-bind:class="[\'weui-cell\',\'weui-check__label\']" v-bind:for="item.userid">' +
+		'<label v-for="(item,index) in curDepartInfo.personList"  v-if="item.userid&&item.isleader" v-bind:class="[\'weui-cell\',\'weui-check__label\']" v-bind:for="item.userid">' +
 		'<div v-bind:class="[\'weui-cell__bd\']">' +
 		'<p>{{item.name}}</p>' +
 		'</div>' +
@@ -19,8 +19,8 @@ Vue.component("single-choose-person", {
 		'<span v-bind:class="[\'weui-icon-checked\']"></span>' +
 		'</div>' +
 		'</label>' +
-		'</template>' +
-		'<a v-else v-bind:class="[\'weui-cell\',{\'weui-cell_access\':item.children.length>0}]">' +
+		'</template>' + //部門選擇
+		'<a v-else v-for="(item,index) in curDepartInfo.departList" v-bind:class="[\'weui-cell\',{\'weui-cell_access\':item.departList.length>0}]">' +
 		'<div v-bind:class="[\'weui-cell__hd\']">' +
 		'<label v-bind:for="item.value">' +
 		'<input type="radio" v-bind:class="[\'weui-check\']"  v-bind:id="item.value" v-bind:name="depart_id"' +
@@ -28,10 +28,10 @@ Vue.component("single-choose-person", {
 		'<i v-bind:class="[\'weui-icon-checked\']"></i>' +
 		'</label>' +
 		'</div>' +
-		'<div v-bind:class="[\'weui-cell__bd\']" v-on:click="clickEvent(item)">' +
+		'<div v-bind:class="[\'weui-cell__bd\']" v-on:click="clickEvent(item,index)">' +
 		'<p>{{item.title}}</p>' +
 		'</div>' +
-		'<div v-bind:class="[\'weui-cell__ft\']" v-on:click="clickEvent(item)"></div>' +
+		'<div v-bind:class="[\'weui-cell__ft\']" v-on:click="clickEvent(item,index)"></div>' +
 		'</a>' +
 		'</template>' +
 		'</div></div>',
@@ -40,132 +40,146 @@ Vue.component("single-choose-person", {
 		console.log("当前的部门id:" + this.$route.params.id);
 		this.getAllListData();
 	},
-	watch: {
-		'$route' (to, from) {
-			this.setPosition();
-			console.log("当前的部门id:" + this.$route.params.id);
-			if(this.$route.params.id == -1) {
-				this.getAllListData();
-			} else {
-				this.getCurDeparts();
-			}
-		}
-	},
 	data: function() {
 		return {
-			listData: []
+			listData: [],
+			curDepartInfo: {
+				departList: [],
+				personList: []
+			},
+			departsTree: [],
+			path: "0"
+			departId: -1
+		}
+	},
+	watch: {
+		'$route' (to, from) {
+			this.departId = parseInt(this.$route.params.id);
+			this.path = this.$route.params.path;
+			console.log('路径：' + this.path);
+			console.log("当前的部门id:" + this.departId);
+			this.getAllListData();
 		}
 	},
 	methods: {
 		backup: function() {
-			if(this.$router.params.id==-1){
-				window.history.go(-1);
-			}else{
-				router.go(-1);
-			}
+			router.go(-1);
 		},
 		getAllListData: function() {
 			console.log("*********getAllListData******");
 			var com = this;
 			com.isLoading = true;
-			request.getDepartList(function(data) {
-				console.log("getAllListData获取的部门列表：" + JSON.stringify(data));
-				com.setRealParentValue(data);
-				events.setSessionArray(consts.KEY_DEPARTS, data);
-				com.getCurDeparts();
-			});
-		},
-		setRealParentValue: function(list) {
-			if(typeof(list) == "undefined" || list.length == 0) {
-				return;
+			com.departsTree = events.getSessionArray(consts.KEY_DEPARTS);
+			if(com.departsTree.length == 0) {
+				request.getDepartList(function(data) {
+					console.log("getAllListData获取的部门列表：" + JSON.stringify(data));
+					com.departsTree = com.getChildrenTree(data);
+					com.getCurDepartInfo();
+				});
+			} else {
+				com.getCurDepartInfo();
 			}
-			list.sort(function(a, b) {
-				return a.value - b.value;
+		},
+		/**
+		 * 获取当前部门信息
+		 */
+		getCurDepartInfo: function() {
+			console.log('****choose-depart****getCurDepartInfo****')
+			var pathArr = this.path.split('-')
+			console.log('获取的路径数组：' + pathArr)
+			this.curDepartInfo = this.getNodeInTree(this.childrenTree, pathArr)
+			console.log('获取的本部门数据：' + JSON.stringify(this.curDepartInfo))
+			if(this.chooseType == 1) { //选择人员
+				this.getCurPersen();
+			}
+		}
+		/**
+		 * 根据路径获取在tree数组中的值
+		 * @param tree
+		 * @param pathArr 路径数组
+		 * @returns {*} departInfo
+		 */
+		getNodeInTree: function(tree, pathArr) {
+			console.log('****choose-depart****getNodeInTree****')
+			if(pathArr.length === 1) {
+				console.log('根据路径获取的node节点：' + JSON.stringify(tree[pathArr[0]]))
+				return tree[pathArr[0]]
+			} else {
+				return this.getNodeInTree(tree[pathArr[0]].departList, pathArr.slice(1))
+			}
+		},
+		/**
+		 * array转化为tree
+		 * @param nodes 数组
+		 * @returns {Array} tree结构数组
+		 */
+		getChildrenTree: function(nodes) {
+			console.log('****choose-depart***getChildrenTree***')
+			if(typeof(nodes) === 'undefined' || nodes.length === 0) {
+				return []
+			}
+			nodes.sort(function(a, b) {
+				return a.value - b.value
 			})
-			var map = {},
-				item;
-			for(var i = 0; i < list.length; i++) {
-				item = list[i];
-				map[item.value] = i;
-				if(item.parentvalue > 0) {
-					if(typeof(map[item.parentvalue]) == "undefined") {
-						item.parentvalue = 1;
+			let map = {},
+				node, roots = []
+			for(let i = 0; i < nodes.length; i++) {
+				node = nodes[i]
+				node.departLst = []
+				node.personList = []
+				map[node.value] = i // use map to look-up the parents
+				if(node.parentvalue > 0) {
+					if(typeof(map[node.parentvalue]) !== 'undefined') {
+						nodes[map[node.parentvalue]].departList.push(node)
+					} else {
+						nodes[map[-1]].departList.push(node)
 					}
+				} else {
+					roots.push(node)
 				}
 			}
+			console.log('getChildrenTree获取的数据：' + JSON.stringify(roots))
+			return roots
 		},
 		/**
 		 * 获取当前部门人员
 		 */
-		getCurDeparts: function() {
-			console.log("*********getCurDeparts******");
-			this.isLoading = true;
-			var children = this.getLocalChildren();
-			console.log("获取当前部门*****" + JSON.stringify(children));
-			if(children && children.length > 0) {
-				//				this.setItemsStatus(children);
-				this.listData = children;
-				this.isLoading = false;
-			} else {
-				this.requestChildren();
-			}
-		},
-		/**
-		 * 获取当前部门的子部门
-		 */
-		requestChildren: function() { //获取部门内部信息
-			console.log("*********requestChildren获取本页列表数据******");
-			var parentId = 0;
-			if(this.depart_id === -1) {
-				parentId = 1;
-			} else {
-				parentId = this.depart_id;
-			}
-			var list = JSON.parse(sessionStorage.getItem(consts.KEY_DEPARTS));
-			console.log(list);
-			var childDeparts = list.filter(function(el) {
-				return el.parentvalue == parentId;
-			});
-			console.log("获取的当前部门的子部门:" + JSON.stringify(childDeparts));
-			if(this.chooseType === 1) {
-				this.getCurPersen(childDeparts);
-			} else {
-				this.isLoading = false;
-				this.listData = childDeparts;
-				this.setAsChildren();
-			}
-		},
-		/**
-		 * 获取当前部门人员
-		 */
-		getCurPersen: function(departs) {
+		getCurPersen: function() {
 			console.log("********getCurPersen获取当前部门人员********");
 			var com = this;
-			var id;
-			if(com.$route.params.id == -1) {
-				id = 1
+			if(com.curDepartInfo.personList.length == 0) {
+				var id;
+				if(com.departId == -1) {
+					id = 1
+				} else {
+					id = com.departId;
+				}
+				request.getDepartPersons(id, 0, 1, function(data) {
+					console.log("获取的本部门人员:" + JSON.stringify(data));
+					com.curDepartInfo.personList = com.getLeaderPersen(data);
+					if(com.curDepartInfo.departList.length==0&&com.curDepartInfo.personList.length==0){
+						alert("当前部门无子部门和老师！");
+					}
+					com.isLoading = false;
+				})
 			} else {
-				id = com.$route.params.id
-			}
-			request.getDepartPersons(id, 0, 1, function(data) {
-				console.log("获取的本部门人员:" + JSON.stringify(data));
-				var children = data.concat(departs);
-				com.listData = children;
 				com.isLoading = false;
-				com.setAsChildren();
-			})
+			}
+
 		},
+		getLeaderPersen: function(data) {
+			var leaderPersen = data.filter(function(person) {
+				return person.isleader;
+			})
+		}
 		/**
 		 * 列表cell
 		 * @param {Object} item
 		 */
-		clickEvent: function(item) {
+		clickEvent: function(item, index) {
 			console.log("********clickEvent********");
 			if(item.value) {
-				console.log("路由跳转")
-				this.routerTo(item);
-			} else {
-
+				this.routerTo(item, index);
 			}
 		},
 		/**
@@ -189,7 +203,7 @@ Vue.component("single-choose-person", {
 			departList[this.getDepartIndex(parentId)].children = this.listData;
 			console.log("要保存至本地的列表数据：" + JSON.stringify(departList));
 			//将修改后的数据保存到本地储存列表
-			sessionStorage.setItem(consts.KEY_DEPARTS, JSON.stringify(departList));
+			events.setSessionArray(consts.KEY_DEPARTS, departList);
 		},
 		getDepartIndex: function() { //获取部门再部门列表中的序号
 			console.log("********getDepartIndex获取部门在部门列表中的序号********");
@@ -217,60 +231,21 @@ Vue.component("single-choose-person", {
 			}
 		},
 		routerToTab: function() {
-			var pos = this.getPosition();
-			console.log("@@@@@com-persen@@@@@导向发布页面");
-			router.go(-parseInt(pos));
-		},
-		getPosition: function() {
-			var id = 1;
-			if(parseInt(this.$route.params.id) > 0) {
-				id = parseInt(this.$route.params.id)
-			}
-			return events.getSessionMapValue(consts.KEY_DEPART_POSITION, id);
+			router.go(-this.path.split("-").length);
 		},
 		//通过部门id 更新界面
-		routerTo: function(item) {
+		routerTo: function(item, index) {
 			console.log("********routerTo路由跳转********");
-			if(this.chooseType === 0 && !this.hasChildren(item)) {
+			if(this.chooseType === 0 && !this.curDepartInfo.departList.length === 0) {
 				return;
 			}
 			router.push({
 				name: 'chooseSinPer',
 				params: {
 					id: item.value
+					path: this.path + "-" + index
 				}
 			})
-		},
-		hasChildren: function(item) {
-			var list = JSON.parse(sessionStorage.getItem(consts.KEY_DEPARTS));
-			console.log(list);
-			var childDeparts = list.filter(function(el) {
-				return el.parentvalue == item.value;
-			});
-			console.log("获取的当前部门的子部门:" + JSON.stringify(childDeparts));
-			if(childDeparts && childDeparts.length > 0) {
-				return true;
-			}
-			return false;
-		},
-		getDepartInfo: function() {
-			var list = JSON.parse(sessionStorage.getItem(consts.KEY_DEPARTS));
-			for(var i in list) {
-				if(this.$route.params.id == list[i].value) {
-					return list[i];
-				}
-			}
-		},
-		setPosition: function() {
-			console.log("********setPosition********");
-			if(parseInt(this.$route.params.id) === -1) {
-				events.setSessionMapValue(consts.KEY_DEPART_POSITION, 1, 1);
-			} else {
-				var departInfo = this.getDepartInfo();
-				var parentPosition = events.getSessionMapValue(consts.KEY_DEPART_POSITION, departInfo.parentvalue);
-				events.setSessionMapValue(consts.KEY_DEPART_POSITION, departInfo.value, parseInt(parentPosition) + 1);
-			}
-			console.log("本地存储的部门位置:" + JSON.stringify(events.getSessionMap(consts.KEY_DEPART_POSITION)));
 		}
 	}
 });

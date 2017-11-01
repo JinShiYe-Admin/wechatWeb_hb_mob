@@ -175,7 +175,7 @@
 					<section class="container">
 						<div class="dropdown">
 							<select name="one" id="chnid" class="dropdown-select" onchange="upperCase(this.id,1)" style="font-size: 17px;color: #929292;">
-								<option value="">请选择所属栏目....</option>
+								<option value="9999">请选择所属栏目....</option>
 								<option v-for="item in items" :value="item.chnid">{{item.cname}}</option>
 							</select>
 						</div>
@@ -420,7 +420,9 @@
 			var vue_input = new Vue({
 				el: '#chnid',
 				data: {
-					items: []
+					items: [
+					    
+					]
 				}
 			});
 			//初始化页面
@@ -677,6 +679,10 @@
 				//var Chnid = document.getElementById("chnid"); //栏目id
 				//var PriChnid = Chnid.selectedIndex; // 选中索引
 				var PriChnid = $("#chnid option:selected").val();
+				if(PriChnid==9999){
+					weui.alert("请选择你要添加的栏目");
+				    return false;
+				}
 				console.log('所属栏目=========================:' + PriChnid);
 				PriIsquo = document.getElementById("islink").checked == true ? 1 : 0;
 				PriIsReply = document.getElementById("isReply").checked == true ? 1 : 0;

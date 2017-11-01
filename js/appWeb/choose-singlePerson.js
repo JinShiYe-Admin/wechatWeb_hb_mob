@@ -42,14 +42,13 @@ Vue.component("single-choose-person", {
 	},
 	data: function() {
 		return {
-			listData: [],
-			curDepartInfo: {
+			curDepartInfo: {//当前部门信息
 				departList: [],
 				personList: []
 			},
-			departsTree: [],
-			path: "0"
-			departId: -1
+			departsTree: [],//部门tree结构
+			path: "0"//路径
+			departId: -1//部门Id
 		}
 	},
 	watch: {
@@ -62,24 +61,32 @@ Vue.component("single-choose-person", {
 		}
 	},
 	methods: {
+		//返回上级界面
 		backup: function() {
 			router.go(-1);
 		},
+		//保存部门数据
 		setSessionStorage: function() {
 			events.setSessionArray(consts.KEY_DEPARTS, this.departsTree);
 		},
+		/**
+		 * 获取所有部门数据
+		 */
 		getAllListData: function() {
 			console.log("*********getAllListData******");
 			var com = this;
 			com.isLoading = true;
 			com.departsTree = events.getSessionArray(consts.KEY_DEPARTS);
 			if(com.departsTree.length == 0) {
+				//获取所有部门列表
 				request.getDepartList(function(data) {
 					console.log("getAllListData获取的部门列表：" + JSON.stringify(data));
 					com.departsTree = com.getChildrenTree(data);
+					//获取当前部门信息
 					com.getCurDepartInfo();
 				});
 			} else {
+				//获取当前部门信息
 				com.getCurDepartInfo();
 			}
 		},
@@ -87,7 +94,7 @@ Vue.component("single-choose-person", {
 		 * 获取当前部门信息
 		 */
 		getCurDepartInfo: function() {
-			console.log('****choose-depart****getCurDepartInfo****')
+			console.log('****getCurDepartInfo****')
 			var pathArr = this.path.split('-')
 			console.log('获取的路径数组：' + pathArr)
 			this.curDepartInfo = this.getNodeInTree(this.departsTree, pathArr)
@@ -153,23 +160,25 @@ Vue.component("single-choose-person", {
 		getCurPersen: function() {
 			console.log("********getCurPersen获取当前部门人员********");
 			var com = this;
-			if(com.curDepartInfo.personList.length == 0) {
+			if(com.curDepartInfo.personList.length == 0) {//如果人员列表数据为0 重新获取
 				var id;
 				if(com.departId == -1) {
 					id = 1
 				} else {
 					id = com.departId;
 				}
+				//获取人员信息
 				request.getDepartPersons(id, 0, 1, function(data) {
 					console.log("获取的本部门人员:" + JSON.stringify(data));
-					com.curDepartInfo.personList = com.getLeaderPersen(data);
+					com.curDepartInfo.personList = com.getLeaderPersen(data);//获取老师列表数据
+					//如果此部门没有子部门和老师，弹出提示框
 					if(com.curDepartInfo.departList.length == 0 && com.curDepartInfo.personList.length == 0) {
 						alert("当前部门无子部门和老师！");
 					}
-					com.isLoading = false;
+					com.isLoading = false;//结束加载状态
 					com.setSessionStorage();
 				})
-			} else {
+			} else {//人员列表数据不为0，直接显示数据
 				com.isLoading = false;
 				com.setSessionStorage();
 			}

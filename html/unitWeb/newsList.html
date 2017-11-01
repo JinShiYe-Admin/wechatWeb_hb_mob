@@ -57,6 +57,8 @@
 							<p style='width:350px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;'>副标题：{{newsModel.subtopic}}</p>
 							<button style="float:right" class="weui-btn weui-btn_mini weui-btn_warn" @click="clickDel(newsModel,0,index)">删除</button>
 							<p style='width:350px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;'>内容：{{newsModel.content}}</p>
+							<br />
+							 
 							<button style="float:right" class="weui-btn weui-btn_mini weui-btn_primary" @click="click(newsModel,index,item.cname )">编辑</button>
 						</div>
 					</a>
@@ -102,7 +104,8 @@
 				el: '#newsData',
 				data: {
 					item: { 
-					   
+					   	newsArray: [  
+						]
 					}
 				},
 				updated: function() {

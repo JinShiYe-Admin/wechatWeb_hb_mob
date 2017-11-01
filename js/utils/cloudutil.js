@@ -319,11 +319,11 @@ var cloudutil = (function(mod) {
 					if(info.status == 200) {
 						var imgUrl=mod.getImgUrl(uptokenData);
 						var tempModel = {
-							ImgUrl: imgUrl,
-							SaveUrl: imgUrl,
-							OldName: originalName,
-							NewName: file.name,
-							FileSize: file.size
+							saveurl:uptokenData.data.Data[0].Domain + uptokenData.data.Data[0].Key,
+							imgurl: imgUrl,
+							oldname: originalName,
+							newname: file.name,
+							filesize: file.size
 						}
 						callback(tempModel);
 					}
@@ -350,7 +350,7 @@ var cloudutil = (function(mod) {
 	}
 	/**
 	 * 获取图片在七牛上的地址
-	 * @param {Object} token 上传的token 
+	 * @param {Object} token 上传的token
 	 */
 	mod.getImgUrl=function(token) {
 		console.log("*****getImgUrl：" + JSON.stringify(token))
@@ -360,7 +360,7 @@ var cloudutil = (function(mod) {
 		return token.data.Data[0].Domain + token.data.Data[0].Key;
 	}
 	/**
-	 * 
+	 *
 	 * @param {Object} file
 	 * @param {Object} manageOption { type } 0 原图 3 缩略裁剪图
 	 */

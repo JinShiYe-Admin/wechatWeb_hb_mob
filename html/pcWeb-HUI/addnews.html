@@ -6,6 +6,8 @@
 		<title>新闻添加</title>
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css" />
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+		<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
+		<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
 		<style>
 			.edit_container {
 				margin: 0 auto;
@@ -40,6 +42,14 @@
 			.radio-box {
 				padding-left: 0px;
 			}
+			
+			.select-file {
+				padding: 15px;
+			}
+			
+			.select-file-img {
+				width: 200px;
+			}
 		</style>
 	</head>
 
@@ -49,13 +59,13 @@
 				<div>
 					<select class="select" id="chnid" name="one" style="height: 45px;font-size: 17px;color: #929292;">
 						<option value="">请选择所属栏目....</option>
-						<!--option v-for="item in items" :value="item.chnid">{{item.cname}}</option>-->
+						<option v-for="item in columns" :value="item.chnid">{{item.cname}}</option>
 					</select>
 				</div>
 				<input v-model.trim="artical.topic" id="cname" class="artical-title input-text size-L" type="text" maxlength="64" placeholder="在此输入标题" />
 				<input v-model.trim="artical.subtopic" id="fname" class="artical-subtitle input-text size-L" type="text" maxlength="64" placeholder="在此输入副标题" />
 				<textarea v-model.trim="artical.summas" id="summas" class="textarea" placeholder="在此输入新闻摘要"></textarea>
-				<select-load-pic v-bind:index="-1" v-on:uploadedfile="getHeadImg"></select-load-pic>
+				<select-load-pic v-bind:index="-1" v-on:uploadedfile="getHeadImg" :files="artical.encs" @delete-file="deleteHeadImg"></select-load-pic>
 				<p class="artical-pieces-title">新闻内容</p>
 				<template v-for="(piece,index) in pieces">
 					<div class="artical-piece">
@@ -64,7 +74,7 @@
 					</div>
 					<div>
 						<p v-if="piece.files.lenth>0"></p>
-						<select-load-pic :index="index" v-on:uploadedfile="getPieceImg"></select-load-pic>
+						<select-load-pic :index="index" v-on:uploadedfile="getPieceImg" :files="piece.files" @delete-file="deletePieceImg(index)"></select-load-pic>
 						<input id="add-piece" v-if="pieces.length<5" v-on:click="addPiece(piece,index)" class="btn btn-primary radius float-right" type="button" value="添加段落">
 						<input id="del-piece" v-if="pieces.length>1" v-on:click="delPiece(piece,index)" class="btn btn-warning radius float-right" type="button" value="删除段落">
 					</div>
@@ -74,9 +84,9 @@
 				<div>
 					<div class="check-box">
 						<label for="checkbox-1">是否可评论</label>
-						<input type="checkbox" id="isReply">
+						<input type="checkbox" id="isReply" v-model="artical.isreply">
 					</div>
-					<input class="btn btn-primary radius float-right" v-on:click="publishArtical" type="button" value="发送">
+					<input class="btn btn-primary radius float-right" v-if="artical.type=='add'" v-on:click="publishArtical" type="button" value="发送">
 				</div>
 			</div>
 			<div id="dia-delPiece" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -97,7 +107,22 @@
 				</div>
 			</div>
 		</div>
+		<template id="temp_select_load_pic">
+			<div>
+				<span :id="index|idFilter" class="btn-upload form-group">
+					<input :value="originalName" class="input-text upload-url radius piece" type="text" readonly :placeholder="index|placeHolder" />
+					<a href="" id="upload" class="btn btn-primary radius"><i class="Hui-iconfont Hui-iconfont-upload"></i> 浏览文件</a>
+					<input type="file" accept="image/jpeg,image/png" value="dsafd" v-on:change="selectFile($event)" class="input-file" />
+				</span>
+				<div class="select-file" style="" v-if="files.length!=0">
+					<img :src="files[0].saveurl" class="select-file-img" />
+					<br />
+					<button class="btn btn-danger radius" @click="delBtn">删除图片</button>
+				</div>
+			</div>
+		</template>
 	</body>
+	<script src="../../js/PublicProtocol.js"></script>
 	<script src="../../js/vue.js"></script>
 	<script src="../../js/utils/storageutil.js"></script>
 	<script src="../../js/utils/cryption.js"></script>
@@ -109,11 +134,13 @@
 	<script src="../../js/pcWeb-HUI/select-load-singPic.js"></script>
 	<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
 	<script src="../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
+	<script src="../../js/H-ui.admin/lib/layer/2.4/layer.js"></script>
 	<script>
 		var articalPublish = new Vue({
 			el: "#artical-pub",
 			data: {
 				artical: {
+					type: 'add',
 					chind: -1, //所属栏目id
 					topic: "", //标题
 					subtopic: "", //副标题
@@ -131,7 +158,6 @@
 						//					}
 					], //附件列表
 					stat: "" //根据配置表设置相应值
-
 				},
 				pieces: [{
 					title: "",
@@ -147,6 +173,8 @@
 			created: function() {
 				//vue 创建时 请求栏目列表
 				this.getColumns();
+				//获取网站配置
+				getWebsitConfig();
 			},
 			watch: {
 				pieces: function(newVal, oldVal) { //片段增减的判断
@@ -156,21 +184,101 @@
 			},
 			methods: {
 				publishArtical: function() { //发布文章 
+					if(articalPublish.chind >= 0) {
+						alert('请选择栏目');
+						return false;
+					}
+					if(articalPublish.topic.trim().length == 0) {
+						alert('请输入标题');
+						return false;
+					}
+					if(articalPublish.topic.trim().length > 50) {
+						alert('标题不能超过50个字');
+						return false;
+					}
+					if(articalPublish.subtopic.trim().length == 0) {
+						alert('请输入副标题');
+						return false;
+					}
+					if(articalPublish.topic.trim().length > 50) {
+						alert('副标题不能超过50个字');
+						return false;
+					}
+					//判断是否为链接
+					var tempQuo = 0;
+					if(articalPublish.quourl.trim().length > 0) {
+						//判断是否为链接
+
+						tempQuo = 1;
+					} else {
+
+					}
+					//拼接内容，
+					var tempContent0 = ''; //检查总段落内容，是否全部为空
+					var tempContent1 = ''; //发送协议中的内容字段
+					for(var i = 0; i < articalPublish.pieces.length; i++) {
+						var tempModel = articalPublish.pieces[i];
+						//						if (tempModel.title.trim().length>50) {
+						//							alert('第'+i+'节标题不能超过50个字');
+						//							break;return false;
+						//						} else if (tempModel.content.trim().length>5000) {
+						//							alert('第'+i+'节内容不能超过5000个字');
+						//							break;return false;
+						//						}
+						//判断当前节，是否都为空
+						if(tempModel.title.trim().length == 0 && tempModel.content.trim().length == 0 && tempModel.files.length == 0) {
+							//当前节里，都为空，不加入内容中
+						} else {
+							//获取节当中加入的图片
+							var tempImg = '';
+							for(var i = 0; i < tempModel.files.length; i++) {
+								tempImg += '<img src=' + tempModel.files[i] + '>';
+							}
+							tempContent1 += '<section><h3>' + tempModel.title.trim().replace(/<.*?>/ig, "") + '</h3><p>' + tempModel.content.trim().replace(/<.*?>/ig, "") + '</p>' + tempImg + '</section>';
+						}
+						var tempImgStr = '';
+						for(var i = 0; i < tempModel.files.length; i++) {
+							tempImgStr += tempModel.files[i];
+						}
+						tempContent0 += tempModel.title.trim() + tempModel.content + tempImgStr;
+					}
+
+					if(tempContent0.trim() == 0) {
+						alert('请输入文字内容');
+						return false;
+					}
+
+					var comData = {
+						cmd: 'news', //文章管理
+						type: 'add', //添加文章
+						chnid: articalPublish.chind, //所属栏目ID
+						subtopic: articalPublish.subtopic, //副标题
+						topic: articalPublish.topic, //标题
+						content: tempContent1, //内容
+						summas: articalPublish.summas, //摘要
+						encs: articalPublish.encs, //附件列表
+						isquo: tempQuo, //是否为引用,0否1是
+						quourl: articalPublish.quourl.trim(), //引用url
+						isreply: articalPublish.isreply, //是否允许回复,0否1是
+						stat: articalPublish.stat //根据配置表设置相应值
+					};
 					console.log('comData=========================:' + JSON.stringify(comData));
 					unitWebsitePro(comData, function(data) {
 						if(data.RspCode == 0) {
-							weui.toast("添加成功");
+							if(articalPublish.) {
+
+							}
+							layer.msg('成功', {
+								icon: 5,
+								time: 1000
+							});
 							//清空数据 
-							document.getElementById("cname").value = ""; //新闻标题
-							//document.getElementById("conten").value = ""; //新闻内容
-							document.getElementById("summas").value = ""; //新闻摘要
-							document.getElementById("chnid").selectedIndex = 0; //栏目id
-							document.getElementById("islink").value = ""; //引用地址
-							document.getElementById("fname").value = "";
-							$('.weui-input').val("");
 							location.reload();
 						} else {
-							weui.toast(data.RspTxt);
+							layer.msg('data.RspTxt', {
+								icon: 5,
+								time: 1000
+							});
 						}
 					});
 				},
@@ -222,16 +330,77 @@
 					this.pieces.splice(index, 1);
 					$("#dia-delPiece").modal("hide");
 				},
+				/**
+				 * 增加标题图片
+				 * @param {Object} headImg
+				 * @param {Object} index
+				 */
 				getHeadImg: function(headImg, index) {
 					console.log("*****获取的headImg:" + JSON.stringify(headImg) + ",index:" + index);
-
+					this.artical.encs[0] = headImg;
 				},
+				/**
+				 * 增加内容图片
+				 * @param {Object} contentImg
+				 * @param {Object} index 内容序号
+				 */
 				getPieceImg: function(contentImg, index) {
 					console.log("*****获取的contentImage:" + JSON.stringify(contentImg) + ",index:" + index);
-
+					this.pieces[index].files[0] = contentImg;
+				},
+				/**
+				 * 删除标题图片
+				 */
+				deleteHeadImg: function() {
+					console.log("deleteHeadImg");
+					articalPublish.artical.encs = [];
+				},
+				/**
+				 * 删除内容图片
+				 * @param {Object} index 内容序号
+				 */
+				deletePieceImg: function(index) {
+					console.log("deletePieceImg:" + index);
+					articalPublish.pieces[index].files = [];
 				}
 			}
-		})
+		});
+		/**
+		 * 获取网站配置信息
+		 */
+		function getWebsitConfig() {
+			var tempData = {
+				cmd: 'webcfg',
+				type: 'find'
+			}
+			unitWebsitePro(tempData, function(data) {
+				if(data.RspCode == 0) {
+					if(data.RspData.length > 0) {
+						articalPublish.artical.type = '000';
+					} else {
+						alert('没有获取到配置信息')
+					}
+				} else {
+					alert(data.RspTxt);
+				}
+			});
+		}
+		var detail = utils.getDataFromUrl(window.location.href);
+		console.log('detail=' + JSON.stringify(detail))
+		if(detail.type == 'edit') {
+			articalPublish.artical.type = 'edit';
+			articalPublish.artical.child = detail.child;
+			articalPublish.artical.cname = detail.cname;
+			articalPublish.artical.topic = detail.topic;
+			articalPublish.artical.subtopic = detail.subtopic;
+			articalPublish.artical.summas = detail.summas;
+			articalPublish.artical.content = detail.content;
+			articalPublish.artical.isquo = detail.isquo;
+			articalPublish.artical.quourl = detail.quourl;
+			articalPublish.artical.isreply = detail.isreply;
+			articalPublish.artical.encs = detail.dt;
+			articalPublish.artical.stat = detail.stat;
+		}
 	</script>
 
 </html>

@@ -1,13 +1,9 @@
 Vue.component("select-load-pic", {
-	props: ["index"], //0 原图 最大2M 1缩略图
-	template: '<span :id="index|idFilter"  class="btn-upload form-group">' +
-		'<input :value="originalName" class="input-text upload-url radius piece" type="text" readonly :placeholder="index|placeHolder">' +
-		'<a href="" id="upload" class="btn btn-primary radius"><i class="Hui-iconfont Hui-iconfont-upload"></i> 浏览文件</a>' +
-		'<input type="file" accept="image/jpeg,image/png" value="dsafd" v-on:change="selectFile($event)"  class="input-file">' +
-		'</span>',
+	props: ["index", "files"], //0 原图 最大2M 1缩略图
+	template: '#temp_select_load_pic',
 	data: function() {
 		return {
-			originalName:""
+			originalName: ""
 		}
 	},
 	mounted: function() {
@@ -16,19 +12,19 @@ Vue.component("select-load-pic", {
 	},
 	filters: {
 		placeHolder: function(val) {
-//		    if(val==-1 && detail.type == 'edit' ){
-//		    alert('jinlai')
-////		    return  bjimgurl;
-//		    }
+			//		    if(val==-1 && detail.type == 'edit' ){
+			//		    alert('jinlai')
+			////		    return  bjimgurl;
+			//		    }
 			console.log("要选择的类型：" + val)
-			if(val >=0 ) {
+			if(val >= 0) {
 				console.log("0")
 				return "请选择内容图片";
 			}
 			return "请选择标题图片";
 		},
-		idFilter:function(val){
-			return "upload"+val
+		idFilter: function(val) {
+			return "upload" + val
 		}
 	},
 	methods: {
@@ -53,20 +49,20 @@ Vue.component("select-load-pic", {
 		},
 		uploadFile: function() { //上传文件方法
 			var com = this;
-			var thumbOption={
-				type:0
+			var thumbOption = {
+				type: 0
 			};
 			if(com.index == -1) {
-				thumbOption={
-					type:3,
-					width:300,
-					height:200
+				thumbOption = {
+					type: 3,
+					width: 300,
+					height: 200
 				}
 			}
-			cloudutil.uploadQnSingleImg("upload"+com.index,thumbOption, function(response) {
-				com.originalName=response.OldName;
+			cloudutil.uploadQnSingleImg("upload" + com.index, thumbOption, function(response) {
+				com.originalName = response.oldname;
 				console.log("获取的上传七牛图片信息：" + JSON.stringify(response));
-				com.$emit("uploadedfile", response,com.index); //通知父组件 上传的图片
+				com.$emit("uploadedfile", response, com.index); //通知父组件 上传的图片
 			})
 			//在上传成功回调中使用
 
@@ -79,7 +75,17 @@ Vue.component("select-load-pic", {
 				default:
 					return false;
 			}
+		},
+		/**
+		 * 点击删除图片
+		 */
+		delBtn: function() {
+			var self = this;
+			layer.confirm('确定删除', function(num) {
+				layer.close(num);
+				self.originalName = "";
+				self.$emit("delete-file");
+			});
 		}
-
 	}
 })

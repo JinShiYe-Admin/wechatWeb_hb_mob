@@ -210,7 +210,8 @@ Vue.component("time-table", {
 				router.push({
 					name: 'chooseSinPer',
 					params: {
-						id: -1
+						id: -1,
+						path:'0'
 					}
 				})
 				//点击具体星期

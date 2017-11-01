@@ -57,9 +57,9 @@
 		<div id="artical-pub">
 			<div class="edit_container">
 				<div>
-					<select class="select" id="chnid" name="one" style="height: 45px;font-size: 17px;color: #929292;">
-						<option value="">请选择所属栏目....</option>
-						<option v-for="item in columns" :value="item.chnid">{{item.cname}}</option>
+					<select class="select" id="chnid" name="one" value="-1" style="height: 45px;font-size: 17px;color: #929292;" v-on:change="getStatus($event)">
+						<option value="-1">请选择所属栏目....</option>
+						<option v-for="(item,index) in columns" :value="index">{{item.cname}}</option>
 					</select>
 				</div>
 				<input v-model.trim="artical.topic" id="cname" class="artical-title input-text size-L" type="text" maxlength="64" placeholder="在此输入标题" />
@@ -183,6 +183,16 @@
 				}
 			},
 			methods: {
+				getStatus: function(e) {
+					var index = e.target.value;
+					if(index >= 0) {
+						var curColumnInfo = culumns[index];
+						console.log("选取的column信息：" + JSON.stringify(curColumnInfo));
+					}else{
+						//未选择
+					}
+
+				}
 				publishArtical: function() { //发布文章 
 					if(articalPublish.chind >= 0) {
 						alert('请选择栏目');
@@ -283,6 +293,7 @@
 					});
 				},
 				getColumns: function() { //获取栏目列表
+					var com = this;
 					var tempData = {
 						cmd: 'chn', //网站栏目
 						type: 'findpage', //分页查找栏目列表 
@@ -294,7 +305,7 @@
 					unitWebsitePro(tempData, function(data) {
 						if(data.RspCode == 0) {
 							if(data.RspData.dt.length > 0) {
-								this.columns = data.RspData.dt; //在回调中赋值
+								com.columns = data.RspData.dt; //在回调中赋值
 							} else {
 								alert('暂时还没有栏目');
 							}

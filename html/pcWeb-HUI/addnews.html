@@ -442,7 +442,7 @@
 						articalPublish.artical.content = detail.content;
 						//分解content
 						var tempArr0 = [];
-						var tempArr = detail.split('</section>');
+						var tempArr = detail.content.split('</section>');
 						tempArr.pop(); //移除最后一个数组值
 						for(var i = 0; i < tempArr.length; i++) {
 							tempArr[i] = tempArr[i].replace('<section>', '');

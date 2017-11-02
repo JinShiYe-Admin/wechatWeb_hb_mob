@@ -9,7 +9,7 @@
 
 	<body>
 		<div>webCamera</div>
-		<video id="video" style="width: 100%;height: 200px;background:black;"></video>
+		<video id="video" style="width: 100%;height: 200px;background:black;" controls></video>
 		<button onclick="clickbtn(0)">mediaDevices</button>
 		<button onclick="clickbtn(1)">getUserMedia</button>
 		<button onclick="clickbtn(2)">webkitGetUserMedia</button>
@@ -18,18 +18,45 @@
 		<button onclick="clickbtn(4)">前置摄像头</button>
 		<button onclick="clickbtn(5)">后置摄像头</button>
 		<button onclick="clickbtn(6)">默认摄像头</button>
-
+		<input id="input" type="file" accept="video/*">
+		<!--<script type="text/javascript" src="js/vconsole.min.js?"></script>-->
 		<script type="text/javascript" src="../../js/lib/vconsole/vconsole.min.js?"></script>
+
 		<script>
 			var mediaOpts = {
 				audio: true,
 				video: true,
 			}
 			var option = document.getElementById("option");
+			var video = document.getElementById("video");
+			//iOS获取视频
+			var inputVideo = document.getElementById("input");
+			inputVideo.addEventListener("change", function(e) {
+				console.log("change", e.target);
+				var url = URL.createObjectURL(e.target.files[0]);
+				console.log("url:" + url);
+				video.src = url;
+			});
 
+			var exArray = []; //存储设备源ID
+			//获取视频，音频的设备信息
+			MediaStreamTrack.getSources(function(sourceInfos) {
+				console.log("sourceInfos", sourceInfos);
+				for(var i = 0; i != sourceInfos.length; ++i) {
+					var sourceInfo = sourceInfos[i];
+					//这里会遍历audio,video，所以要加以区分
+					if(sourceInfo.kind === 'video') {
+						exArray.push(sourceInfo.id);
+					}
+				}
+			});
+
+			/**
+			 * 成功获取视频流
+			 * @param {Object} stream
+			 */
 			function successFunc(stream) {
 				console.log("successFunc");
-				var video = document.querySelector('video');
 				if("srcObject" in video) {
 					console.log("srcObject");
 					video.srcObject = stream;
@@ -66,7 +93,9 @@
 						mediaOpts = {
 							audio: true,
 							video: {
-								facingMode: "user"
+								optional: [{
+									sourceId: exArray[0] //0为前置摄像头，1为后置
+								}]
 							}
 						}
 						option.innerText = "摄像头：前置";
@@ -75,9 +104,9 @@
 						mediaOpts = {
 							audio: true,
 							video: {
-								facingMode: {
-									exact: "environment"
-								}
+								optional: [{
+									sourceId: exArray[1] //0为前置摄像头，1为后置
+								}]
 							}
 						}
 						option.innerText = "摄像头：后置";

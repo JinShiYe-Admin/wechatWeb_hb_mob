@@ -2,15 +2,19 @@
 <html> 
 	<head>
 		<meta charset="UTF-8">
-		<title>新闻审核</title> 
-		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css" /> 
-		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" /> 
-		<link rel="stylesheet" type="text/css" href="../../css/weui.min.css" />
-		<style>
- 	</style>
+		<title>文章审核</title>  
+	 	<script type="text/javascript">
+			var WebVersion = "?" + Math.random();
+			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css' + WebVersion + '" id="skin" />');
+			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../css/weui.min.css' + WebVersion + '" />');
+		</script>
 	</head> 
 	<body>
-		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 新闻 <span class="c-gray en">&gt;</span> 新闻审核
+		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 文章 <span class="c-gray en">&gt;</span> 文章审核
 			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
 		</nav>
 		<div class="page-container">
@@ -23,45 +27,39 @@
 				<table style=" table-layout:fixed;" class="table table-border table-bordered table-bg">
 					<thead>
 						<tr class="text-c"> 
-							<th width="90"  >新闻标题</th>
-							<th width="90" >新闻副标题</th>
-							<th width="120" >审核状态</th> 
-							<th  width="100" >操作</th>
+							<th width="90" >文章标题</th>
+							<th width="90" >文章副标题</th>
+							<th width="120">审核状态</th> 
+							<th width="100">操作</th>
 						</tr>
 					</thead>
 					<tbody> 
 						<tr class="text-c" v-for="(newsModel,index) in item.newsArray" :data-index="index"> 
-							<td  style="  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" > {{newsModel.topic}}</td>
+							<td style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" > {{newsModel.topic}}</td>
 							<td style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" >{{newsModel.subtopic}}</td>
-							<td  style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" ><span :class="newsModel.stat==0?'label label-defaunt radius':'label label-success radius'"><a v-if="newsModel.stat==0">未通过</a><a v-else>已通过</a></span></td>
-							<td   style="text-align: center;">
+							<td style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" ><span :class="newsModel.stat==0?'label label-defaunt radius':'label label-success radius'"><a v-if="newsModel.stat==0">未通过</a><a v-else>已通过</a></span></td>
+							<td style="text-align: center;">
 								<button id="{{newsModel.newsid}}" class="btn btn-primary radius" @click="clickDel(newsModel,1,index)">{{newsModel.Prizt}}</button>&nbsp;&nbsp;&nbsp;
 								<a class="text-primary operate-cursor" @click="click(newsModel,index,item.cname )" title="编辑"><i class="Hui-iconfont"></i></a>
 						    	<a style="text-decoration:none" class="ml-5" @click="clickDel(newsModel,0,index)" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
 							</td>
-						</tr>
-
+						</tr> 
 					</tbody>
 				</table>
 			</div>
 			<div id="pages"></div>
-		</div> 
-		<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
-		<script type="text/javascript" src="../../js/H-ui.admin/lib/layer/2.4/layer.js"></script>  
-		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>  
-		<!--<script type="text/javascript" src="../../js/H-ui.admin/lib/laypage/1.2/laypage.js?"></script>-->
+		</div>    
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/laypage/1.2/laypage.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/layer/2.4/layer.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/vue.min.js?" + Math.random() + "'></s" + "cript>");
 		</script>  
 		<script type="text/javascript">
 	       	function click(newsModel, index, cname) { 
-				var url = "../pcWeb-HUI/addnews.html";
-				//var newslist = new Object();
-				//newslist.cname = cname;
-				newsModel.type = "edit";
-				//newslist.newsid = newsModel.newsid;  
-				var ids = url.split("/");
+				var url = "../pcWeb-HUI/addnews.html"; 
+				newsModel.type = "edit";  
 				var index = layer.open({
 					type: 2,
 					title: "编辑文章",
@@ -80,8 +78,7 @@
 			var vue_input = new Vue({
 				el: '#chnid',
 				data: {
-					items: [  
-					]
+					items: []
 				},
 				methods: {}
 			});
@@ -90,9 +87,7 @@
 				el: '#newsData',
 				data: {
 					item: {
-						newsArray: [ 
-						 
-						]
+						newsArray: []
 					}
 				},
 				updated: function() {
@@ -130,7 +125,7 @@
 					}
 				}
 			});
-						//修改审核状态
+			//修改审核状态
 			function SetStat(model, colid) {	
 				var stat = "";
 				if(model.stat == 0)
@@ -183,8 +178,7 @@
 				PriChnid = Chnid.selectedIndex; // 选中索引  
 				newsData.item = vue_input.items[PriChnid];
 				newsData.item.pageindex = 1;   
-				getNewsList(newsData.item); 
-
+				getNewsList(newsData.item);  
 			})
 			//获取栏目对应的新闻
 			function getNewsList(columnModel) { 
@@ -198,7 +192,7 @@
 				} 
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
-					    initLaypage(20, 1);
+					    initLaypage(data.RspData.pg.PageCount, columnModel.pageindex);
 						if(data.RspData.dt.length > 0) {  
 							//循环审核状态
 							for(var i = 0; i < data.RspData.dt.length; i++) {
@@ -208,12 +202,8 @@
 								if(tempModel.stat == 0) 
 									tempModel.Prizt = "通过";
 							}
-							//判断是刷新0，还是加载更多1
-							if(columnModel.newsFlag == 0) {
-								columnModel.newsArray = [].concat(data.RspData.dt);
-							} else {
-								newsData.item.newsArray = newsData.item.newsArray.concat(data.RspData.dt);
-							}
+						  newsData.item.newsArray = newsData.item.newsArray.concat(data.RspData.dt);
+							
 							setTimeout(function() {
 								$(".weui-loadmore").hide();
 								loading = false;
@@ -236,14 +226,8 @@
 					} else {
 						alert(data.RspTxt);
 					}
-				});
-
- 
-               
-				
-			 
-			}
-			
+				}); 
+			} 
 			/**
 			 * 初始化页码
 			 * @param {Object} pages 通过后台拿到的总页数

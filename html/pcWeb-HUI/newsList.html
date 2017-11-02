@@ -190,10 +190,11 @@
 					pageindex: columnModel.pageindex, //页码
 					chnid: columnModel.chnid //某个栏目下的文章，栏目id
 				}  
-				console.log('新闻协议----'+tempData);
+				console.log('获取文章协议----'+tempData);
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
-					    initLaypage(data.RspData.pg.PageCount, columnModel.pageindex);
+						console.log('后台返回数据的总个数----'+data.RspData.pg.PageCount);
+					    initLaypage(data.RspData.pg.PageCount, columnModel.pageindex); 
 						if(data.RspData.dt.length > 0) {  
 							//循环审核状态
 							for(var i = 0; i < data.RspData.dt.length; i++) {
@@ -203,8 +204,9 @@
 								if(tempModel.stat == 0) 
 									tempModel.Prizt = "通过";
 							}
-						console.log('新闻列表----'+JSON.stringify(data.RspData.dt));
+						console.log('后台返回数据----'+JSON.stringify(data.RspData.dt));
 						  newsData.item.newsArray =data.RspData.dt; 
+						console.log('绑定后的数据----'+JSON.stringify(newsData.item.newsArray));
 						} else {
 						 alert("没有获取到数据！");
 						} 

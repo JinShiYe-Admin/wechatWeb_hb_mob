@@ -14,19 +14,28 @@
 		<button onclick="clickbtn(1)">getUserMedia</button>
 		<button onclick="clickbtn(2)">webkitGetUserMedia</button>
 		<button onclick="clickbtn(3)">mozGetUserMedia</button>
-		<script type="text/javascript" src="js/vconsole.min.js"></script>
+		<div id="option">摄像头：默认</div>
+		<button onclick="clickbtn(4)">前置摄像头</button>
+		<button onclick="clickbtn(5)">后置摄像头</button>
+		<button onclick="clickbtn(6)">默认摄像头</button>
+
+		<script type="text/javascript" src="../../js/lib/vconsole/vconsole.min.js?"></script>
 		<script>
 			var mediaOpts = {
+				audio: true,
 				video: true,
 			}
+			var option = document.getElementById("option");
 
 			function successFunc(stream) {
 				console.log("successFunc");
 				var video = document.querySelector('video');
 				if("srcObject" in video) {
+					console.log("srcObject");
 					video.srcObject = stream;
 				} else {
 					video.src = window.URL && window.URL.createObjectURL(stream) || stream;
+					console.log("video.src:" + video.src);
 				}
 				video.play();
 			}
@@ -40,7 +49,9 @@
 				console.log("clickbtn:" + num);
 				switch(num) {
 					case 0:
-						navigator.mediaDevices.getUserMedia(mediaOpts, successFunc, errorFunc);
+						var p = navigator.mediaDevices.getUserMedia(mediaOpts);
+						p.then(successFunc);
+						p.catch(errorFunc);
 						break;
 					case 1:
 						navigator.getUserMedia(mediaOpts, successFunc, errorFunc);
@@ -51,7 +62,33 @@
 					case 3:
 						navigator.mozGetUserMedia(mediaOpts, successFunc, errorFunc);
 						break;
-
+					case 4: //前置摄像头
+						mediaOpts = {
+							audio: true,
+							video: {
+								facingMode: "user"
+							}
+						}
+						option.innerText = "摄像头：前置";
+						break;
+					case 5: //后置摄像头
+						mediaOpts = {
+							audio: true,
+							video: {
+								facingMode: {
+									exact: "environment"
+								}
+							}
+						}
+						option.innerText = "摄像头：后置";
+						break;
+					case 6: //默认摄像头
+						mediaOpts = {
+							audio: true,
+							video: true
+						}
+						option.innerText = "摄像头：默认";
+						break;
 				}
 			}
 

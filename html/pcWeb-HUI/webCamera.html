@@ -32,6 +32,7 @@
 			//iOS获取视频
 			var inputVideo = document.getElementById("input");
 			inputVideo.addEventListener("change", function(e) {
+				console.log("change", e.target);
 				var url = URL.createObjectURL(e.target.files[0]);
 				console.log("url:" + url);
 				video.src = url;

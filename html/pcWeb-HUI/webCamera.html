@@ -143,18 +143,33 @@
 			function androidRecord() {
 				console.log("androidRecord", cameraStream);
 				var mediaRecorder = new MediaRecorder(cameraStream);
+				var chunks = [];
 				console.log("mediaRecorder", mediaRecorder);
 				if(mediaRecorder) {
 					console.log("开始录制");
+					mediaRecorder.onstop = function() {
+						console.log("mediaRecorder.onstop");
+						var blob = new Blob(chunks, {
+							type: 'video/mp4'
+						});
+						chunks = [];
+						var url = window.URL.createObjectURL(blob);
+						console.log("url:" + url);
+						record.src = url
+						record.play();
+					}
+					mediaRecorder.ondataavailable = function(e) {
+						console.log("mediaRecorder.ondataavailable");
+						chunks.push(e.data);
+					}
+					mediaRecorder.onstart = function(e) {
+						console.log("mediaRecorder.onstart");
+					}
 					mediaRecorder.start();
 					setTimeout(function() {
 						console.log("录像结束");
 						mediaRecorder.stop();
-						setTimeout(function() {
-							console.log("mediaRecorder", mediaRecorder);
-							record.src = window.URL.createObjectURL(mediaRecorder);
-						}, 2000);
-					}, 5000);
+					}, 10000);
 				}
 			}
 

@@ -198,41 +198,42 @@
 					}
 				},
 				publishArtical: function() { //发布文章 
-					alert('栏目id:'+articalPublish.artical.chnid);
-					if(articalPublish.artical.chnid < 0) {
-						alert('请选择栏目');
-						return false;
-					}
-					if(articalPublish.artical.topic.trim().length == 0) {
-						alert('请输入标题');
-						return false;
-					}
-					if(articalPublish.artical.topic.trim().length > 50) {
-						alert('标题不能超过50个字');
-						return false;
-					}
-					if(articalPublish.artical.subtopic.trim().length == 0) {
-						alert('请输入副标题');
-						return false;
-					}
-					if(articalPublish.artical.topic.trim().length > 50) {
-						alert('副标题不能超过50个字');
-						return false;
-					}
-					//判断是否为链接
-					var tempQuo = 0;
-					if(articalPublish.artical.quourl.trim().length > 0) {
-						//判断是否为链接
-
-						tempQuo = 1;
-					} else {
-
-					}
+//					alert('栏目id:'+articalPublish.artical.chnid);
+//					if(articalPublish.artical.chnid < 0) {
+//						alert('请选择栏目');
+//						return false;
+//					}
+//					if(articalPublish.artical.topic.trim().length == 0) {
+//						alert('请输入标题');
+//						return false;
+//					}
+//					if(articalPublish.artical.topic.trim().length > 50) {
+//						alert('标题不能超过50个字');
+//						return false;
+//					}
+//					if(articalPublish.artical.subtopic.trim().length == 0) {
+//						alert('请输入副标题');
+//						return false;
+//					}
+//					if(articalPublish.artical.topic.trim().length > 50) {
+//						alert('副标题不能超过50个字');
+//						return false;
+//					}
+//					//判断是否为链接
+//					var tempQuo = 0;
+//					if(articalPublish.artical.quourl.trim().length > 0) {
+//						//判断是否为链接
+//
+//						tempQuo = 1;
+//					} else {
+//
+//					}
 					//拼接内容，
 					var tempContent0 = ''; //检查总段落内容，是否全部为空
 					var tempContent1 = ''; //发送协议中的内容字段
 					for(var i = 0; i < articalPublish.pieces.length; i++) {
 						var tempModel = articalPublish.pieces[i];
+						alert('tempModel:'+JSON.stringify(tempModel));
 						//						if (tempModel.title.trim().length>50) {
 						//							alert('第'+i+'节标题不能超过50个字');
 						//							break;return false;
@@ -246,21 +247,26 @@
 						} else {
 							//获取节当中加入的图片
 							var tempImg = '';
-							for(var i = 0; i < tempModel.files.length; i++) {
-								tempImg += '<p><img src=' + tempModel.files[i].saveurl + '></p>';
+							for(var m = 0; m < tempModel.files.length; m++) {
+								tempImg += '<img src=' + tempModel.files[m].saveurl + '>';
 							}
-							tempContent1 += '<section><h3>' + tempModel.title.trim().replace(/<.*?>/ig, "") + '</h3><p>' + tempModel.content.trim().replace(/<.*?>/ig, "") + '</p>' + tempImg + '</section>';
+							tempContent1 += '<section><h3>' + tempModel.title.trim().replace(/<.*?>/ig, "") + '</h3><p>' + tempModel.content.trim().replace(/<.*?>/ig, "") + '</p><p>' + tempImg + '</p></section>';
 						}
 						var tempImgStr = '';
-						for(var i = 0; i < tempModel.files.length; i++) {
-							tempImgStr += tempModel.files[i].saveurl;
+						for(var n = 0; n < tempModel.files.length; n++) {
+							tempImgStr += tempModel.files[n].saveurl;
 						}
 						tempContent0 += tempModel.title.trim() + tempModel.content + tempImgStr;
 					}
+					alert('tempContent1:'+tempContent1);
 
 					if(tempContent0.trim() == 0) {
 						alert('请输入文章内容');
 						return false;
+					}
+					var isreply = 0;
+					if (articalPublish.artical.isreply) {
+						isreply = 1;
 					}
 
 					var comData = {
@@ -274,7 +280,7 @@
 						encs: articalPublish.artical.encs, //附件列表
 						isquo: tempQuo, //是否为引用,0否1是
 						quourl: articalPublish.artical.quourl.trim(), //引用url
-						isreply: articalPublish.artical.isreply, //是否允许回复,0否1是
+						isreply: isreply, //是否允许回复,0否1是
 						stat: articalPublish.artical.stat //根据配置表设置相应值
 					};
 					unitWebsitePro(comData, function(data) {

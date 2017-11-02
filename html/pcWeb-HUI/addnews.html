@@ -68,7 +68,7 @@
 				<input v-model.trim="artical.topic" id="cname" class="artical-title input-text size-L" type="text" maxlength="64" placeholder="在此输入标题" />
 				<input v-model.trim="artical.subtopic" id="fname" class="artical-subtitle input-text size-L" type="text" maxlength="64" placeholder="在此输入副标题" />
 				<textarea v-model.trim="artical.summas" id="summas" class="textarea" placeholder="在此输入文章摘要"></textarea>
-				<select-load-pic v-bind:index="-1" v-on:uploadedfile="getHeadImg" :files="artical.encs" @delete-file="deleteHeadImg"></select-load-pic>
+				<!--<select-load-pic v-bind:index="-1" v-on:uploadedfile="getHeadImg" :files="artical.encs" @delete-file="deleteHeadImg"></select-load-pic>-->
 				<p class="artical-pieces-title">文章内容</p>
 				<template v-for="(piece,index) in pieces">
 					<div class="artical-piece">
@@ -144,7 +144,7 @@
 			data: {
 				artical: {
 					type: 'add',
-					chind: -1, //所属栏目id
+					chnid: -1, //所属栏目id
 					topic: "", //标题
 					subtopic: "", //副标题
 					summas: "", //摘要
@@ -190,15 +190,17 @@
 					var index = e.target.value;
 					if(index >= 0) {
 						var curColumnInfo = this.columns[index];
-						console.log("选取的column信息：" + JSON.stringify(curColumnInfo));
-						articalPublish.artical.chind = curColumnInfo.chind;
+//						alert("选取的column信息：" + JSON.stringify(curColumnInfo));
+						articalPublish.artical.chnid = curColumnInfo.chnid;
 						articalPublish.artical.stat = curColumnInfo.stat;
 					} else {
 						//未选择
+						articalPublish.artical.chnid = -1;
 					}
 				},
 				publishArtical: function() { //发布文章 
-					if(articalPublish.artical.chind < 0) {
+					alert('栏目id:'+articalPublish.artical.chnid);
+					if(articalPublish.artical.chnid < 0) {
 						alert('请选择栏目');
 						return false;
 					}
@@ -230,8 +232,10 @@
 					//拼接内容，
 					var tempContent0 = ''; //检查总段落内容，是否全部为空
 					var tempContent1 = ''; //发送协议中的内容字段
+					var tempArray99 = [];//附件
 					for(var i = 0; i < articalPublish.pieces.length; i++) {
 						var tempModel = articalPublish.pieces[i];
+//						alert('tempModel:'+JSON.stringify(tempModel));
 						//						if (tempModel.title.trim().length>50) {
 						//							alert('第'+i+'节标题不能超过50个字');
 						//							break;return false;
@@ -245,35 +249,42 @@
 						} else {
 							//获取节当中加入的图片
 							var tempImg = '';
-							for(var i = 0; i < tempModel.files.length; i++) {
-								tempImg += '<img src=' + tempModel.files[i] + '>';
+							for(var m = 0; m < tempModel.files.length; m++) {
+								tempImg += '<img src=' + tempModel.files[m].saveurl + '>';
 							}
-							tempContent1 += '<section><h3>' + tempModel.title.trim().replace(/<.*?>/ig, "") + '</h3><p>' + tempModel.content.trim().replace(/<.*?>/ig, "") + '</p>' + tempImg + '</section>';
+							tempContent1 += '<section><h3>' + tempModel.title.trim().replace(/<.*?>/ig, "") + '</h3><p>' + tempModel.content.trim().replace(/<.*?>/ig, "") + '</p><p>' + tempImg + '</p></section>';
 						}
 						var tempImgStr = '';
-						for(var i = 0; i < tempModel.files.length; i++) {
-							tempImgStr += tempModel.files[i];
+						for(var n = 0; n < tempModel.files.length; n++) {
+							tempImgStr += tempModel.files[n].saveurl;
 						}
 						tempContent0 += tempModel.title.trim() + tempModel.content + tempImgStr;
+						//合并数组
+						tempArray99 = tempArray99.concat(articalPublish.pieces[i].files);
 					}
+//					alert('tempArray99:'+JSON.stringify(tempArray99));
 
 					if(tempContent0.trim() == 0) {
 						alert('请输入文章内容');
 						return false;
 					}
+					var isreply = 0;
+					if (articalPublish.artical.isreply) {
+						isreply = 1;
+					}
 
 					var comData = {
 						cmd: 'news', //文章管理
 						type: 'add', //添加文章
-						chnid: articalPublish.artical.chind, //所属栏目ID
+						chnid: articalPublish.artical.chnid, //所属栏目ID
 						subtopic: articalPublish.artical.subtopic, //副标题
 						topic: articalPublish.artical.topic, //标题
 						content: tempContent1, //内容
 						summas: articalPublish.artical.summas, //摘要
-						encs: articalPublish.artical.encs, //附件列表
+						encs: tempArray99, //附件列表
 						isquo: tempQuo, //是否为引用,0否1是
 						quourl: articalPublish.artical.quourl.trim(), //引用url
-						isreply: articalPublish.artical.isreply, //是否允许回复,0否1是
+						isreply: isreply, //是否允许回复,0否1是
 						stat: articalPublish.artical.stat //根据配置表设置相应值
 					};
 					unitWebsitePro(comData, function(data) {
@@ -318,7 +329,7 @@
 					});
 				},
 				addPiece: function(piece, index) { //增加文章片段
-					if(!piece.title || !piece.content) {
+					if(!piece.title && !piece.content && piece.files.length == 0) {
 						$.Huimodalalert('段落未添加标题或内容，无法继续添加', 3000)
 						return;
 					}
@@ -349,10 +360,10 @@
 				 * @param {Object} headImg
 				 * @param {Object} index
 				 */
-				getHeadImg: function(headImg, index) {
-					console.log("*****获取的headImg:" + JSON.stringify(headImg) + ",index:" + index);
-					this.artical.encs[0] = headImg;
-				},
+//				getHeadImg: function(headImg, index) {
+//					console.log("*****获取的headImg:" + JSON.stringify(headImg) + ",index:" + index);
+//					this.artical.encs[0] = headImg;
+//				},
 				/**
 				 * 增加内容图片
 				 * @param {Object} contentImg
@@ -365,10 +376,10 @@
 				/**
 				 * 删除标题图片
 				 */
-				deleteHeadImg: function() {
-					console.log("deleteHeadImg");
-					articalPublish.artical.encs = [];
-				},
+//				deleteHeadImg: function() {
+//					console.log("deleteHeadImg");
+//					articalPublish.artical.encs = [];
+//				},
 				/**
 				 * 删除内容图片
 				 * @param {Object} index 内容序号
@@ -427,13 +438,18 @@
 				var tempArr1 = tempArr[i].split('</p>');
 				tempArr1.pop(); //移除最后一个数组值
 				var tempArr3 = tempArr1[2].match(/src=[\S]*\s/g);
+				var tempArr4 = [];
 				for(var m = 0; m < tempArr3.length; m++) {
 					tempArr3[m] = tempArr3[m].replace('src=', '');
+					var tempModel9 = {
+						saveurl:tempArr3[m]
+					}
+					tempArr4.push(tempModel9);
 				}
 				var tempModel = {
 					title: tempArr1[0].replace(/<.*?>/ig, ""),
 					content: tempArr1[1].replace(/<.*?>/ig, ""),
-					files: tempArr3
+					files: tempArr4
 				}
 				tempArr0.push(tempModel);
 			}

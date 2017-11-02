@@ -9,6 +9,7 @@
 
 	<body>
 		<div>webCamera</div>
+		<div>video</div>
 		<video id="video" style="width: 100%;height: 200px;background:black;" controls></video>
 		<button onclick="clickbtn(0)">mediaDevices</button>
 		<button onclick="clickbtn(1)">getUserMedia</button>
@@ -19,6 +20,11 @@
 		<button onclick="clickbtn(5)">后置摄像头</button>
 		<button onclick="clickbtn(6)">默认摄像头</button>
 		<input id="input" type="file" accept="video/*">
+		<br />
+		<button onclick="clickbtn(7)">安卓录制</button>
+		<div>record</div>
+		<video id="record" style="width: 100%;height: 200px;background:black;" controls></video>
+
 		<!--<script type="text/javascript" src="js/vconsole.min.js?"></script>-->
 		<script type="text/javascript" src="../../js/lib/vconsole/vconsole.min.js?"></script>
 
@@ -27,41 +33,48 @@
 				audio: true,
 				video: true,
 			}
+			var cameraStream;
 			var option = document.getElementById("option");
 			var video = document.getElementById("video");
+			var record = document.getElementById("record");
+
 			//iOS获取视频
 			var inputVideo = document.getElementById("input");
 			inputVideo.addEventListener("change", function(e) {
-				console.log("change", e.target);
+				console.log("change", e.target.files);
 				var url = URL.createObjectURL(e.target.files[0]);
 				console.log("url:" + url);
 				video.src = url;
+				video.play();
 			});
 
 			var exArray = []; //存储设备源ID
 			//获取视频，音频的设备信息
-			MediaStreamTrack.getSources(function(sourceInfos) {
-				console.log("sourceInfos", sourceInfos);
-				for(var i = 0; i != sourceInfos.length; ++i) {
-					var sourceInfo = sourceInfos[i];
-					//这里会遍历audio,video，所以要加以区分
-					if(sourceInfo.kind === 'video') {
-						exArray.push(sourceInfo.id);
+			if(MediaStreamTrack) {
+				MediaStreamTrack.getSources(function(sourceInfos) {
+					console.log("sourceInfos", sourceInfos);
+					for(var i = 0; i != sourceInfos.length; ++i) {
+						var sourceInfo = sourceInfos[i];
+						//这里会遍历audio,video，所以要加以区分
+						if(sourceInfo.kind === 'video') {
+							exArray.push(sourceInfo.id);
+						}
 					}
-				}
-			});
+				});
+			}
 
 			/**
 			 * 成功获取视频流
 			 * @param {Object} stream
 			 */
 			function successFunc(stream) {
-				console.log("successFunc");
+				cameraStream = stream;
+				console.log("successFunc", cameraStream);
 				if("srcObject" in video) {
 					console.log("srcObject");
-					video.srcObject = stream;
+					video.srcObject = cameraStream;
 				} else {
-					video.src = window.URL && window.URL.createObjectURL(stream) || stream;
+					video.src = window.URL && window.URL.createObjectURL(cameraStream) || cameraStream;
 					console.log("video.src:" + video.src);
 				}
 				video.play();
@@ -118,6 +131,30 @@
 						}
 						option.innerText = "摄像头：默认";
 						break;
+					case 7: //安卓录制
+						androidRecord()
+						break;
+				}
+			}
+
+			/**
+			 * 安卓录制视频
+			 */
+			function androidRecord() {
+				console.log("androidRecord", cameraStream);
+				var mediaRecorder = new MediaRecorder(cameraStream);
+				console.log("mediaRecorder", mediaRecorder);
+				if(mediaRecorder) {
+					console.log("开始录制");
+					mediaRecorder.start();
+					setTimeout(function() {
+						console.log("录像结束");
+						mediaRecorder.stop();
+						setTimeout(function() {
+							console.log("mediaRecorder", mediaRecorder);
+							record.src = window.URL.createObjectURL(mediaRecorder);
+						}, 2000);
+					}, 5000);
 				}
 			}
 
@@ -134,6 +171,7 @@
 					console.log("111111");
 					console.log("navigator.mediaDevices.getUserMedia:" + navigator.mediaDevices.getUserMedia);
 				}
+				console.log("navigator", navigator);
 			}
 		</script>
 	</body>

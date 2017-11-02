@@ -19,7 +19,7 @@
 		</nav>
 		<div class="page-container">
 			<div id="chnid">
-				<select class="select" id="Prixlk" name="one" style="height: 45px;font-size: 17px;color: #929292;">
+				<select class="select" id="Prixlk" name="one" style="height: 45px;width:220px;font-size: 17px;color: #929292;">
 					<option id="selectDropdown" :value='item.chnid' v-for="item in items">{{item.cname}}</option>
 				</select>
 			</div>
@@ -82,7 +82,7 @@
 				},
 				methods: {}
 			});
-			//新闻数据列表
+			//文章数据列表
 			var newsData = new Vue({
 				el: '#newsData',
 				data: {
@@ -96,7 +96,7 @@
 				},
 				methods: {
 					clickDel: function(model, Pribs, index) {
-						var colid = model.newsid; //新闻id
+						var colid = model.newsid; //文章id
 						//确认框confirm	  
 						if(Pribs == 0) {
 							layer.confirm("确定要删除吗？", function(index) { 
@@ -173,6 +173,7 @@
 					}
 				}); 
 			} 
+			//切换栏目获取文章
 			$("#Prixlk").change(function() {
 				var Chnid = document.getElementById("Prixlk");
 				PriChnid = Chnid.selectedIndex; // 选中索引  
@@ -180,7 +181,7 @@
 				newsData.item.pageindex = 1;   
 				getNewsList(newsData.item);  
 			})
-			//获取栏目对应的新闻
+			//获取栏目对应的文章
 			function getNewsList(columnModel) { 
 				console.log('获取新闻列表');
 				var tempData = {
@@ -202,27 +203,10 @@
 								if(tempModel.stat == 0) 
 									tempModel.Prizt = "通过";
 							}
-						  newsData.item.newsArray =data.RspData.dt;
-							
-							setTimeout(function() {
-								$(".weui-loadmore").hide();
-								loading = false;
-								$(".weui-pull-to-refresh").pullToRefreshDone();
-							 
-								if(data.RspData.dt.length < 15) {
-									$(".content-padded").append('<p id="noMore" style="text-align: center;color: darkgray;">--------暂无更多数据--------</p>');
-								}
-							}, 1000); //模拟延迟
+						  newsData.item.newsArray =data.RspData.dt; 
 						} else {
-							setTimeout(function() {
-								$(".weui-loadmore").hide();
-								loading = false;
-								$(".weui-pull-to-refresh").pullToRefreshDone();
-							}, 1000); //模拟延迟
-						 
-							$(".content-padded").append('<p id="noMore" style="text-align: center;color: darkgray;">--------暂无更多数据--------</p>');
-						}
-						console.log('最终数据:' + JSON.stringify(newsData.item));
+						 alert("没有获取到数据！");
+						} 
 					} else {
 						alert(data.RspTxt);
 					}

@@ -11,6 +11,8 @@
 		<div>webCamera</div>
 		<div>video</div>
 		<video id="video" style="width: 100%;height: 200px;background:black;" controls></video>
+		<div>record</div>
+		<video id="record" style="width: 100%;height: 200px;background:black;" controls></video>
 		<button onclick="clickbtn(0)">mediaDevices</button>
 		<button onclick="clickbtn(1)">getUserMedia</button>
 		<button onclick="clickbtn(2)">webkitGetUserMedia</button>
@@ -22,8 +24,6 @@
 		<input id="input" type="file" accept="video/*">
 		<br />
 		<button onclick="clickbtn(7)">安卓录制</button>
-		<div>record</div>
-		<video id="record" style="width: 100%;height: 200px;background:black;" controls></video>
 
 		<!--<script type="text/javascript" src="js/vconsole.min.js?"></script>-->
 		<script type="text/javascript" src="../../js/lib/vconsole/vconsole.min.js?"></script>
@@ -33,6 +33,7 @@
 				audio: true,
 				video: true,
 			}
+			var blobType = 'video/mp4';
 			var cameraStream;
 			var option = document.getElementById("option");
 			var video = document.getElementById("video");
@@ -149,9 +150,12 @@
 					console.log("开始录制");
 					mediaRecorder.onstop = function() {
 						console.log("mediaRecorder.onstop");
+						console.log("chunks:" + chunks.length);
 						var blob = new Blob(chunks, {
-							type: 'video/mp4'
+							type: blobType
 						});
+						console.log("blob:" + blob);
+						console.log("blob:" + blob.size);
 						chunks = [];
 						var url = window.URL.createObjectURL(blob);
 						console.log("url:" + url);
@@ -159,7 +163,6 @@
 						record.play();
 					}
 					mediaRecorder.ondataavailable = function(e) {
-						console.log("mediaRecorder.ondataavailable");
 						chunks.push(e.data);
 					}
 					mediaRecorder.onstart = function(e) {

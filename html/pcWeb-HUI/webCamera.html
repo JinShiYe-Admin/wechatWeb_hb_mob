@@ -10,9 +10,9 @@
 	<body>
 		<div>webCamera</div>
 		<div>video</div>
-		<video id="video" style="width: 100%;height: 200px;background:black;" controls></video>
+		<video id="video" style="width: 100%;height: 200px;background:black;" controls autoplay></video>
 		<div>record</div>
-		<video id="record" style="width: 100%;height: 200px;background:black;" controls></video>
+		<video id="record" style="width: 100%;height: 200px;background:black;" controls autoplay></video>
 		<button onclick="clickbtn(0)">mediaDevices</button>
 		<button onclick="clickbtn(1)">getUserMedia</button>
 		<button onclick="clickbtn(2)">webkitGetUserMedia</button>
@@ -38,6 +38,9 @@
 			var option = document.getElementById("option");
 			var video = document.getElementById("video");
 			var record = document.getElementById("record");
+			record.onerror = function(e) {
+				console.log("record.onerror", record.error);
+			}
 
 			//iOS获取视频
 			var inputVideo = document.getElementById("input");
@@ -45,8 +48,8 @@
 				console.log("change", e.target.files);
 				var url = URL.createObjectURL(e.target.files[0]);
 				console.log("url:" + url);
-				video.src = url;
-				video.play();
+				record.src = url;
+				record.play();
 			});
 
 			var exArray = []; //存储设备源ID
@@ -133,7 +136,7 @@
 						option.innerText = "摄像头：默认";
 						break;
 					case 7: //安卓录制
-						androidRecord()
+						androidRecord();
 						break;
 				}
 			}
@@ -154,11 +157,11 @@
 						var blob = new Blob(chunks, {
 							type: blobType
 						});
-						console.log("blob:" + blob);
-						console.log("blob:" + blob.size);
+						console.log("blob:", blob);
+						console.log("blob:", blob.size);
 						chunks = [];
-						var url = window.URL.createObjectURL(blob);
-						console.log("url:" + url);
+						var url = URL.createObjectURL(blob);
+						console.log("url:", url);
 						record.src = url
 						record.play();
 					}

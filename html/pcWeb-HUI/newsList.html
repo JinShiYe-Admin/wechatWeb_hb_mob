@@ -58,7 +58,7 @@
 		</script>  
 		<script type="text/javascript">
 	       	function click(newsModel, index, cname) { 
-				var url = "../pcWeb-HUI/addnews.html"; 
+				var url = "addnews.html"; 
 				var newslist = new Object();  
                 newslist.type = "edit"; 
                 newslist.newsid = newsModel.newsid;    
@@ -165,9 +165,11 @@
 							//newsData.item = data.RspData.dt[0];
 							vue_input.items = data.RspData.dt; 
 							var Chnid = document.getElementById("Prixlk");
-				            PriChnid = Chnid.selectedIndex; // 选中索引  
+				            PriChnid = Chnid.selectedIndex; // 选中索引   
 				            newsData.item.chnid = PriChnid;
 							newsData.item.pageindex = 1; 
+							console.log('初始化栏目名称'+JSON.stringify(newsData.item.chnid));
+							console.log('初始化获取新闻列表'+JSON.stringify(newsData.item));
 							getNewsList(newsData.item);
 						} else {
 							alert('暂时还没有栏目');

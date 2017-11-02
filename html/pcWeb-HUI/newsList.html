@@ -58,12 +58,14 @@
 		</script>  
 		<script type="text/javascript">
 	       	function click(newsModel, index, cname) { 
-				var url = "../pcWeb-HUI/addnews.html"; 
-				newsModel.type = "edit";  
+				var url = "addnews.html"; 
+				var newslist = new Object();  
+                newslist.type = "edit"; 
+                newslist.newsid = newsModel.newsid;    
 				var index = layer.open({
 					type: 2,
 					title: "编辑文章",
-					content: url + "?v=" + Math.random() + "&data=" + encodeURIComponent(JSON.stringify(newsModel)),
+					content: url + "?v=" + Math.random() + "&data=" + encodeURIComponent(JSON.stringify(newslist)),
 					end: function() {
 						console.log("刷新")
 						location.reload();
@@ -162,7 +164,12 @@
 						if(data.RspData.dt.length > 0) {
 							//newsData.item = data.RspData.dt[0];
 							vue_input.items = data.RspData.dt; 
+							var Chnid = document.getElementById("Prixlk");
+				            PriChnid = Chnid.selectedIndex; // 选中索引   
+				            newsData.item.chnid = PriChnid;
 							newsData.item.pageindex = 1; 
+							console.log('初始化栏目名称'+JSON.stringify(newsData.item.chnid));
+							console.log('初始化获取新闻列表'+JSON.stringify(newsData.item));
 							getNewsList(newsData.item);
 						} else {
 							alert('暂时还没有栏目');
@@ -178,6 +185,7 @@
 				PriChnid = Chnid.selectedIndex; // 选中索引  
 				newsData.item.chnid = PriChnid;
 				newsData.item.pageindex = 1;   
+				console.log('切换栏目获取文章'+JSON.stringify(newsData.item));
 				getNewsList(newsData.item);  
 			})
 			//获取栏目对应的文章
@@ -190,7 +198,7 @@
 					pageindex: columnModel.pageindex, //页码
 					chnid: columnModel.chnid //某个栏目下的文章，栏目id
 				}  
-				console.log('获取文章协议----'+tempData);
+				console.log('获取文章协议----'+JSON.stringify(tempData));
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
 						console.log('后台返回数据的总个数----'+data.RspData.pg.PageCount);
@@ -205,7 +213,7 @@
 									tempModel.Prizt = "通过";
 							}
 						console.log('后台返回数据----'+JSON.stringify(data.RspData.dt));
-						  newsData.item.newsArray =data.RspData.dt; 
+						newsData.item.newsArray =data.RspData.dt; 
 						console.log('绑定后的数据----'+JSON.stringify(newsData.item.newsArray));
 						} else {
 						 alert("没有获取到数据！");

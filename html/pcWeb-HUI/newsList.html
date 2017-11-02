@@ -59,11 +59,13 @@
 		<script type="text/javascript">
 	       	function click(newsModel, index, cname) { 
 				var url = "../pcWeb-HUI/addnews.html"; 
-				newsModel.type = "edit";  
+				var newslist = new Object();  
+                newslist.type = "edit"; 
+                newslist.newsid = newsModel.newsid;    
 				var index = layer.open({
 					type: 2,
 					title: "编辑文章",
-					content: url + "?v=" + Math.random() + "&data=" + encodeURIComponent(JSON.stringify(newsModel)),
+					content: url + "?v=" + Math.random() + "&data=" + encodeURIComponent(JSON.stringify(newslist)),
 					end: function() {
 						console.log("刷新")
 						location.reload();
@@ -162,6 +164,9 @@
 						if(data.RspData.dt.length > 0) {
 							//newsData.item = data.RspData.dt[0];
 							vue_input.items = data.RspData.dt; 
+							var Chnid = document.getElementById("Prixlk");
+				            PriChnid = Chnid.selectedIndex; // 选中索引  
+				            newsData.item.chnid = PriChnid;
 							newsData.item.pageindex = 1; 
 							getNewsList(newsData.item);
 						} else {

@@ -199,7 +199,7 @@
 					}
 				},
 				publishArtical: function() { //发布文章 
-					alert('栏目id:'+articalPublish.artical.chnid);
+//					alert('栏目id:'+articalPublish.artical.chnid);
 					if(articalPublish.artical.chnid < 0) {
 						alert('请选择栏目');
 						return false;
@@ -208,16 +208,16 @@
 						alert('请输入标题');
 						return false;
 					}
-					if(articalPublish.artical.topic.trim().length > 50) {
-						alert('标题不能超过50个字');
+					if(articalPublish.artical.topic.trim().length > 25) {
+						alert('标题不能超过25个字');
 						return false;
 					}
 					if(articalPublish.artical.subtopic.trim().length == 0) {
 						alert('请输入副标题');
 						return false;
 					}
-					if(articalPublish.artical.topic.trim().length > 50) {
-						alert('副标题不能超过50个字');
+					if(articalPublish.artical.subtopic.trim().length > 25) {
+						alert('副标题不能超过25个字');
 						return false;
 					}
 					//判断是否为链接

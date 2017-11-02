@@ -203,26 +203,10 @@
 									tempModel.Prizt = "通过";
 							}
 						  newsData.item.newsArray =data.RspData.dt;
-							
-							setTimeout(function() {
-								$(".weui-loadmore").hide();
-								loading = false;
-								$(".weui-pull-to-refresh").pullToRefreshDone();
 							 
-								if(data.RspData.dt.length < 15) {
-									$(".content-padded").append('<p id="noMore" style="text-align: center;color: darkgray;">--------暂无更多数据--------</p>');
-								}
-							}, 1000); //模拟延迟
 						} else {
-							setTimeout(function() {
-								$(".weui-loadmore").hide();
-								loading = false;
-								$(".weui-pull-to-refresh").pullToRefreshDone();
-							}, 1000); //模拟延迟
-						 
-							$(".content-padded").append('<p id="noMore" style="text-align: center;color: darkgray;">--------暂无更多数据--------</p>');
-						}
-						console.log('最终数据:' + JSON.stringify(newsData.item));
+						 alert("没有获取到数据！");
+						} 
 					} else {
 						alert(data.RspTxt);
 					}

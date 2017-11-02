@@ -254,7 +254,7 @@
 							//获取节当中加入的图片
 							var tempImg = '';
 							for(var m = 0; m < tempModel.files.length; m++) {
-								tempImg += '<img src=' + tempModel.files[m].saveurl + '>';
+								tempImg += '<img src=' + tempModel.files[m].saveurl + ' />';
 							}
 							tempContent1 += '<section><h3>' + tempModel.title.trim().replace(/<.*?>/ig, "") + '</h3><p>' + tempModel.content.trim().replace(/<.*?>/ig, "") + '</p><p>' + tempImg + '</p></section>';
 						}
@@ -333,10 +333,10 @@
 					});
 				},
 				addPiece: function(piece, index) { //增加文章片段
-					if(!piece.title && !piece.content && piece.files.length == 0) {
-						$.Huimodalalert('段落未添加标题或内容，无法继续添加', 3000)
-						return;
-					}
+//					if(!piece.title && !piece.content && piece.files.length == 0) {
+//						$.Huimodalalert('段落未添加标题或内容，无法继续添加', 3000)
+//						return;
+//					}
 					this.pieces.splice(index + 1, 0, {
 						title: "",
 						content: "",
@@ -420,7 +420,7 @@
 			});
 		}
 		var detail0 = utils.getDataFromUrl(window.location.href);
-		alert('detail0=' + JSON.stringify(detail0));
+//		alert('detail0=' + JSON.stringify(detail0));
 		if(detail0.type == 'edit') {
 			var tempData = {
 				cmd: 'news', //网站栏目
@@ -432,9 +432,9 @@
 
 			unitWebsitePro(tempData, function(data) {
 				if (data.RspCode == 0) {
-					var detail = data.RspData.dt[0]
+					var detail = data.RspData.dt[0];
 					articalPublish.artical.type = 'edit';
-						articalPublish.artical.child = detail.child;
+						articalPublish.artical.chnid = detail.chnid;
 						articalPublish.artical.cname = detail.cname;
 						articalPublish.artical.topic = detail.topic;
 						articalPublish.artical.subtopic = detail.subtopic;
@@ -442,7 +442,7 @@
 						articalPublish.artical.content = detail.content;
 						//分解content
 						var tempArr0 = [];
-						var tempArr = tempStr.split('</section>');
+						var tempArr = detail.split('</section>');
 						tempArr.pop(); //移除最后一个数组值
 						for(var i = 0; i < tempArr.length; i++) {
 							tempArr[i] = tempArr[i].replace('<section>', '');
@@ -459,6 +459,7 @@
 								}
 								tempArr4.push(tempModel9);
 							}
+//							alert('tempArr4:'+tempArr4);
 							var tempModel = {
 								title: tempArr1[0].replace(/<.*?>/ig, ""),
 								content: tempArr1[1].replace(/<.*?>/ig, ""),
@@ -466,7 +467,8 @@
 							}
 							tempArr0.push(tempModel);
 						}
-						articalPublish.pieces = tempArr0;
+//						alert('tempArr0:'+JSON.stringify(tempArr0));
+						articalPublish.pieces = [].concat(tempArr0);
 						articalPublish.artical.isquo = detail.isquo;
 						articalPublish.artical.quourl = detail.quourl;
 						articalPublish.artical.isreply = detail.isreply;

@@ -167,7 +167,7 @@
 							var Chnid = $("#chnid option:selected").val();  
 							console.log('初始化栏目id'+Chnid);
 							console.log('初始化获取所有栏目'+JSON.stringify(data.RspData.dt));
-							getNewsList(1,Chnid);
+							getNewsList(1,129);
 						} else {
 							alert('暂时还没有栏目');
 						}
@@ -195,7 +195,7 @@
 				console.log('获取文章协议----'+JSON.stringify(tempData));
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
-						console.log('后台返回数据的总个数----'+data.RspData.pg.PageCount);
+						console.log('后台返回数据的总页数----'+data.RspData.pg.PageCount);
 					    initLaypage(data.RspData.pg.PageCount, pageindex); 
 						if(data.RspData.dt.length > 0) {  
 							//循环审核状态

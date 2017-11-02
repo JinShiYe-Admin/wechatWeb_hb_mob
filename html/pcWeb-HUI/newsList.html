@@ -160,7 +160,7 @@
 				unitWebsitePro(tempData, function(data) { 
 					if(data.RspCode == 0) {
 						if(data.RspData.dt.length > 0) {
-							newsData.item = data.RspData.dt[0];
+							//newsData.item = data.RspData.dt[0];
 							vue_input.items = data.RspData.dt; 
 							newsData.item.pageindex = 1; 
 							getNewsList(newsData.item);
@@ -176,7 +176,7 @@
 			$("#Prixlk").change(function() {
 				var Chnid = document.getElementById("Prixlk");
 				PriChnid = Chnid.selectedIndex; // 选中索引  
-				newsData.item = vue_input.items[PriChnid];
+				newsData.item.chnid = PriChnid;
 				newsData.item.pageindex = 1;   
 				getNewsList(newsData.item);  
 			})
@@ -228,7 +228,7 @@
 						if(!first) { 
 							var Chnid = document.getElementById("Prixlk");
 				            PriChnid = Chnid.selectedIndex; // 选中索引  
-				            newsData.item = vue_input.items[PriChnid];
+				            newsData.item.chnid=PriChnid;
 				            newsData.item.pageindex = e.curr;   
 				            getNewsList(newsData.item); 
 							 

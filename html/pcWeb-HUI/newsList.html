@@ -20,7 +20,7 @@
 				</select>
 			</div>
 			<div id="newsData"> 
-				<table style=" table-layout:fixed;" class="table table-border table-bordered table-bg table-hover table-sort table-responsive">
+				<table style=" table-layout:fixed;" class="table table-border table-bordered table-bg">
 					<thead>
 						<tr class="text-c"> 
 							<th width="90"  >新闻标题</th>
@@ -44,26 +44,28 @@
 					</tbody>
 				</table>
 			</div>
+			<div id="pages"></div>
 		</div> 
 		<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
 		<script type="text/javascript" src="../../js/H-ui.admin/lib/layer/2.4/layer.js"></script>  
 		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>  
-		<script type="text/javascript" src="../../js/H-ui.admin/lib/laypage/1.2/laypage.js"></script>
+		<!--<script type="text/javascript" src="../../js/H-ui.admin/lib/laypage/1.2/laypage.js?"></script>-->
 		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/laypage/1.2/laypage.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>  
 		<script type="text/javascript">
 	       	function click(newsModel, index, cname) { 
 				var url = "../pcWeb-HUI/addnews.html";
-				var newslist = new Object();
-				newslist.cname = cname;
-				newslist.type = "edit";
-				newslist.newsid = newsModel.newsid;  
+				//var newslist = new Object();
+				//newslist.cname = cname;
+				newsModel.type = "edit";
+				//newslist.newsid = newsModel.newsid;  
 				var ids = url.split("/");
 				var index = layer.open({
 					type: 2,
 					title: "编辑文章",
-					content: url + "?v=" + Math.random() + "&data=" + encodeURIComponent(JSON.stringify(newslist)),
+					content: url + "?v=" + Math.random() + "&data=" + encodeURIComponent(JSON.stringify(newsModel)),
 					end: function() {
 						console.log("刷新")
 						location.reload();
@@ -78,9 +80,7 @@
 			var vue_input = new Vue({
 				el: '#chnid',
 				data: {
-					items: [ 
-//					{cname:'llll',
-//					chnid:111},{cname:'zzzz',chnid:222}
+					items: [  
 					]
 				},
 				methods: {}
@@ -91,14 +91,7 @@
 				data: {
 					item: {
 						newsArray: [ 
-//						{
-//						newsid:102, 
-//						chnid:111,
-//						topic:"学校和市审计局启动战略合作",
-//						subtopic:"来源：成都大学新闻网", 
-//						content:"12" ,
-//						stat:1
-//						} 
+						 
 						]
 					}
 				},
@@ -160,8 +153,7 @@
 						model.Prizt = '通过';
 						model.stat = 0;
 					}
-				})
-
+				}) 
 			}
 			window.onload = function() {
 				var tempData = {
@@ -184,11 +176,8 @@
 					} else {
 						alert(data.RspTxt);
 					}
-				});
-
-			}
-		  
-
+				}); 
+			} 
 			$("#Prixlk").change(function() {
 				var Chnid = document.getElementById("Prixlk");
 				PriChnid = Chnid.selectedIndex; // 选中索引  
@@ -209,10 +198,8 @@
 				} 
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
-					    initLaypage(data.RspData.pg.PageCount, columnModel.pageindex);
-						if(data.RspData.dt.length > 0) {
-							columnModel.newsPage++;
-							console.log('columnModel.newsFlag:' + columnModel.newsFlag);
+					    initLaypage(20, 1);
+						if(data.RspData.dt.length > 0) {  
 							//循环审核状态
 							for(var i = 0; i < data.RspData.dt.length; i++) {
 								var tempModel = data.RspData.dt[i];
@@ -250,6 +237,11 @@
 						alert(data.RspTxt);
 					}
 				});
+
+ 
+               
+				
+			 
 			}
 			
 			/**
@@ -257,14 +249,14 @@
 			 * @param {Object} pages 通过后台拿到的总页数
 			 * @param {Object} curr 初始化当前页
 			 */
-			function initLaypage(pages, curr) {
+			function initLaypage(pages, curr) { 
 				laypage({
 					cont: 'pages', //容器
 					pages: pages, //通过后台拿到的总页数
-					curr: curr, //初始化当前页
+					curr: curr, //初始化当前页 
 					jump: function(e, first) { //触发分页后的回调
 						//console.log("jump: " + first + " " + JSON.stringify(e));
-						if(!first) {
+						if(!first) { 
 							var Chnid = document.getElementById("Prixlk");
 				            PriChnid = Chnid.selectedIndex; // 选中索引  
 				            newsData.item = vue_input.items[PriChnid];

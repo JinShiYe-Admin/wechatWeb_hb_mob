@@ -44,13 +44,14 @@
 					</tbody>
 				</table>
 			</div>
+			<div id="pages"></div>
 		</div> 
 		<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
 		<script type="text/javascript" src="../../js/H-ui.admin/lib/layer/2.4/layer.js"></script>  
 		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>  
 		<!--<script type="text/javascript" src="../../js/H-ui.admin/lib/laypage/1.2/laypage.js?"></script>-->
 		<script type="text/javascript">
-						document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/laypage/1.2/laypage.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/laypage/1.2/laypage.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>  
 		<script type="text/javascript">
@@ -79,9 +80,7 @@
 			var vue_input = new Vue({
 				el: '#chnid',
 				data: {
-					items: [ 
-					{cname:'llll',
-					chnid:111},{cname:'zzzz',chnid:222}
+					items: [  
 					]
 				},
 				methods: {}
@@ -92,140 +91,7 @@
 				data: {
 					item: {
 						newsArray: [ 
-						{
-						newsid:102, 
-						chnid:111,
-						topic:"学校和市审计局启动战略合作",
-						subtopic:"来源：成都大学新闻网", 
-						content:"12" ,
-						stat:1
-						},{
-						newsid:102, 
-						chnid:111,
-						topic:"学校和市审计局启动战略合作",
-						subtopic:"来源：成都大学新闻网", 
-						content:"12" ,
-						stat:1
-						},{
-						newsid:102, 
-						chnid:111,
-						topic:"学校和市审计局启动战略合作",
-						subtopic:"来源：成都大学新闻网", 
-						content:"12" ,
-						stat:1
-						},{
-						newsid:102, 
-						chnid:111,
-						topic:"学校和市审计局启动战略合作",
-						subtopic:"来源：成都大学新闻网", 
-						content:"12" ,
-						stat:1
-						},{
-						newsid:102, 
-						chnid:111,
-						topic:"学校和市审计局启动战略合作",
-						subtopic:"来源：成都大学新闻网", 
-						content:"12" ,
-						stat:1
-						},{
-						newsid:102, 
-						chnid:111,
-						topic:"学校和市审计局启动战略合作",
-						subtopic:"来源：成都大学新闻网", 
-						content:"12" ,
-						stat:1
-						},{
-						newsid:102, 
-						chnid:111,
-						topic:"学校和市审计局启动战略合作",
-						subtopic:"来源：成都大学新闻网", 
-						content:"12" ,
-						stat:1
-						},{
-						newsid:102, 
-						chnid:111,
-						topic:"学校和市审计局启动战略合作",
-						subtopic:"来源：成都大学新闻网", 
-						content:"12" ,
-						stat:1
-						},{
-						newsid:102, 
-						chnid:111,
-						topic:"学校和市审计局启动战略合作",
-						subtopic:"来源：成都大学新闻网", 
-						content:"12" ,
-						stat:1
-						},{
-						newsid:102, 
-						chnid:111,
-						topic:"学校和市审计局启动战略合作",
-						subtopic:"来源：成都大学新闻网", 
-						content:"12" ,
-						stat:1
-						},{
-						newsid:102, 
-						chnid:111,
-						topic:"学校和市审计局启动战略合作",
-						subtopic:"来源：成都大学新闻网", 
-						content:"12" ,
-						stat:1
-						},{
-						newsid:102, 
-						chnid:111,
-						topic:"学校和市审计局启动战略合作",
-						subtopic:"来源：成都大学新闻网", 
-						content:"12" ,
-						stat:1
-						},{
-						newsid:102, 
-						chnid:111,
-						topic:"学校和市审计局启动战略合作",
-						subtopic:"来源：成都大学新闻网", 
-						content:"12" ,
-						stat:1
-						},{
-						newsid:102, 
-						chnid:111,
-						topic:"学校和市审计局启动战略合作",
-						subtopic:"来源：成都大学新闻网", 
-						content:"12" ,
-						stat:1
-						},{
-						newsid:102, 
-						chnid:111,
-						topic:"学校和市审计局启动战略合作",
-						subtopic:"来源：成都大学新闻网", 
-						content:"12" ,
-						stat:1
-						},{
-						newsid:102, 
-						chnid:111,
-						topic:"学校和市审计局启动战略合作",
-						subtopic:"来源：成都大学新闻网", 
-						content:"12" ,
-						stat:1
-						},{
-						newsid:102, 
-						chnid:111,
-						topic:"学校和市审计局启动战略合作",
-						subtopic:"来源：成都大学新闻网", 
-						content:"12" ,
-						stat:1
-						},{
-						newsid:102, 
-						chnid:111,
-						topic:"学校和市审计局启动战略合作",
-						subtopic:"来源：成都大学新闻网", 
-						content:"12" ,
-						stat:1
-						},{
-						newsid:102, 
-						chnid:111,
-						topic:"学校和市审计局启动战略合作",
-						subtopic:"来源：成都大学新闻网", 
-						content:"12" ,
-						stat:1
-						}
+						 
 						]
 					}
 				},
@@ -287,42 +153,31 @@
 						model.Prizt = '通过';
 						model.stat = 0;
 					}
-				})
-
+				}) 
 			}
 			window.onload = function() {
-//				var tempData = {
-//					cmd: 'chn', //网站栏目 
-//					type: 'findpage', //分页查找栏目列表 
-//					pagesize: 999, //每页条数 
-//					iswrite: '1',
-//					stat: '1',
-//					pageindex: 1 //页码  
-//				}
-//				unitWebsitePro(tempData, function(data) { 
-//					if(data.RspCode == 0) {
-//						if(data.RspData.dt.length > 0) {
-//							newsData.item = data.RspData.dt[0];
-//							vue_input.items = data.RspData.dt; 
-//							getNewsList(newsData.item);
-//						} else {
-//							alert('暂时还没有栏目');
-//						}
-//					} else {
-//						alert(data.RspTxt);
-//					}
-//				});
-			    
-							 
-							newsData.item =vue_input.items[0] ;
-							alert(JSON.stringify(newsData.item))
+				var tempData = {
+					cmd: 'chn', //网站栏目 
+					type: 'findpage', //分页查找栏目列表 
+					pagesize: 999, //每页条数 
+					iswrite: '1',
+					stat: '1',
+					pageindex: 1 //页码  
+				}
+				unitWebsitePro(tempData, function(data) { 
+					if(data.RspCode == 0) {
+						if(data.RspData.dt.length > 0) {
+							newsData.item = data.RspData.dt[0];
+							vue_input.items = data.RspData.dt; 
 							getNewsList(newsData.item);
-						 
-			 
-
-			}
-		  
-
+						} else {
+							alert('暂时还没有栏目');
+						}
+					} else {
+						alert(data.RspTxt);
+					}
+				}); 
+			} 
 			$("#Prixlk").change(function() {
 				var Chnid = document.getElementById("Prixlk");
 				PriChnid = Chnid.selectedIndex; // 选中索引  
@@ -334,64 +189,20 @@
 			//获取栏目对应的新闻
 			function getNewsList(columnModel) { 
 				console.log('获取新闻列表');
-//				var tempData = {
-//					cmd: 'news', //文章管理
-//					type: 'findpage', //分页查找文章列表
-//					pagesize: '10', //每页条数
-//					pageindex: columnModel.pageindex, //页码
-//					chnid: columnModel.chnid //某个栏目下的文章，栏目id
-//				} 
-//				unitWebsitePro(tempData, function(data) {
-//					if(data.RspCode == 0) {
-//					    initLaypage(20, 1);
-//						if(data.RspData.dt.length > 0) {  
-//							//循环审核状态
-//							for(var i = 0; i < data.RspData.dt.length; i++) {
-//								var tempModel = data.RspData.dt[i];
-//								if(tempModel.stat == 1) 
-//									tempModel.Prizt = "不通过";
-//								if(tempModel.stat == 0) 
-//									tempModel.Prizt = "通过";
-//							}
-//							//判断是刷新0，还是加载更多1
-//							if(columnModel.newsFlag == 0) {
-//								columnModel.newsArray = [].concat(data.RspData.dt);
-//							} else {
-//								newsData.item.newsArray = newsData.item.newsArray.concat(data.RspData.dt);
-//							}
-//							setTimeout(function() {
-//								$(".weui-loadmore").hide();
-//								loading = false;
-//								$(".weui-pull-to-refresh").pullToRefreshDone();
-//							 
-//								if(data.RspData.dt.length < 15) {
-//									$(".content-padded").append('<p id="noMore" style="text-align: center;color: darkgray;">--------暂无更多数据--------</p>');
-//								}
-//							}, 1000); //模拟延迟
-//						} else {
-//							setTimeout(function() {
-//								$(".weui-loadmore").hide();
-//								loading = false;
-//								$(".weui-pull-to-refresh").pullToRefreshDone();
-//							}, 1000); //模拟延迟
-//						 
-//							$(".content-padded").append('<p id="noMore" style="text-align: center;color: darkgray;">--------暂无更多数据--------</p>');
-//						}
-//						console.log('最终数据:' + JSON.stringify(newsData.item));
-//					} else {
-//						alert(data.RspTxt);
-//					}
-//				});
-
- 
-              
-				        var dt=newsData.item;
-				        alert(JSON.stringify(dt)) 
-					    initLaypage(20, columnModel.pageindex);
-						if(data.length > 0) {  
+				var tempData = {
+					cmd: 'news', //文章管理
+					type: 'findpage', //分页查找文章列表
+					pagesize: '10', //每页条数
+					pageindex: columnModel.pageindex, //页码
+					chnid: columnModel.chnid //某个栏目下的文章，栏目id
+				} 
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+					    initLaypage(20, 1);
+						if(data.RspData.dt.length > 0) {  
 							//循环审核状态
-							for(var i = 0; i < data.length; i++) {
-								var tempModel = data[i];
+							for(var i = 0; i < data.RspData.dt.length; i++) {
+								var tempModel = data.RspData.dt[i];
 								if(tempModel.stat == 1) 
 									tempModel.Prizt = "不通过";
 								if(tempModel.stat == 0) 
@@ -399,9 +210,9 @@
 							}
 							//判断是刷新0，还是加载更多1
 							if(columnModel.newsFlag == 0) {
-								columnModel.newsArray = [].concat(data);
+								columnModel.newsArray = [].concat(data.RspData.dt);
 							} else {
-								newsData.item.newsArray = newsData.item.newsArray.concat(data);
+								newsData.item.newsArray = newsData.item.newsArray.concat(data.RspData.dt);
 							}
 							setTimeout(function() {
 								$(".weui-loadmore").hide();
@@ -422,6 +233,13 @@
 							$(".content-padded").append('<p id="noMore" style="text-align: center;color: darkgray;">--------暂无更多数据--------</p>');
 						}
 						console.log('最终数据:' + JSON.stringify(newsData.item));
+					} else {
+						alert(data.RspTxt);
+					}
+				});
+
+ 
+               
 				
 			 
 			}
@@ -438,8 +256,7 @@
 					curr: curr, //初始化当前页 
 					jump: function(e, first) { //触发分页后的回调
 						//console.log("jump: " + first + " " + JSON.stringify(e));
-						if(!first) {
-							alert('111')
+						if(!first) { 
 							var Chnid = document.getElementById("Prixlk");
 				            PriChnid = Chnid.selectedIndex; // 选中索引  
 				            newsData.item = vue_input.items[PriChnid];

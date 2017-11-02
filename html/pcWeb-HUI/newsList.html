@@ -158,7 +158,7 @@
 					iswrite: '1',
 					stat: '1',
 					pageindex: 1 //页码  
-				}
+				} 
 				unitWebsitePro(tempData, function(data) { 
 					if(data.RspCode == 0) {
 						if(data.RspData.dt.length > 0) {
@@ -189,7 +189,7 @@
 					pagesize: '10', //每页条数
 					pageindex: columnModel.pageindex, //页码
 					chnid: columnModel.chnid //某个栏目下的文章，栏目id
-				} 
+				}  
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
 					    initLaypage(data.RspData.pg.PageCount, columnModel.pageindex);

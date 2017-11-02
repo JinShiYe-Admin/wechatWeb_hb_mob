@@ -70,9 +70,7 @@
 					}
 				});
 				layer.full(index);  
-			}
-			var newsFlag = 0; //0刷新，1加载更多
-			var newsPage = 1; //加载当当前新闻的页码
+			} 
 			var PriChnid;
 			//所属栏目下拉框
 			var vue_input = new Vue({
@@ -164,6 +162,7 @@
 						if(data.RspData.dt.length > 0) {
 							newsData.item = data.RspData.dt[0];
 							vue_input.items = data.RspData.dt; 
+							newsData.item.pageindex = 1; 
 							getNewsList(newsData.item);
 						} else {
 							alert('暂时还没有栏目');
@@ -191,6 +190,7 @@
 					pageindex: columnModel.pageindex, //页码
 					chnid: columnModel.chnid //某个栏目下的文章，栏目id
 				}  
+				console.log('新闻协议----'+tempData);
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
 					    initLaypage(data.RspData.pg.PageCount, columnModel.pageindex);
@@ -203,6 +203,7 @@
 								if(tempModel.stat == 0) 
 									tempModel.Prizt = "通过";
 							}
+						console.log('新闻列表----'+JSON.stringify(data.RspData.dt));
 						  newsData.item.newsArray =data.RspData.dt; 
 						} else {
 						 alert("没有获取到数据！");

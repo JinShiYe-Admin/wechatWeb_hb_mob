@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<title>新闻添加</title>
+		<title>文章添加</title>
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css" />
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
 		<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
@@ -54,6 +54,9 @@
 	</head>
 
 	<body>
+		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 文章 <span class="c-gray en">&gt;</span> 文章添加编辑
+			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
+		</nav>
 		<div id="artical-pub">
 			<div class="edit_container">
 				<div>
@@ -64,9 +67,9 @@
 				</div>
 				<input v-model.trim="artical.topic" id="cname" class="artical-title input-text size-L" type="text" maxlength="64" placeholder="在此输入标题" />
 				<input v-model.trim="artical.subtopic" id="fname" class="artical-subtitle input-text size-L" type="text" maxlength="64" placeholder="在此输入副标题" />
-				<textarea v-model.trim="artical.summas" id="summas" class="textarea" placeholder="在此输入新闻摘要"></textarea>
+				<textarea v-model.trim="artical.summas" id="summas" class="textarea" placeholder="在此输入文章摘要"></textarea>
 				<select-load-pic v-bind:index="-1" v-on:uploadedfile="getHeadImg" :files="artical.encs" @delete-file="deleteHeadImg"></select-load-pic>
-				<p class="artical-pieces-title">新闻内容</p>
+				<p class="artical-pieces-title">文章内容</p>
 				<template v-for="(piece,index) in pieces">
 					<div class="artical-piece">
 						<input class="piece-title input-text size-L" v-model.trim="piece.title" type="text" maxlength="64" placeholder="在此输入节标题" />
@@ -186,7 +189,7 @@
 				getStatus: function(e) {
 					var index = e.target.value;
 					if(index >= 0) {
-						var curColumnInfo = this.culumns[index];
+						var curColumnInfo = this.columns[index];
 						console.log("选取的column信息：" + JSON.stringify(curColumnInfo));
 						articalPublish.artical.chind = curColumnInfo.chind;
 						articalPublish.artical.stat = curColumnInfo.stat;
@@ -195,7 +198,7 @@
 					}
 				},
 				publishArtical: function() { //发布文章 
-					if(articalPublish.artical.chind >= 0) {
+					if(articalPublish.artical.chind < 0) {
 						alert('请选择栏目');
 						return false;
 					}
@@ -255,7 +258,7 @@
 					}
 
 					if(tempContent0.trim() == 0) {
-						alert('请输入文字内容');
+						alert('请输入文章内容');
 						return false;
 					}
 
@@ -387,7 +390,12 @@
 			unitWebsitePro(tempData, function(data) {
 				if(data.RspCode == 0) {
 					if(data.RspData.length > 0) {
-						articalPublish.artical.type = '000';
+						if (data.RspData[0].stat==0) {
+							articalPublish.artical.type = 'edit';
+							alert('此网站现在为关闭状态');
+						} else{
+							articalPublish.artical.type = 'add';
+						}
 					} else {
 						alert('没有获取到配置信息')
 					}

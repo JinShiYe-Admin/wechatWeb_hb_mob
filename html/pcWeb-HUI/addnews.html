@@ -333,10 +333,10 @@
 					});
 				},
 				addPiece: function(piece, index) { //增加文章片段
-					if(!piece.title && !piece.content && piece.files.length == 0) {
-						$.Huimodalalert('段落未添加标题或内容，无法继续添加', 3000)
-						return;
-					}
+//					if(!piece.title && !piece.content && piece.files.length == 0) {
+//						$.Huimodalalert('段落未添加标题或内容，无法继续添加', 3000)
+//						return;
+//					}
 					this.pieces.splice(index + 1, 0, {
 						title: "",
 						content: "",
@@ -442,7 +442,7 @@
 						articalPublish.artical.content = detail.content;
 						//分解content
 						var tempArr0 = [];
-						var tempArr = tempStr.split('</section>');
+						var tempArr = detail.content.split('</section>');
 						tempArr.pop(); //移除最后一个数组值
 						for(var i = 0; i < tempArr.length; i++) {
 							tempArr[i] = tempArr[i].replace('<section>', '');

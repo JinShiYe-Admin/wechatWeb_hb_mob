@@ -144,7 +144,7 @@
 			data: {
 				artical: {
 					type: 'add',
-					chind: -1, //所属栏目id
+					chnid: -1, //所属栏目id
 					topic: "", //标题
 					subtopic: "", //副标题
 					summas: "", //摘要
@@ -190,15 +190,16 @@
 					var index = e.target.value;
 					if(index >= 0) {
 						var curColumnInfo = this.columns[index];
-						console.log("选取的column信息：" + JSON.stringify(curColumnInfo));
-						articalPublish.artical.chind = curColumnInfo.chind;
+						alert("选取的column信息：" + JSON.stringify(curColumnInfo));
+						articalPublish.artical.chnid = curColumnInfo.chnid;
 						articalPublish.artical.stat = curColumnInfo.stat;
 					} else {
 						//未选择
 					}
 				},
 				publishArtical: function() { //发布文章 
-					if(articalPublish.artical.chind < 0) {
+					alert('栏目id:'+articalPublish.artical.chnid);
+					if(articalPublish.artical.chnid < 0) {
 						alert('请选择栏目');
 						return false;
 					}
@@ -246,13 +247,13 @@
 							//获取节当中加入的图片
 							var tempImg = '';
 							for(var i = 0; i < tempModel.files.length; i++) {
-								tempImg += '<img src=' + tempModel.files[i] + '>';
+								tempImg += '<p><img src=' + tempModel.files[i].saveurl + '></p>';
 							}
 							tempContent1 += '<section><h3>' + tempModel.title.trim().replace(/<.*?>/ig, "") + '</h3><p>' + tempModel.content.trim().replace(/<.*?>/ig, "") + '</p>' + tempImg + '</section>';
 						}
 						var tempImgStr = '';
 						for(var i = 0; i < tempModel.files.length; i++) {
-							tempImgStr += tempModel.files[i];
+							tempImgStr += tempModel.files[i].saveurl;
 						}
 						tempContent0 += tempModel.title.trim() + tempModel.content + tempImgStr;
 					}
@@ -265,7 +266,7 @@
 					var comData = {
 						cmd: 'news', //文章管理
 						type: 'add', //添加文章
-						chnid: articalPublish.artical.chind, //所属栏目ID
+						chnid: articalPublish.artical.chnid, //所属栏目ID
 						subtopic: articalPublish.artical.subtopic, //副标题
 						topic: articalPublish.artical.topic, //标题
 						content: tempContent1, //内容
@@ -427,13 +428,18 @@
 				var tempArr1 = tempArr[i].split('</p>');
 				tempArr1.pop(); //移除最后一个数组值
 				var tempArr3 = tempArr1[2].match(/src=[\S]*\s/g);
+				var tempArr4 = [];
 				for(var m = 0; m < tempArr3.length; m++) {
 					tempArr3[m] = tempArr3[m].replace('src=', '');
+					var tempModel9 = {
+						saveurl:tempArr3[m]
+					}
+					tempArr4.push(tempModel9);
 				}
 				var tempModel = {
 					title: tempArr1[0].replace(/<.*?>/ig, ""),
 					content: tempArr1[1].replace(/<.*?>/ig, ""),
-					files: tempArr3
+					files: tempArr4
 				}
 				tempArr0.push(tempModel);
 			}

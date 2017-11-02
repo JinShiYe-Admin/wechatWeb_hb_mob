@@ -67,8 +67,7 @@
 					title: "编辑文章",
 					content: url + "?v=" + Math.random() + "&data=" + encodeURIComponent(JSON.stringify(newslist)),
 					end: function() {
-						console.log("刷新")
-						location.reload();
+						console.log("刷新") 
 					}
 				});
 				layer.full(index);  
@@ -78,7 +77,8 @@
 			var vue_input = new Vue({
 				el: '#chnid',
 				data: {
-					items: []
+					items: [ 
+					]
 				},
 				methods: {}
 			});
@@ -164,13 +164,10 @@
 						if(data.RspData.dt.length > 0) {
 							//newsData.item = data.RspData.dt[0];
 							vue_input.items = data.RspData.dt; 
-							var Chnid = document.getElementById("Prixlk");
-				            PriChnid = Chnid.selectedIndex; // 选中索引   
-				            newsData.item.chnid = PriChnid;
-							newsData.item.pageindex = 1; 
-							console.log('初始化栏目名称'+JSON.stringify(newsData.item.chnid));
-							console.log('初始化获取新闻列表'+JSON.stringify(newsData.item));
-							getNewsList(newsData.item);
+							var Chnid = $("#chnid option:selected").val();  
+							console.log('初始化栏目id'+Chnid);
+							console.log('初始化获取所有栏目'+JSON.stringify(data.RspData.dt));
+							getNewsList(1,Chnid);
 						} else {
 							alert('暂时还没有栏目');
 						}
@@ -181,28 +178,25 @@
 			} 
 			//切换栏目获取文章
 			$("#Prixlk").change(function() {
-				var Chnid = document.getElementById("Prixlk");
-				PriChnid = Chnid.selectedIndex; // 选中索引  
-				newsData.item.chnid = PriChnid;
-				newsData.item.pageindex = 1;   
-				console.log('切换栏目获取文章'+JSON.stringify(newsData.item));
-				getNewsList(newsData.item);  
+				var Chnid = $("#chnid option:selected").val();   
+				console.log('切换栏目获取id'+Chnid);
+				getNewsList(1,Chnid);  
 			})
 			//获取栏目对应的文章
-			function getNewsList(columnModel) { 
+			function getNewsList(pageindex,Chnid) { 
 				console.log('获取新闻列表');
 				var tempData = {
 					cmd: 'news', //文章管理
 					type: 'findpage', //分页查找文章列表
 					pagesize: '10', //每页条数
-					pageindex: columnModel.pageindex, //页码
-					chnid: columnModel.chnid //某个栏目下的文章，栏目id
+					pageindex: pageindex, //页码
+					chnid: Chnid //某个栏目下的文章，栏目id
 				}  
 				console.log('获取文章协议----'+JSON.stringify(tempData));
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
 						console.log('后台返回数据的总个数----'+data.RspData.pg.PageCount);
-					    initLaypage(data.RspData.pg.PageCount, columnModel.pageindex); 
+					    initLaypage(data.RspData.pg.PageCount, pageindex); 
 						if(data.RspData.dt.length > 0) {  
 							//循环审核状态
 							for(var i = 0; i < data.RspData.dt.length; i++) {
@@ -236,11 +230,8 @@
 					jump: function(e, first) { //触发分页后的回调
 						//console.log("jump: " + first + " " + JSON.stringify(e));
 						if(!first) { 
-							var Chnid = document.getElementById("Prixlk");
-				            PriChnid = Chnid.selectedIndex; // 选中索引  
-				            newsData.item.chnid=PriChnid;
-				            newsData.item.pageindex = e.curr;   
-				            getNewsList(newsData.item); 
+							var Chnid = $("#chnid option:selected").val();   
+				            getNewsList(e.curr,Chnid); 
 							 
 						}
 					}

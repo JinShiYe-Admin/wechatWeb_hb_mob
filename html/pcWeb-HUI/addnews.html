@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<title>新闻添加</title>
+		<title>文章添加</title>
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css" />
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
 		<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
@@ -54,6 +54,9 @@
 	</head>
 
 	<body>
+		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 文章 <span class="c-gray en">&gt;</span> 文章添加编辑
+			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
+		</nav>
 		<div id="artical-pub">
 			<div class="edit_container">
 				<div>
@@ -64,9 +67,9 @@
 				</div>
 				<input v-model.trim="artical.topic" id="cname" class="artical-title input-text size-L" type="text" maxlength="64" placeholder="在此输入标题" />
 				<input v-model.trim="artical.subtopic" id="fname" class="artical-subtitle input-text size-L" type="text" maxlength="64" placeholder="在此输入副标题" />
-				<textarea v-model.trim="artical.summas" id="summas" class="textarea" placeholder="在此输入新闻摘要"></textarea>
-				<select-load-pic v-bind:index="-1" v-on:uploadedfile="getHeadImg" :files="artical.encs" @delete-file="deleteHeadImg"></select-load-pic>
-				<p class="artical-pieces-title">新闻内容</p>
+				<textarea v-model.trim="artical.summas" id="summas" class="textarea" placeholder="在此输入文章摘要"></textarea>
+				<!--<select-load-pic v-bind:index="-1" v-on:uploadedfile="getHeadImg" :files="artical.encs" @delete-file="deleteHeadImg"></select-load-pic>-->
+				<p class="artical-pieces-title">文章内容</p>
 				<template v-for="(piece,index) in pieces">
 					<div class="artical-piece">
 						<input class="piece-title input-text size-L" v-model.trim="piece.title" type="text" maxlength="64" placeholder="在此输入节标题" />
@@ -141,7 +144,7 @@
 			data: {
 				artical: {
 					type: 'add',
-					chind: -1, //所属栏目id
+					chnid: -1, //所属栏目id
 					topic: "", //标题
 					subtopic: "", //副标题
 					summas: "", //摘要
@@ -186,37 +189,44 @@
 				getStatus: function(e) {
 					var index = e.target.value;
 					if(index >= 0) {
-						var curColumnInfo = culumns[index];
-						console.log("选取的column信息：" + JSON.stringify(curColumnInfo));
-					}else{
+						var curColumnInfo = this.columns[index];
+						//						alert("选取的column信息：" + JSON.stringify(curColumnInfo));
+						articalPublish.artical.chnid = curColumnInfo.chnid;
+						articalPublish.artical.stat = curColumnInfo.stat;
+					} else {
 						//未选择
+						articalPublish.artical.chnid = -1;
 					}
-
-				}
+				},
 				publishArtical: function() { //发布文章 
-					if(articalPublish.chind >= 0) {
+					//					alert('栏目id:'+articalPublish.artical.chnid);
+					if(articalPublish.artical.chnid < 0) {
 						alert('请选择栏目');
 						return false;
 					}
-					if(articalPublish.topic.trim().length == 0) {
+					if(articalPublish.artical.topic.trim().length == 0) {
 						alert('请输入标题');
 						return false;
 					}
-					if(articalPublish.topic.trim().length > 50) {
-						alert('标题不能超过50个字');
+					if(articalPublish.artical.topic.trim().length > 25) {
+						alert('标题不能超过25个字');
 						return false;
 					}
-					if(articalPublish.subtopic.trim().length == 0) {
+					if(articalPublish.artical.subtopic.trim().length == 0) {
 						alert('请输入副标题');
 						return false;
 					}
-					if(articalPublish.topic.trim().length > 50) {
-						alert('副标题不能超过50个字');
+					if(articalPublish.artical.subtopic.trim().length > 25) {
+						alert('副标题不能超过25个字');
+						return false;
+					}
+					if(articalPublish.artical.summas.trim().length > 250) {
+						alert('摘要不能超过250个字');
 						return false;
 					}
 					//判断是否为链接
 					var tempQuo = 0;
-					if(articalPublish.quourl.trim().length > 0) {
+					if(articalPublish.artical.quourl.trim().length > 0) {
 						//判断是否为链接
 
 						tempQuo = 1;
@@ -226,8 +236,10 @@
 					//拼接内容，
 					var tempContent0 = ''; //检查总段落内容，是否全部为空
 					var tempContent1 = ''; //发送协议中的内容字段
+					var tempArray99 = []; //附件
 					for(var i = 0; i < articalPublish.pieces.length; i++) {
 						var tempModel = articalPublish.pieces[i];
+						//						alert('tempModel:'+JSON.stringify(tempModel));
 						//						if (tempModel.title.trim().length>50) {
 						//							alert('第'+i+'节标题不能超过50个字');
 						//							break;return false;
@@ -241,49 +253,55 @@
 						} else {
 							//获取节当中加入的图片
 							var tempImg = '';
-							for(var i = 0; i < tempModel.files.length; i++) {
-								tempImg += '<img src=' + tempModel.files[i] + '>';
+							for(var m = 0; m < tempModel.files.length; m++) {
+								tempImg += '<img src=' + tempModel.files[m].saveurl + ' />';
 							}
-							tempContent1 += '<section><h3>' + tempModel.title.trim().replace(/<.*?>/ig, "") + '</h3><p>' + tempModel.content.trim().replace(/<.*?>/ig, "") + '</p>' + tempImg + '</section>';
+							tempContent1 += '<section><h3>' + tempModel.title.trim().replace(/<.*?>/ig, "") + '</h3><p>' + tempModel.content.trim().replace(/<.*?>/ig, "") + '</p><p>' + tempImg + '</p></section>';
 						}
 						var tempImgStr = '';
-						for(var i = 0; i < tempModel.files.length; i++) {
-							tempImgStr += tempModel.files[i];
+						for(var n = 0; n < tempModel.files.length; n++) {
+							tempImgStr += tempModel.files[n].saveurl;
 						}
 						tempContent0 += tempModel.title.trim() + tempModel.content + tempImgStr;
+						//合并数组
+						tempArray99 = tempArray99.concat(articalPublish.pieces[i].files);
 					}
+					//					alert('tempArray99:'+JSON.stringify(tempArray99));
 
 					if(tempContent0.trim() == 0) {
-						alert('请输入文字内容');
+						alert('请输入文章内容');
 						return false;
+					}
+					var isreply = 0;
+					if(articalPublish.artical.isreply) {
+						isreply = 1;
 					}
 
 					var comData = {
 						cmd: 'news', //文章管理
 						type: 'add', //添加文章
-						chnid: articalPublish.chind, //所属栏目ID
-						subtopic: articalPublish.subtopic, //副标题
-						topic: articalPublish.topic, //标题
+						chnid: articalPublish.artical.chnid, //所属栏目ID
+						subtopic: articalPublish.artical.subtopic, //副标题
+						topic: articalPublish.artical.topic, //标题
 						content: tempContent1, //内容
-						summas: articalPublish.summas, //摘要
-						encs: articalPublish.encs, //附件列表
+						summas: articalPublish.artical.summas, //摘要
+						encs: tempArray99, //附件列表
 						isquo: tempQuo, //是否为引用,0否1是
-						quourl: articalPublish.quourl.trim(), //引用url
-						isreply: articalPublish.isreply, //是否允许回复,0否1是
-						stat: articalPublish.stat //根据配置表设置相应值
+						quourl: articalPublish.artical.quourl.trim(), //引用url
+						isreply: isreply, //是否允许回复,0否1是
+						stat: articalPublish.artical.stat //根据配置表设置相应值
 					};
-					console.log('comData=========================:' + JSON.stringify(comData));
 					unitWebsitePro(comData, function(data) {
 						if(data.RspCode == 0) {
-							if(articalPublish.) {
-
-							}
 							layer.msg('成功', {
 								icon: 5,
 								time: 1000
 							});
-							//清空数据 
-							location.reload();
+							if(articalPublish.artical.type = 'add') {
+								//清空数据 
+								location.reload();
+							}
+
 						} else {
 							layer.msg('data.RspTxt', {
 								icon: 5,
@@ -315,10 +333,10 @@
 					});
 				},
 				addPiece: function(piece, index) { //增加文章片段
-					if(!piece.title || !piece.content) {
-						$.Huimodalalert('段落未添加标题或内容，无法继续添加', 3000)
-						return;
-					}
+//					if(!piece.title && !piece.content && piece.files.length == 0) {
+//						$.Huimodalalert('段落未添加标题或内容，无法继续添加', 3000)
+//						return;
+//					}
 					this.pieces.splice(index + 1, 0, {
 						title: "",
 						content: "",
@@ -346,10 +364,10 @@
 				 * @param {Object} headImg
 				 * @param {Object} index
 				 */
-				getHeadImg: function(headImg, index) {
-					console.log("*****获取的headImg:" + JSON.stringify(headImg) + ",index:" + index);
-					this.artical.encs[0] = headImg;
-				},
+				//				getHeadImg: function(headImg, index) {
+				//					console.log("*****获取的headImg:" + JSON.stringify(headImg) + ",index:" + index);
+				//					this.artical.encs[0] = headImg;
+				//				},
 				/**
 				 * 增加内容图片
 				 * @param {Object} contentImg
@@ -362,10 +380,10 @@
 				/**
 				 * 删除标题图片
 				 */
-				deleteHeadImg: function() {
-					console.log("deleteHeadImg");
-					articalPublish.artical.encs = [];
-				},
+				//				deleteHeadImg: function() {
+				//					console.log("deleteHeadImg");
+				//					articalPublish.artical.encs = [];
+				//				},
 				/**
 				 * 删除内容图片
 				 * @param {Object} index 内容序号
@@ -387,7 +405,12 @@
 			unitWebsitePro(tempData, function(data) {
 				if(data.RspCode == 0) {
 					if(data.RspData.length > 0) {
-						articalPublish.artical.type = '000';
+						if(data.RspData[0].stat == 0) {
+							articalPublish.artical.type = 'edit';
+							alert('此网站现在为关闭状态');
+						} else {
+							articalPublish.artical.type = 'add';
+						}
 					} else {
 						alert('没有获取到配置信息')
 					}
@@ -396,21 +419,65 @@
 				}
 			});
 		}
-		var detail = utils.getDataFromUrl(window.location.href);
-		console.log('detail=' + JSON.stringify(detail))
-		if(detail.type == 'edit') {
-			articalPublish.artical.type = 'edit';
-			articalPublish.artical.child = detail.child;
-			articalPublish.artical.cname = detail.cname;
-			articalPublish.artical.topic = detail.topic;
-			articalPublish.artical.subtopic = detail.subtopic;
-			articalPublish.artical.summas = detail.summas;
-			articalPublish.artical.content = detail.content;
-			articalPublish.artical.isquo = detail.isquo;
-			articalPublish.artical.quourl = detail.quourl;
-			articalPublish.artical.isreply = detail.isreply;
-			articalPublish.artical.encs = detail.dt;
-			articalPublish.artical.stat = detail.stat;
+		var detail0 = utils.getDataFromUrl(window.location.href);
+//		alert('detail0=' + JSON.stringify(detail0));
+		if(detail0.type == 'edit') {
+			var tempData = {
+				cmd: 'news', //网站栏目
+				type: 'findpage', //分页查找栏目列表
+				newsid: detail0.newsid, //文章id
+				pagesize: 999, //每页条数  
+				pageindex: 1 //页码 
+			}
+
+			unitWebsitePro(tempData, function(data) {
+				if (data.RspCode == 0) {
+					var detail = data.RspData.dt[0];
+					articalPublish.artical.type = 'edit';
+						articalPublish.artical.chnid = detail.chnid;
+						articalPublish.artical.cname = detail.cname;
+						articalPublish.artical.topic = detail.topic;
+						articalPublish.artical.subtopic = detail.subtopic;
+						articalPublish.artical.summas = detail.summas;
+						articalPublish.artical.content = detail.content;
+						//分解content
+						var tempArr0 = [];
+						var tempArr = detail.content.split('</section>');
+						tempArr.pop(); //移除最后一个数组值
+						for(var i = 0; i < tempArr.length; i++) {
+							tempArr[i] = tempArr[i].replace('<section>', '');
+							tempArr[i] = tempArr[i].replace('<h3>', '<p>');
+							tempArr[i] = tempArr[i].replace('</h3>', '</p>');
+							var tempArr1 = tempArr[i].split('</p>');
+							tempArr1.pop(); //移除最后一个数组值
+							var tempArr3 = tempArr1[2].match(/src=[\S]*\s/g);
+							var tempArr4 = [];
+							for(var m = 0; m < tempArr3.length; m++) {
+								tempArr3[m] = tempArr3[m].replace('src=', '');
+								var tempModel9 = {
+									saveurl:tempArr3[m]
+								}
+								tempArr4.push(tempModel9);
+							}
+//							alert('tempArr4:'+tempArr4);
+							var tempModel = {
+								title: tempArr1[0].replace(/<.*?>/ig, ""),
+								content: tempArr1[1].replace(/<.*?>/ig, ""),
+								files: tempArr4
+							}
+							tempArr0.push(tempModel);
+						}
+//						alert('tempArr0:'+JSON.stringify(tempArr0));
+						articalPublish.pieces = [].concat(tempArr0);
+						articalPublish.artical.isquo = detail.isquo;
+						articalPublish.artical.quourl = detail.quourl;
+						articalPublish.artical.isreply = detail.isreply;
+						articalPublish.artical.encs = detail.dt;
+						articalPublish.artical.stat = detail.stat;
+				} else{
+					alert(data.RspTxt);
+				}
+			});
 		}
 	</script>
 

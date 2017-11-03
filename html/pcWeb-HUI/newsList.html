@@ -98,6 +98,8 @@
 					content: url + "?v=" + Math.random() + "&data=" + encodeURIComponent(JSON.stringify(newslist)),
 					end: function() {
 						console.log("刷新")
+						var Chnid = $('#chnid option:selected').val();
+						getNewsList(1,Chnid);
 					}
 				});
 				layer.full(index);

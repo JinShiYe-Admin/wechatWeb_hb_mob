@@ -438,7 +438,7 @@
 							if(data.RspCode == 0) {
 								for(var item in articalPublish.artical) {
 									(function addwatch(key) {
-										vm.$watch('articalPublish.' + key, function(newVal, oldVal) {
+										articalPublish.$watch('artical.' + key, function(newVal, oldVal) {
 											edit(oldVal, newVal, key)
 										})
 									})(item)

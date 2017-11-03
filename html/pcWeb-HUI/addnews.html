@@ -542,11 +542,11 @@
 			}
 
 			console.log('key=' + key + '--oldVal=' + oldVal + '--newVal=' + newVal)
-			var colv = boolToInt(newVal)
+			var colv = ''
 			if(key == 'title' && key == 'content' && key == 'files') {
-				var colv = boolToInt(newVal)
+				colv = boolToInt(newVal)
 			} else {
-				var colv = tempContent1
+				colv = tempContent1
 			}
 			var para = {
 				cmd: 'news',

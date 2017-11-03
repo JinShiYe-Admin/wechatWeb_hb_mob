@@ -138,7 +138,7 @@ Vue.component("single-choose-person", {
 				node, roots = [];
 			for(var i = 0; i < nodes.length; i++) {
 				node = nodes[i]
-				node.departLst = []
+				node.departList = []
 				node.personList = []
 				map[node.value] = i // use map to look-up the parents
 				if(node.parentvalue > 0) {

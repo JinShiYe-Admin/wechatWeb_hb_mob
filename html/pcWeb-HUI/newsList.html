@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html> 
 	<head>
-		<meta charset="UTF-8">
-		<title>文章审核</title>  
-	 	<script type="text/javascript">
+		<meta charset="UTF-8"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-stat-bar-style" content="black">
+		<title>文章审核</title>
+		<script type="text/javascript">
 			var WebVersion = "?" + Math.random();
 			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css' + WebVersion + '" />');
 			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css' + WebVersion + '" />');
@@ -21,42 +24,43 @@
 			<div id="chnid">
 				<select class="select" id="Prixlk" name="one" style="height: 45px;width:220px;font-size: 17px;color: #929292;">
 					<option id="selectDropdown" :value='item.chnid' v-for="item in items">{{item.cname}}</option>
-				</select> 
+				</select>
 			</div>
-			<div id="newsData"> 
+			<div id="newsData">
 				<table style=" table-layout:fixed;" class="table table-border table-bordered table-bg">
 					<thead>
-						<tr class="text-c"> 
-							<th width="90" >文章标题</th>
-							<th width="90" >文章副标题</th>
-							<th width="120">审核状态</th> 
+						<tr class="text-c">
+							<th width="90">文章标题</th>
+							<th width="90">文章副标题</th>
+							<th width="120">审核状态</th>
 							<th width="100">操作</th>
 						</tr>
 					</thead>
-					<tbody> 
-						<tr class="text-c" v-for="(newsModel,index) in item.newsArray" :data-index="index"> 
-							<td style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" > {{newsModel.topic}}</td>
-							<td style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" >{{newsModel.subtopic}}</td>
-							<td style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" ><span :class="newsModel.stat==0?'label label-defaunt radius':'label label-success radius'"><a v-if="newsModel.stat==0">未通过</a><a v-else>已通过</a></span></td>
+					<tbody>
+						<tr class="text-c" v-for="(newsModel,index) in item.newsArray" :data-index="index">
+							<td style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;"> {{newsModel.topic}}</td>
+							<td style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{{newsModel.subtopic}}</td>
+							<td style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;"><span :class="newsModel.stat==0?'label label-defaunt radius':'label label-success radius'"><a v-if="newsModel.stat==0">未通过</a><a v-else>已通过</a></span></td>
 							<td style="text-align: center;">
 								<button id="{{newsModel.newsid}}" class="btn btn-primary radius" @click="clickDel(newsModel,1,index)">{{newsModel.Prizt}}</button>&nbsp;&nbsp;&nbsp;
 								<a class="text-primary operate-cursor" @click="click(newsModel,index,item.cname )" title="编辑"><i class="Hui-iconfont"></i></a>
-						    	<a style="text-decoration:none" class="ml-5" @click="clickDel(newsModel,0,index)" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+								<a style="text-decoration:none" class="ml-5" @click="clickDel(newsModel,0,index)" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
 							</td>
-						</tr> 
+						</tr>
 					</tbody>
 				</table>
 			</div>
 			<div id="pages"></div>
-		</div>    
+		</div>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/laypage/1.2/laypage.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/layer/2.4/layer.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/vue.min.js?" + Math.random() + "'></s" + "cript>");
-		</script>  
+		</script>
 		<script type="text/javascript">
+			//初始化获取栏目和文章
 			window.onload = function() {
 				var tempData = {
 					cmd: 'chn', //网站栏目 
@@ -65,39 +69,39 @@
 					iswrite: '1',
 					stat: '1',
 					pageindex: 1 //页码  
-				} 
-				unitWebsitePro(tempData, function(data) { 
+				}
+				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
 						if(data.RspData.dt.length > 0) {
-							//newsData.item = data.RspData.dt[0];
-							vue_input.items = data.RspData.dt; 
-							var Chnid = data.RspData.dt[0].chnid;  
-							console.log('初始化栏目id'+Chnid);
-							console.log('初始化获取所有栏目'+JSON.stringify(data.RspData.dt));
-							getNewsList(1,Chnid);
+							vue_input.items = data.RspData.dt;
+							var Chnid = data.RspData.dt[0].chnid;
+							console.log('初始化栏目id' + Chnid);
+							console.log('初始化获取所有栏目' + JSON.stringify(data.RspData.dt));
+							getNewsList(1, Chnid);
 						} else {
 							alert('暂时还没有栏目');
 						}
 					} else {
 						alert(data.RspTxt);
 					}
-				}); 
-			} 
-	       	function click(newsModel, index, cname) { 
-				var url = "addnews.html"; 
-				var newslist = new Object();  
-                newslist.type = "edit"; 
-                newslist.newsid = newsModel.newsid;    
+				});
+			}
+           //编辑弹框
+			function click(newsModel, index, cname) {
+				var url = "addnews.html";
+				var newslist = new Object();
+				newslist.type = "edit";
+				newslist.newsid = newsModel.newsid;
 				var index = layer.open({
 					type: 2,
 					title: "编辑文章",
 					content: url + "?v=" + Math.random() + "&data=" + encodeURIComponent(JSON.stringify(newslist)),
 					end: function() {
-						console.log("刷新") 
+						console.log("刷新")
 					}
 				});
-				layer.full(index);  
-			} 
+				layer.full(index);
+			}
 			var PriChnid;
 			//所属栏目下拉框
 			var vue_input = new Vue({
@@ -112,9 +116,7 @@
 				el: '#newsData',
 				data: {
 					item: {
-						newsArray: [
-						 
-						]
+						newsArray: []
 					}
 				},
 				updated: function() {
@@ -126,28 +128,26 @@
 						var colid = model.newsid; //文章id 
 						//确认框confirm	  
 						if(Pribs == 0) {
-							layer.confirm("确定要删除吗？", function(index) { 
-								layer.close(index); 
+							layer.confirm("确定要删除吗？", function(index) {
+								layer.close(index);
 								//确定删除
 								var tempData = {
 									cmd: 'news', //文章管理
 									type: 'del', //分页查找文章列表
 									colid: colid
-								} 
-							
+								}
 								unitWebsitePro(tempData, function(data) {
-									console.log(JSON.stringify(data));
-									if(data.RspCode == 0000) { 
-										console.log('删除成功准备移除:' + index); 
-										for (var i = newsData.item.newsArray.length-1; i>0; i--){
-                                             if (newsData.item.newsArray[i].newsid==colid){  
-                                                    newsData.item.newsArray.splice(i,1);
-                                             }
-                                        }
-											layer.msg('已删除!', {
-										    icon: 1,
-										    time: 2000
-									});   
+									console.log('删除返回数据' + JSON.stringify(data));
+									if(data.RspCode == 0000) {
+										for (var  i  =  newsData.item.newsArray.length - 1;  i > 0;  i--) {    
+											if (newsData.item.newsArray[i].newsid == colid) {        
+												newsData.item.newsArray.splice(i, 1);
+											}
+										}
+										layer.msg('已删除!', {
+											icon: 1,
+											time: 2000
+										});
 									}
 								});
 							}, function() {});
@@ -158,7 +158,7 @@
 				}
 			});
 			//修改审核状态
-			function SetStat(model, colid) {	
+			function SetStat(model, colid) {
 				var stat = "";
 				if(model.stat == 0)
 					stat = 1;
@@ -170,7 +170,7 @@
 					callcol: 'chk',
 					colid: colid,
 					colv: stat //状态
-				} 
+				}
 				unitWebsitePro(tempData, function(data) {
 					console.log(JSON.stringify(data));
 					if(data.RspCode == 0000 && stat == 1) {
@@ -180,17 +180,17 @@
 						model.Prizt = '通过';
 						model.stat = 0;
 					}
-				}) 
+				})
 			}
 
 			//切换栏目获取文章
 			$("#Prixlk").change(function() {
-				var Chnid = $("#chnid option:selected").val();   
-				console.log('切换栏目获取id'+Chnid);
-				getNewsList(1,Chnid);  
+				var Chnid = $("#chnid option:selected").val();
+				console.log('切换栏目获取id' + Chnid);
+				getNewsList(1, Chnid);
 			})
 			//获取栏目对应的文章
-			function getNewsList(pageindex,Chnid) { 
+			function getNewsList(pageindex, Chnid) {
 				console.log('获取新闻列表');
 				var tempData = {
 					cmd: 'news', //文章管理
@@ -198,48 +198,48 @@
 					pagesize: '10', //每页条数
 					pageindex: pageindex, //页码
 					chnid: Chnid //某个栏目下的文章，栏目id
-				}  
-				console.log('获取文章协议----'+JSON.stringify(tempData));
+				}
+				console.log('获取文章协议----' + JSON.stringify(tempData));
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
-						console.log('后台返回数据的总页数----'+data.RspData.pg.PageCount);
-					    initLaypage(data.RspData.pg.PageCount, pageindex); 
-						if(data.RspData.dt.length > 0) {  
+						console.log('后台返回数据的总页数----' + data.RspData.pg.PageCount);
+						initLaypage(data.RspData.pg.PageCount, pageindex);
+						if(data.RspData.dt.length > 0) {
 							//循环审核状态
 							for(var i = 0; i < data.RspData.dt.length; i++) {
 								var tempModel = data.RspData.dt[i];
-								if(tempModel.stat == 1) 
+								if(tempModel.stat == 1)
 									tempModel.Prizt = "不通过";
-								if(tempModel.stat == 0) 
+								if(tempModel.stat == 0)
 									tempModel.Prizt = "通过";
 							}
-						console.log('后台返回数据----'+JSON.stringify(data.RspData.dt));
-						newsData.item.newsArray =data.RspData.dt; 
-						console.log('绑定后的数据----'+JSON.stringify(newsData.item.newsArray));
+							console.log('后台返回数据----' + JSON.stringify(data.RspData.dt));
+							newsData.item.newsArray = data.RspData.dt;
+							console.log('绑定后的数据----' + JSON.stringify(newsData.item.newsArray));
 						} else {
-						 alert("没有获取到数据！");
-						} 
+							alert("没有获取到数据！");
+						}
 					} else {
 						alert(data.RspTxt);
 					}
-				}); 
-			} 
+				});
+			}
 			/**
 			 * 初始化页码
 			 * @param {Object} pages 通过后台拿到的总页数
 			 * @param {Object} curr 初始化当前页
 			 */
-			function initLaypage(pages, curr) { 
+			function initLaypage(pages, curr) {
 				laypage({
 					cont: 'pages', //容器
 					pages: pages, //通过后台拿到的总页数
 					curr: curr, //初始化当前页 
 					jump: function(e, first) { //触发分页后的回调
 						//console.log("jump: " + first + " " + JSON.stringify(e));
-						if(!first) { 
-							var Chnid = $("#chnid option:selected").val();   
-				            getNewsList(e.curr,Chnid); 
-							 
+						if(!first) {
+							var Chnid = $("#chnid option:selected").val();
+							getNewsList(e.curr, Chnid);
+
 						}
 					}
 				});

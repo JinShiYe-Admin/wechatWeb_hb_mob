@@ -65,15 +65,15 @@
 						<option v-for="(item,index) in columns" :value="index">{{item.cname}}</option>
 					</select>
 				</div>
-				<input v-model.trim="artical.topic" id="cname" class="artical-title input-text size-L" type="text" maxlength="64" placeholder="在此输入标题" />
-				<input v-model.trim="artical.subtopic" id="fname" class="artical-subtitle input-text size-L" type="text" maxlength="64" placeholder="在此输入副标题" />
-				<textarea v-model.trim="artical.summas" id="summas" class="textarea" placeholder="在此输入文章摘要"></textarea>
+				<input v-model.trim.lazy="artical.topic" id="cname" class="artical-title input-text size-L" type="text" maxlength="64" placeholder="在此输入标题" />
+				<input v-model.trim.lazy="artical.subtopic" id="fname" class="artical-subtitle input-text size-L" type="text" maxlength="64" placeholder="在此输入副标题" />
+				<textarea v-model.trim.lazy="artical.summas" id="summas" class="textarea" placeholder="在此输入文章摘要"></textarea>
 				<!--<select-load-pic v-bind:index="-1" v-on:uploadedfile="getHeadImg" :files="artical.encs" @delete-file="deleteHeadImg"></select-load-pic>-->
 				<p class="artical-pieces-title">文章内容</p>
 				<template v-for="(piece,index) in pieces">
 					<div class="artical-piece">
-						<input class="piece-title input-text size-L" v-model.trim="piece.title" type="text" maxlength="64" placeholder="在此输入节标题" />
-						<textarea class="piece-container textarea radius" v-model.trim="piece.content" placeholder="在此输入节内容"></textarea>
+						<input class="piece-title input-text size-L" v-model.trim.lazy="piece.title" type="text" maxlength="64" placeholder="在此输入节标题" />
+						<textarea class="piece-container textarea radius" v-model.trim.lazy="piece.content" placeholder="在此输入节内容"></textarea>
 					</div>
 					<div>
 						<p v-if="piece.files.lenth>0"></p>
@@ -83,11 +83,11 @@
 					</div>
 				</template>
 				<br />
-				<span><i class="icon Hui-iconfont Hui-iconfont-more2"></i></span><input type="url" id="islink" v-model.trim="artical.quourl" class="artical-url input-text size-L" placeholder="请输入原文链接" />
+				<span><i class="icon Hui-iconfont Hui-iconfont-more2"></i></span><input type="url" id="islink" v-model.trim.lazy="artical.quourl" class="artical-url input-text size-L" placeholder="请输入原文链接" />
 				<div>
 					<div class="check-box">
 						<label for="checkbox-1">是否可评论</label>
-						<input type="checkbox" id="isReply" v-model="artical.isreply">
+						<input type="checkbox" id="isReply" v-model.lazy="artical.isreply">
 					</div>
 					<input class="btn btn-primary radius float-right" v-if="artical.type=='add'" v-on:click="publishArtical" type="button" value="发送">
 				</div>
@@ -187,12 +187,14 @@
 			},
 			methods: {
 				getStatus: function(e) {
+					
 					var index = e.target.value;
 					if(index >= 0) {
 						var curColumnInfo = this.columns[index];
 						//						alert("选取的column信息：" + JSON.stringify(curColumnInfo));
 						articalPublish.artical.chnid = curColumnInfo.chnid;
 						articalPublish.artical.stat = curColumnInfo.stat;
+						edit(-1, curColumnInfo.chnid, 'chnid');
 					} else {
 						//未选择
 						articalPublish.artical.chnid = -1;
@@ -333,10 +335,10 @@
 					});
 				},
 				addPiece: function(piece, index) { //增加文章片段
-//					if(!piece.title && !piece.content && piece.files.length == 0) {
-//						$.Huimodalalert('段落未添加标题或内容，无法继续添加', 3000)
-//						return;
-//					}
+					//					if(!piece.title && !piece.content && piece.files.length == 0) {
+					//						$.Huimodalalert('段落未添加标题或内容，无法继续添加', 3000)
+					//						return;
+					//					}
 					this.pieces.splice(index + 1, 0, {
 						title: "",
 						content: "",
@@ -419,8 +421,10 @@
 				}
 			});
 		}
+
 		var detail0 = utils.getDataFromUrl(window.location.href);
-//		alert('detail0=' + JSON.stringify(detail0));
+		detail0.type = 'edit'
+		//		alert('detail0=' + JSON.stringify(detail0));
 		if(detail0.type == 'edit') {
 			var tempData = {
 				cmd: 'news', //网站栏目
@@ -430,54 +434,86 @@
 				pageindex: 1 //页码 
 			}
 
-			unitWebsitePro(tempData, function(data) {
-				if (data.RspCode == 0) {
-					var detail = data.RspData.dt[0];
-					articalPublish.artical.type = 'edit';
-						articalPublish.artical.chnid = detail.chnid;
-						articalPublish.artical.cname = detail.cname;
-						articalPublish.artical.topic = detail.topic;
-						articalPublish.artical.subtopic = detail.subtopic;
-						articalPublish.artical.summas = detail.summas;
-						articalPublish.artical.content = detail.content;
-						//分解content
-						var tempArr0 = [];
-						var tempArr = detail.content.split('</section>');
-						tempArr.pop(); //移除最后一个数组值
-						for(var i = 0; i < tempArr.length; i++) {
-							tempArr[i] = tempArr[i].replace('<section>', '');
-							tempArr[i] = tempArr[i].replace('<h3>', '<p>');
-							tempArr[i] = tempArr[i].replace('</h3>', '</p>');
-							var tempArr1 = tempArr[i].split('</p>');
-							tempArr1.pop(); //移除最后一个数组值
-							var tempArr3 = tempArr1[2].match(/src=[\S]*\s/g);
-							var tempArr4 = [];
-							for(var m = 0; m < tempArr3.length; m++) {
-								tempArr3[m] = tempArr3[m].replace('src=', '');
-								var tempModel9 = {
-									saveurl:tempArr3[m]
+						unitWebsitePro(tempData, function(data) {
+							if(data.RspCode == 0) {
+								for(var item in articalPublish.artical) {
+									(function addwatch(key) {
+										vm.$watch('articalPublish.' + key, function(newVal, oldVal) {
+											edit(oldVal, newVal, key)
+										})
+									})(item)
 								}
-								tempArr4.push(tempModel9);
+								var detail = data.RspData.dt[0];
+								articalPublish.artical.type = 'edit';
+								articalPublish.artical.chnid = detail.chnid;
+								articalPublish.artical.cname = detail.cname;
+								articalPublish.artical.topic = detail.topic;
+								articalPublish.artical.subtopic = detail.subtopic;
+								articalPublish.artical.summas = detail.summas;
+								articalPublish.artical.content = detail.content;
+								//分解content
+								var tempArr0 = [];
+								var tempArr = detail.content.split('</section>');
+								tempArr.pop(); //移除最后一个数组值
+								for(var i = 0; i < tempArr.length; i++) {
+									tempArr[i] = tempArr[i].replace('<section>', '');
+									tempArr[i] = tempArr[i].replace('<h3>', '<p>');
+									tempArr[i] = tempArr[i].replace('</h3>', '</p>');
+									var tempArr1 = tempArr[i].split('</p>');
+									tempArr1.pop(); //移除最后一个数组值
+									var tempArr3 = tempArr1[2].match(/src=[\S]*\s/g);
+									var tempArr4 = [];
+									for(var m = 0; m < tempArr3.length; m++) {
+										tempArr3[m] = tempArr3[m].replace('src=', '');
+										var tempModel9 = {
+											saveurl: tempArr3[m]
+										}
+										tempArr4.push(tempModel9);
+									}
+									//							alert('tempArr4:'+tempArr4);
+									var tempModel = {
+										title: tempArr1[0].replace(/<.*?>/ig, ""),
+										content: tempArr1[1].replace(/<.*?>/ig, ""),
+										files: tempArr4
+									}
+									tempArr0.push(tempModel);
+								}
+								//						alert('tempArr0:'+JSON.stringify(tempArr0));
+								articalPublish.pieces = [].concat(tempArr0);
+								articalPublish.artical.isquo = detail.isquo;
+								articalPublish.artical.quourl = detail.quourl;
+								articalPublish.artical.isreply = detail.isreply;
+								articalPublish.artical.encs = detail.dt;
+								articalPublish.artical.stat = detail.stat;
+							} else {
+								alert(data.RspTxt);
 							}
-//							alert('tempArr4:'+tempArr4);
-							var tempModel = {
-								title: tempArr1[0].replace(/<.*?>/ig, ""),
-								content: tempArr1[1].replace(/<.*?>/ig, ""),
-								files: tempArr4
-							}
-							tempArr0.push(tempModel);
-						}
-//						alert('tempArr0:'+JSON.stringify(tempArr0));
-						articalPublish.pieces = [].concat(tempArr0);
-						articalPublish.artical.isquo = detail.isquo;
-						articalPublish.artical.quourl = detail.quourl;
-						articalPublish.artical.isreply = detail.isreply;
-						articalPublish.artical.encs = detail.dt;
-						articalPublish.artical.stat = detail.stat;
-				} else{
-					alert(data.RspTxt);
-				}
+						});
+		}
+
+		function edit(oldVal, newVal, key) {
+			console.log('key=' + key + '--oldVal=' + oldVal + '--newVal=' + newVal)
+			var para = {
+				cmd: 'news',
+				type: 'edit',
+				colid: articalPublish.artical.chnid,
+				callcol: key,
+				colv: boolToInt(newVal)
+			}
+			unitWebsitePro(para, function(data) {
+				console.log('成功')
 			});
+		}
+
+		function boolToInt(value) {
+			if(value == true) {
+				return 1;
+			} else if(value == false) {
+				return 0;
+			} else {
+				return value;
+			}
+
 		}
 	</script>
 

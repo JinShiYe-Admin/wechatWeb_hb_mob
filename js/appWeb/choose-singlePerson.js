@@ -42,7 +42,7 @@ Vue.component("single-choose-person", {
 				personList: []
 			},
 			departsTree: [], //部门tree结构
-			path: "0" //路径
+			path: "0", //路径
 			departId: -1 //部门Id
 		}
 	},
@@ -105,7 +105,7 @@ Vue.component("single-choose-person", {
 				com.isLoading = false;
 				this.setSessionStorage();
 			}
-		}
+		},
 		/**
 		 * 根据路径获取在tree数组中的值
 		 * @param tree
@@ -134,9 +134,9 @@ Vue.component("single-choose-person", {
 			nodes.sort(function(a, b) {
 				return a.value - b.value
 			})
-			let map = {},
-				node, roots = []
-			for(let i = 0; i < nodes.length; i++) {
+			var map = {},
+				node, roots = [];
+			for(var i = 0; i < nodes.length; i++) {
 				node = nodes[i]
 				node.departLst = []
 				node.personList = []
@@ -185,7 +185,7 @@ Vue.component("single-choose-person", {
 			})
 			console.log("获取的老师列表数据：" + JSON.stringify(leaderPersen));
 			return leaderPersen;
-		}
+		},
 		/**
 		 * 列表cell
 		 * @param {Object} item
@@ -220,7 +220,7 @@ Vue.component("single-choose-person", {
 			router.push({
 				name: 'chooseSinPer',
 				params: {
-					id: item.value
+					id: item.value,
 					path: this.path + "-" + index
 				}
 			})

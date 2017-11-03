@@ -488,13 +488,11 @@
 							})
 						})(item)
 					}
-					for(var item in articalPublish.pieces) {
-						(function addwatch(key) {
-							articalPublish.$watch('pieces.' + key, function(newVal, oldVal) {
-								edit(oldVal, newVal, key)
-							})
-						})(item)
-					}
+
+					articalPublish.$watch('pieces', function(newVal, oldVal) {
+						edit(oldVal, newVal, 'content')
+					})
+
 				} else {
 					alert(data.RspTxt);
 				}
@@ -543,10 +541,10 @@
 
 			console.log('key=' + key + '--oldVal=' + oldVal + '--newVal=' + newVal)
 			var colv = ''
-			if(key == 'title' && key == 'content' && key == 'files') {
-				colv = boolToInt(newVal)
-			} else {
+			if(key == 'content') {
 				colv = tempContent1
+			} else {
+				colv = boolToInt(newVal)
 			}
 			var para = {
 				cmd: 'news',

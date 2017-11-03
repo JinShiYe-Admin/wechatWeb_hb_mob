@@ -403,7 +403,8 @@ function selectDepart(input_item) {
 	router.push({
 		name: 'chooseSinPer',
 		params: {
-			id: -1
+			id: -1,
+			path:'0'
 		}
 	})
 }

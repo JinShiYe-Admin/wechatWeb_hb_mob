@@ -60,7 +60,7 @@
 		<div id="artical-pub">
 			<div class="edit_container">
 				<div>
-					<select class="select" id="chnid" name="one" value="-1" style="height: 45px;font-size: 17px;color: #929292;" v-on:change="getStatus($event)">
+					<select class="select" id="chnid" name="one" v-model="curColIndex" style="height: 45px;font-size: 17px;color: #929292;" v-on:change="getStatus($event)">
 						<option value="-1">请选择所属栏目....</option>
 						<option v-for="(item,index) in columns" :value="index">{{item.cname}}</option>
 					</select>
@@ -144,6 +144,7 @@
 			data: {
 				artical: {
 					type: 'add',
+					newsid: 0,
 					chnid: -1, //所属栏目id
 					topic: "", //标题
 					subtopic: "", //副标题
@@ -171,7 +172,8 @@
 					piece: null,
 					index: -1
 				},
-				columns: []
+				columns: [],
+				curColIndex: -1//当前栏目index
 			},
 			created: function() {
 				//vue 创建时 请求栏目列表
@@ -187,7 +189,6 @@
 			},
 			methods: {
 				getStatus: function(e) {
-					
 					var index = e.target.value;
 					if(index >= 0) {
 						var curColumnInfo = this.columns[index];
@@ -434,61 +435,71 @@
 				pageindex: 1 //页码 
 			}
 
-						unitWebsitePro(tempData, function(data) {
-							if(data.RspCode == 0) {
-								for(var item in articalPublish.artical) {
-									(function addwatch(key) {
-										vm.$watch('articalPublish.' + key, function(newVal, oldVal) {
-											edit(oldVal, newVal, key)
-										})
-									})(item)
-								}
-								var detail = data.RspData.dt[0];
-								articalPublish.artical.type = 'edit';
-								articalPublish.artical.chnid = detail.chnid;
-								articalPublish.artical.cname = detail.cname;
-								articalPublish.artical.topic = detail.topic;
-								articalPublish.artical.subtopic = detail.subtopic;
-								articalPublish.artical.summas = detail.summas;
-								articalPublish.artical.content = detail.content;
-								//分解content
-								var tempArr0 = [];
-								var tempArr = detail.content.split('</section>');
-								tempArr.pop(); //移除最后一个数组值
-								for(var i = 0; i < tempArr.length; i++) {
-									tempArr[i] = tempArr[i].replace('<section>', '');
-									tempArr[i] = tempArr[i].replace('<h3>', '<p>');
-									tempArr[i] = tempArr[i].replace('</h3>', '</p>');
-									var tempArr1 = tempArr[i].split('</p>');
-									tempArr1.pop(); //移除最后一个数组值
-									var tempArr3 = tempArr1[2].match(/src=[\S]*\s/g);
-									var tempArr4 = [];
-									for(var m = 0; m < tempArr3.length; m++) {
-										tempArr3[m] = tempArr3[m].replace('src=', '');
-										var tempModel9 = {
-											saveurl: tempArr3[m]
-										}
-										tempArr4.push(tempModel9);
-									}
-									//							alert('tempArr4:'+tempArr4);
-									var tempModel = {
-										title: tempArr1[0].replace(/<.*?>/ig, ""),
-										content: tempArr1[1].replace(/<.*?>/ig, ""),
-										files: tempArr4
-									}
-									tempArr0.push(tempModel);
-								}
-								//						alert('tempArr0:'+JSON.stringify(tempArr0));
-								articalPublish.pieces = [].concat(tempArr0);
-								articalPublish.artical.isquo = detail.isquo;
-								articalPublish.artical.quourl = detail.quourl;
-								articalPublish.artical.isreply = detail.isreply;
-								articalPublish.artical.encs = detail.dt;
-								articalPublish.artical.stat = detail.stat;
-							} else {
-								alert(data.RspTxt);
+			unitWebsitePro(tempData, function(data) {
+				if(data.RspCode == 0) {
+					for(var item in articalPublish.artical) {
+						(function addwatch(key) {
+							articalPublish.$watch('artical.' + key, function(newVal, oldVal) {
+								edit(oldVal, newVal, key)
+							})
+						})(item)
+					}
+					var detail = data.RspData.dt[0];
+					articalPublish.curColIndex = getColIndex(detail.chnid);
+					articalPublish.artical.type = 'edit';
+					articalPublish.artical.chnid = detail.chnid;
+					articalPublish.artical.newsid = detail.newsid;
+					articalPublish.artical.cname = detail.cname;
+					articalPublish.artical.topic = detail.topic;
+					articalPublish.artical.subtopic = detail.subtopic;
+					articalPublish.artical.summas = detail.summas;
+					articalPublish.artical.content = detail.content;
+					//分解content
+					var tempArr0 = [];
+					var tempArr = detail.content.split('</section>');
+					tempArr.pop(); //移除最后一个数组值
+					for(var i = 0; i < tempArr.length; i++) {
+						tempArr[i] = tempArr[i].replace('<section>', '');
+						tempArr[i] = tempArr[i].replace('<h3>', '<p>');
+						tempArr[i] = tempArr[i].replace('</h3>', '</p>');
+						var tempArr1 = tempArr[i].split('</p>');
+						tempArr1.pop(); //移除最后一个数组值
+						var tempArr3 = tempArr1[2].match(/src=[\S]*\s/g);
+						var tempArr4 = [];
+						for(var m = 0; m < tempArr3.length; m++) {
+							tempArr3[m] = tempArr3[m].replace('src=', '');
+							var tempModel9 = {
+								saveurl: tempArr3[m]
 							}
-						});
+							tempArr4.push(tempModel9);
+						}
+						//							alert('tempArr4:'+tempArr4);
+						var tempModel = {
+							title: tempArr1[0].replace(/<.*?>/ig, ""),
+							content: tempArr1[1].replace(/<.*?>/ig, ""),
+							files: tempArr4
+						}
+						tempArr0.push(tempModel);
+					}
+					//						alert('tempArr0:'+JSON.stringify(tempArr0));
+					articalPublish.pieces = [].concat(tempArr0);
+					articalPublish.artical.isquo = detail.isquo;
+					articalPublish.artical.quourl = detail.quourl;
+					articalPublish.artical.isreply = detail.isreply;
+					articalPublish.artical.encs = detail.dt;
+					articalPublish.artical.stat = detail.stat;
+				} else {
+					alert(data.RspTxt);
+				}
+			});
+		}
+
+		function getColIndex(chnid) {
+			for(var i in articalPublish.columns) {
+				if(articalPublish.columns[i].chnid == child) {
+					return parseInt(i);
+				}
+			}
 		}
 
 		function edit(oldVal, newVal, key) {
@@ -496,7 +507,7 @@
 			var para = {
 				cmd: 'news',
 				type: 'edit',
-				colid: articalPublish.artical.chnid,
+				colid: articalPublish.artical.newsid,
 				callcol: key,
 				colv: boolToInt(newVal)
 			}

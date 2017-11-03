@@ -62,6 +62,7 @@ Vue.component("single-choose-person", {
 	methods: {
 		//返回上级界面
 		backup: function() {
+			console.log("返回上级界面！！！")
 			router.go(-1);
 		},
 		//保存部门数据
@@ -102,7 +103,7 @@ Vue.component("single-choose-person", {
 			if(this.chooseType == 1) { //选择人员
 				this.getCurPersen();//获取当前部门人员
 			} else {
-				com.isLoading = false;
+				this.isLoading = false;
 				this.setSessionStorage();
 			}
 		},
@@ -138,7 +139,7 @@ Vue.component("single-choose-person", {
 				node, roots = [];
 			for(var i = 0; i < nodes.length; i++) {
 				node = nodes[i]
-				node.departLst = []
+				node.departList = []
 				node.personList = []
 				map[node.value] = i // use map to look-up the parents
 				if(node.parentvalue > 0) {

@@ -60,7 +60,7 @@
 		<div id="artical-pub">
 			<div class="edit_container">
 				<div>
-					<select class="select" id="chnid" name="one" value="-1" style="height: 45px;font-size: 17px;color: #929292;" v-on:change="getStatus($event)">
+					<select class="select" id="chnid" name="one" v-model="curColIndex" style="height: 45px;font-size: 17px;color: #929292;" v-on:change="getStatus($event)">
 						<option value="-1">请选择所属栏目....</option>
 						<option v-for="(item,index) in columns" :value="index">{{item.cname}}</option>
 					</select>
@@ -144,7 +144,7 @@
 			data: {
 				artical: {
 					type: 'add',
-					newsid:0,
+					newsid: 0,
 					chnid: -1, //所属栏目id
 					topic: "", //标题
 					subtopic: "", //副标题
@@ -172,7 +172,8 @@
 					piece: null,
 					index: -1
 				},
-				columns: []
+				columns: [],
+				curColIndex: -1//当前栏目index
 			},
 			created: function() {
 				//vue 创建时 请求栏目列表
@@ -188,7 +189,6 @@
 			},
 			methods: {
 				getStatus: function(e) {
-
 					var index = e.target.value;
 					if(index >= 0) {
 						var curColumnInfo = this.columns[index];
@@ -445,6 +445,7 @@
 						})(item)
 					}
 					var detail = data.RspData.dt[0];
+					articalPublish.curColIndex = getColIndex(detail.chnid);
 					articalPublish.artical.type = 'edit';
 					articalPublish.artical.chnid = detail.chnid;
 					articalPublish.artical.newsid = detail.newsid;
@@ -491,6 +492,14 @@
 					alert(data.RspTxt);
 				}
 			});
+		}
+
+		function getColIndex(chnid) {
+			for(var i in articalPublish.columns) {
+				if(articalPublish.columns[i].chnid == child) {
+					return parseInt(i);
+				}
+			}
 		}
 
 		function edit(oldVal, newVal, key) {

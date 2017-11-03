@@ -1,6 +1,6 @@
 Vue.component("single-choose-person", {
 	props: ['depart_id', 'chooseType'],
-	template: '<div><a href="" v-on:click="backup()">{{parseInt(depart_id)>0?"返回上级部门":"返回"}}</a>' +
+	template: '<div><p v-on:click="backup()">{{parseInt(depart_id)>0?"返回上级部门":"返回"}}</p>' +
 		'<div v-bind:class="[\'weui-cells\',\'weui-cells_radio\']">' +
 		'<template>' +
 		'<template v-if="chooseType===1">' + //人員選擇
@@ -46,7 +46,7 @@ Vue.component("single-choose-person", {
 			departId: -1 //部门Id
 		}
 	},
-	created: function() {//组件创建时 的逻辑任务
+	created: function() { //组件创建时 的逻辑任务
 		console.log("当前的部门id:" + this.$route.params.id);
 		this.getAllListData();
 	},
@@ -77,7 +77,7 @@ Vue.component("single-choose-person", {
 			var com = this;
 			com.isLoading = true;
 			com.departsTree = events.getSessionArray(consts.KEY_DEPARTS);
-			if(com.departsTree.length == 0) {//没有部门数据
+			if(com.departsTree.length == 0) { //没有部门数据
 				//获取所有部门列表
 				request.getDepartList(function(data) {
 					console.log("getAllListData获取的部门列表：" + JSON.stringify(data));
@@ -85,7 +85,7 @@ Vue.component("single-choose-person", {
 					//获取当前部门信息
 					com.getCurDepartInfo();
 				});
-			} else {//有部门数据
+			} else { //有部门数据
 				//获取当前部门信息
 				com.getCurDepartInfo();
 			}
@@ -95,13 +95,13 @@ Vue.component("single-choose-person", {
 		 */
 		getCurDepartInfo: function() {
 			console.log('****getCurDepartInfo****')
-			var pathArr = this.path.split('-');//路径
+			var pathArr = this.path.split('-'); //路径
 			console.log('获取的路径数组：' + pathArr)
 			//获取当前部门信息
 			this.curDepartInfo = this.getNodeInTree(this.departsTree, pathArr)
 			console.log('获取的本部门数据：' + JSON.stringify(this.curDepartInfo))
 			if(this.chooseType == 1) { //选择人员
-				this.getCurPersen();//获取当前部门人员
+				this.getCurPersen(); //获取当前部门人员
 			} else {
 				this.isLoading = false;
 				this.setSessionStorage();
@@ -215,7 +215,8 @@ Vue.component("single-choose-person", {
 		//通过部门id 更新界面
 		routerTo: function(item, index) {
 			console.log("********routerTo路由跳转********");
-			if(this.chooseType === 0 && !this.curDepartInfo.departList.length === 0) {
+			console.log("this.chooseType" + this.chooseType + "当前选择类型：" + typeof(this.chooseType));
+			if(this.chooseType == 0 && this.curDepartInfo.departList[index].departList.length === 0) {
 				return;
 			}
 			router.push({

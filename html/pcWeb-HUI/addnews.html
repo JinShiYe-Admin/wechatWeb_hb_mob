@@ -503,10 +503,11 @@
 
 		function getColIndex(chnid) {
 			for(var i in articalPublish.columns) {
-				if(articalPublish.columns[i].chnid == child) {
+				if(articalPublish.columns[i].chnid == chnid) {
 					return parseInt(i);
 				}
 			}
+			return -1;
 		}
 
 		function edit(oldVal, newVal, key) {

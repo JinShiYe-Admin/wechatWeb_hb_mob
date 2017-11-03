@@ -61,7 +61,7 @@
 		</script>
 		<script type="text/javascript">
 			//初始化获取栏目和文章
-			window.onload = function() {
+			window.onload = function() {  
 				var tempData = {
 					cmd: 'chn', //网站栏目 
 					type: 'findpage', //分页查找栏目列表 
@@ -98,6 +98,8 @@
 					content: url + "?v=" + Math.random() + "&data=" + encodeURIComponent(JSON.stringify(newslist)),
 					end: function() {
 						console.log("刷新")
+						var Chnid = $('#chnid option:selected').val();
+						getNewsList(1,Chnid);
 					}
 				});
 				layer.full(index);
@@ -176,9 +178,17 @@
 					if(data.RspCode == 0000 && stat == 1) {
 						model.Prizt = '不通过';
 						model.stat = 1;
+						layer.msg('审核已完成', {
+								icon: 1,
+								time: 1000
+						});
 					} else if(data.RspCode == 0000 && stat == 0) {
 						model.Prizt = '通过';
 						model.stat = 0;
+						layer.msg('审核已完成', {
+								icon: 1,
+								time: 1000
+						});
 					}
 				})
 			}
@@ -217,7 +227,11 @@
 							newsData.item.newsArray = data.RspData.dt;
 							console.log('绑定后的数据----' + JSON.stringify(newsData.item.newsArray));
 						} else {
-							alert("没有获取到数据！");
+							newsData.item.newsArray =''; 
+							layer.msg('该栏目没有数据', {
+								icon: 5,
+								time: 3000
+							});
 						}
 					} else {
 						alert(data.RspTxt);

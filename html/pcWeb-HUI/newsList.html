@@ -15,13 +15,13 @@
 	</head> 
 	<body>
 		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 文章 <span class="c-gray en">&gt;</span> 文章审核
-			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(newsData.item.newsArray);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
+			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:var Chnid = $('#chnid option:selected').val(); getNewsList(1,Chnid); " title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
 		</nav>
 		<div class="page-container">
 			<div id="chnid">
 				<select class="select" id="Prixlk" name="one" style="height: 45px;width:220px;font-size: 17px;color: #929292;">
 					<option id="selectDropdown" :value='item.chnid' v-for="item in items">{{item.cname}}</option>
-				</select>
+				</select> 
 			</div>
 			<div id="newsData"> 
 				<table style=" table-layout:fixed;" class="table table-border table-bordered table-bg">

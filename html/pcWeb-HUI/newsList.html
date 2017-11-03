@@ -167,7 +167,7 @@
 							var Chnid = data.RspData.dt[0].chnid;  
 							console.log('初始化栏目id'+Chnid);
 							console.log('初始化获取所有栏目'+JSON.stringify(data.RspData.dt));
-							getNewsList(1,129);
+							getNewsList(1,Chnid);
 						} else {
 							alert('暂时还没有栏目');
 						}

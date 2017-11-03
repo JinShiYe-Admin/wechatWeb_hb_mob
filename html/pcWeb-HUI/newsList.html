@@ -112,7 +112,9 @@
 				el: '#newsData',
 				data: {
 					item: {
-						newsArray: []
+						newsArray: [
+						 
+						]
 					}
 				},
 				updated: function() {
@@ -121,7 +123,7 @@
 				},
 				methods: {
 					clickDel: function(model, Pribs, index) {
-						var colid = model.newsid; //文章id
+						var colid = model.newsid; //文章id 
 						//确认框confirm	  
 						if(Pribs == 0) {
 							layer.confirm("确定要删除吗？", function(index) { 
@@ -131,12 +133,17 @@
 									cmd: 'news', //文章管理
 									type: 'del', //分页查找文章列表
 									colid: colid
-								}
+								} 
+							
 								unitWebsitePro(tempData, function(data) {
 									console.log(JSON.stringify(data));
 									if(data.RspCode == 0000) { 
-										    console.log('删除成功准备移除:' + index);
-											newsData.item.newsArray.splice(index, 1);
+										console.log('删除成功准备移除:' + index); 
+										for (var i = newsData.item.newsArray.length-1; i>0; i--){
+                                             if (newsData.item.newsArray[i].newsid==colid){  
+                                                    newsData.item.newsArray.splice(i,1);
+                                             }
+                                        }
 											layer.msg('已删除!', {
 										    icon: 1,
 										    time: 2000

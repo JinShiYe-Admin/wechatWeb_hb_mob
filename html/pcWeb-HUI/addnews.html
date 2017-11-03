@@ -50,10 +50,12 @@
 			.select-file-img {
 				width: 200px;
 			}
-			.edit_container{
+			
+			.edit_container {
 				padding: 20px 0;
 			}
-			.btn.float-right{
+			
+			.btn.float-right {
 				margin: 0 0 0 10px;
 			}
 		</style>
@@ -189,7 +191,8 @@
 			},
 			watch: {
 				pieces: {
-					handler: function() {
+					handler: function(oldVal, newVal) {
+						edit(oldVal, newVal, 'content')
 						console.log(123)
 					},
 					deep: true
@@ -503,9 +506,9 @@
 						})(item)
 					}
 
-//					articalPublish.$watch('pieces', function(newVal, oldVal) {
-//						edit(oldVal, newVal, 'content')
-//					})
+					//					articalPublish.$watch('pieces', function(newVal, oldVal) {
+					//						edit(oldVal, newVal, 'content')
+					//					})
 
 				} else {
 					alert(data.RspTxt);
@@ -523,52 +526,65 @@
 		}
 
 		function edit(oldVal, newVal, key) {
-			//拼接内容，
-			var tempContent0 = ''; //检查总段落内容，是否全部为空
-			var tempContent1 = ''; //发送协议中的内容字段
-			var tempArray99 = []; //附件
-			for(var i = 0; i < articalPublish.pieces.length; i++) {
-				var tempModel = articalPublish.pieces[i];
-				//判断当前节，是否都为空
-				if(tempModel.title.trim().length == 0 && tempModel.content.trim().length == 0 && tempModel.files.length == 0) {
-					//当前节里，都为空，不加入内容中
-				} else {
-					//获取节当中加入的图片
-					var tempImg = '';
-					for(var m = 0; m < tempModel.files.length; m++) {
-						tempImg += '<img src=' + tempModel.files[m].saveurl + ' />';
-					}
-					tempContent1 += '<section><h3>' + tempModel.title.trim().replace(/<.*?>/ig, "") + '</h3><p>' + tempModel.content.trim().replace(/<.*?>/ig, "") + '</p><p>' + tempImg + '</p></section>';
-				}
-				var tempImgStr = '';
-				for(var n = 0; n < tempModel.files.length; n++) {
-					tempImgStr += tempModel.files[n].saveurl;
-				}
-				tempContent0 += tempModel.title.trim() + tempModel.content + tempImgStr;
-				//合并数组
-				tempArray99 = tempArray99.concat(articalPublish.pieces[i].files);
-			}
-			if(tempContent0.trim() == 0) {
-				alert('请输入文章内容');
-				return false;
-			}
 
 			console.log('key=' + key + '--oldVal=' + oldVal + '--newVal=' + newVal)
-			var colv = ''
+			var para;
 			if(key == 'content') {
-				colv = tempContent1
+				if(articalPublish.artical.type=="add"){
+					return;
+				}
+				//拼接内容，
+				var tempContent0 = ''; //检查总段落内容，是否全部为空
+				var tempContent1 = ''; //发送协议中的内容字段
+				var tempArray99 = []; //附件
+				for(var i = 0; i < articalPublish.pieces.length; i++) {
+					var tempModel = articalPublish.pieces[i];
+					//判断当前节，是否都为空
+					if(tempModel.title.trim().length == 0 && tempModel.content.trim().length == 0 && tempModel.files.length == 0) {
+						//当前节里，都为空，不加入内容中
+					} else {
+						//获取节当中加入的图片
+						var tempImg = '';
+						for(var m = 0; m < tempModel.files.length; m++) {
+							tempImg += '<img src=' + tempModel.files[m].saveurl + ' />';
+						}
+						tempContent1 += '<section><h3>' + tempModel.title.trim().replace(/<.*?>/ig, "") + '</h3><p>' + tempModel.content.trim().replace(/<.*?>/ig, "") + '</p><p>' + tempImg + '</p></section>';
+					}
+					var tempImgStr = '';
+					for(var n = 0; n < tempModel.files.length; n++) {
+						tempImgStr += tempModel.files[n].saveurl;
+					}
+					tempContent0 += tempModel.title.trim() + tempModel.content + tempImgStr;
+					//合并数组
+					tempArray99 = tempArray99.concat(articalPublish.pieces[i].files);
+				}
+				if(tempContent0.trim() == 0) {
+					alert('请输入文章内容');
+					return false;
+				}
+				para = {
+					cmd: 'news',
+					type: 'edit',
+					colid: articalPublish.artical.newsid,
+					callcol: key,
+					colv: tempContent1,
+					encs: tempArray99
+
+				}
 			} else {
-				colv = boolToInt(newVal)
+				para = {
+					cmd: 'news',
+					type: 'edit',
+					colid: articalPublish.artical.newsid,
+					callcol: key,
+					colv: boolToInt(newVal)
+				}
 			}
-			var para = {
-				cmd: 'news',
-				type: 'edit',
-				colid: articalPublish.artical.newsid,
-				callcol: key,
-				colv: colv
-			}
+
 			unitWebsitePro(para, function(data) {
-				console.log('成功')
+				if(data.RspCode == 0) {
+					console.log('成功')
+				}
 			});
 		}
 

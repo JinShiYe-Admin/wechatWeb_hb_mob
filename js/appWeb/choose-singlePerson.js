@@ -46,7 +46,7 @@ Vue.component("single-choose-person", {
 			departId: -1 //部门Id
 		}
 	},
-	created: function() {//组件创建时 的逻辑任务
+	created: function() { //组件创建时 的逻辑任务
 		console.log("当前的部门id:" + this.$route.params.id);
 		this.getAllListData();
 	},
@@ -63,7 +63,18 @@ Vue.component("single-choose-person", {
 		//返回上级界面
 		backup: function() {
 			console.log("返回上级界面！！！")
-			router.go(-1);
+			var pathArr = this.path.split("-");
+			router.replace({
+				name: "chooseSinPer",
+				params: {
+					id: this.getParentValue(pathArr),
+					path: pathArr.slice(0, pathArr.length - 1).join("-")
+				}
+			})
+
+		},
+		getParentValue: function(pathArr) {
+			return this.getNodeInTree(this.departsTree, pathArr.slice(0, pathArr.length - 1)).value
 		},
 		//保存部门数据
 		setSessionStorage: function() {
@@ -77,7 +88,7 @@ Vue.component("single-choose-person", {
 			var com = this;
 			com.isLoading = true;
 			com.departsTree = events.getSessionArray(consts.KEY_DEPARTS);
-			if(com.departsTree.length == 0) {//没有部门数据
+			if(com.departsTree.length == 0) { //没有部门数据
 				//获取所有部门列表
 				request.getDepartList(function(data) {
 					console.log("getAllListData获取的部门列表：" + JSON.stringify(data));
@@ -85,7 +96,7 @@ Vue.component("single-choose-person", {
 					//获取当前部门信息
 					com.getCurDepartInfo();
 				});
-			} else {//有部门数据
+			} else { //有部门数据
 				//获取当前部门信息
 				com.getCurDepartInfo();
 			}
@@ -95,13 +106,13 @@ Vue.component("single-choose-person", {
 		 */
 		getCurDepartInfo: function() {
 			console.log('****getCurDepartInfo****')
-			var pathArr = this.path.split('-');//路径
+			var pathArr = this.path.split('-'); //路径
 			console.log('获取的路径数组：' + pathArr)
 			//获取当前部门信息
 			this.curDepartInfo = this.getNodeInTree(this.departsTree, pathArr)
 			console.log('获取的本部门数据：' + JSON.stringify(this.curDepartInfo))
 			if(this.chooseType == 1) { //选择人员
-				this.getCurPersen();//获取当前部门人员
+				this.getCurPersen(); //获取当前部门人员
 			} else {
 				this.isLoading = false;
 				this.setSessionStorage();
@@ -215,10 +226,10 @@ Vue.component("single-choose-person", {
 		//通过部门id 更新界面
 		routerTo: function(item, index) {
 			console.log("********routerTo路由跳转********");
-			if(this.chooseType === 0 && !this.curDepartInfo.departList.length === 0) {
+			if(this.chooseType == 0 && this.curDepartInfo.departList.length === 0) {
 				return;
 			}
-			router.push({
+			router.replace({
 				name: 'chooseSinPer',
 				params: {
 					id: item.value,

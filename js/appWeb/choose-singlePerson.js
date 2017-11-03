@@ -1,6 +1,6 @@
 Vue.component("single-choose-person", {
 	props: ['depart_id', 'chooseType'],
-	template: '<div><a href="" v-on:click="backup()">{{parseInt(depart_id)>0?"返回上级部门":"返回"}}</a>' +
+	template: '<div><p v-on:click="backup()">{{parseInt(depart_id)>0?"返回上级部门":"返回"}}</p>' +
 		'<div v-bind:class="[\'weui-cells\',\'weui-cells_radio\']">' +
 		'<template>' +
 		'<template v-if="chooseType===1">' + //人員選擇
@@ -63,18 +63,7 @@ Vue.component("single-choose-person", {
 		//返回上级界面
 		backup: function() {
 			console.log("返回上级界面！！！")
-			var pathArr = this.path.split("-");
-			router.replace({
-				name: "chooseSinPer",
-				params: {
-					id: this.getParentValue(pathArr),
-					path: pathArr.slice(0, pathArr.length - 1).join("-")
-				}
-			})
-
-		},
-		getParentValue: function(pathArr) {
-			return this.getNodeInTree(this.departsTree, pathArr.slice(0, pathArr.length - 1)).value
+			router.go(-1);
 		},
 		//保存部门数据
 		setSessionStorage: function() {
@@ -227,10 +216,10 @@ Vue.component("single-choose-person", {
 		routerTo: function(item, index) {
 			console.log("********routerTo路由跳转********");
 			console.log("this.chooseType" + this.chooseType + "当前选择类型：" + typeof(this.chooseType));
-			if(this.chooseType == 0 && this.curDepartInfo.departList.length === 0) {
+			if(this.chooseType == 0 && this.curDepartInfo.departList[index].departList.length === 0) {
 				return;
 			}
-			router.replace({
+			router.push({
 				name: 'chooseSinPer',
 				params: {
 					id: item.value,

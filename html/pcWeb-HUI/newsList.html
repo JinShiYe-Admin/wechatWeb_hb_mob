@@ -15,7 +15,7 @@
 	</head> 
 	<body>
 		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 文章 <span class="c-gray en">&gt;</span> 文章审核
-			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
+			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(newsData.item.newsArray);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
 		</nav>
 		<div class="page-container">
 			<div id="chnid">
@@ -57,6 +57,32 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/vue.min.js?" + Math.random() + "'></s" + "cript>");
 		</script>  
 		<script type="text/javascript">
+			window.onload = function() {
+				var tempData = {
+					cmd: 'chn', //网站栏目 
+					type: 'findpage', //分页查找栏目列表 
+					pagesize: 999, //每页条数 
+					iswrite: '1',
+					stat: '1',
+					pageindex: 1 //页码  
+				} 
+				unitWebsitePro(tempData, function(data) { 
+					if(data.RspCode == 0) {
+						if(data.RspData.dt.length > 0) {
+							//newsData.item = data.RspData.dt[0];
+							vue_input.items = data.RspData.dt; 
+							var Chnid = data.RspData.dt[0].chnid;  
+							console.log('初始化栏目id'+Chnid);
+							console.log('初始化获取所有栏目'+JSON.stringify(data.RspData.dt));
+							getNewsList(1,Chnid);
+						} else {
+							alert('暂时还没有栏目');
+						}
+					} else {
+						alert(data.RspTxt);
+					}
+				}); 
+			} 
 	       	function click(newsModel, index, cname) { 
 				var url = "addnews.html"; 
 				var newslist = new Object();  
@@ -77,8 +103,7 @@
 			var vue_input = new Vue({
 				el: '#chnid',
 				data: {
-					items: [ 
-					]
+					items: []
 				},
 				methods: {}
 			});
@@ -87,7 +112,7 @@
 				el: '#newsData',
 				data: {
 					item: {
-						newsArray: []
+						newsArray: [{topic:'2222',subtopic:'sssssss'}]
 					}
 				},
 				updated: function() {
@@ -110,12 +135,12 @@
 								unitWebsitePro(tempData, function(data) {
 									console.log(JSON.stringify(data));
 									if(data.RspCode == 0000) { 
+										    console.log('删除成功准备移除:' + index);
 											newsData.item.newsArray.splice(index, 1);
 											layer.msg('已删除!', {
 										    icon: 1,
-										    time: 1000
-									}); 
-									location.reload();
+										    time: 2000
+									});  
 									}
 								});
 							}, function() {});
@@ -150,32 +175,7 @@
 					}
 				}) 
 			}
-			window.onload = function() {
-				var tempData = {
-					cmd: 'chn', //网站栏目 
-					type: 'findpage', //分页查找栏目列表 
-					pagesize: 999, //每页条数 
-					iswrite: '1',
-					stat: '1',
-					pageindex: 1 //页码  
-				} 
-				unitWebsitePro(tempData, function(data) { 
-					if(data.RspCode == 0) {
-						if(data.RspData.dt.length > 0) {
-							//newsData.item = data.RspData.dt[0];
-							vue_input.items = data.RspData.dt; 
-							var Chnid = data.RspData.dt[0].chnid;  
-							console.log('初始化栏目id'+Chnid);
-							console.log('初始化获取所有栏目'+JSON.stringify(data.RspData.dt));
-							getNewsList(1,Chnid);
-						} else {
-							alert('暂时还没有栏目');
-						}
-					} else {
-						alert(data.RspTxt);
-					}
-				}); 
-			} 
+
 			//切换栏目获取文章
 			$("#Prixlk").change(function() {
 				var Chnid = $("#chnid option:selected").val();   

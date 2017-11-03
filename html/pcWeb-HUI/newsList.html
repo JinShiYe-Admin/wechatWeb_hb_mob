@@ -164,7 +164,7 @@
 						if(data.RspData.dt.length > 0) {
 							//newsData.item = data.RspData.dt[0];
 							vue_input.items = data.RspData.dt; 
-							var Chnid = $("#chnid option:selected").val();  
+							var Chnid = data.RspData.dt[0].chnid;  
 							console.log('初始化栏目id'+Chnid);
 							console.log('初始化获取所有栏目'+JSON.stringify(data.RspData.dt));
 							getNewsList(1,129);

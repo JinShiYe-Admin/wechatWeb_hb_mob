@@ -226,6 +226,7 @@ Vue.component("single-choose-person", {
 		//通过部门id 更新界面
 		routerTo: function(item, index) {
 			console.log("********routerTo路由跳转********");
+			console.log("this.chooseType" + this.chooseType + "当前选择类型：" + typeof(this.chooseType));
 			if(this.chooseType == 0 && this.curDepartInfo.departList.length === 0) {
 				return;
 			}

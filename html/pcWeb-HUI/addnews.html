@@ -182,10 +182,16 @@
 				getWebsitConfig();
 			},
 			watch: {
-				pieces: function(newVal, oldVal) { //片段增减的判断
-					console.log("newVal" + JSON.stringify(newVal));
-					console.log("oldVal:" + JSON.stringify(oldVal));
+				pieces: {
+					handler: function() {
+						console.log(123)
+					},
+					deep: true
 				}
+				//				pieces: function(newVal, oldVal) { //片段增减的判断
+				//					console.log("newVal" + JSON.stringify(newVal));
+				//					console.log("oldVal:" + JSON.stringify(oldVal));
+				//				}
 			},
 			methods: {
 				getStatus: function(e) {
@@ -195,7 +201,9 @@
 						//						alert("选取的column信息：" + JSON.stringify(curColumnInfo));
 						articalPublish.artical.chnid = curColumnInfo.chnid;
 						articalPublish.artical.stat = curColumnInfo.stat;
-						edit(-1, curColumnInfo.chnid, 'chnid');
+						if(articalPublish.artical.type == 'edit') {
+							edit(-1, curColumnInfo.chnid, 'chnid');
+						}
 					} else {
 						//未选择
 						articalPublish.artical.chnid = -1;
@@ -489,9 +497,9 @@
 						})(item)
 					}
 
-					articalPublish.$watch('pieces', function(newVal, oldVal) {
-						edit(oldVal, newVal, 'content')
-					})
+//					articalPublish.$watch('pieces', function(newVal, oldVal) {
+//						edit(oldVal, newVal, 'content')
+//					})
 
 				} else {
 					alert(data.RspTxt);

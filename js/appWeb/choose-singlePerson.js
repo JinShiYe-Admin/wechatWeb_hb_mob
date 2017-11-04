@@ -1,6 +1,6 @@
 Vue.component("single-choose-person", {
 	props: ['depart_id', 'chooseType'],
-	template: '<div><p v-on:click="backup()">{{parseInt(depart_id)>0?"返回上级部门":"返回"}}</p>' +
+	template: '<div><input type="button" v-bind:style="{\'padding\':\'10px\'}" v-bind:class="[\'btn\',\'btn-primary\',\'radius\']" v-on:click="backup()" v-bind:value="parseInt(depart_id)>0?\'返回上级部门\':\'返回\'" />' +
 		'<div v-bind:class="[\'weui-cells\',\'weui-cells_radio\']">' +
 		'<template>' +
 		'<template v-if="chooseType===1">' + //人員選擇

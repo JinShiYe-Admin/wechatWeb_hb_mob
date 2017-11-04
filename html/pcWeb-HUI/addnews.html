@@ -476,20 +476,25 @@
 						tempArr1.pop(); //移除最后一个数组值
 						var tempArr3 = tempArr1[2].match(/src=[\S]*\s/g);
 						var tempArr4 = [];
-						for(var m = 0; m < tempArr3.length; m++) {
-							tempArr3[m] = tempArr3[m].replace('src=', '');
-							var tempModel9 = {
-								saveurl: tempArr3[m]
+						if(tempArr3 == null) {
+
+						} else {
+							for(var m = 0; m < tempArr3.length; m++) {
+								tempArr3[m] = tempArr3[m].replace('src=', '');
+								for(var n = 0; n < data.RspData.dt2.length; n++) {
+									var tempModel8 = data.RspData.dt2[n];
+									if(tempModel8.saveurl == tempArr3[m]) {
+										tempArr4.push(tempModel8);
+									}
+								}
 							}
-							tempArr4.push(tempModel9);
+							var tempModel = {
+								title: tempArr1[0].replace(/<.*?>/ig, ""),
+								content: tempArr1[1].replace(/<.*?>/ig, ""),
+								files: tempArr4
+							}
+							tempArr0.push(tempModel);
 						}
-						//							alert('tempArr4:'+tempArr4);
-						var tempModel = {
-							title: tempArr1[0].replace(/<.*?>/ig, ""),
-							content: tempArr1[1].replace(/<.*?>/ig, ""),
-							files: tempArr4
-						}
-						tempArr0.push(tempModel);
 					}
 					//						alert('tempArr0:'+JSON.stringify(tempArr0));
 					articalPublish.pieces = [].concat(tempArr0);
@@ -530,7 +535,7 @@
 			console.log('key=' + key + '--oldVal=' + oldVal + '--newVal=' + newVal)
 			var para;
 			if(key == 'content') {
-				if(articalPublish.artical.type=="add"){
+				if(articalPublish.artical.type == "add") {
 					return;
 				}
 				//拼接内容，

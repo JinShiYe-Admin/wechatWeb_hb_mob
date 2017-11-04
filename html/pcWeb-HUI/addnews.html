@@ -509,9 +509,9 @@ if(detail0.type == 'edit') {
 			}
 			articalPublish.$watch('pieces', {
 				deep: true,
-				handler: function(val, oldVal) {
+				handler: function(newVal, oldVal) {
+					console.log('编辑内容')
 					edit(oldVal, newVal, 'content')
-					console.log(123)
 				}
 			});
 

@@ -8,55 +8,57 @@
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
 		<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
 		<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
-		<style>.edit_container {
-	margin: 0 auto;
-	width: 1080px;
-}
-
-.input-text:not(.piece) {
-	width: 100%;
-	border: 0;
-	border-bottom: 1px solid #DDDDDD;
-}
-
-.input-text.piece {
-	border: 0;
-}
-
-.float-right {
-	float: right;
-}
-
-.artical-url.input-text {
-	width: 90%;
-	border: none;
-}
-
-.artical-pieces-title {
-	font-size: 18px;
-	padding: 10px 0 0 8px;
-}
-
-.check-box,
-.radio-box {
-	padding-left: 0px;
-}
-
-.select-file {
-	padding: 15px;
-}
-
-.select-file-img {
-	width: 200px;
-}
-
-.edit_container {
-	padding: 20px 0;
-}
-
-.btn.float-right {
-	margin: 0 0 0 10px;
-}</style>
+		<style>
+			.edit_container {
+				margin: 0 auto;
+				width: 1080px;
+			}
+			
+			.input-text:not(.piece) {
+				width: 100%;
+				border: 0;
+				border-bottom: 1px solid #DDDDDD;
+			}
+			
+			.input-text.piece {
+				border: 0;
+			}
+			
+			.float-right {
+				float: right;
+			}
+			
+			.artical-url.input-text {
+				width: 90%;
+				border: none;
+			}
+			
+			.artical-pieces-title {
+				font-size: 18px;
+				padding: 10px 0 0 8px;
+			}
+			
+			.check-box,
+			.radio-box {
+				padding-left: 0px;
+			}
+			
+			.select-file {
+				padding: 15px;
+			}
+			
+			.select-file-img {
+				width: 200px;
+			}
+			
+			.edit_container {
+				padding: 20px 0;
+			}
+			
+			.btn.float-right {
+				margin: 0 0 0 10px;
+			}
+		</style>
 	</head>
 
 	<body>
@@ -83,7 +85,7 @@
 					</div>
 					<div>
 						<p v-if="piece.files.lenth>0"></p>
-						<select-load-pic :index="index" v-on:uploadedfile="getPieceImg" :files="piece.files" @delete-file="deletePieceImg(index)"></select-load-pic>
+						<select-load-pic :index="index" v-on:uploadedfile="getPieceImg" :files="piece.files" @delete-file="deletePieceImg(index)" v-bind:original-name="piece.files|getFileName"></select-load-pic>
 						<input id="add-piece" v-if="pieces.length<5" v-on:click="addPiece(piece,index)" class="btn btn-primary radius float-right" type="button" value="添加段落">
 						<input id="del-piece" v-if="pieces.length>1" v-on:click="delPiece(piece,index)" class="btn btn-warning radius float-right" type="button" value="删除段落">
 					</div>
@@ -119,7 +121,7 @@
 		<template id="temp_select_load_pic">
 			<div>
 				<span :id="index|idFilter" class="btn-upload form-group">
-					<input :value="originalName" class="input-text upload-url radius piece" type="text" readonly :placeholder="index|placeHolder" />
+					<input v-bind:value="originalName" class="input-text upload-url radius piece" type="text" readonly :placeholder="index|placeHolder" />
 					<a href="" id="upload" class="btn btn-primary radius"><i class="Hui-iconfont Hui-iconfont-upload"></i> 浏览文件</a>
 					<input type="file" accept="image/jpeg,image/png" value="dsafd" v-on:change="selectFile($event)" class="input-file" />
 				</span>
@@ -144,468 +146,476 @@
 	<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
 	<script src="../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
 	<script src="../../js/H-ui.admin/lib/layer/2.4/layer.js"></script>
-	<script>var articalPublish = new Vue({
-	el: "#artical-pub",
-	data: {
-		artical: {
-			type: 'add',
-			newsid: 0,
-			chnid: -1, //所属栏目id
-			topic: "", //标题
-			subtopic: "", //副标题
-			summas: "", //摘要
-			content: "", //内容
-			isquo: 0, //是否引用
-			quourl: "", //引用url
-			isreply: 0, //是否允许回复，
-			encs: [
-				//					{oldname:"",//原名称
-				//					newname:"",//新名称
-				//					saveurl:"",//存储url
-				//					filesize:"",//文件大小
-				//					imgurl:""//缩略图
-				//					}
-			], //附件列表
-			stat: "" //根据配置表设置相应值
-		},
-		pieces: [{
-			title: "",
-			content: "",
-			files: []
-		}],
-		curPiece: {
-			piece: null,
-			index: -1
-		},
-		columns: [],
-		curColIndex: -1 //当前栏目index
-	},
-	created: function() {
-		//vue 创建时 请求栏目列表
-		this.getColumns();
-		//获取网站配置
-		getWebsitConfig();
-	},
-	watch: {
-//		pieces: {
-//			handler: function(oldVal, newVal) {
-//				edit(oldVal, newVal, 'content')
-//				console.log(123)
-//			},
-//			deep: true
-//		}
-		//				pieces: function(newVal, oldVal) { //片段增减的判断
-		//					console.log("newVal" + JSON.stringify(newVal));
-		//					console.log("oldVal:" + JSON.stringify(oldVal));
-		//				}
-	},
-	methods: {
-		getStatus: function(e) {
-			var index = e.target.value;
-			if(index >= 0) {
-				var curColumnInfo = this.columns[index];
-				//						alert("选取的column信息：" + JSON.stringify(curColumnInfo));
-				articalPublish.artical.chnid = curColumnInfo.chnid;
-				articalPublish.artical.stat = curColumnInfo.stat;
-				if(articalPublish.artical.type == 'edit') {
-					edit(-1, curColumnInfo.chnid, 'chnid');
-				}
-			} else {
-				//未选择
-				articalPublish.artical.chnid = -1;
-			}
-		},
-		publishArtical: function() { //发布文章 
-			//					alert('栏目id:'+articalPublish.artical.chnid);
-			if(articalPublish.artical.chnid < 0) {
-				alert('请选择栏目');
-				return false;
-			}
-			if(articalPublish.artical.topic.trim().length == 0) {
-				alert('请输入标题');
-				return false;
-			}
-			if(articalPublish.artical.topic.trim().length > 25) {
-				alert('标题不能超过25个字');
-				return false;
-			}
-			if(articalPublish.artical.subtopic.trim().length == 0) {
-				alert('请输入副标题');
-				return false;
-			}
-			if(articalPublish.artical.subtopic.trim().length > 25) {
-				alert('副标题不能超过25个字');
-				return false;
-			}
-			if(articalPublish.artical.summas.trim().length > 250) {
-				alert('摘要不能超过250个字');
-				return false;
-			}
-			//判断是否为链接
-			var tempQuo = 0;
-			if(articalPublish.artical.quourl.trim().length > 0) {
-				//判断是否为链接
-
-				tempQuo = 1;
-			} else {
-
-			}
-			//拼接内容，
-			var tempContent0 = ''; //检查总段落内容，是否全部为空
-			var tempContent1 = ''; //发送协议中的内容字段
-			var tempArray99 = []; //附件
-			for(var i = 0; i < articalPublish.pieces.length; i++) {
-				var tempModel = articalPublish.pieces[i];
-				//						alert('tempModel:'+JSON.stringify(tempModel));
-				//						if (tempModel.title.trim().length>50) {
-				//							alert('第'+i+'节标题不能超过50个字');
-				//							break;return false;
-				//						} else if (tempModel.content.trim().length>5000) {
-				//							alert('第'+i+'节内容不能超过5000个字');
-				//							break;return false;
-				//						}
-				//判断当前节，是否都为空
-				if(tempModel.title.trim().length == 0 && tempModel.content.trim().length == 0 && tempModel.files.length == 0) {
-					//当前节里，都为空，不加入内容中
-				} else {
-					//获取节当中加入的图片
-					var tempImg = '';
-					for(var m = 0; m < tempModel.files.length; m++) {
-						tempImg += '<img src=' + tempModel.files[m].saveurl + ' />';
+	<script>
+		var articalPublish = new Vue({
+			el: "#artical-pub",
+			data: {
+				artical: {
+					type: 'add',
+					newsid: 0,
+					chnid: -1, //所属栏目id
+					topic: "", //标题
+					subtopic: "", //副标题
+					summas: "", //摘要
+					content: "", //内容
+					isquo: 0, //是否引用
+					quourl: "", //引用url
+					isreply: 0, //是否允许回复，
+					encs: [
+						//					{oldname:"",//原名称
+						//					newname:"",//新名称
+						//					saveurl:"",//存储url
+						//					filesize:"",//文件大小
+						//					imgurl:""//缩略图
+						//					}
+					], //附件列表
+					stat: "" //根据配置表设置相应值
+				},
+				pieces: [{
+					title: "",
+					content: "",
+					files: []
+				}],
+				curPiece: {
+					piece: null,
+					index: -1
+				},
+				columns: [],
+				curColIndex: -1 //当前栏目index
+			},
+			created: function() {
+				//vue 创建时 请求栏目列表
+				this.getColumns();
+				//获取网站配置
+				getWebsitConfig();
+			},
+			watch: {
+				//		pieces: {
+				//			handler: function(oldVal, newVal) {
+				//				edit(oldVal, newVal, 'content')
+				//				console.log(123)
+				//			},
+				//			deep: true
+				//		}
+								pieces: function(newVal, oldVal) { //片段增减的判断
+									console.log("newVal" + JSON.stringify(newVal));
+									console.log("oldVal:" + JSON.stringify(oldVal));
+								}
+			},
+			filters: {
+				getFileName:function(val){
+					console.log("************#######2@@@@@@@@@@@@@"+JSON.stringify(val));
+					if(val.length==0){
+						return ''
 					}
-					tempContent1 += '<section><h3>' + tempModel.title.trim().replace(/<.*?>/ig, "") + '</h3><p>' + tempModel.content.trim().replace(/<.*?>/ig, "") + '</p><p>' + tempImg + '</p></section>';
+					return val[0].newname
 				}
-				var tempImgStr = '';
-				for(var n = 0; n < tempModel.files.length; n++) {
-					tempImgStr += tempModel.files[n].saveurl;
-				}
-				tempContent0 += tempModel.title.trim() + tempModel.content + tempImgStr;
-				//合并数组
-				tempArray99 = tempArray99.concat(articalPublish.pieces[i].files);
-			}
-			//					alert('tempArray99:'+JSON.stringify(tempArray99));
+			},
+			methods: {
+				getStatus: function(e) {
+					var index = e.target.value;
+					if(index >= 0) {
+						var curColumnInfo = this.columns[index];
+						//						alert("选取的column信息：" + JSON.stringify(curColumnInfo));
+						articalPublish.artical.chnid = curColumnInfo.chnid;
+						articalPublish.artical.stat = curColumnInfo.stat;
+						if(articalPublish.artical.type == 'edit') {
+							edit(-1, curColumnInfo.chnid, 'chnid');
+						}
+					} else {
+						//未选择
+						articalPublish.artical.chnid = -1;
+					}
+				},
+				publishArtical: function() { //发布文章 
+					//					alert('栏目id:'+articalPublish.artical.chnid);
+					if(articalPublish.artical.chnid < 0) {
+						alert('请选择栏目');
+						return false;
+					}
+					if(articalPublish.artical.topic.trim().length == 0) {
+						alert('请输入标题');
+						return false;
+					}
+					if(articalPublish.artical.topic.trim().length > 25) {
+						alert('标题不能超过25个字');
+						return false;
+					}
+					if(articalPublish.artical.subtopic.trim().length == 0) {
+						alert('请输入副标题');
+						return false;
+					}
+					if(articalPublish.artical.subtopic.trim().length > 25) {
+						alert('副标题不能超过25个字');
+						return false;
+					}
+					if(articalPublish.artical.summas.trim().length > 250) {
+						alert('摘要不能超过250个字');
+						return false;
+					}
+					//判断是否为链接
+					var tempQuo = 0;
+					if(articalPublish.artical.quourl.trim().length > 0) {
+						//判断是否为链接
 
-			if(tempContent0.trim() == 0) {
-				alert('请输入文章内容');
-				return false;
-			}
-			var isreply = 0;
-			if(articalPublish.artical.isreply) {
-				isreply = 1;
-			}
+						tempQuo = 1;
+					} else {
 
-			var comData = {
-				cmd: 'news', //文章管理
-				type: 'add', //添加文章
-				chnid: articalPublish.artical.chnid, //所属栏目ID
-				subtopic: articalPublish.artical.subtopic, //副标题
-				topic: articalPublish.artical.topic, //标题
-				content: tempContent1, //内容
-				summas: articalPublish.artical.summas, //摘要
-				encs: tempArray99, //附件列表
-				isquo: tempQuo, //是否为引用,0否1是
-				quourl: articalPublish.artical.quourl.trim(), //引用url
-				isreply: isreply, //是否允许回复,0否1是
-				stat: articalPublish.artical.stat //根据配置表设置相应值
-			};
-			unitWebsitePro(comData, function(data) {
-				if(data.RspCode == 0) {
-					layer.msg('成功', {
-						icon: 5,
-						time: 1000
-					});
-					if(articalPublish.artical.type = 'add') {
-						//清空数据 
-						location.reload();
+					}
+					//拼接内容，
+					var tempContent0 = ''; //检查总段落内容，是否全部为空
+					var tempContent1 = ''; //发送协议中的内容字段
+					var tempArray99 = []; //附件
+					for(var i = 0; i < articalPublish.pieces.length; i++) {
+						var tempModel = articalPublish.pieces[i];
+						//						alert('tempModel:'+JSON.stringify(tempModel));
+						//						if (tempModel.title.trim().length>50) {
+						//							alert('第'+i+'节标题不能超过50个字');
+						//							break;return false;
+						//						} else if (tempModel.content.trim().length>5000) {
+						//							alert('第'+i+'节内容不能超过5000个字');
+						//							break;return false;
+						//						}
+						//判断当前节，是否都为空
+						if(tempModel.title.trim().length == 0 && tempModel.content.trim().length == 0 && tempModel.files.length == 0) {
+							//当前节里，都为空，不加入内容中
+						} else {
+							//获取节当中加入的图片
+							var tempImg = '';
+							for(var m = 0; m < tempModel.files.length; m++) {
+								tempImg += '<img src=' + tempModel.files[m].saveurl + ' />';
+							}
+							tempContent1 += '<section><h3>' + tempModel.title.trim().replace(/<.*?>/ig, "") + '</h3><p>' + tempModel.content.trim().replace(/<.*?>/ig, "") + '</p><p>' + tempImg + '</p></section>';
+						}
+						var tempImgStr = '';
+						for(var n = 0; n < tempModel.files.length; n++) {
+							tempImgStr += tempModel.files[n].saveurl;
+						}
+						tempContent0 += tempModel.title.trim() + tempModel.content + tempImgStr;
+						//合并数组
+						tempArray99 = tempArray99.concat(articalPublish.pieces[i].files);
+					}
+					//					alert('tempArray99:'+JSON.stringify(tempArray99));
+
+					if(tempContent0.trim() == 0) {
+						alert('请输入文章内容');
+						return false;
+					}
+					var isreply = 0;
+					if(articalPublish.artical.isreply) {
+						isreply = 1;
 					}
 
-				} else {
-					layer.msg('data.RspTxt', {
-						icon: 5,
-						time: 1000
+					var comData = {
+						cmd: 'news', //文章管理
+						type: 'add', //添加文章
+						chnid: articalPublish.artical.chnid, //所属栏目ID
+						subtopic: articalPublish.artical.subtopic, //副标题
+						topic: articalPublish.artical.topic, //标题
+						content: tempContent1, //内容
+						summas: articalPublish.artical.summas, //摘要
+						encs: tempArray99, //附件列表
+						isquo: tempQuo, //是否为引用,0否1是
+						quourl: articalPublish.artical.quourl.trim(), //引用url
+						isreply: isreply, //是否允许回复,0否1是
+						stat: articalPublish.artical.stat //根据配置表设置相应值
+					};
+					unitWebsitePro(comData, function(data) {
+						if(data.RspCode == 0) {
+							layer.msg('成功', {
+								icon: 5,
+								time: 1000
+							});
+							if(articalPublish.artical.type = 'add') {
+								//清空数据 
+								location.reload();
+							}
+
+						} else {
+							layer.msg('data.RspTxt', {
+								icon: 5,
+								time: 1000
+							});
+						}
 					});
+				},
+				getColumns: function() { //获取栏目列表
+					var com = this;
+					var tempData = {
+						cmd: 'chn', //网站栏目
+						type: 'findpage', //分页查找栏目列表 
+						pagesize: 999, //每页条数 
+						iswrite: '1',
+						stat: '1',
+						pageindex: 1 //页码  
+					}
+					unitWebsitePro(tempData, function(data) {
+						if(data.RspCode == 0) {
+							if(data.RspData.dt.length > 0) {
+								com.columns = data.RspData.dt; //在回调中赋值
+							} else {
+								alert('暂时还没有栏目');
+							}
+						} else {
+							alert(data.RspTxt);
+						}
+					});
+				},
+				addPiece: function(piece, index) { //增加文章片段
+					//					if(!piece.title && !piece.content && piece.files.length == 0) {
+					//						$.Huimodalalert('段落未添加标题或内容，无法继续添加', 3000)
+					//						return;
+					//					}
+					this.pieces.splice(index + 1, 0, {
+						title: "",
+						content: "",
+						files: []
+					})
+				},
+				delPiece: function(piece, index) {
+					if(piece.title || piece.content || piece.files.length > 0) {
+						this.curPiece = {
+							piece: piece,
+							index: index
+						}
+						$("#dia-delPiece").modal("show")
+						return;
+					}
+					console.log("要删除的控件：" + index);
+					this.sureDelPiece(index);
+				},
+				sureDelPiece: function(index) {
+					this.pieces.splice(index, 1);
+					$("#dia-delPiece").modal("hide");
+				},
+				/**
+				 * 增加标题图片
+				 * @param {Object} headImg
+				 * @param {Object} index
+				 */
+				//				getHeadImg: function(headImg, index) {
+				//					console.log("*****获取的headImg:" + JSON.stringify(headImg) + ",index:" + index);
+				//					this.artical.encs[0] = headImg;
+				//				},
+				/**
+				 * 增加内容图片
+				 * @param {Object} contentImg
+				 * @param {Object} index 内容序号
+				 */
+				getPieceImg: function(contentImg, index) {
+					console.log("*****获取的contentImage:" + JSON.stringify(contentImg) + ",index:" + index);
+//					this.pieces[index].files[0] = contentImg;
+					this.$set(this.pieces[index].files,0,contentImg)
+				},
+				/**
+				 * 删除内容图片
+				 * @param {Object} index 内容序号
+				 */
+				deletePieceImg: function(index) {
+					console.log("deletePieceImg:" + index);
+					this.pieces[index].files = [];
 				}
-			});
-		},
-		getColumns: function() { //获取栏目列表
-			var com = this;
+			}
+		});
+		/**
+		 * 获取网站配置信息
+		 */
+		function getWebsitConfig() {
 			var tempData = {
-				cmd: 'chn', //网站栏目
-				type: 'findpage', //分页查找栏目列表 
-				pagesize: 999, //每页条数 
-				iswrite: '1',
-				stat: '1',
-				pageindex: 1 //页码  
+				cmd: 'webcfg',
+				type: 'find'
 			}
 			unitWebsitePro(tempData, function(data) {
 				if(data.RspCode == 0) {
-					if(data.RspData.dt.length > 0) {
-						com.columns = data.RspData.dt; //在回调中赋值
+					if(data.RspData.length > 0) {
+						if(data.RspData[0].stat == 0) {
+							//							articalPublish.artical.type = '00000';
+							alert('此网站现在为关闭状态');
+						} else {
+							//							articalPublish.artical.type = 'add';
+						}
 					} else {
-						alert('暂时还没有栏目');
+						alert('没有获取到配置信息')
 					}
 				} else {
 					alert(data.RspTxt);
 				}
 			});
-		},
-		addPiece: function(piece, index) { //增加文章片段
-			//					if(!piece.title && !piece.content && piece.files.length == 0) {
-			//						$.Huimodalalert('段落未添加标题或内容，无法继续添加', 3000)
-			//						return;
-			//					}
-			this.pieces.splice(index + 1, 0, {
-				title: "",
-				content: "",
-				files: []
-			})
-		},
-		delPiece: function(piece, index) {
-			if(piece.title || piece.content || piece.files.length > 0) {
-				this.curPiece = {
-					piece: piece,
-					index: index
-				}
-				$("#dia-delPiece").modal("show")
-				return;
-			}
-			console.log("要删除的控件：" + index);
-			this.sureDelPiece(index);
-		},
-		sureDelPiece: function(index) {
-			this.pieces.splice(index, 1);
-			$("#dia-delPiece").modal("hide");
-		},
-		/**
-		 * 增加标题图片
-		 * @param {Object} headImg
-		 * @param {Object} index
-		 */
-		//				getHeadImg: function(headImg, index) {
-		//					console.log("*****获取的headImg:" + JSON.stringify(headImg) + ",index:" + index);
-		//					this.artical.encs[0] = headImg;
-		//				},
-		/**
-		 * 增加内容图片
-		 * @param {Object} contentImg
-		 * @param {Object} index 内容序号
-		 */
-		getPieceImg: function(contentImg, index) {
-			console.log("*****获取的contentImage:" + JSON.stringify(contentImg) + ",index:" + index);
-			this.pieces[index].files[0] = contentImg;
-		},
-		/**
-		 * 删除标题图片
-		 */
-		//				deleteHeadImg: function() {
-		//					console.log("deleteHeadImg");
-		//					articalPublish.artical.encs = [];
-		//				},
-		/**
-		 * 删除内容图片
-		 * @param {Object} index 内容序号
-		 */
-		deletePieceImg: function(index) {
-			console.log("deletePieceImg:" + index);
-			articalPublish.pieces[index].files = [];
 		}
-	}
-});
-/**
- * 获取网站配置信息
- */
-function getWebsitConfig() {
-	var tempData = {
-		cmd: 'webcfg',
-		type: 'find'
-	}
-	unitWebsitePro(tempData, function(data) {
-		if(data.RspCode == 0) {
-			if(data.RspData.length > 0) {
-				if(data.RspData[0].stat == 0) {
+
+		var detail0 = utils.getDataFromUrl(window.location.href);
+		//		alert('detail0=' + JSON.stringify(detail0));
+		if(detail0.type == 'edit') {
+			var tempData = {
+				cmd: 'news', //网站栏目
+				type: 'findpage', //分页查找栏目列表
+				newsid: detail0.newsid, //文章id
+				pagesize: 999, //每页条数  
+				pageindex: 1 //页码 
+			}
+
+			unitWebsitePro(tempData, function(data) {
+				if(data.RspCode == 0) {
+
+					var detail = data.RspData.dt[0];
+					articalPublish.curColIndex = getColIndex(detail.chnid);
 					articalPublish.artical.type = 'edit';
-					alert('此网站现在为关闭状态');
-				} else {
-					articalPublish.artical.type = 'add';
-				}
-			} else {
-				alert('没有获取到配置信息')
-			}
-		} else {
-			alert(data.RspTxt);
-		}
-	});
-}
+					articalPublish.artical.chnid = detail.chnid;
+					articalPublish.artical.newsid = detail.newsid;
+					articalPublish.artical.cname = detail.cname;
+					articalPublish.artical.topic = detail.topic;
+					articalPublish.artical.subtopic = detail.subtopic;
+					articalPublish.artical.summas = detail.summas;
+					articalPublish.artical.content = detail.content;
 
-var detail0 = utils.getDataFromUrl(window.location.href);
-//		alert('detail0=' + JSON.stringify(detail0));
-if(detail0.type == 'edit') {
-	var tempData = {
-		cmd: 'news', //网站栏目
-		type: 'findpage', //分页查找栏目列表
-		newsid: detail0.newsid, //文章id
-		pagesize: 999, //每页条数  
-		pageindex: 1 //页码 
-	}
+					//分解content
+					var tempArr0 = [];
+					var tempArr = detail.content.split('</section>');
+					tempArr.pop(); //移除最后一个数组值
+					for(var i = 0; i < tempArr.length; i++) {
+						tempArr[i] = tempArr[i].replace('<section>', '');
+						tempArr[i] = tempArr[i].replace('<h3>', '<p>');
+						tempArr[i] = tempArr[i].replace('</h3>', '</p>');
+						var tempArr1 = tempArr[i].split('</p>');
+						tempArr1.pop(); //移除最后一个数组值
+						var tempArr3 = tempArr1[2].match(/src=[\S]*\s/g);
+						var tempArr4 = [];
+						if(tempArr3 == null) {
 
-	unitWebsitePro(tempData, function(data) {
-		if(data.RspCode == 0) {
-
-			var detail = data.RspData.dt[0];
-			articalPublish.curColIndex = getColIndex(detail.chnid);
-			articalPublish.artical.type = 'edit';
-			articalPublish.artical.chnid = detail.chnid;
-			articalPublish.artical.newsid = detail.newsid;
-			articalPublish.artical.cname = detail.cname;
-			articalPublish.artical.topic = detail.topic;
-			articalPublish.artical.subtopic = detail.subtopic;
-			articalPublish.artical.summas = detail.summas;
-			articalPublish.artical.content = detail.content;
-			//分解content
-			var tempArr0 = [];
-			var tempArr = detail.content.split('</section>');
-			tempArr.pop(); //移除最后一个数组值
-			for(var i = 0; i < tempArr.length; i++) {
-				tempArr[i] = tempArr[i].replace('<section>', '');
-				tempArr[i] = tempArr[i].replace('<h3>', '<p>');
-				tempArr[i] = tempArr[i].replace('</h3>', '</p>');
-				var tempArr1 = tempArr[i].split('</p>');
-				tempArr1.pop(); //移除最后一个数组值
-				var tempArr3 = tempArr1[2].match(/src=[\S]*\s/g);
-				var tempArr4 = [];
-				if(tempArr3 == null) {
-
-				} else {
-					for(var m = 0; m < tempArr3.length; m++) {
-						tempArr3[m] = tempArr3[m].replace('src=', '');
-						for(var n = 0; n < data.RspData.dt2.length; n++) {
-							var tempModel8 = data.RspData.dt2[n];
-							if(tempModel8.saveurl == tempArr3[m]) {
-								tempArr4.push(tempModel8);
+						} else {
+							for(var m = 0; m < tempArr3.length; m++) {
+								tempArr3[m] = tempArr3[m].replace('src=', '');
+								tempArr3[m] = tempArr3[m].substring(0, tempArr3[m].length - 1);
+								for(var n = 0; n < data.RspData.dt2.length; n++) {
+									var tempModel8 = data.RspData.dt2[n];
+									if(tempModel8.SaveUrl == tempArr3[m]) {
+										var tempModel0 = {
+											saveurl: tempModel8.SaveUrl,
+											imgurl: tempModel8.SaveUrl,
+											oldname: tempModel8.OldName,
+											newname: tempModel8.NewName,
+											filesize: tempModel8.FileSize
+										}
+										tempArr4.push(tempModel0);
+									}
+								}
 							}
 						}
+						var tempModel = {
+							title: tempArr1[0].replace(/<.*?>/ig, ""),
+							content: tempArr1[1].replace(/<.*?>/ig, ""),
+							files: tempArr4
+						}
+						tempArr0.push(tempModel);
 					}
-					var tempModel = {
-						title: tempArr1[0].replace(/<.*?>/ig, ""),
-						content: tempArr1[1].replace(/<.*?>/ig, ""),
-						files: tempArr4
+					articalPublish.pieces = [].concat(tempArr0);
+					articalPublish.artical.isquo = detail.isquo;
+					articalPublish.artical.quourl = detail.quourl;
+					articalPublish.artical.isreply = detail.isreply;
+					articalPublish.artical.encs = detail.dt;
+					articalPublish.artical.stat = detail.stat;
+					for(var item in articalPublish.artical) {
+						(function addwatch(key) {
+							articalPublish.$watch('artical.' + key, function(newVal, oldVal) {
+								edit(oldVal, newVal, key)
+							})
+						})(item)
 					}
-					tempArr0.push(tempModel);
-				}
-			}
-			//						alert('tempArr0:'+JSON.stringify(tempArr0));
-			articalPublish.pieces = [].concat(tempArr0);
-			articalPublish.artical.isquo = detail.isquo;
-			articalPublish.artical.quourl = detail.quourl;
-			articalPublish.artical.isreply = detail.isreply;
-			articalPublish.artical.encs = detail.dt;
-			articalPublish.artical.stat = detail.stat;
-			for(var item in articalPublish.artical) {
-				(function addwatch(key) {
-					articalPublish.$watch('artical.' + key, function(newVal, oldVal) {
-						edit(oldVal, newVal, key)
-					})
-				})(item)
-			}
-			articalPublish.$watch('pieces', {
-				deep: true,
-				handler: function(val, oldVal) {
-					edit(oldVal, newVal, 'content')
-					console.log(123)
+					articalPublish.$watch('pieces',
+						function(newVal, oldVal) {
+							console.log('编辑内容')
+							edit(oldVal, newVal, 'content')
+						}, {
+							deep: true
+						});
+				} else {
+					alert(data.RspTxt);
 				}
 			});
-
-			//					articalPublish.$watch('pieces', function(newVal, oldVal) {
-			//						edit(oldVal, newVal, 'content')
-			//					})
-
-		} else {
-			alert(data.RspTxt);
 		}
-	});
-}
 
-function getColIndex(chnid) {
-	for(var i in articalPublish.columns) {
-		if(articalPublish.columns[i].chnid == chnid) {
-			return parseInt(i);
-		}
-	}
-	return -1;
-}
-
-function edit(oldVal, newVal, key) {
-
-	console.log('key=' + key + '--oldVal=' + oldVal + '--newVal=' + newVal)
-	var para;
-	if(key == 'content') {
-		if(articalPublish.artical.type == "add") {
-			return;
-		}
-		//拼接内容，
-		var tempContent0 = ''; //检查总段落内容，是否全部为空
-		var tempContent1 = ''; //发送协议中的内容字段
-		var tempArray99 = []; //附件
-		for(var i = 0; i < articalPublish.pieces.length; i++) {
-			var tempModel = articalPublish.pieces[i];
-			//判断当前节，是否都为空
-			if(tempModel.title.trim().length == 0 && tempModel.content.trim().length == 0 && tempModel.files.length == 0) {
-				//当前节里，都为空，不加入内容中
-			} else {
-				//获取节当中加入的图片
-				var tempImg = '';
-				for(var m = 0; m < tempModel.files.length; m++) {
-					tempImg += '<img src=' + tempModel.files[m].saveurl + ' />';
+		function getColIndex(chnid) {
+			for(var i in articalPublish.columns) {
+				if(articalPublish.columns[i].chnid == chnid) {
+					return parseInt(i);
 				}
-				tempContent1 += '<section><h3>' + tempModel.title.trim().replace(/<.*?>/ig, "") + '</h3><p>' + tempModel.content.trim().replace(/<.*?>/ig, "") + '</p><p>' + tempImg + '</p></section>';
 			}
-			var tempImgStr = '';
-			for(var n = 0; n < tempModel.files.length; n++) {
-				tempImgStr += tempModel.files[n].saveurl;
+			return -1;
+		}
+
+		function edit(oldVal, newVal, key) {
+
+			console.log('key=' + key + '--oldVal=' + oldVal + '--newVal=' + newVal)
+			var para;
+			if(key == 'content') {
+				if(articalPublish.artical.type == "add") {
+					return;
+				}
+				//拼接内容，
+				var tempContent0 = ''; //检查总段落内容，是否全部为空
+				var tempContent1 = ''; //发送协议中的内容字段
+				var tempArray99 = []; //附件
+				for(var i = 0; i < articalPublish.pieces.length; i++) {
+					var tempModel = articalPublish.pieces[i];
+					//判断当前节，是否都为空
+					if(tempModel.title.trim().length == 0 && tempModel.content.trim().length == 0 && tempModel.files.length == 0) {
+						//当前节里，都为空，不加入内容中
+					} else {
+						//获取节当中加入的图片
+						var tempImg = '';
+						for(var m = 0; m < tempModel.files.length; m++) {
+							tempImg += '<img src=' + tempModel.files[m].saveurl + ' />';
+						}
+						tempContent1 += '<section><h3>' + tempModel.title.trim().replace(/<.*?>/ig, "") + '</h3><p>' + tempModel.content.trim().replace(/<.*?>/ig, "") + '</p><p>' + tempImg + '</p></section>';
+					}
+					var tempImgStr = '';
+					for(var n = 0; n < tempModel.files.length; n++) {
+						tempImgStr += tempModel.files[n].saveurl;
+					}
+					tempContent0 += tempModel.title.trim() + tempModel.content + tempImgStr;
+					//合并数组
+					tempArray99 = tempArray99.concat(articalPublish.pieces[i].files);
+				}
+				if(tempContent0.trim() == 0) {
+					alert('请输入文章内容');
+					return false;
+				}
+				para = {
+					cmd: 'news',
+					type: 'edit',
+					colid: articalPublish.artical.newsid,
+					callcol: key,
+					colv: tempContent1,
+					encs: tempArray99
+
+				}
+			} else {
+				para = {
+					cmd: 'news',
+					type: 'edit',
+					colid: articalPublish.artical.newsid,
+					callcol: key,
+					colv: boolToInt(newVal)
+				}
 			}
-			tempContent0 += tempModel.title.trim() + tempModel.content + tempImgStr;
-			//合并数组
-			tempArray99 = tempArray99.concat(articalPublish.pieces[i].files);
+
+			unitWebsitePro(para, function(data) {
+				if(data.RspCode == 0) {
+					console.log('成功')
+				}
+			});
 		}
-		if(tempContent0.trim() == 0) {
-			alert('请输入文章内容');
-			return false;
-		}
-		para = {
-			cmd: 'news',
-			type: 'edit',
-			colid: articalPublish.artical.newsid,
-			callcol: key,
-			colv: tempContent1,
-			encs: tempArray99
+
+		function boolToInt(value) {
+			if(value == true) {
+				return 1;
+			} else if(value == false) {
+				return 0;
+			} else {
+				return value;
+			}
 
 		}
-	} else {
-		para = {
-			cmd: 'news',
-			type: 'edit',
-			colid: articalPublish.artical.newsid,
-			callcol: key,
-			colv: boolToInt(newVal)
-		}
-	}
-
-	unitWebsitePro(para, function(data) {
-		if(data.RspCode == 0) {
-			console.log('成功')
-		}
-	});
-}
-
-function boolToInt(value) {
-	if(value == true) {
-		return 1;
-	} else if(value == false) {
-		return 0;
-	} else {
-		return value;
-	}
-
-}</script>
+	</script>
 
 </html>

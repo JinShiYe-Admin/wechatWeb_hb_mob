@@ -288,12 +288,20 @@ var cloudutil = (function(mod) {
 			save_key: false, // 默认 false。若在服务端生成 uptoken 的上传策略中指定了 `save_key`，则开启，SDK在前端将不对key进行任何处理
 			get_new_uptoken: true, // 设置上传文件的时候是否每次都重新获取新的 uptoken
 			domain: storageutil.QNPBDOMAIN, // bucket 域名，下载资源时用到，如：'http://xxx.bkt.clouddn.com/' **必需**
-			max_file_size: '4mb', // 最大文件体积限制
+			max_file_size: '100mb', // 最大文件体积限制
 			flash_swf_url: '../../js/lib/plupload/Moxie.swf', //引入 flash,相对路径
-			max_retries: 0, // 上传失败最大重试次数
+			max_retries: 3, // 上传失败最大重试次数
 			dragdrop: false, // 开启可拖曳上传
 			chunk_size: '4mb', // 分块上传时，每块的体积
 			auto_start: true, // 选择文件后自动上传，若关闭需要自己绑定事件触发上传,
+			filters: {
+				mime_types: [ //只允许上传图片和zip文件
+					{
+						title: "Image files",
+						extensions: "jpg,png"
+					}
+				]
+			},
 			init: {
 				'FilesAdded': function(up, files) {
 					plupload.each(files, function(file) {
@@ -317,9 +325,9 @@ var cloudutil = (function(mod) {
 					console.log(info)
 					//					$.hideLoading();
 					if(info.status == 200) {
-						var imgUrl=mod.getImgUrl(uptokenData);
+						var imgUrl = mod.getImgUrl(uptokenData);
 						var tempModel = {
-							saveurl:uptokenData.data.Data[0].Domain + uptokenData.data.Data[0].Key,
+							saveurl: uptokenData.data.Data[0].Domain + uptokenData.data.Data[0].Key,
 							imgurl: imgUrl,
 							oldname: originalName,
 							newname: file.name,
@@ -331,6 +339,7 @@ var cloudutil = (function(mod) {
 				'Error': function(up, err, errTip) {
 					//上传出错时,处理相关的事情
 					console.log("Error:", err, errTip);
+					alert(pluploadutil.errMes(err.code, errTip));
 					//					$.hideLoading();
 				},
 				'UploadComplete': function() {
@@ -352,7 +361,7 @@ var cloudutil = (function(mod) {
 	 * 获取图片在七牛上的地址
 	 * @param {Object} token 上传的token
 	 */
-	mod.getImgUrl=function(token) {
+	mod.getImgUrl = function(token) {
 		console.log("*****getImgUrl：" + JSON.stringify(token))
 		if(token.thumbKey.length > 0) {
 			return token.data.Data[0].OtherKey[token.thumbKey[0]]
@@ -388,9 +397,9 @@ var cloudutil = (function(mod) {
 	 * 七牛图片信息查询
 	 * @param {String} url 图片地址
 	 */
-	mod.getQNImgInfo=function(url){
-		var request=new XMLHttpRequest();
-		request.open("GET",url+"?imageInfo",false);
+	mod.getQNImgInfo = function(url) {
+		var request = new XMLHttpRequest();
+		request.open("GET", url + "?imageInfo", false);
 		request.send();
 		console.log(request.response)
 		return request.response;

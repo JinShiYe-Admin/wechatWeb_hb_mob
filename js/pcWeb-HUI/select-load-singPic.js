@@ -1,13 +1,28 @@
 Vue.component("select-load-pic", {
-	props: ["index", "files"], //0 原图 最大2M 1缩略图
+	props: {
+		index:{
+			type:Number
+		},
+		files:{
+			default:function(){
+				return []
+			},
+			type:Array
+		},
+		originalName:{
+			default:'',
+			type:String
+		}
+	}, //0 原图 最大2M 1缩略图
 	template: '#temp_select_load_pic',
 	data: function() {
 		return {
-			originalName: ""
+		
 		}
 	},
 	mounted: function() {
 		console.log("当前pic类型:" + this.index)
+		console.log("*******isDel"+this.isdel)
 		this.uploadFile();
 	},
 	filters: {
@@ -60,7 +75,6 @@ Vue.component("select-load-pic", {
 				}
 			}
 			cloudutil.uploadQnSingleImg("upload" + com.index, thumbOption, function(response) {
-				com.originalName = response.oldname;
 				console.log("获取的上传七牛图片信息：" + JSON.stringify(response));
 				com.$emit("uploadedfile", response, com.index); //通知父组件 上传的图片
 			})
@@ -83,7 +97,6 @@ Vue.component("select-load-pic", {
 			var self = this;
 			layer.confirm('确定删除', function(num) {
 				layer.close(num);
-				self.originalName = "";
 				self.$emit("delete-file");
 			});
 		}

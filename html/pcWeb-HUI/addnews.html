@@ -85,7 +85,7 @@
 					</div>
 					<div>
 						<p v-if="piece.files.lenth>0"></p>
-						<select-load-pic :index="index" v-on:uploadedfile="getPieceImg" :files="piece.files" @delete-file="deletePieceImg(index)"></select-load-pic>
+						<select-load-pic :index="index" v-on:uploadedfile="getPieceImg" :files="piece.files" @delete-file="deletePieceImg(index)" v-bind:original-name="piece.files|getFileName"></select-load-pic>
 						<input id="add-piece" v-if="pieces.length<5" v-on:click="addPiece(piece,index)" class="btn btn-primary radius float-right" type="button" value="添加段落">
 						<input id="del-piece" v-if="pieces.length>1" v-on:click="delPiece(piece,index)" class="btn btn-warning radius float-right" type="button" value="删除段落">
 					</div>
@@ -122,7 +122,6 @@
 			<div>
 				<span :id="index|idFilter" class="btn-upload form-group">
 					<input :value="originalName" accept="image/jpeg,image/png"  class="input-text upload-url radius piece" type="text" readonly :placeholder="index|placeHolder" />
-
 					<a href="" id="upload" class="btn btn-primary radius"><i class="Hui-iconfont Hui-iconfont-upload"></i> 浏览文件</a>
 					<input type="file" accept="image/jpeg,image/png" value="dsafd" v-on:change="selectFile($event)" class="input-file" />
 				</span>
@@ -199,10 +198,19 @@
 				//			},
 				//			deep: true
 				//		}
-				//				pieces: function(newVal, oldVal) { //片段增减的判断
-				//					console.log("newVal" + JSON.stringify(newVal));
-				//					console.log("oldVal:" + JSON.stringify(oldVal));
-				//				}
+								pieces: function(newVal, oldVal) { //片段增减的判断
+									console.log("newVal" + JSON.stringify(newVal));
+									console.log("oldVal:" + JSON.stringify(oldVal));
+								}
+			},
+			filters: {
+				getFileName:function(val){
+					console.log("************#######2@@@@@@@@@@@@@"+JSON.stringify(val));
+					if(val.length==0){
+						return ''
+					}
+					return val[0].newname
+				}
 			},
 			methods: {
 				getStatus: function(e) {
@@ -405,19 +413,12 @@
 					Vue.set(this.pieces[index].files, 0, contentImg);
 				},
 				/**
-				 * 删除标题图片
-				 */
-				//				deleteHeadImg: function() {
-				//					console.log("deleteHeadImg");
-				//					articalPublish.artical.encs = [];
-				//				},
-				/**
 				 * 删除内容图片
 				 * @param {Object} index 内容序号
 				 */
 				deletePieceImg: function(index) {
 					console.log("deletePieceImg:" + index);
-					articalPublish.pieces[index].files = [];
+					this.pieces[index].files = [];
 				}
 			}
 		});

@@ -65,7 +65,7 @@
 		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 文章 <span class="c-gray en">&gt;</span> 文章添加编辑
 			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
 		</nav>
-		<div id="artical-pub">
+		<div id="artical-pub" v-show="flag>0" style="display: none;">
 			<div class="edit_container">
 				<div>
 					<select class="select" id="chnid" name="one" v-model="curColIndex" style="height: 45px;font-size: 17px;color: #929292;" v-on:change="getStatus($event)">
@@ -121,7 +121,8 @@
 		<template id="temp_select_load_pic">
 			<div>
 				<span :id="index|idFilter" class="btn-upload form-group">
-					<input :value="originalName" class="input-text upload-url radius piece" type="text" readonly :placeholder="index|placeHolder" />
+					<input :value="originalName" accept="image/jpeg,image/png"  class="input-text upload-url radius piece" type="text" readonly :placeholder="index|placeHolder" />
+
 					<a href="" id="upload" class="btn btn-primary radius"><i class="Hui-iconfont Hui-iconfont-upload"></i> 浏览文件</a>
 					<input type="file" accept="image/jpeg,image/png" value="dsafd" v-on:change="selectFile($event)" class="input-file" />
 				</span>
@@ -180,6 +181,7 @@
 					piece: null,
 					index: -1
 				},
+				flag: 0, //0界面不显示，网站关闭，1显示
 				columns: [],
 				curColIndex: -1 //当前栏目index
 			},
@@ -247,11 +249,16 @@
 					//判断是否为链接
 					var tempQuo = 0;
 					if(articalPublish.artical.quourl.trim().length > 0) {
-						//判断是否为链接
-
 						tempQuo = 1;
+						//判断是否为链接
+						if (CheckUrl(articalPublish.artical.quourl.trim())) {
+							
+						}else{
+							alert('请输入正确的url');
+							return false;
+						}
 					} else {
-
+						
 					}
 					//拼接内容，
 					var tempContent0 = ''; //检查总段落内容，是否全部为空
@@ -395,7 +402,7 @@
 				 */
 				getPieceImg: function(contentImg, index) {
 					console.log("*****获取的contentImage:" + JSON.stringify(contentImg) + ",index:" + index);
-					this.pieces[index].files[0] = contentImg;
+					Vue.set(this.pieces[index].files, 0, contentImg);
 				},
 				/**
 				 * 删除标题图片
@@ -414,6 +421,15 @@
 				}
 			}
 		});
+		//正则验证URL
+		function CheckUrl(str) {
+			var RegUrl = new RegExp();
+			RegUrl.compile("^[A-Za-z]+://[A-Za-z0-9-_]+\\.[A-Za-z0-9-_%&\?\/.=]+$");
+			if(!RegUrl.test(str)) {
+				return false;
+			}
+			return true;
+		}
 		/**
 		 * 获取网站配置信息
 		 */
@@ -426,10 +442,10 @@
 				if(data.RspCode == 0) {
 					if(data.RspData.length > 0) {
 						if(data.RspData[0].stat == 0) {
-							//							articalPublish.artical.type = '00000';
+							articalPublish.flag = 0;
 							alert('此网站现在为关闭状态');
 						} else {
-							//							articalPublish.artical.type = 'add';
+							articalPublish.flag = 1;
 						}
 					} else {
 						alert('没有获取到配置信息')

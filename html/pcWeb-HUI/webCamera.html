@@ -47,16 +47,20 @@
 		<script>
 			var vUrl_0 = "http://qn-cspb.jiaobaowang.net/wechat/classcircle/1510024921851588.mp4";
 			var vUrl_1 = "http://qn-cspb.jiaobaowang.net/wechat/classcircle/1510025197498564.mov";
+			var vUrl_2 = "http://qn-cspb.jiaobaowang.net/wechat/classcircle/151003795793335.webm";
+			var vUrl_3 = "http://qn-cspb.jiaobaowang.net/wechat/classcircle/1510038907164806.webm";
 			var mediaOpts = {
 				audio: true,
 				video: true,
 			} //获取摄像头的参数
 			var blobType = 'video/webm'; //录制视频文件的格式
 			var cameraStream; //摄像头视频流
-			var uploadFile; //需要长传的文件
 			var mediaRecorder; //录制对象
 			var chunks = []; //录制时的视频流
 			var videoBlob; //录制的视频文件
+			var timeslice = null; //录制视频存储的间隔
+
+			var uploadFile; //需要上传的文件
 			var uptokenData; //上传文件的token
 			var qnFileUploader; //七牛上传对象
 
@@ -69,7 +73,7 @@
 			record.onerror = function(e) {
 				console.log("record.onerror", record.error);
 			}
-			//video.src = vUrl_1;
+			video.src = vUrl_3;
 
 			//input获取视频
 			var inputVideo = document.getElementById("input");
@@ -191,15 +195,20 @@
 			 * 安卓录制视频
 			 */
 			function androidRecord() {
-				mediaRecorder = new MediaRecorder(cameraStream);
+				mediaRecorder = new MediaRecorder(cameraStream, {
+					mimeType: blobType
+				});
 				if(mediaRecorder) {
 					console.log("开始录制");
 					mediaRecorder.onstop = function() {
 						console.log("mediaRecorder.onstop");
-						console.log("chunks:", chunks);
+						console.log("chunks", chunks);
 						videoBlob = new Blob(chunks, {
 							type: blobType
 						});
+						videoBlob.lastModifiedDate = new Date();
+						videoBlob.name = videoBlob.lastModifiedDate.getTime() + ".webm";
+						console.log("videoBlob", videoBlob);
 						var url = URL.createObjectURL(videoBlob);
 						uploadFile = videoBlob;
 						console.log("url:" + url);
@@ -217,7 +226,11 @@
 						}, 10000);
 					}
 					chunks = [];
-					mediaRecorder.start();
+					if(timeslice) {
+						mediaRecorder.start(timeslice);
+					} else {
+						mediaRecorder.start();
+					}
 				} else {
 					console.log("mediaRecorder 无录制功能");
 				}

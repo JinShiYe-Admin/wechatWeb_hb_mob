@@ -189,28 +189,28 @@
 			<div class="weui-media-box relate-to-me" :class="{'relate-reply-type-praise':relateType,'relate-reply-type-comment':!relateType}">
 				<div class="weui-media-box_appmsg">
 					<div class="weui-media-box__hd class-circle-headimage-hd">
-						<img class="weui-media-box__thumb class-circle-headimage" @load="headLoad($event)" @error.once="headError($event)" @click="clickPerson(value.UserId)" :src="value.UserId|userThumbImage" />
+						<img class="weui-media-box__thumb class-circle-headimage" @load="headLoad($event)" @error.once="headError($event)" @click="clickPerson(value.MaxUser)" :src="value.MaxUser|userThumbImage" />
 					</div>
 					<div class="weui-media-box__bd">
 						<div class="class-circle-title">
-							<div class="weui-media-box__title relate-name" @click="clickPerson(value.UserId)">{{value.UserId|userName}}</div>
+							<div class="weui-media-box__title relate-name" @click="clickPerson(value.MaxUser)">{{value.MaxUser|userName}}</div>
 							<template v-if="value.MsgType == 1">
 								<div class="relate-reply-type">评论了我</div>
-								<div class="relate-reply" @click="clickRelateReply(value.UserId)">回复</div>
+								<div class="relate-reply" @click="clickRelateReply(value.MaxUser)">回复</div>
 							</template>
 							<template v-else-if="value.MsgType == 2">
 								<div class="relate-reply-type">回复了我</div>
-								<div class="relate-reply" @click="clickRelateReply(value.UserId)">回复</div>
+								<div class="relate-reply" @click="clickRelateReply(value.MaxUser)">回复</div>
 							</template>
 							<template v-else-if="value.MsgType == 3">
 								<div class="relate-reply-type">赞了我</div>
 							</template>
 						</div>
-						<div class="weui-media-box__desc">{{value.MsgDate}}</div>
+						<div class="weui-media-box__desc">{{value.MaxDate}}</div>
 					</div>
 				</div>
 				<template v-if="value.MsgType != 3">
-					<div class="relate-comment-content" @click="clickRelateContent">{{value.Content}}</div>
+					<div class="relate-comment-content" @click="clickRelateContent">{{value.MaxContent}}</div>
 				</template>
 				<div class="relate-reply-trends-bg">
 					<div class="relate-reply-trends-img" v-if="value.EncType == 1">
@@ -385,7 +385,7 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/lib/exif/exif.min.js?" + mathRandom + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_utils.js?" + mathRandom + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_home.js?" + mathRandom + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_temp_data.js?" + mathRandom + "'></s" + "cript>");
+			//document.write("<s" + "cript type='text/javascript' src='../../js/classCircle/class_circle_temp_data.js?" + mathRandom + "'></s" + "cript>");
 		</script>
 	</body>
 

@@ -18,7 +18,7 @@
 	</head>
 
 	<body>
-		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 网站配置 <span class="c-gray en">&gt;</span> 模块设置
+		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 网站配置 <span class="c-gray en">&gt;</span> 单位模块设置
 			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
 		</nav>
 		<div class="page-container" id="moduleSum">
@@ -26,19 +26,19 @@
 				<table class="table table-border table-bordered table-hover table-bg">
 					<thead>
 						<tr class="text-c">
-							<th width="25"></th>
+							<th width="25">是否选择</th>
 							<th width="80">模块名称</th>
-							<th width="100">模块链接</th>
-							<th width="100">模块图片链接</th>
-							<th width="50">排序ID</th>
+							<!--<th width="100">模块链接</th>
+							<th width="100">模块图片链接</th>-->
+							<th width="50">选择排序ID</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr class="text-c" v-for='(module,index) in moduleArray' v-show="flag>0" style="display: none;">
 							<td><input type="checkbox" value=module.corpmodid name="" v-model=module.flag @change="selectCheckbox(module,index)"></td>
 							<td>{{module.mname}}</td>
-							<td>{{module.murl}}</td>
-							<td>{{module.mimg}}</td>
+							<!--<td>{{module.murl}}</td>
+							<td>{{module.mimg}}</td>-->
 							<td>
 								<select :id="'select'+module.modid" @change="selectOrder(module,index)">
 									<template v-for="item in selectArray">

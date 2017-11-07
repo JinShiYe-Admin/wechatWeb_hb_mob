@@ -8,6 +8,7 @@
 	</head>
 
 	<body>
+		<input id="qnInput" style="display: none;" />
 		<div>webCamera</div>
 		<div>video</div>
 		<video id="video" style="width: 100%;height: 200px;background:black;" controls autoplay></video>
@@ -24,42 +25,58 @@
 		<input id="input" type="file" accept="video/*">
 		<br />
 		<button onclick="clickbtn(7)">安卓录制</button>
-		<button onclick="clickbtn(8)">显示视频1</button>
-		<button onclick="clickbtn(9)">显示视频2</button>
-		<a id="download_1" download>文件1</a>
-		<a id="download_2" download>文件2</a>
-
 		<br />
-		<!--<button onclick="clickbtn(8)">上传录制的视频</button>-->
+		<button onclick="clickbtn(8)">上传录制的视频</button>
+		<div id="fileUrl">文件路径</div>
 
-		<!--<script type="text/javascript" src="js/vconsole.min.js?"></script>-->
-		<script type="text/javascript" src="../../js/lib/vconsole/vconsole.min.js?"></script>
+		<script type="text/javascript" src="../../js/demoCssJs/jquery-2.1.4.js"></script>
+		<script type="text/javascript" src="../../js/lib/vconsole/vconsole.min.js"></script>
+		<script type="text/javascript" src="../../js/lib/plupload/moxie.min.js"></script>
+		<script type="text/javascript" src="../../js/lib/plupload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../../js/lib/qiniu/qiniu.min.js"></script>
+		<script type="text/javascript" src="../../js/utils/cryption.js"></script>
+		<script>
+			var WebVersion = "?" + Math.random();
+			document.write("<s" + "cript type='text/javascript' src='../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cloudutil.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/compress.js" + WebVersion + "'></s" + "cript>");
+		</script>
 
 		<script>
+			var vUrl_0 = "http://qn-cspb.jiaobaowang.net/wechat/classcircle/1510024921851588.mp4";
+			var vUrl_1 = "http://qn-cspb.jiaobaowang.net/wechat/classcircle/1510025197498564.mov";
 			var mediaOpts = {
 				audio: true,
 				video: true,
-			}
-			var blobType = 'video/webm';
-			var cameraStream;
-			var uploadFile;
-			var mediaRecorder;
-			var chunks = [];
-			var videoBlob;
-			var videoBlobA;
-			var videoBlobB;
+			} //获取摄像头的参数
+			var blobType = 'video/webm'; //录制视频文件的格式
+			var cameraStream; //摄像头视频流
+			var uploadFile; //需要长传的文件
+			var mediaRecorder; //录制对象
+			var chunks = []; //录制时的视频流
+			var videoBlob; //录制的视频文件
+			var uptokenData; //上传文件的token
+			var qnFileUploader; //七牛上传对象
+
 			var option = document.getElementById("option");
 			var video = document.getElementById("video");
 			var record = document.getElementById("record");
+			video.onerror = function(e) {
+				console.log("video.onerror", video.error);
+			}
 			record.onerror = function(e) {
 				console.log("record.onerror", record.error);
 			}
+			//video.src = vUrl_1;
 
-			//iOS获取视频
+			//input获取视频
 			var inputVideo = document.getElementById("input");
 			inputVideo.addEventListener("change", function(e) {
 				console.log("change", e.target.files);
 				var url = URL.createObjectURL(e.target.files[0]);
+				uploadFile = e.target.files[0];
 				console.log("url:" + url);
 				record.src = url;
 				record.play();
@@ -67,7 +84,7 @@
 
 			var exArray = []; //存储设备源ID
 			//获取视频，音频的设备信息
-			if(MediaStreamTrack && MediaStreamTrack.getSources) {
+			if(window.MediaStreamTrack && window.MediaStreamTrack.getSources) {
 				MediaStreamTrack.getSources(function(sourceInfos) {
 					console.log("sourceInfos", sourceInfos);
 					for(var i = 0; i != sourceInfos.length; ++i) {
@@ -163,21 +180,9 @@
 					case 7: //安卓录制
 						androidRecord();
 						break;
-					case 8:
-						var url = URL.createObjectURL(videoBlobA);
-						var ad = document.getElementById("download_1");
-						ad.setAttribute("href", url);
-						ad.innerText = "文件1-" + url;
-						record.src = url
-						record.play();
-						break;
-					case 9:
-						var url = URL.createObjectURL(videoBlob);
-						var ad = document.getElementById("download_2");
-						ad.setAttribute("href", url);
-						ad.innerText = "文件2-" + url;
-						record.src = url
-						record.play();
+					case 8: //上传录制的文件
+						console.log("uploadFile", uploadFile)
+						qnFileUploader.addFile(uploadFile, uploadFile.name);
 						break;
 				}
 			}
@@ -186,36 +191,33 @@
 			 * 安卓录制视频
 			 */
 			function androidRecord() {
-				console.log("androidRecord", cameraStream);
 				mediaRecorder = new MediaRecorder(cameraStream);
-				console.log("mediaRecorder", mediaRecorder);
 				if(mediaRecorder) {
 					console.log("开始录制");
 					mediaRecorder.onstop = function() {
 						console.log("mediaRecorder.onstop");
-						console.log("chunks:" + chunks.length);
-						videoBlobA = new Blob(chunks, {
+						console.log("chunks:", chunks);
+						videoBlob = new Blob(chunks, {
 							type: blobType
 						});
-						console.log("videoBlobA:", videoBlobA);
-						console.log("videoBlobA:", videoBlobA.size);
-						console.log("videoBlob:", videoBlob);
-						console.log("videoBlob:", videoBlob.size);
+						var url = URL.createObjectURL(videoBlob);
+						uploadFile = videoBlob;
+						console.log("url:" + url);
+						record.src = url;
+						record.play();
 					}
 					mediaRecorder.ondataavailable = function(e) {
 						chunks.push(e.data);
-						videoBlob = new Blob([e.data], {
-							type: e.data.type
-						});
 					}
 					mediaRecorder.onstart = function(e) {
 						console.log("mediaRecorder.onstart");
+						setTimeout(function() {
+							console.log("录像结束");
+							mediaRecorder.stop();
+						}, 10000);
 					}
+					chunks = [];
 					mediaRecorder.start();
-					setTimeout(function() {
-						console.log("录像结束");
-						mediaRecorder.stop();
-					}, 10000);
 				} else {
 					console.log("mediaRecorder 无录制功能");
 				}
@@ -235,6 +237,114 @@
 					console.log("navigator.mediaDevices.getUserMedia:" + navigator.mediaDevices.getUserMedia);
 				}
 				console.log("navigator", navigator);
+				initQNUploader();
+			}
+
+			/**
+			 * 初始化七牛上传对象
+			 */
+			function initQNUploader() {
+				qnFileUploader = Qiniu.uploader({
+					disable_statistics_report: false, // 禁止自动发送上传统计信息到七牛，默认允许发送
+					runtimes: 'html5,flash,html4', // 上传模式,依次退化
+					browse_button: 'qnInput', // 上传选择的点选按钮，**必需**
+					uptoken_func: function(file) { // 在需要获取 uptoken 时，该方法会被调用
+						uptokenData = null;
+						uptokenData = getQNUpToken(file.name);
+						console.log("uptokenData:", uptokenData);
+						if(uptokenData) {
+							if(uptokenData.code) {
+								var fileUrl = uptokenData.data.Data[0].Domain + uptokenData.data.Data[0].Key
+								console.log("fileUrl", fileUrl);
+								document.getElementById("fileUrl").innerText = "文件路径-" + fileUrl;
+								return uptokenData.data.Data[0].Token;
+							} else {
+								qnFileUploader.stop();
+								console.log("上传失败");
+							}
+						} else {
+							qnFileUploader.stop();
+							console.log("上传失败");
+						}
+					},
+					unique_names: false, // 默认 false，key 为文件名。若开启该选项，JS-SDK 会为每个文件自动生成key（文件名）
+					save_key: false, // 默认 false。若在服务端生成 uptoken 的上传策略中指定了 `save_key`，则开启，SDK在前端将不对key进行任何处理
+					get_new_uptoken: true, // 设置上传文件的时候是否每次都重新获取新的 uptoken
+					domain: storageutil.QNPBDOMAIN, // bucket 域名，下载资源时用到，如：'http://xxx.bkt.clouddn.com/' **必需**
+					max_file_size: '100mb', // 最大文件体积限制
+					flash_swf_url: '../../js/lib/plupload/Moxie.swf', //引入 flash,相对路径
+					max_retries: 0, // 上传失败最大重试次数
+					dragdrop: false, // 开启可拖曳上传
+					chunk_size: '4mb', // 分块上传时，每块的体积
+					auto_start: true, // 选择文件后自动上传，若关闭需要自己绑定事件触发上传,
+					init: {
+						'FilesAdded': function(up, files) {
+							plupload.each(files, function(file) {
+								// 文件添加进队列后,处理相关的事情
+								console.log("FilesAdded:", file);
+							});
+						},
+						'BeforeUpload': function(up, file) {
+							// 每个文件上传前,处理相关的事情
+							console.log("BeforeUpload:");
+						},
+						'UploadProgress': function(up, file) {
+							// 每个文件上传时,处理相关的事情
+							console.log("UploadProgress:" + file.percent);
+						},
+						'FileUploaded': function(up, file, info) {
+							// 每个文件上传成功后,处理相关的事情
+							console.log("FileUploaded:", info);
+							if(info.status == 200) {
+								console.log("上传成功");
+							} else {
+								console.log("上传失败");
+							}
+						},
+						'Error': function(up, err, errTip) {
+							//上传出错时,处理相关的事情
+							console.log("Error:", err, errTip);
+						},
+						'UploadComplete': function(up) {
+							//队列文件处理完毕后,处理相关的事情
+							console.log("UploadComplete:");
+						},
+						'FilesRemoved ': function() {
+							//文件移出队列
+							console.log("FilesRemoved:");
+						},
+						'Key': function(up, file) {
+							// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
+							// 该配置必须要在 unique_names: false , save_key: false 时才生效
+							if(uptokenData && uptokenData.code) { //成功
+								return uptokenData.data.Data[0].Key;
+							}
+						}
+					}
+				});
+			}
+			/**
+			 * 获取七牛上传token
+			 */
+			function getQNUpToken(fname) {
+				console.log("getQNUpToken:", fname);
+				var myDate = new Date();
+				var fileName = myDate.getTime() + "" + parseInt(Math.random() * 1000);
+				var types = fname.toLowerCase().split(".");
+				fileName = fileName + "." + types[types.length - 1];
+				var getTokenData = {
+					appId: storageutil.QNQYWXKID,
+					mainSpace: storageutil.QNPUBSPACE,
+					saveSpace: storageutil.QNSSPACECLASSCIRCLE,
+					fileArray: [{
+						qnFileName: fileName,
+					}]
+				}
+				var upToken;
+				cloudutil.getFileUpTokens(getTokenData, function(data) {
+					upToken = data;
+				});
+				return upToken;
 			}
 		</script>
 	</body>

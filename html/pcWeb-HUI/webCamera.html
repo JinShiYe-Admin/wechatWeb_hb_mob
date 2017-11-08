@@ -25,10 +25,6 @@
 		<button onclick="clickbtn(4)">前置摄像头</button>
 		<button onclick="clickbtn(5)">后置摄像头</button>
 		<button onclick="clickbtn(6)">默认摄像头</button>
-		<div id="textWidth">宽度：默认</div>
-		<input type="text" id="inputWidth" />
-		<div id="textHeight">高度：默认</div>
-		<input type="text" id="inputHeight" />
 		<div>---视频文件选择---</div>
 		<input id="input" type="file" accept="video/*">
 		<div>---视频文件录制和上传---</div>
@@ -177,10 +173,6 @@
 
 			function clickbtn(num) {
 				console.log("clickbtn:" + num);
-				if(num == 0 || num == 1 || num == 2 || num == 3 || num == 4 || num == 5) {
-					initWidthHeight(num);
-				}
-				console.log("mediaOpts", mediaOpts);
 				switch(num) {
 					case 0:
 						var p = navigator.mediaDevices.getUserMedia(mediaOpts);
@@ -198,7 +190,12 @@
 						break;
 					case 4: //前置摄像头
 						if(deviceId.user) {
-							mediaOpts.video.deviceId = deviceId.user;
+							mediaOpts = {
+								audio: true,
+								video: {
+									deviceId: deviceId.user
+								}
+							}
 							option.innerText = "摄像头：前置";
 						} else {
 							console.log("没有前置摄像头")
@@ -207,7 +204,12 @@
 						break;
 					case 5: //后置摄像头
 						if(deviceId.environment) {
-							mediaOpts.video.deviceId = deviceId.environment;
+							mediaOpts = {
+								audio: true,
+								video: {
+									deviceId: deviceId.environment
+								}
+							}
 							option.innerText = "摄像头：后置";
 						} else {
 							console.log("没有后置摄像头")
@@ -219,10 +221,6 @@
 							audio: true,
 							video: true
 						}
-						document.getElementById("textWidth").innerText = "宽度：默认";
-						document.getElementById("textHeight").innerText = "高度：默认";
-						document.getElementById("inputWidth").value = "";
-						document.getElementById("inputHeight").value = "";
 						option.innerText = "摄像头：默认";
 						console.log("mediaOpts", mediaOpts);
 						break;
@@ -240,38 +238,6 @@
 							tracks[i].stop();
 						}
 						break;
-				}
-			}
-
-			/**
-			 * 初始化获取的视频流的宽高
-			 * @param {Object} num
-			 */
-			function initWidthHeight(num) {
-				var width = document.getElementById("inputWidth").value;
-				var height = document.getElementById("inputHeight").value;
-				console.log("width:" + width);
-				console.log("height:" + height);
-				if(width != "" || height != "" || num == 4 || num == 5) {
-					mediaOpts.video = {};
-				}
-				if(width == "") {
-					delete mediaOpts.video.width;
-					document.getElementById("textWidth").innerText = "宽度：默认";
-				} else {
-					mediaOpts.video.width = {
-						ideal: width * 1
-					};
-					document.getElementById("textWidth").innerText = "宽度：" + width;
-				}
-				if(height == "") {
-					delete mediaOpts.video.height;
-					document.getElementById("textHeight").innerText = "高度：默认";
-				} else {
-					mediaOpts.video.height = {
-						ideal: height * 1
-					};
-					document.getElementById("textHeight").innerText = "高度：" + height;
 				}
 			}
 

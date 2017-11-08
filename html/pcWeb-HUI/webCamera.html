@@ -63,6 +63,7 @@
 			} //获取摄像头的参数
 			var blobType = 'video/webm'; //录制视频文件的格式
 			var cameraStream; //摄像头视频流
+			var mediaStreamTrack; //视频流轨道
 			var mediaRecorder; //录制对象
 			var chunks = []; //录制时的视频流
 			var videoBlob; //录制的视频文件
@@ -157,6 +158,8 @@
 			function successFunc(stream) {
 				cameraStream = stream;
 				console.log("successFunc", cameraStream);
+				var mediaStreamTrack = cameraStream.getTracks();
+				console.log("mediaStreamTrack", mediaStreamTrack);
 				if("srcObject" in video) {
 					console.log("srcObject");
 					video.srcObject = cameraStream;

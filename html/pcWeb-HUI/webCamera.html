@@ -14,18 +14,21 @@
 		<video id="video" style="width: 100%;height: 200px;background:black;" controls autoplay></video>
 		<div>record</div>
 		<video id="record" style="width: 100%;height: 200px;background:black;" controls autoplay></video>
+		<div>---摄像头获取---</div>
 		<button onclick="clickbtn(0)">mediaDevices</button>
 		<button onclick="clickbtn(1)">getUserMedia</button>
 		<button onclick="clickbtn(2)">webkitGetUserMedia</button>
 		<button onclick="clickbtn(3)">mozGetUserMedia</button>
+		<button onclick="clickbtn(9)">关闭从摄像头获取的视频流</button>
+		<div>---摄像头设置---</div>
 		<div id="option">摄像头：默认</div>
 		<button onclick="clickbtn(4)">前置摄像头</button>
 		<button onclick="clickbtn(5)">后置摄像头</button>
 		<button onclick="clickbtn(6)">默认摄像头</button>
+		<div>---视频文件选择---</div>
 		<input id="input" type="file" accept="video/*">
-		<br />
+		<div>---视频文件录制和上传---</div>
 		<button onclick="clickbtn(7)">安卓录制</button>
-		<br />
 		<button onclick="clickbtn(8)">上传录制的视频</button>
 		<div id="fileUrl">文件路径</div>
 
@@ -49,13 +52,18 @@
 			var vUrl_1 = "http://qn-cspb.jiaobaowang.net/wechat/classcircle/1510025197498564.mov";
 			var vUrl_2 = "http://qn-cspb.jiaobaowang.net/wechat/classcircle/151003795793335.webm";
 			var vUrl_3 = "http://qn-cspb.jiaobaowang.net/wechat/classcircle/1510038907164806.webm";
+			var vUrl_4 = "http://qn-cspb.jiaobaowang.net/wechat/classcircle/1510108302096261.webm";
 			var mediaOpts = {
 				audio: true,
-				video: true,
+				video: true
 			} //获取摄像头的参数
 			var blobType = 'video/webm'; //录制视频文件的格式
 			var cameraStream; //摄像头视频流
+			var mediaStreamTrack; //视频流轨道
 			var mediaRecorder; //录制对象
+			mediaRecorderOption = {
+				mimeType: blobType
+			}; //录制视频时的设置
 			var chunks = []; //录制时的视频流
 			var videoBlob; //录制的视频文件
 			var timeslice = null; //录制视频存储的间隔
@@ -67,13 +75,35 @@
 			var option = document.getElementById("option");
 			var video = document.getElementById("video");
 			var record = document.getElementById("record");
+
+			window.onload = function() {
+				console.log("navigator", navigator);
+				console.log("navigator.mediaDevices:", navigator.mediaDevices);
+				console.log("navigator.getUserMedia:", navigator.getUserMedia);
+				console.log("navigator.webkitGetUserMedia :", navigator.webkitGetUserMedia);
+				console.log("navigator.mozGetUserMedia :", navigator.mozGetUserMedia);
+
+				// getUserMedia 被标准废除了，mediaDevices 正在取代中
+				if(navigator.mediaDevices === undefined) {
+					console.log("000000");
+				} else {
+					console.log("111111");
+					console.log("navigator.mediaDevices.getUserMedia:", navigator.mediaDevices.getUserMedia);
+					var Constraints = navigator.mediaDevices.getSupportedConstraints();
+					console.log("navigator.mediaDevices.getSupportedConstraints:", Constraints);
+				}
+
+				initQNUploader();
+				console.log("screen", window.screen);
+			}
+
 			video.onerror = function(e) {
 				console.log("video.onerror", video.error);
 			}
 			record.onerror = function(e) {
 				console.log("record.onerror", record.error);
 			}
-			video.src = vUrl_3;
+			video.src = vUrl_4;
 
 			//input获取视频
 			var inputVideo = document.getElementById("input");
@@ -86,8 +116,11 @@
 				record.play();
 			});
 
-			var exArray = []; //存储设备源ID
-			//获取视频，音频的设备信息
+			var deviceId = {
+				user: null, //拍用户（前置）
+				environment: null //拍环境（后置）
+			}; //设备源ID
+			//视频，音频的设备信息
 			if(window.MediaStreamTrack && window.MediaStreamTrack.getSources) {
 				MediaStreamTrack.getSources(function(sourceInfos) {
 					console.log("sourceInfos", sourceInfos);
@@ -95,7 +128,11 @@
 						var sourceInfo = sourceInfos[i];
 						//这里会遍历audio,video，所以要加以区分
 						if(sourceInfo.kind === 'video') {
-							exArray.push(sourceInfo.id);
+							if(sourceInfo.facing == "user") {
+								deviceId.user = sourceInfo.id;
+							} else if(sourceInfo.facing == "environment") {
+								deviceId.environment = sourceInfo.id;
+							}
 						}
 					}
 				});
@@ -120,6 +157,8 @@
 			function successFunc(stream) {
 				cameraStream = stream;
 				console.log("successFunc", cameraStream);
+				var mediaStreamTrack = cameraStream.getTracks();
+				console.log("mediaStreamTrack", mediaStreamTrack);
 				if("srcObject" in video) {
 					console.log("srcObject");
 					video.srcObject = cameraStream;
@@ -153,26 +192,32 @@
 						navigator.mozGetUserMedia(mediaOpts, successFunc, errorFunc);
 						break;
 					case 4: //前置摄像头
-						mediaOpts = {
-							audio: true,
-							video: {
-								optional: [{
-									sourceId: exArray[0] //0为前置摄像头，1为后置
-								}]
+						if(deviceId.user) {
+							mediaOpts = {
+								audio: true,
+								video: {
+									deviceId: deviceId.user
+								}
 							}
+							option.innerText = "摄像头：前置";
+						} else {
+							console.log("没有前置摄像头")
 						}
-						option.innerText = "摄像头：前置";
+						console.log("mediaOpts", mediaOpts);
 						break;
 					case 5: //后置摄像头
-						mediaOpts = {
-							audio: true,
-							video: {
-								optional: [{
-									sourceId: exArray[1] //0为前置摄像头，1为后置
-								}]
+						if(deviceId.environment) {
+							mediaOpts = {
+								audio: true,
+								video: {
+									deviceId: deviceId.environment
+								}
 							}
+							option.innerText = "摄像头：后置";
+						} else {
+							console.log("没有后置摄像头")
 						}
-						option.innerText = "摄像头：后置";
+						console.log("mediaOpts", mediaOpts);
 						break;
 					case 6: //默认摄像头
 						mediaOpts = {
@@ -180,6 +225,7 @@
 							video: true
 						}
 						option.innerText = "摄像头：默认";
+						console.log("mediaOpts", mediaOpts);
 						break;
 					case 7: //安卓录制
 						androidRecord();
@@ -188,6 +234,13 @@
 						console.log("uploadFile", uploadFile)
 						qnFileUploader.addFile(uploadFile, uploadFile.name);
 						break;
+					case 9: //关闭视频流
+						var tracks = cameraStream.getTracks();
+						console.log("tracks", tracks);
+						for(var i = 0; i < tracks.length; i++) {
+							tracks[i].stop();
+						}
+						break;
 				}
 			}
 
@@ -195,9 +248,7 @@
 			 * 安卓录制视频
 			 */
 			function androidRecord() {
-				mediaRecorder = new MediaRecorder(cameraStream, {
-					mimeType: blobType
-				});
+				mediaRecorder = new MediaRecorder(cameraStream, mediaRecorderOption);
 				if(mediaRecorder) {
 					console.log("开始录制");
 					mediaRecorder.onstop = function() {
@@ -234,23 +285,6 @@
 				} else {
 					console.log("mediaRecorder 无录制功能");
 				}
-			}
-
-			window.onload = function() {
-				console.log("navigator.mediaDevices:" + navigator.mediaDevices);
-				console.log("navigator.getUserMedia:" + navigator.getUserMedia);
-				console.log("navigator.webkitGetUserMedia :" + navigator.webkitGetUserMedia);
-				console.log("navigator.mozGetUserMedia :" + navigator.mozGetUserMedia);
-
-				// getUserMedia 被标准废除了，mediaDevices 正在取代中
-				if(navigator.mediaDevices === undefined) {
-					console.log("000000");
-				} else {
-					console.log("111111");
-					console.log("navigator.mediaDevices.getUserMedia:" + navigator.mediaDevices.getUserMedia);
-				}
-				console.log("navigator", navigator);
-				initQNUploader();
 			}
 
 			/**

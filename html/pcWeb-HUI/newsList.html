@@ -26,6 +26,7 @@
 					<option id="selectDropdown" :value='item.chnid' v-for="item in items">{{item.cname}}</option>
 				</select>
 			</div>
+			<br />
 			<div id="newsData">
 				<table style=" table-layout:fixed;" class="table table-border table-bordered table-bg">
 					<thead>
@@ -50,6 +51,7 @@
 					</tbody>
 				</table>
 			</div>
+			<br />
 			<div id="pages"></div>
 		</div>
 		<script type="text/javascript">
@@ -77,7 +79,7 @@
 							var Chnid = data.RspData.dt[0].chnid;
 							console.log('初始化栏目id' + Chnid);
 							console.log('初始化获取所有栏目' + JSON.stringify(data.RspData.dt));
-							getNewsList(1, Chnid);
+							getNewsList(1, Chnid); 
 						} else {
 							alert('暂时还没有栏目');
 						}
@@ -86,6 +88,7 @@
 					}
 				});
 			}
+			var Priym;
            //编辑弹框
 			function click(newsModel, index, cname) {
 				var url = "addnews.html";
@@ -96,15 +99,15 @@
 					type: 2,
 					title: "编辑文章",
 					content: url + "?v=" + Math.random() + "&data=" + encodeURIComponent(JSON.stringify(newslist)),
-					end: function() {
+					end: function() { 
 						console.log("刷新")
 						var Chnid = $('#chnid option:selected').val();
-						getNewsList(1,Chnid);
+						getNewsList(Priym,Chnid);  
 					}
 				});
 				layer.full(index);
 			}
-			var PriChnid;
+			var PriChnid; 
 			//所属栏目下拉框
 			var vue_input = new Vue({
 				el: '#chnid',
@@ -252,6 +255,7 @@
 						//console.log("jump: " + first + " " + JSON.stringify(e));
 						if(!first) {
 							var Chnid = $("#chnid option:selected").val();
+							Priym=e.curr;
 							getNewsList(e.curr, Chnid);
 
 						}

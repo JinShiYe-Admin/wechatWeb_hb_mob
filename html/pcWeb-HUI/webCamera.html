@@ -53,16 +53,20 @@
 			var vUrl_2 = "http://qn-cspb.jiaobaowang.net/wechat/classcircle/151003795793335.webm";
 			var vUrl_3 = "http://qn-cspb.jiaobaowang.net/wechat/classcircle/1510038907164806.webm";
 			var vUrl_4 = "http://qn-cspb.jiaobaowang.net/wechat/classcircle/1510108302096261.webm";
+			var vUrl_5 = "http://qn-cspb.jiaobaowang.net/wechat/classcircle/1510129169670127.webm";
+			var vUrl_6 = "http://qn-cspb.jiaobaowang.net/wechat/classcircle/151012986452614.webm";
+			var vUrl_7 = "http://qn-cspb.jiaobaowang.net/wechat/classcircle/1510195201592100.webm";
+			var vUrl_8 = "http://qn-cspb.jiaobaowang.net/wechat/classcircle/1510199497252613.webm";
 			var mediaOpts = {
 				audio: true,
 				video: true
 			} //获取摄像头的参数
-			var blobType = 'video/webm'; //录制视频文件的格式
+			var blobType = 'webm'; //录制视频文件的格式
 			var cameraStream; //摄像头视频流
 			var mediaStreamTrack; //视频流轨道
 			var mediaRecorder; //录制对象
-			mediaRecorderOption = {
-				mimeType: blobType
+			var mediaRecorderOption = {
+				mimeType: "video/" + blobType
 			}; //录制视频时的设置
 			var chunks = []; //录制时的视频流
 			var videoBlob; //录制的视频文件
@@ -77,6 +81,7 @@
 			var record = document.getElementById("record");
 
 			window.onload = function() {
+				console.log("screen", window.screen);
 				console.log("navigator", navigator);
 				console.log("navigator.mediaDevices:", navigator.mediaDevices);
 				console.log("navigator.getUserMedia:", navigator.getUserMedia);
@@ -94,7 +99,7 @@
 				}
 
 				initQNUploader();
-				console.log("screen", window.screen);
+				video.src = vUrl_8;
 			}
 
 			video.onerror = function(e) {
@@ -103,13 +108,12 @@
 			record.onerror = function(e) {
 				console.log("record.onerror", record.error);
 			}
-			video.src = vUrl_4;
 
 			//input获取视频
 			var inputVideo = document.getElementById("input");
 			inputVideo.addEventListener("change", function(e) {
 				console.log("change", e.target.files);
-				var url = URL.createObjectURL(e.target.files[0]);
+				var url = window.URL.createObjectURL(e.target.files[0]);
 				uploadFile = e.target.files[0];
 				console.log("url:" + url);
 				record.src = url;
@@ -255,12 +259,12 @@
 						console.log("mediaRecorder.onstop");
 						console.log("chunks", chunks);
 						videoBlob = new Blob(chunks, {
-							type: blobType
+							type: "video/" + blobType
 						});
 						videoBlob.lastModifiedDate = new Date();
-						videoBlob.name = videoBlob.lastModifiedDate.getTime() + ".webm";
+						videoBlob.name = videoBlob.lastModifiedDate.getTime() + "." + blobType;
 						console.log("videoBlob", videoBlob);
-						var url = URL.createObjectURL(videoBlob);
+						var url = window.URL.createObjectURL(videoBlob);
 						uploadFile = videoBlob;
 						console.log("url:" + url);
 						record.src = url;

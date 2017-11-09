@@ -23,10 +23,11 @@
 		</nav>
 		<div class="page-container" id="moduleSum">
 			<div class="">
+				<p> *请选择你需要在系统中显示的模块，勾选则显示，排序ID越小越靠前</p>
 				<table class="table table-border table-bordered table-hover table-bg">
 					<thead>
 						<tr class="text-c">
-							<th width="25">是否选择</th>
+							<th width="25">选择你需要在系统显示的模块</th>
 							<th width="80">模块名称</th>
 							<!--<th width="100">模块链接</th>
 							<th width="100">模块图片链接</th>-->
@@ -92,7 +93,15 @@
 				data: {
 					flag: 0,
 					selectArray: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-					moduleArray: []
+					moduleArray: [
+//					{
+//						corpmodid:1,
+//						flag:0,
+//						mname:'skdhskduh',
+//						modid:3,
+//						orderid:4
+//					}
+					]
 				}
 			});
 			var selectFalg = false; //判断是否可以勾选
@@ -135,7 +144,9 @@
 						}
 						unitWebsitePro(tempData, function(data) {
 							if(data.RspCode == 0) {
-								location.replace(location.href);
+								selectFalg = false;
+								model.flag = 0;
+//								location.replace(location.href);
 								//							layer.msg('已删除!', {
 								//								icon: 1,
 								//								time: 1000
@@ -155,7 +166,9 @@
 						}
 						unitWebsitePro(tempData, function(data) {
 							if(data.RspCode == 0) {
-								location.replace(location.href);
+								selectFalg = false;
+								model.flag = 1;
+//								location.replace(location.href);
 								//							layer.msg('已添加!', {
 								//								icon: 1,
 								//								time: 1000

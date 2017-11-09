@@ -4,7 +4,7 @@ Vue.component("single-choose-person", {
 		'<div v-bind:class="[\'weui-cells\',\'weui-cells_radio\']">' +
 		'<template>' +
 		'<template v-if="chooseType===1">' + //人員選擇
-		'<a v-for="(item,index) in curDepartInfo.departList" v-if="item.value" v-bind:class="[\'weui-cell\',\'weui-cell_access\']" v-on:click="clickEvent(item,index)">' +
+		'<a v-for="(item,index) in curDepartInfo.departList" v-if="item.value>0" v-bind:class="[\'weui-cell\',\'weui-cell_access\']" v-on:click="clickEvent(item,index)">' +
 		'<div v-bind:class="[\'weui-cell__bd\']">' +
 		'{{item.title}}' +
 		'</div>' +
@@ -20,7 +20,7 @@ Vue.component("single-choose-person", {
 		'</div>' +
 		'</label>' +
 		'</template>' + //部門選擇
-		'<a v-else v-for="(item,index) in curDepartInfo.departList" v-bind:class="[\'weui-cell\',{\'weui-cell_access\':item.departList.length>0}]">' +
+		'<a v-if="chooseType==0" v-for="(item,index) in curDepartInfo.departList" v-bind:class="[\'weui-cell\',{\'weui-cell_access\':item.value>0&&item.departList.length>0}]">' +
 		'<div v-bind:class="[\'weui-cell__hd\']">' +
 		'<label v-bind:for="item.value">' +
 		'<input type="radio" v-bind:class="[\'weui-check\']"  v-bind:id="item.value" v-bind:name="depart_id"' +
@@ -141,8 +141,18 @@ Vue.component("single-choose-person", {
 				node = nodes[i]
 				node.departList = []
 				node.personList = []
+				if(node.value == -1) {
+					node.parentvalue = -1;
+					node.departList.push({
+						value: -1,
+						parentvalue: 0,
+						departList: [],
+						personList: [],
+						title: "全部"
+					})
+				}
 				map[node.value] = i // use map to look-up the parents
-				if(node.parentvalue > 0) {
+				if(node.parentvalue >= 0) {
 					if(typeof(map[node.parentvalue]) !== 'undefined') {
 						nodes[map[node.parentvalue]].departList.push(node)
 					} else {
@@ -193,7 +203,7 @@ Vue.component("single-choose-person", {
 		 */
 		clickEvent: function(item, index) {
 			console.log("********clickEvent********");
-			if(item.value) {
+			if(item.value >= 0) {
 				this.routerTo(item, index);
 			}
 		},

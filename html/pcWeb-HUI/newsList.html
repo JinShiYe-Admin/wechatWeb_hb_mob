@@ -26,6 +26,7 @@
 					<option id="selectDropdown" :value='item.chnid' v-for="item in items">{{item.cname}}</option>
 				</select>
 			</div>
+			<br />
 			<div id="newsData">
 				<table style=" table-layout:fixed;" class="table table-border table-bordered table-bg">
 					<thead>
@@ -50,6 +51,7 @@
 					</tbody>
 				</table>
 			</div>
+			<br />
 			<div id="pages"></div>
 		</div>
 		<script type="text/javascript">
@@ -119,7 +121,7 @@
 				el: '#newsData',
 				data: {
 					item: {
-						newsArray: [{topic:"111",subtopic:"2222"}]
+						newsArray: []
 					}
 				},
 				updated: function() {

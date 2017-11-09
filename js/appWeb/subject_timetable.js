@@ -96,6 +96,7 @@ Vue.component("time-table", {
 
 		},
 		departname: function(newVal, oldVal) {
+			console.log('监听部门名字')
 			editEdule(oldVal, newVal, "depart")
 
 		},
@@ -349,6 +350,7 @@ function addEdule() {
 
 function editEdule(oldVal, newVal, callcol) {
 	if(table_data.flag == 0 || oldVal == newVal) {
+		console.log('添加或者值相同时return');
 		return;
 	}
 	var colv

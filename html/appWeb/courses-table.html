@@ -159,8 +159,8 @@
 				table_data.eduleid = detail.eduleid;
 				table_data.departname = detail.departname;
 				table_data.departid = detail.departid;
-				table_data.timespanb = detail.timespanb;
-				table_data.timespane = detail.timespane;
+				table_data.timespanb = detail.timespanb.slice(0,4)+"年"+detail.timespanb.slice(4)+"月";
+				table_data.timespane = detail.timespane.slice(0,4)+"年"+detail.timespane.slice(4)+"月";
 				
 			} else {
 				table_data.flag = 0
@@ -178,6 +178,7 @@
 						this.$root.chosedPerson = item;
 						
 						if(table_data.type == 0) {
+							console.log('更新数据')
 							table_data.departname = item.title
 							table_data.departid = item.value
 						} else {

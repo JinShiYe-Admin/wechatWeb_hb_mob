@@ -44,3 +44,27 @@ body {
 .check-box {
 	padding-left: 0;
 }
+
+table {
+	width: 50%;
+}
+
+.table-bordered {
+	border: none;
+}
+
+.table-striped tbody>tr:nth-child(odd)>td,
+.table-striped tbody>tr:nth-child(odd)>th {
+	background: white;
+}
+
+.table-bordered td {
+	border: none;
+}
+
+.table-bordered th {
+	border: none;
+}
+.weui-cells:before{
+	border: none;
+}

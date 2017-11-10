@@ -71,6 +71,7 @@
 			var chunks = []; //录制时的视频流
 			var videoBlob; //录制的视频文件
 			var timeslice = null; //录制视频存储的间隔
+			var getRecordDataType = 1;//获取录制的文件的方式
 
 			var uploadFile; //需要上传的文件
 			var uptokenData; //上传文件的token
@@ -253,31 +254,46 @@
 			 */
 			function androidRecord() {
 				mediaRecorder = new MediaRecorder(cameraStream, mediaRecorderOption);
+				console.log("mediaRecorder", mediaRecorder);
 				if(mediaRecorder) {
 					console.log("开始录制");
 					mediaRecorder.onstop = function() {
 						console.log("mediaRecorder.onstop");
-						console.log("chunks", chunks);
-						videoBlob = new Blob(chunks, {
-							type: "video/" + blobType
-						});
-						videoBlob.lastModifiedDate = new Date();
-						videoBlob.name = videoBlob.lastModifiedDate.getTime() + "." + blobType;
-						console.log("videoBlob", videoBlob);
-						var url = window.URL.createObjectURL(videoBlob);
-						uploadFile = videoBlob;
-						console.log("url:" + url);
-						record.src = url;
-						record.play();
+						if(getRecordDataType === 0) {
+							console.log("chunks", chunks);
+							videoBlob = new Blob(chunks, {
+								type: "video/" + blobType
+							});
+							videoBlob.lastModifiedDate = new Date();
+							videoBlob.name = videoBlob.lastModifiedDate.getTime() + "." + blobType;
+							console.log("videoBlob", videoBlob);
+							var url = window.URL.createObjectURL(videoBlob);
+							uploadFile = videoBlob;
+							console.log("url:" + url);
+							record.src = url;
+							record.play();
+						}
 					}
-					mediaRecorder.ondataavailable = function(e) {
-						chunks.push(e.data);
+					if(getRecordDataType === 0) {
+						mediaRecorder.ondataavailable = function(e) {
+							chunks.push(e.data);
+						}
 					}
 					mediaRecorder.onstart = function(e) {
 						console.log("mediaRecorder.onstart");
 						setTimeout(function() {
 							console.log("录像结束");
-							mediaRecorder.stop();
+							if(getRecordDataType === 0) {
+								mediaRecorder.stop();
+							} else if(getRecordDataType === 1) {
+								mediaRecorder.ondataavailable = function(e) {
+									console.log("ondataavailable", e);
+									chunks.push(e.data);
+								}
+								console.log("chunks", chunks);
+								mediaRecorder.requestData();
+								mediaRecorder.stop();
+							}
 						}, 10000);
 					}
 					chunks = [];

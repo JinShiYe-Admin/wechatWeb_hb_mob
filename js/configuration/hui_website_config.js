@@ -475,7 +475,7 @@ function initWebsiteConfig(data) {
  */
 function showList() {
 	vm_input.isShow = true;
-	vm_skin.isShow = true;
+	vm_skin.isShow = false;
 	vm_image.isShow = true;
 	vm_switch.isShow = true;
 }

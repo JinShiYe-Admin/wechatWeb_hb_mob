@@ -26,9 +26,9 @@
 		<input id="qnInput" style="display: none;" />
 		<div>webCamera</div>
 		<div>video</div>
-		<video id="video" controls autoplay></video>
+		<video id="video" controls></video>
 		<div>record</div>
-		<video id="record" controls autoplay></video>
+		<video id="record" controls></video>
 		<div>---摄像头获取---</div>
 		<button onclick="clickbtn(0)">mediaDevices</button>
 		<button onclick="clickbtn(1)">getUserMedia</button>
@@ -43,6 +43,8 @@
 		<button onclick="clickbtn(6)">默认摄像头</button>
 		<div>---视频文件选择---</div>
 		<input id="input" type="file" accept="video/*">
+		<button onclick="clickbtn(11)">读取上传的文件 readAsDataURL</button>
+		<button onclick="clickbtn(12)">读取上传的文件 readAsArrayBuffer</button>
 		<div>---视频文件录制和上传---</div>
 		<button onclick="clickbtn(7)">安卓录制</button>
 		<button onclick="clickbtn(8)">上传录制的视频</button>
@@ -53,9 +55,9 @@
 		<template id="TempUpLoadVideo">
 			<div>
 				<div>上传的原文件 {{index}} {{value.qnv}}</div>
-				<video :src="value.qnv" controls autoplay></video>
+				<video :src="value.qnv" controls></video>
 				<div>转码后的文件{{index}} {{value.qnvc}}</div>
-				<video :src="value.qnvc" controls autoplay></video>
+				<video :src="value.qnvc" controls></video>
 				<div>视频缩略图{{index}} {{value.qnvt}}</div>
 				<img :src="value.qnvt" @error="imageError($event,index)" />
 			</div>
@@ -96,10 +98,15 @@
 			var qnv_2 = vUrl + v_2 + ".mov";
 			var qnvc_2 = vConvert + v_2 + ".mp4";
 			var qnvt_2 = vThumb + v_2 + ".jpg";
+
 			var mediaOpts = {
 				audio: true,
 				video: true
 			} //获取摄像头的参数
+			var deviceId = {
+				user: null, //拍用户（前置）
+				environment: null //拍环境（后置）
+			}; //设备源ID
 			var blobType = 'webm'; //录制视频文件的格式
 			var cameraStream; //摄像头视频流
 			var mediaStreamTrack; //视频流轨道
@@ -116,9 +123,33 @@
 			var qnFileUploader; //七牛上传对象
 			var VueUpLoadVideo; //上传成功的文件列表
 
+			var reader = new FileReader();
+			reader.onload = function() {
+				console.log("reader.onload", reader);
+			}
+			reader.onerror = function() {
+				console.log("reader.onerror", reader.error);
+			}
+
 			var option = document.getElementById("option");
+
+			var inputVideo = document.getElementById("input");
+			inputVideo.addEventListener("change", function(e) {
+				console.log("change", e.target.files);
+				var url = window.URL.createObjectURL(e.target.files[0]);
+				uploadFile = e.target.files[0];
+				console.log("url:" + url);
+				record.src = url;
+				record.play();
+			});
 			var video = document.getElementById("video");
+			video.onerror = function(e) {
+				console.log("video.onerror", video.error);
+			}
 			var record = document.getElementById("record");
+			record.onerror = function(e) {
+				console.log("record.onerror", record.error);
+			}
 
 			window.onload = function() {
 				console.log("screen", window.screen);
@@ -144,28 +175,6 @@
 				//record.src = vCon_7;
 			}
 
-			video.onerror = function(e) {
-				console.log("video.onerror", video.error);
-			}
-			record.onerror = function(e) {
-				console.log("record.onerror", record.error);
-			}
-
-			//input获取视频
-			var inputVideo = document.getElementById("input");
-			inputVideo.addEventListener("change", function(e) {
-				console.log("change", e.target.files);
-				var url = window.URL.createObjectURL(e.target.files[0]);
-				uploadFile = e.target.files[0];
-				console.log("url:" + url);
-				record.src = url;
-				record.play();
-			});
-
-			var deviceId = {
-				user: null, //拍用户（前置）
-				environment: null //拍环境（后置）
-			}; //设备源ID
 			//视频，音频的设备信息
 			if(window.MediaStreamTrack && window.MediaStreamTrack.getSources) {
 				MediaStreamTrack.getSources(function(sourceInfos) {
@@ -277,7 +286,7 @@
 						androidRecord();
 						break;
 					case 8: //上传录制的文件
-						console.log("uploadFile", uploadFile)
+						console.log("uploadFile", uploadFile);
 						qnFileUploader.addFile(uploadFile, uploadFile.name);
 						break;
 					case 9: //关闭视频流
@@ -300,6 +309,13 @@
 								}]
 							}
 						}
+					case 11: //读取上传的文件
+						console.log("uploadFile", uploadFile);
+						reader.readAsDataURL(uploadFile);
+						break;
+					case 12: //读取上传的文件
+						console.log("uploadFile", uploadFile);
+						reader.readAsArrayBuffer(uploadFile);
 						break;
 				}
 			}

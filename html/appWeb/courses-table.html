@@ -159,9 +159,9 @@
 				table_data.eduleid = detail.eduleid;
 				table_data.departname = detail.departname;
 				table_data.departid = detail.departid;
-				table_data.timespanb = detail.timespanb.slice(0,4)+"年"+detail.timespanb.slice(4)+"月";
-				table_data.timespane = detail.timespane.slice(0,4)+"年"+detail.timespane.slice(4)+"月";
-				
+				table_data.timespanb = detail.timespanb.slice(0, 4) + "年" + detail.timespanb.slice(4) + "月";
+				table_data.timespane = detail.timespane.slice(0, 4) + "年" + detail.timespane.slice(4) + "月";
+
 			} else {
 				table_data.flag = 0
 
@@ -176,13 +176,33 @@
 					chosedPerson: function(item, isAdd) {
 						console.log("#####courses获取的传过来的值：" + JSON.stringify(item) + ",isAdd:" + isAdd);
 						this.$root.chosedPerson = item;
-						
+
 						if(table_data.type == 0) {
 							console.log('更新数据')
 							table_data.departname = item.title
 							table_data.departid = item.value
+
+							if(table_data.flag == 0) {
+								console.log('添加或者值相同时return');
+								return;
+							}
+							var colv = table_data.departid + "|" + table_data.departname
+							var tempData = {
+								cmd: 'edule',
+								type: 'edit',
+								callcol: 'depart',
+								colid: table_data.eduleid,
+								colv: colv,
+							}
+							unitWebsitePro(tempData, function(data) {
+								console.log('编辑课程表:' + JSON.stringify(data));
+								if(data.RspCode == 0) {} else {
+									mui.toast(data.RspTxt)
+								}
+							})
+
 						} else {
-							table_data.tempFlag =1;
+							table_data.tempFlag = 1;
 							var index = table_data.rowIndex;
 							var callcol = table_data.colIndex
 							table_data.items_array[index][callcol + "uname"] = item.name;
@@ -192,7 +212,7 @@
 				}
 			}
 			const router = new VueRouter({
-//				mode: 'history',
+				//				mode: 'history',
 				routes: [{
 					path: '/table',
 					name: 'table',

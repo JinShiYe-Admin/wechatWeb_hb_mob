@@ -28,7 +28,7 @@ var cloudutil = (function(mod) {
 	 * @param {Object.qnFileName} data.qnFileName 必填 文件名
 	 */
 	mod.setQNCmd = function(data) {
-		console.log("setQNCmd:" + JSON.stringify(data));
+		console.log("setQNCmd:", data);
 		var returnData = {};
 		switch(data.option.type) {
 			case 0: //只传原文件，不执行七牛的持久化命令
@@ -62,10 +62,21 @@ var cloudutil = (function(mod) {
 				returnData.thumbKey = Qiniu.URLSafeBase64Encode(data.mainSpace + ":" + thumbSpace + fileNames[0] + ".jpg");
 				returnData.ops = "imageView2/1/w/" + width + "/h/" + height + "/format/jpeg|saveas/" + returnData.thumbKey;
 				break;
+			case 4: //视频,转MP4格式,生成缩略图
+				var convetSpace = data.saveSpace + storageutil.QNCONVERT;
+				var thumbSpace = data.saveSpace + storageutil.QNTHUMB;
+				var fileNames = data.qnFileName.split(".");
+				returnData.convertKey = Qiniu.URLSafeBase64Encode(data.mainSpace + ":" + convetSpace + fileNames[0] + ".mp4");
+				returnData.thumbKey = Qiniu.URLSafeBase64Encode(data.mainSpace + ":" + thumbSpace + fileNames[0] + ".jpg");
+				var avthumb = "avthumb/mp4/vcodec/mpeg4/h264Crf/18|saveas/" + returnData.convertKey;
+				var vframe = "vframe/png/offset/1|saveas/" + returnData.thumbKey;
+				returnData.ops = avthumb + ";" + vframe;
+				break;
 			default:
+				console.log("returnData:", returnData);
 				break;
 		}
-		console.log("returnData:" + JSON.stringify(returnData));
+		console.log("returnData:", returnData);
 		return returnData;
 	}
 
@@ -75,7 +86,8 @@ var cloudutil = (function(mod) {
 	 * @param {Object.appId} data.appId 必填 项目id
 	 * @param {Object.mainSpace} data.mainSpace 必填 文件存放在私有空间或公有空间
 	 * @param {Object.saveSpace} data.saveSpace 必填 文件存放的空间(第二前缀名)
-	 * @param {Object.qnCmdOption} data.qnCmdOption 选填 七牛的持久化命令类型，默认0传原文件
+	 * @param {Object.qnCmdOption} data.qnCmdOption 选填 七牛的持久化命令
+	 * @param {Object.qnCmdOption.type} data.qnCmdOption 选填 七牛的持久化命令类型，默认0传原文件
 	 * @param {Object.fileSplit} data.fileSplit 选填 文件路径分割类型，默认/
 	 * @param {Object.fileArray} data.fileArray 必填 文件数组
 	 * @param {Object.fileArray.filePath} data.fileArray.filePath 必填(选填 如果使用自定义的文件名) 文件路径
@@ -102,7 +114,8 @@ var cloudutil = (function(mod) {
 		}
 
 		var configure = {}; //配置的数据
-		configure.thumbKey = []; //持久化命令
+		configure.thumbKey = []; //缩略图持久化命令
+		configure.convertKey = []; //视频格式转换持久化命令
 		var params = []; //配置的参数信息
 		for(var i in data.fileArray) {
 			var param = {}; //文件的配置参数
@@ -139,6 +152,7 @@ var cloudutil = (function(mod) {
 			if(opsData != null) {
 				param.Pops = opsData.ops;
 				configure.thumbKey.push(opsData.thumbKey);
+				configure.convertKey.push(opsData.convertKey);
 			} else {
 				param.Pops = "";
 			}
@@ -157,6 +171,7 @@ var cloudutil = (function(mod) {
 					code: 1,
 					data: tokenData.data,
 					thumbKey: configure.thumbKey,
+					convertKey: configure.convertKey,
 					message: tokenData.message
 				});
 			} else {

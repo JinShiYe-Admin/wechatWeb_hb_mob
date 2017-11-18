@@ -43,9 +43,10 @@ body {
 
 .check-box {
 	padding-left: 0;
+	cursor: default;
 }
 
-table .input-text{
+table .input-text {
 	width: 35%;
 }
 
@@ -65,6 +66,7 @@ table .input-text{
 .table-bordered th {
 	border: none;
 }
-.weui-cells:before{
+
+.weui-cells:before {
 	border: none;
 }

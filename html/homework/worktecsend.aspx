@@ -151,7 +151,7 @@
 		<script src="js/jquery-weui.js" type="text/javascript" charset="utf-8"></script>
 		<script src="https://jsypay.jiaobaowang.net/suitetest/js/utils/consts.js"></script>
 		<script src="https://jsypay.jiaobaowang.net/suitetest/js/utils/events.js"></script>
-		<script src="https://jsypay.jiaobaowang.net/suitetest/js/lib/vconsole/vconsole.min.js"></script>
+		<!--<script src="https://jsypay.jiaobaowang.net/suitetest/js/lib/vconsole/vconsole.min.js"></script>-->
 		<script src='https://jsypay.jiaobaowang.net/suitetest/js/lib/exif/exif.min.js'></script>
 		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/PublicProtocol.js'></script>
 		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/utils/utils.js'></script>
@@ -313,13 +313,13 @@
 		                    cmd: 'work',
 		                    type: 'add',
 		                    touser: idArr.join('|'),
-		                    toparty: '',
+		                    toparty: homework.classes.currClass.id,
 		                    totag: '',
 		                    msgtype: 'textcard',
 		                    safe: 0,
 		                    content: homework.workTitle,
 		                    tousername: nameArr.join('|'),
-		                    topartyname: '',
+		                    topartyname: homework.classes.currClass.name,
 		                    totagname: '',
 		                    subid: homework.subject.currSubject.id,
 		                    subname: homework.subject.currSubject.name,

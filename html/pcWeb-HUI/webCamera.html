@@ -5,21 +5,37 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<title>webCamera</title>
+		<style>
+			body {
+				word-break: break-word;
+			}
+
+			video {
+				width: 100%;
+				height: 200px;
+				background: black;
+			}
+
+			img {
+				width: 50%;
+			}
+		</style>
 	</head>
 
 	<body>
 		<input id="qnInput" style="display: none;" />
 		<div>webCamera</div>
 		<div>video</div>
-		<video id="video" style="width: 100%;height: 200px;background:black;" controls autoplay></video>
+		<video id="video" controls></video>
 		<div>record</div>
-		<video id="record" style="width: 100%;height: 200px;background:black;" controls autoplay></video>
+		<video id="record" controls></video>
 		<div>---摄像头获取---</div>
 		<button onclick="clickbtn(0)">mediaDevices</button>
 		<button onclick="clickbtn(1)">getUserMedia</button>
 		<button onclick="clickbtn(2)">webkitGetUserMedia</button>
 		<button onclick="clickbtn(3)">mozGetUserMedia</button>
 		<button onclick="clickbtn(9)">关闭从摄像头获取的视频流</button>
+		<button onclick="clickbtn(10)">设置后置两倍分辨率</button>
 		<div>---摄像头设置---</div>
 		<div id="option">摄像头：默认</div>
 		<button onclick="clickbtn(4)">前置摄像头</button>
@@ -27,10 +43,25 @@
 		<button onclick="clickbtn(6)">默认摄像头</button>
 		<div>---视频文件选择---</div>
 		<input id="input" type="file" accept="video/*">
+		<button onclick="clickbtn(11)">读取上传的文件 readAsDataURL</button>
+		<button onclick="clickbtn(12)">读取上传的文件 readAsArrayBuffer</button>
 		<div>---视频文件录制和上传---</div>
 		<button onclick="clickbtn(7)">安卓录制</button>
 		<button onclick="clickbtn(8)">上传录制的视频</button>
-		<div id="fileUrl">文件路径</div>
+		<div id="UploadVideoFile">
+			<div>---上传成功的文件---</div>
+			<video-table v-for="(value,index) in QiNiuFile" :key="index" :value="value" :index="index"></video-table>
+		</div>
+		<template id="TempUpLoadVideo">
+			<div>
+				<div>上传的原文件 {{index}} {{value.qnv}}</div>
+				<video :src="value.qnv" controls></video>
+				<div>转码后的文件{{index}} {{value.qnvc}}</div>
+				<video :src="value.qnvc" controls></video>
+				<div>视频缩略图{{index}} {{value.qnvt}}</div>
+				<img :src="value.qnvt" @error="imageError($event,index)" />
+			</div>
+		</template>
 
 		<script type="text/javascript" src="../../js/demoCssJs/jquery-2.1.4.js"></script>
 		<script type="text/javascript" src="../../js/lib/vconsole/vconsole.min.js"></script>
@@ -38,6 +69,7 @@
 		<script type="text/javascript" src="../../js/lib/plupload/plupload.full.min.js"></script>
 		<script type="text/javascript" src="../../js/lib/qiniu/qiniu.min.js"></script>
 		<script type="text/javascript" src="../../js/utils/cryption.js"></script>
+		<script type="text/javascript" src="../../js/vue.js"></script>
 		<script>
 			var WebVersion = "?" + Math.random();
 			document.write("<s" + "cript type='text/javascript' src='../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
@@ -48,38 +80,76 @@
 		</script>
 
 		<script>
-			var vUrl_0 = "http://qn-cspb.jiaobaowang.net/wechat/classcircle/1510024921851588.mp4";
-			var vUrl_1 = "http://qn-cspb.jiaobaowang.net/wechat/classcircle/1510025197498564.mov";
-			var vUrl_2 = "http://qn-cspb.jiaobaowang.net/wechat/classcircle/151003795793335.webm";
-			var vUrl_3 = "http://qn-cspb.jiaobaowang.net/wechat/classcircle/1510038907164806.webm";
-			var vUrl_4 = "http://qn-cspb.jiaobaowang.net/wechat/classcircle/1510108302096261.webm";
-			var vUrl_5 = "http://qn-cspb.jiaobaowang.net/wechat/classcircle/1510129169670127.webm";
-			var vUrl_6 = "http://qn-cspb.jiaobaowang.net/wechat/classcircle/151012986452614.webm";
-			var vUrl_7 = "http://qn-cspb.jiaobaowang.net/wechat/classcircle/1510195201592100.webm";
-			var vUrl_8 = "http://qn-cspb.jiaobaowang.net/wechat/classcircle/1510199497252613.webm";
+			var vUrl = storageutil.QNPBDOMAIN + storageutil.QNQYWXFN + storageutil.QNVIDEO;
+			var vConvert = vUrl + storageutil.QNCONVERT;
+			var vThumb = vUrl + storageutil.QNTHUMB;
+			var rF_0 = "http://qn-cspb.jiaobaowang.net/wechat/classcircle/1510303282436135.webm";
+			var rF_1 = "http://qn-cspb.jiaobaowang.net/wechat/classcircle/1510363318969261.mp4";
+
+			var v_0 = "1510303853283468"
+			var qnv_0 = vUrl + v_0 + ".webm";
+			var qnvc_0 = vConvert + v_0 + ".mp4";
+			var qnvt_0 = vThumb + v_0 + ".jpg";
+			var v_1 = "1510305685572360"
+			var qnv_1 = vUrl + v_1 + ".webm";
+			var qnvc_1 = vConvert + v_1 + ".mp4";
+			var qnvt_1 = vThumb + v_1 + ".jpg";
+			var v_2 = "1510306358529423"
+			var qnv_2 = vUrl + v_2 + ".mov";
+			var qnvc_2 = vConvert + v_2 + ".mp4";
+			var qnvt_2 = vThumb + v_2 + ".jpg";
+
 			var mediaOpts = {
 				audio: true,
 				video: true
 			} //获取摄像头的参数
+			var deviceId = {
+				user: null, //拍用户（前置）
+				environment: null //拍环境（后置）
+			}; //设备源ID
 			var blobType = 'webm'; //录制视频文件的格式
 			var cameraStream; //摄像头视频流
 			var mediaStreamTrack; //视频流轨道
 			var mediaRecorder; //录制对象
 			var mediaRecorderOption = {
-				mimeType: "video/" + blobType
+				mimeType: "video/webm"
 			}; //录制视频时的设置
 			var chunks = []; //录制时的视频流
 			var videoBlob; //录制的视频文件
 			var timeslice = null; //录制视频存储的间隔
-			var getRecordDataType = 1;//获取录制的文件的方式
 
 			var uploadFile; //需要上传的文件
 			var uptokenData; //上传文件的token
 			var qnFileUploader; //七牛上传对象
+			var VueUpLoadVideo; //上传成功的文件列表
+
+			var reader = new FileReader();
+			reader.onload = function() {
+				console.log("reader.onload", reader);
+			}
+			reader.onerror = function() {
+				console.log("reader.onerror", reader.error);
+			}
 
 			var option = document.getElementById("option");
+
+			var inputVideo = document.getElementById("input");
+			inputVideo.addEventListener("change", function(e) {
+				console.log("change", e.target.files);
+				var url = window.URL.createObjectURL(e.target.files[0]);
+				uploadFile = e.target.files[0];
+				console.log("url:" + url);
+				record.src = url;
+				record.play();
+			});
 			var video = document.getElementById("video");
+			video.onerror = function(e) {
+				console.log("video.onerror", video.error);
+			}
 			var record = document.getElementById("record");
+			record.onerror = function(e) {
+				console.log("record.onerror", record.error);
+			}
 
 			window.onload = function() {
 				console.log("screen", window.screen);
@@ -100,31 +170,11 @@
 				}
 
 				initQNUploader();
-				video.src = vUrl_8;
+				initVue();
+				video.src = rF_1;
+				//record.src = vCon_7;
 			}
 
-			video.onerror = function(e) {
-				console.log("video.onerror", video.error);
-			}
-			record.onerror = function(e) {
-				console.log("record.onerror", record.error);
-			}
-
-			//input获取视频
-			var inputVideo = document.getElementById("input");
-			inputVideo.addEventListener("change", function(e) {
-				console.log("change", e.target.files);
-				var url = window.URL.createObjectURL(e.target.files[0]);
-				uploadFile = e.target.files[0];
-				console.log("url:" + url);
-				record.src = url;
-				record.play();
-			});
-
-			var deviceId = {
-				user: null, //拍用户（前置）
-				environment: null //拍环境（后置）
-			}; //设备源ID
 			//视频，音频的设备信息
 			if(window.MediaStreamTrack && window.MediaStreamTrack.getSources) {
 				MediaStreamTrack.getSources(function(sourceInfos) {
@@ -236,7 +286,7 @@
 						androidRecord();
 						break;
 					case 8: //上传录制的文件
-						console.log("uploadFile", uploadFile)
+						console.log("uploadFile", uploadFile);
 						qnFileUploader.addFile(uploadFile, uploadFile.name);
 						break;
 					case 9: //关闭视频流
@@ -245,6 +295,27 @@
 						for(var i = 0; i < tracks.length; i++) {
 							tracks[i].stop();
 						}
+						break;
+					case 10: //两倍分辨率
+						mediaOpts = {
+							audio: true,
+							video: {
+								mandatory: {
+									minWidth: 720,
+									minHeight: 1280,
+								},
+								optional: [{
+									sourceId: deviceId.environment
+								}]
+							}
+						}
+					case 11: //读取上传的文件
+						console.log("uploadFile", uploadFile);
+						reader.readAsDataURL(uploadFile);
+						break;
+					case 12: //读取上传的文件
+						console.log("uploadFile", uploadFile);
+						reader.readAsArrayBuffer(uploadFile);
 						break;
 				}
 			}
@@ -259,41 +330,28 @@
 					console.log("开始录制");
 					mediaRecorder.onstop = function() {
 						console.log("mediaRecorder.onstop");
-						if(getRecordDataType === 0) {
-							console.log("chunks", chunks);
-							videoBlob = new Blob(chunks, {
-								type: "video/" + blobType
-							});
-							videoBlob.lastModifiedDate = new Date();
-							videoBlob.name = videoBlob.lastModifiedDate.getTime() + "." + blobType;
-							console.log("videoBlob", videoBlob);
-							var url = window.URL.createObjectURL(videoBlob);
-							uploadFile = videoBlob;
-							console.log("url:" + url);
-							record.src = url;
-							record.play();
-						}
+						console.log("chunks", chunks);
+						console.log("chunks.length", chunks.length);
+						videoBlob = new Blob(chunks, {
+							type: "video/" + blobType
+						});
+						videoBlob.lastModifiedDate = new Date();
+						videoBlob.name = videoBlob.lastModifiedDate.getTime() + "." + blobType;
+						console.log("videoBlob", videoBlob);
+						var url = window.URL.createObjectURL(videoBlob);
+						uploadFile = videoBlob;
+						console.log("url:" + url);
+						record.src = url;
+						record.play();
 					}
-					if(getRecordDataType === 0) {
-						mediaRecorder.ondataavailable = function(e) {
-							chunks.push(e.data);
-						}
+					mediaRecorder.ondataavailable = function(e) {
+						chunks.push(e.data);
 					}
 					mediaRecorder.onstart = function(e) {
 						console.log("mediaRecorder.onstart");
 						setTimeout(function() {
 							console.log("录像结束");
-							if(getRecordDataType === 0) {
-								mediaRecorder.stop();
-							} else if(getRecordDataType === 1) {
-								mediaRecorder.ondataavailable = function(e) {
-									console.log("ondataavailable", e);
-									chunks.push(e.data);
-								}
-								console.log("chunks", chunks);
-								mediaRecorder.requestData();
-								mediaRecorder.stop();
-							}
+							mediaRecorder.stop();
 						}, 10000);
 					}
 					chunks = [];
@@ -321,9 +379,12 @@
 						console.log("uptokenData:", uptokenData);
 						if(uptokenData) {
 							if(uptokenData.code) {
-								var fileUrl = uptokenData.data.Data[0].Domain + uptokenData.data.Data[0].Key
+								var fileUrl = uptokenData.data.Data[0].Domain + uptokenData.data.Data[0].Key;
+								var convertUrl = uptokenData.data.Data[0].OtherKey[uptokenData.convertKey[0]];
+								var thumbtUrl = uptokenData.data.Data[0].OtherKey[uptokenData.thumbKey[0]];
 								console.log("fileUrl", fileUrl);
-								document.getElementById("fileUrl").innerText = "文件路径-" + fileUrl;
+								console.log("convertUrl", convertUrl);
+								console.log("thumbtUrl", thumbtUrl);
 								return uptokenData.data.Data[0].Token;
 							} else {
 								qnFileUploader.stop();
@@ -364,6 +425,11 @@
 							console.log("FileUploaded:", info);
 							if(info.status == 200) {
 								console.log("上传成功");
+								VueUpLoadVideo.QiNiuFile.push({
+									qnv: uptokenData.data.Data[0].Domain + uptokenData.data.Data[0].Key,
+									qnvc: uptokenData.data.Data[0].OtherKey[uptokenData.convertKey[0]],
+									qnvt: uptokenData.data.Data[0].OtherKey[uptokenData.thumbKey[0]]
+								})
 							} else {
 								console.log("上传失败");
 							}
@@ -402,7 +468,10 @@
 				var getTokenData = {
 					appId: storageutil.QNQYWXKID,
 					mainSpace: storageutil.QNPUBSPACE,
-					saveSpace: storageutil.QNSSPACECLASSCIRCLE,
+					saveSpace: storageutil.QNVIDEO,
+					qnCmdOption: {
+						type: 4
+					},
 					fileArray: [{
 						qnFileName: fileName,
 					}]
@@ -412,6 +481,40 @@
 					upToken = data;
 				});
 				return upToken;
+			}
+
+			function initVue() {
+				Vue.component('video-table', {
+					props: ['value', 'index'],
+					template: '#TempUpLoadVideo',
+					methods: {
+						imageError: function(e, index) {
+							var self = this;
+							setTimeout(function() {
+								e.target.src = self.images[index];
+								self = null;
+							}, 5000);
+						}
+					}
+				});
+				VueUpLoadVideo = new Vue({
+					el: "#UploadVideoFile",
+					data: {
+						QiNiuFile: [{
+							qnv: qnv_0,
+							qnvc: qnvc_0,
+							qnvt: qnvt_0
+						}, {
+							qnv: qnv_1,
+							qnvc: qnvc_1,
+							qnvt: qnvt_1
+						}, {
+							qnv: qnv_2,
+							qnvc: qnvc_2,
+							qnvt: qnvt_2
+						}]
+					}
+				})
 			}
 		</script>
 	</body>

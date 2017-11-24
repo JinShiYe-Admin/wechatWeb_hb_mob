@@ -62,7 +62,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="weui-circle">
+			<div class="weui-circle" v-on:click="addNewService()">
 
 			</div>
 		</div>
@@ -145,6 +145,12 @@
 					},
 					jumpToDetail:function(item){
 						location.href="service-detail.html?id="+item.id;
+					},
+					/**
+					 * 添加新维修
+					 */
+					addNewService:function(){
+						location.href="addserviceform.html"
 					}
 				}
 			})

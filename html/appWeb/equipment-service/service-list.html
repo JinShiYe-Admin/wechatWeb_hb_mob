@@ -18,7 +18,8 @@
 			.weui-tab__bd .weui-tab__bd-item {
 				width: 100%;
 			}
-			.weui-circle{
+			
+			.weui-circle {
 				position: absolute;
 				right: 50px;
 				bottom: 50px;
@@ -30,13 +31,16 @@
 				background-position: center;
 				background-size: contain;
 			}
+			.weui-cells{
+				margin: 0;
+			}
 		</style>
 	</head>
 
 	<body ontouchstart>
 		<div class="weui-tab" id="tabs">
 			<div class="weui-navbar">
-				<div v-for="tab in tabs" class="weui-navbar__item" v-bind:class="[{'weui-bar__item--on':tab.id===activeId}]" v-bind:href="'#tab'+tab.id">{{tab.title}}</div>
+				<div v-for="tab in tabs" class="weui-navbar__item" v-bind:class="[{'weui-bar__item--on':tab.id===activeId}]" v-bind:href="'#tab'+tab.id" v-on:click="setActiveId(tab.id)">{{tab.title}}</div>
 			</div>
 			<div class="weui-tab__bd">
 				<div v-for="tab in tabs" :id="'tab'+tab.id" class="weui-tab__bd-item  weui-pull-to-refresh infinite" :class="[{'weui-tab__bd-item--active':tab.id===activeId}]">
@@ -47,9 +51,10 @@
 						<div class="up">释放刷新</div>
 						<div class="refresh">正在刷新</div>
 					</div>
-					<h1 class="doc-head">页面{{tab.title}}</h1>
-					<div class="content-padded">
+					<div class="weui-cells">
+						<div v-for="item in tab.list" class="weui-cell" v-on:click="jumpToDetail(item)">
 
+						</div>
 					</div>
 					<div v-show="tab.haveMore" class="weui-loadmore">
 						<i class="weui-loading"></i>
@@ -57,11 +62,11 @@
 					</div>
 				</div>
 			</div>
-			<div class="weui-circle" >
-				
+			<div class="weui-circle">
+
 			</div>
 		</div>
-		
+
 		<script src="../../../js/jquery.min.js"></script>
 		<script src="../../../js/jquery-weui.min.js"></script>
 		<script src="../../../js/vue.js"></script>
@@ -74,19 +79,31 @@
 					tabs: [{
 						id: 0,
 						title: "全部",
-						haveMore:false
+						haveMore: false,
+						pageIndex: 1,
+						totalPage: 0,
+						list: []
 					}, {
 						id: 1,
 						title: "未解決",
-						haveMore:false
+						haveMore: false,
+						pageIndex: 1,
+						totalPage: 0,
+						list: []
 					}, {
 						id: 2,
 						title: "已解決",
-						haveMore:false
+						haveMore: false,
+						pageIndex: 1,
+						totalPage: 0,
+						list: []
 					}, {
 						id: 3,
 						title: "已关闭",
-						haveMore:false
+						haveMore: false,
+						pageIndex: 1,
+						totalPage: 0,
+						list: []
 					}]
 				},
 				mounted: function() {
@@ -97,6 +114,7 @@
 						}, 2000)
 					});
 					$('.infinite').infinite().on("infinite", function() {
+						
 						var self = this;
 						console.log(self.loading)
 						if(self.loading) return;
@@ -107,6 +125,27 @@
 							self.loading = false;
 						}, 2000); //模拟延迟
 					});
+				},
+				methods: {
+					/**
+					 * 设置活动的id
+					 * @param {Object} id
+					 */
+					setActiveId: function(id) {
+						this.activeId = id;
+					},
+					requestList:function(){
+						
+					},
+					refreshList:function(){
+						
+					},
+					loadMore:function(){
+						
+					},
+					jumpToDetail:function(item){
+						location.href="service-detail.html?id="+item.id;
+					}
 				}
 			})
 		</script>

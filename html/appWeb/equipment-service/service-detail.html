@@ -7,8 +7,33 @@
 		<title>维修详情</title>
 		<link href="../../../css/weui.min.css" rel="stylesheet" />
 	</head>
+
 	<body>
-		
+		<div id="detail">
+			<div></div>
+			<div></div>
+		</div>
 	</body>
+	<script src="../../../js/vue.js"></script>
+	<script src="../../../js/jquery.min.js"></script>
+	<script type="text/javascript">
+		var deatil = new Vue({
+			el: "#detail",
+			data: {
+				detail: {
+
+				}
+			},
+			mounted: function() {
+				detail.id = $.url().param('id');
+				this.getDetail(detail.id);
+			},
+			methods: {
+				getDetail: function(id) {
+
+				}
+			}
+		})
+	</script>
 
 </html>

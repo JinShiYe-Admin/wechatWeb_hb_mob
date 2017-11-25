@@ -31,8 +31,13 @@
 				background-position: center;
 				background-size: contain;
 			}
-			.weui-cells{
+			
+			.weui-cells {
 				margin: 0;
+			}
+			
+			.weui-cell {
+				display: block;
 			}
 		</style>
 	</head>
@@ -53,7 +58,8 @@
 					</div>
 					<div class="weui-cells">
 						<div v-for="item in tab.list" class="weui-cell" v-on:click="jumpToDetail(item)">
-
+							<div>{{item.title}}</div>
+							<div>{{item.date}}</div>
 						</div>
 					</div>
 					<div v-show="tab.haveMore" class="weui-loadmore">
@@ -82,7 +88,12 @@
 						haveMore: false,
 						pageIndex: 1,
 						totalPage: 0,
-						list: []
+						list: [{
+							id: 0,
+							title: "电灯漏电还发热，灯泡电丝都发红了",
+							date: "2015-11-12",
+							type: "电"
+						}]
 					}, {
 						id: 1,
 						title: "未解決",
@@ -107,26 +118,41 @@
 					}]
 				},
 				mounted: function() {
+
+					var com = this;
+					com.initialData();
 					$('.weui-tab__bd-item').pullToRefresh().on('pull-to-refresh', function(done) {
 						var self = this
 						setTimeout(function() {
+							com.tabs[com.activeId].list = []
+							com.initialData();
 							$(self).pullToRefreshDone();
 						}, 2000)
 					});
 					$('.infinite').infinite().on("infinite", function() {
-						
 						var self = this;
 						console.log(self.loading)
 						if(self.loading) return;
 						self.loading = true;
 						console.log(self);
 						setTimeout(function() {
-							$(self).find(".content-padded").append("<p>我是加载的新内容。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。我是加载的新内容。。。。。</p>");
+							com.loadMore();
 							self.loading = false;
 						}, 2000); //模拟延迟
 					});
 				},
 				methods: {
+					initialData: function() {
+						for(var i = 0; i < 10; i++) {
+							this.tabs[this.activeId].list.push({
+								id: i,
+								title: "传说中的错误由我承担",
+								type: "其他",
+								date: "2017-15-45"
+							})
+						}
+						this.tabs[this.activeId].haveMore = true
+					},
 					/**
 					 * 设置活动的id
 					 * @param {Object} id
@@ -134,23 +160,28 @@
 					setActiveId: function(id) {
 						this.activeId = id;
 					},
-					requestList:function(){
-						
+					requestList: function() {
+
 					},
-					refreshList:function(){
-						
+					refreshList: function() {
+
 					},
-					loadMore:function(){
-						
+					loadMore: function() {
+						this.tabs[this.activeId].list.push({
+							id: 1,
+							title: "水管出粪水",
+							type: "水",
+							date: "2017-11-25"
+						})
 					},
-					jumpToDetail:function(item){
-						location.href="service-detail.html?id="+item.id;
+					jumpToDetail: function(item) {
+						location.href = "service-detail.html?id=" + item.id;
 					},
 					/**
 					 * 添加新维修
 					 */
-					addNewService:function(){
-						location.href="addserviceform.html"
+					addNewService: function() {
+						location.href = "addserviceform.html"
 					}
 				}
 			})

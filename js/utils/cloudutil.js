@@ -419,6 +419,44 @@ var cloudutil = (function(mod) {
 		console.log(request.response)
 		return request.response;
 	}
+
+	/**
+	 * 获取七牛初始化部分设置
+	 * 1.默认不自动上传
+	 * 2.uptoken, uptoken_url, uptoken_func 三个参数中必须有一个被设置
+	 * 3.使用时请检查domain和flash_swf_url的参数
+	 * @param {Object} browse_button 上传选择的点选按钮
+	 */
+	mod.getQiNiuInitOption = function(browse_button) {
+		var qnOption = {
+			disable_statistics_report: false, // 禁止自动发送上传统计信息到七牛，默认允许发送
+			runtimes: 'html5,flash,html4', // 上传模式,依次退化
+			browse_button: browse_button, // 上传选择的点选按钮，**必需**
+			unique_names: false, // 默认 false，key 为文件名。若开启该选项，JS-SDK 会为每个文件自动生成key（文件名）
+			save_key: false, // 默认 false。若在服务端生成 uptoken 的上传策略中指定了 `save_key`，则开启，SDK在前端将不对key进行任何处理
+			get_new_uptoken: true, // 设置上传文件的时候是否每次都重新获取新的 uptoken
+			domain: storageutil.QNPBDOMAIN, // bucket 域名，下载资源时用到，如：'http://xxx.bkt.clouddn.com/' **必需**
+			max_file_size: '100mb', // 最大文件体积限制
+			flash_swf_url: "../../js/lib/plupload/Moxie.swf", //引入 flash,相对路径
+			max_retries: 0, // 上传失败最大重试次数
+			dragdrop: false, // 开启可拖曳上传
+			chunk_size: '4mb', // 分块上传时，每块的体积
+			auto_start: false, // 选择文件后自动上传，若关闭需要自己绑定事件触发上传,
+		}
+		return qnOption;
+	}
+
+	/**
+	 * 获取七牛上传的文件名
+	 * @param {Object} fname
+	 */
+	mod.getQNName = function(fname) {
+		var myDate = new Date();
+		var fileName = myDate.getTime() + "" + parseInt(Math.random() * 1000);
+		var types = fname.toLowerCase().split(".");
+		fileName = fileName + "." + types[types.length - 1];
+		return fileName;
+	}
 	return mod;
 })(window.cloudutil || {});
 

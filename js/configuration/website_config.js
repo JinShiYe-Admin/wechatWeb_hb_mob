@@ -13,8 +13,8 @@ window.onload = function() {
 	initUploader();
 	getWebsitConfig(); //获取配置
 	//---假数据---start---
-	initWebsiteConfig(webConfig);
-	vm_loading.isShow = false;
+	//	initWebsiteConfig(webConfig);
+	//	vm_loading.isShow = false;
 	//---假数据---end---
 };
 

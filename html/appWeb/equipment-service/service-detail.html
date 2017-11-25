@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>维修详情</title>
+		<link href="../../../css/weui.min.css" rel="stylesheet" />
+		<style>
+			.weui-cells {
+				margin: 0;
+			}
+			
+			.display-none {
+				display: none;
+				opacity: 0;
+			}
+			
+			.display-block {
+				display: block;
+				opacity: 1;
+			}
+			.weui-dialog__bd:first-child{
+				padding:15px 10px 5px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="detail">
+			<div class="weui-cells">
+				<div class="weui-cell">
+					<div class="weui-cell__bd">
+						<b>维修单号:</b>
+					</div>
+					<div class="weui-cell__ft">
+						101001
+					</div>
+				</div>
+				<div class="weui-cell">
+					<div class="weui-cell__bd">
+						<b>维修状态:</b>
+					</div>
+					<div class="weui-cell__ft">
+						<a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_primary">未维修</a>
+					</div>
+				</div>
+				<div class="weui-cell">
+					<div class="weui-cell__bd">
+						<b>维修人员:</b>
+					</div>
+					<div class="weui-cell__ft">
+						sombody
+					</div>
+				</div>
+				<div class="weui-cell">
+					<div class="weui-cell__bd">
+						<b>联系人:</b>
+					</div>
+					<div class="weui-cell__ft">
+						an
+					</div>
+				</div>
+				<div class="weui-cell">
+					<div class="weui-cell__bd">
+						<b>联系电话:</b>
+					</div>
+					<div class="weui-cell__ft">
+						18977777777
+					</div>
+				</div>
+				<div class="weui-cell">
+					<div class="weui-cell__bd">
+						<b>维修分类:</b>
+					</div>
+					<div class="weui-cell__ft">
+						电
+					</div>
+				</div>
+				<div class="weui-cell">
+					<div class="weui-cell__bd">
+						<b>维修地址:</b>
+					</div>
+					<div class="weui-cell__ft">
+						天桥区铜元局前街1-201
+					</div>
+				</div>
+				<div class="weui-cell">
+					<div class="weui-cell__hd">
+						<b>维修内容:</b>
+					</div>
+					<div class="weui-cell__bd">
+						成功失败 皆成功失败 皆成功失败 皆成功失败 皆成功失败 皆成功失败 皆成功失败 皆成功失败
+
+					</div>
+				</div>
+				<div class="weui-cell">
+					<div class="weui-uploader">
+						<div class="weui-uploader__hd">
+							<b>维修图片预览</b>
+						</div>
+						<div class="weui-uploader__bd">
+							<ul class="weui-uploader__files" id="uploaderFiles">
+								<li class="weui-uploader__file" style="background-image: url(../../../image/add.png);"></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<div class="weui-gallery display-none" id="gallery" v-on:click="showGallery=false">
+				<div class="swiper-container">
+					<!-- Additional required wrapper -->
+					<div class="swiper-wrapper">
+						<!-- Slides -->
+						<div v-for="(image,index) in detail.imgs" class="swiper-slide" v-bind:style="{backgroundImage:'url('+image.fileurl+')',
+          backgroundSize:'contain',backgroundPosition:'center',backgroundRepeat:'no-repeat'}">
+						</div>
+					</div>
+					<!-- If we need pagination -->
+					<div v-show="detail.imgs.length>1" class="swiper-pagination"></div>
+				</div>
+			</div>
+			<div class="js_dialog display-none" id="dialog">
+				<div class="weui-mask">
+					
+				</div>
+				<div class="weui-dialog">
+					<!--<div class="weui-dialog__hd">
+						<strong>输入评论</strong>
+					</div>-->
+					<div class="weui-dialog__bd">
+						<textarea style="width: 100%;"rows="5">
+							
+						</textarea>
+					</div>
+					<div class="weui-dialog__ft">
+						<a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_default">取消</a>
+						<a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary">已解决</a>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</body>
+	<script src="../../../js/vue.js"></script>
+	<script src="../../../js/jquery.min.js"></script>
+	<script type="text/javascript">
+		var deatil = new Vue({
+			el: "#detail",
+			data: {
+				detail: {
+					imgs: []
+				},
+				showGallery: false
+			},
+			mounted: function() {
+				detail.id = $.url().param('id');
+				this.getDetail(detail.id);
+			},
+			methods: {
+				getDetail: function(id) {
+
+				}
+			}
+		})
+	</script>
+
+</html>

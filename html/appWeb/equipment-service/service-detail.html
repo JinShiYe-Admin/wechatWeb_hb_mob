@@ -8,6 +8,10 @@
 		<link href="../../../css/weui.min.css" rel="stylesheet" />
 		<link href="../../../css/swiper/swiper.min.css" rel="stylesheet" />
 		<style>
+			body {
+				background-color: #f8f8f8;
+			}
+			
 			.weui-cells {
 				margin: 0;
 			}
@@ -21,8 +25,18 @@
 				display: block;
 				opacity: 1;
 			}
-			.weui-dialog__bd:first-child{
-				padding:15px 10px 5px;
+			
+			.weui-dialog__bd:first-child {
+				padding: 15px 10px 5px;
+			}
+			
+			.float-right {
+				float: right;
+			}
+			
+			.margin-right {
+				margin-top: 10px;
+				margin-right: 15px;
 			}
 		</style>
 	</head>
@@ -109,6 +123,14 @@
 				</div>
 
 			</div>
+			<div class="weui-cells__title">回复列表</div>
+			<div class="weui-cells">
+					<div class="weui-cell" v-for="reply in detail.replies">
+						<div>{{reply.name}}:</div>
+						<div>{{reply.content}}</div>
+					</div>
+			</div>
+			<a class="weui-btn weui-btn_mini weui-btn_primary float-right margin-right">回复</a>
 			<div class="weui-gallery display-none" id="gallery" v-on:click="showGallery=false">
 				<div class="swiper-container">
 					<!-- Additional required wrapper -->
@@ -124,14 +146,14 @@
 			</div>
 			<div class="js_dialog display-none" id="dialog">
 				<div class="weui-mask">
-					
+
 				</div>
 				<div class="weui-dialog">
 					<!--<div class="weui-dialog__hd">
 						<strong>输入评论</strong>
 					</div>-->
 					<div class="weui-dialog__bd">
-						<textarea style="width: 100%;"rows="5">
+						<textarea style="width: 100%;" rows="5">
 							
 						</textarea>
 					</div>
@@ -140,7 +162,7 @@
 						<a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary">已解决</a>
 					</div>
 				</div>
-				
+
 			</div>
 		</div>
 	</body>
@@ -152,7 +174,14 @@
 			el: "#detail",
 			data: {
 				detail: {
-					imgs: []
+					imgs: [],
+					replies: [{
+						name:'an',
+						content:'我说的就是这个'
+					},{
+						name:'somebody',
+						content:'我说的不是这个'
+					}]
 				},
 				showGallery: false
 			},

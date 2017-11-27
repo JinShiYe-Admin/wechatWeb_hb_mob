@@ -126,6 +126,7 @@
 					editState = 0;
 					$("#addressText").val("");
 					$("#addressState").css("display", "none");
+					$("#submitArea").css("display", "block");
 					layer.open({
 						type: 1,
 						title: "添加",
@@ -182,6 +183,12 @@
 						return false;
 					}
 					addressEdit("cname", addressText);
+				});
+
+				//修改地址状态
+				$("#stateChange").change(function() {
+					var addressState = $("#stateChange").val() * 1;
+					console.log("addressState:" + addressState);
 				});
 			}
 

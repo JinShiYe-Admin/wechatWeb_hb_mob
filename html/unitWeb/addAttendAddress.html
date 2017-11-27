@@ -1,0 +1,396 @@
+<!--
+	作者：徐邦圣
+	时间：2017-11-25
+	描述：企业微信后台管理页面，考勤管理模块，点新增考勤地点按钮后跳转到该界面，即新增考勤地点记录界面
+-->
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>管理考勤</title>
+		<link rel="stylesheet" href="../../css/weui.min.css" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<style>
+			.weui-cells {
+				margin-top: 0px;
+			}
+			
+			.weui-cells__title {
+				color: black;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!--<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		</header>-->
+		<!--<template>-->
+		<div id="conetent" class="weui-cells weui-cells_form mui-hidden">
+			<h3 style="text-align: center;">新增考勤地点</h3>
+			<!--输入列表-->
+			<div id="input_list">
+				<div>
+					<div class="weui-cells__title">考勤地点名称</div>
+					<div class="weui-cells">
+						<div class="weui-cell">
+							<div class="weui-cell__bd">
+								<input id="attendAdressText" v-model.lazy="cname.message" class="weui-input" type="text" :placeholder="'请输入考勤地点名称'">
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div>
+					<!--<div class="weui-cells__title">{{linkurl.title+" (有链接时，不允许投稿；链接默认打开。)"}}</div>-->
+					<!--<div class="weui-cell__ft" style="margin-top: -35px;margin-right: 15px;">
+						<input class="weui-switch" type="checkbox" v-model="islink.check">
+					</div>-->
+					<!--<div v-if="islink.check" class="weui-cells">-->
+					<div class="weui-cells__title">考勤地点X坐标</div>
+					<div class="weui-cell">
+						<div class="weui-cell__bd">
+							<input id="attendAdressX" v-model.lazy="linkurl.message" class="weui-input" type="text" :placeholder="'请输入考勤地点X坐标'">
+						</div>
+					</div>
+					<!--</div>-->
+				</div>
+
+				<div>
+					<div class="weui-cells__title">考勤地点Y坐标</div>
+					<div class="weui-cells">
+						<div class="weui-cell">
+							<div class="weui-cell__bd">
+								<input id="attendAdressY" v-model.lazy="orderid.message" class="weui-input" type="number" :placeholder="'请输入考勤地点Y坐标'">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div>
+					<div class="weui-cells__title">考勤地点半径</div>
+					<div class="weui-cells">
+						<div class="weui-cell">
+							<div class="weui-cell__bd">
+								<input id="attendAddressRedius"  v-model.lazy="note.message" class="weui-input" type="text" :placeholder="'请输入考勤地点半径'">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--开关列表-->
+			<div id="switch_list">
+				<!--<div>
+					<div class="weui-cell weui-cell_switch">
+						<div class="weui-cell__bd">{{islink.title}}</div>
+						<div class="weui-cell__ft">
+							<input class="weui-switch" type="checkbox" v-model="islink.check">
+						</div>
+					</div>
+				</div>-->
+
+				<!--<div>
+					<div class="weui-cell weui-cell_switch">
+						<div class="weui-cell__bd">{{iswrite.title}}</div>
+						<div class="weui-cell__ft">
+							<input :disabled="(islink.check)||(iswrite_all==0)" class="weui-switch" type="checkbox" v-model="iswrite.check">
+						</div>
+					</div>
+				</div>
+
+				<div>
+					<div class="weui-cell weui-cell_switch">
+						<div class="weui-cell__bd">{{istop.title}}</div>
+						<div class="weui-cell__ft">
+							<input class="weui-switch" type="checkbox" v-model="istop.check">
+						</div>
+					</div>
+				</div>-->
+			</div>
+			<div class="weui-btn-area" v-if="editName =='添加'">
+				<button id="submit" v-on:click="submitClick" class="weui-btn weui-btn_primary">{{editName}}</button>
+			</div>
+		</div>
+		<!--</template>-->
+		<script src="../../js/mui.min.js"></script>
+		<script type="text/javascript" src="../../js/weui.min.js"></script>
+		<script type="text/javascript" src="../../js/vue.min.js"></script>
+		<script type="text/javascript" src="../../js/jweixin.js"></script>
+		<script type="text/javascript" src="../../js/jquery.min.js"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
+		</script>
+		<script>
+			window.onload = function() {
+				getWebsitConfig();
+				var detail = utils.getDataFromUrl(window.location.href);
+				//				alert("detail " + JSON.stringify(detail));
+				vm.type = detail.type;
+				if(vm.type == 'edit') {
+					var tempData = {
+						cmd: 'chn',
+						type: 'findpage',
+						pagesize: '1',
+						pageindex: '1',
+						chnid: detail.chnid
+						//				cname: '',
+						//				stat: '',
+						//				iswrite: '',
+						//				islink: ''
+					}
+					unitWebsitePro(tempData, function(data) {
+						//				alert(JSON.stringify(data));
+						if(data.RspCode == 0) {
+							detail = data.RspData.dt[0];
+							vm.editName = '删除'
+							vm.colid = detail.chnid;
+							vm.cname.message = detail.cname;
+							vm.orderid.message = detail.orderid;
+							vm.linkurl.message = detail.linkurl;
+							vm.islink.check = detail.islink == 1 ? true : false;
+							vm.iswrite.check = detail.iswrite == 1 ? true : false;
+							vm.istop.check = detail.istop == 1 ? true : false;
+							vm.note.message = detail.note
+							for(var item in vm.$data) {
+								(function addwatch(key) {
+									vm.$watch(key + '.message', function(newVal, oldVal) {
+										edit(oldVal, newVal, key)
+									})
+									vm.$watch(key + '.check', function(newVal, oldVal) {
+										edit(oldVal, newVal, key)
+									})
+								})(item)
+
+							}
+						} else {
+							alert(data.RspTxt);
+						}
+					});
+
+				} else {
+					vm.editName = '添加'
+					vm.$watch('islink.check', function(newVal, oldVal) {
+						edit(oldVal, newVal, 'islink')
+					})
+				}
+				document.getElementById("conetent").className = "weui-cells weui-cells_form"
+
+			}
+			var vm = new Vue({
+				el: '#conetent',
+				data: {
+					editName: '',
+					iswrite_all: 1,
+					cname: {
+						title: "栏目名称",
+						message: ""
+					},
+					linkurl: {
+						title: "链接url",
+						message: ""
+					},
+					orderid: {
+						title: "排序ID",
+						message: ""
+					},
+					islink: {
+						title: "是否为链接",
+						check: true
+					},
+					iswrite: {
+						title: "是否允许投稿",
+						check: false
+					},
+					istop: {
+						title: "是否显示首页",
+						check: false
+					},
+					note: {
+						title: "备注",
+						message: ""
+					}
+				},
+				methods: {
+					resetData: function() { //重置数据
+						Object.assign(this.$data, getDefaultData());
+					},
+					submitClick: function() {
+						//alert(99);
+						//提交前先判断。如果都不为空，则允许提交
+						/**
+						 * 得到各input输入框的值
+						 */
+						var attendAdressValue = document.getElementById("attendAdressText").value;
+						//alert("attendAdressValue==="+attendAdressValue);
+						var attendAdressX = document.getElementById("attendAdressX").value;
+						var attendAdressY = document.getElementById("attendAdressY").value;
+						var attendAddressRedius=document.getElementById("attendAddressRedius").value;
+						//						if(vm.type == 'add') { //添加栏目
+						//							alert(000)
+						//							var para = {
+						//								cmd: 'chn',
+						//								type: 'add',
+						//								cname: vm.cname.message,
+						//								islink: boolToInt(vm.islink.check),
+						//								linkurl: vm.linkurl.message,
+						//								iswrite: boolToInt(vm.iswrite.check),
+						//								note: vm.note.message,
+						//								orderid: vm.orderid.message,
+						//								pid: 0,
+						//								istop: boolToInt(vm.istop.check)
+						//							}
+						//							if(para.cname==""){
+						//								alert("请输入栏目名称");
+						//								return;
+						//							}
+						//							if(para.islink==1&&para.linkurl==''){
+						//								alert("请输入链接地址");
+						//								return;
+						//							}
+						//							if(para.note==""){
+						//								alert("请输入备注");
+						//								return;
+						//							}
+						//
+						//							var reg = /^[1-9]\d*$/
+						//								var numFlag = reg.test(vm.orderid.message);
+						//								if(numFlag == false) {
+						//									alert('请输入正确排序ID')
+						//									return;
+						//								}
+						//							
+						//							
+						//							//							alert(JSON.stringify(para))
+						//							unitWebsitePro(para, function(data) {
+						//								if(data.RspCode == 0) {
+						//									alert('添加成功');
+						//									vm.resetData();
+						//									vm.editName = '添加'
+						////									mui.back()
+						//								}
+						//								//								alert(JSON.stringify(data));
+						//							});
+						//						} else if(vm.type == 'edit') { //删除栏目
+						//							var para = {
+						//								cmd: 'chn',
+						//								type: 'del',
+						//								colid: vm.colid
+						//							}
+						//							//							alert(JSON.stringify(para))
+						//							unitWebsitePro(para, function(data) {
+						//								if(data.RspCode == 0) {
+						//									vm.resetData();
+						////									mui.back()
+						//								}
+						//								//								alert(JSON.stringify(data));
+						//							});
+						//						}
+
+					}
+				}
+
+			})
+
+			function getDefaultData() {
+				return {
+					editName: '',
+					cname: {
+						title: "栏目名称",
+						message: ""
+					},
+					linkurl: {
+						title: "链接url",
+						message: ""
+					},
+					orderid: {
+						title: "排序ID",
+						message: ""
+					},
+					islink: {
+						title: "是否为链接",
+						check: true
+					},
+					iswrite: {
+						title: "是否允许投稿",
+						check: false
+					},
+					note: {
+						title: "备注",
+						message: ""
+					}
+				}
+			}
+
+			function edit(oldVal, newVal, key) {
+				console.log('key=' + key + '--oldVal=' + oldVal + '--newVal=' + newVal)
+				if(vm.type == "orderid") {
+					var numFlag = newVal.test('^[0-9]*$');
+					console.log(numFlag)
+					if(numFlag == false) {
+						console.log('请输入正确的数字')
+					}
+				}
+				if(vm.type == "add" && key == 'islink') {
+					if(newVal == true) {
+						$("#linkurl").focus();
+						vm.iswrite.check = false;
+					}
+					return;
+
+				}
+				if(key == 'islink' && newVal == true) {
+
+					$("#linkurl").focus();
+					vm.iswrite.check = false;
+				}
+				if(newVal == oldVal) {
+					return;
+				}
+				var para = {
+					cmd: 'chn',
+					type: 'edit',
+					colid: vm.colid,
+					callcol: key,
+					colv: boolToInt(newVal)
+				}
+				console.log(JSON.stringify(para))
+				unitWebsitePro(para, function(data) {
+					//					alert(JSON.stringify(data));
+				});
+			}
+
+			function boolToInt(value) {
+				if(value == true) {
+					return 1;
+				} else if(value == false) {
+					return 0;
+				} else {
+					return value;
+				}
+
+			}
+			/**
+			 * 获取网站配置信息
+			 */
+			function getWebsitConfig() {
+				var tempData = {
+					cmd: 'webcfg',
+					type: 'find'
+				}
+				unitWebsitePro(tempData, function(data) {
+					console.log('配置为:' + JSON.stringify(data));
+					if(data.RspCode == 0) {
+						if(data.RspData.length > 0) {
+							vm.iswrite_all = data.RspData[0].iswrite;
+							//							vm.iswrite.check = false;
+						}
+					}
+				});
+			}
+		</script>
+	</body>
+
+</html>

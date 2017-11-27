@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>报修单</title>
+		<script type="text/javascript">
+			var WebVersion = "?" + Math.random();
+		</script>
+		<link rel="stylesheet" href="../../../css/weui.min.css" />
+		<link rel="stylesheet" href="../../../js/demoCssJs/jquery-weui.min.css" />
+		<link rel="stylesheet" href="../../../js/demoCssJs/demos.css" />
+
+		<style>
+			.weui-cells {
+				margin-top: 0;
+				/*表格位置*/
+			}
+
+			.weui-cells:before {
+				border-top: none;
+				/*表格顶部横线*/
+			}
+
+			.weui-cells:after {
+				border-bottom: none;
+				/*表格底部横线*/
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="weui-cells weui-cells_form">
+			<div class="weui-cell">
+				<div class="weui-cell__hd"><label class="weui-label">故障信息</label></div>
+				<div class="weui-cell__bd">
+					<input id="troubleInfo" class="weui-input" placeholder="请输入故障信息" type="text">
+				</div>
+			</div>
+			<div class="weui-cell weui-cell_select weui-cell_select-after">
+				<div class="weui-cell__hd">
+					<label class="weui-label">故障类型</label>
+				</div>
+				<div class="weui-cell__bd">
+					<select id="troubleType" class="weui-select" name="select1">
+						<option value="故障类型1">故障类型1</option>
+						<option value="故障类型2">故障类型2</option>
+						<option value="故障类型3">故障类型3</option>
+					</select>
+				</div>
+			</div>
+			<div class="weui-cell">
+				<div class="weui-cell__hd"><label class="weui-label">维修地址</label></div>
+				<div class="weui-cell__bd">
+					<input id="address" class="weui-input" placeholder="请输入维修地址" type="text">
+				</div>
+			</div>
+			<div class="weui-cell">
+				<div class="weui-cell__hd"><label class="weui-label">联系人</label></div>
+				<div class="weui-cell__bd">
+					<input id="linkMan" class="weui-input" placeholder="请输入联系人" type="text">
+				</div>
+			</div>
+			<div class="weui-cell">
+				<div class="weui-cell__hd"><label class="weui-label">联系人电话</label></div>
+				<div class="weui-cell__bd">
+					<input id="linkManTel" class="weui-input" placeholder="请输入联系人电话" type="tel">
+				</div>
+			</div>
+			<div class="weui-cell weui-cell_select weui-cell_select-after">
+				<div class="weui-cell__hd">
+					<label class="weui-label">维修人员</label>
+				</div>
+				<div class="weui-cell__bd">
+					<select id="serviceMan" class="weui-select" name="select2">
+						<option value="维修人员1">维修人员1</option>
+						<option value="维修人员2">维修人员2</option>
+						<option value="维修人员3">维修人员3</option>
+					</select>
+				</div>
+			</div>
+			<div class="weui-cell">
+				<div class="weui-cell__bd">
+					<div class="weui-uploader">
+						<div class="weui-uploader__hd">
+							<p class="weui-uploader__title">添加图片</p>
+							<div id="imageAmount" class="weui-uploader__info">0/9</div>
+						</div>
+						<div class="weui-uploader__bd">
+							<ul id="uploaderFiles" class="weui-uploader__files"></ul>
+							<div class="weui-uploader__input-box">
+								<input id="addImage" class="weui-uploader__input" accept="image/*" multiple type="file">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="weui-btn-area">
+				<a id="submitForm" class="weui-btn weui-btn_primary">提交报修单</a>
+			</div>
+			<input id="qnInput" style="display: none;" />
+		</div>
+		<!--查看图片-->
+		<div id="gallery" class="weui-gallery">
+			<span id="galleryImage" class="weui-gallery__img"></span>
+			<div class="weui-gallery__opr">
+				<a class="weui-gallery__del">
+					<i class="weui-icon-delete weui-icon_gallery-delete"></i>
+				</a>
+			</div>
+		</div>
+		<script type="text/javascript" src="../../../js/lib/vconsole/vconsole.min.js"></script>
+		<script type="text/javascript" src="../../../js/demoCssJs/jquery-2.1.4.js"></script>
+		<script type="text/javascript" src="../../../js/demoCssJs/jquery-weui.min.js"></script>
+		<script type="text/javascript" src="../../../js/lib/plupload/moxie.min.js"></script>
+		<script type="text/javascript" src="../../../js/lib/plupload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../../../js/lib/qiniu/qiniu.min.js"></script>
+		<script type="text/javascript" src="../../../js/utils/cryption.js"></script>
+		<script type="text/javascript" src="../../../js/lib/exif/exif.min.js"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/cloudutil.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/compress.js" + WebVersion + "'></s" + "cript>");
+		</script>
+		<script type="text/javascript">
+			var qnUploader; //七牛上传控件
+			var uptokenData; //七牛上传凭证
+			var tempString; //处理图片失败的提示
+			var uploadFile = []; //上传图片的数组
+			var showImageIndex; //当前显示的图片的序号
+			var uploadImageIndex; //当前上传的图片的序号
+			var submitForm; //报修单
+			var liUpload; //上传图片对应的li元素
+			var uploadError; //本次上传是否出错
+			window.onload = function() {
+				console.log("onload");
+				initUploader();
+				initListener();
+			}
+
+			/**
+			 * 初始化监听
+			 */
+			function initListener() {
+				//添加图片
+				$("#addImage").change(function(e) {
+					console.log("fileChange:files", e.target.files);
+					disposeAllFiles(e.target.files);
+				});
+
+				//查看图片
+				$("body").on("click", ".weui-uploader__file", function(e) {
+					showImageIndex = $("#uploaderFiles .weui-uploader__file").index(this);
+					$("#galleryImage").css("background-image", "url(" + uploadFile[showImageIndex].filePath + ")");
+					$("#gallery").css("display", "block");
+				});
+
+				//隐藏查看图片
+				$("#galleryImage").click(function() {
+					$("#gallery").css("display", "none");
+					$("#galleryImage").css("background-image", "");
+					showImageIndex = null;
+				});
+
+				//删除图片
+				$(".weui-gallery__del").click(function() {
+					$.modal({
+						title: "提示",
+						text: "确定删除?",
+						buttons: [{
+							text: "取消",
+							className: "default",
+						}, {
+							text: "确定",
+							className: "color-danger",
+							onClick: function() {
+								var imageNumber = uploadFile.length - 1;
+								$("#uploaderFiles").find(".weui-uploader__file")[showImageIndex].remove();
+								$("#imageAmount").text(imageNumber + "/9");
+								if(imageNumber < 9) {
+									$(".weui-uploader__input-box").css("display", "block");
+								}
+								$("#gallery").css("display", "none");
+								$("#galleryImage").css("background-image", "");
+								uploadFile.splice(showImageIndex, 1);
+								showImageIndex = null;
+							}
+						}]
+					});
+				});
+
+				//提交报修单
+				$("#submitForm").click(function() {
+					var troubleInfo = $.trim($("#troubleInfo").val()); //故障信息
+					var troubleType = $("#troubleType").val(); //故障类型
+					var address = $.trim($("#address").val()); //维修地址
+					var linkMan = $.trim($("#linkMan").val()); //联系人
+					var linkManTel = $.trim($("#linkManTel").val()); //联系人电话
+					var serviceMan = $("#serviceMan").val(); //维修人员
+					if(troubleInfo == "") {
+						$.alert("故障信息不能为空");
+						return false;
+					}
+					if(troubleType == "") {
+						$.alert("故障类型不能为空");
+						return false;
+					}
+					if(address == "") {
+						$.alert("维修地址不能为空");
+						return false;
+					}
+					if(linkMan == "") {
+						$.alert("联系人不能为空");
+						return false;
+					}
+					if(linkManTel == "") {
+						$.alert("联系人电话不能为空");
+						return false;
+					}
+					if(uploadFile.length == 0) {
+						$.alert("图片不能为空");
+						return false;
+					}
+					$.showLoading();
+					submitForm = {
+						troubleInfo: troubleInfo,
+						troubleType: troubleType,
+						address: address,
+						linkMan: linkMan,
+						linkManTel: linkManTel,
+						serviceMan: serviceMan
+					}
+					console.log("submitForm", submitForm);
+					//重置所有文件允许上传
+					for(var i = 0; i < uploadFile.length; i++) {
+						uploadFile[i].allowUpload = true;
+					}
+					upLoadImages();
+				});
+			}
+
+			/**
+			 * 初始化七牛上传控件
+			 */
+			function initUploader() {
+				var qnOption = cloudutil.getQiNiuInitOption("qnInput");
+				qnOption.flash_swf_url = "../../../js/lib/plupload/Moxie.swf";
+				qnOption.auto_start = true;
+				qnOption.uptoken_func = function(file) {
+					// 在需要获取 uptoken 时，该方法会被调用
+					var getTokenData = {
+						appId: storageutil.QNQYWXKID,
+						mainSpace: storageutil.QNPUBSPACE,
+						saveSpace: storageutil.QNSERVICE,
+						qnCmdOption: {
+							type: 2
+						},
+						fileArray: [{
+							qnFileName: cloudutil.getQNName(file.name),
+						}]
+					}
+					uptokenData = null;
+					cloudutil.getFileUpTokens(getTokenData, function(data) {
+						uptokenData = data;
+					});
+					console.log("uptokenData", uptokenData);
+					if(uptokenData && uptokenData.code) { //成功
+						console.log("fileUrl:" + uptokenData.data.Data[0].Domain + uptokenData.data.Data[0].Key);
+						console.log("cropUrl:" + uptokenData.data.Data[0].OtherKey[uptokenData.thumbKey[0]]);
+						return uptokenData.data.Data[0].Token;
+					} else {
+						qnUploader.stop();
+						uploadError = true;
+						uploadImageError("获取上传凭证失败");
+
+					}
+				}
+				qnOption.init = {
+					'FilesAdded': function(up, files) {
+						plupload.each(files, function(file) {
+							// 文件添加进队列后,处理相关的事情
+							console.log("FilesAdded:", file);
+						});
+					},
+					'UploadProgress': function(up, file) {
+						// 每个文件上传时,处理相关的事情
+						console.log("UploadProgress:" + file.percent);
+						if(liUpload) {
+							liUpload.innerHTML = '<div class="weui-uploader__file-content">' + file.percent + '%</div>';
+						}
+					},
+					'FileUploaded': function(up, file, info) {
+						// 每个文件上传结束后,处理相关的事情
+						console.log("FileUploaded:", info.status);
+						console.log("FileUploaded:", info.response);
+						if(info.status == 200) {
+							//成功
+							console.log("上传成功");
+							liUpload.innerHTML = '<div class="weui-uploader__file-content"><i class="weui-icon-success"></i></div>';
+							uploadFile[uploadImageIndex].success = true;
+							uploadFile[uploadImageIndex].fileUrl = uptokenData.data.Data[0].Domain + uptokenData.data.Data[0].Key;
+							uploadFile[uploadImageIndex].cropUrl = uptokenData.data.Data[0].OtherKey[uptokenData.thumbKey[0]];
+						} else {
+							uploadImageError(info.response);
+						}
+						upLoadImages();
+					},
+					'Error': function(up, err, errTip) {
+						//上传出错时,处理相关的事情
+						console.log("Error:", err, errTip);
+						uploadImageError(errTip);
+					},
+					'FilesRemoved ': function() {
+						//文件移出队列
+						console.log("FilesRemoved:文件移出队列");
+						if(uploadError) {
+							uploadError = false;
+							upLoadImages();
+						}
+					},
+					'Key': function(up, file) {
+						// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
+						// 该配置必须要在 unique_names: false , save_key: false 时才生效
+						if(uptokenData && uptokenData.code) { //成功
+							return uptokenData.data.Data[0].Key;
+						}
+					}
+				}
+				qnUploader = Qiniu.uploader(qnOption);
+			}
+
+			/**
+			 * 处理选取的图片
+			 * @param {Array} files 文件数组
+			 */
+			function disposeAllFiles(files) {
+				if(files.length == 1 && (files[0].size == 0 || files[0].name == "/")) {
+					//处理安卓不选取图片的情况
+					console.log("未选择图片");
+					return false;
+				}
+				$.showLoading();
+				disposeFile(files, 0);
+			}
+
+			/**
+			 * 处理单个文件
+			 * @param {Array} files 文件数组
+			 * @param {Number} num 文件序号
+			 */
+			function disposeFile(files, num) {
+				console.log("disposeFile:" + num);
+				var types = files[num].type.toLowerCase().split("/");
+				if(types[0] == "image") {
+					EXIF.getData(files[num], function() {
+						var orientation = EXIF.getTag(this, 'Orientation'); //获取旋转信息
+						//显示文件
+						var reader = new FileReader();
+						reader.onload = function() {
+							var result = this.result;
+							var maxSize = 2 * 1024 * 1024;
+							compress.getImgInfo(result, function(img, imgInfo) {
+								var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)), orientation);
+								var newImage = {
+									filePath: newDataUrl, //文件路径
+									allowUpload: true //是否允许上传
+								}
+								//界面中添加图片
+								$("#uploaderFiles").append('<li class="weui-uploader__file" style="background-image:url(' + newDataUrl + ')"></li>');
+								uploadFile.push(newImage);
+								$("#imageAmount").text(uploadFile.length + "/9");
+								disposeFileNextFile(files, num);
+							});
+						}
+						reader.readAsDataURL(files[num]);
+					});
+				} else {
+					tempString = "请图片类型的文件";
+					disposeFileNextFile(files, num);
+				}
+			}
+
+			/**
+			 * 处理下一个文件的逻辑判断
+			 * @param {Object} files
+			 * @param {Object} num
+			 */
+			function disposeFileNextFile(files, num) {
+				var finish = false;
+				if(num == files.length - 1) {
+					//所有文件已经处理完
+					finish = true;
+				} else {
+					if(uploadFile.length == 9) {
+						finish = true;
+						tempString = "最多只能上传9张照片";
+					}
+				}
+				if(finish) {
+					$('#addImage').val('');
+					if(tempString) {
+						$.alert(tempString, "选择失败");
+					}
+					tempString = null;
+					if(uploadFile.length == 9) {
+						$(".weui-uploader__input-box").css("display", "none");
+					}
+					$.hideLoading();
+					console.log("处理完成", uploadFile);
+				} else {
+					num++;
+					disposeFile(files, num);
+				}
+			}
+
+			/**
+			 * 上传图片
+			 */
+			function upLoadImages() {
+				var finish = true; //是否已经结束上传
+				var allSuccessUpload = true; //是否所有的文件都成功上传
+				for(var i = 0; i < uploadFile.length; i++) {
+					if(!uploadFile[i].success) {
+						//有未成功的文件
+						allSuccessUpload = false;
+					}
+					if(uploadFile[i].allowUpload) {
+						//允许上传
+						console.log("uploadImageIndex:" + i);
+						uploadImageIndex = i;
+						finish = false;
+						break;
+					}
+				}
+				if(finish) {
+					if(allSuccessUpload) {
+						console.log("结束后所有的文件都成功上传");
+						addServiceForm();
+					} else {
+						console.log("结束后有文件未成功上传");
+						if(tempString) {
+							$.alert(tempString, "上传失败");
+						}
+						tempString = null;
+						$.hideLoading();
+					}
+				} else {
+					uploadFile[uploadImageIndex].allowUpload = false; //文件本次循环上传，已上传过
+					var blob = compress.base64ToBlob(uploadFile[uploadImageIndex].filePath, 'image/jpeg');
+					blob.lastModifiedDate = new Date();
+					var fileName = blob.lastModifiedDate.getTime() + ".jpg";
+					console.log('blob', blob);
+					liUpload = $("#uploaderFiles").find(".weui-uploader__file")[uploadImageIndex];
+					liUpload.className = "weui-uploader__file weui-uploader__file_status";
+					liUpload.innerHTML = '<div class="weui-uploader__file-content"><i class="weui-icon-waiting"></i></div>';
+					qnUploader.addFile(blob, fileName);
+				}
+			}
+
+			/**
+			 * 上传图片失败
+			 */
+			function uploadImageError(errTip) {
+				console.log("上传失败");
+				liUpload.innerHTML = '<div class="weui-uploader__file-content"><i class="weui-icon-warn"></i></div>';
+				tempString = errTip;
+				uploadError = true;
+				qnUploader.splice(0, 1); //移除当前队列文件
+			}
+
+			/**
+			 * 添加一个报修单
+			 */
+			function addServiceForm() {
+				console.log("addServiceForm:submitForm", submitForm);
+				console.log("addServiceForm:uploadFile", uploadFile);
+				var fileUrl = [];
+				var cropUrl = [];
+				for(var i = 0; i < uploadFile.length; i++) {
+					fileUrl.push(uploadFile[i].fileUrl);
+					cropUrl.push(uploadFile[i].cropUrl);
+				}
+				var strFileUrl = fileUrl.join("|");
+				var strCropUrl = cropUrl.join("|");
+				console.log("strFileUrl", strFileUrl);
+				console.log("strCropUrl", strCropUrl);
+				$.hideLoading();
+			}
+		</script>
+	</body>
+
+</html>

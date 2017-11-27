@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width initial-scale=1 minimum-scale=1 maximum-scale=1 user-scalable=no">
+		<title></title>
+		<link href="../../../css/jquery-weui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/static/h-ui/css/H-ui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css" />
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
+		<style>
+			.float-right {
+				float: right;
+			}
+			
+			.inline-block {
+				display: inline-block;
+			}
+			
+			body {
+				background-color: #F8F8F8;
+			}
+			
+			.title-persons {
+				width: 80%;
+			}
+			
+			.add-perdson,
+			.del-classify {
+				color: dodgerblue;
+			}
+			
+			.del-classify {
+				padding-right: 15px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="classify-container">
+			<router-view></router-view>
+		</div>
+		<template id="classify-tem">
+			<classify-list></classify-list>
+		</template>
+		<template id="classify-list">
+			<div>
+				<div>
+					<p class="inline-block">维修分类列表</p>
+					<span class="float-right">
+					<a id="addressAdd" class="btn btn-primary radius"><i class="Hui-iconfont"></i> 添加维修分类</a>
+				</span>
+				</div>
+				<ul id="list" class="Huifold">
+					<li v-for="classify in classifies" class="item">
+						<h4>{{classify.title}}<span class="add-perdson float-right" v-on:click.stop="addPerson(classify)">添加人员</span><span class="Hui-iconfont Hui-iconfont-del3 del-classify float-right" v-on:click.stop="delClassify()"></span><b class="Hui-iconfont Hui-iconfont-arrow2-top"></b></h4>
+						<div class="info">
+							<table class="table table-border table-bordered table-bg">
+								<thead class="text-c">
+									<tr>
+										<th class="title-persons">维修人员</th>
+										<th>操作</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr class="text-c" v-for="(item,index) in classify.personList">
+										<td>{{item.name}}</td>
+										<td>
+											<a class="operate-edit ml-5" title="删除"><i class="Hui-iconfont"></i></a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</template>
+		<script src="../../../js/vue.js"></script>
+		<script src="../../../js/vue-router.js"></script>
+		<script src="../../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+		<script src="../../../js/H-ui.admin/static/h-ui/js/H-ui.js"></script>
+		<script src="../../../js/H-ui.admin/static/h-ui/js/jQuery.Huifold.js"></script>
+		<script src="../../../js/utils/events.js"></script>
+		<script src="../../../js/utils/consts.js"></script>
+		<script src="../../../js/utils/request.js"></script>
+		<script src="../../../js/equipment-service/classify-list.js"></script>
+		<script src="../../../js/equipment-service/chose-multiPerson.js"></script>
+		<script>
+			const classifyList = {
+				template: '#classify-tem'
+			}
+			const chooseSinglePer = {
+				template: '<multi-choose-person  v-bind:depart_id="parseInt(this.$route.params.id)" v-on:chosedPerson="chosedPerson"></multi-choose-person>',
+				methods: {
+					chosedPerson: function(item, isAdd) {
+						console.log("#####courses获取的传过来的值：" + JSON.stringify(item) + ",isAdd:" + isAdd);
+						this.$root.chosedPerson = item;
+
+						if(table_data.type == 0) {
+							console.log('更新数据')
+							table_data.departname = item.title
+							table_data.departid = item.value
+
+							if(table_data.flag == 0) {
+								console.log('添加或者值相同时return');
+								return;
+							}
+							var colv = table_data.departid + "|" + table_data.departname
+							var tempData = {
+								cmd: 'edule',
+								type: 'edit',
+								callcol: 'depart',
+								colid: table_data.eduleid,
+								colv: colv,
+							}
+							unitWebsitePro(tempData, function(data) {
+								console.log('编辑课程表:' + JSON.stringify(data));
+								if(data.RspCode == 0) {} else {
+									mui.toast(data.RspTxt)
+								}
+							})
+
+						} else {
+							table_data.tempFlag = 1;
+							var index = table_data.rowIndex;
+							var callcol = table_data.colIndex
+							table_data.items_array[index][callcol + "uname"] = item.name;
+							table_data.items_array[index][callcol + "uid"] = item.userid;
+						}
+					}
+				}
+			}
+			const router = new VueRouter({
+				//				mode: 'history',
+				routes: [{
+					path: '/classify-list',
+					name: 'classify-list',
+					component: classifyList
+				}, {
+					path: '/chooseSinPer/:id/:path',
+					name: 'chooseSinPer',
+					component: chooseSinglePer
+				}]
+			})
+			var vue = new Vue({
+				el: "#classify-container",
+				router: router,
+				data: {
+					chosedPerson: {
+
+					},
+					type:0
+				}
+			})
+			router.replace({
+				name: 'classify-list'
+			})
+		</script>
+	</body>
+
+</html>

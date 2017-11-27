@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta charset="utf-8">
+		<title>添加地址</title>
+		<script type="text/javascript">
+			var WebVersion = "?" + Math.random();
+		</script>
+		<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui/css/H-ui.min.css" />
+		<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css" />
+		<link rel="stylesheet" href="../../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+		<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" />
+		<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui.admin/css/style.css" id="skin" />
+		<style>
+			.operate-edit {
+				text-decoration: none;
+			}
+
+			.title-address {
+				width: 80%;
+			}
+
+			#pages {
+				margin-top: 20px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 维修配置 <span class="c-gray en">&gt;</span> 地址配置
+			<a class="btn btn-success radius r" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
+		</nav>
+		<div class="page-container">
+			<div class="cl pd-5 bg-1 bk-gray">
+				<span class="l">
+					<a id="addressAdd" class="btn btn-primary radius"><i class="Hui-iconfont"></i> 添加地址</a>
+				</span>
+			</div>
+			<table class="table table-border table-bordered table-bg">
+				<thead class="text-c">
+					<tr>
+						<th class="title-address">地址</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="text-c" v-for="(item,index) in value">
+						<td>1</td>
+						<td>
+							<a class="operate-edit" title="修改"><i class="Hui-iconfont"></i></a>
+							<a class="operate-edit ml-5" title="删除"><i class="Hui-iconfont"></i></a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div id="pages"></div>
+		</div>
+		<script type="text/javascript" src="../../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../../../js/H-ui.admin/lib/layer/2.4/layer.js"></script>
+		<script type="text/javascript" src="../../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
+		<script type="text/javascript" src="../../../js/H-ui.admin/static/h-ui.admin/js/H-ui.admin.js"></script>
+		<script type="text/javascript" src="../../../js/H-ui.admin/lib/laypage/1.2/laypage.js"></script>
+		<script>
+			window.onload = function() {
+				initListener();
+			}
+
+			function initListener() {
+				$("#addressAdd").click(function() {
+					console.log("addressAdd");
+				});
+			}
+
+			/**
+			 * 获取第几页
+			 * @param {Object} index
+			 */
+			function getData(index) {
+				console.log("getData:" + index);
+			}
+			/**
+			 * 初始化页码
+			 * @param {Object} pages 通过后台拿到的总页数
+			 * @param {Object} curr 初始化当前页
+			 */
+			function initLaypage(pages, curr) {
+				laypage({
+					cont: 'pages', //容器
+					pages: pages, //通过后台拿到的总页数
+					curr: curr, //初始化当前页
+					jump: function(e, first) { //触发分页后的回调
+						if(!first) {
+							getData(e.curr);
+						}
+					}
+				});
+			}
+		</script>
+	</body>
+
+</html>

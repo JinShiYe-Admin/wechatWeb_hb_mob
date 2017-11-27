@@ -39,7 +39,7 @@
 					<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
-								<input id="attendAdressText" v-model.lazy="cname.message" class="weui-input" type="text"   readonly="true">
+								<input id="attendAdressText"  class="weui-input" type="text"   readonly="true">
 							</div>
 						</div>
 					</div>
@@ -54,7 +54,7 @@
 					<div class="weui-cells__title">考勤地点X坐标</div>
 					<div class="weui-cell">
 						<div class="weui-cell__bd">
-							<input id="attendAdressX" v-model.lazy="linkurl.message" class="weui-input" type="text" >
+							<input id="attendAdressX"  class="weui-input" type="text" >
 						</div>
 					</div>
 					<!--</div>-->
@@ -65,7 +65,7 @@
 					<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
-								<input id="attendAdressY" v-model.lazy="orderid.message" class="weui-input" type="text">
+								<input id="attendAdressY"  class="weui-input" type="text">
 							</div>
 						</div>
 					</div>
@@ -75,7 +75,7 @@
 					<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
-								<input id="attendAddressRedius" v-model.lazy="note.message" class="weui-input" type="text">
+								<input id="attendAddressRedius"  class="weui-input" type="text">
 							</div>
 						</div>
 					</div>
@@ -383,10 +383,10 @@
 				var attendAdressX = document.getElementById("attendAdressX").value;
 				var attendAdressY = document.getElementById("attendAdressY").value;
 				var attendAddressRedius = document.getElementById("attendAddressRedius").value;
-				alert("attendAdressValue==" + attendAdressValue);
-				alert("attendAdressX==" + attendAdressX);
-				alert("attendAdressY==" + attendAdressY);
-				alert("attendAddressRedius==" + attendAddressRedius);
+//				alert("attendAdressValue==" + attendAdressValue);
+//				alert("attendAdressX==" + attendAdressX);
+//				alert("attendAdressY==" + attendAdressY);
+//				alert("attendAddressRedius==" + attendAddressRedius);
 				if(attendAdressX == "") {
 					alert("考勤地点X坐标不能为空！");
 					return;

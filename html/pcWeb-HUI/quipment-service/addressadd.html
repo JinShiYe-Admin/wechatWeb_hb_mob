@@ -247,7 +247,8 @@
 					$("#addressList").empty();
 					addressData = [];
 					if(data.RspCode == 0) {
-						showData(data.RspData.dt);
+						addressData = data.RspData.dt;
+						showData(addressData);
 						initLaypage(data.RspData.pg.PageCount, pageindex);
 					} else {
 						layer.confirm(data.RspTxt, {

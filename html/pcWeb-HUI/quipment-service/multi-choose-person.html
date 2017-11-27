@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>人员选择</title>
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/static/h-ui/css/H-ui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css" />
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
+	</head>
+
+	<body>
+		<div>
+			<ul id="depart-person" class="depart-person-list">
+				<li>
+					<ul>
+						<li>
+							
+						</li>
+					</ul>
+				</li>
+			</ul>
+			<div class="choose-footer">
+
+			</div>
+		</div>
+		<script src="../../../js/vue.js"></script>
+		<script src="../../../js/vue-router.js"></script>
+		<script src="../../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+		<script src="../../../js/H-ui.admin/static/h-ui/js/H-ui.js"></script>
+		<script src="../../../js/H-ui.admin/static/h-ui/js/jQuery.Huifold.js"></script>
+		<script src="../../../js/utils/events.js"></script>
+		<script src="../../../js/utils/consts.js"></script>
+		<script src="../../../js/utils/request.js"></script>
+		<script type="text/javascript">
+			var departPeronList=new Vue({
+				el:"#depart-person",
+				data:{
+					rootDepart:{
+						departList:[],
+						personList:[]
+					}
+				}
+			});
+		</script>
+	</body>
+
+</html>

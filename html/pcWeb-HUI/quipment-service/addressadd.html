@@ -12,18 +12,33 @@
 		<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css" />
 		<link rel="stylesheet" href="../../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
 		<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" />
-		<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui.admin/css/style.css" id="skin" />
+		<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
 		<style>
-			.operate-edit {
+			.operate-edit,
+			.operate-del {
 				text-decoration: none;
 			}
 
 			.title-address {
-				width: 80%;
+				width: 70%;
 			}
 
 			#pages {
 				margin-top: 20px;
+			}
+
+			#addressAdd .row {
+				margin-left: 0;
+				margin-right: 0;
+			}
+
+			.submit-button,
+			.select-state {
+				margin-bottom: 15px;
+			}
+
+			.bk-gray .select-box {
+				margin-left: 5px;
 			}
 		</style>
 	</head>
@@ -35,51 +50,168 @@
 		<div class="page-container">
 			<div class="cl pd-5 bg-1 bk-gray">
 				<span class="l">
-					<a id="addressAdd" class="btn btn-primary radius"><i class="Hui-iconfont"></i> 添加地址</a>
+					<a id="addBtn" class="btn btn-primary radius"><i class="Hui-iconfont"></i> 添加地址</a>
+				</span>
+				<span class="select-box inline">
+					<select id="stateSelect" class="select" title="修改查询地址状态">
+						<option value="-1">全部状态</option>
+						<option value="0">屏蔽状态</option>
+						<option value="1">正常状态</option>
+					</select>
 				</span>
 			</div>
 			<table class="table table-border table-bordered table-bg">
 				<thead class="text-c">
 					<tr>
 						<th class="title-address">地址</th>
+						<th>状态</th>
 						<th>操作</th>
 					</tr>
 				</thead>
-				<tbody>
-					<tr class="text-c" v-for="(item,index) in value">
-						<td>1</td>
-						<td>
-							<a class="operate-edit" title="修改"><i class="Hui-iconfont"></i></a>
-							<a class="operate-edit ml-5" title="删除"><i class="Hui-iconfont"></i></a>
-						</td>
-					</tr>
-				</tbody>
+				<tbody id="addressList"></tbody>
 			</table>
 			<div id="pages"></div>
+		</div>
+		<!--添加地址-->
+		<div id="addressAdd" style="display: none;">
+			<form class="form form-horizontal">
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">地址：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<textarea id="addressText" type="text" class="textarea radius" placeholder="请输入地址"></textarea>
+					</div>
+				</div>
+				<div id="addressState" class="row cl select-state">
+					<label class="form-label col-xs-4 col-sm-3">状态：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<span class="select-box">
+							<select id="stateChange" class="select">
+								<option value="0">屏蔽</option>
+								<option value="1">正常</option>
+							</select>
+						</span>
+					</div>
+				</div>
+				<div id="submitArea" class="row cl submit-button">
+					<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+						<input id="submitAddress" class="btn btn-primary radius" type="button" value="提交" />
+					</div>
+				</div>
+			</form>
 		</div>
 		<script type="text/javascript" src="../../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
 		<script type="text/javascript" src="../../../js/H-ui.admin/lib/layer/2.4/layer.js"></script>
 		<script type="text/javascript" src="../../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
 		<script type="text/javascript" src="../../../js/H-ui.admin/static/h-ui.admin/js/H-ui.admin.js"></script>
 		<script type="text/javascript" src="../../../js/H-ui.admin/lib/laypage/1.2/laypage.js"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
+		</script>
 		<script>
+			var addressData; //地址列表的数据
+			var addressIndex; //当前编辑的地址序列
+			var selectState = -1; //查询地址状态，0，屏蔽；1，正常；
+			var editState; //0，添加地址；1，修改地址
+
 			window.onload = function() {
+				getData(1);
 				initListener();
 			}
 
 			function initListener() {
-				$("#addressAdd").click(function() {
-					console.log("addressAdd");
+				//点击添加地址
+				$("#addBtn").click(function() {
+					editState = 0;
+					$("#addressText").val("");
+					$("#addressState").css("display", "none");
+					$("#submitArea").css("display", "block");
+					layer.open({
+						type: 1,
+						title: "添加",
+						area: '500px',
+						zIndex: 999,
+						content: $('#addressAdd') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+					});
+				});
+
+				//点击提交按钮
+				$("#submitAddress").click(function() {
+					var addressText = $.trim($("#addressText").val());
+					if(addressText == "") {
+						layer.confirm('请输入地址', {
+							icon: 2,
+							title: '提示'
+						})
+						return false;
+					}
+					layer.load(2);
+					addAddress(addressText);
+				});
+
+				//点击编辑
+				$(".table").on("click", ".operate-edit", function(e) {
+					editState = 1;
+					addressIndex = $("#addressList tr").index(this.parentNode.parentNode);
+					$("#addressState").css("display", "block");
+					$("#submitArea").css("display", "none");
+					$("#addressText").val(addressData[addressIndex].cname);
+					$("#stateChange").val(addressData[addressIndex].stat);
+					layer.open({
+						type: 1,
+						title: "修改",
+						area: '500px',
+						zIndex: 999,
+						content: $('#addressAdd') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+					});
+				});
+
+				//修改查询地址状态
+				$("#stateSelect").change(function() {
+					selectState = $("#stateSelect").val() * 1;
+					getData(1);
+				});
+
+				//地址输入框的焦点离开
+				$("#addressText").blur(function() {
+					if(editState !== 1) {
+						return false;
+					}
+					var addressText = $.trim($("#addressText").val());
+					if(addressText == addressData[addressIndex].cname) {
+						return false;
+					}
+					addressEdit("cname", addressText);
+				});
+
+				//修改地址状态
+				$("#stateChange").change(function() {
+					var addressState = $("#stateChange").val() * 1;
+					console.log("addressState:" + addressState);
 				});
 			}
 
 			/**
-			 * 获取第几页
-			 * @param {Object} index
+			 * 地址列表添加数据
+			 * @param {Array} data
 			 */
-			function getData(index) {
-				console.log("getData:" + index);
+			function showData(data) {
+				var html = "";
+				for(var i = 0; i < data.length; i++) {
+					var html_0 = '<tr class="text-c"><td>' + data[i].cname + '</td>';
+					var html_1 = '';
+					if(data[i].stat == 0) {
+						html_1 = '<td><span class="label label-defaunt radius">屏蔽</span></td>';
+					} else {
+						html_1 = '<td><span class="label label-success radius">正常</span></td>';
+					}
+					var html_2 = '<td><a class="operate-edit " title="修改"><i class="Hui-iconfont"></i></a></td></tr>';
+					html = html + html_0 + html_1 + html_2;
+				}
+				$("#addressList").append(html);
 			}
+
 			/**
 			 * 初始化页码
 			 * @param {Object} pages 通过后台拿到的总页数
@@ -94,6 +226,87 @@
 						if(!first) {
 							getData(e.curr);
 						}
+					}
+				});
+			}
+			/**
+			 * 获取第几页
+			 * @param {Number} pageindex 页码
+			 */
+			function getData(pageindex) {
+				var tempData = {
+					cmd: 'devaddradmin',
+					type: 'findpage',
+					pagesize: 10,
+					pageindex: pageindex,
+				}
+				if(selectState !== -1) {
+					tempData.stat = selectState;
+				}
+				unitWebsitePro(tempData, function(data) {
+					$("#addressList").empty();
+					addressData = [];
+					if(data.RspCode == 0) {
+						addressData = data.RspData.dt;
+						showData(addressData);
+						initLaypage(data.RspData.pg.PageCount, pageindex);
+					} else {
+						layer.confirm(data.RspTxt, {
+							icon: 2,
+							title: '提示'
+						});
+					}
+				});
+			}
+
+			/**
+			 * 添加地址
+			 * @param {String} text 地址文字
+			 */
+			function addAddress(text) {
+				var tempData = {
+					cmd: 'devaddradmin',
+					type: 'add',
+					cname: text,
+				}
+				unitWebsitePro(tempData, function(data) {
+					layer.closeAll('loading');
+					if(data.RspCode == 0) {
+						location.replace(location.href);
+					} else {
+						layer.confirm(data.RspTxt, {
+							icon: 2,
+							title: '提示'
+						});
+					}
+				});
+			}
+
+			/**
+			 * 修改地址信息
+			 * @param {String} callcol 类型
+			 * @param {String or Number} colv 值
+			 */
+			function addressEdit(callcol, colv) {
+				var tempData = {
+					cmd: 'devaddradmin',
+					type: 'edit',
+					callcol: callcol,
+					colv: colv,
+					colid: addressData[addressIndex].addrid
+				}
+				unitWebsitePro(tempData, function(data) {
+					layer.closeAll('loading');
+					if(data.RspCode == 0) {
+						if(callcol == "cname") { //修改地址
+							addressData[addressIndex].cname = colv;
+							$($("#addressList").find("tr")[addressIndex]).find("td")[0].innerText = colv;
+						}
+					} else {
+						layer.confirm(data.RspTxt, {
+							icon: 2,
+							title: '提示'
+						});
 					}
 				});
 			}

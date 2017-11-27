@@ -139,10 +139,11 @@
 							type: 2,
 							title: "新增考勤地点",
 							content: url + "?v=" + Math.random() + "&data=" + encodeURIComponent(dataStr),
-//							end: function() {
-//								console.log("刷新")
-//								location.reload();
-//							}
+							end: function() {
+//								alert("666666666666")
+								console.log("刷新---------------------")
+								location.reload();
+							}
 						});
 						layer.full(index);
 

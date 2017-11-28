@@ -145,3 +145,75 @@ var getAttendTypePro = function(data0, callback) {
 	data0 = extendParameter(data0);
 	xhrPost(tempUrl + 'getAttendType', JSON.stringify(data0), callback);
 }
+
+//4.新增考勤时间段
+var addAttendTimePro = function(data0, callback) {
+	data0 = extendParameter(data0);
+	xhrPost(tempUrl + 'addAttendTime', JSON.stringify(data0), callback);
+}
+
+//5.修改考勤时间段
+var setAttendTimePro = function(data0, callback) {
+	data0 = extendParameter(data0);
+	xhrPost(tempUrl + 'setAttendTime', JSON.stringify(data0), callback);
+}
+
+//6.删除考勤时间段
+var delAttendTimePro = function(data0, callback) {
+	data0 = extendParameter(data0);
+	xhrPost(tempUrl + 'delAttendTime', JSON.stringify(data0), callback);
+}
+
+//7.新增考勤地点
+var addAttendAreaPro = function(data0, callback) {
+	data0 = extendParameter(data0);
+	xhrPost(tempUrl + 'addAttendArea', JSON.stringify(data0), callback);
+}
+
+//8.修改考勤地点
+var setAttendAreaPro = function(data0, callback) {
+	data0 = extendParameter(data0);
+	xhrPost(tempUrl + 'setAttendArea', JSON.stringify(data0), callback);
+}
+
+//9.删除考勤地点
+var delAttendAreaPro = function(data0, callback) {
+	data0 = extendParameter(data0);
+	xhrPost(tempUrl + 'delAttendArea', JSON.stringify(data0), callback);
+}
+
+//10.新增考勤记录
+var addAttendPro = function(data0, callback) {
+	data0 = extendParameter(data0);
+	xhrPost(tempUrl + 'addAttend', JSON.stringify(data0), callback);
+}
+
+//11.删除考勤记录
+var delAttendPro = function(data0, callback) {
+	data0 = extendParameter(data0);
+	xhrPost(tempUrl + 'delAttend', JSON.stringify(data0), callback);
+}
+
+//13.获取考勤时间段
+var getAttendTimePro = function(data0, callback) {
+	data0 = extendParameter(data0);
+	xhrPost(tempUrl + 'getAttendTime', JSON.stringify(data0), callback);
+}
+
+//14.获取考勤地点
+var getAttendAreaPro = function(data0, callback) {
+	data0 = extendParameter(data0);
+	xhrPost(tempUrl + 'getAttendArea', JSON.stringify(data0), callback);
+}
+
+//15.获取考勤记录
+var getAttendPro = function(data0, callback) {
+	data0 = extendParameter(data0);
+	xhrPost(tempUrl + 'getAttend', JSON.stringify(data0), callback);
+}
+
+//16.获取考勤统计
+var getAttendStatPro = function(data0, callback) {
+	data0 = extendParameter(data0);
+	xhrPost(tempUrl + 'getAttendStat', JSON.stringify(data0), callback);
+}

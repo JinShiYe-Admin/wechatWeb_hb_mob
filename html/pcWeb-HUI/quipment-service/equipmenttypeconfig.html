@@ -59,14 +59,15 @@
 			<table class="table table-border table-bordered table-bg">
 				<thead class="text-c">
 					<tr>
-						<th style="width: 50%;">设备类型</th>
+						<th style="width: 40%;">设备类型</th>
 						<th style="width: 10%;">状态</th>
+						<th style="width: 10%;">维修组</th>
 						<th style="width: 10%;">记录者</th>
 						<th style="width: 20%;">记录时间</th>
 						<th style="width: 10%;">操作</th>
 					</tr>
 				</thead>
-				<tbody id="addressList"></tbody>
+				<tbody id="equipmenttypeList"></tbody>
 			</table>
 			<div id="pages"></div>
 		</div>
@@ -76,10 +77,10 @@
 				<div class="row cl">
 					<label class="form-label col-xs-4 col-sm-3">设备类型：</label>
 					<div class="formControls col-xs-8 col-sm-9">
-						<textarea id="quipmentText" type="text" class="textarea radius" placeholder="请输入设备类型"></textarea>
+						<textarea id="equipmenttypeText" type="text" class="textarea radius" placeholder="请输入设备类型"></textarea>
 					</div>
 				</div>
-				<div id="quipmentState" class="row cl select-state">
+				<div id="equipmenttypeState" class="row cl select-state">
 					<label class="form-label col-xs-4 col-sm-3">状态：</label>
 					<div class="formControls col-xs-8 col-sm-9">
 						<span class="select-box">
@@ -108,23 +109,27 @@
 			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
 		</script>
 		<script>
-			var quipmentData; //设备类型列表的数据
-			var quipmentIndex; //当前编辑的设备类型序列
+			var equipmenttypeData; //设备类型列表的数据
+			var equipmenttypeIndex; //当前编辑的设备类型序列
 			var selectState = -1; //查询设备类型状态，0，屏蔽；1，正常；
 			var editState; //0，添加设备类型；1，修改设备类型
 			var page = 1; //当前页数
+			var kindsData = {
+				key: [],
+				value: {}
+			} //维修组的所有数据
 			window.onload = function() {
 				layer.load(2);
 				initListener();
-				getData(page);
+				getKinds();
 			}
 
 			function initListener() {
 				//点击添加设备类型
 				$("#addBtn").click(function() {
 					editState = 0;
-					$("#quipmentText").val("");
-					$("#quipmentState").css("display", "none");
+					$("#equipmenttypeText").val("");
+					$("#equipmenttypeState").css("display", "none");
 					$("#submitArea").css("display", "block");
 					layer.open({
 						type: 1,
@@ -137,8 +142,8 @@
 
 				//点击提交按钮
 				$("#submitAddress").click(function() {
-					var quipmentText = $.trim($("#quipmentText").val());
-					if(quipmentText == "") {
+					var equipmenttypeText = $.trim($("#equipmenttypeText").val());
+					if(equipmenttypeText == "") {
 						layer.confirm('请输入设备类型名称', {
 							icon: 2,
 							title: '提示'
@@ -146,17 +151,17 @@
 						return false;
 					}
 					layer.load(2);
-					addAddress(quipmentText);
+					addAddress(equipmenttypeText);
 				});
 
 				//点击编辑
 				$(".table").on("click", ".operate-edit", function(e) {
 					editState = 1;
-					quipmentIndex = $("#addressList tr").index(this.parentNode.parentNode);
-					$("#quipmentState").css("display", "block");
+					equipmenttypeIndex = $("#equipmenttypeList tr").index(this.parentNode.parentNode);
+					$("#equipmenttypeState").css("display", "block");
 					$("#submitArea").css("display", "none");
-					$("#quipmentText").val(quipmentData[quipmentIndex].cname);
-					$("#stateChange").val(quipmentData[quipmentIndex].stat);
+					$("#equipmenttypeText").val(equipmenttypeData[equipmenttypeIndex].cname);
+					$("#stateChange").val(equipmenttypeData[equipmenttypeIndex].stat);
 					layer.open({
 						type: 1,
 						title: "修改",
@@ -174,23 +179,23 @@
 				});
 
 				//设备类型输入框的焦点离开
-				$("#quipmentText").blur(function() {
+				$("#equipmenttypeText").blur(function() {
 					if(editState !== 1) {
 						return false;
 					}
-					var quipmentText = $.trim($("#quipmentText").val());
-					if(quipmentText == quipmentData[quipmentIndex].cname) {
+					var equipmenttypeText = $.trim($("#equipmenttypeText").val());
+					if(equipmenttypeText == equipmenttypeData[equipmenttypeIndex].cname) {
 						return false;
 					}
 					layer.load(2);
-					addressEdit("cname", quipmentText);
+					addressEdit("cname", equipmenttypeText);
 				});
 
 				//修改设备类型状态
 				$("#stateChange").change(function() {
 					layer.load(2);
-					var quipmentState = $("#stateChange").val() * 1;
-					addressEdit("stat", quipmentState);
+					var equipmenttypeState = $("#stateChange").val() * 1;
+					addressEdit("stat", equipmenttypeState);
 				});
 			}
 
@@ -208,6 +213,11 @@
 					} else {
 						stat = '<td><span class="label label-success radius">正常</span></td>';
 					}
+					var name = kindsData[data[i].kindsid]; //维修组名称
+					if(typeof(name) == "undefined") {
+						name = '未知';
+					}
+					var kindsname = '<td>' + data[i].name + '</td>';
 					var recname = '<td>' + data[i].recname + '</td>';
 					//格式化时间
 					data[i].rectime = data[i].rectime.replace("T", " ");
@@ -219,7 +229,7 @@
 					var edit = '<td><a class="operate-edit " title="修改"><i class="Hui-iconfont"></i></a></td></tr>';
 					html = html + cname + stat + recname + rectime + edit;
 				}
-				$("#addressList").append(html);
+				$("#equipmenttypeList").append(html);
 			}
 
 			/**
@@ -247,7 +257,7 @@
 			 */
 			function getData(pageindex) {
 				var tempData = {
-					cmd: 'devaddradmin',
+					cmd: 'devclassadmin',
 					type: 'findpage',
 					pagesize: 10,
 					pageindex: pageindex,
@@ -257,11 +267,11 @@
 				}
 				unitWebsitePro(tempData, function(data) {
 					layer.closeAll('loading');
-					$("#addressList").empty();
-					quipmentData = [];
+					$("#equipmenttypeList").empty();
+					equipmenttypeData = [];
 					if(data.RspCode == 0) {
-						quipmentData = data.RspData.dt;
-						showData(quipmentData);
+						equipmenttypeData = data.RspData.dt;
+						showData(equipmenttypeData);
 						initLaypage(data.RspData.pg.PageCount, pageindex);
 					} else {
 						layer.confirm(data.RspTxt, {
@@ -309,18 +319,18 @@
 					type: 'edit',
 					callcol: callcol,
 					colv: colv,
-					colid: quipmentData[quipmentIndex].addrid
+					colid: equipmenttypeData[equipmenttypeIndex].addrid
 				}
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
 						layer.closeAll();
 						$.Huimodalalert("修改成功", 2000);
 						if(callcol == "cname") { //修改设备类型
-							quipmentData[quipmentIndex].cname = colv;
-							$($("#addressList").find("tr")[quipmentIndex]).find("td")[0].innerText = colv;
+							equipmenttypeData[equipmenttypeIndex].cname = colv;
+							$($("#equipmenttypeList").find("tr")[equipmenttypeIndex]).find("td")[0].innerText = colv;
 						} else if(callcol == "stat") { //修改状态
-							quipmentData[quipmentIndex].stat = colv;
-							var ele = $($("#addressList").find("tr")[quipmentIndex]).find("span")[0];
+							equipmenttypeData[equipmenttypeIndex].stat = colv;
+							var ele = $($("#equipmenttypeList").find("tr")[equipmenttypeIndex]).find("span")[0];
 							if(colv == 1) {
 								ele.className = "label label-success radius";
 								ele.innerText = "正常";
@@ -333,8 +343,35 @@
 					} else {
 						layer.closeAll('loading');
 						if(callcol == "stat") { //修改状态
-							$("#stateChange").val(quipmentData[quipmentIndex].stat);
+							$("#stateChange").val(equipmenttypeData[equipmenttypeIndex].stat);
 						}
+						layer.confirm(data.RspTxt, {
+							icon: 2,
+							title: '提示'
+						});
+					}
+				});
+			}
+
+			/**
+			 * 获取所有的维修组
+			 */
+			function getKinds() {
+				var tempData = {
+					cmd: 'devkindsadmin',
+					type: 'findpage',
+					pagesize: 9999,
+					pageindex: 1,
+				}
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						for(var i = 0; i < data.RspData.dt.length; i++) {
+							kindsData.key.push(data.RspData.dt[i].kindsid);
+							kindsData.value[data.RspData.dt[i].kindsid] = data.RspData.dt[i];
+						}
+						getData(pageindex);
+					} else {
+						layer.closeAll('loading');
 						layer.confirm(data.RspTxt, {
 							icon: 2,
 							title: '提示'

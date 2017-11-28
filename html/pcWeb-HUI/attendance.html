@@ -1,0 +1,111 @@
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+		<style type="text/css">
+			body,
+			html,
+			#allmap {
+				width: 800px;
+				height: 600px;
+				overflow: hidden;
+				margin: 10px;
+				font-family: "微软雅黑";
+			}
+		</style>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=VPMK2gwQeEtGyV24Py1Gb4GTpukyjm6y"></script>
+		<title>浏览器定位</title>
+	</head>
+
+	<body>
+		<p>基于GPS定位，只有进入打卡点指定距离范围内可进行打卡</p>
+		<div><span>
+			名称：
+		</span><span>
+			<input type="text"  value="金视野微信GPS打卡">
+		</span></div>
+		<div><span>
+			打卡地址：
+		</span><span>
+			<input  style="width: 200px;" id="address" type="text"  value="">
+		</span></div>
+		<div><span>
+			打卡范围：
+		</span><span>
+			<input  style="width: 200px;" id="address" type="text"  value="500m">
+		</span></div>
+		<div><span>
+			纬度：
+		</span><span>
+			<input id="Latitude" type="text"  value="">
+		</span></div>
+		<div><span>
+			经度：
+		</span><span>
+			<input id="longitude" type="text"  value="">
+		</span><span>
+			<input type="button" name="save" id="save" value="保存" />
+		</span></div>
+		
+		<p>地图定位不准确时,可拖动地图中的红点水滴调整位置。</p>
+		
+		<div id="allmap"></div>
+	</body>
+
+</html>
+<script type="text/javascript">
+	// 百度地图API功能
+	var map = new BMap.Map("allmap");
+	var point = new BMap.Point(116.331398, 39.897445);
+	map.centerAndZoom(point, 20);
+
+	var geolocation = new BMap.Geolocation();
+	geolocation.getCurrentPosition(function(r) {
+		if(this.getStatus() == BMAP_STATUS_SUCCESS) {
+			var mk = new BMap.Marker(r.point);
+			map.addOverlay(mk);
+			map.panTo(r.point);
+			document.getElementById("longitude").value = r.point.lng;
+			document.getElementById("Latitude").value = r.point.lat;
+			var myGeo = new BMap.Geocoder();
+			myGeo.getLocation(r.point, function(result) {
+				if(result) {
+					var addComp = result.addressComponents;
+					document.getElementById("address").value = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+				}
+			});
+			mk.enableDragging();
+			mk.addEventListener("dragend", function(e) {
+				document.getElementById("longitude").value = e.point.lng;
+				document.getElementById("Latitude").value = e.point.lat;
+				var myGeo1 = new BMap.Geocoder();
+				myGeo1.getLocation(e.point, function(result) {
+					if(result) {
+						var addComp = result.addressComponents;
+						console.log(JSON.stringify(result.addressComponents));
+						document.getElementById("address").value = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+					}
+				});
+				//				alert("当前位置：" + e.point.lng + ", " + e.point.lat);
+			})
+
+			//			alert('您的位置：' + r.point.lng + ',' + r.point.lat);
+		} else {
+			alert('failed' + this.getStatus());
+		}
+	}, {
+		enableHighAccuracy: true
+	})
+
+	//关于状态码
+	//BMAP_STATUS_SUCCESS	检索成功。对应数值“0”。
+	//BMAP_STATUS_CITY_LIST	城市列表。对应数值“1”。
+	//BMAP_STATUS_UNKNOWN_LOCATION	位置结果未知。对应数值“2”。
+	//BMAP_STATUS_UNKNOWN_ROUTE	导航结果未知。对应数值“3”。
+	//BMAP_STATUS_INVALID_KEY	非法密钥。对应数值“4”。
+	//BMAP_STATUS_INVALID_REQUEST	非法请求。对应数值“5”。
+	//BMAP_STATUS_PERMISSION_DENIED	没有权限。对应数值“6”。(自 1.1 新增)
+	//BMAP_STATUS_SERVICE_UNAVAILABLE	服务不可用。对应数值“7”。(自 1.1 新增)
+	//BMAP_STATUS_TIMEOUT	超时。对应数值“8”。(自 1.1 新增)
+</script>

@@ -102,6 +102,22 @@
 						</ul>
 					</dd>
 				</dl>
+				<dl id="menu-service">
+					<dt><i class="Hui-iconfont">&#xe613;</i> 维修配置<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+					<dd>
+						<ul>
+							<li>
+								<a data-href="quipment-service/addressconfig.html?index=Math.random()" data-title="地址配置" href="javascript:void(0)">地址配置</a>
+							</li>
+							<li>
+								<a data-href="quipment-service/quipment-classify.html?index=Math.random()" data-title="维修人员配置" href="javascript:void(0)">维修人员配置</a>
+							</li>
+							<li>
+								<a data-href="quipment-service/equipmenttypeconfig.html?index=Math.random()" data-title="设备类型配置" href="javascript:void(0)">设备类型配置</a>
+							</li>
+						</ul>
+					</dd>
+				</dl>
 			</div>
 		</aside>
 		<div class="dislpayArrow hidden-xs">
@@ -152,7 +168,7 @@
 							console.log(t);
 							if(t.find("i")){
 								t.find("i").trigger("click");
-							}		
+							}
 						},
 						'closeall': function(t) {
 							alert('Trigger was '+t.id+'\nAction was Email');

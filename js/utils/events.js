@@ -78,5 +78,11 @@ var events = (function(mod) {
 		sessionStorage.setItem(storageKey, JSON.stringify(map));
 		console.log("****setSessionMapValue***放置的本地值：" + JSON.stringify(map));
 	}
+	mod.getSessionObject=function(key){
+		if(sessionStorage.getItem(key)){
+			return JSON.parse(sessionStorage.getItem(key))
+		}
+		return {}
+	}
 	return mod;
 })(events || {})

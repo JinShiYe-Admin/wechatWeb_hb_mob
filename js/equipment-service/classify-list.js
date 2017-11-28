@@ -38,11 +38,7 @@ Vue.component("classify-list", {
 	methods: {
 		addPerson: function(classify) {
 			router.push({
-				name: 'chooseSinPer',
-				params: {
-					id: -1,
-					path: '0'
-				}
+				name: 'chooseDepart'
 			})
 		},
 		delClassify: function() {

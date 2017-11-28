@@ -50,12 +50,12 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr class="text-c" v-for='(course,index) in attendArray' v-show="flag>0" style="display: none;">
-							<td><u style="cursor:pointer" class="text-primary">{{course.cname}}</u></td>
-							<td class="td-status"><span :class="course.stat==0?'label label-defaunt radius':'label label-success radius'"><a v-if="course.stat==0">已停用</a><a v-else>已启用</a></span></td>
+						<tr class="text-c" v-for='(attend,index) in attendArray' v-show="flag>0" style="display: none;">
+							<td><u style="cursor:pointer" class="text-primary">{{attend.cname}}</u></td>
+							<td class="td-status"><span><a v-if="attend.attendTypeProp==1">上班/上学</a><a v-else>下班/放学</a></span></td>
 							<td class="td-manage">
-								<a title="修改考勤类型" href="javascript:;" @click="modifyCourse(course,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>
-								<a title="删除考勤类型" href="javascript:;" @click="removeCourse(course,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+								<a title="修改考勤类型" href="javascript:;" @click="modifyAttend(attend,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>
+								<a title="删除考勤类型" href="javascript:;" @click="removeAttend(attend,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
 							</td>
 						</tr>
 					</tbody>
@@ -104,6 +104,7 @@
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
+		<script src='https://jsypay.jiaobaowang.net/suitetest/js/lib/vconsole/vconsole.min.js'></script>
 		<script type="text/javascript">
 			$(function() {
 				$('.table-sort').dataTable({
@@ -119,8 +120,8 @@
 						} // 制定列不参与排序
 					]
 				});
-				//获取科目列表
-				//				getSubArray();
+				//获取当前人员信息
+				getUserInfo();
 			});
 
 			var attendData = new Vue({
@@ -130,48 +131,32 @@
 					subFlag: 0, //0刷新，1加载更多
 					subIndex: 1, //获取第几页数据
 					userInfo: {}, //当前人员信息
-					attendArray: []
+					attendArray: [],
+					attendFlag: 0 //0添加，1编辑
 				},
 				methods: {
-					modifyCourse: function(model, index) {
-						layer.prompt({
-							formType: 0,
-							value: model.cname,
-							title: '修改科目名称'
-						}, function(value, index, elem) {
-							layer.close(index);
-							//如果输入之后的值，和之前的值一样，不执行任何操作
-							if(value == model.cname) {
-
-							} else {
-								//重新编辑课程时，判断是否输入了值，有没有重复
-								if(checkInput(value)) {
-									editSub(model, value);
-								}
-							}
-						});
+					modifyAttend: function(model, index) {
+						addAttendLayer.showEdit(model);
 					},
 					addAttend: function() {
 						addAttendLayer.showAdd();
 					},
-					removeCourse: function(model, index) {
+					removeAttend: function(model, index) {
 						layer.confirm('确认要删除吗？', function(index) {
 							layer.close(index);
 							var tempData = {
-								cmd: 'subadmin',
-								type: 'del',
-								colid: model.subid
+								attendTypeId: model.AttendTypeId
 							}
-							unitWebsitePro(tempData, function(data) {
+							delAttendTypePro(tempData, function(data) {
 								if(data.RspCode == 0) {
-									attendData.subIndex = 1;
-									attendData.subFlag = 0;
-									//获取科目列表
-									getSubArray();
-									layer.msg('已删除!', {
-										icon: 1,
-										time: 1000
-									});
+									//									attendData.subIndex = 1;
+									//									attendData.subFlag = 0;
+									//									//获取科目列表
+									//									getUserInfo();
+									//									layer.msg('已删除!', {
+									//										icon: 1,
+									//										time: 1000
+									//									});
 								} else {
 									alert(data.RspTxt);
 								}
@@ -185,7 +170,8 @@
 				el: "#addAttendLayer",
 				data: {
 					bname: "", //图片说明
-					orderid: "" //排序ID
+					orderid: "1", //排序ID
+					attendModel:{}
 				},
 				methods: {
 					/**
@@ -193,7 +179,7 @@
 					 */
 					showAdd: function() {
 						this.bname = "";
-						$("#orderidSelect").val(0);
+						$("#orderidSelect").val(1);
 						this.show("添加考勤类型");
 					},
 					/**
@@ -203,51 +189,71 @@
 						this.bname = value.bname;
 						$("#orderidSelect").val(value.orderid);
 						this.show("编辑考勤类型");
+						this.attendModel = value;
 					},
 					/**
 					 * 显示页面
 					 */
 					show: function(title) {
-						//						parent.layer.open({
-						//							type: 0,
-						//							title: 'skdfhls',
-						//							skin: 'layui-layer-rim', //加上边框
-						//							content: 'html内容'
-						//						});
 						parent.layer.open({
 							type: 1,
 							title: title,
 							area: '550px',
+							zIndex: 999,
 							content: $('#addAttendLayer') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
 						});
 					},
 					btnAdd: function() {
-						console.log("添加");
-						//							var addBurl = $.trim(this.burl);
-						//							if(addBurl == "") {
-						//								pictureModal.show("添加失败", "请输入链接URL");
-						//								return false;
-						//							}
-						//							if(this.localFile == null) {
-						//								pictureModal.show("添加失败", "请选取添加的图片");
-						//								return false;
-						//							}
-						//							layer.load(2);
-						//							pictureUploader.addFile(this.localFile, Date.now() + "" + parseInt(Math.random() * 1000) + ".jpg");
+						if(addAttendLayer.bname.length == 0) {
+							parent.layer.alert('请输入考勤类型说明');
+							return false;
+						}
+						if(attendData.attendFlag == 0) { //添加
+							var tempData = {
+								corpId: attendData.userInfo.corpid, //单位ID
+								attendTypeNote: addAttendLayer.bname, //考勤类型说明
+								attendTypeProp: addAttendLayer.orderid //1 上班/上学,2 下班/放学
+							}
+							console.log('tempData:' + JSON.stringify(tempData));
+							addAttendTypePro(tempData, function(data) {
+								parent.layer.closeAll();
+								if(data.RspCode == 0) {
+									
+								} else {
+									//						parent.layer.alert('请重新登录获取个人信息');
+								}
+							});
+						} else {
+							var tempData = {
+								attendTypeId: this.attendModel.attendTypeId, //单位ID
+								attendTypeNote: addAttendLayer.bname //考勤类型说明
+							}
+							
+							console.log('tempData:' + JSON.stringify(tempData));
+							setAttendTypePro(tempData, function(data) {
+								parent.layer.closeAll();
+								if(data.RspCode == 0) {
+									
+								} else {
+									//						parent.layer.alert('请重新登录获取个人信息');
+								}
+							});
+						}
+
 					},
 					/**
 					 * 修改排序ID
 					 */
 					orderidChange: function() {
-						var orderid = $("#orderidSelect").val() * 1;
-						if(this.type == "删除" && orderid != pictureTable.dt[pictureTable.changeIndex].orderid) {
-							changeOption('orderid', orderid);
-						}
+						var obj = document.getElementById('orderidSelect');
+						var index = obj.selectedIndex; //序号，取当前选中选项的序号
+						var val = obj.options[index].value;
+						addAttendLayer.orderid = val;
 					}
 				}
 			});
 			//13.获取当前人员信息
-			var getSubArray = function() {
+			var getUserInfo = function() {
 				var tempData = {
 					cmd: 'userinfo',
 					type: 'findpage', //获取某个详细信息
@@ -257,6 +263,8 @@
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
 						attendData.userInfo = data.userlist;
+						//获取现有的考勤类型
+						getAttendType();
 					} else {
 						parent.layer.alert('请重新登录获取个人信息');
 					}
@@ -270,29 +278,11 @@
 					pageSize: 0 //每页记录数，0 为全部
 				}
 				console.log('tempData:' + JSON.stringify(tempData));
-				unitWebsitePro(tempData, function(data) {
+				getAttendTypePro(tempData, function(data) {
 					if(data.RspCode == 0) {
 						attendData.attendArray = data.RspData.Data;
 					} else {
 						//						parent.layer.alert('请重新登录获取个人信息');
-					}
-				});
-			};
-			//添加课程
-			var addSub = function(subName) {
-				var tempData = {
-					cmd: 'subadmin',
-					type: 'add',
-					cname: subName
-				}
-				unitWebsitePro(tempData, function(data) {
-					if(data.RspCode == 0) {
-						attendData.subIndex = 1;
-						attendData.subFlag = 0;
-						//获取科目列表
-						getSubArray();
-					} else {
-						alert(data.RspTxt);
 					}
 				});
 			};
@@ -310,7 +300,7 @@
 						attendData.subIndex = 1;
 						attendData.subFlag = 0;
 						//获取科目列表
-						getSubArray();
+						getUserInfo();
 					} else {
 						alert(data.RspTxt);
 					}

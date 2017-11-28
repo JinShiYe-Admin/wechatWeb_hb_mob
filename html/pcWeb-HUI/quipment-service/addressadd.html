@@ -112,12 +112,11 @@
 			var addressIndex; //当前编辑的地址序列
 			var selectState = -1; //查询地址状态，0，屏蔽；1，正常；
 			var editState; //0，添加地址；1，修改地址
-			var page; //当前页数
+			var page = 1; //当前页数
 			window.onload = function() {
 				layer.load(2);
 				initListener();
-				page = 1;
-				getData(1);
+				getData(page);
 			}
 
 			function initListener() {
@@ -171,7 +170,7 @@
 				$("#stateSelect").change(function() {
 					selectState = $("#stateSelect").val() * 1;
 					page = 1;
-					getData(1);
+					getData(page);
 				});
 
 				//地址输入框的焦点离开

@@ -107,3 +107,41 @@ var xhrPost = function(url, data, callback) {
 	};
 	xhr.send(data);
 }
+
+//考勤协议
+var tempUrl = 'https://jbyj.jiaobaowang.net/AttendanceService/';
+
+//合并参数
+var extendParameter = function(data0){
+	var tempData = {
+		uuid:'',
+		appid:'',
+		token:'',
+		sign:''
+	}
+	return $.extend(data0, tempData);
+}
+
+//1.新增考勤类型
+var addAttendTypePro = function(data0, callback) {
+	data0 = extendParameter(data0);
+	xhrPost(tempUrl + 'addAttendType', JSON.stringify(data0), callback);
+}
+
+//2.修改考勤类型
+var setAttendTypePro = function(data0, callback) {
+	data0 = extendParameter(data0);
+	xhrPost(tempUrl + 'setAttendType', JSON.stringify(data0), callback);
+}
+
+//3.删除考勤类型
+var delAttendTypePro = function(data0, callback) {
+	data0 = extendParameter(data0);
+	xhrPost(tempUrl + 'delAttendType ', JSON.stringify(data0), callback);
+}
+
+//12.获取考勤类型
+var getAttendTypePro = function(data0, callback) {
+	data0 = extendParameter(data0);
+	xhrPost(tempUrl + 'getAttendType', JSON.stringify(data0), callback);
+}

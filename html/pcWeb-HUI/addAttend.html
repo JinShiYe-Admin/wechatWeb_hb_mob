@@ -239,7 +239,8 @@
 							if(checkInput(addAttendLayer.AttendTypeNote)) {
 								var tempData = {
 									attendTypeId: this.attendModel.AttendTypeId, //考勤类型ID
-									attendTypeNote: addAttendLayer.AttendTypeNote //考勤类型说明
+									attendTypeNote: addAttendLayer.AttendTypeNote, //考勤类型说明
+									attendTypeProp: addAttendLayer.attendTypeProp //1 上班/上学,2 下班/放学
 								}
 								console.log('tempData:' + JSON.stringify(tempData));
 								setAttendTypePro(tempData, function(data) {

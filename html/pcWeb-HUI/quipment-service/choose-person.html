@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>人员选择</title>
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/static/h-ui/css/H-ui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css" />
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
+		<style>
+		</style>
+	</head>
+
+	<body>
+		<table id="person-list" style="margin-right: 20px;" class="table table-border table-bordered table-bg">
+			<thead class="text-c">
+				<tr>
+					<th style="width: 20%;" class=""><input type="checkbox" v-model:checked="isAllCheck" name="choose-person" value="-1" v-on:change="getTotalCheck($event)" /></th>
+					<th style="width: 40%;">姓名</th>
+					<th style="width: 40%;" class="">职务</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="text-c" v-for="(person,index) in personList">
+					<td><input type="checkbox" name="choose-person" value="person.userid" v-on:change="getPersonCheck($event,person)" /></td>
+					<td>{{person.name}}</td>
+					<td>
+						{{person.position}}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<script src="../../../js/vue.js"></script>
+		<script src="../../../js/vue-router.js"></script>
+		<script src="../../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+		<script src="../../../js/H-ui.admin/static/h-ui/js/H-ui.js"></script>
+		<script src="../../../js/H-ui.admin/static/h-ui/js/jQuery.Huifold.js"></script>
+		<script src="../../../js/utils/events.js"></script>
+		<script src="../../../js/utils/consts.js"></script>
+		<script src="../../../js/utils/request.js"></script>
+		<script type="text/javascript">
+			var personList = new Vue({
+				el: "#person-list",
+				data: {
+					isAllCheck: false,
+					personList: [{
+							"corpid": null,
+							"userid": "ChenGuoDong",
+							"name": "jsyce_陈国栋",
+							"position": "老师",
+							"mobile": null,
+							"english_name": "",
+							"gender": 1,
+							"isleader": 1,
+							"telephone": null,
+							"email": null,
+							"weixinid": null,
+							"avatar": "http://p.qlogo.cn/bizmail/G7mxjutjjkbz7JFtic2aMkW7ju6v8VIuSsxL9r2pia9SLgvjhWWicQVmg/0",
+							"status": 1,
+							"extattr": null,
+							"errcode": 0,
+							"errmsg": null,
+							"P2PData": null
+						},
+						{
+							"corpid": null,
+							"userid": "zhangzesheng",
+							"name": "jsyce_张泽升",
+							"position": "",
+							"mobile": null,
+							"english_name": "zhangzesheng",
+							"gender": 1,
+							"isleader": 1,
+							"telephone": null,
+							"email": null,
+							"weixinid": null,
+							"avatar": "http://p.qlogo.cn/bizmail/ia2OREdw34BpbYHswf4t8l1n6Zr8vkNic14b0rW7GtVzKpsOSOPJshQQ/0",
+							"status": 1,
+							"extattr": null,
+							"errcode": 0,
+							"errmsg": null,
+							"P2PData": null
+						}
+					]
+				},
+				methods: {
+					getTotalCheck: function(e) {
+						//						this.isAllCheck=e.target.checked;
+						console.log("isAllChecked" + this.isAllCheck)
+					},
+					getPersonCheck: function(e, person) {
+						var isCheck = e.target.checked;
+						console.log("isPersonChecked:" + person.name + ":" + isCheck)
+						if(!isCheck) {
+							this.isAllCheck = false;
+						}
+					}
+				}
+			})
+		</script>
+	</body>
+
+</html>

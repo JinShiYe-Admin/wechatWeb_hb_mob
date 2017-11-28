@@ -36,6 +36,39 @@
 			.del-classify {
 				padding-right: 15px;
 			}
+			
+			.choose-footer {
+				position: fixed;
+				bottom: 0;
+				left: 0;
+				right: 0;
+			}
+			
+			.selected-style {
+				background-color: darkgrey;
+				color: white;
+			}
+			.display-inline{
+				display: inline-block;
+			}
+			.choose-depart{
+				position: fixed;
+				left: 0;
+				top: 0;
+				width: 20%;
+			}
+			.choose-person{
+				position: fixed;
+				top: 0;
+				right: 0;
+				width: 70%;
+			}
+			.check-container{
+				width: 20%;
+			}
+			.name-contianer,.position-contianer{
+				width: 40%;
+			}
 		</style>
 	</head>
 
@@ -46,12 +79,51 @@
 		<template id="classify-tem">
 			<classify-list></classify-list>
 		</template>
+		<template id="multi-choose">
+			<div>
+				<choose-depart class="display-inline choose-depart"></choose-depart>
+				<choose-person class="display-inline choose-person"></choose-person>
+			</div>
+		</template>
+		<!--人员选择-->
+		<template id="person-list">
+			<table  class="table table-border table-bordered table-bg">
+			<thead class="text-c">
+				<tr>
+					<th class="check-container"><input type="checkbox" v-model:checked="isAllCheck" name="choose-person" value="-1" v-on:change="getTotalCheck($event)" /></th>
+					<th class="name-contianer" >姓名</th>
+					<th class="position-contianer" >职务</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="text-c" v-for="(person,index) in personList">
+					<td><input type="checkbox" name="choose-person" value="person.userid" v-on:change="getPersonCheck($event,person)" /></td>
+					<td >{{person.name}}</td>
+					<td>
+						{{person.position}}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		</template>
+		<!--部门选择-->
+		<template id="choose-depart">
+			<div >
+				<ul v-for="depart in rootDeparts">
+					<depart-tree-node v-bind:depart-info="depart" v-bind:active-depart="activeDepart" v-on:active-depart="getActiveDepart"></depart-tree-node>
+				</ul>
+				<div class="choose-footer">
+					<button>确定</button>
+				</div>
+			</div>
+		</template>
+		<!--维修列表-->
 		<template id="classify-list">
 			<div>
 				<div>
-					<p class="inline-block">维修分类列表</p>
+					<p class="inline-block">维修组列表</p>
 					<span class="float-right">
-					<a id="addressAdd" class="btn btn-primary radius"><i class="Hui-iconfont"></i> 添加维修分类</a>
+					<a id="addressAdd" class="btn btn-primary radius"><i class="Hui-iconfont"></i> 添加维修组</a>
 				</span>
 				</div>
 				<ul id="list" class="Huifold">
@@ -88,51 +160,15 @@
 		<script src="../../../js/utils/consts.js"></script>
 		<script src="../../../js/utils/request.js"></script>
 		<script src="../../../js/equipment-service/classify-list.js"></script>
-		<script src="../../../js/equipment-service/chose-multiPerson.js"></script>
+		<script src="../../../js/equipment-service/treeNode.js"></script>
+		<script src="../../../js/equipment-service/choose-depart.js"></script>
+		<script src="../../../js/equipment-service/choose-person.js"></script>
 		<script>
 			const classifyList = {
 				template: '#classify-tem'
 			}
-			const chooseSinglePer = {
-				template: '<multi-choose-person  v-bind:depart_id="parseInt(this.$route.params.id)" v-on:chosedPerson="chosedPerson"></multi-choose-person>',
-				methods: {
-					chosedPerson: function(item, isAdd) {
-						console.log("#####courses获取的传过来的值：" + JSON.stringify(item) + ",isAdd:" + isAdd);
-						this.$root.chosedPerson = item;
-
-						if(table_data.type == 0) {
-							console.log('更新数据')
-							table_data.departname = item.title
-							table_data.departid = item.value
-
-							if(table_data.flag == 0) {
-								console.log('添加或者值相同时return');
-								return;
-							}
-							var colv = table_data.departid + "|" + table_data.departname
-							var tempData = {
-								cmd: 'edule',
-								type: 'edit',
-								callcol: 'depart',
-								colid: table_data.eduleid,
-								colv: colv,
-							}
-							unitWebsitePro(tempData, function(data) {
-								console.log('编辑课程表:' + JSON.stringify(data));
-								if(data.RspCode == 0) {} else {
-									mui.toast(data.RspTxt)
-								}
-							})
-
-						} else {
-							table_data.tempFlag = 1;
-							var index = table_data.rowIndex;
-							var callcol = table_data.colIndex
-							table_data.items_array[index][callcol + "uname"] = item.name;
-							table_data.items_array[index][callcol + "uid"] = item.userid;
-						}
-					}
-				}
+			const multiChoose={
+				template:'#multi-choose'
 			}
 			const router = new VueRouter({
 				//				mode: 'history',
@@ -141,9 +177,9 @@
 					name: 'classify-list',
 					component: classifyList
 				}, {
-					path: '/chooseSinPer/:id/:path',
-					name: 'chooseSinPer',
-					component: chooseSinglePer
+					path: '/chooseDepart',
+					name: 'chooseDepart',
+					component: multiChoose
 				}]
 			})
 			var vue = new Vue({
@@ -153,7 +189,7 @@
 					chosedPerson: {
 
 					},
-					type:0
+					type: 0
 				}
 			})
 			router.replace({

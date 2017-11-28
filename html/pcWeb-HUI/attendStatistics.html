@@ -1,0 +1,181 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="renderer" content="webkit|ie-comp|ie-stand">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
+		<title>考勤统计</title>
+		
+	</head>
+
+	<body>
+		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 考勤 <span class="c-gray en">&gt;</span> 考勤统计
+			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
+		</nav>
+		<div class="page-container" id="attendData">
+			<div class="cl pd-5 bg-1 bk-gray"> <span class="l"> <a href="javascript:;" @click="addAttend()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加考勤类型</a></span></div>
+			<div class="mt-20">
+				<table class="table table-border table-bordered table-hover table-bg">
+					<thead>
+						<tr class="text-c">
+							<th width="100">用户姓名</th>
+							<th width="100">考勤次数</th>
+							<th width="100">迟到次数</th>
+							<th width="100">早退次数</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="text-c" v-for='(attend,index) in attendArray' v-show="flag>0" style="display: none;">
+							<td><u style="cursor:pointer" class="text-primary">{{attend.UserName}}</u></td>
+							<td><u style="cursor:pointer" class="text-primary">{{attend.AttendCnt}}</u></td>
+							<td><u style="cursor:pointer" class="text-primary">{{attend.LateCnt}}</u></td>
+							<td><u style="cursor:pointer" class="text-primary">{{attend.EarlyCnt}}</u></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!--_footer 作为公共模版分离出去-->
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/layer/2.4/layer.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/static/h-ui.admin/js/H-ui.admin.js"></script>
+		<!--/_footer 作为公共模版分离出去-->
+
+		<!--请在下方写此页面业务相关的脚本-->
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/laypage/1.2/laypage.js"></script>
+		<!--vue-->
+		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
+		</script>
+		<script src='https://jsypay.jiaobaowang.net/suitetest/js/lib/vconsole/vconsole.min.js'></script>
+		<script type="text/javascript">
+			$(function() {
+				$('.table-sort').dataTable({
+					"aaSorting": [
+						[1, "desc"]
+					], //默认第几个排序
+					"bStateSave": true, //状态保存
+					"aoColumnDefs": [
+						//{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+						{
+							"orderable": false,
+							"aTargets": [0, 8, 9]
+						} // 制定列不参与排序
+					]
+				});
+				//获取当前人员信息
+				getUserInfo();
+			});
+
+			var attendData = new Vue({
+				el: "#attendData",
+				data: {
+					flag: 0,
+					userInfo: {}, //当前人员信息
+					attendArray: []
+				},
+				methods: {
+					modifyAttend: function(model, index) {
+						attendData.attendFlag = 1;
+						addAttendLayer.showEdit(model);
+					},
+					addAttend: function() {
+						attendData.attendFlag = 0;
+						addAttendLayer.showAdd();
+					},
+					removeAttend: function(model, index) {
+						layer.confirm('确认要删除吗？', function(index) {
+							layer.close(index);
+							var tempData = {
+								attendTypeId: model.AttendTypeId
+							}
+							delAttendTypePro(tempData, function(data) {
+								if(data.RspCode == 0) {
+									if(data.RspData.Result == 1) {
+										layer.alert('删除成功');
+										//获取现有的考勤类型
+										getAttendType();
+									} else {
+										layer.alert('删除失败');
+									}
+								} else {
+									alert(data.RspTxt);
+								}
+							});
+						});
+					}
+				}
+			});
+			//13.获取当前人员信息
+			var getUserInfo = function() {
+				var tempData = {
+					cmd: 'userinfo',
+					type: 'findpage', //获取某个详细信息
+					colv: '' //留空为取当前人员信息,不为空则为具体人员信息
+				}
+				console.log('tempData:' + JSON.stringify(tempData));
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						attendData.userInfo = JSON.parse(data.RspData);
+						//获取管理的部门
+						getPersonDepart();
+						//16.获取考勤统计
+//						getAttendStat();
+					} else {
+						layer.alert('请重新登录获取个人信息');
+					}
+				});
+			};
+			
+			//获取管理的部门
+			var getPersonDepart = function(){
+				var tempData = {
+					cmd: 'persondepartsadmin',
+					type: 'findpage' //获取管理员全部管理部门
+				}
+				console.log('tempData:' + JSON.stringify(tempData));
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						
+					} else {
+						layer.alert('获取部门出现问题');
+					}
+				});
+			}
+			
+			//16.获取考勤统计
+			var getAttendStat = function() {
+				var tempArr = [];
+				tempArr.push(attendData.userInfo.userId);
+				var tempData = {
+					corpId: attendData.userInfo.corpid, //单位ID
+					userId:tempArr, //用户ID,例如：[“1”, “2”, “3”]
+					beginTime: 1, //统计开始时间,年月日共八位如：20011010
+					endTime: 0 //统计结束时间,年月日共八位如：20011010
+				}
+				console.log('tempData:' + JSON.stringify(tempData));
+				getAttendStatPro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						attendData.attendArray = [].concat(data.RspData.Data);
+						attendData.flag = 1;
+					} else {
+						//						layer.alert('请重新登录获取个人信息');
+					}
+				});
+			};
+		</script>
+	</body>
+
+</html>

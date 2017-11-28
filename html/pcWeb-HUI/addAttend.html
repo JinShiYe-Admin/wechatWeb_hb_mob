@@ -51,7 +51,7 @@
 					</thead>
 					<tbody>
 						<tr class="text-c" v-for='(attend,index) in attendArray' v-show="flag>0" style="display: none;">
-							<td><u style="cursor:pointer" class="text-primary">{{attend.cname}}</u></td>
+							<td><u style="cursor:pointer" class="text-primary">{{attend.AttendTypeNote}}</u></td>
 							<td class="td-status"><span><a v-if="attend.attendTypeProp==1">上班/上学</a><a v-else>下班/放学</a></span></td>
 							<td class="td-manage">
 								<a title="修改考勤类型" href="javascript:;" @click="modifyAttend(attend,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>
@@ -67,14 +67,14 @@
 				<div class="row cl">
 					<label class="form-label col-xs-4 col-sm-3">考勤类型说明：</label>
 					<div class="formControls col-xs-8 col-sm-9">
-						<input type="text" class="input-text" maxlength="20" v-model="bname" placeholder="请输入考勤类型说明">
+						<input type="text" class="input-text" maxlength="20" v-model="AttendTypeNote" placeholder="请输入考勤类型说明">
 					</div>
 				</div>
 				<div class="row cl">
 					<label class="form-label col-xs-4 col-sm-3">考勤类型属性：</label>
 					<div class="formControls col-xs-8 col-sm-9">
 						<span class="select-box">
-							<select id="orderidSelect" class="select" size="1" title="请选择考勤类型属性" @change="orderidChange">
+							<select id="attendTypePropSelect" class="select" size="1" title="请选择考勤类型属性" @change="attendTypePropChange">
 								<option value="1">上班/上学</option>
 								<option value="2">下班/放学</option>
 							</select>
@@ -136,9 +136,11 @@
 				},
 				methods: {
 					modifyAttend: function(model, index) {
+						attendData.attendFlag = 1;
 						addAttendLayer.showEdit(model);
 					},
 					addAttend: function() {
+						attendData.attendFlag = 0;
 						addAttendLayer.showAdd();
 					},
 					removeAttend: function(model, index) {
@@ -149,14 +151,13 @@
 							}
 							delAttendTypePro(tempData, function(data) {
 								if(data.RspCode == 0) {
-									//									attendData.subIndex = 1;
-									//									attendData.subFlag = 0;
-									//									//获取科目列表
-									//									getUserInfo();
-									//									layer.msg('已删除!', {
-									//										icon: 1,
-									//										time: 1000
-									//									});
+									if(data.RspData.Result == 1) {
+										layer.alert('删除成功');
+										//获取现有的考勤类型
+										getAttendType();
+									} else {
+										layer.alert('删除失败');
+									}
 								} else {
 									alert(data.RspTxt);
 								}
@@ -169,25 +170,25 @@
 			addAttendLayer = new Vue({
 				el: "#addAttendLayer",
 				data: {
-					bname: "", //图片说明
-					orderid: "1", //排序ID
-					attendModel:{}
+					AttendTypeNote: "", //图片说明
+					attendTypeProp: "1", //排序ID
+					attendModel: {} //要修改的的类型model
 				},
 				methods: {
 					/**
 					 * 显示添加图片
 					 */
 					showAdd: function() {
-						this.bname = "";
-						$("#orderidSelect").val(1);
+						this.AttendTypeNote = "";
+						$("#attendTypePropSelect").val(1);
 						this.show("添加考勤类型");
 					},
 					/**
 					 * 显示编辑图片
 					 */
 					showEdit: function(value) {
-						this.bname = value.bname;
-						$("#orderidSelect").val(value.orderid);
+						this.AttendTypeNote = value.AttendTypeNote;
+						$("#attendTypePropSelect").val(value.attendTypeProp);
 						this.show("编辑考勤类型");
 						this.attendModel = value;
 					},
@@ -195,60 +196,79 @@
 					 * 显示页面
 					 */
 					show: function(title) {
-						parent.layer.open({
+						layer.open({
 							type: 1,
 							title: title,
 							area: '550px',
-							zIndex: 999,
 							content: $('#addAttendLayer') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
 						});
 					},
 					btnAdd: function() {
-						if(addAttendLayer.bname.length == 0) {
-							parent.layer.alert('请输入考勤类型说明');
+						if(addAttendLayer.AttendTypeNote.length == 0) {
+							layer.alert('请输入考勤类型说明');
 							return false;
 						}
 						if(attendData.attendFlag == 0) { //添加
-							var tempData = {
-								corpId: attendData.userInfo.corpid, //单位ID
-								attendTypeNote: addAttendLayer.bname, //考勤类型说明
-								attendTypeProp: addAttendLayer.orderid //1 上班/上学,2 下班/放学
-							}
-							console.log('tempData:' + JSON.stringify(tempData));
-							addAttendTypePro(tempData, function(data) {
-								parent.layer.closeAll();
-								if(data.RspCode == 0) {
-									
-								} else {
-									//						parent.layer.alert('请重新登录获取个人信息');
+							//添加类型时，判断是否输入了值，有没有重复
+							if(checkInput(addAttendLayer.AttendTypeNote)) {
+								//发送添加协议
+								var tempData = {
+									corpId: attendData.userInfo.corpid, //单位ID
+									attendTypeNote: addAttendLayer.AttendTypeNote, //考勤类型说明
+									attendTypeProp: addAttendLayer.attendTypeProp //1 上班/上学,2 下班/放学
 								}
-							});
+								console.log('tempData:' + JSON.stringify(tempData));
+								addAttendTypePro(tempData, function(data) {
+									layer.closeAll();
+									if(data.RspCode == 0) {
+										if(data.RspData.Result == 0) {
+											layer.alert('添加失败');
+										} else {
+											layer.alert('添加成功');
+											//获取现有的考勤类型
+											getAttendType();
+										}
+									} else {
+										//						layer.alert('请重新登录获取个人信息');
+									}
+								});
+							}
+
 						} else {
-							var tempData = {
-								attendTypeId: this.attendModel.attendTypeId, //单位ID
-								attendTypeNote: addAttendLayer.bname //考勤类型说明
-							}
-							
-							console.log('tempData:' + JSON.stringify(tempData));
-							setAttendTypePro(tempData, function(data) {
-								parent.layer.closeAll();
-								if(data.RspCode == 0) {
-									
-								} else {
-									//						parent.layer.alert('请重新登录获取个人信息');
+							//重新编辑类型时，判断是否输入了值，有没有重复
+							if(checkInput(addAttendLayer.AttendTypeNote)) {
+								var tempData = {
+									attendTypeId: this.attendModel.AttendTypeId, //考勤类型ID
+									attendTypeNote: addAttendLayer.AttendTypeNote //考勤类型说明
 								}
-							});
+								console.log('tempData:' + JSON.stringify(tempData));
+								setAttendTypePro(tempData, function(data) {
+									layer.closeAll();
+									if(data.RspCode == 0) {
+										if(data.RspData.Result == 1) {
+											layer.alert('修改成功');
+											//获取现有的考勤类型
+											getAttendType();
+										} else {
+											layer.alert('修改失败');
+										}
+									} else {
+										//						layer.alert('请重新登录获取个人信息');
+									}
+								});
+							}
+
 						}
 
 					},
 					/**
 					 * 修改排序ID
 					 */
-					orderidChange: function() {
-						var obj = document.getElementById('orderidSelect');
+					attendTypePropChange: function() {
+						var obj = document.getElementById('attendTypePropSelect');
 						var index = obj.selectedIndex; //序号，取当前选中选项的序号
 						var val = obj.options[index].value;
-						addAttendLayer.orderid = val;
+						addAttendLayer.attendTypeProp = val;
 					}
 				}
 			});
@@ -262,11 +282,11 @@
 				console.log('tempData:' + JSON.stringify(tempData));
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
-						attendData.userInfo = data.userlist;
+						attendData.userInfo = JSON.parse(data.RspData);
 						//获取现有的考勤类型
 						getAttendType();
 					} else {
-						parent.layer.alert('请重新登录获取个人信息');
+						layer.alert('请重新登录获取个人信息');
 					}
 				});
 			};
@@ -280,9 +300,10 @@
 				console.log('tempData:' + JSON.stringify(tempData));
 				getAttendTypePro(tempData, function(data) {
 					if(data.RspCode == 0) {
-						attendData.attendArray = data.RspData.Data;
+						attendData.attendArray = [].concat(data.RspData.Data);
+						attendData.flag = 1;
 					} else {
-						//						parent.layer.alert('请重新登录获取个人信息');
+						//						layer.alert('请重新登录获取个人信息');
 					}
 				});
 			};
@@ -309,24 +330,24 @@
 			//添加课程时，判断是否输入了值，有没有重复
 			var checkInput = function(text) {
 				if(text.trim().length == 0) {
-					alert('不能加入空数据');
+					alert('考勤类型说明不能为空');
 					return false;
 				}
 				if(isNull(text)) {
-					alert('不能加入空数据');
+					alert('考勤类型说明不能为空');
 					return false;
 				}
 				var tempFlag = 0;
 				for(var i = 0; i < attendData.attendArray.length; i++) {
 					var tempModel = attendData.attendArray[i];
-					if(tempModel.cname == text) {
+					if(tempModel.AttendTypeNote == text) {
 						tempFlag++;
 					}
 				}
 				if(tempFlag == 0) {
 					return true;
 				} else {
-					alert('不能添加重复课程');
+					alert('存在同名的考勤类型');
 					return false;
 				}
 			}

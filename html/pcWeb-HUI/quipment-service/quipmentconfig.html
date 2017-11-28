@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>设备类型配置</title>
+		<script type="text/javascript">
+			var WebVersion = "?" + Math.random();
+		</script>
+		<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui/css/H-ui.min.css" />
+		<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css" />
+		<link rel="stylesheet" href="../../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+		<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" />
+		<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
+		<style>
+			.operate-edit,
+			.operate-del {
+				text-decoration: none;
+			}
+
+			#pages {
+				margin-top: 20px;
+			}
+
+			#dataAdd .row {
+				margin-left: 0;
+				margin-right: 0;
+			}
+
+			.submit-button,
+			.select-state {
+				margin-bottom: 15px;
+			}
+
+			.bk-gray .select-box {
+				margin-left: 5px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 维修配置 <span class="c-gray en">&gt;</span> 设备类型配置
+			<a class="btn btn-success radius r" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
+		</nav>
+		<div class="page-container">
+			<div class="cl pd-5 bg-1 bk-gray">
+				<span class="l">
+					<a id="addBtn" class="btn btn-primary radius"><i class="Hui-iconfont"></i> 添加设备类型</a>
+				</span>
+				<span class="select-box inline">
+					<select id="stateSelect" class="select" title="修改查询设备类型状态">
+						<option value="-1">全部状态</option>
+						<option value="0">屏蔽状态</option>
+						<option value="1">正常状态</option>
+					</select>
+				</span>
+			</div>
+			<table class="table table-border table-bordered table-bg">
+				<thead class="text-c">
+					<tr>
+						<th style="width: 50%;">设备类型</th>
+						<th style="width: 10%;">状态</th>
+						<th style="width: 10%;">记录者</th>
+						<th style="width: 20%;">记录时间</th>
+						<th style="width: 10%;">操作</th>
+					</tr>
+				</thead>
+				<tbody id="addressList"></tbody>
+			</table>
+			<div id="pages"></div>
+		</div>
+		<!--添加设备类型-->
+		<div id="dataAdd" style="display: none;">
+			<form class="form form-horizontal">
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">设备类型：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<textarea id="quipmentText" type="text" class="textarea radius" placeholder="请输入设备类型"></textarea>
+					</div>
+				</div>
+				<div id="quipmentState" class="row cl select-state">
+					<label class="form-label col-xs-4 col-sm-3">状态：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<span class="select-box">
+							<select id="stateChange" class="select">
+								<option value="0">屏蔽</option>
+								<option value="1">正常</option>
+							</select>
+						</span>
+					</div>
+				</div>
+				<div id="submitArea" class="row cl submit-button">
+					<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+						<input id="submitAddress" class="btn btn-primary radius" type="button" value="提交" />
+					</div>
+				</div>
+			</form>
+		</div>
+		<script type="text/javascript" src="../../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../../../js/H-ui.admin/lib/layer/2.4/layer.js"></script>
+		<script type="text/javascript" src="../../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
+		<script type="text/javascript" src="../../../js/H-ui.admin/static/h-ui.admin/js/H-ui.admin.js"></script>
+		<script type="text/javascript" src="../../../js/H-ui.admin/lib/laypage/1.2/laypage.js"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
+		</script>
+		<script>
+			var quipmentData; //设备类型列表的数据
+			var quipmentIndex; //当前编辑的设备类型序列
+			var selectState = -1; //查询设备类型状态，0，屏蔽；1，正常；
+			var editState; //0，添加设备类型；1，修改设备类型
+			var page = 1; //当前页数
+			window.onload = function() {
+				layer.load(2);
+				initListener();
+				getData(page);
+			}
+
+			function initListener() {
+				//点击添加设备类型
+				$("#addBtn").click(function() {
+					editState = 0;
+					$("#quipmentText").val("");
+					$("#quipmentState").css("display", "none");
+					$("#submitArea").css("display", "block");
+					layer.open({
+						type: 1,
+						title: "添加",
+						area: '500px',
+						zIndex: 999,
+						content: $('#dataAdd') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+					});
+				});
+
+				//点击提交按钮
+				$("#submitAddress").click(function() {
+					var quipmentText = $.trim($("#quipmentText").val());
+					if(quipmentText == "") {
+						layer.confirm('请输入设备类型名称', {
+							icon: 2,
+							title: '提示'
+						})
+						return false;
+					}
+					layer.load(2);
+					addAddress(quipmentText);
+				});
+
+				//点击编辑
+				$(".table").on("click", ".operate-edit", function(e) {
+					editState = 1;
+					quipmentIndex = $("#addressList tr").index(this.parentNode.parentNode);
+					$("#quipmentState").css("display", "block");
+					$("#submitArea").css("display", "none");
+					$("#quipmentText").val(quipmentData[quipmentIndex].cname);
+					$("#stateChange").val(quipmentData[quipmentIndex].stat);
+					layer.open({
+						type: 1,
+						title: "修改",
+						area: '500px',
+						zIndex: 999,
+						content: $('#dataAdd') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+					});
+				});
+
+				//修改查询设备类型状态
+				$("#stateSelect").change(function() {
+					selectState = $("#stateSelect").val() * 1;
+					page = 1;
+					getData(page);
+				});
+
+				//设备类型输入框的焦点离开
+				$("#quipmentText").blur(function() {
+					if(editState !== 1) {
+						return false;
+					}
+					var quipmentText = $.trim($("#quipmentText").val());
+					if(quipmentText == quipmentData[quipmentIndex].cname) {
+						return false;
+					}
+					layer.load(2);
+					addressEdit("cname", quipmentText);
+				});
+
+				//修改设备类型状态
+				$("#stateChange").change(function() {
+					layer.load(2);
+					var quipmentState = $("#stateChange").val() * 1;
+					addressEdit("stat", quipmentState);
+				});
+			}
+
+			/**
+			 * 设备类型列表添加数据
+			 * @param {Array} data
+			 */
+			function showData(data) {
+				var html = "";
+				for(var i = 0; i < data.length; i++) {
+					var cname = '<tr class="text-c"><td>' + data[i].cname + '</td>';
+					var stat = '';
+					if(data[i].stat == 0) {
+						stat = '<td><span class="label label-defaunt radius">屏蔽</span></td>';
+					} else {
+						stat = '<td><span class="label label-success radius">正常</span></td>';
+					}
+					var recname = '<td>' + data[i].recname + '</td>';
+					//格式化时间
+					data[i].rectime = data[i].rectime.replace("T", " ");
+					var index = data[i].rectime.indexOf(".");
+					if(index != -1) {
+						data[i].rectime = data[i].rectime.substring(0, index);
+					}
+					var rectime = '<td>' + data[i].rectime + '</td>';
+					var edit = '<td><a class="operate-edit " title="修改"><i class="Hui-iconfont"></i></a></td></tr>';
+					html = html + cname + stat + recname + rectime + edit;
+				}
+				$("#addressList").append(html);
+			}
+
+			/**
+			 * 初始化页码
+			 * @param {Object} pages 通过后台拿到的总页数
+			 * @param {Object} curr 初始化当前页
+			 */
+			function initLaypage(pages, curr) {
+				laypage({
+					cont: 'pages', //容器
+					pages: pages, //通过后台拿到的总页数
+					curr: curr, //初始化当前页
+					jump: function(e, first) { //触发分页后的回调
+						if(!first) {
+							page = e.curr;
+							getData(e.curr);
+						}
+					}
+				});
+			}
+
+			/**
+			 * 获取第几页
+			 * @param {Number} pageindex 页码
+			 */
+			function getData(pageindex) {
+				var tempData = {
+					cmd: 'devaddradmin',
+					type: 'findpage',
+					pagesize: 10,
+					pageindex: pageindex,
+				}
+				if(selectState !== -1) {
+					tempData.stat = selectState;
+				}
+				unitWebsitePro(tempData, function(data) {
+					layer.closeAll('loading');
+					$("#addressList").empty();
+					quipmentData = [];
+					if(data.RspCode == 0) {
+						quipmentData = data.RspData.dt;
+						showData(quipmentData);
+						initLaypage(data.RspData.pg.PageCount, pageindex);
+					} else {
+						layer.confirm(data.RspTxt, {
+							icon: 2,
+							title: '提示'
+						});
+					}
+				});
+			}
+
+			/**
+			 * 添加设备类型
+			 * @param {String} text 设备类型文字
+			 */
+			function addAddress(text) {
+				var tempData = {
+					cmd: 'devaddradmin',
+					type: 'add',
+					cname: text,
+				}
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						layer.closeAll();
+						$.Huimodalalert("添加成功", 2000);
+						getData(page);
+					} else {
+						layer.closeAll('loading');
+						layer.confirm(data.RspTxt, {
+							icon: 2,
+							title: '提示'
+						});
+					}
+				});
+			}
+
+			/**
+			 * 修改设备类型信息
+			 * @param {String} callcol 类型
+			 * @param {String or Number} colv 值
+			 */
+			function addressEdit(callcol, colv) {
+				console.log("addressEdit:" + callcol + " " + colv);
+				var tempData = {
+					cmd: 'devaddradmin',
+					type: 'edit',
+					callcol: callcol,
+					colv: colv,
+					colid: quipmentData[quipmentIndex].addrid
+				}
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						layer.closeAll();
+						$.Huimodalalert("修改成功", 2000);
+						if(callcol == "cname") { //修改设备类型
+							quipmentData[quipmentIndex].cname = colv;
+							$($("#addressList").find("tr")[quipmentIndex]).find("td")[0].innerText = colv;
+						} else if(callcol == "stat") { //修改状态
+							quipmentData[quipmentIndex].stat = colv;
+							var ele = $($("#addressList").find("tr")[quipmentIndex]).find("span")[0];
+							if(colv == 1) {
+								ele.className = "label label-success radius";
+								ele.innerText = "正常";
+							} else {
+								ele.className = "label label-defaunt radius";
+								ele.innerText = "屏蔽";
+							}
+						}
+						getData(page);
+					} else {
+						layer.closeAll('loading');
+						if(callcol == "stat") { //修改状态
+							$("#stateChange").val(quipmentData[quipmentIndex].stat);
+						}
+						layer.confirm(data.RspTxt, {
+							icon: 2,
+							title: '提示'
+						});
+					}
+				});
+			}
+		</script>
+	</body>
+
+</html>

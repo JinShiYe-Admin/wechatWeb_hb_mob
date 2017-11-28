@@ -19,10 +19,6 @@
 				text-decoration: none;
 			}
 
-			.title-address {
-				width: 70%;
-			}
-
 			#pages {
 				margin-top: 20px;
 			}
@@ -63,9 +59,11 @@
 			<table class="table table-border table-bordered table-bg">
 				<thead class="text-c">
 					<tr>
-						<th class="title-address">地址</th>
-						<th>状态</th>
-						<th>操作</th>
+						<th style="width: 50%;">地址</th>
+						<th style="width: 10%;">状态</th>
+						<th style="width: 10%;">记录者</th>
+						<th style="width: 20%;">记录时间</th>
+						<th style="width: 10%;">操作</th>
 					</tr>
 				</thead>
 				<tbody id="addressList"></tbody>
@@ -114,10 +112,11 @@
 			var addressIndex; //当前编辑的地址序列
 			var selectState = -1; //查询地址状态，0，屏蔽；1，正常；
 			var editState; //0，添加地址；1，修改地址
-
+			var page = 1; //当前页数
 			window.onload = function() {
-				getData(1);
+				layer.load(2);
 				initListener();
+				getData(page);
 			}
 
 			function initListener() {
@@ -170,7 +169,8 @@
 				//修改查询地址状态
 				$("#stateSelect").change(function() {
 					selectState = $("#stateSelect").val() * 1;
-					getData(1);
+					page = 1;
+					getData(page);
 				});
 
 				//地址输入框的焦点离开
@@ -182,13 +182,15 @@
 					if(addressText == addressData[addressIndex].cname) {
 						return false;
 					}
+					layer.load(2);
 					addressEdit("cname", addressText);
 				});
 
 				//修改地址状态
 				$("#stateChange").change(function() {
+					layer.load(2);
 					var addressState = $("#stateChange").val() * 1;
-					console.log("addressState:" + addressState);
+					addressEdit("stat", addressState);
 				});
 			}
 
@@ -199,15 +201,23 @@
 			function showData(data) {
 				var html = "";
 				for(var i = 0; i < data.length; i++) {
-					var html_0 = '<tr class="text-c"><td>' + data[i].cname + '</td>';
-					var html_1 = '';
+					var cname = '<tr class="text-c"><td>' + data[i].cname + '</td>';
+					var stat = '';
 					if(data[i].stat == 0) {
-						html_1 = '<td><span class="label label-defaunt radius">屏蔽</span></td>';
+						stat = '<td><span class="label label-defaunt radius">屏蔽</span></td>';
 					} else {
-						html_1 = '<td><span class="label label-success radius">正常</span></td>';
+						stat = '<td><span class="label label-success radius">正常</span></td>';
 					}
-					var html_2 = '<td><a class="operate-edit " title="修改"><i class="Hui-iconfont"></i></a></td></tr>';
-					html = html + html_0 + html_1 + html_2;
+					var recname = '<td>' + data[i].recname + '</td>';
+					//格式化时间
+					data[i].rectime = data[i].rectime.replace("T", " ");
+					var index = data[i].rectime.indexOf(".");
+					if(index != -1) {
+						data[i].rectime = data[i].rectime.substring(0, index);
+					}
+					var rectime = '<td>' + data[i].rectime + '</td>';
+					var edit = '<td><a class="operate-edit " title="修改"><i class="Hui-iconfont"></i></a></td></tr>';
+					html = cname + stat + recname + rectime + edit;
 				}
 				$("#addressList").append(html);
 			}
@@ -224,11 +234,13 @@
 					curr: curr, //初始化当前页
 					jump: function(e, first) { //触发分页后的回调
 						if(!first) {
+							page = e.curr;
 							getData(e.curr);
 						}
 					}
 				});
 			}
+
 			/**
 			 * 获取第几页
 			 * @param {Number} pageindex 页码
@@ -244,6 +256,7 @@
 					tempData.stat = selectState;
 				}
 				unitWebsitePro(tempData, function(data) {
+					layer.closeAll('loading');
 					$("#addressList").empty();
 					addressData = [];
 					if(data.RspCode == 0) {
@@ -270,10 +283,12 @@
 					cname: text,
 				}
 				unitWebsitePro(tempData, function(data) {
-					layer.closeAll('loading');
 					if(data.RspCode == 0) {
-						location.replace(location.href);
+						layer.closeAll();
+						$.Huimodalalert("添加成功", 2000);
+						getData(page);
 					} else {
+						layer.closeAll('loading');
 						layer.confirm(data.RspTxt, {
 							icon: 2,
 							title: '提示'
@@ -288,6 +303,7 @@
 			 * @param {String or Number} colv 值
 			 */
 			function addressEdit(callcol, colv) {
+				console.log("addressEdit:" + callcol + " " + colv);
 				var tempData = {
 					cmd: 'devaddradmin',
 					type: 'edit',
@@ -296,13 +312,29 @@
 					colid: addressData[addressIndex].addrid
 				}
 				unitWebsitePro(tempData, function(data) {
-					layer.closeAll('loading');
 					if(data.RspCode == 0) {
+						layer.closeAll();
+						$.Huimodalalert("修改成功", 2000);
 						if(callcol == "cname") { //修改地址
 							addressData[addressIndex].cname = colv;
 							$($("#addressList").find("tr")[addressIndex]).find("td")[0].innerText = colv;
+						} else if(callcol == "stat") { //修改状态
+							addressData[addressIndex].stat = colv;
+							var ele = $($("#addressList").find("tr")[addressIndex]).find("span")[0];
+							if(colv == 1) {
+								ele.className = "label label-success radius";
+								ele.innerText = "正常";
+							} else {
+								ele.className = "label label-defaunt radius";
+								ele.innerText = "屏蔽";
+							}
 						}
+						getData(page);
 					} else {
+						layer.closeAll('loading');
+						if(callcol == "stat") { //修改状态
+							$("#stateChange").val(addressData[addressIndex].stat);
+						}
 						layer.confirm(data.RspTxt, {
 							icon: 2,
 							title: '提示'

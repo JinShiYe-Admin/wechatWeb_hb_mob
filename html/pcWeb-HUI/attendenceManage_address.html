@@ -42,7 +42,7 @@
 	</head>
 
 	<body>
-		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 网站配置 <span class="c-gray en">&gt;</span> 管理考勤
+		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 考勤 <span class="c-gray en">&gt;</span> 管理考勤
 			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
 		</nav>
 		<div id="areaDataTable" class="page-container">
@@ -54,71 +54,7 @@
 			<column-table :value="tableAreaData" @click-edit="edit" @click-del="del" @click-shield="shield"></column-table>
 			<div id="pages" style="margin-top: 20px;"></div>
 		</div>
-		<div id="column_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content radius">
-					<div class="modal-header">
-						<h3 class="modal-title">{{title}}</h3>
-					</div>
-					<div class="modal-body">
-						<p>{{content}}</p>
-					</div>
-					<div class="modal-footer">
-						<button class="btn" data-dismiss="modal" aria-hidden="true">确定</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div id="column_info" style="display: none;">
-			<form class="form form-horizontal">
-				<div class="row cl">
-					<label class="form-label col-xs-4 col-sm-3">考勤地点名称：</label>
-					<div class="formControls col-xs-8 col-sm-9">
-						<input type="text" class="input-text" :value="cname" placeholder="请输入栏目名称">
-					</div>
-				</div>
-				<div class="row cl">
-					<label class="form-label col-xs-4 col-sm-3">链接URL：</label>
-					<div class="formControls col-xs-8 col-sm-9">
-						<input type="text" class="input-text" :value="linkurl" placeholder="请输入链接URL">
-					</div>
-				</div>
-				<div class="row cl">
-					<label class="form-label col-xs-4 col-sm-3">排序ID：</label>
-					<div class="formControls col-xs-8 col-sm-9">
-						<input type="number" class="input-text" :value="orderid" placeholder="请输入排序ID，越小越前">
-					</div>
-				</div>
-				<div class="row cl">
-					<label class="form-label col-xs-4 col-sm-3">备注：</label>
-					<div class="formControls col-xs-8 col-sm-9">
-						<input type="text" class="input-text" :value="note" placeholder="请输入备注">
-					</div>
-				</div>
-				<div class="row cl">
-					<label class="form-label col-xs-4 col-sm-3">是否允许投稿：</label>
-					<div class="formControls skin-minimal col-xs-8 col-sm-9">
-						<div class="check-box">
-							<input type="checkbox" disabled>
-						</div>
-					</div>
-				</div>
-				<div class="row cl">
-					<label class="form-label col-xs-4 col-sm-3">是否显示首页：</label>
-					<div class="formControls skin-minimal col-xs-8 col-sm-9">
-						<div class="check-box">
-							<input type="checkbox" v-model="istop">
-						</div>
-					</div>
-				</div>
-				<div class="row cl submit-button">
-					<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
-						<input v-if="type =='添加'" class="btn btn-primary radius" type="button" :value="type">
-						<input v-if="type =='删除'" class="btn btn-danger radius" type="button" :value="type">
-					</div>
-				</div>
-			</form>
-		</div>
+
 		<!--表格-->
 		<template id="temp_column_table">
 			<table class="table table-border table-bordered table-bg">
@@ -138,11 +74,9 @@
 						<td>{{item.AreaX}}</td>
 						<td>{{item.AreaY}}</td>
 						<td>{{item.AreaRedius}}</td>
-						<!--<td class="td-stat"></td>-->
 						<td class="sorting_1">
 							<a class="operate-edit" @click="clickEdit(item)" title="编辑"><i class="Hui-iconfont"></i></a>
 							<a style="text-decoration:none" class="ml-5" @click="clickDel(item)" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
-							<!--<a style="text-decoration:none" class="ml-5" @click="clickShield(item)" title="停用"><i class="Hui-iconfont">&#xe631;</i></a>-->
 
 						</td>
 					</tr>
@@ -206,7 +140,8 @@
 							title: "新增考勤地点",
 							content: url + "?v=" + Math.random() + "&data=" + encodeURIComponent(dataStr),
 							end: function() {
-								console.log("刷新")
+//								alert("666666666666")
+								console.log("刷新---------------------")
 								location.reload();
 							}
 						});
@@ -242,47 +177,6 @@
 						//						column_info.showEdit(this.dt[index]);
 					},
 					shield: function(item) {
-						var tempFlag = 0;
-						var tempStr = ''
-						if(item.stat == 0) {
-							tempFlag = 1;
-							var tempStr = '启用'
-						} else {
-							tempFlag = 0;
-							var tempStr = '停用'
-						}
-						layer.confirm('确认要' + tempStr + '吗？', function(index) {
-							console.log('item1:' + JSON.stringify(item))
-							layer.close(index);
-
-							var para = {
-								cmd: 'chn',
-								type: 'edit',
-								colid: item.chnid,
-								callcol: 'stat',
-								colv: tempFlag
-
-							}
-
-							//							alert(JSON.stringify(para))
-							unitWebsitePro(para, function(data) {
-								if(data.RspCode == 0) {
-									if(item.stat == 0) {
-										item.stat = 1;
-									} else {
-										item.stat = 0;
-									}
-									console.log('item2:' + JSON.stringify(item))
-									console.log('dt:' + JSON.stringify(column_table.dt))
-									layer.msg('已' + tempStr + '!', {
-										icon: 1,
-										time: 1000
-									});
-								} else {
-									alert(data.RspTxt);
-								}
-							});
-						});
 
 					},
 					del: function(item) { //删除考勤地点记录
@@ -327,23 +221,7 @@
 									});
 								}
 							})
-							//							var para = {
-							//								cmd: 'chn',
-							//								type: 'del',
-							//								colid: item.chnid
-							//							}
-							//							//							alert(JSON.stringify(para))
-							//							unitWebsitePro(para, function(data) {
-							//								if(data.RspCode == 0) {
-							//									layer.msg('已删除!', {
-							//										icon: 1,
-							//										time: 1000
-							//									});
-							//									location.reload();
-							//								} else {
-							//									alert(data.RspTxt);
-							//								}
-							//							});
+							
 						});
 
 					},
@@ -362,18 +240,7 @@
 					type: ""
 				},
 				methods: {
-					/**
-					 * 显示添加栏目
-					 */
-					showAdd: function() {
-						this.cname = "";
-						this.linkurl = "";
-						this.orderid = "";
-						this.note = "";
-						this.istop = "";
-						this.type = "添加";
-						this.show("添加栏目");
-					},
+					
 					/**
 					 * 显示编辑栏目
 					 */

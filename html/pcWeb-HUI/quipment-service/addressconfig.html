@@ -284,7 +284,7 @@
 				}
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
-						layer.closeAll();
+						layer.closeAll("page");
 						$.Huimodalalert("添加成功", 2000);
 						getData(page);
 					} else {
@@ -313,22 +313,8 @@
 				}
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
-						layer.closeAll();
+						layer.closeAll("page");
 						$.Huimodalalert("修改成功", 2000);
-						if(callcol == "cname") { //修改地址
-							addressData[addressIndex].cname = colv;
-							$($("#addressList").find("tr")[addressIndex]).find("td")[0].innerText = colv;
-						} else if(callcol == "stat") { //修改状态
-							addressData[addressIndex].stat = colv;
-							var ele = $($("#addressList").find("tr")[addressIndex]).find("span")[0];
-							if(colv == 1) {
-								ele.className = "label label-success radius";
-								ele.innerText = "正常";
-							} else {
-								ele.className = "label label-defaunt radius";
-								ele.innerText = "屏蔽";
-							}
-						}
 						getData(page);
 					} else {
 						layer.closeAll('loading');

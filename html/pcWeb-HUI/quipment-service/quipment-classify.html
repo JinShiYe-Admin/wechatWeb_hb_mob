@@ -48,25 +48,31 @@
 				background-color: darkgrey;
 				color: white;
 			}
-			.display-inline{
-				display: inline-block;
+			
+			.display-inline {
+				/*display: inline-block;*/
 			}
-			.choose-depart{
+			
+			.choose-depart {
 				position: fixed;
 				left: 0;
 				top: 0;
 				width: 20%;
 			}
-			.choose-person{
+			
+			.choose-person {
 				position: fixed;
 				top: 0;
 				right: 0;
 				width: 70%;
 			}
-			.check-container{
+			
+			.check-container {
 				width: 20%;
 			}
-			.name-contianer,.position-contianer{
+			
+			.name-contianer,
+			.position-contianer {
 				width: 40%;
 			}
 		</style>
@@ -81,34 +87,34 @@
 		</template>
 		<template id="multi-choose">
 			<div>
-				<choose-depart class="display-inline choose-depart"></choose-depart>
-				<choose-person class="display-inline choose-person"></choose-person>
+				<choose-depart v-on:active-depart="getActiveDepart" class="display-inline choose-depart"></choose-depart>
+				<choose-person v-bind:chose-depart="activeDepart" class="display-inline choose-person"></choose-person>
 			</div>
 		</template>
 		<!--人员选择-->
 		<template id="person-list">
-			<table  class="table table-border table-bordered table-bg">
-			<thead class="text-c">
-				<tr>
-					<th class="check-container"><input type="checkbox" v-model:checked="isAllCheck" name="choose-person" value="-1" v-on:change="getTotalCheck($event)" /></th>
-					<th class="name-contianer" >姓名</th>
-					<th class="position-contianer" >职务</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr class="text-c" v-for="(person,index) in personList">
-					<td><input type="checkbox" name="choose-person" value="person.userid" v-on:change="getPersonCheck($event,person)" /></td>
-					<td >{{person.name}}</td>
-					<td>
-						{{person.position}}
-					</td>
-				</tr>
-			</tbody>
-		</table>
+			<table v-if="personList.length>0" class="table table-border table-bordered table-bg">
+				<thead class="text-c">
+					<tr>
+						<th class="check-container"><input type="checkbox" v-model:checked="isAllCheck" name="choose-person" value="-1" v-on:change="getTotalCheck($event)" /></th>
+						<th class="name-contianer">姓名</th>
+						<th class="position-contianer">职务</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="text-c" v-for="(person,index) in personList">
+						<td><input v-bind:checked="person.isCheck" type="checkbox" name="choose-person" value="person.userid" v-on:change="getPersonCheck($event,person)" /></td>
+						<td>{{person.name}}</td>
+						<td>
+							{{person.position}}
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</template>
 		<!--部门选择-->
 		<template id="choose-depart">
-			<div >
+			<div>
 				<ul v-for="depart in rootDeparts">
 					<depart-tree-node v-bind:depart-info="depart" v-bind:active-depart="activeDepart" v-on:active-depart="getActiveDepart"></depart-tree-node>
 				</ul>
@@ -167,8 +173,19 @@
 			const classifyList = {
 				template: '#classify-tem'
 			}
-			const multiChoose={
-				template:'#multi-choose'
+			const multiChoose = {
+				template: '#multi-choose',
+				data: function() {
+					return {
+						activeDepart: {}
+					}
+				},
+				methods: {
+					getActiveDepart: function(activeDepart) {
+						this.activeDepart = activeDepart;
+						console.log("获取的响应的depart:"+JSON.stringify(activeDepart))
+					}
+				}
 			}
 			const router = new VueRouter({
 				//				mode: 'history',

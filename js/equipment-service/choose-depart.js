@@ -60,9 +60,7 @@ Vue.component("choose-depart", {
 					if(node.value >= 0) {
 						roots.push(node);
 					}
-
 				}
-
 			}
 			console.log('getChildrenTree获取的数据：' + JSON.stringify(roots))
 			return roots

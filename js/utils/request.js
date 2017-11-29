@@ -97,5 +97,67 @@ var request = (function(mod) {
 			callback(response);
 		})
 	}
+	mod.getServiceGroups = function(callback) {
+		var comData = {
+			cmd: 'devkindsadmin',
+			type: 'findpage',
+			pageindex: 1,
+			pagesize: 9999
+		}
+		mod.postData(consts.MAINURL, JSON.stringify(comData), function(response) {
+			console.log("查询维修种类获取的值:" + JSON.stringify(response));
+			callback(response);
+		})
+
+	}
+	/**
+	 * 
+	 * @param {Object} name
+	 * @param {Object} callbak
+	 */
+	mod.addServiceGroup = function(name,callbak) {
+		var comData = {
+			cmd: 'devkindsadmin',
+			type: 'add',
+			cname: name,
+			gusers: ""
+		}
+		mod.postData(consts.MAINURL, JSON.stringify(comData), function(response) {
+			console.log("添加维修服务组获取的数据" + JSON.stringify(response));
+			callback(response);
+		})
+	}
+	/**
+	 * 编辑维修组
+	 * @param {Object} editContent
+	 * @param {Object} callback
+	 */
+	mod.editSeviceGroup = function(editContent, callback) {
+		var comData = {
+			cmd: 'devkindsadmin',
+			type: 'edit',
+		}
+		jQuery.extend(comData, editContent);
+		mod.postData(consts.MAINURL, JSON.stringify(comData), function(response) {
+			console.log("编辑维修组的结果：" + JSON.stringify(response));
+			callback(response);
+		})
+	}
+	/**
+	 * 删除维修组
+	 * @param {Object} id
+	 * @param {Object} callback
+	 */
+	mod.delServiceGroup = function(id, callback) {
+		var comData = {
+			cmd: 'devkindsadmin',
+			type: 'del',
+			colid: id
+		}
+		mod.postData(consts.MAINURL, JSON.stringify(comData), function(response) {
+			console.log("删除维修组的结果:" + JSON.stringify(response));
+			callback(response);
+		})
+	}
 	return mod;
 })(request || {})

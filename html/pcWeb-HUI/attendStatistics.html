@@ -13,20 +13,26 @@
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
 		<title>考勤统计</title>
-		
+
 	</head>
 
 	<body>
 		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 考勤 <span class="c-gray en">&gt;</span> 考勤统计
 			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
 		</nav>
+
 		<div class="page-container" id="attendData">
-			<div class="cl pd-5 bg-1 bk-gray"> <span class="l"> <a href="javascript:;" @click="addAttend()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加考勤类型</a></span></div>
+			<div class="text-c"> 日期范围：
+				<input placeholder="开始时间" type="text" onfocus="WdatePicker({ maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}' })" id="datemin" class="input-text Wdate" style="width:120px;"> -
+				<input placeholder="结束时间" type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax" class="input-text Wdate" style="width:120px;">
+				<button type="submit" class="btn btn-success radius" id="" name="" @click="searchAttendList()"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
+			</div>
 			<div class="mt-20">
 				<table class="table table-border table-bordered table-hover table-bg">
 					<thead>
 						<tr class="text-c">
 							<th width="100">用户姓名</th>
+							<th width="100">考勤部门</th>
 							<th width="100">考勤次数</th>
 							<th width="100">迟到次数</th>
 							<th width="100">早退次数</th>
@@ -35,6 +41,7 @@
 					<tbody>
 						<tr class="text-c" v-for='(attend,index) in attendArray' v-show="flag>0" style="display: none;">
 							<td><u style="cursor:pointer" class="text-primary">{{attend.UserName}}</u></td>
+							<td><u style="cursor:pointer" class="text-primary">{{attend.departName}}</u></td>
 							<td><u style="cursor:pointer" class="text-primary">{{attend.AttendCnt}}</u></td>
 							<td><u style="cursor:pointer" class="text-primary">{{attend.LateCnt}}</u></td>
 							<td><u style="cursor:pointer" class="text-primary">{{attend.EarlyCnt}}</u></td>
@@ -84,37 +91,14 @@
 				data: {
 					flag: 0,
 					userInfo: {}, //当前人员信息
-					attendArray: []
+					attendArray: [], //考勤统计列表
+					departArray: [], //管理的所有部门数组
+					peopleArray: [] //管理的所有部门的人员数组
 				},
 				methods: {
-					modifyAttend: function(model, index) {
-						attendData.attendFlag = 1;
-						addAttendLayer.showEdit(model);
-					},
-					addAttend: function() {
-						attendData.attendFlag = 0;
-						addAttendLayer.showAdd();
-					},
-					removeAttend: function(model, index) {
-						layer.confirm('确认要删除吗？', function(index) {
-							layer.close(index);
-							var tempData = {
-								attendTypeId: model.AttendTypeId
-							}
-							delAttendTypePro(tempData, function(data) {
-								if(data.RspCode == 0) {
-									if(data.RspData.Result == 1) {
-										layer.alert('删除成功');
-										//获取现有的考勤类型
-										getAttendType();
-									} else {
-										layer.alert('删除失败');
-									}
-								} else {
-									alert(data.RspTxt);
-								}
-							});
-						});
+					searchAttendList: function() {
+						//16.获取考勤统计
+						getAttendStat(attendData.peopleArray);
 					}
 				}
 			});
@@ -131,16 +115,14 @@
 						attendData.userInfo = JSON.parse(data.RspData);
 						//获取管理的部门
 						getPersonDepart();
-						//16.获取考勤统计
-//						getAttendStat();
 					} else {
 						layer.alert('请重新登录获取个人信息');
 					}
 				});
 			};
-			
+
 			//获取管理的部门
-			var getPersonDepart = function(){
+			var getPersonDepart = function() {
 				var tempData = {
 					cmd: 'persondepartsadmin',
 					type: 'findpage' //获取管理员全部管理部门
@@ -148,26 +130,80 @@
 				console.log('tempData:' + JSON.stringify(tempData));
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
-						
+						attendData.departArray = [].concat(JSON.stringify(tempData));
+						//把获取到的部门，按层级组合
+						var tempArr = getNodeTree(JSON.parse(data.RspData));
+						//得到最顶层的部门id数组
+						var tempDepartArr = [];
+						for(var i = 0; i < tempArr.length; i++) {
+							var tempModel = tempArr[i];
+							attendData.peopleArray.push(tempModel.value);
+						}
 					} else {
 						layer.alert('获取部门出现问题');
 					}
 				});
 			}
-			
+
+			//把获取到的部门，按层级组合
+			var getNodeTree = function(nodes) {
+				if(typeof(nodes) === 'undefined' || nodes.length === 0) {
+					return []
+				}
+				nodes.sort(function(a, b) {
+					return a.value - b.value
+				})
+				var map = {},
+					node, roots = [];
+				for(var i = 0; i < nodes.length; i++) {
+					node = nodes[i]
+					node.departList = []
+					node.personList = []
+					map[node.value] = i // use map to look-up the parents
+					if(typeof(map[node.parentvalue]) !== 'undefined') {
+						nodes[map[node.parentvalue]].departList.push(node)
+					} else {
+						if(node.value >= 0) {
+							roots.push(node);
+						}
+					}
+				}
+				console.log('getChildrenTree获取的数据：' + JSON.stringify(roots))
+				return roots
+			}
+
 			//16.获取考勤统计
-			var getAttendStat = function() {
-				var tempArr = [];
-				tempArr.push(attendData.userInfo.userId);
+			var getAttendStat = function(tempDepartArr) {
+				var startTime=$("#datemin").val();
+				var endTime=$("#datemax").val();
+				if (startTime == '') {
+					layer.alert('请选择开始时间');
+					return false;
+				} else if (endTime == '') {
+					layer.alert('请选择结束时间');
+					return false;
+				}
+				startTime = startTime.replace(/-/g,'');
+				endTime = endTime.replace(/-/g,'');
 				var tempData = {
 					corpId: attendData.userInfo.corpid, //单位ID
-					userId:tempArr, //用户ID,例如：[“1”, “2”, “3”]
-					beginTime: 1, //统计开始时间,年月日共八位如：20011010
-					endTime: 0 //统计结束时间,年月日共八位如：20011010
+					userId: tempDepartArr, //用户ID,例如：[“1”, “2”, “3”]
+					beginTime: startTime, //统计开始时间,年月日共八位如：20011010
+					endTime: endTime //统计结束时间,年月日共八位如：20011010
 				}
 				console.log('tempData:' + JSON.stringify(tempData));
 				getAttendStatPro(tempData, function(data) {
 					if(data.RspCode == 0) {
+						//将获取到的统计，添加部门名称
+						for(var i = 0; i < data.RspData.Data.length; i++) {
+							var tempModel = data.RspData.Data[i];
+							for(var i = 0; i < attendData.departArray.length; i++) {
+								var tempModel1 = attendData.departArray[i];
+								if(tempModel.value == tempModel1.DeptId) {
+									tempModel.departName = tempModel1.tempModel1;
+								}
+							}
+						}
 						attendData.attendArray = [].concat(data.RspData.Data);
 						attendData.flag = 1;
 					} else {

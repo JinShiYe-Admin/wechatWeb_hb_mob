@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width initial-scale=1 minimum-scale=1 maximum-scale=1 user-scalable=no">
+		<!--	<meta name="viewport" content="width=device-width initial-scale=1 minimum-scale=1 maximum-scale=1 user-scalable=no">-->
 		<title></title>
 		<link href="../../../css/jquery-weui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/static/h-ui/css/H-ui.min.css" />
@@ -14,6 +14,7 @@
 		<style>
 			.float-right {
 				float: right;
+				margin-left: 10px;
 			}
 			
 			.inline-block {
@@ -53,18 +54,31 @@
 				/*display: inline-block;*/
 			}
 			
-			.choose-depart {
-				position: fixed;
-				left: 0;
-				top: 0;
+			.multi-choose-container {
+				position: relative;
+			}
+			
+			.choose-depart-container {
+				position: absolute;
+				left: 20%;
+				top: 10%;
 				width: 20%;
+				height: 600px;
+				overflow: auto;
+			}
+			
+			.choose-person-container {
+				position: absolute;
+				left: 40%;
+				top: 10%;
+				right: 10%;
+				width: 40%;
+				height: 600px;
 			}
 			
 			.choose-person {
-				position: fixed;
-				top: 0;
-				right: 0;
-				width: 70%;
+				height: 500px;
+				overflow: auto;
 			}
 			
 			.check-container {
@@ -75,42 +89,66 @@
 			.position-contianer {
 				width: 40%;
 			}
+			
+			.person-foot {
+				padding-top: 10px;
+			}
+			
+			.person-container {
+				display: inline-block;
+				padding: 5px 10px;
+				text-align: center;
+				border: solid 1px #D3D4D3;
+				width: 50px;
+				margin: 5px;
+			}
+			
+			.person-container.is-checked {
+				border-color: dodgerblue;
+			}
+			
+			.btn-primary:disabled {
+				background-color: darkgray;
+				border: none;
+			}
 		</style>
 	</head>
 
 	<body>
 		<div id="classify-container">
-			<router-view></router-view>
+			<router-view v-on:group-info="getCurGroup" v-bind:classify="curGroup"></router-view>
 		</div>
-		<template id="classify-tem">
-			<classify-list></classify-list>
-		</template>
+		<!--人员选择-->
 		<template id="multi-choose">
-			<div>
-				<choose-depart v-on:active-depart="getActiveDepart" class="display-inline choose-depart"></choose-depart>
-				<choose-person v-bind:chose-depart="activeDepart" class="display-inline choose-person"></choose-person>
+			<div class="multi-choose-container">
+				<div class="choose-depart-container">
+					<choose-depart v-on:active-depart="getActiveDepart" class="display-inline choose-depart"></choose-depart>
+				</div>
+				<div class="choose-person-container">
+					<p>人员选择</p>
+					<div class="choose-person">
+						<choose-person v-bind:chose-depart="activeDepart" v-bind:choose-person="selectPerson" v-on:select-person="getSelectPerson"></choose-person>
+					</div>
+					<div class="person-foot">
+						<div v-if="Object.keys(selectPerson).length>0">
+							<p>已选人员</p>
+							<div v-for="key of Object.keys(selectPerson)" class="person-container is-checked" v-on:click="delChoosePerson(key)">
+								{{selectPerson[key]}}
+							</div>
+						</div>
+						<a class="btn btn-primary radius float-right" v-on:click="choosePerson()">添加人员</a>
+						<a class="btn btn-default radius float-right" v-on:click="cancelChoose()">取消</a>
+					</div>
+				</div>
 			</div>
 		</template>
 		<!--人员选择-->
 		<template id="person-list">
-			<table v-if="personList.length>0" class="table table-border table-bordered table-bg">
-				<thead class="text-c">
-					<tr>
-						<th class="check-container"><input type="checkbox" v-model:checked="isAllCheck" name="choose-person" value="-1" v-on:change="getTotalCheck($event)" /></th>
-						<th class="name-contianer">姓名</th>
-						<th class="position-contianer">职务</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr class="text-c" v-for="(person,index) in personList">
-						<td><input v-bind:checked="person.isCheck" type="checkbox" name="choose-person" value="person.userid" v-on:change="getPersonCheck($event,person)" /></td>
-						<td>{{person.name}}</td>
-						<td>
-							{{person.position}}
-						</td>
-					</tr>
-				</tbody>
-			</table>
+			<div>
+				<div v-for="(person,index) in personList" class="person-container" v-bind:class="[{'is-checked':person.isCheck}]" v-on:click="toggleChoosePerson(person,index)">
+					{{person.name}}
+				</div>
+			</div>
 		</template>
 		<!--部门选择-->
 		<template id="choose-depart">
@@ -118,9 +156,6 @@
 				<ul v-for="depart in rootDeparts">
 					<depart-tree-node v-bind:depart-info="depart" v-bind:active-depart="activeDepart" v-on:active-depart="getActiveDepart"></depart-tree-node>
 				</ul>
-				<div class="choose-footer">
-					<button>确定</button>
-				</div>
 			</div>
 		</template>
 		<!--维修列表-->
@@ -129,12 +164,13 @@
 				<div>
 					<p class="inline-block">维修组列表</p>
 					<span class="float-right">
-					<a id="addressAdd" class="btn btn-primary radius"><i class="Hui-iconfont"></i> 添加维修组</a>
+					<a id="addressAdd" class="btn btn-primary radius" v-on:click="addService()"><i class="Hui-iconfont"></i> 添加维修组</a>
 				</span>
 				</div>
 				<ul id="list" class="Huifold">
-					<li v-for="classify in classifies" class="item">
-						<h4>{{classify.title}}<span class="add-perdson float-right" v-on:click.stop="addPerson(classify)">添加人员</span><span class="Hui-iconfont Hui-iconfont-del3 del-classify float-right" v-on:click.stop="delClassify()"></span><b class="Hui-iconfont Hui-iconfont-arrow2-top"></b></h4>
+					<li v-for="(classify,index) in classifyList" class="item">
+						<h4>{{classify.cname}}<span class="Hui-iconfont Hui-iconfont-edit" v-on:click="changeGroupName(classify)"></span><span class="add-perdson float-right" v-on:click.stop="changePerson(item)">更改人员</span>
+							<span class="Hui-iconfont Hui-iconfont-del3 del-classify float-right" v-on:click.stop="delClassify(classify,index)"></span><b class="Hui-iconfont Hui-iconfont-arrow2-top"></b></h4>
 						<div class="info">
 							<table class="table table-border table-bordered table-bg">
 								<thead class="text-c">
@@ -144,8 +180,8 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr class="text-c" v-for="(item,index) in classify.personList">
-										<td>{{item.name}}</td>
+									<tr class="text-c" v-for="key in Object.keys(classify.gusers)">
+										<td>{{classify.gusers[key]}}</td>
 										<td>
 											<a class="operate-edit ml-5" title="删除"><i class="Hui-iconfont"></i></a>
 										</td>
@@ -155,6 +191,23 @@
 						</div>
 					</li>
 				</ul>
+				<div id="modal-demo" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content radius">
+							<div class="modal-header">
+								<h3 class="modal-title">组名</h3>
+								<a class="close" data-dismiss="modal" aria-hidden="true" href="javascript:void();">×</a>
+							</div>
+							<div class="modal-body">
+								<textarea type="text" class="textarea radius" v-model.trim="serviceGroupName" placeholder="请输入维修组名称"></textarea>
+							</div>
+							<div class="modal-footer">
+								<button class="btn btn-primary" v-bind:disabled="serviceGroupName.length==0" v-on:click="changeClick()">确定</button>
+								<button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</template>
 		<script src="../../../js/vue.js"></script>
@@ -171,24 +224,73 @@
 		<script src="../../../js/equipment-service/choose-person.js"></script>
 		<script>
 			const classifyList = {
-				template: '#classify-tem'
+				template: '<classify-list v-on:group-info="getGroupInfo"></classify-list>',
+				methods: {
+					getGroupInfo: function(classify) {
+						console.log("获取的classify:" + JSON.stringify(classify));
+						this.$emit("group-info", classify)
+					}
+				}
 			}
 			const multiChoose = {
 				template: '#multi-choose',
+				props: ['classify'],
 				data: function() {
 					return {
-						activeDepart: {}
+						activeDepart: {},
+						selectPerson: this.classify.gusers
+					}
+				},
+				watch: {
+					classify: function(newVal, oldVal) {
+						console.log("wacth:监听classify:" + JSON.stringify(newVal))
+						this.selectPerson = this.classify.gusers;
 					}
 				},
 				methods: {
 					getActiveDepart: function(activeDepart) {
+						console.log("*******getActiveDepart*******")
 						this.activeDepart = activeDepart;
-						console.log("获取的响应的depart:"+JSON.stringify(activeDepart))
+						console.log("获取的响应的depart:" + JSON.stringify(activeDepart))
+					},
+					getSelectPerson: function(person) {
+						console.log("*******getSelectPerson*******")
+						this.selectPerson = Object.assign({}, person);
+						console.log("getSelectPerson:" + JSON.stringify(this.selectPerson))
+					},
+					delChoosePerson: function(key) {
+						console.log("*******delChoosePerson*******")
+						delete this.selectPerson[key];
+						this.selectPerson = Object.assign({}, this.selectPerson);
+					},
+					choosePerson: function() {
+						console.log("*******choosePerson*******")
+						request.editSeviceGroup({
+							colid: this.classify.kindsid,
+							callcol: this.personToString(this.classify.gusers),
+							colv: this.classify.stat
+						}, function(response) {
+							if(response.RspCode == 0) {
+								router.go(-1);
+							}
+						})
+
+					},
+					personToString: function(person) {
+						console.log("*******personToString*******")
+						var strArr = [];
+						for(var key in person) {
+							strArr.push(key + "," + person[key]);
+						}
+						return strArr.join("|");
+					},
+					cancelChoose: function() {
+						router.go(-1);
 					}
+
 				}
 			}
 			const router = new VueRouter({
-				//				mode: 'history',
 				routes: [{
 					path: '/classify-list',
 					name: 'classify-list',
@@ -206,7 +308,21 @@
 					chosedPerson: {
 
 					},
-					type: 0
+					curGroup: {
+
+					}
+
+				},
+				mounted: function() {
+
+				},
+				methods: {
+					getGroupPerson: function(gusers) {
+						this.chosedPerson = gusers;
+					},
+					getCurGroup: function(cgroup) {
+
+					}
 				}
 			})
 			router.replace({

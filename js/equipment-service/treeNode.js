@@ -37,9 +37,6 @@ Vue.component("depart-tree-node", {
 			this.choosePersons = this.choosePersons.concat(persons);
 			this.$emit("choosePerson", this.choosePersons);
 		},
-		requireAllDeparts: function() {
-
-		},
 		toggleDepart: function() {
 			this.$emit("active-depart",this.departInfo);
 			console.log("向上传递的事件activeDepart")
@@ -64,14 +61,6 @@ Vue.component("depart-tree-node", {
 				//如果此部门没有子部门和老师，弹出提示框
 				com.isShow = true;
 			})
-		},
-		/**
-		 * array转化为tree
-		 * @param nodes 数组
-		 * @returns {Array} tree结构数组
-		 */
-		getChildrenTree: function(nodes) {
-
-		},
+		}
 	}
 })

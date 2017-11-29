@@ -4,6 +4,10 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+		<link rel="stylesheet" href="../../../css/weui.min.css" />
+		<link rel="stylesheet" href="../../../css/jquery-weui.min.css" />
+		<link rel="stylesheet" href="../../../css/demos.css" />
+		<link rel="stylesheet" href="https://jsypay.jiaobaowang.net/suitetest/css/utils/iconfont.css" />
 		<style type="text/css">
 			body,
 			html {
@@ -23,15 +27,14 @@
 				font-size: 14px;
 			}
 		</style>
-		<!--<script src="..././../js/appWeb/com-persen.js"></script>-->
 		<script type='text/javascript' src='../../../js/PublicProtocol.js'></script>
-		<script src="https://jsypay.jiaobaowang.net/suitetest/js/lib/vconsole/vconsole.min.js"></script>
+		<script src="../../../js/lib/vconsole/vconsole.min.js"></script>
 
 		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=jYNU39RZ3k37NUz1QduizaYD"></script>
 		<!--加载鼠标绘制工具-->
 		<script type="text/javascript" src="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.js"></script>
 		<link rel="stylesheet" href="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.css" />
-		<title>圆形区域搜索用户数据</title>
+		<title>签到考勤</title>
 	</head>
 
 	<body>
@@ -66,6 +69,28 @@
 		</span>
 		</div>
 
+		<div class="weui-tab">
+			<div class="weui-tab__bd">
+				<div class="weui-tab__bd-item weui-tab__bd-item--active">
+					<div>
+						<div class="weui-cell">
+							<div class="weui-cell__hd"><label class="weui-label">考勤类型</label></div>
+							<div class="weui-cell__bd">
+								<input id="attendType" data_id="" onclick="selectAttendType(this)" class="weui-input" placeholder="请选择考勤类型">
+							</div>
+						</div>
+						<div class="weui-cell">
+							<div class="weui-cell__hd"><label class="weui-label">部门</label></div>
+							<div class="weui-cell__bd">
+								<input id="depart" data_id="" onclick="selectDepart(this)" class="weui-input" placeholder="请选择部门">
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<div id="allmap"></div>
 		<div style="margin-top: 20px;">
 			<span>
@@ -85,11 +110,19 @@
 	</body>
 
 </html>
+<script src="../../../js/weui.min.js" type="text/javascript" charset="utf-8"></script>
+
 <script type="text/javascript">
+	var userInfo = {};
+	var attendType = {
+		tempAttendType: '',
+		attendTypeList: []
+	}
+	getUserInfo();
+
 	function save() {
+		addAttend(attendType.tempAttendType);
 		console.log('签到')
-		alert('1111');
-		getUserInfo();
 	}
 
 	function history() {
@@ -214,7 +247,7 @@
 		});
 	});
 	//12.获取考勤类型
-	var getAttendType = function(userInfo) {
+	var getAttendType = function() {
 		var tempData = {
 			corpId: userInfo.corpid, //单位ID
 			pageIndex: 1, //当前页数
@@ -223,22 +256,27 @@
 		console.log('获取考勤类型:' + JSON.stringify(tempData));
 		getAttendTypePro(tempData, function(data) {
 			if(data.RspCode == 0) {
-				addAttend(userInfo, data.RspData);
-				//						attendData.attendArray = [].concat(data.RspData.Data);
-				//						attendData.flag = 1;
+				for(var i = 0; i < data.RspData.Data.length; i++) {
+					var model = data.RspData.Data[i];
+					model.label = model.attendTypeProp;
+					model.value = model.AttendTypeId;
+					attendType.attendTypeList.push(model);
+
+				}
+	
 			} else {
 				//						layer.alert('请重新登录获取个人信息');
 			}
 		});
 	};
 
-	function addAttend(userInfo, attendType) {
+	function addAttend(tempAttendType) {
 		var tempData = {
 			corpId: userInfo.corpid,
-			deptId: userInfo.department[0],
+			deptId: document.getElementById("depart").data_id,
 			userId: userInfo.userid,
 			userName: userInfo.name,
-			attendType: attendType.AttendTypeId,
+			attendType: document.getElementById("attendType").data_id,
 			attendArea: document.getElementById("tempAddress").innerHTML,
 			attendAreaX: document.getElementById("longitude").innerHTML,
 			attendAreaY: document.getElementById("latitude").innerHTML,
@@ -267,11 +305,68 @@
 		unitWebsitePro(tempData, function(data) {
 			console.log('获取当前人员信息' + JSON.stringify(data.RspData))
 			if(data.RspCode == 0) {
-				var userInfo = data.RspData;
-				getAttendType(userInfo)
+				userInfo = JSON.parse(data.RspData);
+				getAttendType()
 			} else {
 				alert(data.RspTxt)
 			}
 		})
+	}
+
+	function selectDepart(input_item) {
+		document.activeElement.blur();
+		var self = input_item;
+		weui.picker(userInfo.depart_array, {
+			onChange: function(result) {
+				//						console.log(result);
+			},
+			onConfirm: function(result) {
+				document.getElementById("depart").value = result[0].label;
+				document.getElementById("depart").data_id = result[0].value;
+			}
+		});
+	}
+	
+	function selectAttendType(input_item) {
+		document.activeElement.blur();
+		var self = input_item;
+		weui.picker(attendType.attendTypeList, {
+			onChange: function(result) {
+				//						console.log(result);
+			},
+			onConfirm: function(result) {
+				
+				document.getElementById("attendType").value = result[0].label;
+				document.getElementById("attendType").data_id = result[0].value;
+			}
+		});
+	}
+
+	function getDepart() {
+
+		var tempData = {
+			cmd: 'persondeparts',
+			type: 'findpage',
+		}
+		unitWebsitePro(tempData, function(data) {
+			console.log('部门:' + JSON.stringify(data));
+			var rspData = JSON.parse(data.RspData);
+			if(data.RspCode == 0) {
+				userInfo.depart_array = [];
+				for(var i = 0; i < rspData.length; i++) {
+					var model = rspData[i];
+					if(model.value == -1) {
+						continue;
+					} else {
+						model.label = model.title;
+						userInfo.depart_array.push(model);
+					}
+				}
+
+			} else {
+				mui.toast(data.RspTxt)
+			}
+		})
+
 	}
 </script>

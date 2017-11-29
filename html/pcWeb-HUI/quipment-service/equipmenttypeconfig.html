@@ -19,6 +19,10 @@
 				text-decoration: none;
 			}
 
+			.operate-del {
+				margin-left: 15px;
+			}
+
 			#pages {
 				margin-top: 20px;
 			}
@@ -193,6 +197,21 @@
 					});
 				});
 
+				//点击删除
+				$(".table").on("click", ".operate-del", function(e) {
+					equipmenttypeIndex = $("#equipmenttypeList tr").index(this.parentNode.parentNode);
+					console.log(equipmenttypeData[equipmenttypeIndex]);
+					layer.open({
+						content: "确定删除？",
+						icon: 0,
+						title: '提示',
+						yes: function(index) {
+							layer.close(index);
+							equipmenttypeDel();
+						}
+					});
+				});
+
 				//修改查询设备类型状态
 				$("#stateSelect").change(function() {
 					selectState = $("#stateSelect").val() * 1;
@@ -218,6 +237,7 @@
 					equipmenttypeEdit("stat", equipmenttypeState);
 				});
 
+				//修改设备类型维修组
 				$("#groupsSelect").change(function() {
 					var groupsSelect = $("#stateChange").val();
 					if(editState !== 1 || groupsSelect === -1) {
@@ -257,7 +277,7 @@
 						data[i].rectime = data[i].rectime.substring(0, index);
 					}
 					var rectime = '<td>' + data[i].rectime + '</td>';
-					var edit = '<td><a class="operate-edit " title="修改"><i class="Hui-iconfont"></i></a></td></tr>';
+					var edit = '<td><a class="operate-edit" title="修改"><i class="Hui-iconfont"></i></a><a class="operate-del"  title="删除"><i class="Hui-iconfont"></i></a></td></tr>';
 					html = html + cname + stat + kindsname + recname + rectime + edit;
 				}
 				$("#equipmenttypeList").append(html);
@@ -308,7 +328,7 @@
 						layer.open({
 							content: data.RspTxt,
 							icon: 2,
-							title: '提示'
+							title: '获取设备类型列表'
 						});
 					}
 				});
@@ -322,7 +342,7 @@
 			function equipmenttypeAdd(text, kindsid) {
 				layer.load(2);
 				var tempData = {
-					cmd: 'devaddradmin',
+					cmd: 'devclassadmin',
 					type: 'add',
 					cname: text,
 					kindsid: kindsid
@@ -337,7 +357,7 @@
 						layer.open({
 							content: data.RspTxt,
 							icon: 2,
-							title: '提示'
+							title: '添加设备类型'
 						});
 					}
 				});
@@ -352,7 +372,7 @@
 				console.log("equipmenttypeEdit:" + callcol + " " + colv);
 				layer.load(2);
 				var tempData = {
-					cmd: 'devaddradmin',
+					cmd: 'devclassadmin',
 					type: 'edit',
 					callcol: callcol,
 					colv: colv,
@@ -373,7 +393,7 @@
 						layer.open({
 							content: data.RspTxt,
 							icon: 2,
-							title: '提示'
+							title: '修改设备类型'
 						});
 					}
 				});
@@ -415,6 +435,31 @@
 						});
 					} else {
 						getData(page);
+					}
+				});
+			}
+
+			/**
+			 * 删除设备类型
+			 */
+			function equipmenttypeDel() {
+				layer.load(2);
+				var tempData = {
+					cmd: 'devclassadmin',
+					type: 'del',
+					colid: equipmenttypeData[equipmenttypeIndex].classid
+				}
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						$.Huimodalalert("删除成功", 2000);
+						getData(page);
+					} else {
+						layer.closeAll('loading');
+						layer.open({
+							content: data.RspTxt,
+							icon: 2,
+							title: '删除失败'
+						});
 					}
 				});
 			}

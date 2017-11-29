@@ -23,6 +23,10 @@
 				font-size: 14px;
 			}
 		</style>
+		<script src="..././../js/appWeb/com-persen.js"></script>
+		<script type='text/javascript' src='../../../js/PublicProtocol.js'></script>
+		<script src="https://jsypay.jiaobaowang.net/suitetest/js/lib/vconsole/vconsole.min.js"></script>
+
 		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=jYNU39RZ3k37NUz1QduizaYD"></script>
 		<!--加载鼠标绘制工具-->
 		<script type="text/javascript" src="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.js"></script>
@@ -39,10 +43,26 @@
 		</span>
 		</div>
 		<div style="margin: 10px;">
-		<span>
+			<span>
 			距离：
 		</span>
 			<span id="distance">
+		</span>
+		</div>
+
+		<div style="margin: 10px;">
+			<span>
+			经度：
+		</span>
+			<span id="longitude">
+		</span>
+		</div>
+
+		<div style="margin: 10px;">
+			<span>
+			纬度：
+		</span>
+			<span id="latitude">
 		</span>
 		</div>
 
@@ -51,51 +71,56 @@
 			<span>
 			<input onclick="save()" type="button" name="save" id="save" value="签到" />
 		</span>
-		<span>
+			<span>
 			<input  onclick="history()" type="button" name="history" id="history" value="签到记录" />
 		</span>
-		<span>
+			<span>
 			<input  onclick="refresh()" type="button" name="refresh" id="refresh" value="刷新" />
 		</span>
 		</div>
 		<div>
-			
+
 		</div>
 
 	</body>
 
 </html>
 <script type="text/javascript">
-	function save(){
+	function save() {
 		console.log('签到')
+		getUserInfo();
 	}
-	function history(){
+
+	function history() {
 		console.log('签到记录')
 	}
-	function refresh(){
+
+	function refresh() {
 		console.log('刷新')
 		var geolocation = new BMap.Geolocation();
-	geolocation.getCurrentPosition(function(r) {
-		if(this.getStatus() == BMAP_STATUS_SUCCESS) {
-			var mk = new BMap.Marker(r.point);
-			map.addOverlay(mk);
-			map.panTo(r.point);
-			var myGeo = new BMap.Geocoder();
-			myGeo.getLocation(r.point, function(result) {
-				if(result) {
-					var addComp = result.addressComponents;
-					document.getElementById("tempAddress").innerHTML = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
-					document.getElementById("distance").innerHTML = map.getDistance(r.point,new BMap.Point(117.021629, 36.681578));
-				}
-			});
+		geolocation.getCurrentPosition(function(r) {
+			if(this.getStatus() == BMAP_STATUS_SUCCESS) {
+				var mk = new BMap.Marker(r.point);
+				map.addOverlay(mk);
+				map.panTo(r.point);
+				var myGeo = new BMap.Geocoder();
+				myGeo.getLocation(r.point, function(result) {
+					if(result) {
+						var addComp = result.addressComponents;
+						document.getElementById("longitude").innerHTML = r.point.longitude;
+						document.getElementById("latitude").innerHTML = r.point.latitude;
+						document.getElementById("tempAddress").innerHTML = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+						document.getElementById("distance").innerHTML = map.getDistance(r.point, new BMap.Point(117.021629, 36.681578));
+					}
+				});
 
-			//			alert('您的位置：' + r.point.lng + ',' + r.point.lat);
-		} else {
-			alert('failed' + this.getStatus());
-		}
-	}, {
-		enableHighAccuracy: true
-	})
+				//			alert('您的位置：' + r.point.lng + ',' + r.point.lat);
+			} else {
+				alert('failed' + this.getStatus());
+			}
+		}, {
+			enableHighAccuracy: true
+		})
 	}
 	// 百度地图API功能
 	var map = new BMap.Map("allmap"); // 创建地图实例
@@ -109,8 +134,10 @@
 			myGeo.getLocation(r.point, function(result) {
 				if(result) {
 					var addComp = result.addressComponents;
+					document.getElementById("longitude").innerHTML = r.point.lng;
+					document.getElementById("latitude").innerHTML = r.point.lat;
 					document.getElementById("tempAddress").innerHTML = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
-					document.getElementById("distance").innerHTML = map.getDistance(r.point,new BMap.Point(117.021629, 36.681578));
+					document.getElementById("distance").innerHTML = map.getDistance(r.point, new BMap.Point(117.021629, 36.681578));
 				}
 			});
 
@@ -125,15 +152,15 @@
 	var mk1 = new BMap.Marker(point);
 	map.addOverlay(mk1);
 	map.panTo(point);
-	mk1.addEventListener("click", function(){    
-    	var opts = {    
-    width : 200,     // 信息窗口宽度    
-    height: 80,     // 信息窗口高度    
-    title : "签到地址"  // 信息窗口标题   
-}    
-var infoWindow = new BMap.InfoWindow("山东省济南市天桥区铜元局前街1-6", opts);  // 创建信息窗口对象    
-map.openInfoWindow(infoWindow, point);      // 打开信息窗口   
-});  
+	mk1.addEventListener("click", function() {
+		var opts = {
+			width: 200, // 信息窗口宽度    
+			height: 80, // 信息窗口高度    
+			title: "签到地址" // 信息窗口标题   
+		}
+		var infoWindow = new BMap.InfoWindow("山东省济南市天桥区铜元局前街1-6", opts); // 创建信息窗口对象    
+		map.openInfoWindow(infoWindow, point); // 打开信息窗口   
+	});
 
 	var options = {
 		renderOptions: {
@@ -185,4 +212,65 @@ map.openInfoWindow(infoWindow, point);      // 打开信息窗口
 			}
 		});
 	});
+	//12.获取考勤类型
+	var getAttendType = function(userInfo) {
+		var tempData = {
+			corpId: userInfo.corpid, //单位ID
+			pageIndex: 1, //当前页数
+			pageSize: 0 //每页记录数，0 为全部
+		}
+		console.log('获取考勤类型:' + JSON.stringify(tempData));
+		getAttendTypePro(tempData, function(data) {
+			if(data.RspCode == 0) {
+				addAttend(userInfo, data.RspData);
+				//						attendData.attendArray = [].concat(data.RspData.Data);
+				//						attendData.flag = 1;
+			} else {
+				//						layer.alert('请重新登录获取个人信息');
+			}
+		});
+	};
+
+	function addAttend(userInfo, attendType) {
+		var tempData = {
+			corpId: userInfo.corpid,
+			deptId: userInfo.department[0],
+			userId: userInfo.userid,
+			userName: userInfo.name,
+			attendType: attendType.AttendTypeId,
+			attendArea: document.getElementById("tempAddress").innerHTML,
+			attendAreaX: document.getElementById("longitude").innerHTML,
+			attendAreaY: document.getElementById("latitude").innerHTML,
+			attendPic: '',
+			attendNote: '测试接口',
+		}
+		console.log('添加考勤参数：' + JSON.stringify(tempData));
+
+		addAttendPro(tempData, function(data) {
+			console.log('添加考勤：' + JSON.stringify(data))
+			if(data.RspCode == 0) {
+				alert('添加成功')
+			} else {
+				mui.toast(data.RspTxt)
+			}
+		})
+	}
+
+	function getUserInfo() {
+		var tempData = {
+			cmd: 'userinfo',
+			type: 'findpage',
+			colv: ''
+		}
+		console.log(JSON.stringify(tempData))
+		unitWebsitePro(tempData, function(data) {
+			console.log('获取当前人员信息' + JSON.stringify(data.RspData))
+			if(data.RspCode == 0) {
+				var userInfo = data.RspData;
+				getAttendType(userInfo)
+			} else {
+				alert(data.RspTxt)
+			}
+		})
+	}
 </script>

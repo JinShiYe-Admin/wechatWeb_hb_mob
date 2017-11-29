@@ -12,8 +12,12 @@ Vue.component("classify-list", {
 
 	},
 	watch: {
+		'$route' (to, from) {
+			this.getAllGroups();
+		},
 		classifyList: function(newVal, oldVal) {
-			vue.nextTick(function() {
+			console.log("classifyList改变后的值:" + JSON.stringify(newVal))
+			Vue.nextTick(function() {
 				$("#list").Huifold({
 					titCell: '.item h4',
 					mainCell: '.item .info',
@@ -23,10 +27,7 @@ Vue.component("classify-list", {
 					speed: "first",
 				});
 			})
-		},
-		//		'$route' (to, from) {
-		//			this.getAllGroups();
-		//		}
+		}
 	},
 	methods: {
 		changeGroupName: function(classify) {

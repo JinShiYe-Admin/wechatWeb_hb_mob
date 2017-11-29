@@ -1,0 +1,168 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="renderer" content="webkit|ie-comp|ie-stand">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/static/h-ui/css/H-ui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css" />
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
+		<link rel="stylesheet" href="../../../js/demoCssJs/weui.min.css">
+		<link rel="stylesheet" href="../../../js/demoCssJs/jquery-weui.css">
+		<link rel="stylesheet" href="../../../js/demoCssJs/demos.css">
+		<title>获取考勤记录</title>
+
+	</head>
+
+	<body>
+		<div class="page-container" id="attendData">
+			<div class="weui-cell">
+				<div class="weui-cell__hd"><label for="date" class="weui-label">查询日期</label></div>
+				<div class="weui-cell__bd">
+					<input class="weui-input" id="date" value="" type="text" placeholder="请选择时间">
+				</div>
+			</div>
+			<div class="weui-cells">
+				<div class="weui-cell" v-for='(attend,index) in attendArray' v-show="flag>0" style="display: none;">
+					<div class="weui-cell__hd"><img :src=attend.AttendPic></div>
+					<div class="weui-cell__bd">
+						<p>时间:
+							<a>{{attend.AttendTime}}</a>
+						</p>
+						<p>地点:
+							<a>{{attend.AttendArea}}</a>
+						</p>
+						<p>类型:
+							<a>{{attend.AttendType}}</a>
+						</p>
+						<p>结果:
+							<a>{{attend.AttendResult}}</a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--_footer 作为公共模版分离出去-->
+		<script type="text/javascript" src="../../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../../../js/H-ui.admin/lib/layer/2.4/layer.js"></script>
+		<script type="text/javascript" src="../../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
+		<script type="text/javascript" src="../../../js/H-ui.admin/static/h-ui.admin/js/H-ui.admin.js"></script>
+		<!--/_footer 作为公共模版分离出去-->
+
+		<!--请在下方写此页面业务相关的脚本-->
+		<script type="text/javascript" src="../../../js/H-ui.admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+		<script type="text/javascript" src="../../../js/H-ui.admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+		<script type="text/javascript" src="../../../js/H-ui.admin/lib/laypage/1.2/laypage.js"></script>
+		<!--vue-->
+		<script src="../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/demoCssJs/jquery-2.1.4.js"></script>
+		<script src="../../../js/demoCssJs/iscroll.js"></script>
+		<script src="../../../js/demoCssJs/jquery-weui.js"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
+		</script>
+		<script src='https://jsypay.jiaobaowang.net/suitetest/js/lib/vconsole/vconsole.min.js'></script>
+		<script type="text/javascript">
+			$(function() {
+				$('.table-sort').dataTable({
+					"aaSorting": [
+						[1, "desc"]
+					], //默认第几个排序
+					"bStateSave": true, //状态保存
+					"aoColumnDefs": [
+						//{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+						{
+							"orderable": false,
+							"aTargets": [0, 8, 9]
+						} // 制定列不参与排序
+					]
+				});
+				//获取当前人员信息
+				getUserInfo();
+			});
+
+			var attendData = new Vue({
+				el: "#attendData",
+				data: {
+					flag: 0,
+					beginTime: '',
+					userInfo: {}, //当前人员信息
+					attendArray: [], //考勤统计列表
+					departArray: [], //管理的所有部门数组
+					peopleArray: [] //管理的所有部门的人员数组
+				},
+				methods: {
+					searchAttendList: function() {
+						//16.获取考勤统计
+						getAttend();
+					}
+				}
+			});
+			//13.获取当前人员信息
+			var getUserInfo = function() {
+				var tempData = {
+					cmd: 'userinfo',
+					type: 'findpage', //获取某个详细信息
+					colv: '' //留空为取当前人员信息,不为空则为具体人员信息
+				}
+				console.log('tempData:' + JSON.stringify(tempData));
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						attendData.userInfo = JSON.parse(data.RspData);
+					} else {
+						layer.alert('请重新登录获取个人信息');
+					}
+				});
+			};
+
+			//15.获取考勤记录
+			var getAttend = function() {
+				var beginTime = attendData.beginTime;
+//				alert('beginTime:'+beginTime);
+				if(beginTime == '') {
+					layer.alert('请选择查询日期');
+					return false;
+				}
+				beginTime = beginTime.replace(/-/g, '');
+				var tempId = [];
+				tempId.push(attendData.userInfo.userid);
+				var tempData = {
+					corpId: attendData.userInfo.corpid, //单位ID
+					userId: tempId, //用户ID,例如：[“1”, “2”, “3”]
+					beginTime: beginTime, //统计开始时间,年月日共八位如：20011010
+					endTime: beginTime, //统计结束时间,年月日共八位如：20011010
+					attendResultId: '0', //0：全部,1: 正常,2：迟到,3：早退
+					attendTypeId: '0', //0 为全部
+					attendAreaId: '0', //0 为全部
+					pageIndex: '1',
+					pageSize: '0' //0 为全部
+				}
+				console.log('tempData:' + JSON.stringify(tempData));
+				getAttendPro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						attendData.attendArray = [].concat(data.RspData.Data);
+						attendData.flag = 1;
+					} else {
+						//						layer.alert('请重新登录获取个人信息');
+					}
+				});
+			};
+
+			$("#date").calendar({
+				value: ['2016-12-12'],
+				onChange: function(p, values, displayValues) {
+//					alert(values, displayValues);
+					attendData.beginTime = values;
+					//16.获取考勤统计
+					getAttend();
+				}
+			});
+		</script>
+	</body>
+
+</html>

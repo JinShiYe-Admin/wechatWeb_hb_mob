@@ -483,6 +483,8 @@
 			 */
 			function addServiceForm() {
 				var submitForm = {
+					cmd: "devrepbill",
+					type: "add",
 					represon: $.trim($("#represon").val()),
 					addrid: $("#addressInput").attr("data-values"),
 					classid: $("#deviceTypeInput").attr("data-values"),

@@ -5,14 +5,20 @@ Vue.component("choose-person", {
 			type: Object
 		},
 		choosePerson: {
-			type: Object
+			type: Object,
+			default: function() {
+				return {}
+			}
 		}
+	},
+	mounted: function() {
+		console.log("初始化时获取的新值：" + JSON.stringify())
 	},
 	data: function() {
 		return {
 			isAllCheck: false,
 			personList: [],
-			selectPerson: {}
+			selectPerson: this.choosePerson
 		}
 	},
 	watch: {
@@ -25,17 +31,24 @@ Vue.component("choose-person", {
 			console.log("choosePerson新值:" + JSON.stringify(newVal));
 			console.log("choosePerson旧值:" + JSON.stringify(oldVal));
 			this.selectPerson = newVal;
+
+		},
+		selectPerson: function(newVal) {
+			console.log("selectPerson的新值：" + JSON.stringify(this.selectPerson))
 			this.setChooseStatus();
 		}
 	},
 	methods: {
 		setChooseStatus: function() {
+			console.log("****设置状态：setChooseStatus*****");
 			var com = this;
 			this.personList.forEach(function(person, index, personList) {
 				Vue.set(personList[index], "isCheck", !!com.selectPerson[person.userid])
 			})
+			console.log("更改状态后的数据：" + JSON.stringify(com.personList));
 		},
 		updateSelectPerson: function() {
+			console.log("***updateSelectPerson***");
 			this.$emit("select-person", this.selectPerson);
 		},
 		toggleChoosePerson: function(person, index) {

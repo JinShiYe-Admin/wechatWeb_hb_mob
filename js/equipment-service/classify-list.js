@@ -22,6 +22,13 @@ Vue.component("classify-list", {
 			console.log("classifyList改变后的值:" + JSON.stringify(newVal))
 		}
 	},
+	filters: {
+		formatTime: function(timeStr) {
+			var timeArr = timeStr.split("T");
+			var hourArr = timeArr[1].split(".");
+			return timeArr[0] + " " + hourArr[0]
+		}
+	},
 	methods: {
 		changeState: function(classify, index) {
 			var com = this;
@@ -91,8 +98,8 @@ Vue.component("classify-list", {
 			}
 		},
 		getAllGroups: function() {
-			console.log("****getAllGroups****");
 			var com = this;
+			console.log("****getAllGroups****");
 			request.getServiceGroups(function(data) {
 				console.log("获取所有值：" + JSON.stringify(data));
 				if(data.RspCode == 0) {

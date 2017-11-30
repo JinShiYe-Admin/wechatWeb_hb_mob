@@ -125,10 +125,11 @@
 			};
 
 			$("#date").calendar({
-				value: ['2016-12-12'],
+				value: ['2017-11-30'],
 				onChange: function(p, values, displayValues) {
-//					alert(values, displayValues);
-					attendData.beginTime = values;
+//					alert(p,values, displayValues);
+					alert(values.toString());
+					attendData.beginTime = values.toString();
 					//16.获取考勤统计
 					getAttend();
 				}

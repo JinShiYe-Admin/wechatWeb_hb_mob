@@ -158,11 +158,11 @@
 				console.log('tempData:' + JSON.stringify(tempData));
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
-						for (var i = 0; i < data.RspData.userlistings.length; i++) {
-							var tempModel = data.RspData.userlistings[i];
+						for (var i = 0; i < data.RspData.length; i++) {
+							var tempModel = data.RspData[i];
 							attendData.peopleArray.push(tempModel.userid);
 						}
-						attendData.peopleArray = attendData.peopleArray.concat(data.RspData.userlist);
+						attendData.peopleArray = attendData.peopleArray.concat(data.RspData);
 					} else {
 						layer.alert('获取部门出现问题');
 					}

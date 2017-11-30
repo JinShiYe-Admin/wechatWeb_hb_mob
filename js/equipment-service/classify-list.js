@@ -8,27 +8,34 @@ Vue.component("classify-list", {
 			activeClassify: {}
 		}
 	},
-	created: function() {
-
+	mounted: function() {
+		this.getAllGroups();
 	},
 	watch: {
-		classifyList: function(newVal, oldVal) {
-			vue.nextTick(function() {
-				$("#list").Huifold({
-					titCell: '.item h4',
-					mainCell: '.item .info',
-					type: 1,
-					trigger: 'click',
-					className: "selected",
-					speed: "first",
-				});
-			})
+		'$route' (to, from) {
+			console.log("******页面导航监听******")
+			console.log("to.path:" + to.path);
+			console.log("from path:" + from.path);
+			this.getAllGroups();
 		},
-		//		'$route' (to, from) {
-		//			this.getAllGroups();
-		//		}
+		classifyList: function(newVal, oldVal) {
+			console.log("classifyList改变后的值:" + JSON.stringify(newVal))
+		}
 	},
 	methods: {
+		changeState: function(classify, index) {
+			var com = this;
+			var stat = classify.stat ? 0 : 1;
+			request.editSeviceGroup({
+				colid: classify.kindsid,
+				callcol: 'stat',
+				colv: stat
+			}, function(response) {
+				if(response.RspCode == 0) {
+					com.classifyList[index].stat = stat
+				}
+			})
+		},
 		changeGroupName: function(classify) {
 			console.log("****changeGroupName****");
 			this.changeType = 1;
@@ -54,13 +61,14 @@ Vue.component("classify-list", {
 			console.log("****changeServiceGroupName****");
 			var com = this;
 			request.editSeviceGroup({
-				callcol: this.activeClassify.cname,
+				callcol: "cname",
 				colid: this.activeClassify.kindsid,
 				colv: this.serviceGroupName
 			}, function(response) {
 				if(response.RspCode == 0) {
 					com.activeClassify.cname = com.serviceGroupName
 				}
+				com.toggleNameDialog(false);
 			})
 		},
 		addServiceGroup: function() {
@@ -97,6 +105,7 @@ Vue.component("classify-list", {
 			var com = this;
 			com.classifyList = listData.map(function(item, index, list) {
 				item.gusers = com.manageGusersToObject(item.gusers);
+				item.isShow = false;
 				return item;
 			})
 			console.log("获取的全部组信息:" + JSON.stringify(com.classifyList))
@@ -128,7 +137,7 @@ Vue.component("classify-list", {
 			request.delServiceGroup(classify.kindsid, function(response) {
 				if(response.RspCode == 0) {
 					com.classifyList.splice(index, 1);
-					console.log("刪除組后的數組:" + JSON.stringify(com.classifyList))
+					console.log("删除组后的数组:" + JSON.stringify(com.classifyList))
 				}
 			})
 		}

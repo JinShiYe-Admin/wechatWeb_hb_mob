@@ -90,7 +90,7 @@
 			</div>
 		</div>
 
-		<div id="allmap"></div>
+		<div id="allmap" style="margin-top: -400px";></div>
 		<div style="margin-top: 20px;">
 			<span>
 			<input onclick="save()" type="button" name="save" id="save" value="签到" />
@@ -117,43 +117,173 @@
 		tempAttendType: '',
 		attendTypeList: []
 	}
+	var attendTime = {
+		tempAttendTime:'',
+		attendTimeList:[]
+	}
+	
 	getUserInfo();
-
+	getDepart();
+//	getAttendType()
+//	getAttendTimePro()
+//签到
 	function save() {
 		addAttend(attendType.tempAttendType);
 		console.log('签到')
 	}
-
+//签到记录
 	function history() {
 		console.log('签到记录')
 	}
 
-	function refresh() {
-		console.log('刷新')
-		var geolocation = new BMap.Geolocation();
-		geolocation.getCurrentPosition(function(r) {
-			if(this.getStatus() == BMAP_STATUS_SUCCESS) {
-				var mk = new BMap.Marker(r.point);
-				map.addOverlay(mk);
-				map.panTo(r.point);
-				var myGeo = new BMap.Geocoder();
-				myGeo.getLocation(r.point, function(result) {
-					if(result) {
-						var addComp = result.addressComponents;
-						document.getElementById("longitude").innerHTML = r.point.longitude;
-						document.getElementById("latitude").innerHTML = r.point.latitude;
-						document.getElementById("tempAddress").innerHTML = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
-						document.getElementById("distance").innerHTML = map.getDistance(r.point, new BMap.Point(117.021629, 36.681578));
-					}
-				});
+	//12.获取考勤类型
+	function getAttendType() {
+		var tempData = {
+//			corpId: userInfo.corpid, //单位ID
+			corpId:"wx6c4528c675d4a9c9",
+			pageIndex: 1, //当前页数
+			pageSize: 0 //每页记录数，0 为全部
+		}
+		console.log('获取考勤类型参数:' + JSON.stringify(tempData));
+		getAttendTypePro(tempData, function(data) {
+			console.log('获取考勤类型数据:' + JSON.stringify(data));
+			if(data.RspCode == 0) {
+				
+				for(var i = 0; i < data.RspData.Data.length; i++) {
+					var model = data.RspData.Data[i];
+					model.label = model.attendTypeProp;
+					model.value = model.AttendTypeId;
+					attendType.attendTypeList.push(model);
 
-				//			alert('您的位置：' + r.point.lng + ',' + r.point.lat);
+				}
+				console.log('重组考勤类型:' + JSON.stringify(attendType.attendTypeList));
+
 			} else {
-				alert('failed' + this.getStatus());
+				//						layer.alert('请重新登录获取个人信息');
 			}
-		}, {
-			enableHighAccuracy: true
+		});
+	};
+
+	function addAttend(tempAttendType) {
+		var tempData = {
+			corpId: userInfo.corpid,
+			deptId: document.getElementById("depart").data_id,
+			userId: userInfo.userid,
+			userName: userInfo.name,
+			attendType: document.getElementById("attendType").data_id,
+			attendArea: document.getElementById("tempAddress").innerHTML,
+			attendAreaX: document.getElementById("longitude").innerHTML,
+			attendAreaY: document.getElementById("latitude").innerHTML,
+			attendPic: '',
+			attendNote: '测试接口',
+		}
+		console.log('添加考勤参数：' + JSON.stringify(tempData));
+
+		addAttendPro(tempData, function(data) {
+			console.log('添加考勤：' + JSON.stringify(data))
+			if(data.RspCode == 0) {
+				alert('添加成功')
+			} else {
+				mui.toast(data.RspTxt)
+			}
 		})
+	}
+
+	function getUserInfo() {
+		var tempData = {
+			cmd: 'userinfo',
+			type: 'findpage',
+			colv: ''
+		}
+		console.log(JSON.stringify(tempData))
+		unitWebsitePro(tempData, function(data) {
+			console.log('获取当前人员信息' + JSON.stringify(data.RspData))
+			if(data.RspCode == 0) {
+				userInfo = JSON.parse(data.RspData);
+				getAttendType()
+				getAttendTimePro()
+			} else {
+				alert(data.RspTxt)
+			}
+		})
+	}
+function getAttendTimePro(){
+	var para = {
+		corpId:userInfo.corpId,
+		pageIndex:1,
+		pageSize:100
+	}
+	getAttendTimePro(para, function(data) {
+			console.log('获取考勤时间段：' + JSON.stringify(data))
+			if(data.RspCode == 0) {
+				attendTime.attendTimeList = data.RspData.Data;
+				for(var i = 0; i < attendTime.attendTimeList.length; i++) {
+					var model = attendTime.attendTimeList[i];
+						model.label = model.title;
+					
+				}
+	
+			} else {
+				mui.toast(data.RspTxt)
+			}
+		})
+}
+	function selectDepart(input_item) {
+		document.activeElement.blur();
+		var self = input_item;
+		weui.picker(userInfo.depart_array, {
+			onChange: function(result) {
+				//						console.log(result);
+			},
+			onConfirm: function(result) {
+				document.getElementById("depart").value = result[0].label;
+				document.getElementById("depart").data_id = result[0].value;
+			}
+		});
+	}
+
+	function selectAttendType(input_item) {
+		document.activeElement.blur();
+		var self = input_item;
+		weui.picker(attendType.attendTypeList, {
+			onChange: function(result) {
+				//						console.log(result);
+			},
+			onConfirm: function(result) {
+
+				document.getElementById("attendType").value = result[0].label;
+				document.getElementById("attendType").data_id = result[0].value;
+			}
+		});
+	}
+
+	function getDepart() {
+
+		var tempData = {
+			cmd: 'persondeparts',
+			type: 'findpage',
+		}
+		unitWebsitePro(tempData, function(data) {
+			console.log('部门:' + JSON.stringify(data));
+			var rspData = JSON.parse(data.RspData);
+			if(data.RspCode == 0) {
+				userInfo.depart_array = [];
+				for(var i = 0; i < rspData.length; i++) {
+					var model = rspData[i];
+					if(model.value == -1) {
+						continue;
+					} else {
+						model.label = model.title;
+						userInfo.depart_array.push(model);
+					}
+				}
+				console.log('重组部门:' + JSON.stringify(userInfo.depart_array));
+
+			} else {
+				alert(data.RspTxt)
+			}
+		})
+
 	}
 	// 百度地图API功能
 	var map = new BMap.Map("allmap"); // 创建地图实例
@@ -245,127 +375,32 @@
 			}
 		});
 	});
-	//12.获取考勤类型
-	function getAttendType() {
-		var tempData = {
-			corpId: userInfo.corpid, //单位ID
-			pageIndex: 1, //当前页数
-			pageSize: 0 //每页记录数，0 为全部
-		}
-		console.log('获取考勤类型:' + JSON.stringify(tempData));
-		getAttendTypePro(tempData, function(data) {
-			if(data.RspCode == 0) {
-				for(var i = 0; i < data.RspData.Data.length; i++) {
-					var model = data.RspData.Data[i];
-					model.label = model.attendTypeProp;
-					model.value = model.AttendTypeId;
-					attendType.attendTypeList.push(model);
 
-				}
-	
-			} else {
-				//						layer.alert('请重新登录获取个人信息');
-			}
-		});
-	};
-
-	function addAttend(tempAttendType) {
-		var tempData = {
-			corpId: userInfo.corpid,
-			deptId: document.getElementById("depart").data_id,
-			userId: userInfo.userid,
-			userName: userInfo.name,
-			attendType: document.getElementById("attendType").data_id,
-			attendArea: document.getElementById("tempAddress").innerHTML,
-			attendAreaX: document.getElementById("longitude").innerHTML,
-			attendAreaY: document.getElementById("latitude").innerHTML,
-			attendPic: '',
-			attendNote: '测试接口',
-		}
-		console.log('添加考勤参数：' + JSON.stringify(tempData));
-
-		addAttendPro(tempData, function(data) {
-			console.log('添加考勤：' + JSON.stringify(data))
-			if(data.RspCode == 0) {
-				alert('添加成功')
-			} else {
-				mui.toast(data.RspTxt)
-			}
-		})
-	}
-
-	function getUserInfo() {
-		var tempData = {
-			cmd: 'userinfo',
-			type: 'findpage',
-			colv: ''
-		}
-		console.log(JSON.stringify(tempData))
-		unitWebsitePro(tempData, function(data) {
-			console.log('获取当前人员信息' + JSON.stringify(data.RspData))
-			if(data.RspCode == 0) {
-				userInfo = JSON.parse(data.RspData);
-				getAttendType()
-			} else {
-				alert(data.RspTxt)
-			}
-		})
-	}
-
-	function selectDepart(input_item) {
-		document.activeElement.blur();
-		var self = input_item;
-		weui.picker(userInfo.depart_array, {
-			onChange: function(result) {
-				//						console.log(result);
-			},
-			onConfirm: function(result) {
-				document.getElementById("depart").value = result[0].label;
-				document.getElementById("depart").data_id = result[0].value;
-			}
-		});
-	}
-	
-	function selectAttendType(input_item) {
-		document.activeElement.blur();
-		var self = input_item;
-		weui.picker(attendType.attendTypeList, {
-			onChange: function(result) {
-				//						console.log(result);
-			},
-			onConfirm: function(result) {
-				
-				document.getElementById("attendType").value = result[0].label;
-				document.getElementById("attendType").data_id = result[0].value;
-			}
-		});
-	}
-
-	function getDepart() {
-
-		var tempData = {
-			cmd: 'persondeparts',
-			type: 'findpage',
-		}
-		unitWebsitePro(tempData, function(data) {
-			console.log('部门:' + JSON.stringify(data));
-			var rspData = JSON.parse(data.RspData);
-			if(data.RspCode == 0) {
-				userInfo.depart_array = [];
-				for(var i = 0; i < rspData.length; i++) {
-					var model = rspData[i];
-					if(model.value == -1) {
-						continue;
-					} else {
-						model.label = model.title;
-						userInfo.depart_array.push(model);
+	function refresh() {
+		console.log('刷新')
+		var geolocation = new BMap.Geolocation();
+		geolocation.getCurrentPosition(function(r) {
+			if(this.getStatus() == BMAP_STATUS_SUCCESS) {
+				var mk = new BMap.Marker(r.point);
+				map.addOverlay(mk);
+				map.panTo(r.point);
+				var myGeo = new BMap.Geocoder();
+				myGeo.getLocation(r.point, function(result) {
+					if(result) {
+						var addComp = result.addressComponents;
+						document.getElementById("longitude").innerHTML = r.point.longitude;
+						document.getElementById("latitude").innerHTML = r.point.latitude;
+						document.getElementById("tempAddress").innerHTML = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+						document.getElementById("distance").innerHTML = map.getDistance(r.point, new BMap.Point(117.021629, 36.681578));
 					}
-				}
+				});
 
+				//			alert('您的位置：' + r.point.lng + ',' + r.point.lat);
 			} else {
-				mui.toast(data.RspTxt)
+				alert('failed' + this.getStatus());
 			}
+		}, {
+			enableHighAccuracy: true
 		})
-
 	}
 </script>

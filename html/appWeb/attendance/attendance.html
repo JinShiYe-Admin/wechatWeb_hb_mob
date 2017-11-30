@@ -4,10 +4,13 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-		<link rel="stylesheet" href="../../../css/weui.min.css" />
+		<link rel="stylesheet" href="../../../js/demoCssJs/weui.min.css">
+		<link rel="stylesheet" href="../../../js/demoCssJs/jquery-weui.css">
+		<link rel="stylesheet" href="../../../js/demoCssJs/demos.css">
+		<!--<link rel="stylesheet" href="../../../css/weui.min.css" />
 		<link rel="stylesheet" href="../../../css/jquery-weui.min.css" />
-		<link rel="stylesheet" href="../../../css/demos.css" />
-		<link rel="stylesheet" href="https://jsypay.jiaobaowang.net/suitetest/css/utils/iconfont.css" />
+		<link rel="stylesheet" href="../../../css/demos.css" />-->
+		<!--<link rel="stylesheet" href="https://jsypay.jiaobaowang.net/suitetest/css/utils/iconfont.css" />-->
 		<style type="text/css">
 			body,
 			html {
@@ -27,12 +30,12 @@
 				font-size: 14px;
 			}
 		</style>
-		<script type='text/javascript' src='../../../js/PublicProtocol.js'></script>
-		<script src="../../../js/lib/vconsole/vconsole.min.js"></script>
-		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=VPMK2gwQeEtGyV24Py1Gb4GTpukyjm6y"></script>
+		<!--<script type='text/javascript' src='../../../js/PublicProtocol.js'></script>
+		<script src="../../../js/lib/vconsole/vconsole.min.js"></script>-->
+		<!--<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=VPMK2gwQeEtGyV24Py1Gb4GTpukyjm6y"></script>-->
 		<!--加载鼠标绘制工具-->
-		<script type="text/javascript" src="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.js"></script>
-		<link rel="stylesheet" href="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.css" />
+		<!--<script type="text/javascript" src="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.js"></script>
+		<link rel="stylesheet" href="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.css" />-->
 		<title>签到考勤</title>
 	</head>
 
@@ -105,11 +108,19 @@
 		<div>
 
 		</div>
+		<script src="../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/demoCssJs/jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/demoCssJs/iscroll.js"></script>
+		<script src="../../../js/demoCssJs/jquery-weui.js"></script>
+		<script src="../../../js/PublicProtocol.js"></script>
+		<script src="../../../js/utils/utils.js"></script>
+		<script src="../../../js/utils/storageutil.js"></script>
+		<script src='../../../js/lib/vconsole/vconsole.min.js'></script>
 
 	</body>
 
 </html>
-<script src="../../../js/weui.min.js" type="text/javascript" charset="utf-8"></script>
+<!--<script src="../../../js/weui.min.js" type="text/javascript" charset="utf-8"></script>-->
 
 <script type="text/javascript">
 	var userInfo = {};
@@ -141,8 +152,8 @@
 		var tempData = {
 //			corpId: userInfo.corpid, //单位ID
 			corpId:"wx6c4528c675d4a9c9",
-			pageIndex: 1, //当前页数
-			pageSize: 0 //每页记录数，0 为全部
+			pageIndex: '1', //当前页数
+			pageSize: '0' //每页记录数，0 为全部
 		}
 		console.log('获取考勤类型参数:' + JSON.stringify(tempData));
 		getAttendTypePro(tempData, function(data) {
@@ -159,7 +170,7 @@
 				console.log('重组考勤类型:' + JSON.stringify(attendType.attendTypeList));
 
 			} else {
-				//						layer.alert('请重新登录获取个人信息');
+				layer.alert('请重新登录76767获取个人信息');
 			}
 		});
 	};
@@ -197,6 +208,7 @@
 		}
 		console.log(JSON.stringify(tempData))
 		unitWebsitePro(tempData, function(data) {
+			getAttendType()
 			console.log('获取当前人员信息' + JSON.stringify(data.RspData))
 			if(data.RspCode == 0) {
 				userInfo = JSON.parse(data.RspData);
@@ -294,6 +306,7 @@ function getAttendTimePro(){
 			map.addOverlay(mk);
 			map.panTo(r.point);
 			var myGeo = new BMap.Geocoder();
+			
 			myGeo.getLocation(r.point, function(result) {
 				if(result) {
 					var addComp = result.addressComponents;

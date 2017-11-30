@@ -13,6 +13,7 @@ Vue.component("classify-list", {
 	},
 	watch: {
 		'$route' (to, from) {
+			console.log("******页面导航监听******")
 			this.getAllGroups();
 		},
 		classifyList: function(newVal, oldVal) {

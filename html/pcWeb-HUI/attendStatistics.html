@@ -137,8 +137,32 @@
 						var tempDepartArr = [];
 						for(var i = 0; i < tempArr.length; i++) {
 							var tempModel = tempArr[i];
-							attendData.peopleArray.push(tempModel.value);
+							//获取部门下的所有人员
+							getDepartPerson(tempModel.value);
 						}
+					} else {
+						layer.alert('获取部门出现问题');
+					}
+				});
+			}
+			
+			//17.获取某部门ID下所有人员(PC管理端)
+			var getDepartPerson = function(departID) {
+				var tempData = {
+					cmd: 'departpersonsadmin',
+					type: 'findpage', //获取管理员全部管理部门
+					colid:departID,//部门ID
+					colv:'1',//是否递归获取子级部门中所有人员,0否1是
+					callcol:'base'//获取详细信息:info,获取普通信息:base
+				}
+				console.log('tempData:' + JSON.stringify(tempData));
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						for (var i = 0; i < Thdata.RspData.userlistings.length; i++) {
+							var tempModel = Thdata.RspData.userlistings[i];
+							attendData.peopleArray.push(tempModel.userid);
+						}
+						attendData.peopleArray = attendData.peopleArray.concat(data.RspData.userlist);
 					} else {
 						layer.alert('获取部门出现问题');
 					}

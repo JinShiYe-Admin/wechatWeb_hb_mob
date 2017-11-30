@@ -102,20 +102,9 @@
 				beginTime = beginTime.replace(/-/g, '');
 				var tempId = [];
 				tempId.push(attendData.userInfo.userid);
-//				var tempData = {
-//					corpId: attendData.userInfo.corpid, //单位ID
-//					userId: tempId, //用户ID,例如：[“1”, “2”, “3”]
-//					beginTime: beginTime, //统计开始时间,年月日共八位如：20011010
-//					endTime: beginTime, //统计结束时间,年月日共八位如：20011010
-//					attendResultId: '0', //0：全部,1: 正常,2：迟到,3：早退
-//					attendTypeId: '0', //0 为全部
-//					attendAreaId: '0', //0 为全部
-//					pageIndex: '1',
-//					pageSize: '0' //0 为全部
-//				}
 				var tempData = {
-					corpId: 'wx6c4528c675d4a9c9', //单位ID
-					userId: 'zhaoqiwang', //用户ID,例如：[“1”, “2”, “3”]
+					corpId: attendData.userInfo.corpid, //单位ID
+					userId: tempId, //用户ID,例如：[“1”, “2”, “3”]
 					beginTime: beginTime, //统计开始时间,年月日共八位如：20011010
 					endTime: beginTime, //统计结束时间,年月日共八位如：20011010
 					attendResultId: '0', //0：全部,1: 正常,2：迟到,3：早退

@@ -209,15 +209,9 @@
 				}
 				startTime = startTime.replace(/-/g,'');
 				endTime = endTime.replace(/-/g,'');
-//				var tempData = {
-//					corpId: attendData.userInfo.corpid, //单位ID
-//					userId: tempDepartArr, //用户ID,例如：[“1”, “2”, “3”]
-//					beginTime: startTime, //统计开始时间,年月日共八位如：20011010
-//					endTime: endTime //统计结束时间,年月日共八位如：20011010
-//				}
 				var tempData = {
-					corpId: 'wx6c4528c675d4a9c9', //单位ID
-					userId: 'zhaoqiwang', //用户ID,例如：[“1”, “2”, “3”]
+					corpId: attendData.userInfo.corpid, //单位ID
+					userId: tempDepartArr, //用户ID,例如：[“1”, “2”, “3”]
 					beginTime: startTime, //统计开始时间,年月日共八位如：20011010
 					endTime: endTime //统计结束时间,年月日共八位如：20011010
 				}

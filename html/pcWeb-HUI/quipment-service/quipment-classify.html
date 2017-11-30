@@ -305,9 +305,6 @@
 				el: "#classify-container",
 				router: router,
 				data: {
-					chosedPerson: {
-
-					},
 					curGroup: {
 
 					}
@@ -317,11 +314,8 @@
 
 				},
 				methods: {
-					getGroupPerson: function(gusers) {
-						this.chosedPerson = gusers;
-					},
 					getCurGroup: function(cgroup) {
-
+						this.curGroup = cgroup;
 					}
 				}
 			})

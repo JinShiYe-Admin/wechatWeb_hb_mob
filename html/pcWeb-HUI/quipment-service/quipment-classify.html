@@ -83,6 +83,7 @@
 			}
 			
 			.choose-person {
+				min-height: 300px;
 				max-height: 500px;
 				overflow: auto;
 			}
@@ -130,7 +131,7 @@
 
 	<body>
 		<div id="classify-container">
-			<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 维修配置 <span class="c-gray en">&gt;</span> 维修人员设置
+			<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 维修配置 <span class="c-gray en">&gt;</span> 维修人员配置
 			</nav>
 			<div class="page-container">
 				<router-view v-on:group-info="getCurGroup" v-bind:classify="curGroup"></router-view>
@@ -180,7 +181,7 @@
 		<template id="classify-list">
 			<div>
 				<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a class="btn btn-primary radius" v-on:click="addService()" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加维修组</a></span> </div>
-				<table id="list" class="table table-border table-bordered table-bg table-hover table-sort">
+				<table id="list" v-if="classifyList.length>0" class="table table-border table-bordered table-bg table-hover table-sort">
 					<thead>
 						<tr class="text-c">
 							<th width="300">维修组</th>

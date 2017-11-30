@@ -176,10 +176,10 @@
 				<ul id="list" class="Huifold">
 					<li v-for="(classify,index) in classifyList" class="item">
 						<h4 v-on:click="classify.isShow=!classify.isShow">{{classify.cname}}
-							<span class="Hui-iconfont Hui-iconfont-edit edit-groupName" v-on:click.stop="changeGroupName(classify)"></span>
+							<span class="Hui-iconfont Hui-iconfont-edit edit-groupName" title="编辑组名" v-on:click.stop="changeGroupName(classify)"></span>
 							<span class="add-perdson float-right" v-on:click.stop="changePerson(classify)">更改人员</span>
 							<!--<span class="Hui-iconfont Hui-iconfont-del3 del-classify float-right" v-on:click.stop="delClassify(classify,index)"></span>-->
-							<span class="Hui-iconfont  float-right" v-bind:class="[{'Hui-iconfont-yanjing':classify.stat}, {'Hui-iconfont-niming':!classify.stat},{'close-classify':!classify.stat},{'show-classify':classify.stat}]" 
+							<span class="Hui-iconfont  float-right" title="显示\/屏蔽" v-bind:class="[{'Hui-iconfont-yanjing':classify.stat}, {'Hui-iconfont-niming':!classify.stat},{'close-classify':!classify.stat},{'show-classify':classify.stat}]" 
 								v-on:click.stop="changeState(classify,index)"></span>
 							<b v-bind:class="['Hui-iconfont',{'Hui-iconfont-arrow2-top':!classify.isShow},{'Hui-iconfont-arrow2-bottom':classify.isShow}]"></b>
 						</h4>

@@ -97,6 +97,10 @@ var request = (function(mod) {
 			callback(response);
 		})
 	}
+	/**
+	 * 获取服务组
+	 * @param {Object} callback
+	 */
 	mod.getServiceGroups = function(callback) {
 		var comData = {
 			cmd: 'devkindsadmin',
@@ -111,11 +115,11 @@ var request = (function(mod) {
 
 	}
 	/**
-	 * 
+	 * 添加服务组
 	 * @param {Object} name
 	 * @param {Object} callbak
 	 */
-	mod.addServiceGroup = function(name,callbak) {
+	mod.addServiceGroup = function(name,callback) {
 		var comData = {
 			cmd: 'devkindsadmin',
 			type: 'add',

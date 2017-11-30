@@ -30,8 +30,14 @@
 			}
 			
 			.add-perdson,
-			.del-classify {
+			.del-classify,
+			.show-classify,
+			.edit-groupName {
 				color: dodgerblue;
+			}
+			
+			.close-classify {
+				color: darkgray
 			}
 			
 			.del-classify {
@@ -132,11 +138,11 @@
 					<div class="person-foot">
 						<div v-if="Object.keys(selectPerson).length>0">
 							<p>已选人员</p>
-							<div v-for="key of Object.keys(selectPerson)" class="person-container is-checked" v-on:click="delChoosePerson(key)">
+							<div v-for="key of Object.keys(selectPerson)" v-if="key" class="person-container is-checked" v-on:click="delChoosePerson(key)">
 								{{selectPerson[key]}}
 							</div>
 						</div>
-						<a class="btn btn-primary radius float-right" v-on:click="choosePerson()">添加人员</a>
+						<a v-if="Object.keys(selectPerson).length>0" class="btn btn-primary radius float-right" v-on:click="choosePerson()">添加人员</a>
 						<a class="btn btn-default radius float-right" v-on:click="cancelChoose()">取消</a>
 					</div>
 				</div>
@@ -170,17 +176,20 @@
 				<ul id="list" class="Huifold">
 					<li v-for="(classify,index) in classifyList" class="item">
 						<h4 v-on:click="classify.isShow=!classify.isShow">{{classify.cname}}
-							<span class="Hui-iconfont Hui-iconfont-edit" v-on:click.stop="changeGroupName(classify)"></span>
+							<span class="Hui-iconfont Hui-iconfont-edit edit-groupName" title="编辑组名" v-on:click.stop="changeGroupName(classify)"></span>
 							<span class="add-perdson float-right" v-on:click.stop="changePerson(classify)">更改人员</span>
 							<!--<span class="Hui-iconfont Hui-iconfont-del3 del-classify float-right" v-on:click.stop="delClassify(classify,index)"></span>-->
-							<span class="Hui-iconfont  float-right" v-bind:class="[{'Hui-iconfont-yanjing':classify.stat}, {'Hui-iconfont-niming':!classify.stat}]" v-on:click.stop="changeState(classify,index)">更改人员</span>
+							<span class="Hui-iconfont  float-right" title="显示\/屏蔽" v-bind:class="[{'Hui-iconfont-yanjing':classify.stat}, {'Hui-iconfont-niming':!classify.stat},{'close-classify':!classify.stat},{'show-classify':classify.stat}]" 
+								v-on:click.stop="changeState(classify,index)"></span>
 							<b v-bind:class="['Hui-iconfont',{'Hui-iconfont-arrow2-top':!classify.isShow},{'Hui-iconfont-arrow2-bottom':classify.isShow}]"></b>
 						</h4>
-						<div v-if="Object.keys(classify.gusers).length>0" v-show="classify.isShow" class="info">
-							<div v-for="key in Object.keys(classify.gusers)" class="person-container">
-								{{classify.gusers[key]}}
+						<template v-if="Object.keys(classify.gusers).length>0">
+							<div v-show="classify.isShow" class="info">
+								<div v-for="key in Object.keys(classify.gusers)" v-if="key" class="person-container">
+									{{classify.gusers[key]}}
+								</div>
 							</div>
-						</div>
+						</template>
 					</li>
 				</ul>
 				<div id="modal-demo" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -234,6 +243,11 @@
 					}
 				},
 				watch: {
+					selectPerson: function(newVal, oldVal) {
+						console.log("selectPerson.newVal:" + JSON.stringify(newVal));
+						console.log("SelectPerson.oldVal:" + JSON.stringify(oldVal));
+						console.log(Object.keys(newVal).length);
+					},
 					classify: function(newVal, oldVal) {
 						console.log("wacth:监听classify:" + JSON.stringify(newVal))
 						this.selectPerson = this.classify.gusers;

@@ -23,6 +23,19 @@ Vue.component("classify-list", {
 		}
 	},
 	methods: {
+		changeState: function(classify, index) {
+			var com = this;
+			var stat = classify.stat ? 0 : 1;
+			request.editSeviceGroup({
+				colid: classify.kindsid,
+				callcol: 'stat',
+				colv: stat
+			}, function(response) {
+				if(response.RspCode == 0) {
+					com.classifyList[index].stat = stat
+				}
+			})
+		},
 		changeGroupName: function(classify) {
 			console.log("****changeGroupName****");
 			this.changeType = 1;

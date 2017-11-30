@@ -8,12 +8,14 @@ Vue.component("classify-list", {
 			activeClassify: {}
 		}
 	},
-	created: function() {
-
+	mounted: function() {
+		this.getAllGroups();
 	},
 	watch: {
 		'$route' (to, from) {
 			console.log("******页面导航监听******")
+			console.log("to.path:" + to.path);
+			console.log("from path:" + from.path);
 			this.getAllGroups();
 		},
 		classifyList: function(newVal, oldVal) {
@@ -130,7 +132,7 @@ Vue.component("classify-list", {
 			request.delServiceGroup(classify.kindsid, function(response) {
 				if(response.RspCode == 0) {
 					com.classifyList.splice(index, 1);
-					console.log("刪除組后的數組:" + JSON.stringify(com.classifyList))
+					console.log("删除组后的数组:" + JSON.stringify(com.classifyList))
 				}
 			})
 		}

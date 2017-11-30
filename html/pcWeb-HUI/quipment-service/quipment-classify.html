@@ -119,19 +119,22 @@
 			}
 			
 			.group-title {
-				background: #EEEEEE;
+				background: #eee;
 			}
 			
-			.page-container {
-				padding: 20px 16px;
-				background-color: #FFF;
+			.manage-item {
+				padding: 5px 5px;
 			}
 		</style>
 	</head>
 
 	<body>
 		<div id="classify-container">
-			<router-view v-on:group-info="getCurGroup" v-bind:classify="curGroup"></router-view>
+			<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 维修配置 <span class="c-gray en">&gt;</span> 维修人员设置
+			</nav>
+			<div class="page-container">
+				<router-view v-on:group-info="getCurGroup" v-bind:classify="curGroup"></router-view>
+			</div>
 		</div>
 		<!--人员选择-->
 		<template id="multi-choose">
@@ -151,7 +154,7 @@
 								{{selectPerson[key]}}
 							</div>
 						</div>
-						<a v-if="Object.keys(selectPerson).length>0" class="btn btn-primary radius float-right" v-on:click="choosePerson()">添加人员</a>
+						<a v-if="Object.keys(selectPerson).length>0" class="btn btn-primary radius float-right" v-on:click="choosePerson()">更改人员</a>
 						<a class="btn btn-default radius float-right" v-on:click="cancelChoose()">取消</a>
 					</div>
 				</div>
@@ -176,21 +179,44 @@
 		<!--维修列表-->
 		<template id="classify-list">
 			<div>
-				<div>
-					<p class="inline-block">维修组列表</p>
-					<span class="float-right">
-					<a id="addressAdd" class="btn btn-primary radius" v-on:click="addService()"><i class="Hui-iconfont"></i> 添加维修组</a>
-				</span>
-				</div>
-				<ul id="list">
+				<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a class="btn btn-primary radius" v-on:click="addService()" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加维修组</a></span> </div>
+				<table id="list" class="table table-border table-bordered table-bg table-hover table-sort">
+					<thead>
+						<tr class="text-c">
+							<th width="300">维修组</th>
+							<th>维修人员</th>
+							<th width="100">记录者</th>
+							<th width="150">记录时间</th>
+							<th width="100">状态</th>
+							<th width="100">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="text-c" v-for="(classify,index) in classifyList">
+							<td>{{classify.cname}}</td>
+							<td><span v-for="key in Object.keys(classify.gusers)">{{classify.gusers[key]}} </span></td>
+
+							<td class="text-c">{{classify.recname}}</td>
+							<td>{{classify.rectime|formatTime}}</td>
+							<td class="td-status"><span class="label  radius" v-bind:class="[{'label-defaunt':!classify.stat},{'label-success':classify.stat}]">{{classify.stat?"显示":"屏蔽"}}</span></td>
+							<td class="td-manage">
+								<span class="Hui-iconfont manage-item" title="显示/屏蔽" v-bind:class="[{'Hui-iconfont-yanjing':classify.stat}, {'Hui-iconfont-niming':!classify.stat},{'close-classify':!classify.stat},{'show-classify':classify.stat}]" v-on:click.stop="changeState(classify,index)"></span>
+								<span class="Hui-iconfont Hui-iconfont-edit edit-groupName manage-item" title="编辑组名" v-on:click.stop="changeGroupName(classify)"></span>
+								<span class="add-perdson Hui-iconfont Hui-iconfont-user-group manage-item" title="更改组员" v-on:click.stop="changePerson(classify)"></span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<!--<ul id="list">
 					<li v-for="(classify,index) in classifyList">
-						<h4 class="group-title" style="background-color: darkgray;" v-on:click="classify.isShow=!classify.isShow">{{classify.cname}}
-							<span class="Hui-iconfont Hui-iconfont-edit edit-groupName" title="编辑组名" v-on:click.stop="changeGroupName(classify)"></span>
+						<h4 class="group-title" v-on:click="classify.isShow=!classify.isShow">{{classify.cname}}
+							
 							<span v-bind:class="['float-right','Hui-iconfont',{'Hui-iconfont-arrow2-top':!classify.isShow},{'Hui-iconfont-arrow2-bottom':classify.isShow}]"></span>
 							<span class="add-perdson float-right" v-on:click.stop="changePerson(classify)">更改人员</span>
 							<!--<span class="Hui-iconfont Hui-iconfont-del3 del-classify float-right" v-on:click.stop="delClassify(classify,index)"></span>-->
-							<span class="Hui-iconfont  float-right" title="显示/屏蔽" v-bind:class="[{'Hui-iconfont-yanjing':classify.stat}, {'Hui-iconfont-niming':!classify.stat},{'close-classify':!classify.stat},{'show-classify':classify.stat}]" 
+				<!--<span class="Hui-iconfont  float-right" title="显示/屏蔽" v-bind:class="[{'Hui-iconfont-yanjing':classify.stat}, {'Hui-iconfont-niming':!classify.stat},{'close-classify':!classify.stat},{'show-classify':classify.stat}]" 
 								v-on:click.stop="changeState(classify,index)"></span>
+							<span class="Hui-iconfont Hui-iconfont-edit edit-groupName float-right" title="编辑组名" v-on:click.stop="changeGroupName(classify)"></span>
 							
 						</h4>
 						<template v-if="Object.keys(classify.gusers).length>0">
@@ -201,7 +227,7 @@
 							</div>
 						</template>
 					</li>
-				</ul>
+				</ul>-->
 				<div id="modal-demo" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 					<div class="modal-dialog">
 						<div class="modal-content radius">

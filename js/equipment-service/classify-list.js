@@ -22,6 +22,13 @@ Vue.component("classify-list", {
 			console.log("classifyList改变后的值:" + JSON.stringify(newVal))
 		}
 	},
+	filters: {
+		formatTime: function(timeStr) {
+			var timeArr = timeStr.split("T");
+			var hourArr = timeArr[1].split(".");
+			return timeArr[0] + " " + hourArr[0]
+		}
+	},
 	methods: {
 		changeState: function(classify, index) {
 			var com = this;
@@ -91,8 +98,92 @@ Vue.component("classify-list", {
 			}
 		},
 		getAllGroups: function() {
-			console.log("****getAllGroups****");
 			var com = this;
+			com.classifyList = [{
+					"kindsid": 2,
+					"cname": "新租",
+					"gusers": {
+						"huxy": "胡孝钰",
+						"qianr": "钱荣"
+					},
+					"recname": "安琪",
+					"rectime": "2017-11-30T09:12:12.287",
+					"recuser": "anqi",
+					"stat": 0,
+					"ROWSTAT": null,
+					"isShow": false
+				},
+				{
+					"kindsid": 4,
+					"cname": "新名字007",
+					"gusers": {
+						"anqi": "安琪",
+						"maohuimin": "毛慧敏",
+						"konglingming": "孔令明"
+					},
+					"recname": "安琪",
+					"rectime": "2017-11-30T09:30:40.693",
+					"recuser": "anqi",
+					"stat": 1,
+					"ROWSTAT": null,
+					"isShow": false
+				},
+				{
+					"kindsid": 3,
+					"cname": "新名字",
+					"gusers": {
+						"zhangbx": "章彬香",
+						"dingf": "丁峰",
+						"guancl": "管彩丽",
+						"wangy": "汪英",
+						"lvqy": "吕巧云",
+						"weijj": "魏晶晶",
+						"yangq": "杨琼",
+						"15866690035": "莫名"
+					},
+					"recname": "安琪",
+					"rectime": "2017-11-30T09:12:21.43",
+					"recuser": "anqi",
+					"stat": 1,
+					"ROWSTAT": null,
+					"isShow": false
+				},
+				{
+					"kindsid": 5,
+					"cname": "第五组",
+					"gusers": {
+						"huxy": "胡孝钰",
+						"chenf": "陈芳",
+						"chenl": "陈丽",
+						"chenyy": "陈亚芸",
+						"xuey": "薛杨",
+						"taocm": "陶彩梅",
+						"zhouy": "周逸"
+					},
+					"recname": "安琪",
+					"rectime": "2017-11-30T09:33:38.29",
+					"recuser": "anqi",
+					"stat": 1,
+					"ROWSTAT": null,
+					"isShow": false
+				},
+				{
+					"kindsid": 1,
+					"cname": "1234456",
+					"gusers": {
+						"yangg": "杨淦",
+						"bayp": "巴永平"
+					},
+					"recname": "安琪",
+					"rectime": "2017-11-30T09:11:59.087",
+					"recuser": "anqi",
+					"stat": 1,
+					"ROWSTAT": null,
+					"isShow": false
+				}
+			];
+			console.log("****getAllGroups****");
+
 			request.getServiceGroups(function(data) {
 				console.log("获取所有值：" + JSON.stringify(data));
 				if(data.RspCode == 0) {

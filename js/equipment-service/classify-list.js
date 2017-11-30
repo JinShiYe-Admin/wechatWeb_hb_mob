@@ -20,16 +20,6 @@ Vue.component("classify-list", {
 		},
 		classifyList: function(newVal, oldVal) {
 			console.log("classifyList改变后的值:" + JSON.stringify(newVal))
-			Vue.nextTick(function() {
-				$("#list").Huifold({
-					titCell: '.item h4',
-					mainCell: '.item .info',
-					type: 1,
-					trigger: 'click',
-					className: "selected",
-					speed: "first",
-				});
-			})
 		}
 	},
 	methods: {
@@ -58,7 +48,7 @@ Vue.component("classify-list", {
 			console.log("****changeServiceGroupName****");
 			var com = this;
 			request.editSeviceGroup({
-				callcol: this.activeClassify.cname,
+				callcol: "cname",
 				colid: this.activeClassify.kindsid,
 				colv: this.serviceGroupName
 			}, function(response) {
@@ -102,6 +92,7 @@ Vue.component("classify-list", {
 			var com = this;
 			com.classifyList = listData.map(function(item, index, list) {
 				item.gusers = com.manageGusersToObject(item.gusers);
+				item.isShow = false;
 				return item;
 			})
 			console.log("获取的全部组信息:" + JSON.stringify(com.classifyList))

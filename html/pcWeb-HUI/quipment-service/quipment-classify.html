@@ -169,25 +169,17 @@
 				</div>
 				<ul id="list" class="Huifold">
 					<li v-for="(classify,index) in classifyList" class="item">
-						<h4>{{classify.cname}}<span class="Hui-iconfont Hui-iconfont-edit" v-on:click="changeGroupName(classify)"></span><span class="add-perdson float-right" v-on:click.stop="changePerson(classify)">更改人员</span>
-							<span class="Hui-iconfont Hui-iconfont-del3 del-classify float-right" v-on:click.stop="delClassify(classify,index)"></span><b class="Hui-iconfont Hui-iconfont-arrow2-top"></b></h4>
-						<div class="info">
-							<table class="table table-border table-bordered table-bg">
-								<thead class="text-c">
-									<tr>
-										<th class="title-persons">维修人员</th>
-										<th>操作</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr class="text-c" v-for="key in Object.keys(classify.gusers)">
-										<td>{{classify.gusers[key]}}</td>
-										<td>
-											<a class="operate-edit ml-5" title="删除"><i class="Hui-iconfont"></i></a>
-										</td>
-									</tr>
-								</tbody>
-							</table>
+						<h4 v-on:click="classify.isShow=!classify.isShow">{{classify.cname}}
+							<span class="Hui-iconfont Hui-iconfont-edit" v-on:click.stop="changeGroupName(classify)"></span>
+							<span class="add-perdson float-right" v-on:click.stop="changePerson(classify)">更改人员</span>
+							<!--<span class="Hui-iconfont Hui-iconfont-del3 del-classify float-right" v-on:click.stop="delClassify(classify,index)"></span>-->
+							<span class="Hui-iconfont  float-right" v-bind:class="[{'Hui-iconfont-yanjing':classify.stat}, {'Hui-iconfont-niming':!classify.stat}]" v-on:click.stop="changeState(classify,index)">更改人员</span>
+							<b v-bind:class="['Hui-iconfont',{'Hui-iconfont-arrow2-top':!classify.isShow},{'Hui-iconfont-arrow2-bottom':classify.isShow}]"></b>
+						</h4>
+						<div v-if="Object.keys(classify.gusers).length>0" v-show="classify.isShow" class="info">
+							<div v-for="key in Object.keys(classify.gusers)" class="person-container">
+								{{classify.gusers[key]}}
+							</div>
 						</div>
 					</li>
 				</ul>
@@ -214,7 +206,7 @@
 		<script src="../../../js/vue-router.js"></script>
 		<script src="../../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
 		<script src="../../../js/H-ui.admin/static/h-ui/js/H-ui.js"></script>
-		<script src="../../../js/H-ui.admin/static/h-ui/js/jQuery.Huifold.js"></script>
+		<!--<script src="../../../js/H-ui.admin/static/h-ui/js/jQuery.Huifold.js"></script>-->
 		<script src="../../../js/utils/events.js"></script>
 		<script src="../../../js/utils/consts.js"></script>
 		<script src="../../../js/utils/request.js"></script>
@@ -267,8 +259,8 @@
 						console.log("*******choosePerson*******")
 						request.editSeviceGroup({
 							colid: this.classify.kindsid,
-							callcol: this.personToString(this.classify.gusers),
-							colv: this.classify.stat
+							callcol: "gusers",
+							colv: this.personToString(this.selectPerson)
 						}, function(response) {
 							if(response.RspCode == 0) {
 								router.go(-1);

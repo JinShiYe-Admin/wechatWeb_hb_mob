@@ -31,7 +31,8 @@
 			
 			.add-perdson,
 			.del-classify,
-			.show-classify {
+			.show-classify,
+			.edit-groupName {
 				color: dodgerblue;
 			}
 			
@@ -175,7 +176,7 @@
 				<ul id="list" class="Huifold">
 					<li v-for="(classify,index) in classifyList" class="item">
 						<h4 v-on:click="classify.isShow=!classify.isShow">{{classify.cname}}
-							<span class="Hui-iconfont Hui-iconfont-edit" v-on:click.stop="changeGroupName(classify)"></span>
+							<span class="Hui-iconfont Hui-iconfont-edit edit-groupName" v-on:click.stop="changeGroupName(classify)"></span>
 							<span class="add-perdson float-right" v-on:click.stop="changePerson(classify)">更改人员</span>
 							<!--<span class="Hui-iconfont Hui-iconfont-del3 del-classify float-right" v-on:click.stop="delClassify(classify,index)"></span>-->
 							<span class="Hui-iconfont  float-right" v-bind:class="[{'Hui-iconfont-yanjing':classify.stat}, {'Hui-iconfont-niming':!classify.stat},{'close-classify':!classify.stat},{'show-classify':classify.stat}]" 

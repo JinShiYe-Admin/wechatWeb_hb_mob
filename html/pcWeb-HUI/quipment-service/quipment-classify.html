@@ -141,7 +141,7 @@
 								{{selectPerson[key]}}
 							</div>
 						</div>
-						<a class="btn btn-primary radius float-right" v-on:click="choosePerson()">添加人员</a>
+						<a v-if="Object.keys(selectPerson).length>0" class="btn btn-primary radius float-right" v-on:click="choosePerson()">添加人员</a>
 						<a class="btn btn-default radius float-right" v-on:click="cancelChoose()">取消</a>
 					</div>
 				</div>

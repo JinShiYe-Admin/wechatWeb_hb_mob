@@ -158,11 +158,11 @@
 				console.log('tempData:' + JSON.stringify(tempData));
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
-						for (var i = 0; i < data.RspData.userlistings.length; i++) {
-							var tempModel = data.RspData.userlistings[i];
+						for (var i = 0; i < data.RspData.length; i++) {
+							var tempModel = data.RspData[i];
 							attendData.peopleArray.push(tempModel.userid);
 						}
-						attendData.peopleArray = attendData.peopleArray.concat(data.RspData.userlist);
+						attendData.peopleArray = attendData.peopleArray.concat(data.RspData);
 					} else {
 						layer.alert('获取部门出现问题');
 					}
@@ -209,9 +209,15 @@
 				}
 				startTime = startTime.replace(/-/g,'');
 				endTime = endTime.replace(/-/g,'');
+//				var tempData = {
+//					corpId: attendData.userInfo.corpid, //单位ID
+//					userId: tempDepartArr, //用户ID,例如：[“1”, “2”, “3”]
+//					beginTime: startTime, //统计开始时间,年月日共八位如：20011010
+//					endTime: endTime //统计结束时间,年月日共八位如：20011010
+//				}
 				var tempData = {
-					corpId: attendData.userInfo.corpid, //单位ID
-					userId: tempDepartArr, //用户ID,例如：[“1”, “2”, “3”]
+					corpId: 'wx6c4528c675d4a9c9', //单位ID
+					userId: 'zhaoqiwang', //用户ID,例如：[“1”, “2”, “3”]
 					beginTime: startTime, //统计开始时间,年月日共八位如：20011010
 					endTime: endTime //统计结束时间,年月日共八位如：20011010
 				}

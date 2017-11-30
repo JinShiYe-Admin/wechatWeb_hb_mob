@@ -10,7 +10,7 @@
 		<link rel="stylesheet" href="lib/weui.min.css" />
 		<link rel="stylesheet" href="css/jquery-weui.css" />
 		<link rel="stylesheet" href="css/demos.css" />
-		<link rel="stylesheet" href="https://jsypay.jiaobaowang.net/suitetest/css/utils/iconfont.css" />
+		<link rel="stylesheet" href="https://jsypay.jiaobaowang.net/wxthadmin/css/utils/iconfont.css" />
 		<style>
 			.wrap {
 				width: 30px;
@@ -97,6 +97,7 @@
 							</div>
 						</div>
 						<a href="javascript:;" class="weui-btn weui-btn_primary" @click="clickSubmitBtn()">提交</a>
+						<a href="https://jsypay.jiaobaowang.net/wxthadmin/html/appWeb/attendance/attendance.html" class="weui-btn weui-btn_primary">签到考勤</a>
 						<input id="qnInput" style="display: none;" />
 						<!--<div class="weui-gallery" style="display: block">-->
 						<div class="weui-gallery" :style="displayGallery">
@@ -143,26 +144,26 @@
 				</a>--%>
 			</div>
 		</div>
-		<script src="https://jsypay.jiaobaowang.net/suitetest/js/weui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="https://jsypay.jiaobaowang.net/wxthadmin/js/weui.min.js" type="text/javascript" charset="utf-8"></script>
 
-		<script src="https://jsypay.jiaobaowang.net/suitetest/js/demoCssJs/vue.min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="https://jsypay.jiaobaowang.net/suitetest/js/appweb/choose-file.js" type="text/javascript" charset="utf-8"></script>
+		<script src="https://jsypay.jiaobaowang.net/wxthadmin/js/demoCssJs/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="https://jsypay.jiaobaowang.net/wxthadmin/js/appweb/choose-file.js" type="text/javascript" charset="utf-8"></script>
 		<script src="lib/jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
 		<script src="js/jquery-weui.js" type="text/javascript" charset="utf-8"></script>
-		<script src="https://jsypay.jiaobaowang.net/suitetest/js/utils/consts.js"></script>
-		<script src="https://jsypay.jiaobaowang.net/suitetest/js/utils/events.js"></script>
-		<!--<script src="https://jsypay.jiaobaowang.net/suitetest/js/lib/vconsole/vconsole.min.js"></script>-->
-		<script src='https://jsypay.jiaobaowang.net/suitetest/js/lib/exif/exif.min.js'></script>
-		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/PublicProtocol.js'></script>
-		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/utils/utils.js'></script>
-		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/utils/storageutil.js'></script>
-		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/lib/plupload/moxie.min.js'></script>
-		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/lib/plupload/plupload.full.min.js'></script>
-		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/lib/qiniu/qiniu.min.js'></script>
-		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/utils/cryption.js'></script>
-		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/utils/cloudutil.js'></script>
-		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/utils/compress.js'></script>
-		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/suitetest/js/utils/pluploadutil.js'></script>
+		<script src="https://jsypay.jiaobaowang.net/wxthadmin/js/utils/consts.js"></script>
+		<script src="https://jsypay.jiaobaowang.net/wxthadmin/js/utils/events.js"></script>
+		<!--<script src="https://jsypay.jiaobaowang.net/wxthadmin/js/lib/vconsole/vconsole.min.js"></script>-->
+		<script src='https://jsypay.jiaobaowang.net/wxthadmin/js/lib/exif/exif.min.js'></script>
+		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/wxthadmin/js/PublicProtocol.js'></script>
+		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/wxthadmin/js/utils/utils.js'></script>
+		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/wxthadmin/js/utils/storageutil.js'></script>
+		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/wxthadmin/js/lib/plupload/moxie.min.js'></script>
+		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/wxthadmin/js/lib/plupload/plupload.full.min.js'></script>
+		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/wxthadmin/js/lib/qiniu/qiniu.min.js'></script>
+		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/wxthadmin/js/utils/cryption.js'></script>
+		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/wxthadmin/js/utils/cloudutil.js'></script>
+		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/wxthadmin/js/utils/compress.js'></script>
+		<script type='text/javascript' src='https://jsypay.jiaobaowang.net/wxthadmin/js/utils/pluploadutil.js'></script>
 
 		<script type="text/javascript">
 		    var winHeight = $(window).height(); //获取当前页面高度
@@ -428,7 +429,7 @@
 		            get_new_uptoken: true, // 设置上传文件的时候是否每次都重新获取新的 uptoken
 		            domain: storageutil.QNPBDOMAIN, // bucket 域名，下载资源时用到，如：'http://xxx.bkt.clouddn.com/' **必需**
 		            max_file_size: '4mb', // 最大文件体积限制
-		            flash_swf_url: 'https://jsypay.jiaobaowang.net/suitetest/js/lib/plupload/Moxie.swf', //引入 flash,相对路径
+		            flash_swf_url: 'https://jsypay.jiaobaowang.net/wxthadmin/js/lib/plupload/Moxie.swf', //引入 flash,相对路径
 		            max_retries: 0, // 上传失败最大重试次数
 		            dragdrop: false, // 开启可拖曳上传
 		            chunk_size: '4mb', // 分块上传时，每块的体积
@@ -663,6 +664,9 @@
 		            'left': (tabar_width - 30) * 50 / tabar_width + '%'
 		        });
 		    }, false);
+		    function attendance() {
+		        utils.wOpenWithData("../../../html/appWeb/attendance/attendance.html", '')
+		    }
 		</script>
 	</body>
 

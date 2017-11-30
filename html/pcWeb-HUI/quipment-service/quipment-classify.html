@@ -83,7 +83,7 @@
 			}
 			
 			.choose-person {
-				height: 500px;
+				max-height: 500px;
 				overflow: auto;
 			}
 			
@@ -116,6 +116,9 @@
 			.btn-primary:disabled {
 				background-color: darkgray;
 				border: none;
+			}
+			.group-title{
+				background:#EEEEEE;
 			}
 		</style>
 	</head>
@@ -173,18 +176,19 @@
 					<a id="addressAdd" class="btn btn-primary radius" v-on:click="addService()"><i class="Hui-iconfont"></i> 添加维修组</a>
 				</span>
 				</div>
-				<ul id="list" class="Huifold">
-					<li v-for="(classify,index) in classifyList" class="item">
-						<h4 v-on:click="classify.isShow=!classify.isShow">{{classify.cname}}
+				<ul id="list">
+					<li v-for="(classify,index) in classifyList">
+						<h4 class="group-title" style="background-color: darkgray;" v-on:click="classify.isShow=!classify.isShow">{{classify.cname}}
 							<span class="Hui-iconfont Hui-iconfont-edit edit-groupName" title="编辑组名" v-on:click.stop="changeGroupName(classify)"></span>
+							<span v-bind:class="['float-right','Hui-iconfont',{'Hui-iconfont-arrow2-top':!classify.isShow},{'Hui-iconfont-arrow2-bottom':classify.isShow}]"></span>
 							<span class="add-perdson float-right" v-on:click.stop="changePerson(classify)">更改人员</span>
 							<!--<span class="Hui-iconfont Hui-iconfont-del3 del-classify float-right" v-on:click.stop="delClassify(classify,index)"></span>-->
-							<span class="Hui-iconfont  float-right" title="显示\/屏蔽" v-bind:class="[{'Hui-iconfont-yanjing':classify.stat}, {'Hui-iconfont-niming':!classify.stat},{'close-classify':!classify.stat},{'show-classify':classify.stat}]" 
+							<span class="Hui-iconfont  float-right" title="显示/屏蔽" v-bind:class="[{'Hui-iconfont-yanjing':classify.stat}, {'Hui-iconfont-niming':!classify.stat},{'close-classify':!classify.stat},{'show-classify':classify.stat}]" 
 								v-on:click.stop="changeState(classify,index)"></span>
-							<b v-bind:class="['Hui-iconfont',{'Hui-iconfont-arrow2-top':!classify.isShow},{'Hui-iconfont-arrow2-bottom':classify.isShow}]"></b>
+							
 						</h4>
 						<template v-if="Object.keys(classify.gusers).length>0">
-							<div v-show="classify.isShow" class="info">
+							<div v-show="classify.isShow">
 								<div v-for="key in Object.keys(classify.gusers)" v-if="key" class="person-container">
 									{{classify.gusers[key]}}
 								</div>
@@ -268,6 +272,7 @@
 						console.log("*******delChoosePerson*******")
 						delete this.selectPerson[key];
 						this.selectPerson = Object.assign({}, this.selectPerson);
+						console.log("删除人员后的数据：" + JSON.stringify(this.selectPerson))
 					},
 					choosePerson: function() {
 						console.log("*******choosePerson*******")
@@ -311,10 +316,7 @@
 				el: "#classify-container",
 				router: router,
 				data: {
-					curGroup: {
-
-					}
-
+					curGroup: {}
 				},
 				mounted: function() {
 

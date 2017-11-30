@@ -1,7 +1,7 @@
 <!--
 	作者：徐邦圣
 	时间：2017-11-25
-	描述：企业微信后台管理页面，考勤管理模块，点新增考勤地点按钮后跳转到该界面，即新增考勤地点记录界面
+	描述：企业微信后台管理页面，考勤管理模块，点新增考勤时间段按钮后跳转到该界面，即新增考勤时间段记录界面
 -->
 <!DOCTYPE html>
 <html>
@@ -11,29 +11,16 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
-		<title>管理考勤</title>
+		<title>新增考勤时间段</title>
 		<link rel="stylesheet" href="../../css/weui.min.css" />
-		<!--<link href="../../css/mui.min.css" rel="stylesheet" />-->
-		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=Z5iqNpaPerdxLv1m4Vd6PPgHYMZ3YbqH"></script>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
 		<style>
-			#allmap {
-				overflow: hidden;
-				margin: 0;
-				font-family: "微软雅黑";
-			}
-			
 			.weui-cells {
 				margin-top: 0px;
 			}
 			
 			.weui-cells__title {
 				color: black;
-			}
-			/*地图缩放控件层*/
-			
-			#r-result {
-				width: 100%;
-				margin-top: 5px;
 			}
 		</style>
 	</head>
@@ -44,38 +31,64 @@
 		</header>-->
 		<!--<template>-->
 		<div id="conetent" class="weui-cells weui-cells_form mui-hidden">
-			<h3 style="text-align: center;">新增考勤地点</h3>
+			<h3 style="text-align: center;">新增考勤时间段</h3>
 			<!--输入列表-->
 			<div id="input_list">
 				<div>
-					<div class="weui-cells__title">考勤地点名称</div>
+					<div class="weui-cells__title">开始时间（小时）</div>
 					<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
-								<input id="attendAdressText" v-model.lazy="cname.message" class="weui-input" type="text" :placeholder="'请输入考勤地点名称'">
+								<input id="beginHour" v-model.lazy="cname.message" class="weui-input" type="text" :placeholder="'请输入考勤开始时间'">
 							</div>
 						</div>
 					</div>
 				</div>
 
-				<!--用来显示地图-->
-				<div id="allmap" style="height:500px;width:100%;"></div>
-
-				<div id="r-result">
-
+				<div>
+					<!--<div class="weui-cells__title">{{linkurl.title+" (有链接时，不允许投稿；链接默认打开。)"}}</div>-->
+					<!--<div class="weui-cell__ft" style="margin-top: -35px;margin-right: 15px;">
+						<input class="weui-switch" type="checkbox" v-model="islink.check">
+					</div>-->
+					<!--<div v-if="islink.check" class="weui-cells">-->
+					<div class="weui-cells__title">开始时间（分钟）</div>
+					<div class="weui-cell">
+						<div class="weui-cell__bd">
+							<input id="beginMinute" class="weui-input" type="text" :placeholder="'请输入考勤开始时间'">
+						</div>
+					</div>
+					<!--</div>-->
 				</div>
-				考勤地点X坐标（经度）：<input type="text" id="longitude" /> 考勤地点Y坐标（纬度）：
-				<input type="text" id="latitude" />
-				<div class="weui-cells__title ">考勤地点半径</div>
-				<div class="weui-cells ">
-					<div class="weui-cell ">
-						<div class="weui-cell__bd ">
-							<input id="attendAddressRedius" class="weui-input " type="text" :placeholder=" '请输入考勤地点半径' ">米（建议500-1000米）
+
+				<div>
+					<div class="weui-cells__title">持续时间（分钟）</div>
+					<div class="weui-cells">
+						<div class="weui-cell">
+							<div class="weui-cell__bd">
+								<input id="continuousTime" class="weui-input" type="text" :placeholder="'请输入考勤持续时间'">
+							</div>
 						</div>
 					</div>
 				</div>
-				<div>系统无法获取经纬度时，请使用高德地图查询后手动输入
-					<a href="http://lbs.amap.com/console/show/picker">查询</a>
+				<div>
+					<div class="weui-cells__title">迟到时间（分钟）</div>
+					<div class="weui-cells">
+						<div class="weui-cell">
+							<div class="weui-cell__bd">
+								<input id="lateMinutes" class="weui-input" type="text" :placeholder="'请输入考勤迟到时间'">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div>
+					<div class="weui-cells__title">考勤短信内容</div>
+					<div class="weui-cells">
+						<div class="weui-cell">
+							<div class="weui-cell__bd">
+								<input id="attendMessage" class="weui-input" type="text" :placeholder="'请输入考勤短信内容，#N代表考勤人姓名，#T代表考勤时间，#A代表考勤地点，举例：#T#N在#A上午上班签到'">
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 			<!--开关列表-->
@@ -112,16 +125,17 @@
 			</div>
 		</div>
 		<!--</template>-->
-		<!--<script src="../../js/mui.min.js"></script>-->
+		<script src="../../js/mui.min.js"></script>
 		<script type="text/javascript" src="../../js/weui.min.js"></script>
 		<script type="text/javascript" src="../../js/vue.min.js"></script>
-		<!--<script type="text/javascript" src="../../js/jweixin.js"></script>-->
+		<script type="text/javascript" src="../../js/jweixin.js"></script>
 		<script type="text/javascript" src="../../js/jquery.min.js"></script>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 		<script>
 			var corpId = "";
+			var attendTypeId;
 			window.onload = function() {
 				/**
 				 * 页面一加载，向顾工c#接口代码请求该操作者的信息，目的是拿到该操作者的单位标识
@@ -147,9 +161,10 @@
 							corpId = rep.corpid;
 
 						} else if(data.RspCode == 7) {
-							$.toast("登录超时，请重新进入APP", "cancel", function() {
-								console.log('close');
-							});
+							//							$.toast("登录超时，请重新进入企业微信后台管理端", "cancel", function() {
+							//								console.log('close');
+							//							});
+							alert("登录超时，请重新进入企业微信后台管理端");
 						}
 					},
 					error: function() {
@@ -159,8 +174,15 @@
 				//给corpId赋值假数据
 //				corpId = "wx6c4528c675d4a9c9";
 				//	getWebsitConfig();
+				/**
+				 * 从考勤类型列表数据每一行记录点超链接跳转到此页面，将考勤类型记录对象得到，detail即是
+				 */
 				var detail = utils.getDataFromUrl(window.location.href);
 				//				alert("detail " + JSON.stringify(detail));
+
+				//所需要的考勤类型记录的编号
+				//				attendTypeId=detail.AttendTypeId;
+				attendTypeId = 4;
 				vm.type = detail.type;
 				if(vm.type == 'edit') {
 					var tempData = {
@@ -251,72 +273,76 @@
 						Object.assign(this.$data, getDefaultData());
 					},
 					submitClick: function() {
-						//						alert(99);
+						//alert(99);
 						//提交前先判断。如果都不为空，则允许提交
 						/**
 						 * 得到各input输入框的值
 						 */
-						var attendAdressValue = document.getElementById("attendAdressText").value;
+						var beginHour = document.getElementById("beginHour").value;
 						//alert("attendAdressValue==="+attendAdressValue);
-						var attendAdressX = document.getElementById("longitude").value;
-						var attendAdressY = document.getElementById("latitude").value;
-						var attendAddressRedius = document.getElementById("attendAddressRedius").value;
-						//						alert("attendAddressRedius=="+attendAddressRedius);
-						if(attendAdressValue == "") {
-							alert("考勤地点名称不能为空！");
+						var beginMinute = document.getElementById("beginMinute").value;
+						var lateMinutes = document.getElementById("lateMinutes").value;
+						var continuousTime = document.getElementById("continuousTime").value;
+
+						var attendMessage = document.getElementById("attendMessage").value;
+						if(beginHour == "") {
+							alert("开始时间（小时）不能为空！");
 							return;
-						} else if(attendAdressX == "") {
-							alert("考勤地点X坐标不能为空！");
+						} else if(beginMinute == "") {
+							alert("开始时间（分钟）不能为空！");
 							return;
-						} else if(attendAdressY == "") {
-							alert("考勤地点Y坐标不能为空！");
+						} else if(lateMinutes == "") {
+							alert("迟到时间（分钟）不能为空！");
 							return;
-						} else if(attendAddressRedius == "") {
-							alert("考勤地点半径不能为空！");
+						} else if(continuousTime == "") {
+							alert("持续时间（分钟）不能为空！");
+							return;
+						} else if(attendMessage == "") {
+							alert("考勤短信内容不能为空！");
 							return;
 						} else {
 							//input 输入框的值都填写了，则提交，进行添加。
 							var tempData = {
 								"corpId": corpId,
-								"areaName": attendAdressValue,
-								"areaX": attendAdressX,
-								"areaY": attendAdressY,
-								"areaRedius": attendAddressRedius,
+								"attendType": attendTypeId,
+								"beginHour": beginHour,
+								"beginMinute": beginMinute,
+								"continuousMinute": continuousTime,
+								"lateMinute": lateMinutes,
+								"attendMessage": attendMessage,
 								"uuid": "",
 								"appid": "",
 								"token": "",
 								"sign": ""
 							}
 							$.ajax({
-								url: "https://jbyj.jiaobaowang.net/AttendanceService/addAttendArea",
+								url: "https://jbyj.jiaobaowang.net/AttendanceService/addAttendTime",
 								type: "POST",
 								data: JSON.stringify(tempData),
 								timeout: 1000,
 								dataType: "json",
 								async: false,
 								success: function(data) {
-									console.log("新增考勤地点接口返回的情况======" + JSON.stringify(data));
+									console.log("新增考勤时间段接口返回的情况======" + JSON.stringify(data));
 									/**
 									 * 如果接口返回正常，则跳转到显示考勤地点页面
 									 */
 									if(data.RspCode == 0) {
 										//给用户提示，添加成功
 										alert("添加成功");
-										//									window.location="../pcWeb-HUI/attendenceManage_address.html";
-										//										vm.resetData();
-										//										vm.editName = '添加'
-										//清空input输入框
-										document.getElementById("attendAdressText").value = "";
-										document.getElementById("longitude").value = "";
-										document.getElementById("latitude").value = "";
-										document.getElementById("attendAddressRedius").value = "";
+										window.location = "../pcWeb-HUI/attendenceManage.html";
 
+									} else if(data.RspCode == 1018) {
+										alert("存在相同时间的考勤时间段");
+									}else if(data.RspCode == 1019) {
+										alert("同一个考勤类型记录也只能有一个时间段");
 									}
 								},
 								error: function() {
-									$.toast("状态错误，请重新进入APP", "cancel", function() {
-										console.log('close');
-									});
+									//									$.toast("状态错误，请重新进入APP", "cancel", function() {
+									//										console.log('close');
+									//									});
+									alert("状态错误，请重新进入企业微信后台管理");
 								}
 							})
 						}
@@ -465,87 +491,24 @@
 				}
 
 			}
-			// 百度地图API功能
-			var map = new BMap.Map("allmap");
-			var point = new BMap.Point(116.331398, 39.897445);
-			map.centerAndZoom(point, 12);
-			map.enableScrollWheelZoom(true);
-			//添加地图类型控件
-			map.addControl(new BMap.MapTypeControl({
-				mapTypes: [
-					BMAP_NORMAL_MAP,
-					BMAP_HYBRID_MAP
-				]
-			}));
-			var top_left_control = new BMap.ScaleControl({
-				anchor: BMAP_ANCHOR_BOTTOM_RIGHT
-			}); // 左上角，添加比例尺
-			var top_left_navigation = new BMap.NavigationControl({
-				anchor: BMAP_ANCHOR_BOTTOM_RIGHT
-
-			}); //左上角，添加默认缩放平移控件
-			map.addControl(top_left_control);
-			map.addControl(top_left_navigation);
-
 			/**
-			 * 城市列表控件
+			 * 获取网站配置信息
 			 */
-			map.enableInertialDragging();
-
-			map.enableContinuousZoom();
-
-			var size = new BMap.Size(10, 20);
-			map.addControl(new BMap.CityListControl({
-				anchor: BMAP_ANCHOR_TOP_LEFT,
-				offset: size,
-				// 切换城市之间事件
-				// onChangeBefore: function(){
-				//    alert('before');
-				// },
-				// 切换城市之后事件
-				// onChangeAfter:function(){
-				//   alert('after');
-				// }
-			}));
-			/**
-			 * 根据浏览器定位
-			 */
-			var geolocation = new BMap.Geolocation();
-			geolocation.getCurrentPosition(function(r) {
-				if(this.getStatus() == BMAP_STATUS_SUCCESS) {
-					var mk = new BMap.Marker(r.point);
-					map.addOverlay(mk);
-					map.panTo(r.point);
-					//					alert('您的位置：' + r.point.lng + ',' + r.point.lat);
-				} else {
-					alert('failed' + this.getStatus());
+			function getWebsitConfig() {
+				var tempData = {
+					cmd: 'webcfg',
+					type: 'find'
 				}
-			}, {
-				enableHighAccuracy: true
-			})
-
-			var geoc = new BMap.Geocoder();
-			/**
-			 * 监听用户在地图上的点击事件
-			 */
-			map.addEventListener("click", function(e) {
-				//通过点击百度地图，可以获取到对应的point, 由point的lng、lat属性就可以获取对应的经度纬度     
-				var pt = e.point;
-				geoc.getLocation(pt, function(rs) {
-					//addressComponents对象可以获取到详细的地址信息
-					var addComp = rs.addressComponents;
-					var site = addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber;
-					//将对应的HTML元素设置值
-					document.getElementById("attendAdressText").value = site;
-					document.getElementById("longitude").value = pt.lng;
-					document.getElementById("latitude").value = pt.lat;
-					$("#site").val(site);
-					$("#longitude").val(pt.lng);
-					$("#latitude").val(pt.lat);
-					//          alert("pt.lng=="+pt.lng);
-					//           alert("pt.lat=="+pt.lat);
+				unitWebsitePro(tempData, function(data) {
+					console.log('配置为:' + JSON.stringify(data));
+					if(data.RspCode == 0) {
+						if(data.RspData.length > 0) {
+							vm.iswrite_all = data.RspData[0].iswrite;
+							//							vm.iswrite.check = false;
+						}
+					}
 				});
-			});
+			}
 		</script>
 	</body>
 

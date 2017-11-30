@@ -15,92 +15,106 @@
 		<style>
 			.weui-cells {
 				margin-top: 0;
-				/*表格位置*/
 			}
 
-			.weui-cells:before {
+			.weui-cell__bd p {
+				min-height: 25px;
+			}
+
+			.weui-cells__title {
+				margin-top: .7em;
+				margin-bottom: .7em;
+			}
+
+			.weui-uploader__title {
+				color: #999;
+			}
+
+			.image-list:before {
 				border-top: none;
-				/*表格顶部横线*/
 			}
 
-			.weui-cells:after {
+			.image-list:after {
 				border-bottom: none;
-				/*表格底部横线*/
+			}
+
+			.weui-cell.weui-check_label {
+				text-align: center;
+			}
+
+			.container {
+				position: absolute;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0
 			}
 		</style>
 	</head>
 
 	<body>
-		<div class="weui-cells weui-cells_form">
-			<div class="weui-cell">
-				<div class="weui-cell__hd"><label class="weui-label">故障信息</label></div>
-				<div class="weui-cell__bd">
-					<input id="troubleInfo" class="weui-input" placeholder="请输入故障信息" type="text">
+		<div class="container">
+			<div class="weui-cells__title">报修原因</div>
+			<div class="weui-cells weui-cells_form">
+				<div class="weui-cell">
+					<div class="weui-cell__bd">
+						<textarea id="represon" class="weui-textarea" placeholder="请输入报修原因，最多500字" rows="3" maxlength="500"></textarea>
+					</div>
 				</div>
 			</div>
-			<div class="weui-cell weui-cell_select weui-cell_select-after">
-				<div class="weui-cell__hd">
-					<label class="weui-label">故障类型</label>
-				</div>
-				<div class="weui-cell__bd">
-					<select id="troubleType" class="weui-select" name="select1">
-						<option value="故障类型1">故障类型1</option>
-						<option value="故障类型2">故障类型2</option>
-						<option value="故障类型3">故障类型3</option>
-					</select>
+			<div class="weui-cells__title">设备地点</div>
+			<div class="weui-cells">
+				<a id="address" class="weui-cell weui-cell_access">
+					<div class="weui-cell__bd">
+						<p></p>
+					</div>
+					<div class="weui-cell__ft">
+					</div>
+					<input id="addressInput" type="hidden" />
+				</a>
+			</div>
+			<div class="weui-cells__title">设备类型</div>
+			<div class="weui-cells">
+				<a id="deviceType" class="weui-cell weui-cell_access">
+					<div class="weui-cell__bd">
+						<p></p>
+					</div>
+					<div class="weui-cell__ft">
+					</div>
+					<input id="deviceTypeInput" type="hidden" />
+				</a>
+			</div>
+			<div class="weui-cells__title">设备数量</div>
+			<div class="weui-cells weui-cells_form">
+				<div class="weui-cell">
+					<div class="weui-cell__bd">
+						<input id="deviceNumber" type="number" class="weui-input" placeholder="请输入设备数量"></input>
+					</div>
 				</div>
 			</div>
-			<div class="weui-cell">
-				<div class="weui-cell__hd"><label class="weui-label">维修地址</label></div>
-				<div class="weui-cell__bd">
-					<input id="address" class="weui-input" placeholder="请输入维修地址" type="text">
-				</div>
-			</div>
-			<div class="weui-cell">
-				<div class="weui-cell__hd"><label class="weui-label">联系人</label></div>
-				<div class="weui-cell__bd">
-					<input id="linkMan" class="weui-input" placeholder="请输入联系人" type="text">
-				</div>
-			</div>
-			<div class="weui-cell">
-				<div class="weui-cell__hd"><label class="weui-label">联系人电话</label></div>
-				<div class="weui-cell__bd">
-					<input id="linkManTel" class="weui-input" placeholder="请输入联系人电话" type="tel">
-				</div>
-			</div>
-			<div class="weui-cell weui-cell_select weui-cell_select-after">
-				<div class="weui-cell__hd">
-					<label class="weui-label">维修人员</label>
-				</div>
-				<div class="weui-cell__bd">
-					<select id="serviceMan" class="weui-select" name="select2">
-						<option value="维修人员1">维修人员1</option>
-						<option value="维修人员2">维修人员2</option>
-						<option value="维修人员3">维修人员3</option>
-					</select>
-				</div>
-			</div>
-			<div class="weui-cell">
-				<div class="weui-cell__bd">
-					<div class="weui-uploader">
-						<div class="weui-uploader__hd">
-							<p class="weui-uploader__title">添加图片</p>
-							<div id="imageAmount" class="weui-uploader__info">0/9</div>
-						</div>
-						<div class="weui-uploader__bd">
-							<ul id="uploaderFiles" class="weui-uploader__files"></ul>
-							<div class="weui-uploader__input-box">
-								<input id="addImage" class="weui-uploader__input" accept="image/*" multiple type="file">
+			<div class="weui-cells weui-cells_form image-list">
+				<div class="weui-cell">
+					<div class="weui-cell__bd">
+						<div class="weui-uploader">
+							<div class="weui-uploader__hd">
+								<p class="weui-uploader__title">添加图片</p>
+								<div id="imageAmount" class="weui-uploader__info">0/9</div>
+							</div>
+							<div class="weui-uploader__bd">
+								<ul id="uploaderFiles" class="weui-uploader__files"></ul>
+								<div class="weui-uploader__input-box">
+									<input id="addImage" class="weui-uploader__input" accept="image/*" multiple type="file">
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
+				<div class="weui-btn-area">
+					<a id="submitForm" class="weui-btn weui-btn_primary">提交报修单</a>
+				</div>
 			</div>
-			<div class="weui-btn-area">
-				<a id="submitForm" class="weui-btn weui-btn_primary">提交报修单</a>
-			</div>
-			<input id="qnInput" style="display: none;" />
 		</div>
+		<input id="qnInput" style="display: none;" />
 		<!--查看图片-->
 		<div id="gallery" class="weui-gallery">
 			<span id="galleryImage" class="weui-gallery__img"></span>
@@ -110,7 +124,7 @@
 				</a>
 			</div>
 		</div>
-		<!--<script type="text/javascript" src="../../../js/lib/vconsole/vconsole.min.js"></script>-->
+		<script type="text/javascript" src="../../../js/lib/vconsole/vconsole.min.js"></script>
 		<script type="text/javascript" src="../../../js/demoCssJs/jquery-2.1.4.js"></script>
 		<script type="text/javascript" src="../../../js/demoCssJs/jquery-weui.min.js"></script>
 		<script type="text/javascript" src="../../../js/lib/plupload/moxie.min.js"></script>
@@ -132,13 +146,24 @@
 			var uploadFile = []; //上传图片的数组
 			var showImageIndex; //当前显示的图片的序号
 			var uploadImageIndex; //当前上传的图片的序号
-			var submitForm; //报修单
 			var liUpload; //上传图片对应的li元素
 			var uploadError; //本次上传是否出错
+			var addressData = {
+				key: [],
+				select: [],
+				value: {}
+			} //地址数据
+			var deviceTypeData = {
+				key: [],
+				select: [],
+				value: {}
+			} //设备类型数据
+
 			window.onload = function() {
-				console.log("onload");
+				$.showLoading();
 				initUploader();
 				initListener();
+				getAddress();
 			}
 
 			/**
@@ -194,51 +219,30 @@
 
 				//提交报修单
 				$("#submitForm").click(function() {
-					var troubleInfo = $.trim($("#troubleInfo").val()); //故障信息
-					var troubleType = $("#troubleType").val(); //故障类型
-					var address = $.trim($("#address").val()); //维修地址
-					var linkMan = $.trim($("#linkMan").val()); //联系人
-					var linkManTel = $.trim($("#linkManTel").val()); //联系人电话
-					var serviceMan = $("#serviceMan").val(); //维修人员
-					if(troubleInfo == "") {
-						$.alert("故障信息不能为空");
+					var represon = $.trim($("#represon").val()); //报修原因
+					var deviceNumber = $.trim($("#deviceNumber").val()); //设备数量
+					var reg = /^[1-9]\d*$/;
+					if(represon == "") {
+						$.alert("请输入报修原因");
 						return false;
 					}
-					if(troubleType == "") {
-						$.alert("故障类型不能为空");
-						return false;
-					}
-					if(address == "") {
-						$.alert("维修地址不能为空");
-						return false;
-					}
-					if(linkMan == "") {
-						$.alert("联系人不能为空");
-						return false;
-					}
-					if(linkManTel == "") {
-						$.alert("联系人电话不能为空");
-						return false;
-					}
-					if(uploadFile.length == 0) {
-						$.alert("图片不能为空");
+					if(deviceNumber == "" || !reg.test(deviceNumber)) {
+						$.alert("请输入正确的设备数量");
 						return false;
 					}
 					$.showLoading();
-					submitForm = {
-						troubleInfo: troubleInfo,
-						troubleType: troubleType,
-						address: address,
-						linkMan: linkMan,
-						linkManTel: linkManTel,
-						serviceMan: serviceMan
+					if(uploadFile.length == 0) {
+						addServiceForm();
+					} else {
+						//重置失败的文件允许上传
+						for(var i = 0; i < uploadFile.length; i++) {
+							if(!uploadFile[i].success) {
+								uploadFile[i].allowUpload = true;
+							}
+						}
+						upLoadImages();
 					}
-					console.log("submitForm", submitForm);
-					//重置所有文件允许上传
-					for(var i = 0; i < uploadFile.length; i++) {
-						uploadFile[i].allowUpload = true;
-					}
-					upLoadImages();
+
 				});
 			}
 
@@ -294,15 +298,16 @@
 					},
 					'FileUploaded': function(up, file, info) {
 						// 每个文件上传结束后,处理相关的事情
-						console.log("FileUploaded:", info.status);
-						console.log("FileUploaded:", info.response);
+						console.log("FileUploaded:up", up);
+						console.log("FileUploaded:info", info);
 						if(info.status == 200) {
 							//成功
 							console.log("上传成功");
 							liUpload.innerHTML = '<div class="weui-uploader__file-content"><i class="weui-icon-success"></i></div>';
 							uploadFile[uploadImageIndex].success = true;
-							uploadFile[uploadImageIndex].fileUrl = uptokenData.data.Data[0].Domain + uptokenData.data.Data[0].Key;
-							uploadFile[uploadImageIndex].cropUrl = uptokenData.data.Data[0].OtherKey[uptokenData.thumbKey[0]];
+							uploadFile[uploadImageIndex].newname = uptokenData.data.Data[0].Key;
+							uploadFile[uploadImageIndex].saveurl = uptokenData.data.Data[0].Domain + uptokenData.data.Data[0].Key;
+							uploadFile[uploadImageIndex].imgurl = uptokenData.data.Data[0].OtherKey[uptokenData.thumbKey[0]];
 						} else {
 							uploadImageError(info.response);
 						}
@@ -366,7 +371,8 @@
 								var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)), orientation);
 								var newImage = {
 									filePath: newDataUrl, //文件路径
-									allowUpload: true //是否允许上传
+									allowUpload: true, //是否允许上传
+									oldname: files[num].name //原始文件名
 								}
 								//界面中添加图片
 								$("#uploaderFiles").append('<li class="weui-uploader__file" style="background-image:url(' + newDataUrl + ')"></li>');
@@ -378,7 +384,7 @@
 						reader.readAsDataURL(files[num]);
 					});
 				} else {
-					tempString = "请图片类型的文件";
+					tempString = "请选择图片类型的文件";
 					disposeFileNextFile(files, num);
 				}
 			}
@@ -453,6 +459,7 @@
 					blob.lastModifiedDate = new Date();
 					var fileName = blob.lastModifiedDate.getTime() + ".jpg";
 					console.log('blob', blob);
+					uploadFile[uploadImageIndex].filesize = blob.size;
 					liUpload = $("#uploaderFiles").find(".weui-uploader__file")[uploadImageIndex];
 					liUpload.className = "weui-uploader__file weui-uploader__file_status";
 					liUpload.innerHTML = '<div class="weui-uploader__file-content"><i class="weui-icon-waiting"></i></div>';
@@ -475,19 +482,141 @@
 			 * 添加一个报修单
 			 */
 			function addServiceForm() {
-				console.log("addServiceForm:submitForm", submitForm);
-				console.log("addServiceForm:uploadFile", uploadFile);
-				var fileUrl = [];
-				var cropUrl = [];
-				for(var i = 0; i < uploadFile.length; i++) {
-					fileUrl.push(uploadFile[i].fileUrl);
-					cropUrl.push(uploadFile[i].cropUrl);
+				var submitForm = {
+					represon: $.trim($("#represon").val()),
+					addrid: $("#addressInput").attr("data-values"),
+					classid: $("#deviceTypeInput").attr("data-values"),
+					devc: $.trim($("#deviceNumber").val()) * 1,
+					encs: []
 				}
-				var strFileUrl = fileUrl.join("|");
-				var strCropUrl = cropUrl.join("|");
-				console.log("strFileUrl", strFileUrl);
-				console.log("strCropUrl", strCropUrl);
-				$.hideLoading();
+				for(var i = 0; i < uploadFile.length; i++) {
+					var temp = {
+						oldname: uploadFile[i].oldname,
+						newname: uploadFile[i].newname,
+						saveurl: uploadFile[i].saveurl,
+						filesize: uploadFile[i].filesize,
+						imgurl: uploadFile[i].imgurl
+					}
+					submitForm.encs.push(temp);
+				}
+				console.log("submitForm", submitForm);
+				unitWebsitePro(submitForm, function(data) {
+					$.hideLoading();
+					if(data.RspCode == 0) {
+						$.toast("提交成功");
+						$("#represon").val("");
+						$("#address p").text(addressData.select[0].title);
+						$("#addressInput").attr("value", addressData.select[0].title);
+						$("#addressInput").attr("data-values", addressData.select[0].value);
+						$("#deviceType p").text(deviceTypeData.select[0].title);
+						$("#deviceTypeInput").attr("value", deviceTypeData.select[0].title);
+						$("#deviceTypeInput").attr("data-values", deviceTypeData.select[0].value);
+						$("#deviceNumber").val("");
+						$("#imageAmount").text("0/9");
+						uploadFile = null;
+						uploadFile = [];
+						$("#uploaderFiles").empty();
+					} else {
+						$.alert(data.RspTxt, "提交失败");
+					}
+				});
+
+			}
+
+			/**
+			 * 获取正常的地址
+			 */
+			function getAddress() {
+				var tempData = {
+					cmd: 'devaddr',
+					type: 'findpage',
+					pagesize: 9999,
+					pageindex: 1,
+					stat: 1
+				}
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						for(var i = 0; i < data.RspData.dt.length; i++) {
+							addressData.key.push(data.RspData.dt[i].addrid);
+							addressData.select.push({
+								title: data.RspData.dt[i].cname,
+								value: data.RspData.dt[i].addrid
+							});
+							addressData.value[data.RspData.dt[i].addrid] = data.RspData.dt[i];
+						}
+						if(data.RspData.dt.length != 0) {
+							$("#address p").text(addressData.select[0].title);
+							$("#addressInput").attr("value", addressData.select[0].title);
+							$("#addressInput").attr("data-values", addressData.select[0].value);
+							$("#addressInput").select({
+								title: "请选择设备地点",
+								closeText: "关闭",
+								items: addressData.select,
+								onChange: function(e) {
+									console.log("addressOnChange", e);
+									$("#address p").text(e.titles);
+								}
+							});
+							$("#address").click(function() {
+								$("#addressInput").select("open");
+							});
+						}
+					}
+					getDeviceType()
+				});
+			}
+			/**
+			 * 获取正常的设备类型
+			 */
+			function getDeviceType() {
+				var tempData = {
+					cmd: 'devclass',
+					type: 'findpage',
+					pagesize: 9999,
+					pageindex: 1,
+					stat: 1
+				}
+				unitWebsitePro(tempData, function(data) {
+					$.hideLoading();
+					if(data.RspCode == 0) {
+						for(var i = 0; i < data.RspData.dt.length; i++) {
+							deviceTypeData.key.push(data.RspData.dt[i].classid);
+							deviceTypeData.select.push({
+								title: data.RspData.dt[i].cname,
+								value: data.RspData.dt[i].classid
+							});
+							deviceTypeData.value[data.RspData.dt[i].classid] = data.RspData.dt[i];
+						}
+						if(data.RspData.dt.length != 0) {
+							$("#deviceType p").text(deviceTypeData.select[0].title);
+							$("#deviceTypeInput").attr("value", deviceTypeData.select[0].title);
+							$("#deviceTypeInput").attr("data-values", deviceTypeData.select[0].value);
+							$("#deviceTypeInput").select({
+								title: "请选择设备类型",
+								closeText: "关闭",
+								items: deviceTypeData.select,
+								onChange: function(e) {
+									console.log("deviceTypeOnChange", e);
+									$("#deviceType p").text(e.titles);
+								}
+							});
+							$("#deviceType").click(function() {
+								$("#deviceTypeInput").select("open");
+							});
+						}
+					}
+					if(addressData.key.length == 0 || deviceTypeData.key.length == 0) {
+						$("#submitForm").unbind();
+						$("#submitForm").addClass("weui-btn_disabled");
+						if(addressData.key.length == 0 && deviceTypeData.key.length == 0) {
+							$.alert("未获取到有效的设备地点和设备类型，无法提交报修单(" + data.RspTxt + ")", "提示");
+						} else if(addressData.key.length == 0) {
+							$.alert("未获取到有效的设备地点，无法提交报修单(" + data.RspTxt + ")", "提示");
+						} else if(deviceTypeData.key.length == 0) {
+							$.alert("未获取到有效的设备类型，无法提交报修单(" + data.RspTxt + ")", "提示");
+						}
+					}
+				});
 			}
 		</script>
 	</body>

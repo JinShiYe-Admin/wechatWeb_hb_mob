@@ -65,6 +65,7 @@ Vue.component("classify-list", {
 				if(response.RspCode == 0) {
 					com.activeClassify.cname = com.serviceGroupName
 				}
+				com.toggleNameDialog(false);
 			})
 		},
 		addServiceGroup: function() {

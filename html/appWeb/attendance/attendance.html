@@ -29,8 +29,7 @@
 		</style>
 		<script type='text/javascript' src='../../../js/PublicProtocol.js'></script>
 		<script src="../../../js/lib/vconsole/vconsole.min.js"></script>
-
-		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=jYNU39RZ3k37NUz1QduizaYD"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=VPMK2gwQeEtGyV24Py1Gb4GTpukyjm6y"></script>
 		<!--加载鼠标绘制工具-->
 		<script type="text/javascript" src="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.js"></script>
 		<link rel="stylesheet" href="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.css" />
@@ -247,7 +246,7 @@
 		});
 	});
 	//12.获取考勤类型
-	var getAttendType = function() {
+	function getAttendType() {
 		var tempData = {
 			corpId: userInfo.corpid, //单位ID
 			pageIndex: 1, //当前页数

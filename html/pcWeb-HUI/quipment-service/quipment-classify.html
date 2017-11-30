@@ -169,7 +169,7 @@
 				</div>
 				<ul id="list" class="Huifold">
 					<li v-for="(classify,index) in classifyList" class="item">
-						<h4>{{classify.cname}}<span class="Hui-iconfont Hui-iconfont-edit" v-on:click="changeGroupName(classify)"></span><span class="add-perdson float-right" v-on:click.stop="changePerson(item)">更改人员</span>
+						<h4>{{classify.cname}}<span class="Hui-iconfont Hui-iconfont-edit" v-on:click="changeGroupName(classify)"></span><span class="add-perdson float-right" v-on:click.stop="changePerson(classify)">更改人员</span>
 							<span class="Hui-iconfont Hui-iconfont-del3 del-classify float-right" v-on:click.stop="delClassify(classify,index)"></span><b class="Hui-iconfont Hui-iconfont-arrow2-top"></b></h4>
 						<div class="info">
 							<table class="table table-border table-bordered table-bg">
@@ -305,9 +305,6 @@
 				el: "#classify-container",
 				router: router,
 				data: {
-					chosedPerson: {
-
-					},
 					curGroup: {
 
 					}
@@ -317,11 +314,8 @@
 
 				},
 				methods: {
-					getGroupPerson: function(gusers) {
-						this.chosedPerson = gusers;
-					},
 					getCurGroup: function(cgroup) {
-
+						this.curGroup = cgroup;
 					}
 				}
 			})

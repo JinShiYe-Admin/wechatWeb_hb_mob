@@ -39,7 +39,22 @@
 					<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
-								<input id="beginHour" v-model.lazy="cname.message" class="weui-input" type="text" :placeholder="'请输入考勤开始时间'">
+								<!--<input id="beginHour" v-model.lazy="cname.message" class="weui-input" type="text" :placeholder="'请'">-->
+								<select  >
+									<option value="0">0</option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+									<option value="6">6</option>
+									<option value="7">7</option>
+									<option value="8">8</option>
+									<option value="9">9</option>
+									<option value="10">10</option>
+									<option value="11">11</option>
+									<option value="12">12</option>
+								</select>
 							</div>
 						</div>
 					</div>
@@ -54,7 +69,61 @@
 					<div class="weui-cells__title">开始时间（分钟）</div>
 					<div class="weui-cell">
 						<div class="weui-cell__bd">
-							<input id="beginMinute" class="weui-input" type="text" :placeholder="'请输入考勤开始时间'">
+							<!--<input id="beginMinute" class="weui-input" type="text" :placeholder="'请输入考勤开始时间'">-->
+								<select  >
+									<option value="0">0</option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+									<option value="6">6</option>
+									<option value="7">7</option>
+									<option value="8">8</option>
+									<option value="9">9</option>
+									<option value="10">10</option>
+									<option value="11">11</option>
+									<option value="12">12</option>
+									<option value="13">13</option>
+									<option value="14">14</option>
+									<option value="15">15</option>
+									<option value="16">16</option>
+									<option value="17">17</option>
+									<option value="17">18</option>
+									<option value="19">19</option>
+									<option value="20">20</option>
+									<option value="21">21</option>
+									<option value="22">22</option>
+									<option value="23">23</option>
+									<option value="24">24</option>
+									<option value="25">25</option>
+									<option value="26">26</option>
+									<option value="27">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+									<option value="6">6</option>
+									<option value="7">7</option>
+									<option value="8">8</option>
+									<option value="9">9</option>
+									<option value="10">10</option>
+									<option value="11">11</option>
+									<option value="12">12</option>
+									<option value="13">13</option>
+									<option value="14">14</option>
+									<option value="15">15</option>
+									<option value="16">16</option>
+									<option value="17">17</option>
+									<option value="17">18</option>
+									<option value="19">19</option>
+									<option value="20">20</option>
+									<option value="21">21</option>
+									<option value="22">22</option>
+									<option value="23">23</option>
+									<option value="24">24</option>
+									<option value="25">25</option>
+								</select>
 						</div>
 					</div>
 					<!--</div>-->
@@ -137,23 +206,23 @@
 			var corpId = "";
 			var attendTypeId;
 			window.onload = function() {
+
 				attendTypeId = getUrlParam('attendTypeId');
 				console.log("attendTypeId===" + JSON.stringify(attendTypeId));
-//				getNote();
-			
+				//				getNote();
 
-			function getUrlParam(name) {
+				function getUrlParam(name) {
 
-				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
-				var r = window.location.search.substr(1).match(reg); //匹配目标参数
-				if(r != null) {
+					var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+					var r = window.location.search.substr(1).match(reg); //匹配目标参数
+					if(r != null) {
 
-					return decodeURI(unescape(r[2]));
-				} else {
-					return null; //返回参数值
+						return decodeURI(unescape(r[2]));
+					} else {
+						return null; //返回参数值
+					}
+
 				}
-
-			}
 				/**
 				 * 页面一加载，向顾工c#接口代码请求该操作者的信息，目的是拿到该操作者的单位标识
 				 */
@@ -195,11 +264,11 @@
 				 * 从考勤类型列表数据每一行记录点超链接跳转到此页面，将考勤类型记录对象得到，detail即是
 				 */
 				var detail = utils.getDataFromUrl(window.location.href);
-				//				alert("detail " + JSON.stringify(detail));
+				console.log("detail " + JSON.stringify(detail));
 
 				//所需要的考勤类型记录的编号
-				//				attendTypeId=detail.AttendTypeId;
-//				attendTypeId = 4;
+				//								attendTypeId=detail.AttendTypeId;
+				//				attendTypeId = 4;
 				vm.type = detail.type;
 				if(vm.type == 'edit') {
 					var tempData = {
@@ -332,6 +401,7 @@
 								"token": "",
 								"sign": ""
 							}
+							console.log("tempData=====" + JSON.stringify(tempData));
 							$.ajax({
 								url: "https://jbyj.jiaobaowang.net/AttendanceService/addAttendTime",
 								type: "POST",
@@ -351,7 +421,7 @@
 
 									} else if(data.RspCode == 1018) {
 										alert("存在相同时间的考勤时间段");
-									}else if(data.RspCode == 1019) {
+									} else if(data.RspCode == 1019) {
 										alert("同一个考勤类型记录也只能有一个时间段");
 									}
 								},

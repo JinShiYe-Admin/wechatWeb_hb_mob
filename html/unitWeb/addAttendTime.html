@@ -137,6 +137,23 @@
 			var corpId = "";
 			var attendTypeId;
 			window.onload = function() {
+				attendTypeId = getUrlParam('attendTypeId');
+				console.log("attendTypeId===" + JSON.stringify(attendTypeId));
+//				getNote();
+			
+
+			function getUrlParam(name) {
+
+				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+				var r = window.location.search.substr(1).match(reg); //匹配目标参数
+				if(r != null) {
+
+					return decodeURI(unescape(r[2]));
+				} else {
+					return null; //返回参数值
+				}
+
+			}
 				/**
 				 * 页面一加载，向顾工c#接口代码请求该操作者的信息，目的是拿到该操作者的单位标识
 				 */
@@ -182,7 +199,7 @@
 
 				//所需要的考勤类型记录的编号
 				//				attendTypeId=detail.AttendTypeId;
-				attendTypeId = 4;
+//				attendTypeId = 4;
 				vm.type = detail.type;
 				if(vm.type == 'edit') {
 					var tempData = {

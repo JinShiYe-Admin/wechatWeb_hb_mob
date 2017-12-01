@@ -224,8 +224,8 @@
 							var tempModel = data.RspData.Data[i];
 							for(var m = 0; m < attendData.departArray.length; m++) {
 								var tempModel1 = attendData.departArray[m];
-								if(tempModel.value == tempModel1.DeptId) {
-									tempModel.departName = tempModel1.tempModel1;
+								if(tempModel.DeptId == tempModel1.value) {
+									tempModel.departName = tempModel1.title;
 								}
 							}
 						}

@@ -11,32 +11,47 @@
 		<link rel="stylesheet" href="../../../js/demoCssJs/jquery-weui.css">
 		<link rel="stylesheet" href="../../../js/demoCssJs/demos.css">
 		<title>获取考勤记录</title>
-
+		<style type="text/css">
+			.classP {
+				font-size: 15px;
+				color: gray;
+			}
+			
+			.classA {
+				font-size: 15px;
+				color: black;
+			}
+			
+			.mui-media-object {
+				width: 100px;
+				height: 80px;
+			}
+		</style>
 	</head>
 
 	<body>
 		<div class="weui-tab" id="attendData">
-			<div class="weui-cell">
-				<div class="weui-cell__hd"><label for="date" class="weui-label">查询日期</label></div>
-				<div class="weui-cell__bd">
-					<input class="weui-input" id="date" value="" type="text" placeholder="请选择时间">
-				</div>
-			</div>
 			<div class="weui-cells">
-				<div class="weui-cell" v-for='(attend,index) in attendArray' v-show="flag>0" style="display: none;">
-					<div class="weui-cell__hd"><img :src=attend.AttendPic></div>
+				<div class="weui-cell">
+					<div class="weui-cell__hd"><label for="date" class="weui-label">查询日期</label></div>
 					<div class="weui-cell__bd">
-						<p>时间:
-							<a>{{attend.AttendTime}}</a>
+						<input class="weui-input" id="date" value="" type="text" placeholder="请点击选择查询日期">
+					</div>
+				</div>
+				<div class="weui-cell" v-for='(attend,index) in attendArray' v-show="flag>0" style="display: none;">
+					<div class="weui-cell__hd"><img class="mui-media-object" :src=attend.AttendPic></div>
+					<div class="weui-cell__bd">
+						<p class="classP">时间:
+							<a class="classA">{{attend.AttendTime}}</a>
 						</p>
-						<p>地点:
-							<a>{{attend.AttendArea}}</a>
+						<p class="classP">地点:
+							<a class="classA">{{attend.AttendArea}}</a>
 						</p>
-						<p>类型:
-							<a>{{attend.AttendType}}</a>
+						<p class="classP">类型:
+							<a class="classA">{{attend.AttendType}}</a>
 						</p>
-						<p>结果:
-							<a>{{attend.AttendResult}}</a>
+						<p class="classP">结果:
+							<a class="classA">{{attend.AttendResult}}</a>
 						</p>
 					</div>
 				</div>
@@ -50,7 +65,7 @@
 		<script src="../../../js/PublicProtocol.js"></script>
 		<script src="../../../js/utils/utils.js"></script>
 		<script src="../../../js/utils/storageutil.js"></script>
-		<script src='../../../js/lib/vconsole/vconsole.min.js'></script>
+		<!--<script src='../../../js/lib/vconsole/vconsole.min.js'></script>-->
 		<script type="text/javascript">
 			$(function() {
 				//获取当前人员信息
@@ -94,7 +109,6 @@
 			//15.获取考勤记录
 			var getAttend = function() {
 				var beginTime = attendData.beginTime;
-				alert('beginTime:'+beginTime);
 				if(beginTime == '') {
 					alert('请选择查询日期');
 					return false;
@@ -116,19 +130,30 @@
 				console.log('tempData:' + JSON.stringify(tempData));
 				getAttendPro(tempData, function(data) {
 					if(data.RspCode == 0) {
-						attendData.attendArray = [].concat(data.RspData.Data);
-						attendData.flag = 1;
+						if(data.RspData.Data.length > 0) {
+							for(var i = 0; i < data.RspData.Data.length; i++) {
+								var tempModel = data.RspData.Data[i];
+								if(tempModel.AttendPic) {
+									if(tempModel.AttendPic.length == 0) {
+										tempModel.AttendPic = '../../../image/mineIndex.png';
+									}
+								}
+							}
+							attendData.attendArray = [].concat(data.RspData.Data);
+							attendData.flag = 1;
+						} else {
+							attendData.attendArray = [].concat([]);
+							attendData.flag = 0;
+							$.toast("暂无考勤记录");
+						}
 					} else {
-						
+
 					}
 				});
 			};
 
 			$("#date").calendar({
-				value: ['2017-11-30'],
 				onChange: function(p, values, displayValues) {
-//					alert(p,values, displayValues);
-					alert(values.toString());
 					attendData.beginTime = values.toString();
 					//16.获取考勤统计
 					getAttend();

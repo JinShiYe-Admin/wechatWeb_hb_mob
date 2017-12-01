@@ -49,6 +49,26 @@
 				bottom: 0;
 				left: 0
 			}
+
+			.weui-btn_primary {
+				margin-left: 5%;
+				width: 90%;
+				background-color: #46BDFF;
+				border-color: #46BDFF;
+				margin-top: 10px;
+			}
+
+			.weui-btn_disabled.weui-btn_primary {
+				background-color: #46BDFF;
+				border-color: #46BDFF;
+				opacity: .5;
+			}
+
+			.weui-btn_primary:not(.weui-btn_disabled):active {
+				background-color: #46BDFF;
+				border-color: #46BDFF;
+				opacity: .5;
+			}
 		</style>
 	</head>
 
@@ -103,7 +123,7 @@
 							<div class="weui-uploader__bd">
 								<ul id="uploaderFiles" class="weui-uploader__files"></ul>
 								<div class="weui-uploader__input-box">
-									<input id="addImage" class="weui-uploader__input" accept="image/*" multiple type="file">
+									<input id="addImage" class="weui-uploader__input" accept="image/*" type="file">
 								</div>
 							</div>
 						</div>
@@ -522,7 +542,6 @@
 						$.alert(data.RspTxt, "提交失败");
 					}
 				});
-
 			}
 
 			/**

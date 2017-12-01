@@ -221,7 +221,7 @@
 
 				//设备类型输入框的焦点离开
 				$("#equipmenttypeText").blur(function() {
-					if(editState !== 1) {
+					if(editState != 1) {
 						return false;
 					}
 					var equipmenttypeText = $.trim($("#equipmenttypeText").val());
@@ -239,8 +239,8 @@
 
 				//修改设备类型维修组
 				$("#groupsSelect").change(function() {
-					var groupsSelect = $("#groupsSelect").val();
-					if(editState !== 1 || groupsSelect === -1) {
+					var groupsSelect = $("#groupsSelect").val()*1;
+					if(editState != 1 || groupsSelect == -1) {
 						return false;
 					}
 					equipmenttypeEdit("kindsid", groupsSelect);

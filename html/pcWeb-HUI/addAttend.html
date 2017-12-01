@@ -54,6 +54,7 @@
 							<td><u style="cursor:pointer" class="text-primary">{{attend.AttendTypeNote}}</u></td>
 							<td class="td-status"><span><a v-if="attend.attendTypeProp==1">上班/上学</a><a v-else>下班/放学</a></span></td>
 							<td class="td-manage">
+								<a :href="'../unitWeb/addAttendTime.html?attendTypeId=' + attend.AttendTypeId">添加考勤时间段</a>
 								<a title="修改考勤类型" href="javascript:;" @click="modifyAttend(attend,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>
 								<a title="删除考勤类型" href="javascript:;" @click="removeAttend(attend,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
 							</td>
@@ -210,7 +211,7 @@
 						}
 						if(attendData.attendFlag == 0) { //添加
 							//添加类型时，判断是否输入了值，有没有重复
-							if(checkInput(addAttendLayer.AttendTypeNote)) {
+							if(checkInput(addAttendLayer.AttendTypeNote,0)) {
 								//发送添加协议
 								var tempData = {
 									corpId: attendData.userInfo.corpid, //单位ID
@@ -236,7 +237,7 @@
 
 						} else {
 							//重新编辑类型时，判断是否输入了值，有没有重复
-							if(checkInput(addAttendLayer.AttendTypeNote)) {
+							if(checkInput(addAttendLayer.AttendTypeNote,1)) {
 								var tempData = {
 									attendTypeId: this.attendModel.AttendTypeId, //考勤类型ID
 									attendTypeNote: addAttendLayer.AttendTypeNote, //考勤类型说明
@@ -328,8 +329,8 @@
 					}
 				});
 			};
-			//添加课程时，判断是否输入了值，有没有重复
-			var checkInput = function(text) {
+			//添加课程时，判断是否输入了值，有没有重复,flag=0添加，flag=1修改
+			var checkInput = function(text,flag) {
 				if(text.trim().length == 0) {
 					alert('考勤类型说明不能为空');
 					return false;
@@ -346,6 +347,8 @@
 					}
 				}
 				if(tempFlag == 0) {
+					return true;
+				}else if(tempFlag == 1&&flag == 1) {
 					return true;
 				} else {
 					alert('存在同名的考勤类型');

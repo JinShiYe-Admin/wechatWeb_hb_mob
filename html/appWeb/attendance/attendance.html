@@ -42,33 +42,12 @@
 		</span>
 			<span id="tempAddress">
 		</span>
-		
+
 		</div>
-			<input  style="margin-bottom: 10px;"  onclick="refresh()" type="button" name="refresh" id="refresh" value="点击刷新当前位置" />
+		<a style="margin-bottom: 10px;width: 150px;height: 30px;font-size: 13px;" href="javascript:;" class="weui-btn weui-btn_primary" onclick="refresh()">点击刷新当前位置</a>
+
+		<!--<input style="margin-bottom: 10px;" onclick="refresh()" type="button" name="refresh" id="refresh" value="点击刷新当前位置" />-->
 		<div id="allmap"></div>
-		<!--<div style="margin: 10px;visibility: hidden;">
-			<span>
-			距离：
-		</span>
-			<span id="distance">
-		</span>
-		</div>
-
-		<div style="margin: 10px;visibility: hidden;">
-			<span>
-			经度：
-		</span>
-			<span id="longitude">
-		</span>
-		</div>
-
-		<div style="margin: 10px;visibility: hidden;">
-			<span>
-			纬度：
-		</span>
-			<span id="latitude">
-		</span>
-		</div>-->
 
 		<div class="weui-cell">
 			<div class="weui-cell__hd"><label class="weui-label">考勤类型</label></div>
@@ -91,16 +70,28 @@
 		</div>
 
 		<div style="margin-top: 20px;">
-			
-										<a id="save" href="javascript:;" class="weui-btn weui-btn_primary" onclick="save()">签到</a>
-										<a id="history" href="javascript:;" class="weui-btn weui-btn_primary" onclick="history()">签到记录</a>
-
-		
-
-			
+			<a id="save" href="javascript:;" class="weui-btn weui-btn_primary" onclick="save()">签到</a>
+			<!--<a id="history" href="javascript:;" class="weui-btn weui-btn_primary" onclick="history()">签到记录</a>-->
 		</div>
 		<div>
 
+		</div>
+		<div id="bottomView" class="weui_tab footer-menu">
+			<div class="weui-tabbar">
+				<a href="attendance.html" class="weui-tabbar__item weui-bar__item--on">
+					<div class="wrap">
+						<img class="img" src="../../../image/考勤/打卡.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">签到</p>
+				</a>
+				<a href="getAttendList.html" class="weui-tabbar__item">
+					<div class="wrap">
+						<img class="img" src="../../../image/考勤/考勤查询灰.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">签到考勤</p>
+				</a>
+
+			</div>
 		</div>
 		<script src="../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../../js/demoCssJs/jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
@@ -133,8 +124,8 @@
 		attendAreaList: []
 	}
 
-	getUserInfo();
-	getDepart();
+	//	getUserInfo();
+	//	getDepart();
 	//签到
 	function save() {
 		addAttend(attendType.tempAttendType);
@@ -142,7 +133,7 @@
 	}
 	//签到记录
 	function history() {
-		utils.wOpenWithData('getAttendList.html','')
+		utils.wOpenWithData('getAttendList.html', '')
 		console.log('签到记录')
 	}
 
@@ -317,10 +308,10 @@
 		})
 
 	}
-
+	var map = new BMap.Map("allmap"); // 创建地图实例
 	function setMap() {
 		// 百度地图API功能
-		var map = new BMap.Map("allmap"); // 创建地图实例
+
 		var geolocation = new BMap.Geolocation();
 		geolocation.getCurrentPosition(function(r) {
 			if(this.getStatus() == BMAP_STATUS_SUCCESS) {
@@ -383,4 +374,26 @@
 			enableHighAccuracy: true
 		})
 	}
+	 var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
+		    var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
+		    $('.weui-tab__bd').css({
+		        'height': (allheight - barheight) * 100 / allheight + '%'
+		    });
+		    //有红点提示的宽度调整
+		    var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
+		    $('.wrap').css({
+		        'left': (tabar_width - 30) * 50 / tabar_width + '%'
+		    });
+		    window.addEventListener("resize", function () {
+		        var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
+		        var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
+		        $('.weui-tab__bd').css({
+		            'height': (allheight - barheight) * 100 / allheight + '%'
+		        });
+
+		        var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
+		        $('.wrap').css({
+		            'left': (tabar_width - 30) * 50 / tabar_width + '%'
+		        });
+		    }, false);
 </script>

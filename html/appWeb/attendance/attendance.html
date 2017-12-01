@@ -236,8 +236,7 @@
 		unitWebsitePro(tempData, function(data) {
 			console.log('获取当前人员信息' + JSON.stringify(data.RspData))
 			if(data.RspCode == 0) {
-				userList = JSON.parse(data.RspData);
-				userInfo = userList[0];
+				userInfo = JSON.parse(data.RspData);
 				getAttendType();
 				getAttendArea();
 			} else {

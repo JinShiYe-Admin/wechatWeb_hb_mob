@@ -130,7 +130,7 @@
 				console.log('tempData:' + JSON.stringify(tempData));
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
-						attendData.departArray = [].concat(JSON.stringify(tempData));
+						attendData.departArray = [].concat(JSON.stringify(data.RspData));
 						//把获取到的部门，按层级组合
 						var tempArr = getNodeTree(JSON.parse(data.RspData));
 						//得到最顶层的部门id数组
@@ -165,7 +165,7 @@
 						}
 						attendData.peopleArray = attendData.peopleArray.concat(tempArr);
 					} else {
-						layer.alert('获取部门出现问题');
+						//layer.alert('获取部门出现问题');
 					}
 				});
 			}
@@ -222,8 +222,8 @@
 						//将获取到的统计，添加部门名称
 						for(var i = 0; i < data.RspData.Data.length; i++) {
 							var tempModel = data.RspData.Data[i];
-							for(var i = 0; i < attendData.departArray.length; i++) {
-								var tempModel1 = attendData.departArray[i];
+							for(var m = 0; m < attendData.departArray.length; m++) {
+								var tempModel1 = attendData.departArray[m];
 								if(tempModel.value == tempModel1.DeptId) {
 									tempModel.departName = tempModel1.tempModel1;
 								}

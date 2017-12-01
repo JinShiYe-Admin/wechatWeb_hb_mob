@@ -41,7 +41,7 @@
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
 								<!--<input id="beginHour" v-model.lazy="cname.message" class="weui-input" type="text" :placeholder="'请'">-->
-								<select id="attendTypeNote">
+								<select id="attendTypeNote" name="sel"  onFocus="Myselect()">
 									<option value=""></option>
 
 								</select>
@@ -289,7 +289,7 @@
 				/**
 				 * 获取考勤类型记录数据列表
 				 */
-				var selectArray;
+				var selectArray = new Array();
 				var requestDataForAttendType = {
 					"corpId": corpId, //暂时写死，此值是从顾工c#接口中获取登陆者的单位标识
 					"pageIndex": 1,
@@ -307,17 +307,30 @@
 					success: function(data) {
 						console.log("data====" + JSON.stringify(data));
 						if(data.RspCode == 0) {
-							for (i = 0, len = data.RspData.Data.length; i < len; i++) {
-								console.log("data.RspData.Data[i]===="+data.RspData.Data[i]);
-//								selectArray.push(data.RspData.Data[i]);
+							for(i = 0, len = data.RspData.Data.length; i < len; i++) {
+								console.log("data.RspData.Data[i]====" + data.RspData.Data[i]);
+								selectArray.push(data.RspData.Data[i]);
 							}
-							
+
 							//							column_table.dt = data.RspData.Data;
 
 						}
 					}
 				})
-				console.log("selectArray--=========="+selectArray);
+				console.log("selectArray--==========" + selectArray);
+				console.log("selectArray---json======" + JSON.stringify(selectArray));
+
+				var counts;
+				counts = 0;
+				
+				counts = selectArray.length;
+
+				function Myselect() {
+					var i;
+					for(i = 0; i < counts; i++) {
+						document.sel.options[i] = new Option(arr[i], i);
+					}
+				}
 				//	getWebsitConfig();
 				/**
 				 * 从考勤类型列表数据每一行记录点超链接跳转到此页面，将考勤类型记录对象得到，detail即是

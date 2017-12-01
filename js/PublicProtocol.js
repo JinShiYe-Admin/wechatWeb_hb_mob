@@ -76,9 +76,13 @@ var xhrPost = function(url, data, callback) {
 		if(this.readyState === 4 && this.status === 200) {
 			var success_data = JSON.parse(this.responseText);
 			console.log('XHRP-Success:', success_data);
-			if (success_data.RspCode == 0013) {
-				alert('用户没有登录或超时,关闭当前页,重新从企业管理端登录.');
-			} else{
+			if(success_data.RspCode == 0013) {
+				callback({
+					RspCode: 404,
+					RspData: null,
+					RspTxt: "用户没有登录或超时,关闭当前页,重新从企业管理端登录."
+				});
+			} else {
 				callback(success_data);
 			}
 		} else {
@@ -112,12 +116,12 @@ var xhrPost = function(url, data, callback) {
 var tempUrl = 'https://jbyj.jiaobaowang.net/AttendanceService/';
 
 //合并参数
-var extendParameter = function(data0){
+var extendParameter = function(data0) {
 	var tempData = {
-		uuid:'',
-		appid:'',
-		token:'',
-		sign:''
+		uuid: '',
+		appid: '',
+		token: '',
+		sign: ''
 	}
 	return $.extend(data0, tempData);
 }

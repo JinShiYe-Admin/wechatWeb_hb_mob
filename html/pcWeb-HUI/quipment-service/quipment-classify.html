@@ -298,13 +298,13 @@
 					},
 					getSelectPerson: function(person) {
 						console.log("*******getSelectPerson*******")
-						this.selectPerson = Object.assign({}, person);
+						this.selectPerson = jQuery.extend({}, person);
 						console.log("getSelectPerson:" + JSON.stringify(this.selectPerson))
 					},
 					delChoosePerson: function(key) {
 						console.log("*******delChoosePerson*******")
 						delete this.selectPerson[key];
-						this.selectPerson = Object.assign({}, this.selectPerson);
+						this.selectPerson = jQuery.extend({}, this.selectPerson);
 						console.log("删除人员后的数据：" + JSON.stringify(this.selectPerson))
 					},
 					choosePerson: function() {
@@ -322,10 +322,12 @@
 					},
 					personToString: function(person) {
 						console.log("*******personToString*******")
+						console.log("要提交的person值：" + JSON.stringify(person))
 						var strArr = [];
 						for(var key in person) {
 							strArr.push(key + "," + person[key]);
 						}
+						console.log("更改为字符串时的值：" + strArr.join("|"));
 						return strArr.join("|");
 					},
 					cancelChoose: function() {

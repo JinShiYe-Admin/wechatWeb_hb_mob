@@ -175,7 +175,7 @@
 
 				//地址输入框的焦点离开
 				$("#addressText").blur(function() {
-					if(editState !== 1) {
+					if(editState != 1) {
 						return false;
 					}
 					var addressText = $.trim($("#addressText").val());

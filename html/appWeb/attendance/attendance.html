@@ -90,12 +90,12 @@
 		</div>
 
 		<div style="margin-top: 20px;">
-			<span>
-			<input onclick="save()" type="button" name="save" id="save" value="签到" />
-		</span>
-			<span>
-			<input  onclick="history()" type="button" name="history" id="history" value="签到记录" />
-		</span>
+			
+										<a id="save" href="javascript:;" class="weui-btn weui-btn_primary" onclick="save()">签到</a>
+										<a id="history" href="javascript:;" class="weui-btn weui-btn_primary" onclick="history()">签到记录</a>
+
+		
+
 			
 		</div>
 		<div>
@@ -236,8 +236,7 @@
 		unitWebsitePro(tempData, function(data) {
 			console.log('获取当前人员信息' + JSON.stringify(data.RspData))
 			if(data.RspCode == 0) {
-				userList = JSON.parse(data.RspData);
-				userInfo = userList[0];
+				userInfo = JSON.parse(data.RspData);
 				getAttendType();
 				getAttendArea();
 			} else {

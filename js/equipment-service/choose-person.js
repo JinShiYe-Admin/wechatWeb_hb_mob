@@ -2,7 +2,10 @@ Vue.component("choose-person", {
 	template: "#person-list",
 	props: {
 		choseDepart: {
-			type: Object
+			type: Object,
+			default: function() {
+				return {}
+			}
 		},
 		choosePerson: {
 			type: Object,
@@ -12,7 +15,6 @@ Vue.component("choose-person", {
 		}
 	},
 	mounted: function() {
-		console.log("初始化时获取的新值：" + JSON.stringify())
 	},
 	data: function() {
 		return {

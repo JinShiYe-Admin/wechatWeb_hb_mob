@@ -123,8 +123,10 @@ Vue.component("classify-list", {
 			var reObj = {};
 			if(perStrArr.length > 0) {
 				perStrArr.forEach(function(perStr) {
-					var personArr = perStr.split(",")
-					reObj[personArr[0]] = personArr[1];
+					if(perStr != "") {
+						var personArr = perStr.split(",")
+						reObj[personArr[0]] = personArr[1];
+					}
 				})
 			}
 			console.log("获取的成员信息：" + JSON.stringify(reObj));

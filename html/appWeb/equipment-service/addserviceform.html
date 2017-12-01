@@ -197,7 +197,7 @@
 				});
 
 				//查看图片
-				$("body").on("click", ".weui-uploader__file", function(e) {
+				$("#uploaderFiles").on("click", ".weui-uploader__file", function(e) {
 					showImageIndex = $("#uploaderFiles .weui-uploader__file").index(this);
 					$("#galleryImage").css("background-image", "url(" + uploadFile[showImageIndex].filePath + ")");
 					$("#gallery").css("display", "block");

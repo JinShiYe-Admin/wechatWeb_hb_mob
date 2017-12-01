@@ -179,6 +179,14 @@
 						return false;
 					}
 					var addressText = $.trim($("#addressText").val());
+					if(addressText == "") {
+						layer.open({
+							content: '请输入地址',
+							icon: 2,
+							title: '提示'
+						});
+						return false;
+					}
 					if(addressText == addressData[addressIndex].cname) {
 						return false;
 					}

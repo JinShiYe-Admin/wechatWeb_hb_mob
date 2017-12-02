@@ -136,7 +136,7 @@
 
 	<body>
 		<div id="process-container">
-			<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 请假配置 <span class="c-gray en">&gt;</span> 流程配置
+			<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 流程配置 <span class="c-gray en">&gt;</span> 流程配置
 			</nav>
 			<div class="page-container">
 				<router-view v-on:group-info="getCurProcess" v-bind:classify="activeProcess"></router-view>
@@ -251,7 +251,7 @@
 		<script src="../../../js/equipment-service/choose-person.js"></script>
 		<script src="../../../js/pcWeb-HUI/process/process-setting.js"></script>
 		<script type="text/javascript">
-			const classifyList = {
+			const processSetting = {
 				template: '<process-setting v-on:process-info="getProcessInfo"></process-setting>',
 				methods: {
 					getProcessInfo: function(process) {
@@ -330,7 +330,7 @@
 				routes: [{
 					path: '/process-setting',
 					name: 'process-setting',
-					component: classifyList
+					component: processSetting
 				}, {
 					path: '/chooseDepart',
 					name: 'chooseDepart',

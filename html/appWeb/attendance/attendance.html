@@ -115,13 +115,13 @@
 		<div class="weui-tabbar">
 			<a href="attendance.html" class="weui-tabbar__item weui-bar__item--on">
 				<div class="weui-tabbar__icon">
-					<img class="img" src="../../../image/考勤/打卡灰.png" alt="">
+					<img class="img" src="../../../image/考勤/打卡.png" alt="">
 				</div>
 				<p class="weui-tabbar__label">签到</p>
 			</a>
-			<a href="mineIndex.html" class="weui-tabbar__item">
+			<a href="getAttendList.html" class="weui-tabbar__item">
 				<div class="weui-tabbar__icon">
-					<img src="../../../image/考勤/考勤查询.png" alt="">
+					<img src="../../../image/考勤/考勤查询灰.png" alt="">
 				</div>
 				<p class="weui-tabbar__label">考勤查询</p>
 			</a>
@@ -499,28 +499,28 @@
 			enableHighAccuracy: true
 		})
 	}
-	//	 var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
-	//		    var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
-	//		    $('.weui-tab__bd').css({
-	//		        'height': (allheight - barheight) * 100 / allheight + '%'
-	//		    });
-	//		    //有红点提示的宽度调整
-	//		    var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
-	//		    $('.wrap').css({
-	//		        'left': (tabar_width - 30) * 50 / tabar_width + '%'
-	//		    });
-	//		    window.addEventListener("resize", function () {
-	//		        var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
-	//		        var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
-	//		        $('.weui-tab__bd').css({
-	//		            'height': (allheight - barheight) * 100 / allheight + '%'
-	//		        });
-	//
-	//		        var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
-	//		        $('.wrap').css({
-	//		            'left': (tabar_width - 30) * 50 / tabar_width + '%'
-	//		        });
-	//		    }, false);
+		 var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
+			    var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
+			    $('.weui-tab__bd').css({
+			        'height': (allheight - barheight) * 100 / allheight + '%'
+			    });
+			    //有红点提示的宽度调整
+			    var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
+			    $('.wrap').css({
+			        'left': (tabar_width - 30) * 50 / tabar_width + '%'
+			    });
+			    window.addEventListener("resize", function () {
+			        var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
+			        var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
+			        $('.weui-tab__bd').css({
+			            'height': (allheight - barheight) * 100 / allheight + '%'
+			        });
+	
+			        var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
+			        $('.wrap').css({
+			            'left': (tabar_width - 30) * 50 / tabar_width + '%'
+			        });
+			    }, false);
 
 	//从相册中选择照片后，上传
 	//index--从相册选择照片回调里面，照片的索引，files--选择的照片信息，filesSum--选择照片之前，现存的照片张数

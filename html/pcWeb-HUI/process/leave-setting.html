@@ -146,7 +146,7 @@
 		<!--流程列表-->
 		<template id="leave-list">
 			<div>
-				<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a class="btn btn-primary radius" v-on:click="addleave()" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加请假类型</a></span> </div>
+				<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a class="btn btn-primary radius" v-on:click="addLeave()" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加请假类型</a></span> </div>
 				<table v-if="leaveList.length>0" class="table table-border table-bordered table-bg table-hover table-sort">
 					<thead>
 						<tr class="text-c">
@@ -171,17 +171,29 @@
 							<!--<td>{{leave.rectime|formatTime}}</td>
 						<td class="td-status"><span class="label  radius" v-bind:class="[{'label-defaunt':!leave.stat},{'label-success':leave.stat}]">{{leave.stat?"显示":"屏蔽"}}</span></td>-->
 							<td class="td-manage">
-								<span class="Hui-iconfont Hui-iconfont-edit edit-groupName manage-item" title="编辑请假信息" v-on:click.stop="changeleaveInfo(leave)"></span>
-								<span class="add-perdson Hui-iconfont Hui-iconfont-user-group manage-item" title="更改请假关系" v-on:click.stop="changeleaveList(leave)"></span>
+								<span class="Hui-iconfont Hui-iconfont-edit edit-groupName manage-item" title="编辑请假信息" v-on:click.stop="changeLeaveInfo(leave)"></span>
 							</td>
 						</tr>
 					</tbody>
 				</table>
 				<form id="edit-pocessInfo" style="display: none;" action="" method="post" class="form form-horizontal" id="form-member-add">
 					<div class="row cl">
-						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>流程类型：</label>
+						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>请假类型：</label>
 						<div class="formControls col-xs-8 col-sm-9">
 							<input type="text" class="input-text" value="" v-model="activeLeave.ProcTypeName" placeholder="" id="username" name="username">
+						</div>
+					</div>
+					<div class="row cl">
+						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>角色关系：</label>
+						<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+							<div class="check-box">
+								<input name="sex" id="role-1" type="checkbox" name="role">
+								<label for="role-1">老师请假</label>
+							</div>
+							<div class="check-box">
+								<input type="checkbox" id="role-2" name="role">
+								<label for="role-2">家长请假</label>
+							</div>
 						</div>
 					</div>
 					<div class="row cl">

@@ -29,154 +29,155 @@
 		</style>
 	</head>
 
-	<body>
-		<div class="weui-tab" id="attendData">
-			<div class="weui-cells" style="margin-top: 0;">
-				<div class="weui-cell">
-					<div class="weui-cell__hd"><label for="date" class="weui-label">查询日期</label></div>
-					<div class="weui-cell__bd">
-						<input class="weui-input" id="date" value="" type="text" placeholder="请点击选择查询日期">
+	<body ontouchstart>
+		<div class="weui-tab">
+			<div class="weui-tab__bd" style="padding-bottom: 50px;">
+				<div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active">
+					<div class="weui-cells" style="margin-top: 0;">
+						<div class="weui-cell">
+							<div class="weui-cell__hd"><label for="date" class="weui-label">查询日期</label></div>
+							<div class="weui-cell__bd">
+								<input class="weui-input" id="date" value="" type="text" placeholder="请点击选择查询日期">
+							</div>
+						</div>
+					</div>
+					<div class="weui-cell" v-for='(attend,index) in attendArray' v-show="flag>0" style="display: none;">
+						<div class="weui-cell__hd"><img class="mui-media-object" :src=attend.AttendPic></div>
+						<div class="weui-cell__bd">
+							<p class="classP">时间:
+								<a class="classA">{{attend.AttendTime}}</a>
+							</p>
+							<p class="classP">地点:
+								<a class="classA">{{attend.AttendArea}}</a>
+							</p>
+							<p class="classP">类型:
+								<a class="classA">{{attend.AttendType}}</a>
+							</p>
+							<p class="classP">结果:
+								<a class="classA">{{attend.AttendResult}}</a>
+							</p>
+						</div>
 					</div>
 				</div>
-				<div class="weui-cell" v-for='(attend,index) in attendArray' v-show="flag>0" style="display: none;">
-					<div class="weui-cell__hd"><img class="mui-media-object" :src=attend.AttendPic></div>
-					<div class="weui-cell__bd">
-						<p class="classP">时间:
-							<a class="classA">{{attend.AttendTime}}</a>
-						</p>
-						<p class="classP">地点:
-							<a class="classA">{{attend.AttendArea}}</a>
-						</p>
-						<p class="classP">类型:
-							<a class="classA">{{attend.AttendType}}</a>
-						</p>
-						<p class="classP">结果:
-							<a class="classA">{{attend.AttendResult}}</a>
-						</p>
-					</div>
+				<div class="weui-tabbar">
+					<a href="attendance.html" class="weui-tabbar__item">
+						<div class="weui-tabbar__icon">
+							<img class="img" src="../../../image/考勤/打卡灰.png" alt="">
+						</div>
+						<p class="weui-tabbar__label">签到</p>
+					</a>
+					<a href="mineIndex.html" class="weui-tabbar__item weui-bar__item--on">
+						<div class="weui-tabbar__icon">
+							<img src="../../../image/考勤/考勤查询.png" alt="">
+						</div>
+						<p class="weui-tabbar__label">考勤查询</p>
+					</a>
 				</div>
 			</div>
-		</div>
-		<div id="bottomView" class="weui_tab footer-menu">
-			<div class="weui-tabbar">
-				<a href="attendance.html" class="weui-tabbar__item">
-					<div class="wrap">
-						<img class="img" src="../../../image/考勤/打卡灰.png" alt="">
-					</div>
-					<p class="weui-tabbar__label">签到</p>
-				</a>
-				<a href="getAttendList.html" class="weui-tabbar__item weui-bar__item--on">
-					<div class="wrap">
-						<img class="img" src="../../../image/考勤/考勤查询.png" alt="">
-					</div>
-					<p class="weui-tabbar__label">考勤查询</p>
-				</a>
 
-			</div>
-		</div>
-		<!--vue-->
-		<script src="../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../../../js/demoCssJs/jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../../../js/demoCssJs/iscroll.js"></script>
-		<script src="../../../js/demoCssJs/jquery-weui.js"></script>
-		<script src="../../../js/PublicProtocol.js"></script>
-		<script src="../../../js/utils/utils.js"></script>
-		<script src="../../../js/utils/storageutil.js"></script>
-		<!--<script src='../../../js/lib/vconsole/vconsole.min.js'></script>-->
-		<script type="text/javascript">
-			$(function() {
-				//获取当前人员信息
-				getUserInfo();
-			});
+			<!--vue-->
+			<script src="../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+			<script src="../../../js/demoCssJs/jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
+			<script src="../../../js/demoCssJs/iscroll.js"></script>
+			<script src="../../../js/demoCssJs/jquery-weui.js"></script>
+			<script src="../../../js/PublicProtocol.js"></script>
+			<script src="../../../js/utils/utils.js"></script>
+			<script src="../../../js/utils/storageutil.js"></script>
+			<!--<script src='../../../js/lib/vconsole/vconsole.min.js'></script>-->
+			<script type="text/javascript">
+				$(function() {
+					//获取当前人员信息
+					getUserInfo();
+				});
 
-			var attendData = new Vue({
-				el: "#attendData",
-				data: {
-					flag: 0,
-					beginTime: '',
-					userInfo: {}, //当前人员信息
-					attendArray: [], //考勤统计列表
-					departArray: [], //管理的所有部门数组
-					peopleArray: [] //管理的所有部门的人员数组
-				},
-				methods: {
-					searchAttendList: function() {
+				var attendData = new Vue({
+					el: "#attendData",
+					data: {
+						flag: 0,
+						beginTime: '',
+						userInfo: {}, //当前人员信息
+						attendArray: [], //考勤统计列表
+						departArray: [], //管理的所有部门数组
+						peopleArray: [] //管理的所有部门的人员数组
+					},
+					methods: {
+						searchAttendList: function() {
+							//16.获取考勤统计
+							getAttend();
+						}
+					}
+				});
+				//13.获取当前人员信息
+				var getUserInfo = function() {
+					var tempData = {
+						cmd: 'userinfo',
+						type: 'findpage', //获取某个详细信息
+						colv: '' //留空为取当前人员信息,不为空则为具体人员信息
+					}
+					console.log('tempData:' + JSON.stringify(tempData));
+					unitWebsitePro(tempData, function(data) {
+						if(data.RspCode == 0) {
+							attendData.userInfo = JSON.parse(data.RspData);
+						} else {
+							alert('请重新登录获取个人信息');
+						}
+					});
+				};
+
+				//15.获取考勤记录
+				var getAttend = function() {
+					var beginTime = attendData.beginTime;
+					if(beginTime == '') {
+						alert('请选择查询日期');
+						return false;
+					}
+					beginTime = beginTime.replace(/-/g, '');
+					var tempId = [];
+					tempId.push(attendData.userInfo.userid);
+					var tempData = {
+						corpId: attendData.userInfo.corpid, //单位ID
+						userId: tempId, //用户ID,例如：[“1”, “2”, “3”]
+						beginTime: beginTime, //统计开始时间,年月日共八位如：20011010
+						endTime: beginTime, //统计结束时间,年月日共八位如：20011010
+						attendResultId: '0', //0：全部,1: 正常,2：迟到,3：早退
+						attendTypeId: '0', //0 为全部
+						attendAreaId: '0', //0 为全部
+						pageIndex: '1',
+						pageSize: '0' //0 为全部
+					}
+					console.log('tempData:' + JSON.stringify(tempData));
+					getAttendPro(tempData, function(data) {
+						if(data.RspCode == 0) {
+							if(data.RspData.Data.length > 0) {
+								for(var i = 0; i < data.RspData.Data.length; i++) {
+									var tempModel = data.RspData.Data[i];
+									if(tempModel.AttendPic) {
+										if(tempModel.AttendPic.length == 0) {
+											tempModel.AttendPic = '../../../image/mineIndex.png';
+										}
+									}
+								}
+								attendData.attendArray = [].concat(data.RspData.Data);
+								attendData.flag = 1;
+							} else {
+								attendData.attendArray = [].concat([]);
+								attendData.flag = 0;
+								$.toast("暂无考勤记录");
+							}
+						} else {
+
+						}
+					});
+				};
+
+				$("#date").calendar({
+					onChange: function(p, values, displayValues) {
+						attendData.beginTime = values.toString();
 						//16.获取考勤统计
 						getAttend();
 					}
-				}
-			});
-			//13.获取当前人员信息
-			var getUserInfo = function() {
-				var tempData = {
-					cmd: 'userinfo',
-					type: 'findpage', //获取某个详细信息
-					colv: '' //留空为取当前人员信息,不为空则为具体人员信息
-				}
-				console.log('tempData:' + JSON.stringify(tempData));
-				unitWebsitePro(tempData, function(data) {
-					if(data.RspCode == 0) {
-						attendData.userInfo = JSON.parse(data.RspData);
-					} else {
-						alert('请重新登录获取个人信息');
-					}
 				});
-			};
-
-			//15.获取考勤记录
-			var getAttend = function() {
-				var beginTime = attendData.beginTime;
-				if(beginTime == '') {
-					alert('请选择查询日期');
-					return false;
-				}
-				beginTime = beginTime.replace(/-/g, '');
-				var tempId = [];
-				tempId.push(attendData.userInfo.userid);
-				var tempData = {
-					corpId: attendData.userInfo.corpid, //单位ID
-					userId: tempId, //用户ID,例如：[“1”, “2”, “3”]
-					beginTime: beginTime, //统计开始时间,年月日共八位如：20011010
-					endTime: beginTime, //统计结束时间,年月日共八位如：20011010
-					attendResultId: '0', //0：全部,1: 正常,2：迟到,3：早退
-					attendTypeId: '0', //0 为全部
-					attendAreaId: '0', //0 为全部
-					pageIndex: '1',
-					pageSize: '0' //0 为全部
-				}
-				console.log('tempData:' + JSON.stringify(tempData));
-				getAttendPro(tempData, function(data) {
-					if(data.RspCode == 0) {
-						if(data.RspData.Data.length > 0) {
-							for(var i = 0; i < data.RspData.Data.length; i++) {
-								var tempModel = data.RspData.Data[i];
-								if(tempModel.AttendPic) {
-									if(tempModel.AttendPic.length == 0) {
-										tempModel.AttendPic = '../../../image/mineIndex.png';
-									}
-								}
-							}
-							attendData.attendArray = [].concat(data.RspData.Data);
-							attendData.flag = 1;
-						} else {
-							attendData.attendArray = [].concat([]);
-							attendData.flag = 0;
-							$.toast("暂无考勤记录");
-						}
-					} else {
-
-					}
-				});
-			};
-
-			$("#date").calendar({
-				onChange: function(p, values, displayValues) {
-					attendData.beginTime = values.toString();
-					//16.获取考勤统计
-					getAttend();
-				}
-			});
-		</script>
+			</script>
 	</body>
 
 </html>

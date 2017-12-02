@@ -213,6 +213,8 @@
 										alert("删除成功");
 										window.location = "../pcWeb-HUI/attendenceManage_address.html";
 
+									}else if(data.RspCode ==1014){
+										alert("有关联的考勤记录");
 									}
 								},
 								error: function() {

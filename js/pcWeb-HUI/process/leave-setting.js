@@ -34,7 +34,7 @@ Vue.component("leave-setting", {
 			this.changeType = 0;
 			this.activeLeave.ProcTypeName = "";
 			this.activeLeave.ProTypeNote = "";
-			this.toggleLayer(true, "添加流程");
+			this.toggleLayer(true, "添加请假类型");
 		},
 		toggleLayer: function(isOpen, title) {
 			if(isOpen) {
@@ -54,7 +54,7 @@ Vue.component("leave-setting", {
 		changeLeaveInfo: function(Leave) {
 			this.changeType = 1;
 			this.activeLeave = Leave;
-			this.toggleLayer(true, "更改流程信息");
+			this.toggleLayer(true, "更改请假类型信息");
 		},
 		//获取全部流程信息
 		requireAllLeave: function() {

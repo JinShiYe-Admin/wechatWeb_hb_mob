@@ -45,9 +45,12 @@
 		</span>
 						<span id="tempAddress">
 		</span>
+						<span><a onclick="refresh()">
+<img  height="25px" width="25px" src="../../../image/考勤/刷新.png" />
+</a></span>
 
 					</div>
-					<a style="margin-bottom: 10px;width: 150px;height: 30px;font-size: 13px;" href="javascript:;" class="weui-btn weui-btn_primary" onclick="refresh()">点击刷新当前位置</a>
+					<!--<a style="margin-bottom: 10px;width: 150px;height: 30px;font-size: 13px;" href="javascript:;" class="weui-btn weui-btn_primary" onclick="refresh()">点击刷新当前位置</a>-->
 
 					<!--<input style="margin-bottom: 10px;" onclick="refresh()" type="button" name="refresh" id="refresh" value="点击刷新当前位置" />-->
 					<div id="allmap"></div>
@@ -72,56 +75,58 @@
 						</div>
 					</div>
 
-					<div style="margin-top: 20px;">
-						<a id="save" href="javascript:;" class="weui-btn weui-btn_primary" onclick="save()">签到</a>
-						<!--<a id="history" href="javascript:;" class="weui-btn weui-btn_primary" onclick="history()">签到记录</a>-->
-					</div>
+
 					<div>
 
 					</div>
 					<div id="submitHomework">
-			<div class="weui-cells weui-cells_form">
-				<div class="weui-cell">
-					<div class="weui-cell__bd">
-						<div class="weui-uploader">
-							<div class="weui-uploader__hd">
-								<p class="weui-uploader__title">上传照片</p>
-							</div>
-							<div class="weui-uploader__bd">
-								<ul class="weui-uploader__files" id="uploaderFiles">
-									<li v-for="(file,index) of uploadedFiles" @click="clickImg(index)" v-bind:class="['weui-uploader__file']" v-bind:style="{'background-image':'url('+file.ImgUrl+')'}"></li>
-								</ul>
-								<div class="weui-uploader__input-box" :style="displayAddBtn">
-									<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" v-on:change="selectFile($event)">
+						<div class="weui-cells weui-cells_form">
+							<div class="weui-cell">
+								<div class="weui-cell__bd">
+									<div class="weui-uploader">
+										<div class="weui-uploader__hd">
+											<p class="weui-uploader__title">上传照片</p>
+										</div>
+										<div class="weui-uploader__bd">
+											<ul class="weui-uploader__files" id="uploaderFiles">
+												<li v-for="(file,index) of uploadedFiles" @click="clickImg(index)" v-bind:class="['weui-uploader__file']" v-bind:style="{'background-image':'url('+file.ImgUrl+')'}"></li>
+											</ul>
+											<div class="weui-uploader__input-box" :style="displayAddBtn">
+												<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" v-on:change="selectFile($event)">
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
+						<input id="qnInput" style="display: none;">
+						<div class="weui-gallery" :style="displayGallery">
+							<span class="weui-gallery__img" @click="clickGigImg" :style="{backgroundImage:'url('+selectImgPath+')'}"></span>
+							<div class="weui-gallery__opr">
+								<a href="javascript:" class="weui-gallery__del">
+									<i class="weui-icon-delete weui-icon_gallery-delete" @click="deleteImg"></i>
+								</a>
+							</div>
+						</div>
 					</div>
-				</div>
+										<div style="margin-top: 20px;">
+						<a id="save" href="javascript:;" class="weui-btn weui-btn_primary" onclick="save()">签到</a>
+						<!--<a id="history" href="javascript:;" class="weui-btn weui-btn_primary" onclick="history()">签到记录</a>-->
+					</div>
+				<!--</div>
 			</div>
-			<input id="qnInput" style="display: none;">
-			<div class="weui-gallery" :style="displayGallery">
-				<span class="weui-gallery__img" @click="clickGigImg" :style="{backgroundImage:'url('+selectImgPath+')'}"></span>
-				<div class="weui-gallery__opr">
-					<a href="javascript:" class="weui-gallery__del">
-						<i class="weui-icon-delete weui-icon_gallery-delete" @click="deleteImg"></i>
-					</a>
-				</div>
-			</div>
-		</div>
-				</div>
-			</div>
-		</div>
+		</div>-->
+		
 		<div class="weui-tabbar">
 			<a href="attendance.html" class="weui-tabbar__item weui-bar__item--on">
 				<div class="weui-tabbar__icon">
-					<img class="img" src="../../../image/考勤/打卡灰.png" alt="">
+					<img class="img" src="../../../image/考勤/打卡.png" alt="">
 				</div>
 				<p class="weui-tabbar__label">签到</p>
 			</a>
-			<a href="mineIndex.html" class="weui-tabbar__item">
+			<a href="getAttendList.html" class="weui-tabbar__item">
 				<div class="weui-tabbar__icon">
-					<img src="../../../image/考勤/考勤查询.png" alt="">
+					<img src="../../../image/考勤/考勤查询灰.png" alt="">
 				</div>
 				<p class="weui-tabbar__label">考勤查询</p>
 			</a>
@@ -236,8 +241,8 @@
 		initQNUploader();
 
 	}
-	//	getUserInfo();
-	//	getDepart();
+		getUserInfo();
+		getDepart();
 	//签到
 	function save() {
 		addAttend(attendType.tempAttendType);
@@ -308,8 +313,8 @@
 	function addAttend(tempAttendType) {
 		//附件数组
 		var tempEncs = [];
-		for(var i = 0; i < homework.uploadedFiles.length; i++) {
-			var tempValue = homework.uploadedFiles[i];
+		for(var i = 0; i < submitHomework.uploadedFiles.length; i++) {
+			var tempValue = submitHomework.uploadedFiles[i];
 			var tempModel = {
 				oldname: tempValue.OldName,
 				newname: tempValue.NewName,
@@ -328,7 +333,7 @@
 			attendArea: document.getElementById("attendArea").data_id,
 			attendAreaX: attendArea.tempAttendArea.lng,
 			attendAreaY: attendArea.tempAttendArea.lat,
-			attendPic: '',
+			attendPic: tempEncs[0].imgurl,
 			attendNote: '测试接口',
 		}
 		console.log('添加考勤参数：' + JSON.stringify(tempData));
@@ -499,28 +504,28 @@
 			enableHighAccuracy: true
 		})
 	}
-	//	 var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
-	//		    var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
-	//		    $('.weui-tab__bd').css({
-	//		        'height': (allheight - barheight) * 100 / allheight + '%'
-	//		    });
-	//		    //有红点提示的宽度调整
-	//		    var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
-	//		    $('.wrap').css({
-	//		        'left': (tabar_width - 30) * 50 / tabar_width + '%'
-	//		    });
-	//		    window.addEventListener("resize", function () {
-	//		        var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
-	//		        var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
-	//		        $('.weui-tab__bd').css({
-	//		            'height': (allheight - barheight) * 100 / allheight + '%'
-	//		        });
-	//
-	//		        var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
-	//		        $('.wrap').css({
-	//		            'left': (tabar_width - 30) * 50 / tabar_width + '%'
-	//		        });
-	//		    }, false);
+	var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
+	var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
+	$('.weui-tab__bd').css({
+		'height': (allheight - barheight) * 100 / allheight + '%'
+	});
+	//有红点提示的宽度调整
+	var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
+	$('.wrap').css({
+		'left': (tabar_width - 30) * 50 / tabar_width + '%'
+	});
+	window.addEventListener("resize", function() {
+		var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
+		var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
+		$('.weui-tab__bd').css({
+			'height': (allheight - barheight) * 100 / allheight + '%'
+		});
+
+		var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
+		$('.wrap').css({
+			'left': (tabar_width - 30) * 50 / tabar_width + '%'
+		});
+	}, false);
 
 	//从相册中选择照片后，上传
 	//index--从相册选择照片回调里面，照片的索引，files--选择的照片信息，filesSum--选择照片之前，现存的照片张数

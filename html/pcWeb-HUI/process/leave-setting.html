@@ -1,0 +1,250 @@
+<!---->
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width initial-scale=1 minimum-scale=1 maximum-scale=1 user-scalable=no">
+		<title>请假流程设置</title>
+		<link href="../../../css/jquery-weui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/static/h-ui/css/H-ui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css" />
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
+		<style>
+			.float-right {
+				float: right;
+				margin-left: 10px;
+			}
+			
+			.inline-block {
+				display: inline-block;
+			}
+			
+			body {
+				background-color: #F8F8F8;
+			}
+			
+			.title-persons {
+				width: 80%;
+			}
+			
+			.add-perdson,
+			.del-leave,
+			.show-leave,
+			.edit-groupName {
+				color: dodgerblue;
+			}
+			
+			.close-leave {
+				color: darkgray
+			}
+			
+			.del-leave {
+				padding-right: 15px;
+			}
+			
+			.choose-footer {
+				position: fixed;
+				bottom: 0;
+				left: 0;
+				right: 0;
+			}
+			
+			.selected-style {
+				background-color: darkgrey;
+				color: white;
+			}
+			
+			.display-inline {
+				/*display: inline-block;*/
+			}
+			
+			.multi-choose-container {
+				position: relative;
+			}
+			
+			.choose-depart-container {
+				position: absolute;
+				left: 20%;
+				top: 10%;
+				width: 20%;
+				height: 600px;
+				overflow: auto;
+			}
+			
+			.choose-person-container {
+				position: absolute;
+				left: 40%;
+				top: 10%;
+				right: 10%;
+				width: 40%;
+				height: 600px;
+			}
+			
+			.choose-person {
+				min-height: 300px;
+				max-height: 500px;
+				overflow: auto;
+			}
+			
+			.check-container {
+				width: 20%;
+			}
+			
+			.name-contianer,
+			.position-contianer {
+				width: 40%;
+			}
+			
+			.person-foot {
+				padding-top: 10px;
+			}
+			
+			.person-container {
+				display: inline-block;
+				padding: 5px 10px;
+				text-align: center;
+				border: solid 1px #D3D4D3;
+				width: 50px;
+				margin: 5px;
+			}
+			
+			.person-container.is-checked {
+				border-color: dodgerblue;
+			}
+			
+			.btn-primary:disabled {
+				background-color: darkgray;
+				border: none;
+			}
+			
+			.group-title {
+				background: #eee;
+			}
+			
+			.manage-item {
+				padding: 5px 5px;
+			}
+			
+			#edit-pocessInfo .row {
+				margin-left: 0;
+				margin-right: 0;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="leave-container">
+			<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 流程配置 <span class="c-gray en">&gt;</span> 请假类型配置
+			</nav>
+			<div class="page-container">
+				<router-view v-on:group-info="getCurleave" v-bind:classify="activeLeave"></router-view>
+			</div>
+		</div>
+		<!--流程列表-->
+		<template id="leave-list">
+			<div>
+				<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a class="btn btn-primary radius" v-on:click="addleave()" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加请假类型</a></span> </div>
+				<table v-if="leaveList.length>0" class="table table-border table-bordered table-bg table-hover table-sort">
+					<thead>
+						<tr class="text-c">
+							<th width="300">请假类型</th>
+							<th width="300">请假关系</th>
+							<th width="500">备注</th>
+							<!--<th width="150"></th>-->
+							<!--<th width="100">状态</th>-->
+							<th width="100">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="text-c" v-for="(leave,index) in leaveList">
+							<td>{{leave.ProcTypeName}}</td>
+							<!--流程链-->
+							<td>
+								<!--<div v-for="">
+								<div></div>
+							</div>-->
+							</td>
+							<td class="text-c">{{leave.ProTypeNote}}</td>
+							<!--<td>{{leave.rectime|formatTime}}</td>
+						<td class="td-status"><span class="label  radius" v-bind:class="[{'label-defaunt':!leave.stat},{'label-success':leave.stat}]">{{leave.stat?"显示":"屏蔽"}}</span></td>-->
+							<td class="td-manage">
+								<span class="Hui-iconfont Hui-iconfont-edit edit-groupName manage-item" title="编辑请假信息" v-on:click.stop="changeleaveInfo(leave)"></span>
+								<span class="add-perdson Hui-iconfont Hui-iconfont-user-group manage-item" title="更改请假关系" v-on:click.stop="changeleaveList(leave)"></span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<form id="edit-pocessInfo" style="display: none;" action="" method="post" class="form form-horizontal" id="form-member-add">
+					<div class="row cl">
+						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>流程类型：</label>
+						<div class="formControls col-xs-8 col-sm-9">
+							<input type="text" class="input-text" value="" v-model="activeLeave.ProcTypeName" placeholder="" id="username" name="username">
+						</div>
+					</div>
+					<div class="row cl">
+						<label class="form-label col-xs-4 col-sm-3">备注：</label>
+						<div class="formControls col-xs-8 col-sm-9">
+							<textarea name="beizhu" cols="" rows="" class="textarea" placeholder="请输入备注" v-model="activeLeave.ProTypeNote" onKeyUp="$.Huitextarealength(this,100)"></textarea>
+							<p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>
+						</div>
+					</div>
+					<div class="row cl">
+						<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+							<input class="btn btn-primary radius" type="submit" value="提交">
+						</div>
+					</div>
+				</form>
+			</div>
+		</template>
+		<script src="../../../js/vue.js"></script>
+		<script src="../../../js/vue-router.js"></script>
+		<script src="../../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+		<script src="../../../js/H-ui.admin/static/h-ui/js/H-ui.js"></script>
+		<script type="text/javascript" src="../../../js/H-ui.admin/lib/layer/2.4/layer.js"></script>
+		<script src="../../../js/utils/events.js"></script>
+		<script src="../../../js/utils/consts.js"></script>
+		<script src="../../../js/utils/request.js"></script>
+		<script src="../../../js/pcWeb-HUI/process/leave-setting.js"></script>
+		<script type="text/javascript">
+			const leaveSetting = {
+				template: '<leave-setting v-on:leave-info="getleaveInfo"></leave-setting>',
+				methods: {
+					getleaveInfo: function(leave) {
+						console.log("获取的classify:" + JSON.stringify(leave));
+						this.$emit("leave-info", leave);
+					}
+				}
+			}
+
+			const router = new VueRouter({
+				routes: [{
+					path: '/leave-setting',
+					name: 'leave-setting',
+					component: leaveSetting
+				}]
+			})
+			var vue = new Vue({
+				el: "#leave-container",
+				router: router,
+				data: {
+					activeLeave: {}
+				},
+				mounted: function() {
+
+				},
+				methods: {
+					getCurleave: function(leave) {
+						this.activeLeave = leave;
+					}
+				}
+			})
+			router.replace({
+				name: 'leave-setting'
+			})
+		</script>
+	</body>
+
+</html>

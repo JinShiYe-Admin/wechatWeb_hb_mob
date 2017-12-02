@@ -40,7 +40,11 @@
 			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
 		</nav>
 		<div id="column_table" class="page-container">
-			
+			<div class="cl pd-5 bg-1 bk-gray">
+				<span class="l">
+					<a class="btn btn-primary radius" @click="add"><i class="Hui-iconfont"></i> 添加考勤时间段</a>
+				</span>
+			</div>
 			<column-table :value="dt" @click-edit="edit" @click-del="del" @click-shield="shield"></column-table>
 			<div id="pages" style="margin-top: 20px;"></div>
 		</div>
@@ -70,7 +74,7 @@
 						<th>开始时间（分钟）</th>
 						<th>持续时间</th>
 						
-						<th>迟到时间</th>
+						<th>迟到时间（分钟）忽略不计、早退时间（分钟）忽略不计</th>
 						<th>考勤短信</th>
 						<th>操作</th>
 					</tr>

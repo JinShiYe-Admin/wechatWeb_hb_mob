@@ -32,14 +32,43 @@
 		<!--<template>-->
 		<div id="conetent" class="weui-cells weui-cells_form mui-hidden">
 			<h3 style="text-align: center;">新增考勤时间段</h3>
+
 			<!--输入列表-->
 			<div id="input_list">
 				<div>
+					<div class="weui-cells__title">考勤类型说明</div>
+					<div class="weui-cells">
+						<div class="weui-cell">
+							<div class="weui-cell__bd">
+								<!--<input id="beginHour" v-model.lazy="cname.message" class="weui-input" type="text" :placeholder="'请'">-->
+								<select id="attendTypeNote" name="sel"  onFocus="Myselect()">
+									<option value=""></option>
+
+								</select>
+							</div>
+						</div>
+					</div>
 					<div class="weui-cells__title">开始时间（小时）</div>
 					<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
-								<input id="beginHour" v-model.lazy="cname.message" class="weui-input" type="text" :placeholder="'请输入考勤开始时间'">
+								<!--<input id="beginHour" v-model.lazy="cname.message" class="weui-input" type="text" :placeholder="'请'">-->
+								<select id="beginHour">
+									<option value=""></option>
+									<option value="0">0</option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+									<option value="6">6</option>
+									<option value="7">7</option>
+									<option value="8">8</option>
+									<option value="9">9</option>
+									<option value="10">10</option>
+									<option value="11">11</option>
+									<option value="12">12</option>
+								</select>
 							</div>
 						</div>
 					</div>
@@ -54,7 +83,68 @@
 					<div class="weui-cells__title">开始时间（分钟）</div>
 					<div class="weui-cell">
 						<div class="weui-cell__bd">
-							<input id="beginMinute" class="weui-input" type="text" :placeholder="'请输入考勤开始时间'">
+							<!--<input id="beginMinute" class="weui-input" type="text" :placeholder="'请输入考勤开始时间'">-->
+							<select id="beginMinute">
+								<option value=""></option>
+								<option value="0">0</option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+								<option value="9">9</option>
+								<option value="10">10</option>
+								<option value="11">11</option>
+								<option value="12">12</option>
+								<option value="13">13</option>
+								<option value="14">14</option>
+								<option value="15">15</option>
+								<option value="16">16</option>
+								<option value="17">17</option>
+								<option value="17">18</option>
+								<option value="19">19</option>
+								<option value="20">20</option>
+								<option value="21">21</option>
+								<option value="22">22</option>
+								<option value="23">23</option>
+								<option value="24">24</option>
+								<option value="25">25</option>
+								<option value="26">26</option>
+								<option value="27">27</option>
+								<option value="28">28</option>
+								<option value="29">29</option>
+								<option value="30">30</option>
+								<option value="31">31</option>
+								<option value="32">32</option>
+								<option value="33">34</option>
+								<option value="35">36</option>
+								<option value="37">38</option>
+								<option value="39">39</option>
+								<option value="40">40</option>
+								<option value="41">41</option>
+								<option value="42">42</option>
+								<option value="43">43</option>
+								<option value="44">44</option>
+								<option value="45">45</option>
+								<option value="46">46</option>
+								<option value="47">47</option>
+								<option value="48">48</option>
+								<option value="49">49</option>
+								<option value="50">50</option>
+								<option value="51">51</option>
+								<option value="52">52</option>
+								<option value="53">53</option>
+								<option value="54">54</option>
+								<option value="55">55</option>
+								<option value="56">56</option>
+								<option value="57">57</option>
+								<option value="58">58</option>
+								<option value="59">59</option>
+								<option value="60">60</option>
+							</select>
 						</div>
 					</div>
 					<!--</div>-->
@@ -65,17 +155,20 @@
 					<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
-								<input id="continuousTime" class="weui-input" type="text" :placeholder="'请输入考勤持续时间'">
+								<!--<input id="continuousTime" class="weui-input" type="number" :placeholder="'请输入考勤持续时间'">-->
+								<input id="continuousTime" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">
 							</div>
 						</div>
 					</div>
 				</div>
 				<div>
-					<div class="weui-cells__title">迟到时间（分钟）</div>
+					<div class="weui-cells__title">迟到时间（分钟）忽略不计、早退时间（分钟）忽略不计</div>
 					<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
-								<input id="lateMinutes" class="weui-input" type="text" :placeholder="'请输入考勤迟到时间'">
+								<!--<input id="lateMinutes" class="weui-input" type="text" :placeholder="'请输入考勤迟到时间'">-->
+								<input id="lateMinutes" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^0-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">
+
 							</div>
 						</div>
 					</div>
@@ -85,7 +178,9 @@
 					<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
-								<input id="attendMessage" class="weui-input" type="text" :placeholder="'请输入考勤短信内容，#N代表考勤人姓名，#T代表考勤时间，#A代表考勤地点，举例：#T#N在#A上午上班签到'">
+
+								<input id="attendMessage" class="weui-input" type="text" :placeholder="''">
+								<h6>请输入考勤短信内容，#N代表考勤人姓名，#T代表考勤时间，#A代表考勤地点，举例：#T#N在#A上午上班签到</h6>
 							</div>
 						</div>
 					</div>
@@ -134,26 +229,27 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 		<script>
+			//			console.log(document.getElementById("beginMinute").selected);
 			var corpId = "";
 			var attendTypeId;
 			window.onload = function() {
+
 				attendTypeId = getUrlParam('attendTypeId');
 				console.log("attendTypeId===" + JSON.stringify(attendTypeId));
-//				getNote();
-			
+				//				getNote();
 
-			function getUrlParam(name) {
+				function getUrlParam(name) {
 
-				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
-				var r = window.location.search.substr(1).match(reg); //匹配目标参数
-				if(r != null) {
+					var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+					var r = window.location.search.substr(1).match(reg); //匹配目标参数
+					if(r != null) {
 
-					return decodeURI(unescape(r[2]));
-				} else {
-					return null; //返回参数值
+						return decodeURI(unescape(r[2]));
+					} else {
+						return null; //返回参数值
+					}
+
 				}
-
-			}
 				/**
 				 * 页面一加载，向顾工c#接口代码请求该操作者的信息，目的是拿到该操作者的单位标识
 				 */
@@ -190,16 +286,61 @@
 				})
 				//给corpId赋值假数据
 //				corpId = "wx6c4528c675d4a9c9";
+				/**
+				 * 获取考勤类型记录数据列表
+				 */
+				var selectArray = new Array();
+				var requestDataForAttendType = {
+					"corpId": corpId, //暂时写死，此值是从顾工c#接口中获取登陆者的单位标识
+					"pageIndex": 1,
+					"pageSize": 0,
+					"uuid": "",
+					"appid": "",
+					"token": "",
+					"sign": ""
+				}
+				$.ajax({
+					type: "post",
+					url: "https://jbyj.jiaobaowang.net/AttendanceService/getAttendType", //应该是绑定.9机器的域名，考勤管理模块应该也是部署在此阿里云服务机器上。
+					async: false,
+					data: JSON.stringify(requestDataForAttendType),
+					success: function(data) {
+						console.log("data====" + JSON.stringify(data));
+						if(data.RspCode == 0) {
+							for(i = 0, len = data.RspData.Data.length; i < len; i++) {
+								console.log("data.RspData.Data[i]====" + data.RspData.Data[i]);
+								selectArray.push(data.RspData.Data[i]);
+							}
+
+							//							column_table.dt = data.RspData.Data;
+
+						}
+					}
+				})
+				console.log("selectArray--==========" + selectArray);
+				console.log("selectArray---json======" + JSON.stringify(selectArray));
+
+				var counts;
+				counts = 0;
+				
+				counts = selectArray.length;
+
+				function Myselect() {
+					var i;
+					for(i = 0; i < counts; i++) {
+						document.sel.options[i] = new Option(arr[i], i);
+					}
+				}
 				//	getWebsitConfig();
 				/**
 				 * 从考勤类型列表数据每一行记录点超链接跳转到此页面，将考勤类型记录对象得到，detail即是
 				 */
 				var detail = utils.getDataFromUrl(window.location.href);
-				//				alert("detail " + JSON.stringify(detail));
+				console.log("detail " + JSON.stringify(detail));
 
 				//所需要的考勤类型记录的编号
-				//				attendTypeId=detail.AttendTypeId;
-//				attendTypeId = 4;
+				//								attendTypeId=detail.AttendTypeId;
+				attendTypeId = 5
 				vm.type = detail.type;
 				if(vm.type == 'edit') {
 					var tempData = {
@@ -295,9 +436,24 @@
 						/**
 						 * 得到各input输入框的值
 						 */
+
+						var selectElementObject_M = document.getElementById("beginMinute");
+						//						console.log("selectElementObject===" + selectElementObject_M);
+						var optionElementObjectIndex_M = selectElementObject_M.selectedIndex;
+						//						console.log("optionElementObjectIndex===" + optionElementObjectIndex_M);
+						var optionElementText_M = selectElementObject_M.options[optionElementObjectIndex_M].text;
+						console.log("optionElementText_M====" + optionElementText_M);
+
 						var beginHour = document.getElementById("beginHour").value;
 						//alert("attendAdressValue==="+attendAdressValue);
-						var beginMinute = document.getElementById("beginMinute").value;
+						var beginMinute = optionElementText_M;
+						var selectElementObject_H = document.getElementById("beginHour");
+						//						console.log("selectElementObject===" + selectElementObject);
+						var optionElementObjectIndex_H = selectElementObject_H.selectedIndex;
+						console.log("optionElementObjectIndex_H===" + optionElementObjectIndex_H);
+						var optionElementText_H = selectElementObject_M.options[optionElementObjectIndex_H].text;
+						console.log("optionElementText_H====" + optionElementText_H);
+						var beginHour = optionElementText_H;
 						var lateMinutes = document.getElementById("lateMinutes").value;
 						var continuousTime = document.getElementById("continuousTime").value;
 
@@ -332,6 +488,7 @@
 								"token": "",
 								"sign": ""
 							}
+							console.log("tempData=====" + JSON.stringify(tempData));
 							$.ajax({
 								url: "https://jbyj.jiaobaowang.net/AttendanceService/addAttendTime",
 								type: "POST",
@@ -351,7 +508,7 @@
 
 									} else if(data.RspCode == 1018) {
 										alert("存在相同时间的考勤时间段");
-									}else if(data.RspCode == 1019) {
+									} else if(data.RspCode == 1019) {
 										alert("同一个考勤类型记录也只能有一个时间段");
 									}
 								},

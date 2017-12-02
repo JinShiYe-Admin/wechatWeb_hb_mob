@@ -1,3 +1,4 @@
+<!---->
 <!DOCTYPE html>
 <html>
 
@@ -30,17 +31,17 @@
 			}
 			
 			.add-perdson,
-			.del-process,
-			.show-process,
+			.del-leave,
+			.show-leave,
 			.edit-groupName {
 				color: dodgerblue;
 			}
 			
-			.close-process {
+			.close-leave {
 				color: darkgray
 			}
 			
-			.del-process {
+			.del-leave {
 				padding-right: 15px;
 			}
 			
@@ -135,11 +136,11 @@
 	</head>
 
 	<body>
-		<div id="process-container">
-			<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 请假配置 <span class="c-gray en">&gt;</span> 流程配置
+		<div id="leave-container">
+			<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 流程配置 <span class="c-gray en">&gt;</span> 请假类型配置
 			</nav>
 			<div class="page-container">
-				<router-view v-on:group-info="getCurProcess" v-bind:classify="activeProcess"></router-view>
+				<router-view v-on:group-info="getCurleave" v-bind:classify="activeLeave"></router-view>
 			</div>
 		</div>
 		<!--人员选择-->
@@ -183,10 +184,10 @@
 			</div>
 		</template>
 		<!--流程列表-->
-		<template id="process-list">
+		<template id="leave-list">
 			<div>
-				<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a class="btn btn-primary radius" v-on:click="addProcess()" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加流程类型</a></span> </div>
-				<table v-if="processList.length>0" class="table table-border table-bordered table-bg table-hover table-sort">
+				<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a class="btn btn-primary radius" v-on:click="addleave()" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加请假类型</a></span> </div>
+				<table v-if="leaveList.length>0" class="table table-border table-bordered table-bg table-hover table-sort">
 					<thead>
 						<tr class="text-c">
 							<th width="300">请假类型</th>
@@ -198,20 +199,20 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr class="text-c" v-for="(process,index) in processList">
-							<td>{{process.ProcTypeName}}</td>
+						<tr class="text-c" v-for="(leave,index) in leaveList">
+							<td>{{leave.ProcTypeName}}</td>
 							<!--流程链-->
 							<td>
 								<!--<div v-for="">
 								<div></div>
 							</div>-->
 							</td>
-							<td class="text-c">{{process.ProTypeNote}}</td>
-							<!--<td>{{process.rectime|formatTime}}</td>
-						<td class="td-status"><span class="label  radius" v-bind:class="[{'label-defaunt':!process.stat},{'label-success':process.stat}]">{{process.stat?"显示":"屏蔽"}}</span></td>-->
+							<td class="text-c">{{leave.ProTypeNote}}</td>
+							<!--<td>{{leave.rectime|formatTime}}</td>
+						<td class="td-status"><span class="label  radius" v-bind:class="[{'label-defaunt':!leave.stat},{'label-success':leave.stat}]">{{leave.stat?"显示":"屏蔽"}}</span></td>-->
 							<td class="td-manage">
-								<span class="Hui-iconfont Hui-iconfont-edit edit-groupName manage-item" title="编辑请假信息" v-on:click.stop="changeProcessInfo(process)"></span>
-								<span class="add-perdson Hui-iconfont Hui-iconfont-user-group manage-item" title="更改请假关系" v-on:click.stop="changeProcessList(process)"></span>
+								<span class="Hui-iconfont Hui-iconfont-edit edit-groupName manage-item" title="编辑请假信息" v-on:click.stop="changeleaveInfo(leave)"></span>
+								<span class="add-perdson Hui-iconfont Hui-iconfont-user-group manage-item" title="更改请假关系" v-on:click.stop="changeleaveList(leave)"></span>
 							</td>
 						</tr>
 					</tbody>
@@ -220,13 +221,13 @@
 					<div class="row cl">
 						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>流程类型：</label>
 						<div class="formControls col-xs-8 col-sm-9">
-							<input type="text" class="input-text" value="" v-model="activeProcess.ProcTypeName" placeholder="" id="username" name="username">
+							<input type="text" class="input-text" value="" v-model="activeLeave.ProcTypeName" placeholder="" id="username" name="username">
 						</div>
 					</div>
 					<div class="row cl">
 						<label class="form-label col-xs-4 col-sm-3">备注：</label>
 						<div class="formControls col-xs-8 col-sm-9">
-							<textarea name="beizhu" cols="" rows="" class="textarea" placeholder="请输入备注" v-model="activeProcess.ProTypeNote" onKeyUp="$.Huitextarealength(this,100)"></textarea>
+							<textarea name="beizhu" cols="" rows="" class="textarea" placeholder="请输入备注" v-model="activeLeave.ProTypeNote" onKeyUp="$.Huitextarealength(this,100)"></textarea>
 							<p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>
 						</div>
 					</div>
@@ -249,24 +250,24 @@
 		<script src="../../../js/equipment-service/treeNode.js"></script>
 		<script src="../../../js/equipment-service/choose-depart.js"></script>
 		<script src="../../../js/equipment-service/choose-person.js"></script>
-		<script src="../../../js/pcWeb-HUI/process/process-setting.js"></script>
+		<script src="../../../js/pcWeb-HUI/process/leave-setting.js"></script>
 		<script type="text/javascript">
 			const classifyList = {
-				template: '<process-setting v-on:process-info="getProcessInfo"></process-setting>',
+				template: '<leave-setting v-on:leave-info="getleaveInfo"></leave-setting>',
 				methods: {
-					getProcessInfo: function(process) {
-						console.log("获取的classify:" + JSON.stringify(process));
-						this.$emit("process-info", process);
+					getleaveInfo: function(leave) {
+						console.log("获取的classify:" + JSON.stringify(leave));
+						this.$emit("leave-info", leave);
 					}
 				}
 			}
 			const multiChoose = {
 				template: '#multi-choose',
-				props: ['process'],
+				props: ['leave'],
 				data: function() {
 					return {
 						activeDepart: {},
-						personList: this.process.personList
+						personList: this.leave.personList
 					}
 				},
 				watch: {
@@ -275,9 +276,9 @@
 						console.log("SelectPerson.oldVal:" + JSON.stringify(oldVal));
 						console.log(Object.keys(newVal).length);
 					},
-					process: function(newVal, oldVal) {
+					leave: function(newVal, oldVal) {
 						console.log("wacth:监听classify:" + JSON.stringify(newVal))
-						this.selectPerson = this.process.gusers;
+						this.selectPerson = this.leave.gusers;
 					}
 				},
 				methods: {
@@ -328,8 +329,8 @@
 			}
 			const router = new VueRouter({
 				routes: [{
-					path: '/process-setting',
-					name: 'process-setting',
+					path: '/leave-setting',
+					name: 'leave-setting',
 					component: classifyList
 				}, {
 					path: '/chooseDepart',
@@ -338,22 +339,22 @@
 				}]
 			})
 			var vue = new Vue({
-				el: "#process-container",
+				el: "#leave-container",
 				router: router,
 				data: {
-					activeProcess: {}
+					activeLeave: {}
 				},
 				mounted: function() {
 
 				},
 				methods: {
-					getCurProcess: function(process) {
-						this.activeProcess = process;
+					getCurleave: function(leave) {
+						this.activeLeave = leave;
 					}
 				}
 			})
 			router.replace({
-				name: 'process-setting'
+				name: 'leave-setting'
 			})
 		</script>
 	</body>

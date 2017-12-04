@@ -198,6 +198,9 @@ var processRequest = (function(mod) {
 	}
 	/**
 	 * 发送接口协议
+	 * @param portName 接口名称
+	 * @param postData 发送的数据
+	 * @param callback 回调
 	 */
 	mod.postProcessData = function(portName, postData, callback) {
 		mod.postData(mod.URL + portName, postData, callback);

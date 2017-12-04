@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 	<head>
@@ -9,13 +9,10 @@
 		<link rel="stylesheet" href="../../../js/demoCssJs/demos.css">
 		<link rel="stylesheet" href="../../../css/demos.css" />
 		<style type="text/css">
-			body,
-			html {
-				width: 100%;
-				height: 100%;
-				margin: 0;
-				font-family: "微软雅黑";
-			}
+			        body, html {
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
 			
 			#allmap {
 				width: 100%;
@@ -26,6 +23,58 @@
 				margin-left: 5px;
 				font-size: 14px;
 			}
+			       .wrap {
+            width: 30px;
+            position: relative;
+        }
+
+        .img {
+            width: 27px;
+            height: 27px;
+        }
+
+        .notice {
+            width: 15px;
+            height: 15px;
+            line-height: 15px;
+            font-size: 10px;
+            color: #fff;
+            text-align: center;
+            background-color: #f00;
+            border-radius: 50%;
+            position: absolute;
+            right: -7px;
+            top: -7px;
+        }
+
+        .lines {
+            height: 1px;
+            border-top: 10px solid #f5f1f1;
+            text-align: center;
+            margin: 10px 0px 0px 0px;
+        }
+
+        .weui-popup__container {
+            z-index: 1000;
+        }
+
+        .owerid {
+            background: #f89fbc;
+        }
+
+        .weui-media-box__hd {
+            width: 80px;
+            height: 60px;
+            overflow: hidden;
+        }
+
+            .weui-media-box__hd img {
+                max-width: 80px;
+                _width: expression(this.width > 80 ? "80px" : this.width);
+            }
+            /*.weui-tab {
+            margin-top:-30px;
+        }*/
 		</style>
 		<!--<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=VPMK2gwQeEtGyV24Py1Gb4GTpukyjm6y"></script>-->
 		<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&services=true&ak=VPMK2gwQeEtGyV24Py1Gb4GTpukyjm6y"></script>
@@ -35,27 +84,19 @@
 		<title>签到考勤</title>
 	</head>
 
-	<body>
-		<div class="weui-tab">
-			<div class="weui-tab__bd" style="padding-bottom: 50px;">
-				<div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active">
-					<div style="margin: 10px;">
-						<span>
-			当前位置：
-		</span>
-						<span id="tempAddress">
-		</span>
-						<span><a onclick="refresh()">
-<img  height="25px" width="25px" src="../../../image/考勤/刷新.png" />
-</a></span>
+	<body ontouchstart>
+		<div class="weui-tab" id="wrapper">
+			<div class="weui-tab__bd">
+				<div class="weui-tab__bd-item weui-tab__bd-item--active" id="tab0">
 
+					<div style="margin-top:10px;margin-bottom: 10px;">
+						<span>当前位置：</span><span id="tempAddress"></span>
+						<span><a onclick="refresh()"><img style="vertical-align: bottom;"  height="25px" width="25px" src="../../../image/考勤/刷新.png" /></a></span>
 					</div>
-					<!--<a style="margin-bottom: 10px;width: 150px;height: 30px;font-size: 13px;" href="javascript:;" class="weui-btn weui-btn_primary" onclick="refresh()">点击刷新当前位置</a>-->
 
-					<!--<input style="margin-bottom: 10px;" onclick="refresh()" type="button" name="refresh" id="refresh" value="点击刷新当前位置" />-->
 					<div id="allmap"></div>
 
-					<div class="weui-cell">
+					<div class="weui-cell" >
 						<div class="weui-cell__hd"><label class="weui-label">考勤类型</label></div>
 						<div class="weui-cell__bd">
 							<input id="attendType" data_id="" onclick="selectAttendType(this)" class="weui-input" placeholder="请选择考勤类型">
@@ -75,11 +116,7 @@
 						</div>
 					</div>
 
-
-					<div>
-
-					</div>
-					<div id="submitHomework">
+					<div id="submitHomework" style="margin-top: -20px;">
 						<div class="weui-cells weui-cells_form">
 							<div class="weui-cell">
 								<div class="weui-cell__bd">
@@ -109,28 +146,41 @@
 							</div>
 						</div>
 					</div>
-										<div style="margin-top: 20px;">
-						<a id="save" href="javascript:;" class="weui-btn weui-btn_primary" onclick="save()">签到</a>
+					<br />
+					<div>
+						<a style="width: 95%;" id="save" href="javascript:;" class="weui-btn weui-btn_primary" onclick="save()">签到</a>
 						<!--<a id="history" href="javascript:;" class="weui-btn weui-btn_primary" onclick="history()">签到记录</a>-->
 					</div>
-				<!--</div>
+					<br /><br />
+					
+				</div>
 			</div>
-		</div>-->
-		
-		<div class="weui-tabbar">
-			<a href="attendance.html" class="weui-tabbar__item weui-bar__item--on">
-				<div class="weui-tabbar__icon">
-					<img class="img" src="../../../image/考勤/打卡.png" alt="">
-				</div>
-				<p class="weui-tabbar__label">签到</p>
-			</a>
-			<a href="getAttendList.html" class="weui-tabbar__item">
-				<div class="weui-tabbar__icon">
-					<img src="../../../image/考勤/考勤查询灰.png" alt="">
-				</div>
-				<p class="weui-tabbar__label">考勤查询</p>
-			</a>
 		</div>
+		<div class="weui_tab footer-menu">
+			<div class="weui-tabbar">
+				<a href="https://jsypay.jiaobaowang.net/wxth/appschweb/app/index.aspx" class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
+						<img class="img" src="../../../image/考勤/pic_ico_index0.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">微校园</p>
+				</a>
+				<a href="attendance.html" class="weui-tabbar__item">
+					<div class="wrap">
+						<img class="img" src="../../../image/考勤/打卡.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">签到</p>
+				</a>
+
+				<a href="getAttendList.html" class="weui-tabbar__item">
+					<div class="wrap">
+						<img class="img" src="../../../image/考勤/考勤查询灰.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">考勤查询</p>
+				</a>
+
+			</div>
+		</div>
+
 		<script src="../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../../js/demoCssJs/jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../../js/demoCssJs/iscroll.js"></script>
@@ -165,6 +215,35 @@
 </html>
 
 <script type="text/javascript">
+    var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
+    var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight;
+    $('.weui-tab').css({
+        'height': (allheight - barheight) + 30 + 'px'
+    });
+    $('.weui-tab__bd').css({
+        'height': (allheight - barheight) + 30 + 'px'
+    });
+    $('.weui-tab__bd-item').css({
+        'height': (allheight - barheight) + 30 + 'px'
+    });
+    var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
+    $('.wrap').css({
+        'left': (tabar_width - 30) * 50 / tabar_width + '%'
+    });
+		window.addEventListener("resize", function() {
+		    var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
+		    var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight;
+		    $('.weui-tab__bd').css({
+		        'height': (allheight - barheight) + 30 + 'px'
+		    });
+		    $('.weui-tab__bd-item').css({
+		        'height': (allheight - barheight) + 30 + 'px'
+		    });
+		    var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
+		    $('.wrap').css({
+		        'left': (tabar_width - 30) * 50 / tabar_width + '%'
+		    });
+		}, false);
 	var uptokenData;
 	var qnFileUploader; //七牛上传控件对象
 	var submitHomework = new Vue({
@@ -241,8 +320,8 @@
 		initQNUploader();
 
 	}
-		getUserInfo();
-		getDepart();
+	//		getUserInfo();
+	//		getDepart();
 	//签到
 	function save() {
 		addAttend(attendType.tempAttendType);
@@ -258,7 +337,7 @@
 	function getAttendType() {
 		var tempData = {
 			corpId: userInfo.corpid, //单位ID
-//						corpId: "wx6c4528c675d4a9c9",
+			//						corpId: "wx6c4528c675d4a9c9",
 			pageIndex: '1', //当前页数
 			pageSize: '0' //每页记录数，0 为全部
 		}
@@ -285,7 +364,7 @@
 	function getAttendArea() {
 		var tempData = {
 			corpId: userInfo.corpid, //单位ID
-//						corpId: "wx6c4528c675d4a9c9",
+			//						corpId: "wx6c4528c675d4a9c9",
 			pageIndex: 1, //当前页数
 			pageSize: 0 //每页记录数，0 为全部
 		}
@@ -312,15 +391,15 @@
 
 	function addAttend(tempAttendType) {
 
-		if(document.getElementById("attendType").data_id==undefined){
+		if(document.getElementById("attendType").data_id == undefined) {
 			alert("请选择考勤类型");
 			return;
 		}
-		if(document.getElementById("depart").data_id==undefined){
+		if(document.getElementById("depart").data_id == undefined) {
 			alert("请选择部门");
 			return;
 		}
-		if(document.getElementById("attendArea").data_id==undefined){
+		if(document.getElementById("attendArea").data_id == undefined) {
 			alert("请选择考勤地点");
 			return;
 		}
@@ -337,7 +416,7 @@
 			}
 			tempEncs.push(tempModel);
 		}
-		if(tempEncs.length==0){
+		if(tempEncs.length == 0) {
 			alert("请添加照片");
 		}
 		var tempData = {
@@ -370,8 +449,8 @@
 			type: 'findpage',
 			colv: ''
 		}
-//		getAttendType();
-//		getAttendArea();
+		//		getAttendType();
+		//		getAttendArea();
 		console.log(JSON.stringify(tempData))
 		unitWebsitePro(tempData, function(data) {
 			console.log('获取当前人员信息' + JSON.stringify(data.RspData))
@@ -522,28 +601,7 @@
 			enableHighAccuracy: true
 		})
 	}
-//	var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
-//	var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
-//	$('.weui-tab__bd').css({
-//		'height': (allheight - barheight) * 100 / allheight + '%'
-//	});
-//	//有红点提示的宽度调整
-//	var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
-//	$('.wrap').css({
-//		'left': (tabar_width - 30) * 50 / tabar_width + '%'
-//	});
-//	window.addEventListener("resize", function() {
-//		var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
-//		var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
-//		$('.weui-tab__bd').css({
-//			'height': (allheight - barheight) * 100 / allheight + '%'
-//		});
-//
-//		var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
-//		$('.wrap').css({
-//			'left': (tabar_width - 30) * 50 / tabar_width + '%'
-//		});
-//	}, false);
+
 
 	//从相册中选择照片后，上传
 	//index--从相册选择照片回调里面，照片的索引，files--选择的照片信息，filesSum--选择照片之前，现存的照片张数

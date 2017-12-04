@@ -59,33 +59,33 @@
 		<div class="container">
 			<div class="weui-cells weui-cells_form">
 				<div class="weui-cell weui-cell_access">
-					<div class="weui-cell__hd"><label class="weui-label">流程类型</label></div>
+					<div class="weui-cell__hd"><label class="weui-label" for="selectTypeFirstInput">流程类型</label></div>
 					<div class="weui-cell__bd">
-						<input id="selectTypeFirstInput" class="weui-input" placeholder="选取流程类型" readonly/>
+						<input id="selectTypeFirstInput" class="weui-input" placeholder="选取流程类型" readonly="readonly" />
 					</div>
 					<div class="weui-cell__ft">
 					</div>
 				</div>
 				<div class="weui-cell weui-cell_access">
-					<div class="weui-cell__hd"><label class="weui-label">请假类型</label></div>
+					<div class="weui-cell__hd"><label class="weui-label" for="selectTypeSecondInput">请假类型</label></div>
 					<div class="weui-cell__bd">
-						<input id="selectTypeSecondInput" class="weui-input" placeholder="选取请假类型" readonly/>
+						<input id="selectTypeSecondInput" class="weui-input" placeholder="选取请假类型" readonly="readonly" />
 					</div>
 					<div class="weui-cell__ft">
 					</div>
 				</div>
 				<div class="weui-cell weui-cell_access">
-					<div class="weui-cell__hd"><label class="weui-label">开始时间</label></div>
+					<div class="weui-cell__hd"><label class="weui-label" for="selectTypeThirdInput">开始时间</label></div>
 					<div class="weui-cell__bd">
-						<input id="selectTypeThirdInput" class="weui-input" placeholder="选取开始时间" readonly/>
+						<input id="selectTypeThirdInput" class="weui-input" placeholder="选取开始时间" readonly="readonly" />
 					</div>
 					<div class="weui-cell__ft">
 					</div>
 				</div>
 				<div class="weui-cell weui-cell_access">
-					<div class="weui-cell__hd"><label class="weui-label">结束时间</label></div>
+					<div class="weui-cell__hd"><label class="weui-label" for="selectTypeFourthInput">结束时间</label></div>
 					<div class="weui-cell__bd">
-						<input id="selectTypeFourthInput" class="weui-input" placeholder="选取结束时间" readonly/>
+						<input id="selectTypeFourthInput" class="weui-input" placeholder="选取结束时间" readonly="readonly" />
 					</div>
 					<div class="weui-cell__ft">
 					</div>
@@ -112,7 +112,7 @@
 					</div>
 				</div>
 				<div class="weui-btn-area">
-					<a id="submitForm" class="weui-btn weui-btn_primary">提交请假申请</a>
+					<a id="submitForm" class="weui-btn weui-btn_primary weui-btn_disabled">提交请假申请</a>
 				</div>
 			</div>
 		</div>
@@ -140,6 +140,8 @@
 			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/cloudutil.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/compress.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/request.js" + WebVersion + "'></s" + "cript>");
+//			document.write("<s" + "cript type='text/javascript' src='../../../temp/mineinfo.js" + WebVersion + "'></s" + "cript>");
 		</script>
 		<script type="text/javascript">
 			var qnUploader; //七牛上传控件
@@ -150,37 +152,83 @@
 			var uploadImageIndex; //当前上传的图片的序号
 			var liUpload; //上传图片对应的li元素
 			var uploadError; //本次上传是否出错
+			var mineUserInfo; //我的个人信息
+			var beginTime = ""; //请假开始时间
+			var endTime = ""; //请假结束时间
 			var procTypeData = {
 				key: [],
 				select: [],
 				value: {}
-			} //地址数据
+			} //流程类型
 			var leaveTypeData = {
 				key: [],
 				select: [],
 				value: {}
-			} //设备类型数据
+			} //请假类型
 
 			window.onload = function() {
-				//$.showLoading();
-				//initUploader();
-				initDatePicker();
-				initListener();
-				//getProcType();
+				$.showLoading();
+				getMineInfo();
 			}
 
 			/**
-			 * 初始化时间选择控件
+			 * 初始化
 			 */
-			function initDatePicker() {
+			function initPage() {
+				console.log("允许提交请假申请");
+				initSelect();
+				initDatePicker();
+				initListener();
+				initUploader();
+				$("#submitForm").removeClass("weui-btn_disabled");
+				$("#submitForm").click(clickSubmitForm);
+			}
+
+			/**
+			 * 初始化流程类型和请假类型控件
+			 */
+			function initSelect() {
+				$("#selectTypeSecondInput").attr("value", leaveTypeData.select[0].title);
+				$("#selectTypeSecondInput").attr("data-values", leaveTypeData.select[0].value);
+				$("#selectTypeSecondInput").select({
+					title: "请假类型",
+					closeText: "关闭",
+					items: leaveTypeData.select,
+				});
+				$("#selectTypeFirstInput").attr("value", procTypeData.select[0].title);
+				$("#selectTypeFirstInput").attr("data-values", procTypeData.select[0].value);
+				$("#selectTypeFirstInput").select({
+					title: "流程类型",
+					closeText: "关闭",
+					items: procTypeData.select,
+				});
+			}
+
+			/**
+			 * 初始化开始，结束时间选择控件
+			 * @param {String} begin "2017-12-04 17:22"
+			 * @param {String} end "2017-12-04 17:22"
+			 */
+			function initDatePicker(begin, end) {
 				$("#selectTypeThirdInput").datetimePicker({
 					title: "开始时间",
 					toolbarCloseText: "关闭",
+					onChange: function(data) {
+						console.log("beginTime", data.value);
+						beginTime = data.value.join("");
+					},
+					value: begin
 				});
 				$("#selectTypeFourthInput").datetimePicker({
 					title: "结束时间",
 					toolbarCloseText: "关闭",
+					onChange: function(data) {
+						console.log("endTime", data.value);
+						endTime = data.value.join("");
+					},
+					value: end
 				});
+
 			}
 
 			/**
@@ -233,27 +281,37 @@
 						}]
 					});
 				});
+			}
 
-				//提交请假申请
-				$("#submitForm").click(function() {
-					var represon = $.trim($("#represon").val()); //请假事由
-					if(represon == "") {
-						$.alert("请输入请假事由");
-						return false;
-					}
-					$.showLoading();
-					if(uploadFile.length == 0) {
-						addForm();
-					} else {
-						//重置失败的文件允许上传
-						for(var i = 0; i < uploadFile.length; i++) {
-							if(!uploadFile[i].success) {
-								uploadFile[i].allowUpload = true;
-							}
+			/**
+			 * 提交请假申请
+			 */
+			function clickSubmitForm() {
+				if(!beginTime) {
+					$.alert("请选取请假开始时间");
+					return false;
+				}
+				if(!endTime) {
+					$.alert("请选取请假结束时间");
+					return false;
+				}
+				var represon = $.trim($("#represon").val()); //请假事由
+				if(represon == "") {
+					$.alert("请输入请假事由");
+					return false;
+				}
+				$.showLoading();
+				if(uploadFile.length == 0) {
+					addForm();
+				} else {
+					//重置失败的文件允许上传
+					for(var i = 0; i < uploadFile.length; i++) {
+						if(!uploadFile[i].success) {
+							uploadFile[i].allowUpload = true;
 						}
-						upLoadImages();
 					}
-				});
+					upLoadImages();
+				}
 			}
 
 			/**
@@ -268,7 +326,7 @@
 					var getTokenData = {
 						appId: storageutil.QNQYWXKID,
 						mainSpace: storageutil.QNPUBSPACE,
-						saveSpace: storageutil.QNSERVICE,
+						saveSpace: storageutil.QNLEAVE,
 						qnCmdOption: {
 							type: 2
 						},
@@ -493,42 +551,53 @@
 			 */
 			function addForm() {
 				var submitForm = {
-					cmd: "devrepbill",
-					type: "add",
-					represon: $.trim($("#represon").val()),
-					addrid: $("#selectTypeFirstInput").attr("data-values"),
-					classid: $("#selectTypeSecondInput").attr("data-values"),
-					devc: $.trim($("#deviceNumber").val()) * 1,
-					encs: []
+					corpId: mineUserInfo.corpid,
+					applyMan: mineUserInfo.userid,
+					applyManName: mineUserInfo.name,
+					applyManPic: mineUserInfo.avatar,
+					procTypeId: $("#selectTypeFirstInput").attr("data-values"),
+					leaveTypeId: $("#selectTypeSecondInput").attr("data-values"),
+					beginTime: beginTime,
+					endTime: endTime,
+					applyReason: $.trim($("#represon").val()),
+					applyPic: "",
+					applyPicThumb: ""
 				}
-				for(var i = 0; i < uploadFile.length; i++) {
-					var temp = {
-						oldname: uploadFile[i].oldname,
-						newname: uploadFile[i].newname,
-						saveurl: uploadFile[i].saveurl,
-						filesize: uploadFile[i].filesize,
-						imgurl: uploadFile[i].imgurl
+				if(uploadFile.length != 0) {
+					var pic = [];
+					var picThumb = [];
+					for(var i = 0; i < uploadFile.length; i++) {
+						pic.push(uploadFile[i].saveurl);
+						picThumb.push(uploadFile[i].imgurl);
 					}
-					submitForm.encs.push(temp);
+					submitForm.applyPic = pic.join("|");
+					submitForm.applyPicThumb = picThumb.join("|");
 				}
+
 				console.log("submitForm", submitForm);
-				unitWebsitePro(submitForm, function(data) {
-					$.hideLoading();
+				processRequest.postProcessData("addLeaveApply", submitForm, function(data) {
 					if(data.RspCode == 0) {
 						$.toast("提交成功");
-						$("#represon").val("");
-						$("#selectTypeFirst p").text(procTypeData.select[0].title);
 						$("#selectTypeFirstInput").attr("value", procTypeData.select[0].title);
 						$("#selectTypeFirstInput").attr("data-values", procTypeData.select[0].value);
-						$("#selectTypeSecond p").text(leaveTypeData.select[0].title);
 						$("#selectTypeSecondInput").attr("value", leaveTypeData.select[0].title);
 						$("#selectTypeSecondInput").attr("data-values", leaveTypeData.select[0].value);
-						$("#deviceNumber").val("");
+						$("#selectTypeThirdInput").removeAttr("readonly");
+						$("#selectTypeFourthInput").removeAttr("readonly");
+						$("#selectTypeThirdInput").val("");
+						$("#selectTypeFourthInput").val("");
+						$("#selectTypeThirdInput").attr("readonly", "readonly");
+						$("#selectTypeFourthInput").attr("readonly", "readonly");
+						beginTime = "";
+						endTime = "";
+						$("#represon").val("");
 						$("#imageAmount").text("0/9");
 						uploadFile = null;
 						uploadFile = [];
 						$("#uploaderFiles").empty();
+						$.hideLoading();
 					} else {
+						$.hideLoading();
 						$.alert(data.RspTxt, "提交失败");
 					}
 				});
@@ -538,64 +607,81 @@
 			 * 获取流程类型
 			 */
 			function getProcType() {
-				unitWebsitePro(tempData, function(data) {
-					if(data.RspCode == 0) {
-						for(var i = 0; i < data.RspData.dt.length; i++) {
-							procTypeData.key.push(data.RspData.dt[i].addrid);
+				var tempData = {
+					corpId: mineUserInfo.corpid,
+					pageIndex: 1,
+					pageSize: 0
+				}
+				processRequest.postProcessData("getProcessType", tempData, function(data) {
+					if(data.RspCode == 0 && data.RspData.Data.length != 0) {
+						for(var i = 0; i < data.RspData.Data.length; i++) {
+							procTypeData.key.push(data.RspData.Data[i].ProcessTypeId);
+							procTypeData.value[data.RspData.Data[i].ProcessTypeId] = data.RspData.Data[i];
 							procTypeData.select.push({
-								title: data.RspData.dt[i].cname,
-								value: data.RspData.dt[i].addrid
-							});
-							procTypeData.value[data.RspData.dt[i].addrid] = data.RspData.dt[i];
-						}
-						if(data.RspData.dt.length != 0) {
-							$("#selectTypeFirstInput").attr("value", procTypeData.select[0].title);
-							$("#selectTypeFirstInput").attr("data-values", procTypeData.select[0].value);
-							$("#selectTypeFirstInput").select({
-								title: "请选取流程类型",
-								closeText: "关闭",
-								items: procTypeData.select,
+								title: data.RspData.Data[i].ProcTypeName,
+								value: data.RspData.Data[i].ProcessTypeId
 							});
 						}
+						getLeaveType();
+					} else {
+						$.hideLoading();
+						$.alert("未获取到有效的流程类型，无法提交请假申请(" + data.RspTxt + ")", "提示");
 					}
-					getLeaveType()
 				});
 			}
 			/**
 			 * 获取请假类型
 			 */
 			function getLeaveType() {
-				unitWebsitePro(tempData, function(data) {
-					$.hideLoading();
-					if(data.RspCode == 0) {
-						for(var i = 0; i < data.RspData.dt.length; i++) {
-							leaveTypeData.key.push(data.RspData.dt[i].classid);
-							leaveTypeData.select.push({
-								title: data.RspData.dt[i].cname,
-								value: data.RspData.dt[i].classid
-							});
-							leaveTypeData.value[data.RspData.dt[i].classid] = data.RspData.dt[i];
-						}
-						if(data.RspData.dt.length != 0) {
-							$("#selectTypeSecondInput").attr("value", leaveTypeData.select[0].title);
-							$("#selectTypeSecondInput").attr("data-values", leaveTypeData.select[0].value);
-							$("#selectTypeSecondInput").select({
-								title: "请假类型",
-								closeText: "关闭",
-								items: leaveTypeData.select,
-							});
+				var tempData = {
+					corpId: mineUserInfo.corpid,
+					pageIndex: 1,
+					pageSize: 0
+				}
+				processRequest.postProcessData("getLeaveType", tempData, function(data) {
+					if(data.RspCode == 0 && data.RspData.Data.length != 0) {
+						for(var i = 0; i < data.RspData.Data.length; i++) {
+							leaveTypeData.key.push(data.RspData.Data[i].LeaveTypeId);
+							leaveTypeData.value[data.RspData.Data[i].LeaveTypeId] = data.RspData.Data[i];
+							if(data.RspData.Data[i].IsLeader == 0 || (data.RspData.Data[i].IsLeader == 1 && mineUserInfo.isleader == 1) || (data.RspData.Data[i].IsLeader == 2 && mineUserInfo.isleader == 0)) { //请假类型为全部
+								//请假类型为全部||(请假类型为老师&&个人身份为上级)||(请假类型为家长&&个人身份不是上级)
+								leaveTypeData.select.push({
+									title: data.RspData.Data[i].LeaveTypeName,
+									value: data.RspData.Data[i].LeaveTypeId
+								});
+							}
 						}
 					}
-					if(procTypeData.key.length == 0 || leaveTypeData.key.length == 0) {
-						$("#submitForm").unbind();
-						$("#submitForm").addClass("weui-btn_disabled");
-						if(procTypeData.key.length == 0 && leaveTypeData.key.length == 0) {
-							$.alert("未获取到有效的流程类型和请假类型，无法提交请假申请(" + data.RspTxt + ")", "提示");
-						} else if(procTypeData.key.length == 0) {
-							$.alert("未获取到有效的流程类型，无法提交请假申请(" + data.RspTxt + ")", "提示");
-						} else if(leaveTypeData.key.length == 0) {
-							$.alert("未获取到有效的请假类型，无法提交请假申请(" + data.RspTxt + ")", "提示");
+					if(leaveTypeData.select.length == 0) {
+						var errStr = "";
+						if(data.RspCode != 0) {
+							errStr = "(" + data.RspTxt + ")";
 						}
+						$.hideLoading();
+						$.alert("未获取到有效的请假类型，无法提交请假申请" + errStr + "", "提示");
+					} else {
+						initPage();
+						$.hideLoading();
+					}
+				});
+			}
+
+			/**
+			 * 获取我的信息
+			 */
+			function getMineInfo() {
+				var tempData = {
+					cmd: 'userinfo',
+					type: 'findpage',
+					colv: ""
+				}
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						mineUserInfo = JSON.parse(data.RspData);
+						getProcType();
+					} else {
+						$.hideLoading();
+						$.alert("未获取到有效的个人信息，无法提交请假申请(" + data.RspTxt + ")", "提示");
 					}
 				});
 			}

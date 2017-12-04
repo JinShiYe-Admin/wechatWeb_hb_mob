@@ -34,9 +34,9 @@ Vue.component("process-setting", {
 			this.changeType = 0;
 			this.activeProcess.ProcTypeName = "";
 			this.activeProcess.ProTypeNote = "";
-			this.toggleLayer(true,"添加流程");
+			this.toggleLayer(true, "添加流程");
 		},
-		toggleLayer: function(isOpen,title) {
+		toggleLayer: function(isOpen, title) {
 			if(isOpen) {
 				layer.open({
 					type: 1,
@@ -63,11 +63,19 @@ Vue.component("process-setting", {
 		changeProcessInfo: function(process) {
 			this.changeType = 1;
 			this.activeProcess = process;
-			this.toggleLayer(true,"更改流程信息");
+			this.toggleLayer(true, "更改流程信息");
 		},
 		//获取全部流程信息
 		requireAllProcess: function() {
 
+		},
+		//array to obj
+		changeArrayToObj: function(arrays) {
+			var obj = {};
+			for(var i in arrays) {
+				obj[arrays[i][0]] = arrays[i][1];
+			}
+			return obj;
 		}
 	}
 })

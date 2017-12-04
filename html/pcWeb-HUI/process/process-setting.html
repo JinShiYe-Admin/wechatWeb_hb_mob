@@ -302,7 +302,7 @@
 						request.editSeviceGroup({
 							colid: this.classify.kindsid,
 							callcol: "gusers",
-							colv: this.personToString(this.selectPerson)
+							colv: this.personToArray(this.selectPerson)
 						}, function(response) {
 							if(response.RspCode == 0) {
 								router.go(-1);
@@ -310,15 +310,14 @@
 						})
 
 					},
-					personToString: function(person) {
+					personToArray: function(person) {
 						console.log("*******personToString*******")
 						console.log("要提交的person值：" + JSON.stringify(person))
 						var strArr = [];
 						for(var key in person) {
-							strArr.push(key + "," + person[key]);
+							strArr.push([key,person[key]]);
 						}
-						console.log("更改为字符串时的值：" + strArr.join("|"));
-						return strArr.join("|");
+						return strArr;
 					},
 					cancelChoose: function() {
 						router.go(-1);

@@ -119,7 +119,7 @@ var request = (function(mod) {
 	 * @param {Object} name
 	 * @param {Object} callbak
 	 */
-	mod.addServiceGroup = function(name,callback) {
+	mod.addServiceGroup = function(name, callback) {
 		var comData = {
 			cmd: 'devkindsadmin',
 			type: 'add',
@@ -163,5 +163,44 @@ var request = (function(mod) {
 			callback(response);
 		})
 	}
+	/**
+	 * 获取的个人信息
+	 */
+	mod.requestPersonalInfo = function() {
+		var comData = {
+			cmd: "userinfo",
+			type: "findpage",
+			colv: ""
+		}
+		mod.postData(consts.MAINURL, JSON.stringify(comData), function(response) {
+			console.log("获取的个人信息:" + JSON.stringify(response));
+			callback(response);
+		})
+	}
 	return mod;
 })(request || {})
+var processRequest = (function(mod) {
+	mod.URL = "";
+	mod.postData = function(url, data, callback) {
+		data = JSON.stringify(jQuery.extend({
+			uuid: "",
+			appid: "",
+			token: "",
+			sign: ""
+		}, data));
+		jQuery.post(url, data, function(data) {
+			if(data.RspCode == 13) {
+				alert("用户没有登录或已超时，关闭当前页面，从新从企业管理端登录")
+			} else {
+				callback(data);
+			}
+		});
+	}
+	/**
+	 * 发送接口协议
+	 */
+	mod.postProcessData = function(portName, postData, callback) {
+		mod.postData(mod.URL + portName, postData, callback);
+	}
+
+})(processRequest || {})

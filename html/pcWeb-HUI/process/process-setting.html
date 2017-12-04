@@ -29,9 +29,8 @@
 				width: 80%;
 			}
 			
-			.add-perdson,
 			.del-process,
-			.show-process,
+			.edit-process,
 			.edit-groupName {
 				color: dodgerblue;
 			}
@@ -211,28 +210,29 @@
 						<td class="td-status"><span class="label  radius" v-bind:class="[{'label-defaunt':!process.stat},{'label-success':process.stat}]">{{process.stat?"显示":"屏蔽"}}</span></td>-->
 							<td class="td-manage">
 								<span class="Hui-iconfont Hui-iconfont-edit edit-groupName manage-item" title="编辑流程信息" v-on:click.stop="changeProcessInfo(process)"></span>
-								<span class="add-perdson Hui-iconfont Hui-iconfont-user-group manage-item" title="更改流程链" v-on:click.stop="changeProcessList(process)"></span>
+								<span class="Hui-iconfont Hui-iconfont-user-group edit-process manage-item" title="更改流程链" v-on:click.stop="changeProcessList(process)"></span>
+								<span class="Hui-iconfont Hui-iconfont-del2 del-process manage-item" title="删除流程" v-on:click.stop="delProcess(process)"></span>
 							</td>
 						</tr>
 					</tbody>
 				</table>
-				<form id="edit-pocessInfo" style="display: none;" action="" method="post" class="form form-horizontal" id="form-member-add">
+				<form id="edit-pocessInfo" style="display: none;" action="" class="form form-horizontal" id="form-member-add">
 					<div class="row cl">
 						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>流程类型：</label>
 						<div class="formControls col-xs-8 col-sm-9">
-							<input type="text" class="input-text" value="" v-model="activeProcess.ProcTypeName" placeholder="" id="username" name="username">
+							<input type="text" class="input-text" value="" v-model="name" placeholder="" id="username" name="username">
 						</div>
 					</div>
 					<div class="row cl">
 						<label class="form-label col-xs-4 col-sm-3">备注：</label>
 						<div class="formControls col-xs-8 col-sm-9">
-							<textarea name="beizhu" cols="" rows="" class="textarea" placeholder="请输入备注" v-model="activeProcess.ProTypeNote" onKeyUp="$.Huitextarealength(this,100)"></textarea>
+							<textarea name="beizhu" cols="" rows="" class="textarea" placeholder="请输入备注" v-model="note" onKeyUp="$.Huitextarealength(this,100)"></textarea>
 							<p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>
 						</div>
 					</div>
 					<div class="row cl">
 						<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
-							<input class="btn btn-primary radius" type="submit" value="提交">
+							<input class="btn btn-primary radius" type="submit" v-on:click="submitProcess()" value="提交">
 						</div>
 					</div>
 				</form>
@@ -266,18 +266,28 @@
 				data: function() {
 					return {
 						activeDepart: {},
-						personList: this.process.personList
+						personList: this.process.apprManList
 					}
 				},
 				watch: {
+					/**
+					 * 
+					 * @param {Object} newVal
+					 * @param {Object} oldVal
+					 */
 					selectPerson: function(newVal, oldVal) {
 						console.log("selectPerson.newVal:" + JSON.stringify(newVal));
 						console.log("SelectPerson.oldVal:" + JSON.stringify(oldVal));
 						console.log(Object.keys(newVal).length);
 					},
+					/**
+					 * 
+					 * @param {Object} newVal 
+					 * @param {Object} oldVal
+					 */
 					process: function(newVal, oldVal) {
 						console.log("wacth:监听classify:" + JSON.stringify(newVal))
-						this.selectPerson = this.process.gusers;
+						this.selectPerson = this.process.apprManList;
 					}
 				},
 				methods: {
@@ -299,10 +309,17 @@
 					},
 					choosePerson: function() {
 						console.log("*******choosePerson*******")
-						request.editSeviceGroup({
-							colid: this.classify.kindsid,
-							callcol: "gusers",
-							colv: this.personToArray(this.selectPerson)
+						var url = "";
+						if(isAdd) {
+							url = "addProcessList";
+						} else {
+							url = "setProcessList";
+						}
+						processRequest.postProcessData(url, {
+							corpId: this.process.kindsid,
+							procTypeId: "gusers",
+							apprManList: this.personToArray(this.selectPerson),
+							procNote: ""
 						}, function(response) {
 							if(response.RspCode == 0) {
 								router.go(-1);
@@ -315,7 +332,7 @@
 						console.log("要提交的person值：" + JSON.stringify(person))
 						var strArr = [];
 						for(var key in person) {
-							strArr.push([key,person[key]]);
+							strArr.push([key, person[key]]);
 						}
 						return strArr;
 					},

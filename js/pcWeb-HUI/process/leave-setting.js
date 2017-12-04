@@ -25,6 +25,8 @@ Vue.component("leave-setting", {
 				ProTypeNote: "流程4备注" //流程备注
 			},
 			changeType: 0, //0 新建流程 1修改流程
+			checkedTea: false,
+			checkedPar: false
 		}
 	},
 	methods: {
@@ -34,6 +36,8 @@ Vue.component("leave-setting", {
 			this.changeType = 0;
 			this.activeLeave.ProcTypeName = "";
 			this.activeLeave.ProTypeNote = "";
+			this.checkedTea = false;
+			this.checkedPar = false;
 			this.toggleLayer(true, "添加请假类型");
 		},
 		toggleLayer: function(isOpen, title) {
@@ -51,9 +55,11 @@ Vue.component("leave-setting", {
 
 		},
 		//更改流程信息
-		changeLeaveInfo: function(Leave) {
+		changeLeaveInfo: function(leave) {
 			this.changeType = 1;
-			this.activeLeave = Leave;
+			this.activeLeave = leave;
+			this.checkedTea = true;
+			this.checkedPar = true;
 			this.toggleLayer(true, "更改请假类型信息");
 		},
 		//获取全部流程信息

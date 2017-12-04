@@ -85,7 +85,7 @@
 					<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
-								<input id="attendAddressRedius" class="weui-input" type="text">
+								<input id="attendAddressRedius" class="weui-input" type="text">米（建议500-1000米）
 							</div>
 						</div>
 					</div>
@@ -246,7 +246,15 @@
 				// }
 			}));
 				var geoc = new BMap.Geocoder();
-
+				// 将地址解析结果显示在地图上,并调整地图视野.并将考勤地点记录的名称传进去
+				geoc.getPoint(attendAddressObject.AreaName, function(point){
+					if (point) {
+						map.centerAndZoom(point, 16);
+						map.addOverlay(new BMap.Marker(point));
+					}else{
+						alert("您选择地址没有解析到结果!");
+					}
+				});
 				map.addEventListener("click", function(e) {
 					//通过点击百度地图，可以获取到对应的point, 由point的lng、lat属性就可以获取对应的经度纬度     
 					var pt = e.point;
@@ -457,7 +465,7 @@
 				 * 得到各input输入框的值
 				 */
 				var attendAdressValue = document.getElementById("attendAdressText").value;
-				alert("attendAdressValue==="+attendAdressValue);
+				//alert("attendAdressValue==="+attendAdressValue);
 				var attendAdressX = document.getElementById("attendAdressX").value;
 				var attendAdressY = document.getElementById("attendAdressY").value;
 				var attendAddressRedius = document.getElementById("attendAddressRedius").value;

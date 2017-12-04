@@ -115,7 +115,7 @@ Vue.component("process-setting", {
 			}
 			if(this.pageIndex === 1) {
 				this.processList.splice(0, 0, process);
-				this.ProcessList.splice(20, 1)
+				this.ProcessList.splice(20, 1);
 			} else {
 				this.requireProcess();
 			}
@@ -157,6 +157,20 @@ Vue.component("process-setting", {
 				obj[arrays[i][0]] = arrays[i][1];
 			}
 			return obj;
+		},
+		/**
+		 * 删除Process
+		 * @param {Object} process
+		 */
+		delProcess: function(process) {
+			var com = this;
+			processRequest.postProcessData("delProcessType", {
+				procTypeId: process.ProcessTypeId
+			}, function(response) {
+				if(response.RspCode == 0) {
+					com.requireProcess()
+				}
+			})
 		}
 	}
 })

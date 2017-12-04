@@ -29,9 +29,8 @@
 				width: 80%;
 			}
 			
-			.add-perdson,
 			.del-process,
-			.show-process,
+			.edit-process,
 			.edit-groupName {
 				color: dodgerblue;
 			}
@@ -211,7 +210,8 @@
 						<td class="td-status"><span class="label  radius" v-bind:class="[{'label-defaunt':!process.stat},{'label-success':process.stat}]">{{process.stat?"显示":"屏蔽"}}</span></td>-->
 							<td class="td-manage">
 								<span class="Hui-iconfont Hui-iconfont-edit edit-groupName manage-item" title="编辑流程信息" v-on:click.stop="changeProcessInfo(process)"></span>
-								<span class="add-perdson Hui-iconfont Hui-iconfont-user-group manage-item" title="更改流程链" v-on:click.stop="changeProcessList(process)"></span>
+								<span class="Hui-iconfont Hui-iconfont-user-group edit-process manage-item" title="更改流程链" v-on:click.stop="changeProcessList(process)"></span>
+								<span class="Hui-iconfont Hui-iconfont-del2 del-process manage-item" title="删除流程" v-on:click.stop="delProcess(process)"></span>
 							</td>
 						</tr>
 					</tbody>

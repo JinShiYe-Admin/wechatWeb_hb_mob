@@ -187,11 +187,11 @@
 						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>角色关系：</label>
 						<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 							<div class="check-box">
-								<input name="sex" id="role-1" type="checkbox" name="role">
+								<input id="role-1" type="checkbox" value="1" v-model:checked="checkedTea" name="role">
 								<label for="role-1">老师请假</label>
 							</div>
 							<div class="check-box">
-								<input type="checkbox" id="role-2" name="role">
+								<input type="checkbox" id="role-2" value="2" v-model:checked="checkedPar" name="role">
 								<label for="role-2">家长请假</label>
 							</div>
 						</div>

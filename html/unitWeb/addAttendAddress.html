@@ -16,6 +16,15 @@
 		<!--<link href="../../css/mui.min.css" rel="stylesheet" />-->
 		<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=Z5iqNpaPerdxLv1m4Vd6PPgHYMZ3YbqH"></script>
 		<style>
+			/**
+			 * tips提示样式
+			 */
+			
+			.tips {
+				color: #737373;
+				font-size: 13px;
+			}
+			
 			#allmap {
 				overflow: hidden;
 				margin: 0;
@@ -57,7 +66,7 @@
 						</div>
 					</div>
 				</div>
-
+				<div class="tips">地址定位不准确时，可拖动地图中的红色水滴调整位置。</div>
 				<!--用来显示地图-->
 				<div id="allmap" style="height:500px;width:100%;"></div>
 
@@ -70,12 +79,12 @@
 				<div class="weui-cells ">
 					<div class="weui-cell ">
 						<div class="weui-cell__bd ">
-							<input id="attendAddressRedius" class="weui-input " type="text" :placeholder=" '请输入考勤地点半径' ">米（建议500-1000米）
+							<input id="attendAddressRedius" class="weui-input " type="text" :placeholder=" '请输入考勤地点半径' ">米<span class="tips">（建议500-1000米）</span>
 						</div>
 					</div>
 				</div>
-				<div>系统无法获取经纬度时，请使用高德地图查询后手动输入
-					<a href="https://lbs.amap.com/console/show/picker">查询</a>
+				<div class="tips">系统无法获取经纬度时，请使用高德地图查询后手动输入
+					<a style="color: #737373; text-decoration: underline;" href="https://lbs.amap.com/console/show/picker">查询</a>
 				</div>
 			</div>
 			<!--开关列表-->
@@ -157,7 +166,7 @@
 					}
 				})
 				//给corpId赋值假数据
-//				corpId = "wx6c4528c675d4a9c9";
+				//				corpId = "wx6c4528c675d4a9c9";
 				//	getWebsitConfig();
 				var detail = utils.getDataFromUrl(window.location.href);
 				//				alert("detail " + JSON.stringify(detail));
@@ -311,7 +320,7 @@
 										document.getElementById("latitude").value = "";
 										document.getElementById("attendAddressRedius").value = "";
 
-									}else if(data.RspCode == 1017){
+									} else if(data.RspCode == 1017) {
 										alert("存在同名的考勤地点");
 									}
 								},
@@ -509,15 +518,33 @@
 				//   alert('after');
 				// }
 			}));
+			var geoc = new BMap.Geocoder();//创建解析对象
 			/**
 			 * 根据浏览器定位
 			 */
 			var geolocation = new BMap.Geolocation();
 			geolocation.getCurrentPosition(function(r) {
 				if(this.getStatus() == BMAP_STATUS_SUCCESS) {
-					var mk = new BMap.Marker(r.point);
-					map.addOverlay(mk);
+					var marker = new BMap.Marker(r.point);
+					map.addOverlay(marker);
 					map.panTo(r.point);
+					/**
+					 * 浏览器定位到的红点也是可以拖动的
+					 */
+					marker.enableDragging(); //设置可拖拽
+					marker.addEventListener("dragend", function(e) { //拖动事件 
+						var pt = e.point;
+						geoc.getLocation(pt, function(rs) {
+							//addressComponents对象可以获取到详细的地址信息
+							var addComp = rs.addressComponents;
+							var site = addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber;
+							//将对应的HTML元素设置值
+							document.getElementById("attendAdressText").value = site;
+							document.getElementById("longitude").value = pt.lng;
+							document.getElementById("latitude").value = pt.lat;
+						});
+
+					})
 					//					alert('您的位置：' + r.point.lng + ',' + r.point.lat);
 				} else {
 					alert('failed' + this.getStatus());
@@ -546,6 +573,40 @@
 					$("#latitude").val(pt.lat);
 					//          alert("pt.lng=="+pt.lng);
 					//           alert("pt.lat=="+pt.lat);
+					/**
+					 * 操作者点击地图上的地点名称，将红点显示在该地方
+					 */
+					// 将地址解析结果显示在地图上,并调整地图视野.并将考勤地点记录的名称传进去
+					console.log("点击的地址site======" + site);
+					geoc.getPoint(site, function(point) {
+						console.log("22222222222222222");
+						if(point) {
+							map.centerAndZoom(point, 16);
+							/**
+							 * 将之前标注的红点清空
+							 */
+							map.clearOverlays();
+							//创建标注对象
+							var marker = new BMap.Marker(point);
+							map.addOverlay(marker);
+							marker.enableDragging(); //设置可拖拽
+							marker.addEventListener("dragend", function(e) { //拖动事件 
+								var pt = e.point;
+								geoc.getLocation(pt, function(rs) {
+									//addressComponents对象可以获取到详细的地址信息
+									var addComp = rs.addressComponents;
+									var site = addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber;
+									//将对应的HTML元素设置值
+									document.getElementById("attendAdressText").value = site;
+									document.getElementById("longitude").value = pt.lng;
+									document.getElementById("latitude").value = pt.lat;
+								});
+
+							})
+						} else {
+							alert("点击地图---------您选择地址没有解析到结果!");
+						}
+					});
 				});
 			});
 		</script>

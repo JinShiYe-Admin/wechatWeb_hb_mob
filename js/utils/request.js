@@ -194,6 +194,13 @@ var processRequest = (function(mod) {
 			} else {
 				callback(data);
 			}
+		}).error(function(e) {
+			console.log("JQP:onerror:", e);
+			callback({
+				RspCode: 404,
+				RspData: null,
+				RspTxt: "网络连接失败,请重新尝试一下"
+			});
 		});
 	}
 	/**
@@ -205,5 +212,5 @@ var processRequest = (function(mod) {
 	mod.postProcessData = function(portName, postData, callback) {
 		mod.postData(mod.URL + portName, postData, callback);
 	}
-
+	return mod;
 })(processRequest || {})

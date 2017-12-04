@@ -41,8 +41,7 @@
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
 								<!--<input id="beginHour" v-model.lazy="cname.message" class="weui-input" type="text" :placeholder="'请'">-->
-								<select id="attendTypeNote" name="sel"  onFocus="Myselect()">
-									<option value=""></option>
+								<select id="attendTypeNote" name="sel" onFocus="Myselect()">
 
 								</select>
 							</div>
@@ -104,7 +103,7 @@
 								<option value="15">15</option>
 								<option value="16">16</option>
 								<option value="17">17</option>
-								<option value="17">18</option>
+								<option value="18">18</option>
 								<option value="19">19</option>
 								<option value="20">20</option>
 								<option value="21">21</option>
@@ -119,9 +118,12 @@
 								<option value="30">30</option>
 								<option value="31">31</option>
 								<option value="32">32</option>
-								<option value="33">34</option>
-								<option value="35">36</option>
-								<option value="37">38</option>
+								<option value="33">33</option>
+								<option value="34">34</option>
+								<option value="35">35</option>
+								<option value="36">36</option>
+								<option value="37">37</option>
+								<option value="38">38</option>
 								<option value="39">39</option>
 								<option value="40">40</option>
 								<option value="41">41</option>
@@ -162,7 +164,7 @@
 					</div>
 				</div>
 				<div>
-					<div class="weui-cells__title">迟到时间（分钟）忽略不计、早退时间（分钟）忽略不计</div>
+					<div class="weui-cells__title">迟到时间（分钟</div>
 					<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
@@ -215,8 +217,8 @@
 					</div>
 				</div>-->
 			</div>
-			<div class="weui-btn-area" v-if="editName =='添加'">
-				<button id="submit" v-on:click="submitClick" class="weui-btn weui-btn_primary">{{editName}}</button>
+			<div class="weui-btn-area" >
+				<button id="submit" v-on:click="submitClick" class="weui-btn weui-btn_primary">添加</button>
 			</div>
 		</div>
 		<!--</template>-->
@@ -229,169 +231,165 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 		<script>
-			//			console.log(document.getElementById("beginMinute").selected);
+			console.log(11111111111111);
 			var corpId = "";
 			var attendTypeId;
-			window.onload = function() {
+			var selectArray = new Array();
+			var optionValueArray = new Array();
+			//			window.onload = function() {
+			console.log(222222222222222222);
+			attendTypeId = getUrlParam('attendTypeId');
+			console.log("attendTypeId===" + JSON.stringify(attendTypeId));
+			//				getNote();
 
-				attendTypeId = getUrlParam('attendTypeId');
-				console.log("attendTypeId===" + JSON.stringify(attendTypeId));
-				//				getNote();
+			function getUrlParam(name) {
 
-				function getUrlParam(name) {
+				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+				var r = window.location.search.substr(1).match(reg); //匹配目标参数
+				if(r != null) {
 
-					var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
-					var r = window.location.search.substr(1).match(reg); //匹配目标参数
-					if(r != null) {
-
-						return decodeURI(unescape(r[2]));
-					} else {
-						return null; //返回参数值
-					}
-
-				}
-				/**
-				 * 页面一加载，向顾工c#接口代码请求该操作者的信息，目的是拿到该操作者的单位标识
-				 */
-				var tempData = {
-					cmd: 'userinfo',
-					type: 'findpage',
-					colv: ''
-				}
-
-				$.ajax({
-					url: "https://jsypay.jiaobaowang.net/wxth/appschweb/schwebapi.aspx",
-					type: "POST",
-					data: JSON.stringify(tempData),
-					timeout: 1000,
-					dataType: "json",
-					async: false,
-					success: function(data) {
-						console.log("用户基本信息==============" + JSON.stringify(data))
-						if(data.RspCode == 0) {
-							var rep = JSON.parse(data.RspData);
-
-							corpId = rep.corpid;
-
-						} else if(data.RspCode == 7) {
-							//							$.toast("登录超时，请重新进入企业微信后台管理端", "cancel", function() {
-							//								console.log('close');
-							//							});
-							alert("登录超时，请重新进入企业微信后台管理端");
-						}
-					},
-					error: function() {
-						console.log("error");
-					}
-				})
-				//给corpId赋值假数据
-//				corpId = "wx6c4528c675d4a9c9";
-				/**
-				 * 获取考勤类型记录数据列表
-				 */
-				var selectArray = new Array();
-				var requestDataForAttendType = {
-					"corpId": corpId, //暂时写死，此值是从顾工c#接口中获取登陆者的单位标识
-					"pageIndex": 1,
-					"pageSize": 0,
-					"uuid": "",
-					"appid": "",
-					"token": "",
-					"sign": ""
-				}
-				$.ajax({
-					type: "post",
-					url: "https://jbyj.jiaobaowang.net/AttendanceService/getAttendType", //应该是绑定.9机器的域名，考勤管理模块应该也是部署在此阿里云服务机器上。
-					async: false,
-					data: JSON.stringify(requestDataForAttendType),
-					success: function(data) {
-						console.log("data====" + JSON.stringify(data));
-						if(data.RspCode == 0) {
-							for(i = 0, len = data.RspData.Data.length; i < len; i++) {
-								console.log("data.RspData.Data[i]====" + data.RspData.Data[i]);
-								selectArray.push(data.RspData.Data[i]);
-							}
-
-							//							column_table.dt = data.RspData.Data;
-
-						}
-					}
-				})
-				console.log("selectArray--==========" + selectArray);
-				console.log("selectArray---json======" + JSON.stringify(selectArray));
-
-				var counts;
-				counts = 0;
-				
-				counts = selectArray.length;
-
-				function Myselect() {
-					var i;
-					for(i = 0; i < counts; i++) {
-						document.sel.options[i] = new Option(arr[i], i);
-					}
-				}
-				//	getWebsitConfig();
-				/**
-				 * 从考勤类型列表数据每一行记录点超链接跳转到此页面，将考勤类型记录对象得到，detail即是
-				 */
-				var detail = utils.getDataFromUrl(window.location.href);
-				console.log("detail " + JSON.stringify(detail));
-
-				//所需要的考勤类型记录的编号
-				//								attendTypeId=detail.AttendTypeId;
-				attendTypeId = 5
-				vm.type = detail.type;
-				if(vm.type == 'edit') {
-					var tempData = {
-						cmd: 'chn',
-						type: 'findpage',
-						pagesize: '1',
-						pageindex: '1',
-						chnid: detail.chnid
-						//				cname: '',
-						//				stat: '',
-						//				iswrite: '',
-						//				islink: ''
-					}
-					unitWebsitePro(tempData, function(data) {
-						//				alert(JSON.stringify(data));
-						if(data.RspCode == 0) {
-							detail = data.RspData.dt[0];
-							vm.editName = '删除'
-							vm.colid = detail.chnid;
-							vm.cname.message = detail.cname;
-							vm.orderid.message = detail.orderid;
-							vm.linkurl.message = detail.linkurl;
-							vm.islink.check = detail.islink == 1 ? true : false;
-							vm.iswrite.check = detail.iswrite == 1 ? true : false;
-							vm.istop.check = detail.istop == 1 ? true : false;
-							vm.note.message = detail.note
-							for(var item in vm.$data) {
-								(function addwatch(key) {
-									vm.$watch(key + '.message', function(newVal, oldVal) {
-										edit(oldVal, newVal, key)
-									})
-									vm.$watch(key + '.check', function(newVal, oldVal) {
-										edit(oldVal, newVal, key)
-									})
-								})(item)
-
-							}
-						} else {
-							alert(data.RspTxt);
-						}
-					});
-
+					return decodeURI(unescape(r[2]));
 				} else {
-					vm.editName = '添加'
-					vm.$watch('islink.check', function(newVal, oldVal) {
-						edit(oldVal, newVal, 'islink')
-					})
+					return null; //返回参数值
 				}
-				document.getElementById("conetent").className = "weui-cells weui-cells_form"
 
 			}
+			/**
+			 * 页面一加载，向顾工c#接口代码请求该操作者的信息，目的是拿到该操作者的单位标识
+			 */
+			var tempData = {
+				cmd: 'userinfo',
+				type: 'findpage',
+				colv: ''
+			}
+
+			$.ajax({
+				url: "https://jsypay.jiaobaowang.net/wxth/appschweb/schwebapi.aspx",
+				type: "POST",
+				data: JSON.stringify(tempData),
+				timeout: 1000,
+				dataType: "json",
+				async: false,
+				success: function(data) {
+					console.log("用户基本信息==============" + JSON.stringify(data))
+					if(data.RspCode == 0) {
+						var rep = JSON.parse(data.RspData);
+
+						corpId = rep.corpid;
+
+					} else if(data.RspCode == 7) {
+						//							$.toast("登录超时，请重新进入企业微信后台管理端", "cancel", function() {
+						//								console.log('close');
+						//							});
+						alert("登录超时，请重新进入企业微信后台管理端");
+					}
+				},
+				error: function() {
+					console.log("error");
+				}
+			})
+			//给corpId赋值假数据
+//			corpId = "wx6c4528c675d4a9c9";
+			/**
+			 * 获取考勤类型记录数据列表
+			 */
+
+			var requestDataForAttendType = {
+				"corpId": corpId, //暂时写死，此值是从顾工c#接口中获取登陆者的单位标识
+				"pageIndex": 1,
+				"pageSize": 0,
+				"uuid": "",
+				"appid": "",
+				"token": "",
+				"sign": ""
+			}
+			$.ajax({
+				type: "post",
+				url: "https://jbyj.jiaobaowang.net/AttendanceService/getAttendType", //应该是绑定.9机器的域名，考勤管理模块应该也是部署在此阿里云服务机器上。
+				async: false,
+				data: JSON.stringify(requestDataForAttendType),
+				success: function(data) {
+					console.log("data====" + JSON.stringify(data));
+					if(data.RspCode == 0) {
+						for(i = 0, len = data.RspData.Data.length; i < len; i++) {
+							console.log("data.RspData.Data[i]====" + data.RspData.Data[i]);
+							selectArray.push(data.RspData.Data[i].AttendTypeNote);
+							optionValueArray.push(data.RspData.Data[i].AttendTypeId);
+						}
+
+						//							column_table.dt = data.RspData.Data;
+
+					}
+				},
+				error: function() {
+					alert("获取考勤类型记录失败");
+				}
+			})
+			console.log("selectArray--==========" + selectArray);
+			console.log("selectArray---json======" + JSON.stringify(selectArray));
+
+			//	getWebsitConfig();
+			/**
+			 * 从考勤类型列表数据每一行记录点超链接跳转到此页面，将考勤类型记录对象得到，detail即是
+			 */
+			var detail = utils.getDataFromUrl(window.location.href);
+			console.log("detail " + JSON.stringify(detail));
+
+			//所需要的考勤类型记录的编号
+			//								attendTypeId=detail.AttendTypeId;
+//			attendTypeId = 5
+			//				vm.type = detail.type;
+			//				if(vm.type == 'edit') {
+			//					var tempData = {
+			//						cmd: 'chn',
+			//						type: 'findpage',
+			//						pagesize: '1',
+			//						pageindex: '1',
+			//						chnid: detail.chnid
+			//						//				cname: '',
+			//						//				stat: '',
+			//						//				iswrite: '',
+			//						//				islink: ''
+			//					}
+			//					unitWebsitePro(tempData, function(data) {
+			//						//				alert(JSON.stringify(data));
+			//						if(data.RspCode == 0) {
+			//							detail = data.RspData.dt[0];
+			//							vm.editName = '删除'
+			//							vm.colid = detail.chnid;
+			//							vm.cname.message = detail.cname;
+			//							vm.orderid.message = detail.orderid;
+			//							vm.linkurl.message = detail.linkurl;
+			//							vm.islink.check = detail.islink == 1 ? true : false;
+			//							vm.iswrite.check = detail.iswrite == 1 ? true : false;
+			//							vm.istop.check = detail.istop == 1 ? true : false;
+			//							vm.note.message = detail.note
+			//							for(var item in vm.$data) {
+			//								(function addwatch(key) {
+			//									vm.$watch(key + '.message', function(newVal, oldVal) {
+			//										edit(oldVal, newVal, key)
+			//									})
+			//									vm.$watch(key + '.check', function(newVal, oldVal) {
+			//										edit(oldVal, newVal, key)
+			//									})
+			//								})(item)
+			//
+			//							}
+			//						} else {
+			//							alert(data.RspTxt);
+			//						}
+			//					});
+			//
+			//				} else {
+			//					vm.editName = '添加'
+			//					vm.$watch('islink.check', function(newVal, oldVal) {
+			//						edit(oldVal, newVal, 'islink')
+			//					})
+			//				}
+			document.getElementById("conetent").className = "weui-cells weui-cells_form"
+
+			//			}
+
 			var vm = new Vue({
 				el: '#conetent',
 				data: {
@@ -436,7 +434,12 @@
 						/**
 						 * 得到各input输入框的值
 						 */
-
+						var selectObject_Note = document.getElementById("attendTypeNote");
+						var optionObjectNoteIndex=selectObject_Note.selectedIndex;
+						var optionObjectNoteText=selectObject_Note.options[optionObjectNoteIndex].text;
+						console.log("optionObjectNoteText======"+optionObjectNoteText);
+						var optionObjectNoteValue=selectObject_Note.options[optionObjectNoteIndex].value;
+						console.log("optionObjectNoteValue====="+optionObjectNoteValue);
 						var selectElementObject_M = document.getElementById("beginMinute");
 						//						console.log("selectElementObject===" + selectElementObject_M);
 						var optionElementObjectIndex_M = selectElementObject_M.selectedIndex;
@@ -477,7 +480,7 @@
 							//input 输入框的值都填写了，则提交，进行添加。
 							var tempData = {
 								"corpId": corpId,
-								"attendType": attendTypeId,
+								"attendType": optionObjectNoteValue,
 								"beginHour": beginHour,
 								"beginMinute": beginMinute,
 								"continuousMinute": continuousTime,
@@ -504,7 +507,7 @@
 									if(data.RspCode == 0) {
 										//给用户提示，添加成功
 										alert("添加成功");
-										window.location = "../pcWeb-HUI/attendenceManage.html";
+//										window.location = "../pcWeb-HUI/attendenceManage.html";
 
 									} else if(data.RspCode == 1018) {
 										alert("存在相同时间的考勤时间段");
@@ -682,6 +685,22 @@
 						}
 					}
 				});
+			}
+
+			var counts;
+			counts = 0;
+			console.log("3333333333下拉框数组中的元素===========" + selectArray);
+			counts = selectArray.length;
+			console.log("下拉框数组中的元素个数====" + counts);
+
+			function Myselect() {
+				console.log("下拉框获得焦点------------");
+				var i;
+				for(i = 0; i < counts; i++) {
+					console.log("selectArray[i]====" + selectArray[i]);
+					console.log("options[i]=====" + document.getElementById("attendTypeNote").options[i]);
+					document.getElementById("attendTypeNote").options[i] = new Option(selectArray[i], optionValueArray[i]);
+				}
 			}
 		</script>
 	</body>

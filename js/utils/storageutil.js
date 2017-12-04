@@ -19,6 +19,7 @@ var storageutil = (function(mod) {
 	mod.QNSSPACECLASSCIRCLE = "classcircle/"; //班级圈空间(第二前缀名)
 	mod.QNBANNERPICTURE = "bannerpicture/"; //横幅图片(第二前缀名)
 	mod.QNSERVICE = "service/"; //报修图片(第二前缀名)
+	mod.QNLEAVE = "leave/"; //请假图片(第二前缀名)
 	mod.QNVIDEO = "video/"; //视频(第二前缀名)
 	mod.QNTHUMB = "thumb/"; //缩略图的第三前缀
 	mod.QNCROP = "crop/"; //裁剪图的第三前缀

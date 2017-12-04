@@ -30,14 +30,14 @@
 	</head>
 
 	<body ontouchstart>
-		<div class="weui-tab">
+		<div class="weui-tab" id="attendData">
 			<div class="weui-tab__bd" style="padding-bottom: 50px;">
 				<div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active">
 					<div class="weui-cells" style="margin-top: 0;">
 						<div class="weui-cell">
 							<div class="weui-cell__hd"><label for="date" class="weui-label">查询日期</label></div>
 							<div class="weui-cell__bd">
-								<input class="weui-input" id="date" value="" type="text" placeholder="请点击选择查询日期">
+								<input class="weui-input" id="date" :value=beginTime type="text" placeholder="请点击选择查询日期">
 							</div>
 						</div>
 					</div>
@@ -99,14 +99,24 @@
 						attendArray: [], //考勤统计列表
 						departArray: [], //管理的所有部门数组
 						peopleArray: [] //管理的所有部门的人员数组
-					},
-					methods: {
-						searchAttendList: function() {
-							//16.获取考勤统计
-							getAttend();
-						}
 					}
 				});
+				//给正确格式的当前时间
+				Date.prototype.format = function(fmt) { //author: meizz 
+					var o = {
+						"M+": this.getMonth() + 1, //月份 
+						"d+": this.getDate(), //日 
+						"h+": this.getHours(), //小时 
+						"m+": this.getMinutes(), //分 
+						"s+": this.getSeconds(), //秒 
+						"q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+						"S": this.getMilliseconds() //毫秒 
+					};
+					if(/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+					for(var k in o)
+						if(new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+					return fmt;
+				}
 				//13.获取当前人员信息
 				var getUserInfo = function() {
 					var tempData = {
@@ -118,6 +128,10 @@
 					unitWebsitePro(tempData, function(data) {
 						if(data.RspCode == 0) {
 							attendData.userInfo = JSON.parse(data.RspData);
+							var myDate = new Date().format('yyyy-MM-dd');
+							attendData.beginTime = myDate.toString();
+							//16.获取考勤统计
+							getAttend();
 						} else {
 							alert('请重新登录获取个人信息');
 						}
@@ -165,7 +179,7 @@
 								$.toast("暂无考勤记录");
 							}
 						} else {
-
+							alert(data.RspTxt);
 						}
 					});
 				};

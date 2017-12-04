@@ -54,7 +54,6 @@
 							<td><u style="cursor:pointer" class="text-primary">{{attend.AttendTypeNote}}</u></td>
 							<td class="td-status"><span><a v-if="attend.attendTypeProp==1">上班/上学</a><a v-else>下班/放学</a></span></td>
 							<td class="td-manage">
-								<a :href="'../unitWeb/addAttendTime.html?attendTypeId=' + attend.AttendTypeId">添加考勤时间段</a>
 								<a title="修改考勤类型" href="javascript:;" @click="modifyAttend(attend,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>
 								<a title="删除考勤类型" href="javascript:;" @click="removeAttend(attend,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
 							</td>

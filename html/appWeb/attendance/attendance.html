@@ -71,7 +71,7 @@
 					<div class="weui-cell">
 						<div class="weui-cell__hd"><label class="weui-label">考勤地点</label></div>
 						<div class="weui-cell__bd">
-							<input id="attendArea" data_id="" onclick="selectAttendArea(this)" class="weui-input" placeholder="请选择部门">
+							<input id="attendArea" data_id="" onclick="selectAttendArea(this)" class="weui-input" placeholder="请选择考勤地点">
 						</div>
 					</div>
 
@@ -258,7 +258,7 @@
 	function getAttendType() {
 		var tempData = {
 			corpId: userInfo.corpid, //单位ID
-			//			corpId: "wx6c4528c675d4a9c9",
+//						corpId: "wx6c4528c675d4a9c9",
 			pageIndex: '1', //当前页数
 			pageSize: '0' //每页记录数，0 为全部
 		}
@@ -285,7 +285,7 @@
 	function getAttendArea() {
 		var tempData = {
 			corpId: userInfo.corpid, //单位ID
-			//			corpId: "wx6c4528c675d4a9c9",
+//						corpId: "wx6c4528c675d4a9c9",
 			pageIndex: 1, //当前页数
 			pageSize: 0 //每页记录数，0 为全部
 		}
@@ -302,7 +302,7 @@
 
 				}
 
-				console.log('重组考勤地点:' + JSON.stringify(attendType.attendTypeList));
+				console.log('重组考勤地点:' + JSON.stringify(attendArea.attendAreaList));
 
 			} else {
 				alert(data.RspTxt);
@@ -311,6 +311,19 @@
 	}
 
 	function addAttend(tempAttendType) {
+
+		if(document.getElementById("attendType").data_id==undefined){
+			alert("请选择考勤类型");
+			return;
+		}
+		if(document.getElementById("depart").data_id==undefined){
+			alert("请选择部门");
+			return;
+		}
+		if(document.getElementById("attendArea").data_id==undefined){
+			alert("请选择考勤地点");
+			return;
+		}
 		//附件数组
 		var tempEncs = [];
 		for(var i = 0; i < submitHomework.uploadedFiles.length; i++) {
@@ -323,6 +336,9 @@
 				imgurl: tempValue.ImgUrl
 			}
 			tempEncs.push(tempModel);
+		}
+		if(tempEncs.length==0){
+			alert("请添加照片");
 		}
 		var tempData = {
 			corpId: userInfo.corpid,
@@ -354,6 +370,8 @@
 			type: 'findpage',
 			colv: ''
 		}
+//		getAttendType();
+//		getAttendArea();
 		console.log(JSON.stringify(tempData))
 		unitWebsitePro(tempData, function(data) {
 			console.log('获取当前人员信息' + JSON.stringify(data.RspData))
@@ -504,28 +522,28 @@
 			enableHighAccuracy: true
 		})
 	}
-	var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
-	var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
-	$('.weui-tab__bd').css({
-		'height': (allheight - barheight) * 100 / allheight + '%'
-	});
-	//有红点提示的宽度调整
-	var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
-	$('.wrap').css({
-		'left': (tabar_width - 30) * 50 / tabar_width + '%'
-	});
-	window.addEventListener("resize", function() {
-		var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
-		var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
-		$('.weui-tab__bd').css({
-			'height': (allheight - barheight) * 100 / allheight + '%'
-		});
-
-		var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
-		$('.wrap').css({
-			'left': (tabar_width - 30) * 50 / tabar_width + '%'
-		});
-	}, false);
+//	var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
+//	var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
+//	$('.weui-tab__bd').css({
+//		'height': (allheight - barheight) * 100 / allheight + '%'
+//	});
+//	//有红点提示的宽度调整
+//	var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
+//	$('.wrap').css({
+//		'left': (tabar_width - 30) * 50 / tabar_width + '%'
+//	});
+//	window.addEventListener("resize", function() {
+//		var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
+//		var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
+//		$('.weui-tab__bd').css({
+//			'height': (allheight - barheight) * 100 / allheight + '%'
+//		});
+//
+//		var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
+//		$('.wrap').css({
+//			'left': (tabar_width - 30) * 50 / tabar_width + '%'
+//		});
+//	}, false);
 
 	//从相册中选择照片后，上传
 	//index--从相册选择照片回调里面，照片的索引，files--选择的照片信息，filesSum--选择照片之前，现存的照片张数

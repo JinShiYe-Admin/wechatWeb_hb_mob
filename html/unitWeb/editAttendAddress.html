@@ -25,6 +25,7 @@
 				color: #737373;
 				font-size: 13px;
 			}
+			
 			.weui-cells {
 				margin-top: 0px;
 			}
@@ -94,7 +95,7 @@
 						<div class="weui-cells">
 							<div class="weui-cell">
 								<div class="weui-cell__bd">
-									<input id="attendAddressRedius" class="weui-input" type="text">米<span class="tips">（建议500-1000米）</span>
+									<input id="attendAddressRedius" class="weui-input" type="text" oninput="getRedius(this.value)">米<span class="tips">（建议500-1000米）</span>
 								</div>
 							</div>
 						</div>
@@ -138,216 +139,256 @@
 			</div>
 			<!--</template>-->
 			<script src="../../js/mui.min.js"></script>
-			<script type="text/javascript" src="../../js/weui.min.js"></script>
-			<script type="text/javascript" src="../../js/vue.min.js"></script>
-			<script type="text/javascript" src="../../js/jweixin.js"></script>
+			<!--<script type="text/javascript" src="../../js/weui.min.js"></script>
+			<script type="text/javascript" src="../../js/vue.min.js"></script>-->
+			<!--<script type="text/javascript" src="../../js/jweixin.js"></script>-->
 			<script type="text/javascript" src="../../js/jquery.min.js"></script>
 			<script type="text/javascript">
 				document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 			</script>
 			<script>
+				function getDataFromUrl(url) {
+					var data = {};
+					var index = url.indexOf("&");
+					if(index != -1) {
+						var dataStr = url.substring(index + 6, url.length);
+						console.log("getDataFromUrl dataStr " + dataStr);
+						data = JSON.parse(decodeURIComponent(dataStr));
+					}
+					console.log("getDataFromUrl url " + url);
+					console.log("getDataFromUrl data " + JSON.stringify(data));
+					return data;
+				}
+				console.log("111111111111-----------");
 				var attendAddressObject;
-				window.onload = function() {
+				//				window.onload = function() {
 
-					//	getWebsitConfig();
-					attendAddressObject = utils.getDataFromUrl(window.location.href);
-					console.log("attendAddressObject " + JSON.stringify(attendAddressObject));
-					/**
-					 * 将每条考勤地点对象的属性值分别赋值到相应属性上
-					 */
-					document.getElementById("attendAddressRedius").value = attendAddressObject.AreaRedius;
-					document.getElementById("attendAdressText").value = attendAddressObject.AreaName;
-					document.getElementById("attendAdressX").value = attendAddressObject.AreaX;
-					document.getElementById("attendAdressY").value = attendAddressObject.AreaY;
-					//				vm.type = detail.type;
-					if(vm.type == 'edit') {
-						var tempData = {
-							cmd: 'chn',
-							type: 'findpage',
-							pagesize: '1',
-							pageindex: '1',
-							chnid: detail.chnid
-							//				cname: '',
-							//				stat: '',
-							//				iswrite: '',
-							//				islink: ''
-						}
-						unitWebsitePro(tempData, function(data) {
-							//				alert(JSON.stringify(data));
-							if(data.RspCode == 0) {
-								detail = data.RspData.dt[0];
-								vm.editName = '删除'
-								vm.colid = detail.chnid;
-								vm.cname.message = detail.cname;
-								vm.orderid.message = detail.orderid;
-								vm.linkurl.message = detail.linkurl;
-								vm.islink.check = detail.islink == 1 ? true : false;
-								vm.iswrite.check = detail.iswrite == 1 ? true : false;
-								vm.istop.check = detail.istop == 1 ? true : false;
-								vm.note.message = detail.note
-								for(var item in vm.$data) {
-									(function addwatch(key) {
-										vm.$watch(key + '.message', function(newVal, oldVal) {
-											edit(oldVal, newVal, key)
-										})
-										vm.$watch(key + '.check', function(newVal, oldVal) {
-											edit(oldVal, newVal, key)
-										})
-									})(item)
+				//	getWebsitConfig();
+				attendAddressObject = getDataFromUrl(window.location.href);
+				console.log("222222222222attendAddressObject " + JSON.stringify(attendAddressObject));
+				/**
+				 * 将每条考勤地点对象的属性值分别赋值到相应属性上
+				 */
+				document.getElementById("attendAddressRedius").value = attendAddressObject.AreaRedius;
+				document.getElementById("attendAdressText").value = attendAddressObject.AreaName;
+				document.getElementById("attendAdressX").value = attendAddressObject.AreaX;
+				document.getElementById("attendAdressY").value = attendAddressObject.AreaY;
+				//				vm.type = detail.type;
+				//					if(vm.type == 'edit') {
+				//						var tempData = {
+				//							cmd: 'chn',
+				//							type: 'findpage',
+				//							pagesize: '1',
+				//							pageindex: '1',
+				//							chnid: detail.chnid
+				//							//				cname: '',
+				//							//				stat: '',
+				//							//				iswrite: '',
+				//							//				islink: ''
+				//						}
+				//						unitWebsitePro(tempData, function(data) {
+				//							//				alert(JSON.stringify(data));
+				//							if(data.RspCode == 0) {
+				//								detail = data.RspData.dt[0];
+				//								vm.editName = '删除'
+				//								vm.colid = detail.chnid;
+				//								vm.cname.message = detail.cname;
+				//								vm.orderid.message = detail.orderid;
+				//								vm.linkurl.message = detail.linkurl;
+				//								vm.islink.check = detail.islink == 1 ? true : false;
+				//								vm.iswrite.check = detail.iswrite == 1 ? true : false;
+				//								vm.istop.check = detail.istop == 1 ? true : false;
+				//								vm.note.message = detail.note
+				//								for(var item in vm.$data) {
+				//									(function addwatch(key) {
+				//										vm.$watch(key + '.message', function(newVal, oldVal) {
+				//											edit(oldVal, newVal, key)
+				//										})
+				//										vm.$watch(key + '.check', function(newVal, oldVal) {
+				//											edit(oldVal, newVal, key)
+				//										})
+				//									})(item)
+				//
+				//								}
+				//							} else {
+				//								alert(data.RspTxt);
+				//							}
+				//						});
+				//
+				//					} else {
+				//						vm.editName = '添加'
+				//						vm.$watch('islink.check', function(newVal, oldVal) {
+				//							edit(oldVal, newVal, 'islink')
+				//						})
+				//					}
+				document.getElementById("conetent").className = "weui-cells weui-cells_form"
+				// 百度地图API功能
+				var map = new BMap.Map("allmap");
+				console.log("map==============" + map);
 
-								}
+				//								var point = new BMap.Point(116.331398, 39.897445);
+				//将原来的经纬度放入方法中
+//												alert(attendAddressObject.AreaX+"---"+attendAddressObject.AreaY);
+				var point = new BMap.Point(attendAddressObject.AreaX, attendAddressObject.AreaY);
+				map.centerAndZoom(point, 12);
+				map.enableScrollWheelZoom(true);
+				//添加地图类型控件
+				map.addControl(new BMap.MapTypeControl({
+					mapTypes: [
+						BMAP_NORMAL_MAP,
+						BMAP_HYBRID_MAP
+					]
+				}));
+				var top_left_control = new BMap.ScaleControl({
+					anchor: BMAP_ANCHOR_BOTTOM_RIGHT
+				}); // 左上角，添加比例尺
+				var top_left_navigation = new BMap.NavigationControl({
+					anchor: BMAP_ANCHOR_BOTTOM_RIGHT
+
+				}); //左上角，添加默认缩放平移控件
+				map.addControl(top_left_control);
+				map.addControl(top_left_navigation);
+
+				/**
+				 * 城市列表控件
+				 */
+				map.enableInertialDragging();
+
+				map.enableContinuousZoom();
+
+				var size = new BMap.Size(10, 20);
+				map.addControl(new BMap.CityListControl({
+					anchor: BMAP_ANCHOR_TOP_LEFT,
+					offset: size,
+					// 切换城市之间事件
+					// onChangeBefore: function(){
+					//    alert('before');
+					// },
+					// 切换城市之后事件
+					// onChangeAfter:function(){
+					//   alert('after');
+					// }
+				}));
+				var geoc = new BMap.Geocoder();
+				/**
+				 * 根据原先的地址解析之，将其对应的位置在地图上显示
+				 */
+				// 将地址解析结果显示在地图上,并调整地图视野.并将考勤地点记录的名称传进去
+
+				console.log("attendAddressObject.AreaName====" + attendAddressObject.AreaName);
+				/**
+				 * 将地址中的逗号去掉
+				 */
+				var address = attendAddressObject.AreaName;
+				//					var regularExpression="/^,/g";
+				var addressReplaced = address.replace(/,/g, "");
+				console.log("addressReplaced=====" + addressReplaced);
+				geoc.getPoint(addressReplaced, function(point) {
+					if(point) {
+						map.centerAndZoom(point, 16);
+						var marker = new BMap.Marker(point); //创建标注对象
+						map.addOverlay(marker);
+						//给标注对象授权可拖动并监听拖动事件
+						marker.enableDragging(); //设置可拖拽
+						marker.addEventListener("dragend", function(e) { //拖动事件 
+							var pt = e.point;
+							geoc.getLocation(pt, function(rs) {
+								//addressComponents对象可以获取到详细的地址信息
+								var addComp = rs.addressComponents;
+								var site = addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber;
+								//将对应的HTML元素设置值
+								document.getElementById("attendAdressText").value = site;
+								document.getElementById("attendAdressX").value = pt.lng;
+								document.getElementById("attendAdressY").value = pt.lat;
+							});
+
+						})
+					} else {
+						alert("您选择地址没有解析到结果!");
+					}
+				});
+				map.addEventListener("click", function(e) {
+					//通过点击百度地图，可以获取到对应的point, 由point的lng、lat属性就可以获取对应的经度纬度     
+					var pt = e.point;
+					//点击得到的准确地址
+					var site;
+					geoc.getLocation(pt, function(rs) {
+						console.log("11111111111");
+						//addressComponents对象可以获取到详细的地址信息
+						var addComp = rs.addressComponents;
+						site = addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber;
+						//将对应的HTML元素设置值
+						document.getElementById("attendAdressText").value = site;
+						document.getElementById("attendAdressX").value = pt.lng;
+						document.getElementById("attendAdressY").value = pt.lat;
+						$("#site").val(site);
+						$("#longitude").val(pt.lng);
+						$("#latitude").val(pt.lat);
+						//          alert("pt.lng=="+pt.lng);
+						//           alert("pt.lat=="+pt.lat);
+						/**
+						 * 操作者点击地图上的地点名称，将红点显示在该地方
+						 */
+						// 将地址解析结果显示在地图上,并调整地图视野.并将考勤地点记录的名称传进去
+						console.log("点击的地址site======" + site);
+						geoc.getPoint(site, function(point) {
+							console.log("22222222222222222");
+							if(point) {
+								map.centerAndZoom(point, 16);
+								/**
+								 * 将之前标注的红点清空
+								 */
+								map.clearOverlays();
+								var marker = new BMap.Marker(point);
+								map.addOverlay(marker);
+								marker.enableDragging(); //设置可拖拽
+								marker.addEventListener("dragend", function(e) { //拖动事件 
+									var pt = e.point;
+									geoc.getLocation(pt, function(rs) {
+										//addressComponents对象可以获取到详细的地址信息
+										var addComp = rs.addressComponents;
+										var site = addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber;
+										//将对应的HTML元素设置值
+										document.getElementById("attendAdressText").value = site;
+										document.getElementById("attendAdressX").value = pt.lng;
+										document.getElementById("attendAdressY").value = pt.lat;
+									});
+
+								})
 							} else {
-								alert(data.RspTxt);
+								alert("点击地图---------您选择地址没有解析到结果!");
 							}
 						});
 
-					} else {
-						vm.editName = '添加'
-						vm.$watch('islink.check', function(newVal, oldVal) {
-							edit(oldVal, newVal, 'islink')
-						})
-					}
-					document.getElementById("conetent").className = "weui-cells weui-cells_form"
-					// 百度地图API功能
-					var map = new BMap.Map("allmap");
+					});
 
-					//			var point = new BMap.Point(116.331398, 39.897445);
-					//将原来的经纬度放入方法中
-					//			alert(attendAddressObject.AreaX);
-					var point = new BMap.Point(attendAddressObject.AreaX, attendAddressObject.AreaY);
-					map.centerAndZoom(point, 12);
-					map.enableScrollWheelZoom(true);
-					//添加地图类型控件
-					map.addControl(new BMap.MapTypeControl({
-						mapTypes: [
-							BMAP_NORMAL_MAP,
-							BMAP_HYBRID_MAP
-						]
-					}));
-					var top_left_control = new BMap.ScaleControl({
-						anchor: BMAP_ANCHOR_BOTTOM_RIGHT
-					}); // 左上角，添加比例尺
-					var top_left_navigation = new BMap.NavigationControl({
-						anchor: BMAP_ANCHOR_BOTTOM_RIGHT
+				});
 
-					}); //左上角，添加默认缩放平移控件
-					map.addControl(top_left_control);
-					map.addControl(top_left_navigation);
+				//				}
 
-					/**
-					 * 城市列表控件
-					 */
-					map.enableInertialDragging();
+				/**
+				 * oninput事件触发的函数
+				 */
 
-					map.enableContinuousZoom();
-
-					var size = new BMap.Size(10, 20);
-					map.addControl(new BMap.CityListControl({
-						anchor: BMAP_ANCHOR_TOP_LEFT,
-						offset: size,
-						// 切换城市之间事件
-						// onChangeBefore: function(){
-						//    alert('before');
-						// },
-						// 切换城市之后事件
-						// onChangeAfter:function(){
-						//   alert('after');
-						// }
-					}));
-					var geoc = new BMap.Geocoder();
-					/**
-					 * 根据原先的地址解析之，将其对应的位置在地图上显示
-					 */
-					// 将地址解析结果显示在地图上,并调整地图视野.并将考勤地点记录的名称传进去
+				function getRedius(redius) {
 					
-					console.log("attendAddressObject.AreaName===="+attendAddressObject.AreaName);
-					/**
-					 * 将地址中的逗号去掉
-					 */
-					var address=attendAddressObject.AreaName;
-//					var regularExpression="/^,/g";
-					var addressReplaced=address.replace(/,/g,"");
-					console.log("addressReplaced====="+addressReplaced);
-					geoc.getPoint(addressReplaced, function(point) {
-						if(point) {
-							map.centerAndZoom(point, 16);
-							var marker = new BMap.Marker(point); //创建标注对象
-							map.addOverlay(marker);
-							//给标注对象授权可拖动并监听拖动事件
-							marker.enableDragging(); //设置可拖拽
-							marker.addEventListener("dragend", function(e) { //拖动事件 
-								var pt = e.point;
-								geoc.getLocation(pt, function(rs) {
-									//addressComponents对象可以获取到详细的地址信息
-									var addComp = rs.addressComponents;
-									var site = addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber;
-									//将对应的HTML元素设置值
-									document.getElementById("attendAdressText").value = site;
-									document.getElementById("attendAdressX").value = pt.lng;
-									document.getElementById("attendAdressY").value = pt.lat;
-								});
+					console.log("函数里面redius====" + redius);
+					var lng = document.getElementById("attendAdressX").value;
+					var lat = document.getElementById("attendAdressY").value;
+					console.log("getRedius---lng===" + lng);
+					var point = new BMap.Point(lng, lat);
+					
+					var circle = new BMap.Circle(point, redius, {
+						strokeColor: "blue",
+						strokeWeight: 2,
+						strokeOpacity: 0.5
+					}); //创建圆
 
-							})
-						} else {
-							alert("您选择地址没有解析到结果!");
-						}
-					});
-					map.addEventListener("click", function(e) {
-						//通过点击百度地图，可以获取到对应的point, 由point的lng、lat属性就可以获取对应的经度纬度     
-						var pt = e.point;
-						//点击得到的准确地址
-						var site;
-						geoc.getLocation(pt, function(rs) {
-							console.log("11111111111");
-							//addressComponents对象可以获取到详细的地址信息
-							var addComp = rs.addressComponents;
-							site = addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber;
-							//将对应的HTML元素设置值
-							document.getElementById("attendAdressText").value = site;
-							document.getElementById("attendAdressX").value = pt.lng;
-							document.getElementById("attendAdressY").value = pt.lat;
-							$("#site").val(site);
-							$("#longitude").val(pt.lng);
-							$("#latitude").val(pt.lat);
-							//          alert("pt.lng=="+pt.lng);
-							//           alert("pt.lat=="+pt.lat);
-							/**
-							 * 操作者点击地图上的地点名称，将红点显示在该地方
-							 */
-							// 将地址解析结果显示在地图上,并调整地图视野.并将考勤地点记录的名称传进去
-							console.log("点击的地址site======" + site);
-							geoc.getPoint(site, function(point) {
-								console.log("22222222222222222");
-								if(point) {
-									map.centerAndZoom(point, 16);
-									/**
-									 * 将之前标注的红点清空
-									 */
-									map.clearOverlays();
-									var marker=new BMap.Marker(point);
-									map.addOverlay(marker);
-									marker.enableDragging(); //设置可拖拽
-									marker.addEventListener("dragend", function(e) { //拖动事件 
-										var pt = e.point;
-										geoc.getLocation(pt, function(rs) {
-											//addressComponents对象可以获取到详细的地址信息
-											var addComp = rs.addressComponents;
-											var site = addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber;
-											//将对应的HTML元素设置值
-											document.getElementById("attendAdressText").value = site;
-											document.getElementById("attendAdressX").value = pt.lng;
-											document.getElementById("attendAdressY").value = pt.lat;
-										});
-
-									})
-								} else {
-									alert("点击地图---------您选择地址没有解析到结果!");
-								}
-							});
-
-						});
-
-					});
+					map.clearOverlays();
+					//创建标注对象
+					var marker = new BMap.Marker(point);
+					map.addOverlay(marker);
+					map.addOverlay(circle);
 				}
 
 				var vm = new Vue({

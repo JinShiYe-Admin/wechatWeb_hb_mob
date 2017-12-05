@@ -134,7 +134,7 @@
 				</div>-->
 				</div>
 				<!--<div class="weui-btn-area" v-if="editName =='修改'">-->
-				<button id="submit" v-on:click="submitClick" class="weui-btn weui-btn_primary">修改</button>
+				<button id="submit" onclick="submitClick()" class="weui-btn weui-btn_primary">修改</button>
 				<!--</div>-->
 			</div>
 			<!--</template>-->
@@ -391,7 +391,7 @@
 					map.addOverlay(circle);
 				}
 
-				var vm = new Vue({
+				/* var vm = new Vue({
 					el: '#conetent',
 					data: {
 						editName: '',
@@ -424,8 +424,8 @@
 							title: "备注",
 							message: ""
 						}
-					},
-					methods: {
+					}, */
+					//methods: {
 						//					resetData: function() { //重置数据
 						//						Object.assign(this.$data, getDefaultData());
 						//					},
@@ -491,9 +491,10 @@
 						//							});
 						//						}
 
-					}
+				
+			/* 	}
 
-				})
+				}) */
 
 				function getDefaultData() {
 					return {

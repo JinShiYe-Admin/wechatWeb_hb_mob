@@ -14,13 +14,12 @@ Vue.component("choose-person", {
 			}
 		}
 	},
-	mounted: function() {
-	},
+	mounted: function() {},
 	data: function() {
 		return {
 			isAllCheck: false,
 			personList: [],
-			selectPerson: this.choosePerson
+			selectPerson: {}
 		}
 	},
 	watch: {
@@ -32,8 +31,6 @@ Vue.component("choose-person", {
 		choosePerson: function(newVal, oldVal) {
 			console.log("choosePerson新值:" + JSON.stringify(newVal));
 			console.log("choosePerson旧值:" + JSON.stringify(oldVal));
-			this.selectPerson = newVal;
-
 		},
 		selectPerson: function(newVal) {
 			console.log("selectPerson的新值：" + JSON.stringify(this.selectPerson))
@@ -45,7 +42,7 @@ Vue.component("choose-person", {
 			console.log("****设置状态：setChooseStatus*****");
 			var com = this;
 			this.personList.forEach(function(person, index, personList) {
-				Vue.set(personList[index], "isCheck", !!com.selectPerson[person.userid])
+				Vue.set(personList[index], "isChose", !!com.selectPerson[person.userid])
 			})
 			console.log("更改状态后的数据：" + JSON.stringify(com.personList));
 		},
@@ -53,8 +50,16 @@ Vue.component("choose-person", {
 			console.log("***updateSelectPerson***");
 			this.$emit("select-person", this.selectPerson);
 		},
+		/**
+		 * 选择或删除人员
+		 * @param {Object} person
+		 * @param {Object} index
+		 */
 		toggleChoosePerson: function(person, index) {
 			console.log("toggleChoosePerson:" + JSON.stringify(person))
+			if(person.isChose) {
+				return;
+			}
 			Vue.set(this.personList[index], "isCheck", !person.isCheck);
 			if(person.isCheck) {
 				this.selectPerson[person.userid] = person.name;

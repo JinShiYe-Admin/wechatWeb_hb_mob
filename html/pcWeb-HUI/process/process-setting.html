@@ -144,13 +144,10 @@
 		<!--人员选择-->
 		<template id="multi-choose">
 			<div class="multi-choose-container">
-				<div class="choose-depart-container">
-					<choose-depart v-on:active-depart="getActiveDepart" class="display-inline choose-depart"></choose-depart>
-				</div>
 				<div class="choose-person-container">
 					<p>人员选择</p>
 					<div class="choose-person">
-						<choose-person v-bind:chose-depart="activeDepart" v-bind:choose-person="selectPerson" v-on:select-person="getSelectPerson"></choose-person>
+						<choose-person v-bind:all-check-person="allCheckPerson" v-bind:choose-person="selectPerson" v-on:select-person="getSelectPerson"></choose-person>
 					</div>
 					<div class="person-foot">
 						<div v-if="Object.keys(selectPerson).length>0">
@@ -184,7 +181,7 @@
 		<!--流程列表-->
 		<template id="process-list">
 			<div>
-				<div class="cl pd-5 bg-1 bk-gray mt-20">  <span class="l"><a class="btn btn-primary radius" v-on:click="addProcess()" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加流程类型</a></span> </div>
+				<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a class="btn btn-primary radius" v-on:click="addProcess()" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加流程类型</a></span> </div>
 				<table v-if="processList.length>0" class="table table-border table-bordered table-bg table-hover table-sort">
 					<thead>
 						<tr class="text-c">
@@ -246,9 +243,7 @@
 		<script src="../../../js/utils/events.js"></script>
 		<script src="../../../js/utils/consts.js"></script>
 		<script src="../../../js/utils/request.js"></script>
-		<script src="../../../js/equipment-service/treeNode.js"></script>
-		<script src="../../../js/equipment-service/choose-depart.js"></script>
-		<script src="../../../js/equipment-service/choose-person.js"></script>
+		<script src="../../../js/pcWeb-HUI/process/select-person.js"></script>
 		<script src="../../../js/pcWeb-HUI/process/process-setting.js"></script>
 		<script type="text/javascript">
 			const processSetting = {
@@ -266,7 +261,8 @@
 				data: function() {
 					return {
 						activeDepart: {},
-						personList: this.process.apprManList
+						personList: this.process.apprManList,
+						allCheckPerson: []
 					}
 				},
 				watch: {
@@ -291,10 +287,22 @@
 					}
 				},
 				methods: {
-					getActiveDepart: function(activeDepart) {
-						console.log("*******getActiveDepart*******")
-						this.activeDepart = activeDepart;
-						console.log("获取的响应的depart:" + JSON.stringify(activeDepart))
+					/**
+					 * 获取所有审核人员
+					 */
+					getAllCheckPerson: function() {
+						var com = this;
+						processRequest.postProcessData("getApprMan", {
+							corpId: this.corpId,
+							pageIndex: 1,
+							pageSize: 0
+						}, function(response) {
+							if(response.RspCode == 0) {
+								com.addCheckPerson = response.RspData.Data;
+							} else {
+								alert(response.RspTxt);
+							}
+						})
 					},
 					getSelectPerson: function(person) {
 						console.log("*******getSelectPerson*******")
@@ -316,8 +324,8 @@
 							url = "setProcessList";
 						}
 						processRequest.postProcessData(url, {
-							corpId: this.process.kindsid,
-							procTypeId: "gusers",
+							corpId: this.corpId,
+							procTypeId: this.process.kindsid,
 							apprManList: this.personToArray(this.selectPerson),
 							procNote: ""
 						}, function(response) {

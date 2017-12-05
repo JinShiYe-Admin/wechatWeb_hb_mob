@@ -9,10 +9,11 @@
 		<link rel="stylesheet" href="../../../js/demoCssJs/demos.css">
 		<link rel="stylesheet" href="../../../css/demos.css" />
 		<style type="text/css">
-			        body, html {
-            overflow: auto;
-            -webkit-overflow-scrolling: touch;
-        }
+			body,
+			html {
+				overflow: auto;
+				-webkit-overflow-scrolling: touch;
+			}
 			
 			#allmap {
 				width: 100%;
@@ -23,56 +24,57 @@
 				margin-left: 5px;
 				font-size: 14px;
 			}
-			       .wrap {
-            width: 30px;
-            position: relative;
-        }
-
-        .img {
-            width: 27px;
-            height: 27px;
-        }
-
-        .notice {
-            width: 15px;
-            height: 15px;
-            line-height: 15px;
-            font-size: 10px;
-            color: #fff;
-            text-align: center;
-            background-color: #f00;
-            border-radius: 50%;
-            position: absolute;
-            right: -7px;
-            top: -7px;
-        }
-
-        .lines {
-            height: 1px;
-            border-top: 10px solid #f5f1f1;
-            text-align: center;
-            margin: 10px 0px 0px 0px;
-        }
-
-        .weui-popup__container {
-            z-index: 1000;
-        }
-
-        .owerid {
-            background: #f89fbc;
-        }
-
-        .weui-media-box__hd {
-            width: 80px;
-            height: 60px;
-            overflow: hidden;
-        }
-
-            .weui-media-box__hd img {
-                max-width: 80px;
-                _width: expression(this.width > 80 ? "80px" : this.width);
-            }
-            /*.weui-tab {
+			
+			.wrap {
+				width: 30px;
+				position: relative;
+			}
+			
+			.img {
+				width: 27px;
+				height: 27px;
+			}
+			
+			.notice {
+				width: 15px;
+				height: 15px;
+				line-height: 15px;
+				font-size: 10px;
+				color: #fff;
+				text-align: center;
+				background-color: #f00;
+				border-radius: 50%;
+				position: absolute;
+				right: -7px;
+				top: -7px;
+			}
+			
+			.lines {
+				height: 1px;
+				border-top: 10px solid #f5f1f1;
+				text-align: center;
+				margin: 10px 0px 0px 0px;
+			}
+			
+			.weui-popup__container {
+				z-index: 1000;
+			}
+			
+			.owerid {
+				background: #f89fbc;
+			}
+			
+			.weui-media-box__hd {
+				width: 80px;
+				height: 60px;
+				overflow: hidden;
+			}
+			
+			.weui-media-box__hd img {
+				max-width: 80px;
+				_width: expression(this.width > 80 ? "80px": this.width);
+			}
+			/*.weui-tab {
             margin-top:-30px;
         }*/
 		</style>
@@ -96,7 +98,7 @@
 
 					<div id="allmap"></div>
 
-					<div class="weui-cell" >
+					<div class="weui-cell">
 						<div class="weui-cell__hd"><label class="weui-label">考勤类型</label></div>
 						<div class="weui-cell__bd">
 							<input id="attendType" data_id="" onclick="selectAttendType(this)" class="weui-input" placeholder="请选择考勤类型">
@@ -129,7 +131,7 @@
 												<li v-for="(file,index) of uploadedFiles" @click="clickImg(index)" v-bind:class="['weui-uploader__file']" v-bind:style="{'background-image':'url('+file.ImgUrl+')'}"></li>
 											</ul>
 											<div class="weui-uploader__input-box" :style="displayAddBtn">
-												<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" v-on:change="selectFile($event)">
+												<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" capture="camera" v-on:change="selectFile($event)">
 											</div>
 										</div>
 									</div>
@@ -152,7 +154,7 @@
 						<!--<a id="history" href="javascript:;" class="weui-btn weui-btn_primary" onclick="history()">签到记录</a>-->
 					</div>
 					<br /><br />
-					
+
 				</div>
 			</div>
 		</div>
@@ -215,35 +217,35 @@
 </html>
 
 <script type="text/javascript">
-    var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
-    var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight;
-    $('.weui-tab').css({
-        'height': (allheight - barheight) + 30 + 'px'
-    });
-    $('.weui-tab__bd').css({
-        'height': (allheight - barheight) + 30 + 'px'
-    });
-    $('.weui-tab__bd-item').css({
-        'height': (allheight - barheight) + 30 + 'px'
-    });
-    var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
-    $('.wrap').css({
-        'left': (tabar_width - 30) * 50 / tabar_width + '%'
-    });
-		window.addEventListener("resize", function() {
-		    var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
-		    var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight;
-		    $('.weui-tab__bd').css({
-		        'height': (allheight - barheight) + 30 + 'px'
-		    });
-		    $('.weui-tab__bd-item').css({
-		        'height': (allheight - barheight) + 30 + 'px'
-		    });
-		    var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
-		    $('.wrap').css({
-		        'left': (tabar_width - 30) * 50 / tabar_width + '%'
-		    });
-		}, false);
+	var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
+	var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight;
+	$('.weui-tab').css({
+		'height': (allheight - barheight) + 30 + 'px'
+	});
+	$('.weui-tab__bd').css({
+		'height': (allheight - barheight) + 30 + 'px'
+	});
+	$('.weui-tab__bd-item').css({
+		'height': (allheight - barheight) + 30 + 'px'
+	});
+	var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
+	$('.wrap').css({
+		'left': (tabar_width - 30) * 50 / tabar_width + '%'
+	});
+	window.addEventListener("resize", function() {
+		var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
+		var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight;
+		$('.weui-tab__bd').css({
+			'height': (allheight - barheight) + 30 + 'px'
+		});
+		$('.weui-tab__bd-item').css({
+			'height': (allheight - barheight) + 30 + 'px'
+		});
+		var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
+		$('.wrap').css({
+			'left': (tabar_width - 30) * 50 / tabar_width + '%'
+		});
+	}, false);
 	var uptokenData;
 	var qnFileUploader; //七牛上传控件对象
 	var submitHomework = new Vue({
@@ -320,8 +322,8 @@
 		initQNUploader();
 
 	}
-			getUserInfo();
-			getDepart();
+	getUserInfo();
+	getDepart();
 	//签到
 	function save() {
 		addAttend(attendType.tempAttendType);
@@ -437,7 +439,33 @@
 			console.log('添加考勤：' + JSON.stringify(data))
 			if(data.RspCode == 0) {
 				alert('添加成功')
+				sendmsg(data.RspData);
 			} else {
+				alert(data.RspTxt)
+			}
+		})
+	}
+
+	function sendmsg(msgObj) {
+		var tempData = {
+			cmd: 'msg',
+			type: 'text',
+			touser: userInfo.userid,
+			toparty: '',
+			totag: '',
+			msgtype: '',
+			safe: '',
+			content: msgObj.AttendMsg,
+			tousername: userInfo.name,
+			topartyname: '',
+			totagname: '',
+		}
+		//		getAttendType();
+		//		getAttendArea();
+		console.log("发送短信参数：" + JSON.stringify(tempData))
+		unitWebsitePro(tempData, function(data) {
+			console.log('发送短信数据：' + JSON.stringify(data.RspData))
+			if(data.RspCode == 0) {} else {
 				alert(data.RspTxt)
 			}
 		})
@@ -536,13 +564,16 @@
 
 	}
 	var map = new BMap.Map("allmap"); // 创建地图实例
+	var mk = new BMap.Marker(0, 0);
 	function setMap() {
 		// 百度地图API功能
 
 		var geolocation = new BMap.Geolocation();
+		
 		geolocation.getCurrentPosition(function(r) {
 			if(this.getStatus() == BMAP_STATUS_SUCCESS) {
-				var mk = new BMap.Marker(r.point);
+				//				mk = new BMap.Marker(r.point);
+				mk.setPosition(r.point);
 				map.addOverlay(mk);
 				map.panTo(r.point);
 				var myGeo = new BMap.Geocoder();
@@ -577,8 +608,10 @@
 		var geolocation = new BMap.Geolocation();
 		geolocation.getCurrentPosition(function(r) {
 			if(this.getStatus() == BMAP_STATUS_SUCCESS) {
-				var mk = new BMap.Marker(r.point);
-				map.addOverlay(mk);
+				//				mk = new BMap.Marker(r.point);
+				//				map.addOverlay(mk);
+				mk.setPosition(r.point);
+//				map.addOverlay(mk);
 				map.panTo(r.point);
 				var myGeo = new BMap.Geocoder();
 				myGeo.getLocation(r.point, function(result) {
@@ -601,7 +634,6 @@
 			enableHighAccuracy: true
 		})
 	}
-
 
 	//从相册中选择照片后，上传
 	//index--从相册选择照片回调里面，照片的索引，files--选择的照片信息，filesSum--选择照片之前，现存的照片张数

@@ -111,7 +111,7 @@
 		<script src="../../../js/PublicProtocol.js"></script>
 		<script src="../../../js/utils/utils.js"></script>
 		<script src="../../../js/utils/storageutil.js"></script>
-		<script src='../../../js/lib/vconsole/vconsole.min.js'></script>
+		<!--<script src='../../../js/lib/vconsole/vconsole.min.js'></script>-->
 		<script type="text/javascript">
 			$(function() {
 				//获取当前人员信息
@@ -132,9 +132,10 @@
 				},
 				methods: {
 					searchAttendList: function() {
+						attendData.pageIndex = 1;
 						attendData.attendArray = [];
 						//16.获取考勤统计
-						getAttend();
+						getAttend(0);
 					}
 				}
 			});
@@ -166,7 +167,7 @@
 					if(data.RspCode == 0) {
 						attendData.userInfo = JSON.parse(data.RspData);
 						//16.获取考勤统计
-						getAttend();
+						getAttend(0);
 					} else {
 						alert('请重新登录获取个人信息');
 					}

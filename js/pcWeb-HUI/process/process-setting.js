@@ -154,7 +154,7 @@ Vue.component("process-setting", {
 		changeArrayToObj: function(arrays) {
 			var obj = {};
 			for(var i in arrays) {
-				obj[arrays[i][0]] = arrays[i][1];
+				obj[arrays[i].ApprMan] = arrays[i].ApprManName;
 			}
 			return obj;
 		},

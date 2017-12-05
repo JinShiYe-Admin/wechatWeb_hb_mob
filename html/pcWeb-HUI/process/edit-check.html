@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width initial-scale=1 minimum-scale=1 maximum-scale=1 user-scalable=no">
-		<title>请假流程设置</title>
+		<title>审核人员配置</title>
 		<link href="../../../css/jquery-weui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/static/h-ui/css/H-ui.min.css" />
 		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css" />
@@ -29,17 +29,17 @@
 				width: 80%;
 			}
 			
-			.del-process,
-			.edit-process,
+			.del-person,
+			.edit-person,
 			.edit-groupName {
 				color: dodgerblue;
 			}
 			
-			.close-process {
+			.close-Person {
 				color: darkgray
 			}
 			
-			.del-process {
+			.del-Person {
 				padding-right: 15px;
 			}
 			
@@ -130,24 +130,44 @@
 				margin-left: 0;
 				margin-right: 0;
 			}
+			
+			.select-page {
+				color: dodgerblue;
+			}
+			
+			.page-no {
+				line-height: 20px;
+				padding: 5px;
+			}
+			
+			.pageNo-container {
+				padding: 10px 0;
+			}
+			.is-chose{
+				background-color: lightgray;
+				color: white;
+			}
 		</style>
 	</head>
 
 	<body>
-		<div id="process-container">
-			<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 流程配置 <span class="c-gray en">&gt;</span> 流程配置
+		<div id="checkPerson-container">
+			<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 流程配置 <span class="c-gray en">&gt;</span> 审核权限配置
 			</nav>
 			<div class="page-container">
-				<router-view v-on:group-info="getCurProcess" v-bind:classify="activeProcess"></router-view>
+				<router-view v-on:person-info="getChosedPerson" v-bind:chosed-person="chosedPerson"></router-view>
 			</div>
 		</div>
 		<!--人员选择-->
 		<template id="multi-choose">
 			<div class="multi-choose-container">
+				<div class="choose-depart-container">
+					<choose-depart v-on:active-depart="getActiveDepart" class="display-inline choose-depart"></choose-depart>
+				</div>
 				<div class="choose-person-container">
 					<p>人员选择</p>
 					<div class="choose-person">
-						<choose-person v-bind:all-check-person="allCheckPerson" v-bind:choose-person="selectPerson" v-on:select-person="getSelectPerson"></choose-person>
+						<choose-person v-bind:chose-depart="activeDepart" v-bind:choose-person="selectPerson" v-on:select-person="getSelectPerson"></choose-person>
 					</div>
 					<div class="person-foot">
 						<div v-if="Object.keys(selectPerson).length>0">
@@ -156,7 +176,7 @@
 								{{selectPerson[key]}}
 							</div>
 						</div>
-						<a v-if="Object.keys(selectPerson).length>0" class="btn btn-primary radius float-right" v-on:click="choosePerson()">更改人员</a>
+						<a v-if="Object.keys(selectPerson).length>0" class="btn btn-primary radius float-right" v-on:click="addCheckPersons()">添加审核人员</a>
 						<a class="btn btn-default radius float-right" v-on:click="cancelChoose()">取消</a>
 					</div>
 				</div>
@@ -165,7 +185,7 @@
 		<!--人员选择-->
 		<template id="person-list">
 			<div>
-				<div v-for="(person,index) in personList" class="person-container" v-bind:class="[{'is-checked':person.isCheck}]" v-on:click="toggleChoosePerson(person,index)">
+				<div v-for="(person,index) in personList" class="person-container" v-bind:class="[{'is-checked':person.isCheck},{'is-chose':person.isChose}]" v-on:click="toggleChoosePerson(person,index)">
 					{{person.name}}
 				</div>
 			</div>
@@ -179,40 +199,36 @@
 			</div>
 		</template>
 		<!--流程列表-->
-		<template id="process-list">
+		<template id="checkPerson-list">
 			<div>
-				<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a class="btn btn-primary radius" v-on:click="addProcess()" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加流程类型</a></span> </div>
-				<table v-if="processList.length>0" class="table table-border table-bordered table-bg table-hover table-sort">
+				<div class="cl pd-5 bg-1 bk-gray mt-20">
+					<span class="l">
+						<a href="javascript:;" v-on:click="delPersons()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
+						<a href="javascript:;"  v-on:click="addPersons()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加审核人员</a></span>
+				</div>
+				<table v-if="checkPersonList.length>0" class="table table-border table-bordered table-bg table-hover table-sort">
 					<thead>
 						<tr class="text-c">
-							<th width="300">流程</th>
-							<th>流程链</th>
-							<th width="500">备注</th>
-							<!--<th width="150"></th>-->
-							<!--<th width="100">状态</th>-->
+							<th width="100"><input type="checkbox" v-on:change="getAllCheckStatus($event)" v-model:checked="isAllCheck" name="selectCheckedPerson" /></th>
+							<th>审核人员</th>
 							<th width="100">操作</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr class="text-c" v-for="(process,index) in processList">
-							<td>{{process.ProcTypeName}}</td>
-							<!--流程链-->
-							<td>
-								<!--<div v-for="">
-								<div></div>
-							</div>-->
-							</td>
-							<td class="text-c">{{process.ProTypeNote}}</td>
-							<!--<td>{{process.rectime|formatTime}}</td>
-						<td class="td-status"><span class="label  radius" v-bind:class="[{'label-defaunt':!process.stat},{'label-success':process.stat}]">{{process.stat?"显示":"屏蔽"}}</span></td>-->
+						<tr class="text-c" v-for="(person,index) in checkPersonList">
+							<td><input type="checkbox" name="selectCheckedPerson" v-on:change="getStatus($event,person)" v-bind:value="person.ApprMan" /></td>
+							<td>{{person.ApprManName}}</td>
 							<td class="td-manage">
-								<span class="Hui-iconfont Hui-iconfont-edit edit-groupName manage-item" title="编辑流程信息" v-on:click.stop="changeProcessInfo(process)"></span>
-								<span class="Hui-iconfont Hui-iconfont-user-group edit-process manage-item" title="更改流程链" v-on:click.stop="changeProcessList(process)"></span>
-								<span class="Hui-iconfont Hui-iconfont-del2 del-process manage-item" title="删除流程" v-on:click.stop="delProcess(process)"></span>
+								<span class="Hui-iconfont Hui-iconfont-del2 del-person manage-item" title="删除审核人员" v-on:click.stop="delCurPerson(person)"></span>
 							</td>
 						</tr>
 					</tbody>
 				</table>
+				<div class="float-right pageNo-container">
+					<button v-on:click="lastPage()">上一页</button>
+					<span v-for="pageNo in totalPage" v-bind:class="[{'select-page':pageNo==pageIndex},'page-no']">{{pageNo}}</span>
+					<button v-on:click="nextPage()">下一页</button>
+				</div>
 				<form id="edit-pocessInfo" style="display: none;" action="" class="form form-horizontal" id="form-member-add">
 					<div class="row cl">
 						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>流程类型：</label>
@@ -229,7 +245,7 @@
 					</div>
 					<div class="row cl">
 						<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
-							<input class="btn btn-primary radius" type="submit" v-on:click="submitProcess()" value="提交">
+							<input class="btn btn-primary radius" type="submit" v-on:click="submitPerson()" value="提交">
 						</div>
 					</div>
 				</form>
@@ -243,26 +259,28 @@
 		<script src="../../../js/utils/events.js"></script>
 		<script src="../../../js/utils/consts.js"></script>
 		<script src="../../../js/utils/request.js"></script>
-		<script src="../../../js/pcWeb-HUI/process/select-person.js"></script>
-		<script src="../../../js/pcWeb-HUI/process/process-setting.js"></script>
+		<script src="../../../js/equipment-service/treeNode.js"></script>
+		<script src="../../../js/equipment-service/choose-depart.js"></script>
+		<script src="../../../js/pcWeb-HUI/process/choose-checked-person.js"></script>
+		<script src="../../../js/pcWeb-HUI/process/checkPerson-list.js"></script>
 		<script type="text/javascript">
-			const processSetting = {
-				template: '<process-setting v-on:process-info="getProcessInfo"></process-setting>',
+			const checkPersonList = {
+				template: '<check-person-list v-on:person-info="getPersonInfo"></check-person-list>',
 				methods: {
-					getProcessInfo: function(process) {
-						console.log("获取的classify:" + JSON.stringify(process));
-						this.$emit("process-info", process);
+					getPersonInfo: function(person) {
+						console.log("获取的classify:" + JSON.stringify(person));
+						this.$emit("person-info", person);
 					}
 				}
 			}
 			const multiChoose = {
 				template: '#multi-choose',
-				props: ['process'],
+				props: ['chosedPerson'],
 				data: function() {
 					return {
 						activeDepart: {},
-						personList: this.process.apprManList,
-						allCheckPerson: []
+						personList: this.chosedPerson,
+						selectPerson: {}
 					}
 				},
 				watch: {
@@ -277,32 +295,19 @@
 						console.log(Object.keys(newVal).length);
 					},
 					/**
-					 * 
 					 * @param {Object} newVal 
 					 * @param {Object} oldVal
 					 */
-					process: function(newVal, oldVal) {
+					chosedPerson: function(newVal, oldVal) {
 						console.log("wacth:监听classify:" + JSON.stringify(newVal))
-						this.selectPerson = this.process.apprManList;
+						this.selectPerson = this.Person.apprManList;
 					}
 				},
 				methods: {
-					/**
-					 * 获取所有审核人员
-					 */
-					getAllCheckPerson: function() {
-						var com = this;
-						processRequest.postProcessData("getApprMan", {
-							corpId: this.corpId,
-							pageIndex: 1,
-							pageSize: 0
-						}, function(response) {
-							if(response.RspCode == 0) {
-								com.addCheckPerson = response.RspData.Data;
-							} else {
-								alert(response.RspTxt);
-							}
-						})
+					getActiveDepart: function(activeDepart) {
+						console.log("*******getActiveDepart*******")
+						this.activeDepart = activeDepart;
+						console.log("获取的响应的depart:" + JSON.stringify(activeDepart))
 					},
 					getSelectPerson: function(person) {
 						console.log("*******getSelectPerson*******")
@@ -315,35 +320,45 @@
 						this.selectPerson = jQuery.extend({}, this.selectPerson);
 						console.log("删除人员后的数据：" + JSON.stringify(this.selectPerson))
 					},
-					choosePerson: function() {
-						console.log("*******choosePerson*******")
-						var url = "";
-						if(isAdd) {
-							url = "addProcessList";
-						} else {
-							url = "setProcessList";
+					/**
+					 * 添加审核人员
+					 */
+					addCheckPersons: function() {
+						var com = this;
+						var count = 0;
+						for(var key in com.selectPerson) {
+							this.addCheckPerson({
+								userid: key,
+								name: com.selectPerson[key]
+							}, function() {
+								count++;
+								if(count == Object.keys(com.selectPerson).length) {
+									router.go(-1);
+								}
+							})
 						}
-						processRequest.postProcessData(url, {
+					},
+					/**
+					 * 添加单个审核人员
+					 * @param {Object} personInfo
+					 * @param {Object} callback
+					 */
+					addCheckPerson: function(personInfo, callback) {
+						console.log("*******choosePerson*******")
+						PersonRequest.postPersonData("addApprMan", {
 							corpId: this.corpId,
-							procTypeId: this.process.kindsid,
-							apprManList: this.personToArray(this.selectPerson),
-							procNote: ""
+							apprMan: personInfo.userid,
+							apprManName: personInfo.name
 						}, function(response) {
 							if(response.RspCode == 0) {
-								router.go(-1);
+								callback();
 							}
 						})
 
 					},
-					personToArray: function(person) {
-						console.log("*******personToString*******")
-						console.log("要提交的person值：" + JSON.stringify(person))
-						var strArr = [];
-						for(var key in person) {
-							strArr.push([key, person[key]]);
-						}
-						return strArr;
-					},
+					/**
+					 * 取消审核
+					 */
 					cancelChoose: function() {
 						router.go(-1);
 					}
@@ -352,9 +367,9 @@
 			}
 			const router = new VueRouter({
 				routes: [{
-					path: '/process-setting',
-					name: 'process-setting',
-					component: processSetting
+					path: '/checkPerson-list',
+					name: 'checkPerson-list',
+					component: checkPersonList
 				}, {
 					path: '/chooseDepart',
 					name: 'chooseDepart',
@@ -362,22 +377,22 @@
 				}]
 			})
 			var vue = new Vue({
-				el: "#process-container",
+				el: "#checkPerson-container",
 				router: router,
 				data: {
-					activeProcess: {}
+					chosedPerson: {}
 				},
 				mounted: function() {
 
 				},
 				methods: {
-					getCurProcess: function(process) {
-						this.activeProcess = process;
+					getChosedPerson: function(person) {
+						this.chosedPerson = person;
 					}
 				}
 			})
 			router.replace({
-				name: 'process-setting'
+				name: 'checkPerson-list'
 			})
 		</script>
 	</body>

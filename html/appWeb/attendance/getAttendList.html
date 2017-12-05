@@ -30,78 +30,76 @@
 	</head>
 
 	<body ontouchstart>
-		<div class="weui-tab" id="attendData">
-			<div class="weui-tab__bd" style="margin-top: -50px;">
-				<div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active  weui-pull-to-refresh infinite">
-					<div class="weui-pull-to-refresh__layer">
-						<div class='weui-pull-to-refresh__arrow'></div>
-						<div class='weui-pull-to-refresh__preloader'></div>
-						<div class="down">下拉刷新</div>
-						<div class="up">释放刷新</div>
-						<div class="refresh">正在刷新</div>
-					</div>
-					<div class="weui-cells" style="margin-top: 0;">
-						<div class="weui-cell">
-							<div class="weui-cell__hd"><label for="date" class="weui-label">开始日期</label></div>
-							<div class="weui-cell__bd">
-								<input class="weui-input" id="date" value='' type="text" placeholder="请选择开始查询日期">
-							</div>
-						</div>
-						<div class="weui-cell">
-							<div class="weui-cell__hd"><label for="date1" class="weui-label">结束日期</label></div>
-							<div class="weui-cell__bd">
-								<input class="weui-input" id="date1" value='' type="text" placeholder="请选择结束查询日期">
-							</div>
-						</div>
-						<div class="weui-cell">
-							<a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_primary" style="margin-left: 0px;" @click="searchAttendList()">查询</a>
-						</div>
-
-						<!--</div>-->
-						<div class="weui-cell" v-for='(attend,index) in attendArray' v-show="flag>0" style="display: none;">
-							<div class="weui-cell__hd"><img class="mui-media-object" :src=attend.AttendPic></div>
-							<div class="weui-cell__bd">
-								<p class="classP">时间:
-									<a class="classA">{{attend.AttendTime}}</a>
-								</p>
-								<p class="classP">地点:
-									<a class="classA">{{attend.AttendArea}}</a>
-								</p>
-								<p class="classP">类型:
-									<a class="classA">{{attend.AttendType}}</a>
-								</p>
-								<p class="classP">结果:
-									<a class="classA">{{attend.AttendResult}}</a>
-								</p>
-							</div>
-						</div>
-					</div>
-					<div class="weui-loadmore">
-						<i class="weui-loading"></i>
-						<span class="weui-loadmore__tips">正在加载</span>
+		<div class="weui-tab infinite" id="attendData">
+			<div class="weui-pull-to-refresh__layer">
+				<div class='weui-pull-to-refresh__arrow'></div>
+				<div class='weui-pull-to-refresh__preloader'></div>
+				<div class="down">下拉刷新</div>
+				<div class="up">释放刷新</div>
+				<div class="refresh">正在刷新</div>
+			</div>
+			<div class="weui-cells" style="margin-top: 0px;margin-bottom: 100px;">
+				<div class="weui-cell">
+					<div class="weui-cell__hd"><label for="date" class="weui-label">开始日期</label></div>
+					<div class="weui-cell__bd">
+						<input class="weui-input" id="date" value='' type="text" placeholder="请选择开始查询日期">
 					</div>
 				</div>
+				<div class="weui-cell">
+					<div class="weui-cell__hd"><label for="date1" class="weui-label">结束日期</label></div>
+					<div class="weui-cell__bd">
+						<input class="weui-input" id="date1" value='' type="text" placeholder="请选择结束查询日期">
+					</div>
+				</div>
+				<div class="weui-cell">
+					<a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_primary" style="margin-left: 0px;" @click="searchAttendList()">查询</a>
+				</div>
+
+				<!--</div>-->
+				<div class="weui-cell" v-for='(attend,index) in attendArray' v-show="flag>0" style="display: none;">
+					<div class="weui-cell__hd"><img class="mui-media-object" :src=attend.AttendPic></div>
+					<div class="weui-cell__bd">
+						<p class="classP">时间:
+							<a class="classA">{{attend.AttendTime}}</a>
+						</p>
+						<p class="classP">地点:
+							<a class="classA">{{attend.AttendArea}}</a>
+						</p>
+						<p class="classP">类型:
+							<a class="classA">{{attend.AttendType}}</a>
+						</p>
+						<p class="classP">结果:
+							<a class="classA">{{attend.AttendResult}}</a>
+						</p>
+					</div>
+				</div>
+				<div class="weui-loadmore" v-show="showLoadMore == 0">
+				<i class="weui-loading"></i>
+				<span class="weui-loadmore__tips">正在加载</span>
 			</div>
-			<div class="weui-tabbar" style="margin-bottom: -50px;">
-				<a href="https://jsypay.jiaobaowang.net/wxth/appschweb/app/index.aspx" class="weui-tabbar__item">
-					<div class="weui-tabbar__icon">
-						<img class="img" src="../../../image/考勤/pic_ico_index0.png" alt="">
-					</div>
-					<p class="weui-tabbar__label">微校园</p>
-				</a>
-				<a href="attendance.html" class="weui-tabbar__item">
-					<div class="weui-tabbar__icon">
-						<img class="img" src="../../../image/考勤/打卡灰.png" alt="">
-					</div>
-					<p class="weui-tabbar__label">签到</p>
-				</a>
-				<a href="getAttendList.html" class="weui-tabbar__item weui-bar__item--on">
-					<div class="weui-tabbar__icon">
-						<img src="../../../image/考勤/考勤查询.png" alt="">
-					</div>
-					<p class="weui-tabbar__label">考勤查询</p>
-				</a>
 			</div>
+
+			
+		</div>
+		<div class="weui-tabbar weui-footer_fixed-bottom" style="margin-bottom: -9px;">
+			<a href="https://jsypay.jiaobaowang.net/wxth/appschweb/app/index.aspx" class="weui-tabbar__item">
+				<div class="weui-tabbar__icon">
+					<img class="img" src="../../../image/考勤/pic_ico_index0.png" alt="">
+				</div>
+				<p class="weui-tabbar__label">微校园</p>
+			</a>
+			<a href="attendance.html" class="weui-tabbar__item">
+				<div class="weui-tabbar__icon">
+					<img class="img" src="../../../image/考勤/打卡灰.png" alt="">
+				</div>
+				<p class="weui-tabbar__label">签到</p>
+			</a>
+			<a href="getAttendList.html" class="weui-tabbar__item weui-bar__item--on">
+				<div class="weui-tabbar__icon">
+					<img src="../../../image/考勤/考勤查询.png" alt="">
+				</div>
+				<p class="weui-tabbar__label">考勤查询</p>
+			</a>
 		</div>
 		<!--vue-->
 		<script src="../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
@@ -124,7 +122,8 @@
 					flag: 0,
 					beginTime: '',
 					endTime: '',
-					pageIndex:1,//获取的第几页数据
+					showLoadMore:0,//0显示，1没有更多
+					pageIndex: 1, //获取的第几页数据
 					userInfo: {}, //当前人员信息
 					attendArray: [], //考勤统计列表
 					departArray: [], //管理的所有部门数组
@@ -164,6 +163,7 @@
 				}
 				console.log('tempData:' + JSON.stringify(tempData));
 				unitWebsitePro(tempData, function(data) {
+					getAttend(0);
 					if(data.RspCode == 0) {
 						attendData.userInfo = JSON.parse(data.RspData);
 						//16.获取考勤统计
@@ -174,17 +174,17 @@
 				});
 			};
 
-			//刷新
-			$('.weui-tab__bd-item').pullToRefresh().on('pull-to-refresh', function(done) {
+			$(document.body).pullToRefresh().on("pull-to-refresh", function() {
+				attendData.showLoadMore = 0;
 				var self = this
 				getAttend(0);
 			});
-			
-			//加载更多
+			// infinite
 			var loading = false;
-			$(".infinite").infinite(0).on("infinite", function() {
+			$(document.body).infinite().on("infinite", function() {
 				var self = this;
 				if(loading) return;
+				if(attendData.showLoadMore == 1) return;
 				$(self).find(".weui-loadmore").show();
 				loading = true;
 				getAttend(1);
@@ -208,9 +208,9 @@
 					return false;
 				}
 				var tempPage = 1;
-				if (flag == 0) {
+				if(flag == 0) {
 					tempPage = 1;
-				} else{
+				} else {
 					tempPage = attendData.pageIndex;
 				}
 				var tempId = [];
@@ -232,8 +232,8 @@
 					var myDate = new Date().format('yyyy-MM-dd');
 					var endTime = myDate.toString().replace(/-/g, '');
 					tempData = {
-						corpId: attendData.userInfo.corpid, //单位ID
-						userId: tempId, //用户ID,例如：[“1”, “2”, “3”]
+						corpId: 'wx6c4528c675d4a9c9', //单位ID
+						userId: ["zhaoqiwang"], //用户ID,例如：[“1”, “2”, “3”]
 						beginTime: '19900101', //统计开始时间,年月日共八位如：20011010
 						endTime: endTime, //统计结束时间,年月日共八位如：20011010
 						attendResultId: '0', //0：全部,1: 正常,2：迟到,3：早退
@@ -255,29 +255,35 @@
 									}
 								}
 							}
+							if (data.RspData.Data.length == 10) {
+								attendData.showLoadMore = 0;
+							} else{
+								attendData.showLoadMore = 1;
+							}
 							setTimeout(function() {
-									$(".weui-loadmore").hide();
-									loading = false;
-									$(".weui-pull-to-refresh").pullToRefreshDone();
-								}, 1000); //模拟延迟
-							
-							if (flag == 0) {//刷新
+								$(".weui-loadmore").hide();
+								loading = false;
+								$(".weui-pull-to-refresh").pullToRefreshDone();
+							}, 1000); //模拟延迟
+
+							if(flag == 0) { //刷新
 								attendData.attendArray = [].concat(data.RspData.Data);
 								attendData.pageIndex = 1;
-							} else{//加载更多
+							} else { //加载更多
 								attendData.attendArray = attendData.attendArray.concat(data.RspData.Data);
 							}
-							attendData.pageIndex ++;
+							attendData.pageIndex++;
 							attendData.flag = 1;
 						} else {
 							setTimeout(function() {
-									$(".weui-loadmore").hide();
-									loading = false;
-									$(".weui-pull-to-refresh").pullToRefreshDone();
-								}, 1000); //模拟延迟
-							if (flag == 0) {//刷新
+								$(".weui-loadmore").hide();
+								loading = false;
+								$(".weui-pull-to-refresh").pullToRefreshDone();
+							}, 1000); //模拟延迟
+							attendData.showLoadMore = 1;
+							if(flag == 0) { //刷新
 								$.toast("暂无考勤记录");
-							} else{//加载更多
+							} else { //加载更多
 								$.toast("暂无更多考勤记录");
 							}
 						}

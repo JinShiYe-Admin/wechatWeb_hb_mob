@@ -1,0 +1,132 @@
+<!--
+	作者：444811716@qq.com
+	时间：2017-12-05
+	描述：我的请假列表
+-->
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>请假列表</title>
+		<script type="text/javascript">
+			var WebVersion = "?" + Math.random();
+		</script>
+		<link rel="stylesheet" href="../../../css/weui.min.css" />
+		<link rel="stylesheet" href="../../../js/demoCssJs/jquery-weui.min.css" />
+		<link rel="stylesheet" href="../../../js/demoCssJs/demos.css" />
+		<style>
+			.weui-cells,
+			.weui-media-box__info {
+				margin-top: 0;
+			}
+
+			.weui-media-box__info {
+				color: black;
+				padding-top: 5px;
+			}
+
+			.weui-media-box {
+				padding: 0 15px 0 0;
+			}
+
+			.apply-state-naudited {
+				color: #46BDFF;
+			}
+
+			.apply-state-passed {
+				color: #09BB07;
+			}
+
+			.apply-state-nopassed {
+				color: #F76260;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="weui-pull-to-refresh__layer">
+			<div class='weui-pull-to-refresh__arrow'></div>
+			<div class='weui-pull-to-refresh__preloader'></div>
+			<div class="down">下拉刷新</div>
+			<div class="up">释放刷新</div>
+			<div class="refresh">正在刷新</div>
+		</div>
+		<div class="weui-cells weui-panel">
+			<a class="weui-cell weui-cell_access">
+				<div class="weui-cell__bd weui-panel__bd">
+					<div class="weui-media-box weui-media-box_text">
+						<ul class="weui-media-box__info">
+							<li class="weui-media-box__info__meta">流程类型0</li>
+							<li class="weui-media-box__info__meta weui-media-box__info__meta_extra">请假类型0</li>
+						</ul>
+						<ul class="weui-media-box__info">
+							<li class="weui-media-box__info__meta">2017-12-5 10:09</li>
+							<li class="weui-media-box__info__meta">2017-12-5 10:20</li>
+						</ul>
+					</div>
+				</div>
+				<div class="weui-cell__ft apply-state-naudited">未审批</div>
+			</a>
+		</div>
+		<div class="weui-cells weui-panel">
+			<a class="weui-cell weui-cell_access">
+				<div class="weui-cell__bd weui-panel__bd">
+					<div class="weui-media-box weui-media-box_text">
+						<ul class="weui-media-box__info">
+							<li class="weui-media-box__info__meta">流程类型0</li>
+							<li class="weui-media-box__info__meta weui-media-box__info__meta_extra">请假类型0</li>
+						</ul>
+						<ul class="weui-media-box__info">
+							<li class="weui-media-box__info__meta">2017-12-5 10:09</li>
+							<li class="weui-media-box__info__meta ">2017-12-5 10:20</li>
+						</ul>
+					</div>
+				</div>
+				<div class="weui-cell__ft apply-state-passed">已通过</div>
+			</a>
+		</div>
+		<div class="weui-cells weui-panel">
+			<a class="weui-cell weui-cell_access">
+				<div class="weui-cell__bd weui-panel__bd">
+					<div class="weui-media-box weui-media-box_text">
+						<ul class="weui-media-box__info">
+							<li class="weui-media-box__info__meta">流程类型0</li>
+							<li class="weui-media-box__info__meta weui-media-box__info__meta_extra">请假类型0</li>
+						</ul>
+						<ul class="weui-media-box__info">
+							<li class="weui-media-box__info__meta">2017-12-5 10:09</li>
+							<li class="weui-media-box__info__meta">2017-12-5 10:20</li>
+						</ul>
+					</div>
+				</div>
+				<div class="weui-cell__ft apply-state-nopassed">未通过</div>
+			</a>
+		</div>
+		<script type="text/javascript" src="../../../js/lib/vconsole/vconsole.min.js"></script>
+		<script type="text/javascript" src="../../../js/demoCssJs/jquery-2.1.4.js"></script>
+		<script type="text/javascript" src="../../../js/demoCssJs/jquery-weui.min.js"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/request.js" + WebVersion + "'></s" + "cript>");
+			//			document.write("<s" + "cript type='text/javascript' src='../../../temp/mineinfo.js" + WebVersion + "'></s" + "cript>");
+		</script>
+		<script>
+			var loading = false; //状态标记
+			$(document.body).infinite().on("infinite", function() {
+				if(loading) return;
+				loading = true;
+				setTimeout(function() {
+					loading = false;
+				}, 1500); //模拟延迟
+			});
+			window.onload = function() {
+				console.log("onload");
+			}
+		</script>
+	</body>
+
+</html>

@@ -259,7 +259,16 @@
 					 * 根据原先的地址解析之，将其对应的位置在地图上显示
 					 */
 					// 将地址解析结果显示在地图上,并调整地图视野.并将考勤地点记录的名称传进去
-					geoc.getPoint(attendAddressObject.AreaName, function(point) {
+					
+					console.log("attendAddressObject.AreaName===="+attendAddressObject.AreaName);
+					/**
+					 * 将地址中的逗号去掉
+					 */
+					var address=attendAddressObject.AreaName;
+//					var regularExpression="/^,/g";
+					var addressReplaced=address.replace(/,/g,"");
+					console.log("addressReplaced====="+addressReplaced);
+					geoc.getPoint(addressReplaced, function(point) {
 						if(point) {
 							map.centerAndZoom(point, 16);
 							var marker = new BMap.Marker(point); //创建标注对象

@@ -14,8 +14,7 @@ Vue.component("choose-person", {
 			}
 		}
 	},
-	mounted: function() {
-	},
+	mounted: function() {},
 	data: function() {
 		return {
 			isAllCheck: false,
@@ -69,24 +68,6 @@ Vue.component("choose-person", {
 				com.personList = data;
 				com.setChooseStatus();
 			})
-		},
-		getTotalCheck: function(e) {
-			//						this.isAllCheck=e.target.checked;
-			console.log("isAllChecked" + this.isAllCheck)
-			this.toggleAllCheck(this.isAllCheck)
-		},
-		toggleAllCheck: function(isCheck) {
-			this.personList = this.personList.map(function(person) {
-				person.isCheck = isCheck;
-				return person;
-			})
-		},
-		getPersonCheck: function(e, person) {
-			person.isCheck = e.target.checked;
-			console.log("isPersonChecked:" + person.name + ":" + person.isCheck)
-			if(!person.isCheck) {
-				this.isAllCheck = false;
-			}
 		}
 	}
 })

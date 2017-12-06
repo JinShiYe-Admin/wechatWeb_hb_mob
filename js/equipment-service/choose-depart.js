@@ -19,16 +19,28 @@ Vue.component("choose-depart", {
 		}
 	},
 	methods: {
+		/**
+		 * 获取响应的部门
+		 * @param {Object} depart
+		 */
 		getActiveDepart: function(depart) {
 			this.activeDepart = depart;
 			console.log("当前选中的depart:" + JSON.stringify(depart))
 			this.$emit('active-depart', depart);
 		},
+		/**
+		 * 选择已选人员
+		 * @param {Object} persons
+		 */
 		getChoosePerson: function(persons) {
 			console.log("已选人员：" + JSON.stringify(persons))
 			this.choosePerson = persons;
 
 		},
+		/**
+		 * 获取所有部门
+		 * @param {Object} callback
+		 */
 		getAllDeparts: function(callback) {
 			console.log("*********getAllListData******");
 			var com = this;
@@ -39,6 +51,10 @@ Vue.component("choose-depart", {
 				com.isLoading = false;
 			});
 		},
+		/**
+		 * 重新排序
+		 * @param {Object} nodes
+		 */
 		getNodeTree: function(nodes) {
 			console.log('****choose-depart***getChildrenTree***')
 			if(typeof(nodes) === 'undefined' || nodes.length === 0) {

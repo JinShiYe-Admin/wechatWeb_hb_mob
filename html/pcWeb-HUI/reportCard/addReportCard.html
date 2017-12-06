@@ -1,0 +1,384 @@
+<!--
+	作者：444811716@qq.com
+	时间：2017-07-04
+	描述：网站配置
+-->
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>网站栏目</title>
+		<script type="text/javascript">
+			var WebVersion = "?" + Math.random();
+			document.write('<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui/css/H-ui.min.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css' + WebVersion + '" id="skin" />');
+			document.write('<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui.admin/css/style.css' + WebVersion + '" />');
+		</script>
+				<link rel="stylesheet" href="../../../js/demoCssJs/weui.min.css">
+		<link rel="stylesheet" href="../../../js/demoCssJs/jquery-weui.css">
+		<link rel="stylesheet" href="../../../js/demoCssJs/demos.css">
+		<link rel="stylesheet" href="../../../css/demos.css" />
+		<link href="../../../css/mui.min.css" rel="stylesheet" />
+		<style>
+			.weui-cells {
+				margin-top: 0px;
+			}
+			
+			.weui-cells__title {
+				color: black;
+			}
+		</style>
+	</head>
+
+	<body>
+
+		<div id="content" class="weui-cells weui-cells_form">
+			<!--输入列表-->
+			<div id="input_list">
+				<div class="weui-cells__title">成绩单名称</div>
+				<div class="weui-cells">
+					<div class="weui-cell">
+						<div class="weui-cell__bd">
+							<input v-model="cname" class="weui-input" type="text" :placeholder="'请输入'+cname">
+						</div>
+					</div>
+				</div>
+				<div class="weui-cells__title">部门名称</div>
+				<div class="weui-cells">
+					<div class="weui-cell">
+						<div class="weui-cell__bd">
+							<input v-model="dptname" class="weui-input" type="text" :placeholder="'请输入'+dptname">
+						</div>
+					</div>
+				</div>
+
+				<div class="weui-cells__title">记录人</div>
+				<div class="weui-cells">
+					<div class="weui-cell">
+						<div class="weui-cell__bd">
+							<input v-model="recname" class="weui-input" type="text" :placeholder="'请输入'+recname">
+						</div>
+					</div>
+				</div>
+
+				<div class="weui-cells__title">记录时间</div>
+				<div class="weui-cells">
+					<div class="weui-cell">
+						<div class="weui-cell__bd">
+							<input v-model="rectime" class="weui-input" type="text" :placeholder="'请输入'+rectime">
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div>
+				<div class="weui-cells weui-cells_form">
+					<div class="weui-cell">
+						<div class="weui-cell__bd">
+							<div class="weui-uploader">
+								<div class="weui-uploader__hd">
+									<p class="weui-uploader__title">上传照片</p>
+								</div>
+								<div class="weui-uploader__bd">
+									<ul class="weui-uploader__files" id="uploaderFiles">
+										<li v-for="(file,index) of uploadedFiles" @click="clickImg(index)" v-bind:class="['weui-uploader__file']" v-bind:style="{'background-image':'url('+file.ImgUrl+')'}"></li>
+									</ul>
+									<div class="weui-uploader__input-box" :style="displayAddBtn">
+										<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" v-on:change="selectFile($event)">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<input id="qnInput" style="display: none;">
+				<div class="weui-gallery" :style="displayGallery">
+					<span class="weui-gallery__img" @click="clickGigImg" :style="{backgroundImage:'url('+selectImgPath+')'}"></span>
+					<div class="weui-gallery__opr">
+						<a href="javascript:" class="weui-gallery__del">
+							<i class="weui-icon-delete weui-icon_gallery-delete" @click="deleteImg"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="weui-btn-area">
+				<button id="submit" class="weui-btn weui-btn_primary">添加成绩单</button>
+			</div>
+		</div>
+
+		<script src="../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/demoCssJs/jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/demoCssJs/iscroll.js"></script>
+		<script src="../../../js/demoCssJs/jquery-weui.js"></script>
+		<script src="../../../js/weui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/PublicProtocol.js"></script>
+		<script src="../../../js/utils/utils.js"></script>
+		<script src="../../../js/utils/storageutil.js"></script>
+		<script src='../../../js/lib/vconsole/vconsole.min.js'></script>
+		<script src="https://jsypay.jiaobaowang.net/wxthadmin/js/weui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src='https://jsypay.jiaobaowang.net/wxthadmin/js/demoCssJs/vue.min.js'></script>
+		<script src='https://jsypay.jiaobaowang.net/wxthadmin/js/PublicProtocol.js'></script>
+		<script src='https://jsypay.jiaobaowang.net/wxthadmin/js/utils/utils.js'></script>
+		<script src='https://jsypay.jiaobaowang.net/wxthadmin/js/utils/storageutil.js'></script>
+
+		<script src="../../../js/appweb/choose-file.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/utils/consts.js"></script>
+		<script src="../../../js/utils/events.js"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../../js/lib/exif/exif.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/lib/plupload/moxie.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/lib/qiniu/qiniu.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/cryption.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/cloudutil.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/compress.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/pluploadutil.js?" + Math.random() + "'></s" + "cript>");
+		</script>
+		<script>
+			var uptokenData;
+			var qnFileUploader; //七牛上传控件对象
+			var content = new Vue({
+				el: '#content',
+				data: {
+					cname: "开发部成绩单",
+					dptname: "开发部",
+					recname: "宋艳明",
+					rectime: "2017/12/6",
+
+					displayGallery: {
+						display: 'none'
+					},
+					displayAddBtn: {
+						display: 'block'
+					},
+
+					selectIndex: 0,
+					selectImgPath: '',
+					uploadedFiles: []
+
+				},
+				methods: {
+					selectFile: function(event) { //从手机中选择图片后到界面的回调
+						// 如果没有选中文件，直接返回  
+						var files = event.target.files;
+						console.log(files)
+						if(files.length === 0) {
+							$.hideLoading();
+							return;
+						} else {
+							uploadFiles(0, files, content.uploadedFiles.length);
+						}
+					},
+
+					clickImg: function(index) { //点击列表中的附件，给别的地方赋值
+						content.selectIndex = index;
+						content.selectImgPath = content.uploadedFiles[index].ImgUrl;
+						content.displayGallery = {
+							display: 'block'
+						};
+					},
+					clickGigImg: function() { //点击放大后的图片，隐藏显示
+						content.displayGallery = {
+							display: 'none'
+						};
+					},
+					deleteImg: function() { //删除图片
+						$.confirm({
+							title: '提示',
+							text: '确认删除？',
+							onOK: function() {
+								content.displayGallery = {
+									display: 'none'
+								};
+								content.uploadedFiles.splice(content.selectIndex, 1);
+								displayAddBtnFun();
+							}
+						});
+					}
+				}
+
+			})
+
+			window.onload = function() {
+				initQNUploader();
+
+			}
+			//从相册中选择照片后，上传
+			//index--从相册选择照片回调里面，照片的索引，files--选择的照片信息，filesSum--选择照片之前，现存的照片张数
+			function uploadFiles(index, files, filesSum) {
+				console.log('index:' + index + ',files.count:' + files.length + ',filesSum.length:' + filesSum.length);
+				if(index < files.length) {
+					if(filesSum + index > 0) {
+						$.alert("最多只能上传1张照片");
+					} else {
+						var file = files[index];
+						var types = file.type.toLowerCase().split("/");
+						console.log("types:" + types);
+						if(types[1] == "png" || types[1] == "jpg" || types[1] == "jpeg") {
+							EXIF.getData(file, function() {
+								$.showLoading('加载中...');
+								var orientation = EXIF.getTag(this, 'Orientation'); //获取旋转信息
+								console.log('orientation:' + JSON.stringify(orientation));
+								//显示文件
+								var reader = new FileReader();
+								reader.onload = function() {
+									var result = this.result;
+									var maxSize = 2 * 1024 * 1024;
+									compress.getImgInfo(result, function(img, imgInfo) {
+										console.log("获取的文件信息：" + JSON.stringify(imgInfo));
+										console.log("原图尺寸：" + result.length);
+										var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)), orientation);
+										var blob = compress.base64ToBlob(newDataUrl, 'image/jpeg');
+										console.log("blob.type:" + blob.type);
+										console.log('要传递的文件大小：' + blob.size);
+										blob.lastModifiedDate = new Date();
+										qnFileUploader.addFile(blob, Date.now() + '.jpg');
+										index++;
+										uploadFiles(index, files, filesSum);
+										if(index == files.length - 1) {
+											$('#uploaderInput').val('');
+										}
+									});
+								}
+								reader.readAsDataURL(file);
+							});
+						} else {
+							if(index + 1 < filesSum.length) {
+								index++;
+								uploadFiles(index, files, filesSum);
+							}
+							$('#uploaderInput').val('');
+							$.toast("请选择png,jpg,jpeg类型的图片");
+						}
+					}
+				}
+			}
+
+			/**
+			 * 初始化上传
+			 */
+			function initQNUploader() {
+				qnFileUploader = Qiniu.uploader({
+					disable_statistics_report: false, // 禁止自动发送上传统计信息到七牛，默认允许发送
+					runtimes: 'html5,flash,html4', // 上传模式,依次退化
+					browse_button: 'qnInput', // 上传选择的点选按钮，**必需**
+					uptoken_func: function(file) { // 在需要获取 uptoken 时，该方法会被调用
+						uptokenData = null;
+						uptokenData = getQNUpToken(file);
+						console.log("获取uptoken回调:" + JSON.stringify(uptokenData));
+						if(uptokenData && uptokenData.code) { //成功
+							return uptokenData.data.Data[0].Token;
+						} else {
+							qnFileUploader.stop();
+						}
+					},
+					unique_names: false, // 默认 false，key 为文件名。若开启该选项，JS-SDK 会为每个文件自动生成key（文件名）
+					save_key: false, // 默认 false。若在服务端生成 uptoken 的上传策略中指定了 `save_key`，则开启，SDK在前端将不对key进行任何处理
+					get_new_uptoken: true, // 设置上传文件的时候是否每次都重新获取新的 uptoken
+					domain: storageutil.QNPBDOMAIN, // bucket 域名，下载资源时用到，如：'http://xxx.bkt.clouddn.com/' **必需**
+					max_file_size: '4mb', // 最大文件体积限制
+					flash_swf_url: 'https://jsypay.jiaobaowang.net/wxthadmin/js/lib/plupload/Moxie.swf', //引入 flash,相对路径
+					max_retries: 0, // 上传失败最大重试次数
+					dragdrop: false, // 开启可拖曳上传
+					chunk_size: '4mb', // 分块上传时，每块的体积
+					auto_start: true, // 选择文件后自动上传，若关闭需要自己绑定事件触发上传,
+					init: {
+						'FilesAdded': function(up, files) {
+							console.log("FilesAdded0:", files);
+							plupload.each(files, function(file) {
+								// 文件添加进队列后,处理相关的事情
+								console.log("FilesAdded:", file);
+							});
+						},
+						'BeforeUpload': function(up, file) {
+							$.showLoading('加载中...');
+							// 每个文件上传前,处理相关的事情
+							console.log("BeforeUpload:");
+						},
+						'UploadProgress': function(up, file) {
+							// 每个文件上传时,处理相关的事情
+							console.log("UploadProgress:" + file.percent);
+						},
+						'FileUploaded': function(up, file, info) {
+							// 每个文件上传成功后,处理相关的事情
+							console.log("FileUploaded:");
+							$.hideLoading();
+							if(info.status == 200) {
+								var tempModel = {
+									ImgUrl: storageutil.QNPBDOMAIN + JSON.parse(info["response"]).key,
+									SaveUrl: storageutil.QNPBDOMAIN + JSON.parse(info["response"]).key,
+									OldName: file.name,
+									NewName: file.name,
+									FileSize: file.size
+								}
+								content.uploadedFiles.push(tempModel);
+								displayAddBtnFun();
+								console.log("success:" + storageutil.QNPBDOMAIN + JSON.parse(info["response"]).key);
+							}
+						},
+						'Error': function(up, err, errTip) {
+							//上传出错时,处理相关的事情
+							console.log("Error:", err, errTip);
+							$.hideLoading();
+						},
+						'UploadComplete': function() {
+							//队列文件处理完毕后,处理相关的事情
+							console.log("UploadComplete:");
+						},
+						'Key': function(up, file) {
+							console.log('得到token0:' + JSON.stringify(uptokenData));
+							// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
+							// 该配置必须要在 unique_names: false , save_key: false 时才生效
+							if(uptokenData && uptokenData.code) { //成功
+								console.log('得到token:' + JSON.stringify(uptokenData));
+								return uptokenData.data.Data[0].Key;
+							}
+						}
+					}
+				});
+			}
+
+			//判断照片添加按钮是否显示，大于9张时隐藏
+			function displayAddBtnFun() {
+				if(content.uploadedFiles.length >= 1) {
+					content.displayAddBtn = {
+						display: 'none'
+					};
+				} else {
+					content.displayAddBtn = {
+						display: 'block'
+					};
+				}
+			}
+				/**
+	 * 获取七牛上传token
+	 */
+	function getQNUpToken(file) {
+		var myDate = new Date();
+		var fileName = myDate.getTime() + "" + parseInt(Math.random() * 1000);
+		var types = file.name.split(".");
+		fileName = fileName + "." + types[types.length - 1];
+		var getTokenData = {
+			appId: storageutil.QNQYWXKID,
+			mainSpace: storageutil.QNPUBSPACE,
+			saveSpace: storageutil.QNSSPACEWEBCON,
+			fileArray: [{
+				qnFileName: fileName,
+			}]
+		}
+		var upToken;
+		cloudutil.getFileUpTokens(getTokenData, function(data) {
+			upToken = data;
+		});
+		return upToken;
+	}
+		</script>
+	</body>
+
+</html>

@@ -1,14 +1,20 @@
 Vue.component("choose-person", {
 	template: "#person-list",
 	props: {
-		choosePerson: {//已选人员
+		choosePerson: { //已选人员
 			type: Object,
 			default: function() {
 				return {}
 			}
 		},
-		allCheckPerson: {//所有已选人员
-			type: Array,
+		allCheckPerson: { //所有已选人员
+			type: Object,
+			default: function() {
+				return {}
+			}
+		},
+		choseDepart: {
+			type: Object,
 			default: function() {
 				return {}
 			}
@@ -23,6 +29,11 @@ Vue.component("choose-person", {
 		}
 	},
 	watch: {
+		choseDepart: function(newVal, oldVal) {
+			this.personList = [];
+			this.isAllCheck = false;
+			this.requireDepartPerson();
+		},
 		/**
 		 * 所有具有審核權限的人員
 		 * @param {Object} newVal
@@ -51,6 +62,13 @@ Vue.component("choose-person", {
 		}
 	},
 	methods: {
+		requireDepartPerson: function() {
+			var com = this;
+			request.getDepartPersons(this.choseDepart, 1, 0, function(data) {
+				com.personList = data;
+				com.setChooseStatus();
+			})
+		},
 		/**
 		 * 设置审核状态
 		 */

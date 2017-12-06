@@ -150,7 +150,7 @@
 					</div>
 					<div class="person-foot">
 						<div v-if="Object.keys(selectPerson).length>0">
-							<p>已选人员</p>
+							<p>已选人员({{Object.keys(selectPerson).length}}/50)</p>
 							<div v-for="key of Object.keys(selectPerson)" v-if="key" class="person-container is-checked" v-on:click="delChoosePerson(key)">
 								{{selectPerson[key]}}
 							</div>
@@ -216,7 +216,7 @@
 								<a class="close" data-dismiss="modal" aria-hidden="true" href="javascript:void();">×</a>
 							</div>
 							<div class="modal-body">
-								<textarea type="text" class="textarea radius" v-model.trim="serviceGroupName" placeholder="请输入维修组名称"></textarea>
+								<textarea type="text" class="textarea radius" v-model.trim="serviceGroupName" maxlength="20" placeholder="请输入维修组名称,最多20字"></textarea>
 							</div>
 							<div class="modal-footer">
 								<button class="btn btn-primary" v-bind:disabled="serviceGroupName.length==0" v-on:click="changeClick()">确定</button>

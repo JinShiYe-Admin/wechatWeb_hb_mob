@@ -26,13 +26,20 @@
 				width: 100px;
 				height: 80px;
 			}
+			
+			.scrollgo {
+				overflow: auto;
+				-webkit-overflow-scrolling: touch;
+				width: 100%;
+				height: 100%;
+			}
 		</style>
 	</head>
 
 	<body ontouchstart>
-		<div class="weui-tab" id="attendData">
-			<div class="weui-tab__bd" style="margin-top: -50px;">
-				<div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active  weui-pull-to-refresh infinite">
+		<div class="weui-tab scrollgo" id="attendData">
+			<div class="weui-tab__bd">
+				<div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active  weui-pull-to-refresh infinite" style="margin-top: -100px;">
 					<div class="weui-pull-to-refresh__layer">
 						<div class='weui-pull-to-refresh__arrow'></div>
 						<div class='weui-pull-to-refresh__preloader'></div>
@@ -40,7 +47,7 @@
 						<div class="up">释放刷新</div>
 						<div class="refresh">正在刷新</div>
 					</div>
-					<div class="weui-cells" style="margin-top: 0;">
+					<div class="weui-cells" style="margin-top: 0px;">
 						<div class="weui-cell">
 							<div class="weui-cell__hd"><label for="date" class="weui-label">开始日期</label></div>
 							<div class="weui-cell__bd">
@@ -76,13 +83,13 @@
 							</div>
 						</div>
 					</div>
-					<div class="weui-loadmore">
+					<div class="weui-loadmore" v-show="showLoadMore == 0">
 						<i class="weui-loading"></i>
 						<span class="weui-loadmore__tips">正在加载</span>
 					</div>
 				</div>
 			</div>
-			<div class="weui-tabbar" style="margin-bottom: -50px;">
+			<div class="weui-tabbar" style="">
 				<a href="https://jsypay.jiaobaowang.net/wxth/appschweb/app/index.aspx" class="weui-tabbar__item">
 					<div class="weui-tabbar__icon">
 						<img class="img" src="../../../image/考勤/pic_ico_index0.png" alt="">
@@ -118,13 +125,44 @@
 				getUserInfo();
 			});
 
+			//每个选项栏的高度重新调整
+			var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight;
+			var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight;
+			$('.weui-tab__bd').css({
+				'height': (allheight - barheight) * 100 / allheight + '%'
+			});
+			$('.weui-tab__bd-item').css({
+				'height': (allheight - barheight) * 100 / allheight + '%' + 50
+			});
+			//有红点提示的宽度调整
+			var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth;
+			$('.wrap').css({
+				'left': (tabar_width - 30) * 50 / tabar_width + '%'
+			});
+			window.addEventListener("resize", function() {
+				var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight;
+				var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight;
+				$('.weui-tab__bd').css({
+					'height': (allheight - barheight) * 100 / allheight + '%'
+				});
+				$('.weui-tab__bd-item').css({
+					'height': (allheight - barheight) * 100 / allheight + '%' + 50
+				});
+
+				var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth;
+				$('.wrap').css({
+					'left': (tabar_width - 30) * 50 / tabar_width + '%'
+				});
+			}, false);
+
 			var attendData = new Vue({
 				el: "#attendData",
 				data: {
 					flag: 0,
 					beginTime: '',
 					endTime: '',
-					pageIndex:1,//获取的第几页数据
+					showLoadMore: 0, //0显示，1没有更多
+					pageIndex: 1, //获取的第几页数据
 					userInfo: {}, //当前人员信息
 					attendArray: [], //考勤统计列表
 					departArray: [], //管理的所有部门数组
@@ -164,6 +202,7 @@
 				}
 				console.log('tempData:' + JSON.stringify(tempData));
 				unitWebsitePro(tempData, function(data) {
+					getAttend(0);
 					if(data.RspCode == 0) {
 						attendData.userInfo = JSON.parse(data.RspData);
 						//16.获取考勤统计
@@ -176,15 +215,17 @@
 
 			//刷新
 			$('.weui-tab__bd-item').pullToRefresh().on('pull-to-refresh', function(done) {
+				attendData.showLoadMore = 0;
 				var self = this
 				getAttend(0);
 			});
-			
+
 			//加载更多
 			var loading = false;
 			$(".infinite").infinite(0).on("infinite", function() {
 				var self = this;
 				if(loading) return;
+				if(attendData.showLoadMore == 1) return;
 				$(self).find(".weui-loadmore").show();
 				loading = true;
 				getAttend(1);
@@ -208,9 +249,9 @@
 					return false;
 				}
 				var tempPage = 1;
-				if (flag == 0) {
+				if(flag == 0) {
 					tempPage = 1;
-				} else{
+				} else {
 					tempPage = attendData.pageIndex;
 				}
 				var tempId = [];
@@ -232,8 +273,8 @@
 					var myDate = new Date().format('yyyy-MM-dd');
 					var endTime = myDate.toString().replace(/-/g, '');
 					tempData = {
-						corpId: attendData.userInfo.corpid, //单位ID
-						userId: tempId, //用户ID,例如：[“1”, “2”, “3”]
+						corpId: 'wx6c4528c675d4a9c9', //单位ID
+						userId: ["zhaoqiwang"], //用户ID,例如：[“1”, “2”, “3”]
 						beginTime: '19900101', //统计开始时间,年月日共八位如：20011010
 						endTime: endTime, //统计结束时间,年月日共八位如：20011010
 						attendResultId: '0', //0：全部,1: 正常,2：迟到,3：早退
@@ -255,29 +296,35 @@
 									}
 								}
 							}
+							if(data.RspData.Data.length == 10) {
+								attendData.showLoadMore = 0;
+							} else {
+								attendData.showLoadMore = 1;
+							}
 							setTimeout(function() {
-									$(".weui-loadmore").hide();
-									loading = false;
-									$(".weui-pull-to-refresh").pullToRefreshDone();
-								}, 1000); //模拟延迟
-							
-							if (flag == 0) {//刷新
+								$(".weui-loadmore").hide();
+								loading = false;
+								$(".weui-pull-to-refresh").pullToRefreshDone();
+							}, 1000); //模拟延迟
+
+							if(flag == 0) { //刷新
 								attendData.attendArray = [].concat(data.RspData.Data);
 								attendData.pageIndex = 1;
-							} else{//加载更多
+							} else { //加载更多
 								attendData.attendArray = attendData.attendArray.concat(data.RspData.Data);
 							}
-							attendData.pageIndex ++;
+							attendData.pageIndex++;
 							attendData.flag = 1;
 						} else {
 							setTimeout(function() {
-									$(".weui-loadmore").hide();
-									loading = false;
-									$(".weui-pull-to-refresh").pullToRefreshDone();
-								}, 1000); //模拟延迟
-							if (flag == 0) {//刷新
+								$(".weui-loadmore").hide();
+								loading = false;
+								$(".weui-pull-to-refresh").pullToRefreshDone();
+							}, 1000); //模拟延迟
+							attendData.showLoadMore = 1;
+							if(flag == 0) { //刷新
 								$.toast("暂无考勤记录");
-							} else{//加载更多
+							} else { //加载更多
 								$.toast("暂无更多考勤记录");
 							}
 						}

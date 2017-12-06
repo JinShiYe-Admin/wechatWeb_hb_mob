@@ -51,10 +51,12 @@
 			.detail-container {
 				padding-bottom: 65px;
 			}
-			.weui-cell__ft{
+			
+			.weui-cell__ft {
 				text-align: center;
 			}
-			.reply-cell{
+			
+			.reply-cell {
 				padding: 10px 15px;
 			}
 		</style>
@@ -223,7 +225,15 @@
 			},
 			methods: {
 				getDetail: function(id) {
+					request.postProcessData("getDetail", {
+						procId: id
+					}, function(response) {
+						if(response.RspCode == 0) {
 
+						} else {
+
+						}
+					});
 				}
 			}
 		})

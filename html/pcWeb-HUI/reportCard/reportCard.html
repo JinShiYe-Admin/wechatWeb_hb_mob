@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-stat-bar-style" content="black">
+		<title>成绩单</title>
+		<script type="text/javascript">
+			var WebVersion = "?" + Math.random();
+			document.write('<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui/css/H-ui.min.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css' + WebVersion + '" id="skin" />');
+			document.write('<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui.admin/css/style.css' + WebVersion + '" />');
+		</script>
+		<style>
+			.operate-edit {
+				text-decoration: none;
+			}
+			
+			#column_info .row {
+				margin-left: 0;
+				margin-right: 0;
+			}
+			
+			#column_info .submit-button {
+				margin-bottom: 15px;
+			}
+			
+			#column_info .input-text[type="number"] {
+				width: 100%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 成绩单 <span class="c-gray en">&gt;</span>成绩单
+			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
+		</nav>
+		<div id="column_table" class="page-container">
+			<div class="cl pd-5 bg-1 bk-gray">
+				<span class="l">
+					<a class="btn btn-primary radius" @click="add"><i class="Hui-iconfont"></i> 添加栏目</a>
+				</span>
+				<span class="select-box inline">
+					<select id="stateSelect" class="select" title="选择部门">
+						<option value="-1">开发部</option>
+						<option value="0">行政部</option>
+						<option value="1">财务部</option>
+					</select>
+				</span>
+				<span class="select-box inline">
+					<select id="stateSelect" class="select" title="选择成绩单名称">
+						<option value="-1">开发部成绩单</option>
+						<option value="0">行政部成绩单</option>
+						<option value="1">财务部成绩单</option>
+					</select>
+				</span>
+			</div>
+						<table class="table table-border table-bordered table-bg">
+				<thead class="text-c">
+					<tr>
+						<th>部门</th>
+						<th>成绩单名称</th>
+						<th>添加时间</th>
+						<th>操作</th>
+
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="text-c" v-for="(item,index) in dt">
+						<td>{{item.departname}}</td>
+						<td>{{item.reportname}}</td>
+						<td>{{item.time}}</td>
+						<td class="sorting_1">
+							<a style="text-decoration:none" class="ml-5" @click="clickDel(item)" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div id="pages" style="margin-top: 20px;"></div>
+		</div>
+
+
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/H-ui.admin/lib/layer/2.4/layer.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/H-ui.admin/static/h-ui/js/H-ui.min.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/H-ui.admin/static/h-ui.admin/js/H-ui.admin.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/H-ui.admin/lib/laypage/1.2/laypage.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/vue.min.js" + WebVersion + "'></s" + "cript>");
+		</script>
+		<script>
+
+			//栏目表
+			var column_table = new Vue({
+				el: "#column_table",
+				data: {
+					dt: [{
+						departname: "开发部",
+						reportname: "开发部成绩单",
+						time: "2017/12/6"
+					}]
+				},
+				updated:function(){
+					console.log(JSON.stringify(column_table.dt));
+					console.log(document.getElementById("column_table").innerHTML)
+				},
+				methods: {
+					/**
+					 * 点击添加栏目
+					 */
+					add: function() {},
+
+					clickDel: function(item) {},
+				}
+			});
+			column_table.dt = [{
+						departname: "开发部",
+						reportname: "开发部成绩单",
+						time: "2017/12/6"
+					}];
+
+			window.onload = function() {
+				
+//					console.log(JSON.stringify(column_table.dt));
+				//				getColumnData(1);
+			}
+
+			/**
+			 * 获取栏目列表
+			 * @param {Object} pageindex 列表序号
+			 */
+			function getColumnData(pageindex) {
+				var tempData = {
+					cmd: 'chn',
+					type: 'findpage',
+					pagesize: '10',
+					pageindex: pageindex
+				}
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						column_table.dt = data.RspData.dt;
+						initLaypage(data.RspData.pg.PageCount, pageindex);
+					} else {
+						column_table.dt = [];
+						column_modal.show("获取数据失败", data.RspTxt);
+					}
+				});
+			}
+
+			/**
+			 * 初始化页码
+			 * @param {Object} pages 通过后台拿到的总页数
+			 * @param {Object} curr 初始化当前页
+			 */
+			function initLaypage(pages, curr) {
+				laypage({
+					cont: 'pages', //容器
+					pages: pages, //通过后台拿到的总页数
+					curr: curr, //初始化当前页
+					jump: function(e, first) { //触发分页后的回调
+						//console.log("jump: " + first + " " + JSON.stringify(e));
+						if(!first) {
+							getColumnData(e.curr);
+						}
+					}
+				});
+			}
+		</script>
+	</body>
+
+</html>

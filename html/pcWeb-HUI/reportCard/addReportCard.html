@@ -1,0 +1,95 @@
+<!--
+	作者：444811716@qq.com
+	时间：2017-07-04
+	描述：网站配置
+-->
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>网站栏目</title>
+				<script type="text/javascript">
+			var WebVersion = "?" + Math.random();
+			document.write('<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui/css/H-ui.min.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css' + WebVersion + '" id="skin" />');
+			document.write('<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui.admin/css/style.css' + WebVersion + '" />');
+		</script>
+		<link rel="stylesheet" href="../../../css/weui.min.css" />
+		<link href="../../../css/mui.min.css" rel="stylesheet" />
+		<style>
+			.weui-cells {
+				margin-top: 0px;
+			}
+			
+			.weui-cells__title {
+				color: black;
+			}
+		</style>
+	</head>
+
+	<body>
+
+		<div id="conetent" class="weui-cells weui-cells_form">
+			<!--输入列表-->
+			<div id="input_list">
+				<div>
+					<div class="weui-cells__title">{{departname}}</div>
+					<div class="weui-cells">
+						<div class="weui-cell">
+							<div class="weui-cell__bd">
+								<input v-model.lazy="departname" class="weui-input" type="text" :placeholder="'请输入'+departname">
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			</div>
+			<div class="weui-btn-area" >
+				<button id="submit" v-on:click="submitClick" class="weui-btn weui-btn_primary">添加成绩单</button>
+			</div>
+		</div>
+		<!--</template>-->
+		<script type="text/javascript" src="../../../js/weui.min.js"></script>
+		<script type="text/javascript" src="../../../js/jweixin.js"></script>
+		<script type="text/javascript" src="../../../js/jquery.min.js"></script>
+		<script type="text/javascript" src="../../../js/mui.min.js"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/H-ui.admin/lib/layer/2.4/layer.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/H-ui.admin/static/h-ui/js/H-ui.min.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/H-ui.admin/static/h-ui.admin/js/H-ui.admin.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/H-ui.admin/lib/laypage/1.2/laypage.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/vue.min.js" + WebVersion + "'></s" + "cript>");
+		</script>
+		<script>
+			window.onload = function() {}
+			var vm = new Vue({
+				el: '#conetent',
+				data: {
+					departname: '开发部',
+				},
+				methods: {
+					submitClick:function(){
+						
+					}
+
+				}
+
+			})
+
+
+		</script>
+	</body>
+
+</html>

@@ -66,9 +66,15 @@
 				margin-right: 5px;
 			}
 			
-			/*.weui-actionsheet__title {
-				height: auto;
-			}*/
+			.display-none {
+				opacity: 0;
+				display: none;
+			}
+			
+			.display-block {
+				opacity: 1;
+				display: block;
+			}
 		</style>
 	</head>
 
@@ -98,7 +104,7 @@
 					</div>
 					<div class="weui-uploader__bd">
 						<ul class="weui-uploader__files">
-							<li class="weui-uploader__file" v-bind:style="{backgroundImage:'url(' +applyDetail.ApplyReasonThumb+ ')'}">
+							<li class="weui-uploader__file" v-on:click="showGallery=true" v-bind:style="{backgroundImage:'url(' +applyDetail.ApplyReasonThumb+ ')'}">
 
 							</li>
 						</ul>
@@ -139,6 +145,9 @@
 						<div class="weui-actionsheet__cell" id="iosActionsheetCancel">取消</div>
 					</div>
 				</div>
+			</div>
+			<div class="weui-gallery" id="gallery" v-on:click="showGallery=false" v-bind:class="[{'display-block':showGallery},{'display-none':!showGallery}]">
+				<span class="weui-gallery__img" id="galleryImg" v-bind:style="{backgroundImage:'url('+applyDetail.ApplyPic+')'}"></span>
 			</div>
 		</div>
 		<script src="../../../js/jquery.min.js"></script>
@@ -195,7 +204,8 @@
 						ApprStat: 2,
 						ApprStatNote: "审核状态说明",
 						ApprTime: "2017-12-07"
-					}]
+					}],
+					showGallery: false
 				},
 				mounted: function() {
 

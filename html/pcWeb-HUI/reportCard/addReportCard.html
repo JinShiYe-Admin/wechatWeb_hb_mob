@@ -111,6 +111,7 @@
 		<script src="../../../js/appweb/choose-file.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../../js/utils/consts.js"></script>
 		<script src="../../../js/utils/events.js"></script>
+		<script src="../../../js/compress.js"></script>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../../js/lib/exif/exif.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../../js/lib/plupload/moxie.min.js?" + Math.random() + "'></s" + "cript>");
@@ -122,8 +123,7 @@
 			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/pluploadutil.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 		<script>
-			var uptokenData;
-			var qnFileUploader; //七牛上传控件对象
+//			var qnFileUploader; //七牛上传控件对象
 			var content = new Vue({
 				el: '#content',
 				data: {
@@ -150,7 +150,10 @@
 							$.hideLoading();
 							return;
 						} else {
-							uploadFiles(0, files, content.uploadedFiles.length);
+							compress.postFile(files, function(filePath){
+								content.uploadedFiles.push(filePath);
+								displayAddBtnFun();
+							});
 						}
 					},
 
@@ -184,7 +187,7 @@
 			})
 
 			window.onload = function() {
-				initQNUploader();
+//				initQNUploader();
 				addExama()
 
 			}
@@ -194,7 +197,7 @@
 					cmd: 'examadmin',
 					type: 'add',
 					cname: content.cname,
-					enc: content.uploadedFiles[0].ImgUrl,
+					enc: content.uploadedFiles[0].filephypath,
 //					dptname: "开发部",
 //					dptid: 11,
 					dptname: document.getElementById("depart").innerHTML,

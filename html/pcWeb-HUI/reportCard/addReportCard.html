@@ -68,7 +68,7 @@
 								</div>
 								<div class="weui-uploader__bd">
 									<ul class="weui-uploader__files" id="uploaderFiles">
-										<li v-for="(file,index) of uploadedFiles" @click="clickImg(index)">{{file.ImgUrl}}</li>
+										<li v-for="(file,index) of uploadedFiles" @click="clickImg(index)">{{file.fileurl}}</li>
 									</ul>
 									<div class="weui-uploader__input-box" :style="displayAddBtn">
 										<input id="uploaderInput" class="weui-uploader__input" type="file" accept="application/vnd.ms-excel" v-on:change="selectFile($event)">
@@ -111,6 +111,7 @@
 		<script src="../../../js/appweb/choose-file.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../../js/utils/consts.js"></script>
 		<script src="../../../js/utils/events.js"></script>
+		<script src="../../../js/compress.js"></script>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../../js/lib/exif/exif.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../../js/lib/plupload/moxie.min.js?" + Math.random() + "'></s" + "cript>");
@@ -122,8 +123,7 @@
 			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/pluploadutil.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 		<script>
-			var uptokenData;
-			var qnFileUploader; //七牛上传控件对象
+			//			var qnFileUploader; //七牛上传控件对象
 			var content = new Vue({
 				el: '#content',
 				data: {
@@ -145,12 +145,17 @@
 					selectFile: function(event) { //从手机中选择图片后到界面的回调
 						// 如果没有选中文件，直接返回  
 						var files = event.target.files;
+						var data = new FormData();
+						data.append('file', files[0]);
 						console.log(files)
 						if(files.length === 0) {
 							$.hideLoading();
 							return;
 						} else {
-							uploadFiles(0, files, content.uploadedFiles.length);
+							compress.postFile(data, function(filePath) {
+								content.uploadedFiles.push(filePath);
+								displayAddBtnFun();
+							});
 						}
 					},
 
@@ -184,8 +189,8 @@
 			})
 
 			window.onload = function() {
-				initQNUploader();
-				addExama()
+				//				initQNUploader();
+				getDepart();
 
 			}
 
@@ -194,16 +199,16 @@
 					cmd: 'examadmin',
 					type: 'add',
 					cname: content.cname,
-					enc: content.uploadedFiles[0].ImgUrl,
-//					dptname: "开发部",
-//					dptid: 11,
+					enc: content.uploadedFiles[0].filephypath,
+					//					dptname: "开发部",
+					//					dptid: 11,
 					dptname: document.getElementById("depart").innerHTML,
 					dptid: document.getElementById("depart").data_id,
 
 				}
 
-				console.log("添加成绩单参数："+JSON.stringify(tempData))
-//				return;
+				console.log("添加成绩单参数：" + JSON.stringify(tempData))
+				//				return;
 				unitWebsitePro(tempData, function(data) {
 					console.log('添加成绩单数据：' + JSON.stringify(data.RspData))
 					if(data.RspCode == 0) {
@@ -294,90 +299,6 @@
 						}
 					}
 				}
-			}
-
-			/**
-			 * 初始化上传
-			 */
-			function initQNUploader() {
-				qnFileUploader = Qiniu.uploader({
-					disable_statistics_report: false, // 禁止自动发送上传统计信息到七牛，默认允许发送
-					runtimes: 'html5,flash,html4', // 上传模式,依次退化
-					browse_button: 'qnInput', // 上传选择的点选按钮，**必需**
-					uptoken_func: function(file) { // 在需要获取 uptoken 时，该方法会被调用
-						uptokenData = null;
-						uptokenData = getQNUpToken(file);
-						console.log("获取uptoken回调:" + JSON.stringify(uptokenData));
-						if(uptokenData && uptokenData.code) { //成功
-							return uptokenData.data.Data[0].Token;
-						} else {
-							qnFileUploader.stop();
-						}
-					},
-					unique_names: false, // 默认 false，key 为文件名。若开启该选项，JS-SDK 会为每个文件自动生成key（文件名）
-					save_key: false, // 默认 false。若在服务端生成 uptoken 的上传策略中指定了 `save_key`，则开启，SDK在前端将不对key进行任何处理
-					get_new_uptoken: true, // 设置上传文件的时候是否每次都重新获取新的 uptoken
-					domain: storageutil.QNPBDOMAIN, // bucket 域名，下载资源时用到，如：'http://xxx.bkt.clouddn.com/' **必需**
-					max_file_size: '4mb', // 最大文件体积限制
-					flash_swf_url: 'https://jsypay.jiaobaowang.net/wxthadmin/js/lib/plupload/Moxie.swf', //引入 flash,相对路径
-					max_retries: 0, // 上传失败最大重试次数
-					dragdrop: false, // 开启可拖曳上传
-					chunk_size: '4mb', // 分块上传时，每块的体积
-					auto_start: true, // 选择文件后自动上传，若关闭需要自己绑定事件触发上传,
-					init: {
-						'FilesAdded': function(up, files) {
-							console.log("FilesAdded0:", files);
-							plupload.each(files, function(file) {
-								// 文件添加进队列后,处理相关的事情
-								console.log("FilesAdded:", file);
-							});
-						},
-						'BeforeUpload': function(up, file) {
-							$.showLoading('加载中...');
-							// 每个文件上传前,处理相关的事情
-							console.log("BeforeUpload:");
-						},
-						'UploadProgress': function(up, file) {
-							// 每个文件上传时,处理相关的事情
-							console.log("UploadProgress:" + file.percent);
-						},
-						'FileUploaded': function(up, file, info) {
-							// 每个文件上传成功后,处理相关的事情
-							console.log("FileUploaded:");
-							$.hideLoading();
-							if(info.status == 200) {
-								var tempModel = {
-									ImgUrl: storageutil.QNPBDOMAIN + JSON.parse(info["response"]).key,
-									SaveUrl: storageutil.QNPBDOMAIN + JSON.parse(info["response"]).key,
-									OldName: file.name,
-									NewName: file.name,
-									FileSize: file.size
-								}
-								content.uploadedFiles.push(tempModel);
-								displayAddBtnFun();
-								console.log("success:" + storageutil.QNPBDOMAIN + JSON.parse(info["response"]).key);
-							}
-						},
-						'Error': function(up, err, errTip) {
-							//上传出错时,处理相关的事情
-							console.log("Error:", err, errTip);
-							$.hideLoading();
-						},
-						'UploadComplete': function() {
-							//队列文件处理完毕后,处理相关的事情
-							console.log("UploadComplete:");
-						},
-						'Key': function(up, file) {
-							console.log('得到token0:' + JSON.stringify(uptokenData));
-							// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
-							// 该配置必须要在 unique_names: false , save_key: false 时才生效
-							if(uptokenData && uptokenData.code) { //成功
-								console.log('得到token:' + JSON.stringify(uptokenData));
-								return uptokenData.data.Data[0].Key;
-							}
-						}
-					}
-				});
 			}
 
 			//判断照片添加按钮是否显示，大于9张时隐藏

@@ -29,6 +29,7 @@ var compress = (function(mod) {
 	}
 	mod.postFile = function(formData, callback) {
 		console.log("开始上传");
+//		console.log("url="+consts.UPLOADURL+"data="+formData);
 		jQuery.ajax({
 				url: consts.UPLOADURL,
 				type: "POST",

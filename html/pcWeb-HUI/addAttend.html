@@ -204,6 +204,7 @@
 					 */
 					showEdit: function(value) {
 						this.AttendTypeNote = value.AttendTypeNote;
+						this.orderID = value.OrderId;
 						$("#attendTypePropSelect").val(value.attendTypeProp);
 						this.show("编辑考勤类型");
 						this.attendModel = value;

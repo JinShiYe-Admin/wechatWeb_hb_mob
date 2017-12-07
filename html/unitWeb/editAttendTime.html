@@ -41,7 +41,6 @@
 							<div class="weui-cell__bd">
 								<!-- <input id="beginHour" class="weui-input" type="text" :placeholder="'请输入考勤开始时间'"> -->
 								<select id="beginHour">
-									<option value=""></option>
 									<option value="1">1</option>
 									<option value="2">2</option>
 									<option value="3">3</option>
@@ -84,7 +83,6 @@
 							<!-- <input id="beginMinute" class="weui-input" type="text"
 							:placeholder="'请输入考勤开始时间'"> -->
 							<select id="beginMinute">
-								<option value=""></option>
 								<option value="0">0</option>
 								<option value="1">1</option>
 								<option value="2">2</option>
@@ -230,7 +228,7 @@
 				Math.random() + "'></s" + "cript>");
 		</script>
 		<script>
-			var corpId = "";
+//			var corpId = "";
 			var attendTimeId;
 			var attendTypeId;
 			var attendTimeObject;
@@ -362,15 +360,14 @@
 						console.log("optionElementText_M====" +
 							optionElementText_M);
 
-						var beginHour = document
-							.getElementById("beginHour").value;
+						
 						//alert("attendAdressValue==="+attendAdressValue);
 						var beginMinute = optionElementText_M;
 						var selectElementObject_H = document
 							.getElementById("beginHour");
 						//						console.log("selectElementObject===" + selectElementObject);
-						var optionElementObjectIndex_H = selectElementObject_H.selectedIndex;
-						console.log("optionElementObjectIndex_H===" +
+						var optionElementObjectIndex_H = selectElementObject_H.selectedIndex+1;
+						console.log("optionElementObjectIndex_H===3333333333333===" +
 							optionElementObjectIndex_H);
 						var optionElementText_H = selectElementObject_M.options[optionElementObjectIndex_H].text;
 						console.log("optionElementText_H====" +

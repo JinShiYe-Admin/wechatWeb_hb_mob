@@ -12,12 +12,12 @@ window.onerror = function(errorMessage, scriptURI, lineNumber, columnNumber, err
 
 //公共方法
 var utils = (function(mod) {
- 
+
 	/**
 	 * 获取url中的数据
-	 * @param {String} url 
+	 * @param {String} url
 	 */
-	mod.getDataFromUrl = function(url) { 
+	mod.getDataFromUrl = function(url) {
 		var data = {};
 		var index = url.indexOf("&");
 		if(index != -1) {
@@ -146,6 +146,20 @@ var utils = (function(mod) {
 		}
 		clock += ss;
 		return clock;
+	}
+
+	/**
+	 * 格式化时间
+	 * @param {String} data 201712061523
+	 * @return {String} data 2017-12-06 15:23
+	 */
+	mod.initTime = function(data) {
+		var year = data.substring(0, data.length - 8);
+		var month = data.substring(data.length - 8, data.length - 6);
+		var day = data.substring(data.length - 6, data.length - 4);
+		var hour = data.substring(data.length - 4, data.length - 2);
+		var minute = data.substring(data.length - 2);
+		return year + "-" + month + "-" + day + " " + hour + ":" + minute;
 	}
 
 	/**

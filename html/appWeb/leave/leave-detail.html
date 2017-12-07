@@ -5,7 +5,6 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../../../css/weui.min.css" rel="stylesheet" />
-		<link href="../../../css/jquery-weui.min.css" rel="stylesheet" />
 		<title>请假详情</title>
 		<style>
 			body {
@@ -67,14 +66,14 @@
 				margin-right: 5px;
 			}
 			
-			.weui-actionsheet__title {
+			/*.weui-actionsheet__title {
 				height: auto;
-			}
+			}*/
 		</style>
 	</head>
 
 	<body>
-		<div id="detail-container" class="page">
+		<div id="detail-container" class="page actionsheet js_show">
 			<div class="weui-cells person-container weui-flex">
 				<img v-bind:src="applyDetail.ApplyManPic" class="head-portrait display-inline">
 				<div class="display-inline name-time-container">
@@ -122,12 +121,12 @@
 					<input type="text" class="weui-input" placeholder="请输入内容" />
 				</div>
 				<div class="weui-cell__ft">
-					<button class="weui-vcode-btn">审核</button>
+					<button class="weui-vcode-btn" id="showIOSActionSheet">审核</button>
 				</div>
 			</div>
 			<div>
-				<div class="weui-mask" id="iosMask" style="opacity: 1;"></div>
-				<div class="weui-actionsheet weui-actionsheet_toggle" id="iosActionsheet">
+				<div class="weui-mask" id="iosMask" style="display: none;"></div>
+				<div class="weui-actionsheet" id="iosActionsheet">
 					<div class="weui-actionsheet__title">
 						<p class="weui-actionsheet__title-text">选择审核状态</p>
 					</div>
@@ -137,15 +136,34 @@
 						<div class="weui-actionsheet__cell">驳回</div>
 					</div>
 					<div class="weui-actionsheet__action">
-						<div class="weui-actionsheet__cell">取消</div>
+						<div class="weui-actionsheet__cell" id="iosActionsheetCancel">取消</div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<script src="../../../js/jquery.min.js"></script>
-		<script src="../../../js/jquery-weui.min.js"></script>
+		<!--<script src="../../../js/jquery-weui.min.js"></script>-->
 		<script src="../../../js/vue.js"></script>
 		<script src="../../../js/vue-router.js"></script>
+		<script>
+			// ios
+			$(function() {
+				var $iosActionsheet = $('#iosActionsheet');
+				var $iosMask = $('#iosMask');
+
+				function hideActionSheet() {
+					$iosActionsheet.removeClass('weui-actionsheet_toggle');
+					$iosMask.fadeOut(200);
+				}
+
+				$iosMask.on('click', hideActionSheet);
+				$('#iosActionsheetCancel').on('click', hideActionSheet);
+				$("#showIOSActionSheet").on("click", function() {
+					$iosActionsheet.addClass('weui-actionsheet_toggle');
+					$iosMask.fadeIn(200);
+				});
+			});
+		</script>
 		<script type="text/javascript">
 			var detail = new Vue({
 				el: "#detail-container",

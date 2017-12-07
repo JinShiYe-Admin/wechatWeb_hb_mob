@@ -15,6 +15,10 @@
 			document.write('<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css' + WebVersion + '" id="skin" />');
 			document.write('<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui.admin/css/style.css' + WebVersion + '" />');
 		</script>
+		<link rel="stylesheet" href="../../../js/demoCssJs/weui.min.css">
+		<link rel="stylesheet" href="../../../js/demoCssJs/jquery-weui.css">
+		<link rel="stylesheet" href="../../../js/demoCssJs/demos.css">
+		<link rel="stylesheet" href="../../../css/demos.css" />
 		<style>
 			.operate-edit {
 				text-decoration: none;
@@ -40,11 +44,12 @@
 			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
 		</nav>
 		<div id="column_table" class="page-container">
+
 			<div class="cl pd-5 bg-1 bk-gray">
 				<span class="l">
-					<a class="btn btn-primary radius" @click="add"><i class="Hui-iconfont"></i> 添加栏目</a>
+					<a class="btn btn-primary radius" @click="add"><i class="Hui-iconfont"></i> 添加成绩单</a>
 				</span>
-				<span class="select-box inline">
+				<!--<span class="select-box inline">
 					<select id="stateSelect" class="select" title="选择部门">
 						<option value="-1">开发部</option>
 						<option value="0">行政部</option>
@@ -57,9 +62,24 @@
 						<option value="0">行政部成绩单</option>
 						<option value="1">财务部成绩单</option>
 					</select>
-				</span>
+				</span>-->
 			</div>
-						<table class="table table-border table-bordered table-bg">
+			<div class="weui-cell">
+				<div class="weui-cell__hd"><label class="weui-label">部门</label></div>
+				<div class="weui-cell__bd">
+					<input id="depart" data_id="" onclick="selectDepart(this)" class="weui-input" placeholder="请选择部门">
+				</div>
+			</div>
+			<div class="weui-cell">
+				<div class="weui-cell__hd"><label class="weui-label">成绩单名称</label></div>
+				<div class="weui-cell__bd">
+					<input id="cname" data_id="" class="weui-input" placeholder="请输入名称">
+				</div>
+			</div>
+			<div class="weui-btn-area" style="width: 100px;">
+				<button onclick="query()" id="submit" class="weui-btn weui-btn_primary">查询</button>
+			</div>
+			<table class="table table-border table-bordered table-bg">
 				<thead class="text-c">
 					<tr>
 						<th>成绩单名称</th>
@@ -87,8 +107,25 @@
 		</div>
 		<div id="pages" style="margin-top: 20px;"></div>
 		</div>
+		<script src="../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/demoCssJs/jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/demoCssJs/iscroll.js"></script>
+		<script src="../../../js/demoCssJs/jquery-weui.js"></script>
+		<script src="../../../js/weui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/PublicProtocol.js"></script>
+		<script src="../../../js/utils/utils.js"></script>
+		<script src="../../../js/utils/storageutil.js"></script>
+		<script src='../../../js/lib/vconsole/vconsole.min.js'></script>
+		<script src="https://jsypay.jiaobaowang.net/wxthadmin/js/weui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src='https://jsypay.jiaobaowang.net/wxthadmin/js/demoCssJs/vue.min.js'></script>
+		<script src='https://jsypay.jiaobaowang.net/wxthadmin/js/PublicProtocol.js'></script>
+		<script src='https://jsypay.jiaobaowang.net/wxthadmin/js/utils/utils.js'></script>
+		<script src='https://jsypay.jiaobaowang.net/wxthadmin/js/utils/storageutil.js'></script>
 
-
+		<script src="../../../js/appweb/choose-file.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/utils/consts.js"></script>
+		<script src="../../../js/utils/events.js"></script>
+		<script src="../../../js/compress.js"></script>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
@@ -101,27 +138,26 @@
 			document.write("<s" + "cript type='text/javascript' src='../../../js/vue.min.js" + WebVersion + "'></s" + "cript>");
 		</script>
 		<script>
-
 			//栏目表
 			var column_table = new Vue({
 				el: "#column_table",
 				data: {
+					depart_array: [],
 					dt: [{
 						departname: "开发部",
 						reportname: "开发部成绩单",
 						time: "2017/12/6"
 					}]
 				},
-				updated:function(){
-					console.log(JSON.stringify(column_table.dt));
-					console.log(document.getElementById("column_table").innerHTML)
+				updated: function() {
+
 				},
 				methods: {
 					/**
 					 * 点击添加栏目
 					 */
 					add: function() {
-						
+
 						var tempData = {
 							type: 'add'
 						}
@@ -140,7 +176,7 @@
 						layer.full(index);
 
 						//						column_info.showAdd();
-					
+
 					},
 
 					clickDel: function(item) { //删除栏目
@@ -187,14 +223,47 @@
 				}
 			});
 			column_table.dt = [{
-						cname: "开发部成绩单",
-						dptname: "开发部",
-						recname: "宋艳明",
-						rectime:"2017/12/6"
-					}];
+				cname: "开发部成绩单",
+				dptname: "开发部",
+				recname: "宋艳明",
+				rectime: "2017/12/6"
+			}];
 
 			window.onload = function() {
 				getexam(1);
+
+			}
+
+			function query() {
+				getexam(1);
+			}
+
+			function getDepart() {
+
+				var tempData = {
+					cmd: 'persondeparts',
+					type: 'findpage',
+				}
+				unitWebsitePro(tempData, function(data) {
+					console.log('部门:' + JSON.stringify(data));
+					var rspData = JSON.parse(data.RspData);
+					if(data.RspCode == 0) {
+						column_table.depart_array = [];
+						for(var i = 0; i < rspData.length; i++) {
+							var model = rspData[i];
+							if(model.value == -1) {
+								continue;
+							} else {
+								model.label = model.title;
+								column_table.depart_array.push(model);
+							}
+						}
+						console.log('重组部门:' + JSON.stringify(column_table.depart_array));
+
+					} else {
+						alert(data.RspTxt)
+					}
+				})
 
 			}
 
@@ -206,16 +275,33 @@
 				var tempData = {
 					cmd: 'examadmin',
 					type: 'findpage',
+					cname: document.getElementById("cname").value,
+					dptid: document.getElementById("depart").data_id,
 					pagesize: '10',
 					pageindex: pageindex
 				}
+				console.log("查询参数：" + JSON.stringify(tempData));
 				unitWebsitePro(tempData, function(data) {
-					console.log("成绩单"+JSON.stringify(data));
+					console.log("成绩单" + JSON.stringify(data));
 					if(data.RspCode == 0) {
 						column_table.dt = data.RspData.dt;
 						initLaypage(data.RspData.pg.PageCount, pageindex);
 					} else {
 						column_table.dt = [];
+					}
+				});
+			}
+
+			function selectDepart(input_item) {
+				document.activeElement.blur();
+				var self = input_item;
+				weui.picker(column_table.depart_array, {
+					onChange: function(result) {
+						//						console.log(result);
+					},
+					onConfirm: function(result) {
+						document.getElementById("depart").value = result[0].label;
+						document.getElementById("depart").data_id = result[0].value;
 					}
 				});
 			}

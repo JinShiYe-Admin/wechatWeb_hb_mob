@@ -15,18 +15,11 @@
 		<style>
 			.weui-cells {
 				margin-top: 0;
+				margin-bottom: 50px;
 			}
 
 			.weui-uploader__title {
 				color: #999;
-			}
-
-			.container {
-				position: absolute;
-				top: 0;
-				right: 0;
-				bottom: 0;
-				left: 0
 			}
 
 			.weui-btn_primary {
@@ -52,68 +45,102 @@
 			.weui-cells:after {
 				border-bottom: none;
 			}
+
+			.weui-tab__bd .weui-tab__bd-item {
+				width: 100%;
+			}
 		</style>
 	</head>
 
 	<body>
-		<div class="container">
-			<div class="weui-cells weui-cells_form">
-				<div class="weui-cell weui-cell_access">
-					<div class="weui-cell__hd"><label class="weui-label" for="selectTypeFirstInput">流程类型</label></div>
-					<div class="weui-cell__bd">
-						<input id="selectTypeFirstInput" class="weui-input" placeholder="选取流程类型" readonly="readonly" />
-					</div>
-					<div class="weui-cell__ft">
-					</div>
-				</div>
-				<div class="weui-cell weui-cell_access">
-					<div class="weui-cell__hd"><label class="weui-label" for="selectTypeSecondInput">请假类型</label></div>
-					<div class="weui-cell__bd">
-						<input id="selectTypeSecondInput" class="weui-input" placeholder="选取请假类型" readonly="readonly" />
-					</div>
-					<div class="weui-cell__ft">
-					</div>
-				</div>
-				<div class="weui-cell weui-cell_access">
-					<div class="weui-cell__hd"><label class="weui-label" for="selectTypeThirdInput">开始时间</label></div>
-					<div class="weui-cell__bd">
-						<input id="selectTypeThirdInput" class="weui-input" placeholder="选取开始时间" readonly="readonly" />
-					</div>
-					<div class="weui-cell__ft">
-					</div>
-				</div>
-				<div class="weui-cell weui-cell_access">
-					<div class="weui-cell__hd"><label class="weui-label" for="selectTypeFourthInput">结束时间</label></div>
-					<div class="weui-cell__bd">
-						<input id="selectTypeFourthInput" class="weui-input" placeholder="选取结束时间" readonly="readonly" />
-					</div>
-					<div class="weui-cell__ft">
-					</div>
-				</div>
-				<div class="weui-cell">
-					<div class="weui-cell__bd">
-						<textarea id="represon" class="weui-textarea" placeholder="请输入请假事由" rows="3" maxlength="500"></textarea>
-					</div>
-				</div>
-				<div class="weui-cell">
-					<div class="weui-cell__bd">
-						<div class="weui-uploader">
-							<div class="weui-uploader__hd">
-								<p class="weui-uploader__title">添加图片</p>
-								<div id="imageAmount" class="weui-uploader__info">0/9</div>
+		<div class="weui-tab">
+			<div class="weui-tab__bd">
+				<div class="weui-tab__bd-item weui-tab__bd-item--active weui-pull-to-refresh">
+					<div class="weui-cells weui-cells_form">
+						<div class="weui-cell weui-cell_access">
+							<div class="weui-cell__hd"><label class="weui-label" for="selectTypeFirstInput">流程类型</label></div>
+							<div class="weui-cell__bd">
+								<input id="selectTypeFirstInput" class="weui-input" placeholder="选取流程类型" readonly="readonly" />
 							</div>
-							<div class="weui-uploader__bd">
-								<ul id="uploaderFiles" class="weui-uploader__files"></ul>
-								<div class="weui-uploader__input-box">
-									<input id="addImage" class="weui-uploader__input" accept="image/*" type="file">
+							<div class="weui-cell__ft">
+							</div>
+						</div>
+						<div class="weui-cell weui-cell_access">
+							<div class="weui-cell__hd"><label class="weui-label" for="selectTypeSecondInput">请假类型</label></div>
+							<div class="weui-cell__bd">
+								<input id="selectTypeSecondInput" class="weui-input" placeholder="选取请假类型" readonly="readonly" />
+							</div>
+							<div class="weui-cell__ft">
+							</div>
+						</div>
+						<div class="weui-cell weui-cell_access">
+							<div class="weui-cell__hd"><label class="weui-label" for="selectTypeThirdInput">开始时间</label></div>
+							<div class="weui-cell__bd">
+								<input id="selectTypeThirdInput" class="weui-input" placeholder="选取开始时间" readonly="readonly" />
+							</div>
+							<div class="weui-cell__ft">
+							</div>
+						</div>
+						<div class="weui-cell weui-cell_access">
+							<div class="weui-cell__hd"><label class="weui-label" for="selectTypeFourthInput">结束时间</label></div>
+							<div class="weui-cell__bd">
+								<input id="selectTypeFourthInput" class="weui-input" placeholder="选取结束时间" readonly="readonly" />
+							</div>
+							<div class="weui-cell__ft">
+							</div>
+						</div>
+						<div class="weui-cell">
+							<div class="weui-cell__bd">
+								<textarea id="represon" class="weui-textarea" placeholder="请输入请假事由" rows="3" maxlength="500"></textarea>
+							</div>
+						</div>
+						<div class="weui-cell">
+							<div class="weui-cell__bd">
+								<div class="weui-uploader">
+									<div class="weui-uploader__hd">
+										<p class="weui-uploader__title">添加图片</p>
+										<div id="imageAmount" class="weui-uploader__info">0/9</div>
+									</div>
+									<div class="weui-uploader__bd">
+										<ul id="uploaderFiles" class="weui-uploader__files"></ul>
+										<div class="weui-uploader__input-box">
+											<input id="addImage" class="weui-uploader__input" accept="image/*" type="file">
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
+						<div class="weui-btn-area">
+							<a id="submitForm" class="weui-btn weui-btn_primary weui-btn_disabled" style="display: none;">提交请假申请</a>
+						</div>
 					</div>
 				</div>
-				<div class="weui-btn-area">
-					<a id="submitForm" class="weui-btn weui-btn_primary weui-btn_disabled" style="display: none;">提交请假申请</a>
-				</div>
+			</div>
+			<div id="tabbar" class="weui-tabbar" style="display: none;">
+				<a href="https://jsypay.jiaobaowang.net/wxth/appschweb/app/index.aspx" class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
+						<img class="img" src="../../../image/utils/wxhome.png">
+					</div>
+					<p class="weui-tabbar__label">微校园</p>
+				</a>
+				<a href="addleaveapply.html" class="weui-tabbar__item  weui-bar__item--on">
+					<div class="weui-tabbar__icon">
+						<img class="img" src="../../../image/leave/applyactive.png">
+					</div>
+					<p class="weui-tabbar__label">请假申请</p>
+				</a>
+				<a href="mineleavelist.html" class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
+						<img src="../../../image/leave/applyquery.png">
+					</div>
+					<p class="weui-tabbar__label">请假查询</p>
+				</a>
+				<a id="checkItem" href="leave-check.html" class="weui-tabbar__item" style="display: none;">
+					<div class="weui-tabbar__icon">
+						<img src="../../../image/leave/checkquery.png">
+					</div>
+					<p class="weui-tabbar__label">请假审核</p>
+				</a>
 			</div>
 		</div>
 		<input id="qnInput" style="display: none;" />
@@ -141,7 +168,7 @@
 			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/cloudutil.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/compress.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/request.js" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../../temp/mineinfo.js" + WebVersion + "'></s" + "cript>");
+			//document.write("<s" + "cript type='text/javascript' src='../../../temp/mineinfo.js" + WebVersion + "'></s" + "cript>");
 		</script>
 		<script type="text/javascript">
 			var qnUploader; //七牛上传控件
@@ -204,6 +231,7 @@
 						$.alert("未获取到有效的初始数据，无法修改请假申请", "提示");
 					}
 				} else {
+					$("#tabbar").css("display", "flex");
 					getMineInfo();
 				}
 				$("#submitForm").css("display", "block");
@@ -617,7 +645,6 @@
 			 * 提交请假的表单
 			 */
 			function submitLeaveForm() {
-				console.log("submitLeaveForm")
 				var submitForm = {
 					procTypeId: $("#selectTypeFirstInput").attr("data-values"),
 					leaveTypeId: $("#selectTypeSecondInput").attr("data-values"),
@@ -667,7 +694,6 @@
 			 */
 			function addLeaveApply(submitForm) {
 				processRequest.postProcessData("addLeaveApply", submitForm, function(data) {
-					data = successResult;
 					$.hideLoading();
 					if(data.RspCode == 0) {
 						$.toast("提交成功");
@@ -701,7 +727,6 @@
 			function changeLeaveApply(submitForm) {
 				processRequest.postProcessData("setLeaveApply", submitForm, function(data) {
 					$.hideLoading();
-					data = successResult;
 					if(data.RspCode == 0 && data.RspData.Result == 1) {
 						$.toast("修改成功");
 						changeData.ProcessTypeId = submitForm.procTypeId;
@@ -712,7 +737,6 @@
 						changeData.ApplyPic = submitForm.applyPic;
 						changeData.ApplyReasonThumb = submitForm.applyPicThumb;
 					} else {
-						$.hideLoading();
 						$.alert("修改失败(" + data.RspTxt + ")", "提示");
 					}
 				});
@@ -728,7 +752,6 @@
 					pageSize: 0
 				}
 				processRequest.postProcessData("getProcessType", tempData, function(data) {
-					data = ptcallback;
 					if(data.RspCode == 0 && data.RspData.Data.length != 0) {
 						for(var i = 0; i < data.RspData.Data.length; i++) {
 							procTypeData.key.push(data.RspData.Data[i].ProcessTypeId);
@@ -758,7 +781,6 @@
 					pageSize: 0
 				}
 				processRequest.postProcessData("getLeaveType", tempData, function(data) {
-					data = ltcallback;
 					if(data.RspCode == 0 && data.RspData.Data.length != 0) {
 						for(var i = 0; i < data.RspData.Data.length; i++) {
 							leaveTypeData.key.push(data.RspData.Data[i].LeaveTypeId);
@@ -799,15 +821,28 @@
 					colv: ""
 				}
 				unitWebsitePro(tempData, function(data) {
-					data = {
-						RspCode: 0
-					}
 					if(data.RspCode == 0) {
-						//mineUserInfo = JSON.parse(data.RspData);
+						mineUserInfo = JSON.parse(data.RspData);
+						checkPower();
 						getProcType();
 					} else {
 						$.hideLoading();
 						$.alert("未获取到有效的个人信息，无法提交请假申请(" + data.RspTxt + ")", "提示");
+					}
+				});
+			}
+
+			/**
+			 * 检查是否有审核权限
+			 */
+			function checkPower() {
+				var tempData = {
+					corpId: mineUserInfo.corpid,
+					userId: mineUserInfo.userid,
+				}
+				processRequest.postProcessData("getApprPowerByUser ", tempData, function(data) {
+					if(data.RspCode == 0 && data.RspData.Result != 0) {
+						$("#checkItem").css("display", "block")
 					}
 				});
 			}

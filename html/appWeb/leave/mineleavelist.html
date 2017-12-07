@@ -199,8 +199,6 @@
 				function showData(data) {
 					var html = "";
 					for(var i = 0; i < data.length; i++) {
-						data[i].ApplyBeginTime = utils.initTime(data[i].ApplyBeginTime);
-						data[i].ApplyEndTime = utils.initTime(data[i].ApplyEndTime);
 						leaveApply.key.push(data[i].ApplyId);
 						leaveApply.value[data[i].ApplyId] = data[i];
 						var className = "apply-state-naudited";
@@ -226,11 +224,11 @@
 									</div>\
 									<div class="weui-form-preview__item">\
 										<label class="weui-form-preview__label">开始时间</label>\
-										<span class="weui-form-preview__value">' + data[i].ApplyBeginTime + '</span>\
+										<span class="weui-form-preview__value">' + utils.initTime(data[i].ApplyBeginTime) + '</span>\
 									</div>\
 									<div class="weui-form-preview__item">\
 										<label class="weui-form-preview__label">结束时间</label>\
-										<span class="weui-form-preview__value">' + data[i].ApplyEndTime + '</span>\
+										<span class="weui-form-preview__value">' + utils.initTime(data[i].ApplyEndTime) + '</span>\
 									</div>\
 									<div class="weui-form-preview__item">\
 										<label class="weui-form-preview__label">请假事由</label>\

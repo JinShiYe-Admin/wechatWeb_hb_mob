@@ -167,7 +167,7 @@
 				value: {}
 			} //请假类型
 
-			var changData; //修改请假申请的数据
+			var changeData; //修改请假申请的数据
 			var procTypeSelectIndex = 0; //流程类型选项初始化时的序号
 			var leaveTypeSelectIndex = 0; //请假类型选项初始化时的序号
 			window.onload = function() {
@@ -187,17 +187,17 @@
 					var sValue = storageutil.getSessionStorage(sKey);
 					if(sValue) {
 						var obj = JSON.parse(sValue)
-						changData = obj.leave;
+						changeData = obj.leave;
 						mineUserInfo = obj.mineUserInfo;
 					}
 				}
 				console.log("isChange:" + isChange);
-				console.log("changData", changData);
+				console.log("changeData", changeData);
 				console.log("mineUserInfo", mineUserInfo);
 				if(isChange) { //进入修改页面
 					$("#submitForm").text("修改请假申请");
 					webType = "修改";
-					if(changData) {
+					if(changeData) {
 						getProcType();
 					} else {
 						$.hideLoading();
@@ -215,9 +215,11 @@
 			function initPage() {
 				console.log("允许" + webType + "请假申请");
 				initSelect();
-				if(changData) { //修改请假申请
-					$("#represon").val(changData.ApplyReason);
-					initDatePicker(changData.ApplyBeginTime, changData.ApplyEndTime);
+				if(changeData) { //修改请假申请
+					$("#represon").val(changeData.ApplyReason);
+					beginTime = changeData.ApplyBeginTime;
+					endTime = changeData.ApplyEndTime;
+					initDatePicker(utils.initTime(changeData.ApplyBeginTime), utils.initTime(changeData.ApplyEndTime));
 					initPic();
 				} else {
 					initDatePicker();
@@ -258,7 +260,6 @@
 					title: "开始时间",
 					toolbarCloseText: "关闭",
 					onChange: function(data) {
-						console.log("beginTime", data.value);
 						beginTime = data.value.join("");
 					},
 					value: begin
@@ -267,7 +268,6 @@
 					title: "结束时间",
 					toolbarCloseText: "关闭",
 					onChange: function(data) {
-						console.log("endTime", data.value);
 						endTime = data.value.join("");
 					},
 					value: end
@@ -278,18 +278,20 @@
 			 * 修改请假申请时初始化图片
 			 */
 			function initPic() {
-				var pic = changData.ApplyPic.split("|");
-				var picThumb = changData.ApplyReasonThumb.split("|");
-				for(var i = 0; i < pic.length; i++) {
-					var temp = {
-						success: 1,
-						allowUpload: false,
-						filePath: pic[i],
-						saveurl: pic[i],
-						imgurl: picThumb[i]
+				if(changeData.ApplyPic != "") {
+					var pic = changeData.ApplyPic.split("|");
+					var picThumb = changeData.ApplyReasonThumb.split("|");
+					for(var i = 0; i < pic.length; i++) {
+						var temp = {
+							success: 1,
+							allowUpload: false,
+							filePath: pic[i],
+							saveurl: pic[i],
+							imgurl: picThumb[i]
+						}
+						$("#uploaderFiles").append('<li class="weui-uploader__file weui-uploader__file_status" style="background-image:url(' + pic[i] + ')"><div class="weui-uploader__file-content"><i class="weui-icon-success"></i></div></li>');
+						uploadFile.push(temp);
 					}
-					$("#uploaderFiles").append('<li class="weui-uploader__file" style="background-image:url(' + pic[i] + ')"></li>');
-					uploadFile.push(temp);
 					$("#imageAmount").text(uploadFile.length + "/9");
 					if(uploadFile.length == 9) {
 						$(".weui-uploader__input-box").css("display", "none");
@@ -368,7 +370,7 @@
 				}
 				$.showLoading();
 				if(uploadFile.length == 0) {
-					addForm();
+					submitLeaveForm();
 				} else {
 					//重置失败的文件允许上传
 					for(var i = 0; i < uploadFile.length; i++) {
@@ -577,7 +579,7 @@
 				if(finish) {
 					if(allSuccessUpload) {
 						console.log("结束后所有的文件都成功上传");
-						addForm();
+						submitLeaveForm();
 					} else {
 						console.log("结束后有文件未成功上传");
 						if(tempString) {
@@ -612,14 +614,11 @@
 			}
 
 			/**
-			 * 添加一个表单
+			 * 提交请假的表单
 			 */
-			function addForm() {
+			function submitLeaveForm() {
+				console.log("submitLeaveForm")
 				var submitForm = {
-					corpId: mineUserInfo.corpid,
-					applyMan: mineUserInfo.userid,
-					applyManName: mineUserInfo.name,
-					applyManPic: mineUserInfo.avatar,
 					procTypeId: $("#selectTypeFirstInput").attr("data-values"),
 					leaveTypeId: $("#selectTypeSecondInput").attr("data-values"),
 					beginTime: beginTime,
@@ -638,9 +637,38 @@
 					submitForm.applyPic = pic.join("|");
 					submitForm.applyPicThumb = picThumb.join("|");
 				}
+				if(webType == "提交") {
+					submitForm.corpId = mineUserInfo.corpid;
+					submitForm.applyMan = mineUserInfo.userid;
+					submitForm.applyManName = mineUserInfo.name;
+					submitForm.applyManPic = mineUserInfo.avatar;
+					console.log("submitForm", submitForm);
+					addLeaveApply(submitForm);
+				} else {
+					if(submitForm.procTypeId == changeData.ProcessTypeId && submitForm.leaveTypeId == changeData.LeaveTypeId) {
+						if(submitForm.beginTime == changeData.ApplyBeginTime && submitForm.endTime == changeData.ApplyEndTime) {
+							if(submitForm.applyReason == changeData.ApplyReason && submitForm.applyPic == changeData.ApplyPic) {
+								$.hideLoading();
+								$.alert("未做任何修改", "提示");
+								return false;
+							}
+						}
 
-				console.log("submitForm", submitForm);
+					}
+					submitForm.leaveApplyId = changeData.ApplyId;
+					console.log("submitForm", submitForm);
+					changeLeaveApply(submitForm);
+				}
+			}
+
+			/**
+			 * 添加一个请假申请
+			 * @param {Object} submitForm
+			 */
+			function addLeaveApply(submitForm) {
 				processRequest.postProcessData("addLeaveApply", submitForm, function(data) {
+					data = successResult;
+					$.hideLoading();
 					if(data.RspCode == 0) {
 						$.toast("提交成功");
 						$("#selectTypeFirstInput").attr("value", procTypeData.select[0].title);
@@ -660,10 +688,32 @@
 						uploadFile = null;
 						uploadFile = [];
 						$("#uploaderFiles").empty();
-						$.hideLoading();
+					} else {
+						$.alert("提交失败(" + data.RspTxt + ")", "提示");
+					}
+				});
+			}
+
+			/**
+			 * 修改请假申请
+			 * @param {Object} submitForm
+			 */
+			function changeLeaveApply(submitForm) {
+				processRequest.postProcessData("setLeaveApply", submitForm, function(data) {
+					$.hideLoading();
+					data = successResult;
+					if(data.RspCode == 0 && data.RspData.Result == 1) {
+						$.toast("修改成功");
+						changeData.ProcessTypeId = submitForm.procTypeId;
+						changeData.LeaveTypeId = submitForm.leaveTypeId;
+						changeData.ApplyBeginTime = submitForm.beginTime;
+						changeData.ApplyEndTime = submitForm.endTime;
+						changeData.ApplyReason = submitForm.applyReason;
+						changeData.ApplyPic = submitForm.applyPic;
+						changeData.ApplyReasonThumb = submitForm.applyPicThumb;
 					} else {
 						$.hideLoading();
-						$.alert(data.RspTxt, "提交失败");
+						$.alert("修改失败(" + data.RspTxt + ")", "提示");
 					}
 				});
 			}
@@ -683,7 +733,7 @@
 						for(var i = 0; i < data.RspData.Data.length; i++) {
 							procTypeData.key.push(data.RspData.Data[i].ProcessTypeId);
 							procTypeData.value[data.RspData.Data[i].ProcessTypeId] = data.RspData.Data[i];
-							if(changData && changData.ProcessTypeId == data.RspData.Data[i].ProcessTypeId) {
+							if(changeData && changeData.ProcessTypeId == data.RspData.Data[i].ProcessTypeId) {
 								procTypeSelectIndex = procTypeData.select.length;
 							}
 							procTypeData.select.push({
@@ -715,7 +765,7 @@
 							leaveTypeData.value[data.RspData.Data[i].LeaveTypeId] = data.RspData.Data[i];
 							if(data.RspData.Data[i].IsLeader == 0 || (data.RspData.Data[i].IsLeader == 1 && mineUserInfo.isleader == 1) || (data.RspData.Data[i].IsLeader == 2 && mineUserInfo.isleader == 0)) { //请假类型为全部
 								//请假类型为全部||(请假类型为老师&&个人身份为上级)||(请假类型为家长&&个人身份不是上级)
-								if(changData && changData.LeaveTypeId == data.RspData.Data[i].LeaveTypeId) {
+								if(changeData && changeData.LeaveTypeId == data.RspData.Data[i].LeaveTypeId) {
 									leaveTypeSelectIndex = leaveTypeData.select.length;
 								}
 								leaveTypeData.select.push({

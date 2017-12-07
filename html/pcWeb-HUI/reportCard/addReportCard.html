@@ -11,7 +11,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
-		<title>网站栏目</title>
+		<title>添加成绩单</title>
 		<script type="text/javascript">
 			var WebVersion = "?" + Math.random();
 			document.write('<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui/css/H-ui.min.css' + WebVersion + '" />');
@@ -20,7 +20,7 @@
 			document.write('<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css' + WebVersion + '" id="skin" />');
 			document.write('<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui.admin/css/style.css' + WebVersion + '" />');
 		</script>
-				<link rel="stylesheet" href="../../../js/demoCssJs/weui.min.css">
+		<link rel="stylesheet" href="../../../js/demoCssJs/weui.min.css">
 		<link rel="stylesheet" href="../../../js/demoCssJs/jquery-weui.css">
 		<link rel="stylesheet" href="../../../js/demoCssJs/demos.css">
 		<link rel="stylesheet" href="../../../css/demos.css" />
@@ -49,32 +49,13 @@
 						</div>
 					</div>
 				</div>
-				<div class="weui-cells__title">部门名称</div>
-				<div class="weui-cells">
-					<div class="weui-cell">
-						<div class="weui-cell__bd">
-							<input v-model="dptname" class="weui-input" type="text" :placeholder="'请输入'+dptname">
-						</div>
+				<div class="weui-cell">
+					<div class="weui-cell__hd"><label class="weui-label">部门</label></div>
+					<div class="weui-cell__bd">
+						<input id="depart" data_id="" onclick="selectDepart(this)" class="weui-input" placeholder="请选择部门">
 					</div>
 				</div>
 
-				<div class="weui-cells__title">记录人</div>
-				<div class="weui-cells">
-					<div class="weui-cell">
-						<div class="weui-cell__bd">
-							<input v-model="recname" class="weui-input" type="text" :placeholder="'请输入'+recname">
-						</div>
-					</div>
-				</div>
-
-				<div class="weui-cells__title">记录时间</div>
-				<div class="weui-cells">
-					<div class="weui-cell">
-						<div class="weui-cell__bd">
-							<input v-model="rectime" class="weui-input" type="text" :placeholder="'请输入'+rectime">
-						</div>
-					</div>
-				</div>
 			</div>
 
 			<div>
@@ -87,10 +68,10 @@
 								</div>
 								<div class="weui-uploader__bd">
 									<ul class="weui-uploader__files" id="uploaderFiles">
-										<li v-for="(file,index) of uploadedFiles" @click="clickImg(index)" v-bind:class="['weui-uploader__file']" v-bind:style="{'background-image':'url('+file.ImgUrl+')'}"></li>
+										<li v-for="(file,index) of uploadedFiles" @click="clickImg(index)">{{file.ImgUrl}}</li>
 									</ul>
 									<div class="weui-uploader__input-box" :style="displayAddBtn">
-										<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" v-on:change="selectFile($event)">
+										<input id="uploaderInput" class="weui-uploader__input" type="file" accept="application/vnd.ms-excel" v-on:change="selectFile($event)">
 									</div>
 								</div>
 							</div>
@@ -108,7 +89,7 @@
 				</div>
 			</div>
 			<div class="weui-btn-area">
-				<button id="submit" class="weui-btn weui-btn_primary">添加成绩单</button>
+				<button onclick="addExama()" id="submit" class="weui-btn weui-btn_primary">添加成绩单</button>
 			</div>
 		</div>
 
@@ -147,10 +128,7 @@
 				el: '#content',
 				data: {
 					cname: "开发部成绩单",
-					dptname: "开发部",
-					recname: "宋艳明",
-					rectime: "2017/12/6",
-
+					depart_array: [],
 					displayGallery: {
 						display: 'none'
 					},
@@ -207,7 +185,76 @@
 
 			window.onload = function() {
 				initQNUploader();
+				addExama()
 
+			}
+
+			function addExama() {
+				var tempData = {
+					cmd: 'examadmin',
+					type: 'add',
+					cname: content.cname,
+					enc: content.uploadedFiles[0].ImgUrl,
+//					dptname: "开发部",
+//					dptid: 11,
+					dptname: document.getElementById("depart").innerHTML,
+					dptid: document.getElementById("depart").data_id,
+
+				}
+
+				console.log("添加成绩单参数："+JSON.stringify(tempData))
+//				return;
+				unitWebsitePro(tempData, function(data) {
+					console.log('添加成绩单数据：' + JSON.stringify(data.RspData))
+					if(data.RspCode == 0) {
+						content = JSON.parse(data.RspData);
+					} else {
+						alert(data.RspTxt)
+					}
+				})
+			}
+
+			function getDepart() {
+
+				var tempData = {
+					cmd: 'persondeparts',
+					type: 'findpage',
+				}
+				unitWebsitePro(tempData, function(data) {
+					console.log('部门:' + JSON.stringify(data));
+					var rspData = JSON.parse(data.RspData);
+					if(data.RspCode == 0) {
+						content.depart_array = [];
+						for(var i = 0; i < rspData.length; i++) {
+							var model = rspData[i];
+							if(model.value == -1) {
+								continue;
+							} else {
+								model.label = model.title;
+								userInfo.depart_array.push(model);
+							}
+						}
+						console.log('重组部门:' + JSON.stringify(userInfo.depart_array));
+
+					} else {
+						alert(data.RspTxt)
+					}
+				})
+
+			}
+
+			function selectDepart(input_item) {
+				document.activeElement.blur();
+				var self = input_item;
+				weui.picker(content.depart_array, {
+					onChange: function(result) {
+						//						console.log(result);
+					},
+					onConfirm: function(result) {
+						document.getElementById("depart").value = result[0].label;
+						document.getElementById("depart").data_id = result[0].value;
+					}
+				});
 			}
 			//从相册中选择照片后，上传
 			//index--从相册选择照片回调里面，照片的索引，files--选择的照片信息，filesSum--选择照片之前，现存的照片张数
@@ -220,31 +267,20 @@
 						var file = files[index];
 						var types = file.type.toLowerCase().split("/");
 						console.log("types:" + types);
-						if(types[1] == "png" || types[1] == "jpg" || types[1] == "jpeg") {
+						if(types[1] == "vnd.ms-excel") {
 							EXIF.getData(file, function() {
 								$.showLoading('加载中...');
-								var orientation = EXIF.getTag(this, 'Orientation'); //获取旋转信息
-								console.log('orientation:' + JSON.stringify(orientation));
+
 								//显示文件
 								var reader = new FileReader();
 								reader.onload = function() {
-									var result = this.result;
-									var maxSize = 2 * 1024 * 1024;
-									compress.getImgInfo(result, function(img, imgInfo) {
-										console.log("获取的文件信息：" + JSON.stringify(imgInfo));
-										console.log("原图尺寸：" + result.length);
-										var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)), orientation);
-										var blob = compress.base64ToBlob(newDataUrl, 'image/jpeg');
-										console.log("blob.type:" + blob.type);
-										console.log('要传递的文件大小：' + blob.size);
-										blob.lastModifiedDate = new Date();
-										qnFileUploader.addFile(blob, Date.now() + '.jpg');
-										index++;
-										uploadFiles(index, files, filesSum);
-										if(index == files.length - 1) {
-											$('#uploaderInput').val('');
-										}
-									});
+									qnFileUploader.addFile(file, Date.now() + '.xls');
+									index++;
+									uploadFiles(index, files, filesSum);
+									if(index == files.length - 1) {
+										$('#uploaderInput').val('');
+									}
+
 								}
 								reader.readAsDataURL(file);
 							});
@@ -254,7 +290,7 @@
 								uploadFiles(index, files, filesSum);
 							}
 							$('#uploaderInput').val('');
-							$.toast("请选择png,jpg,jpeg类型的图片");
+							$.toast("请选择xls,csv,xlsx类型的图片");
 						}
 					}
 				}
@@ -356,28 +392,28 @@
 					};
 				}
 			}
-				/**
-	 * 获取七牛上传token
-	 */
-	function getQNUpToken(file) {
-		var myDate = new Date();
-		var fileName = myDate.getTime() + "" + parseInt(Math.random() * 1000);
-		var types = file.name.split(".");
-		fileName = fileName + "." + types[types.length - 1];
-		var getTokenData = {
-			appId: storageutil.QNQYWXKID,
-			mainSpace: storageutil.QNPUBSPACE,
-			saveSpace: storageutil.QNSSPACEWEBCON,
-			fileArray: [{
-				qnFileName: fileName,
-			}]
-		}
-		var upToken;
-		cloudutil.getFileUpTokens(getTokenData, function(data) {
-			upToken = data;
-		});
-		return upToken;
-	}
+			/**
+			 * 获取七牛上传token
+			 */
+			function getQNUpToken(file) {
+				var myDate = new Date();
+				var fileName = myDate.getTime() + "" + parseInt(Math.random() * 1000);
+				var types = file.name.split(".");
+				fileName = fileName + "." + types[types.length - 1];
+				var getTokenData = {
+					appId: storageutil.QNQYWXKID,
+					mainSpace: storageutil.QNPUBSPACE,
+					saveSpace: storageutil.QNSSPACEWEBCON,
+					fileArray: [{
+						qnFileName: fileName,
+					}]
+				}
+				var upToken;
+				cloudutil.getFileUpTokens(getTokenData, function(data) {
+					upToken = data;
+				});
+				return upToken;
+			}
 		</script>
 	</body>
 

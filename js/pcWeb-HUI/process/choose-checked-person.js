@@ -76,7 +76,7 @@ Vue.component("choose-person", {
 			console.log("****设置状态：setChooseStatus*****");
 			var com = this;
 			this.personList.forEach(function(person, index, personList) {
-				Vue.set(personList[index], "isCheck", !!com.selectPerson[person.ApprMan])
+				Vue.set(personList[index], "isCheck", !!com.selectPerson[person.userid])
 			})
 			console.log("更改状态后的数据：" + JSON.stringify(com.personList));
 		},

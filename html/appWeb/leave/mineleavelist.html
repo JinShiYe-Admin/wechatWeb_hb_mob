@@ -51,12 +51,24 @@
 			.weui-form-preview__label {
 				margin-right: 15px;
 			}
+
+			.weui-tab__bd {
+				margin-top: -50px;
+			}
+
+			.weui-tab__bd-item {
+				width: 100%;
+			}
+
+			.weui-tabbar {
+				bottom: -50px;
+			}
 		</style>
 		<script>
 			//动态设置样式
 			(function() {
 				var wsWidth = window.screen.width;
-				var valueWidth = wsWidth - 30 - 15 - 60 - 64 - 16 - 13;
+				var valueWidth = wsWidth - 30 - 15 - 62 - 64 - 16 - 13;
 				var style = document.createElement("style");
 				style.type = "text/css";
 				var sstr_0 = ".weui-form-preview__value{width: " + valueWidth + "px;}";
@@ -67,21 +79,9 @@
 	</head>
 
 	<body>
-		<!--<div id="pullDown" class="weui-pull-to-refresh__layer" style="display: none;">
-			<div class='weui-pull-to-refresh__arrow'></div>
-			<div class='weui-pull-to-refresh__preloader'></div>
-			<div class="down">下拉刷新</div>
-			<div class="up">释放刷新</div>
-			<div class="refresh">正在刷新</div>
-		</div>
-		<div id="leaveList" class="weui-cells weui-form-preview"></div>
-		<div id="pullUp" class="weui-loadmore">
-			<i class="weui-loading"></i>
-			<span class="weui-loadmore__tips">正在加载</span>
-		</div>-->
 		<div class="weui-tab">
-			<div class="weui-tab__bd" style="margin-top: -50px;">
-				<div class="weui-tab__bd-item weui-tab__bd-item--active weui-pull-to-refresh" style="width: 100%;">
+			<div class="weui-tab__bd">
+				<div class="weui-tab__bd-item weui-tab__bd-item--active weui-pull-to-refresh">
 					<div id="pullDown" class="weui-pull-to-refresh__layer" style="display: none;">
 						<div class='weui-pull-to-refresh__arrow'></div>
 						<div class='weui-pull-to-refresh__preloader'></div>
@@ -90,247 +90,288 @@
 						<div class="refresh">正在刷新</div>
 					</div>
 					<div id="leaveList" class="weui-cells weui-form-preview"></div>
-					<div id="pullUp" class="weui-loadmore">
+					<div id="pullUp" class="weui-loadmore" style="margin-top: 70px;">
 						<i class="weui-loading"></i>
 						<span class="weui-loadmore__tips">正在加载</span>
 					</div>
 				</div>
-				<div class="weui-tabbar" style="bottom: -50px;">
-					<a href="https://jsypay.jiaobaowang.net/wxth/appschweb/app/index.aspx" class="weui-tabbar__item">
-						<div class="weui-tabbar__icon">
-							<img class="img" src="../../../image/考勤/pic_ico_index0.png" alt="">
-						</div>
-						<p class="weui-tabbar__label">微校园</p>
-					</a>
-					<a href="addleaveapply.html" class="weui-tabbar__item">
-						<div class="weui-tabbar__icon">
-							<img class="img" src="../../../image/考勤/打卡灰.png" alt="">
-						</div>
-						<p class="weui-tabbar__label">请假申请</p>
-					</a>
-					<a href="mineleavelist.html" class="weui-tabbar__item weui-bar__item--on">
-						<div class="weui-tabbar__icon">
-							<img src="../../../image/考勤/考勤查询.png" alt="">
-						</div>
-						<p class="weui-tabbar__label">请假查询</p>
-					</a>
-					<a id="checkItem" href="leave-check.html" class="weui-tabbar__item" style="display: none;">
-						<div class="weui-tabbar__icon">
-							<img src="../../../image/考勤/考勤查询灰.png" alt="">
-						</div>
-						<p class="weui-tabbar__label">审核查询</p>
-					</a>
-				</div>
 			</div>
-			<script type="text/javascript" src="../../../js/lib/vconsole/vconsole.min.js"></script>
-			<script type="text/javascript" src="../../../js/demoCssJs/jquery-2.1.4.js"></script>
-			<script type="text/javascript" src="../../../js/demoCssJs/jquery-weui.min.js"></script>
-			<script type="text/javascript">
-				document.write("<s" + "cript type='text/javascript' src='../../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
-				document.write("<s" + "cript type='text/javascript' src='../../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
-				document.write("<s" + "cript type='text/javascript' src='../../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
-				document.write("<s" + "cript type='text/javascript' src='../../../js/utils/request.js" + WebVersion + "'></s" + "cript>");
-				document.write("<s" + "cript type='text/javascript' src='../../../temp/mineinfo.js" + WebVersion + "'></s" + "cript>");
-			</script>
-			<script>
-				var loading = false; //下拉,上拉状态标记
-				var page = 1; //当前页码
-				var mineUserInfo; //个人信息
-				var leaveApply = {
-					key: [],
-					value: {}
-				} //请假列表数据
-				window.onload = function() {
-					getMineInfo();
-				}
+			<div class="weui-tabbar">
+				<a href="https://jsypay.jiaobaowang.net/wxth/appschweb/app/index.aspx" class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
+						<img class="img" src="../../../image/utils/wxhome.png">
+					</div>
+					<p class="weui-tabbar__label">微校园</p>
+				</a>
+				<a href="addleaveapply.html" class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
+						<img class="img" src="../../../image/leave/apply.png">
+					</div>
+					<p class="weui-tabbar__label">请假申请</p>
+				</a>
+				<a href="mineleavelist.html" class="weui-tabbar__item weui-bar__item--on">
+					<div class="weui-tabbar__icon">
+						<img src="../../../image/leave/applyqueryactive.png">
+					</div>
+					<p class="weui-tabbar__label">请假查询</p>
+				</a>
+				<a id="checkItem" href="leave-check.html" class="weui-tabbar__item" style="display: none;">
+					<div class="weui-tabbar__icon">
+						<img src="../../../image/leave/checkquery.png">
+					</div>
+					<p class="weui-tabbar__label">请假审核</p>
+				</a>
+			</div>
+		</div>
+		<script type="text/javascript" src="../../../js/lib/vconsole/vconsole.min.js"></script>
+		<script type="text/javascript" src="../../../js/demoCssJs/jquery-2.1.4.js"></script>
+		<script type="text/javascript" src="../../../js/demoCssJs/jquery-weui.min.js"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/request.js" + WebVersion + "'></s" + "cript>");
+			//document.write("<s" + "cript type='text/javascript' src='../../../temp/mineinfo.js" + WebVersion + "'></s" + "cript>");
+		</script>
+		<script>
+			var loading = false; //下拉,上拉状态标记
+			var page = 1; //当前页码
+			var mineUserInfo; //个人信息
+			var clickIndex; //点击的序号
+			var leaveApply = {
+				key: [],
+				value: {}
+			} //请假列表数据
+			window.onload = function() {
+				getMineInfo();
+			}
 
-				function initListener() {
-					$(".weui-cells").on("click", ".weui-cell", function(e) {
-						var index = $(".weui-cells .weui-cell").index(this);
-						var leave = leaveApply.value[leaveApply.key[index]];
-						console.log("leave", leave);
-						if(leave.ApplyStat == 0) {
-							//未审核
-							//							var myDate = new Date();
-							//							var skey = myDate.getTime() + "" + parseInt(Math.random() * 1000);
-							//							storageutil.setSessionStorage(skey, JSON.stringify(leave));
-							//							location.href = "addleaveapply.html?change=" + skey;
-							$.actions({
-								actions: [{
-									text: "编辑",
-									onClick: function() {
-										//do something
+			function initListener() {
+				$(".weui-cells").on("click", ".weui-cell", function(e) {
+					clickIndex = $(".weui-cells .weui-cell").index(this);
+					var leave = leaveApply.value[leaveApply.key[clickIndex]];
+					console.log("leave", leave);
+					if(leave.ApplyStat == 0) {
+						//未审核
+						$.actions({
+							actions: [{
+								text: "编辑",
+								onClick: function() {
+									var myDate = new Date();
+									var sKey = myDate.getTime() + "" + parseInt(Math.random() * 1000);
+									var sValue = {
+										leave: leave,
+										mineUserInfo: mineUserInfo
 									}
-								}, {
-									text: "删除",
-									onClick: function() {
-										//do something
-									}
-								}]
-							});
-						} else {
-							//已审核
-						}
-					});
-				}
-
-				/**
-				 * 显示请假列表
-				 * @param {Object} data
-				 */
-				function showData(data) {
-					var html = "";
-					for(var i = 0; i < data.length; i++) {
-						leaveApply.key.push(data[i].ApplyId);
-						leaveApply.value[data[i].ApplyId] = data[i];
-						var className = "apply-state-naudited";
-						var stateName = "未审核";
-						if(data[i].ApplyStat == 1) {
-							className = "apply-state-passed";
-							stateName = "已通过";
-						} else if(data[i].ApplyStat == 2) {
-							className = "apply-state-nopassed";
-							stateName = "驳回";
-						}
-						html = html + '\
-					<div class="weui-cell weui-cell_access">\
-						<div class="weui-cell__bd weui-form-preview__bd">\
-							<div class="weui-form-preview__item">\
-								<label class="weui-form-preview__label">流程类型</label>\
-								<span class="weui-form-preview__value">' + data[i].ProcTypeName + '</span>\
-							</div>\
-							<div class="weui-form-preview__item">\
-								<label class="weui-form-preview__label">请假类型</label>\
-								<span class="weui-form-preview__value">' + data[i].LeaveTypeName + '</span>\
-							</div>\
-							<div class="weui-form-preview__item">\
-								<label class="weui-form-preview__label">开始时间</label>\
-								<span class="weui-form-preview__value">' + data[i].ApplyBeginTime + '</span>\
-							</div>\
-							<div class="weui-form-preview__item">\
-								<label class="weui-form-preview__label">结束时间</label>\
-								<span class="weui-form-preview__value">' + data[i].ApplyEndTime + '</span>\
-							</div>\
-							<div class="weui-form-preview__item">\
-								<label class="weui-form-preview__label">请假事由</label>\
-								<span class="weui-form-preview__value">' + data[i].ApplyReason + '</span>\
-							</div>\
-						</div>\
-						<div class="weui-cell__ft ' + className + '">' + stateName + '</div>\
-					</div>';
-					}
-					$("#leaveList").append(html);
-				}
-
-				/**
-				 * 初始化下拉刷新
-				 */
-				function initPullDown() {
-					$("#pullDown").css("display", "block");
-					$(".weui-tab__bd-item").pullToRefresh();
-					$(".weui-tab__bd-item").on("pull-to-refresh", function() {
-						if(loading) {
-							return false
-						};
-						loading = true;
-						setTimeout(function() {
-							getLeaveApply(1);
-						}, 1500);
-					});
-				}
-
-				/**
-				 * 上拉加载更多
-				 */
-				function initPullUp() {
-					$(".weui-tab__bd-item").infinite().on("infinite", function() {
-						if(loading) {
-							return false
-						};
-						loading = true;
-						setTimeout(function() {
-							getLeaveApply(page + 1);
-						}, 1500);
-					});
-				}
-
-				/**
-				 * 获取我的信息
-				 */
-				function getMineInfo() {
-					var tempData = {
-						cmd: 'userinfo',
-						type: 'findpage',
-						colv: ""
-					}
-					unitWebsitePro(tempData, function(data) {
-						data = {
-							RspCode: 0
-						}
-						if(data.RspCode == 0) {
-							//mineUserInfo = JSON.parse(data.RspData);
-							initPullDown();
-							initPullUp();
-							initListener();
-							getLeaveApply(1);
-						} else {
-							$("#pullUp i").css("display", "none");
-							$("#pullUp span").text("加载失败");
-							$.alert("未获取到有效的个人信息，无法获取请假申请(" + data.RspTxt + ")", "提示");
-						}
-					});
-				}
-
-				/**
-				 * 获取请假申请列表
-				 * @param {Object} pageIndex
-				 */
-				function getLeaveApply(pageIndex) {
-					var tempData = {
-						corpId: mineUserInfo.corpid,
-						applyMan: mineUserInfo.userid,
-						pageSize: 10,
-						pageIndex: pageIndex
-					}
-					processRequest.postProcessData("getLeaveApply", tempData, function(data) {
-						data = {
-							RspCode: 0,
-							RspData: {
-								TotalPage: 2,
-								Data: temp_data
-							}
-						}
-						if(pageIndex == 2) {
-							data.RspData.Data[0].ApplyStat = 1;
-						}
-						loading = false;
-						$(".weui-tab__bd-item").pullToRefreshDone();
-						if(data.RspCode == 0) {
-							page = pageIndex;
-							if(pageIndex == 1) { //获取第一页的内容
-								$("#leaveList").empty();
-								leaveApply = null;
-								leaveApply = {
-									key: [],
-									value: {}
+									storageutil.setSessionStorage(sKey, JSON.stringify(sValue));
+									location.href = "addleaveapply.html?change=" + sKey;
 								}
-							}
-							if(pageIndex >= data.RspData.TotalPage) {
-								$("#pullUp i").css("display", "none");
-								$("#pullUp span").text("没有更多了");
-								$(".weui-tab__bd-item").destroyInfinite();
-							} else {
-								$("#pullUp i").css("display", "inline-block");
-								$("#pullUp span").text("正在加载");
-								$(".weui-tab__bd-item").infinite();
-							}
-							showData(data.RspData.Data);
-						} else {
-							$.alert("获取请假列表失败(" + data.RspTxt + ")", "提示");
-						}
-					});
+							}, {
+								text: "删除",
+								className: "color-danger",
+								onClick: function() {
+									$.modal({
+										title: "提示",
+										text: "确定删除?",
+										buttons: [{
+											text: "取消",
+											className: "default",
+										}, {
+											text: "确定",
+											className: "color-danger",
+											onClick: function() {
+												delLeaveApply(leave.ApplyId);
+											}
+										}]
+									});
+								}
+							}]
+						});
+					} else {
+						//已审核
+					}
+				});
+			}
+
+			/**
+			 * 显示请假列表
+			 * @param {Object} data
+			 */
+			function showData(data) {
+				var html = "";
+				for(var i = 0; i < data.length; i++) {
+					leaveApply.key.push(data[i].ApplyId);
+					leaveApply.value[data[i].ApplyId] = data[i];
+					var className = "apply-state-naudited";
+					var stateName = "未审核";
+					if(data[i].ApplyStat == 1) {
+						className = "apply-state-passed";
+						stateName = "已通过";
+					} else if(data[i].ApplyStat == 2) {
+						className = "apply-state-nopassed";
+						stateName = "驳回";
+					}
+
+					html = html + '\
+							<div class="weui-cell weui-cell_access">\
+								<div class="weui-cell__bd weui-form-preview__bd">\
+									<div class="weui-form-preview__item">\
+										<label class="weui-form-preview__label">流程类型</label>\
+										<span class="weui-form-preview__value">' + data[i].ProcTypeName + '</span>\
+									</div>\
+									<div class="weui-form-preview__item">\
+										<label class="weui-form-preview__label">请假类型</label>\
+										<span class="weui-form-preview__value">' + data[i].LeaveTypeName + '</span>\
+									</div>\
+									<div class="weui-form-preview__item">\
+										<label class="weui-form-preview__label">开始时间</label>\
+										<span class="weui-form-preview__value">' + utils.initTime(data[i].ApplyBeginTime) + '</span>\
+									</div>\
+									<div class="weui-form-preview__item">\
+										<label class="weui-form-preview__label">结束时间</label>\
+										<span class="weui-form-preview__value">' + utils.initTime(data[i].ApplyEndTime) + '</span>\
+									</div>\
+									<div class="weui-form-preview__item">\
+										<label class="weui-form-preview__label">请假事由</label>\
+										<span class="weui-form-preview__value">' + data[i].ApplyReason + '</span>\
+									</div>\
+								</div>\
+								<div class="weui-cell__ft ' + className + '">' + stateName + '</div>\
+							</div>';
 				}
-			</script>
+				$("#leaveList").append(html);
+			}
+
+			/**
+			 * 初始化下拉刷新
+			 */
+			function initPullDown() {
+				$("#pullDown").css("display", "block");
+				$(".weui-tab__bd-item").pullToRefresh();
+				$(".weui-tab__bd-item").on("pull-to-refresh", function() {
+					if(loading) {
+						return false
+					};
+					loading = true;
+					getLeaveApply(1);
+
+				});
+			}
+
+			/**
+			 * 上拉加载更多
+			 */
+			function initPullUp() {
+				$(".weui-tab__bd-item").infinite().on("infinite", function() {
+					if(loading) {
+						return false
+					};
+					loading = true;
+					getLeaveApply(page + 1);
+				});
+			}
+
+			/**
+			 * 获取我的信息
+			 */
+			function getMineInfo() {
+				var tempData = {
+					cmd: 'userinfo',
+					type: 'findpage',
+					colv: ""
+				}
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						mineUserInfo = JSON.parse(data.RspData);
+						$("#pullUp").css("margin-top", "1.5em");
+						initPullDown();
+						initPullUp();
+						initListener();
+						checkPower();
+						getLeaveApply(1);
+					} else {
+						$("#pullUp i").css("display", "none");
+						$("#pullUp span").text("加载失败");
+						$.alert("未获取到有效的个人信息，无法获取请假申请(" + data.RspTxt + ")", "提示");
+					}
+				});
+			}
+
+			/**
+			 * 获取请假申请列表
+			 * @param {Object} pageIndex
+			 */
+			function getLeaveApply(pageIndex) {
+				var tempData = {
+					corpId: mineUserInfo.corpid,
+					applyMan: mineUserInfo.userid,
+					pageSize: 10,
+					pageIndex: pageIndex
+				}
+				processRequest.postProcessData("getLeaveApply", tempData, function(data) {
+					loading = false;
+					$(".weui-tab__bd-item").pullToRefreshDone();
+					if(data.RspCode == 0) {
+						page = pageIndex;
+						if(pageIndex == 1) { //获取第一页的内容
+							$("#leaveList").empty();
+							leaveApply = null;
+							leaveApply = {
+								key: [],
+								value: {}
+							}
+						}
+						if(pageIndex >= data.RspData.TotalPage) {
+							$("#pullUp i").css("display", "none");
+							$("#pullUp span").text("没有更多了");
+							$(".weui-tab__bd-item").destroyInfinite();
+						} else {
+							$("#pullUp i").css("display", "inline-block");
+							$("#pullUp span").text("正在加载");
+							$(".weui-tab__bd-item").infinite();
+						}
+						showData(data.RspData.Data);
+					} else {
+						$.alert("获取请假列表失败(" + data.RspTxt + ")", "提示");
+					}
+				});
+			}
+
+			/**
+			 * 删除请假申请
+			 */
+			function delLeaveApply(leaveApplyId) {
+				$.showLoading();
+				processRequest.postProcessData("delLeaveApply ", {
+					leaveApplyId: leaveApplyId
+				}, function(data) {
+					$.hideLoading();
+					if(data.RspCode == 0) {
+						$.toast("删除成功");
+						$(".weui-cells").find(".weui-cell")[clickIndex].remove();
+						leaveApply.key.splice(clickIndex, 1);
+						delete leaveApply.value[leaveApplyId];
+					} else {
+						$.alert("删除失败(" + data.RspTxt + ")", "提示");
+					}
+				});
+			}
+
+			/**
+			 * 检查是否有审核权限
+			 */
+			function checkPower() {
+				var tempData = {
+					corpId: mineUserInfo.corpid,
+					userId: mineUserInfo.userid,
+				}
+				processRequest.postProcessData("getApprPowerByUser ", tempData, function(data) {
+					if(data.RspCode == 0 && data.RspData.Result != 0) {
+						$("#checkItem").css("display", "block")
+					}
+				});
+			}
+		</script>
 	</body>
 
 </html>

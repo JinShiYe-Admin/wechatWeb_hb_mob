@@ -166,7 +166,7 @@
 					}
 				})
 				//给corpId赋值假数据
-				//				corpId = "wx6c4528c675d4a9c9";
+//								corpId = "wx6c4528c675d4a9c9";
 				//	getWebsitConfig();
 				var detail = utils.getDataFromUrl(window.location.href);
 				//				alert("detail " + JSON.stringify(detail));
@@ -541,7 +541,7 @@
 						geoc.getLocation(pt, function(rs) {
 							//addressComponents对象可以获取到详细的地址信息
 							var addComp = rs.addressComponents;
-							var site = addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber;
+							var site = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
 							//将对应的HTML元素设置值
 							document.getElementById("attendAdressText").value = site;
 							document.getElementById("longitude").value = pt.lng;
@@ -567,7 +567,7 @@
 				geoc.getLocation(pt, function(rs) {
 					//addressComponents对象可以获取到详细的地址信息
 					var addComp = rs.addressComponents;
-					var site = addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber;
+					var site = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
 					//将对应的HTML元素设置值
 					document.getElementById("attendAdressText").value = site;
 					document.getElementById("longitude").value = pt.lng;
@@ -599,7 +599,7 @@
 								geoc.getLocation(pt, function(rs) {
 									//addressComponents对象可以获取到详细的地址信息
 									var addComp = rs.addressComponents;
-									var site = addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber;
+									var site = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
 									//将对应的HTML元素设置值
 									document.getElementById("attendAdressText").value = site;
 									document.getElementById("longitude").value = pt.lng;

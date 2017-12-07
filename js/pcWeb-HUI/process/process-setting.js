@@ -33,7 +33,9 @@ Vue.component("process-setting", {
 		}
 	},
 	methods: {
-		//添加流程类型
+		/**
+		 * 添加流程
+		 */
 		addProcess: function() {
 			//todo 添加流程
 			this.changeType = 0;
@@ -41,6 +43,11 @@ Vue.component("process-setting", {
 			this.note = "";
 			this.toggleLayer(true, "添加流程");
 		},
+		/**
+		 * 开关
+		 * @param {Object} isOpen
+		 * @param {Object} title
+		 */
 		toggleLayer: function(isOpen, title) {
 			if(isOpen) {
 				layer.open({
@@ -78,6 +85,9 @@ Vue.component("process-setting", {
 			this.activeProcess = process;
 			this.toggleLayer(true, "更改流程信息");
 		},
+		/**
+		 * 提交流程
+		 */
 		submitProcess: function() {
 			if(changeType === 0) {
 				this.addProcessType();

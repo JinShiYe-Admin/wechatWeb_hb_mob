@@ -1,0 +1,116 @@
+<!--
+	作者：444811716@qq.com
+	时间：2017-07-04
+	描述：网站配置
+-->
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>添加成绩单</title>
+		<script type="text/javascript">
+			var WebVersion = "?" + Math.random();
+			document.write('<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui/css/H-ui.min.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css' + WebVersion + '" />');
+			document.write('<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css' + WebVersion + '" id="skin" />');
+			document.write('<link rel="stylesheet" href="../../../js/H-ui.admin/static/h-ui.admin/css/style.css' + WebVersion + '" />');
+		</script>
+		<link rel="stylesheet" href="../../../js/demoCssJs/weui.min.css">
+		<link rel="stylesheet" href="../../../js/demoCssJs/jquery-weui.css">
+		<link rel="stylesheet" href="../../../js/demoCssJs/demos.css">
+		<link rel="stylesheet" href="../../../css/demos.css" />
+		<link href="../../../css/mui.min.css" rel="stylesheet" />
+		<style>
+			.weui-cells {
+				margin-top: 0px;
+			}
+			
+			.weui-cells__title {
+				color: black;
+			}
+		</style>
+	</head>
+
+	<body>
+
+		<div id="content" class="weui-cells weui-cells_form">
+			<!--输入列表-->
+			<div id="input_list">
+				<div class="weui-cells__title">成绩单名称</div>
+				<div class="weui-cells">
+					<div class="weui-cell">
+						<div class="weui-cell__bd">
+							<input v-model="cname" class="weui-input" type="text">
+						</div>
+					</div>
+				</div>
+				<div class="weui-cells__title">部门名称</div>
+				<div class="weui-cells">
+					<div class="weui-cell">
+						<div class="weui-cell__bd">
+							<input v-model="dptname" class="weui-input" type="text">
+						</div>
+					</div>
+				</div>
+
+
+			</div>
+
+	
+	
+		</div>
+
+		<script src="../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/demoCssJs/jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/demoCssJs/iscroll.js"></script>
+		<script src="../../../js/demoCssJs/jquery-weui.js"></script>
+		<script src="../../../js/weui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/PublicProtocol.js"></script>
+		<script src="../../../js/utils/utils.js"></script>
+		<script src="../../../js/utils/storageutil.js"></script>
+		<script src='../../../js/lib/vconsole/vconsole.min.js'></script>
+		<script src="https://jsypay.jiaobaowang.net/wxthadmin/js/weui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src='https://jsypay.jiaobaowang.net/wxthadmin/js/demoCssJs/vue.min.js'></script>
+		<script src='https://jsypay.jiaobaowang.net/wxthadmin/js/PublicProtocol.js'></script>
+		<script src='https://jsypay.jiaobaowang.net/wxthadmin/js/utils/utils.js'></script>
+		<script src='https://jsypay.jiaobaowang.net/wxthadmin/js/utils/storageutil.js'></script>
+
+		<script src="../../../js/appweb/choose-file.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/utils/consts.js"></script>
+		<script src="../../../js/utils/events.js"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../../js/lib/exif/exif.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/lib/plupload/moxie.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/lib/plupload/plupload.full.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/lib/qiniu/qiniu.min.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/cryption.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/cloudutil.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/compress.js?" + Math.random() + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/pluploadutil.js?" + Math.random() + "'></s" + "cript>");
+		</script>
+		<script>
+
+			var content = new Vue({
+				el: '#content',
+				data: {
+					cname: "开发部成绩单",
+					dptname:"开发部",
+					
+				},
+				methods: {}
+
+			})
+			window.onload = function() {
+
+			}
+
+
+		</script>
+	</body>
+
+</html>

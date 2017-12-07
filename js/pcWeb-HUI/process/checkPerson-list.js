@@ -36,6 +36,11 @@ Vue.component("check-person-list", {
 		}
 	},
 	methods: {
+		/**
+		 * 获取状态
+		 * @param {Object} e
+		 * @param {Object} person
+		 */
 		getStatus: function(e, person) {
 			console.log("****getStatus*****");
 			var isAdd = e.target.checked;
@@ -54,6 +59,10 @@ Vue.component("check-person-list", {
 			var isAllAdd = e.target.checked;
 			this.inputToggleAll(isAllAdd)
 		},
+		/**
+		 * 全选逻辑
+		 * @param {Object} isAdd
+		 */
 		inputToggleAll: function(isAdd) {
 			if(isAdd) {
 				for(var checkPerson in checkPersonList) {
@@ -63,14 +72,25 @@ Vue.component("check-person-list", {
 				this.selectedInputPerson = {};
 			}
 		},
+		/**
+		 * 所有具有审核权限的人员信息
+		 */
 		getAllCheckPerson: function() {
 			console.log("****getAllCheckPerson*****");
 			this.getCheckPerson(1, 0);
 		},
+		/**
+		 * 获取当前页面审核人员
+		 */
 		getCurPagePerson: function() {
 			console.log("****getCurPagePerson****");
 			this.getCheckPerson(this.pageIndex, 20);
 		},
+		/**
+		 * 获取审核人员
+		 * @param {Object} pageIndex
+		 * @param {Object} pageSize
+		 */
 		getCheckPerson: function(pageIndex, pageSize) {
 			console.log("****getCheckPerson****");
 			var com = this;
@@ -89,6 +109,9 @@ Vue.component("check-person-list", {
 				}
 			})
 		},
+		/**
+		 * 删除人员
+		 */
 		delPersons: function() {
 			console.log("****批量删除人员****");
 			var com = this;
@@ -138,6 +161,10 @@ Vue.component("check-person-list", {
 				}
 			})
 		},
+		/**
+		 * 将数组转换成object
+		 * @param {Object} arr
+		 */
 		changeArrToObj: function(arr) {
 			console.log("****changeArrToObj****");
 			var obj = {};
@@ -146,6 +173,9 @@ Vue.component("check-person-list", {
 			});
 			return obj;
 		},
+		/**
+		 * 下一页
+		 */
 		nextPage: function() {
 			console.log("****nextPage*****");
 			if(this.pageIndex < this.totalPage) {
@@ -153,6 +183,9 @@ Vue.component("check-person-list", {
 				this.getCurPagePerson();
 			}
 		},
+		/**
+		 * 上一页
+		 */
 		lastPage: function() {
 			console.log("****lastPage****");
 			if(this.pageIndex > 1) {

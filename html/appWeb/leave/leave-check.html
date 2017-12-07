@@ -19,19 +19,6 @@
 				width: 100%;
 			}
 			
-			.weui-circle {
-				position: absolute;
-				right: 50px;
-				bottom: 50px;
-				border-radius: 50%;
-				width: 80px;
-				height: 80px;
-				z-index: 100;
-				background-image: url(../../../image/add.png);
-				background-position: center;
-				background-size: contain;
-			}
-			
 			.weui-cells {
 				margin: 0;
 			}
@@ -49,10 +36,15 @@
 				width: 15%;
 				text-align: center;
 			}
-			.item-hint,.apply-date{
+			
+			.item-hint,
+			.apply-date {
 				color: darkgrey;
 			}
-			.item-hint,.apply-date,.item-info{
+			
+			.item-hint,
+			.apply-date,
+			.item-info {
 				font-size: 0.8em;
 			}
 		</style>
@@ -61,10 +53,10 @@
 	<body ontouchstart>
 		<div class="weui-tab" id="tabs">
 			<div class="weui-navbar">
-				<div v-for="tab in tabs" class="weui-navbar__item" v-bind:class="[{'weui-bar__item--on':tab.id===activeId}]" v-bind:href="'#tab'+tab.id" v-on:click="setActiveId(tab.id)">{{tab.title}}</div>
+				<div v-for="tab in tabs" class="weui-navbar__item" v-bind:class="[{'weui-bar__item--on':tab.apprStat===activeId}]" v-bind:href="'#tab'+tab.apprStat" v-on:click="setActiveId(tab.apprStat)">{{tab.title}}</div>
 			</div>
 			<div class="weui-tab__bd">
-				<div v-for="tab in tabs" :id="'tab'+tab.id" class="weui-tab__bd-item  weui-pull-to-refresh infinite" :class="[{'weui-tab__bd-item--active':tab.id===activeId}]">
+				<div v-for="tab in tabs" :id="'tab'+tab.apprStat" class="weui-tab__bd-item  weui-pull-to-refresh infinite" :class="[{'weui-tab__bd-item--active':tab.apprStat===activeId}]">
 					<div class="weui-pull-to-refresh__layer">
 						<div class='weui-pull-to-refresh__arrow'></div>
 						<div class='weui-pull-to-refresh__preloader'></div>
@@ -106,7 +98,7 @@
 				data: {
 					activeId: 0,
 					tabs: [{
-						id: 0,
+						apprStat: 0,
 						title: "全部",
 						haveMore: false,
 						pageIndex: 1,
@@ -124,21 +116,21 @@
 							ApprStat: "1"
 						}]
 					}, {
-						id: 1,
+						apprStat: 1,
 						title: "未审批",
 						haveMore: false,
 						pageIndex: 1,
 						totalPage: 0,
 						list: []
 					}, {
-						id: 2,
+						apprStat: 2,
 						title: "已通过",
 						haveMore: false,
 						pageIndex: 1,
 						totalPage: 0,
 						list: []
 					}, {
-						id: 3,
+						apprStat: 3,
 						title: "驳回",
 						haveMore: false,
 						pageIndex: 1,
@@ -213,7 +205,7 @@
 						})
 					},
 					jumpToDetail: function(item) {
-						location.href = "service-detail.html?id=" + item.id;
+						location.href = "leave-detail.html?id=" + item.id;
 					},
 					/**
 					 * 添加新维修

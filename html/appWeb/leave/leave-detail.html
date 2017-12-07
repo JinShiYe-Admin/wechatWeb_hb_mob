@@ -7,21 +7,130 @@
 		<link href="../../../css/weui.min.css" rel="stylesheet" />
 		<link href="../../../css/jquery-weui.min.css" rel="stylesheet" />
 		<title>请假详情</title>
+		<style>
+			body {
+				background-color: #F8F8F8;
+			}
+			
+			.head-portrait {
+				width: 20%;
+				height: 20%;
+				border-radius: 50%;
+			}
+			
+			.display-inline {
+				display: inline-block;
+			}
+			
+			.name-time-container {
+				margin: auto 0;
+				padding-left: 16px;
+			}
+			
+			.apply-name {
+				font-size: 1em;
+				font-weight: bold;
+			}
+			
+			.apply-info-container {
+				font-size: .8em;
+			}
+			
+			.apply-hint {
+				color: darkgray;
+			}
+			
+			.person-container.weui-cells {
+				margin-top: 0;
+			}
+			
+			.weui-cells {
+				padding: 8px 16px;
+			}
+		</style>
 	</head>
 
 	<body>
-		<div>
-			<div class="person-container">
-				
+		<div id="detail-container" class="page">
+			<div class="weui-cells person-container weui-flex">
+				<img v-bind:src="applyDetail.ApplyManPic" class="head-portrait display-inline">
+				<div class="display-inline name-time-container">
+					<p class="apply-name">{{applyDetail.ApplyManName}}</p>
+					<p class="apply-time apply-info-container"><span class="apply-hint">申请时间:</span>{{applyDetail.ApplyTime}}</p>
+				</div>
 			</div>
-			<div>
-				{{}}
+			<div class="apply-type-container weui-cells">
+				<p class="leave-type apply-info-container"><span class="apply-hint">请假类型:</span>{{applyDetail.LeaveTypeName}}</p>
+				<p class="process-type apply-info-container"><span class="apply-hint">流程类型:</span>{{applyDetail.ProcTypeName}}</p>
 			</div>
-			<div>
-				<p></p>
-				<p></p>
+			<div class="apply-time-container weui-cells">
+				<p class="time-length apply-info-container"><span class="apply-hint">请假时长:</span>{{applyDetail.ApplyBeginEndCnt}}</p>
+				<p class="begin-time apply-info-container"><span class="apply-hint">开始时间:</span>{{applyDetail.ApplyBeginTime}}</p>
+				<p class="end-time apply-info-container"><span class="apply-hint">结束时间:</span>{{applyDetail.ApplyEndTime}}</p>
 			</div>
+			<div class="detail-info weui-cells">
+				<p class="apply-reason apply-info-container"><span class="apply-hint">请假缘由:</span>{{applyDetail.ApplyReason}}</p>
+				<div class="apply-imgs apply-info-container weui-uploader">
+					<div class="weui-uploader__hd">
+						<p><span class="apply-hint">图片附件:</span></p>
+					</div>
+					<div class="weui-uploader__bd">
+						<ul class="weui-uploader__files">
+							<li class="weui-uploader__file" v-bind:style="{backgroundImage:'url(' +applyDetail.ApplyReasonThumb+ ')'}">
+
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!--<template>-->
+			<div class="weui-cells__title">
+				审批详情
+			</div>
+			<div class="weui-cells">
+
+			</div>
+			<!--</template>-->
 		</div>
+		<script src="../../../js/jquery.min.js"></script>
+		<script src="../../../js/jquery-weui.min.js"></script>
+		<script src="../../../js/vue.js"></script>
+		<script src="../../../js/vue-router.js"></script>
+		<script type="text/javascript">
+			var detail = new Vue({
+				el: "#detail-container",
+				data: {
+					applyDetail: {
+						ApprId: 0,
+						ApprStat: 1,
+						ApprStatNote: "未审核",
+						ApplyId: 1,
+						ApplyMan: 123,
+						ApplyManName: "申请人",
+						ApplyManPic: "https://github.com/rockan007/photos/blob/master/bug.png?raw=true",
+						ProcessTypeId: 2,
+						ProcTypeName: "流程类型名称",
+						LeaveTypeId: 1,
+						LeaveTypeName: "请假类型名称",
+						ApplyBeginTime: "2017-12-07 08:30",
+						ApplyEndTime: "2017-01-01 17:30",
+						ApplyBeginEndCnt: 123,
+						ApplyReason: "请假原因",
+						ApplyPic: "https://github.com/rockan007/photos/blob/master/cookie-example.png?raw=true",
+						ApplyReasonThumb: "https://github.com/rockan007/photos/blob/master/cookie-example.png?raw=true",
+						ApplyTime: "2017-12-06"
+					}
+				},
+				mounted: function() {
+
+				},
+				methods: {
+					getDetail: function() {
+
+					}
+				}
+			})
+		</script>
 	</body>
 
 </html>

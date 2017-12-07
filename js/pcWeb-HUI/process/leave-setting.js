@@ -64,7 +64,10 @@ Vue.component("leave-setting", {
 			}
 
 		},
-		//更改流程信息
+		/**
+		 * 更改请假类型信息
+		 * @param {Object} leave
+		 */
 		changeLeaveInfo: function(leave) {
 			this.changeType = 1;
 			this.activeLeave = leave;
@@ -159,7 +162,9 @@ Vue.component("leave-setting", {
 					break;
 			}
 		},
-		//获取全部流程信息
+		/**
+		 * 獲取全部請假類型信息
+		 */
 		requireLeave: function() {
 			var com = this;
 			processRequest.postProcessData("getLeaveType", {

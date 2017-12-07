@@ -138,7 +138,7 @@
 					</div>
 					<div class="weui-actionsheet__menu">
 						<div class="weui-actionsheet__cell" v-on:click="setProcessApprove(1)">同意</div>
-						<div class="weui-actionsheet__cell" c-on:click="setProcessApprove(2)">驳回</div>
+						<div class="weui-actionsheet__cell" v-on:click="setProcessApprove(2)">驳回</div>
 					</div>
 					<div class="weui-actionsheet__action" v-on:click="showOptions=false">
 						<div class="weui-actionsheet__cell" id="iosActionsheetCancel">取消</div>
@@ -219,6 +219,7 @@
 						}, function(response) {
 							com.showToast = false;
 							if(response.RspCode == 0) {
+								com.showOptions = false
 								com.approveNote = "";
 							} else {
 

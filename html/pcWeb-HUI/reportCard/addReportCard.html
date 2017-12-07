@@ -36,19 +36,19 @@
 		</style>
 	</head>
 
-	<body>
+	<body style="background-color: white;">
 
 		<div id="content" class="weui-cells weui-cells_form">
 			<!--输入列表-->
 			<div id="input_list">
-				<div class="weui-cells__title">成绩单名称</div>
-				<div class="weui-cells">
-					<div class="weui-cell">
-						<div class="weui-cell__bd">
-							<input v-model="cname" class="weui-input" type="text" :placeholder="'请输入'+cname">
-						</div>
+
+				<div class="weui-cell">
+					<div class="weui-cell__hd"><label class="weui-label">成绩单名称</label></div>
+					<div class="weui-cell__bd">
+						<input v-model="cname" class="weui-input" placeholder="请输入成绩单名称">
 					</div>
 				</div>
+
 				<div class="weui-cell">
 					<div class="weui-cell__hd"><label class="weui-label">部门</label></div>
 					<div class="weui-cell__bd">
@@ -57,42 +57,14 @@
 				</div>
 
 			</div>
+			<div class="weui-cell"></div>
 
-			<div>
-				<div class="weui-cells weui-cells_form">
-					<div class="weui-cell">
-						<div class="weui-cell__bd">
-							<div class="weui-uploader">
-								<div class="weui-uploader__hd">
-									<p class="weui-uploader__title">上传照片</p>
-								</div>
-								<div class="weui-uploader__bd">
-									<ul class="weui-uploader__files" id="uploaderFiles">
-										<li v-for="(file,index) of uploadedFiles" @click="clickImg(index)">{{file.fileurl}}</li>
-									</ul>
-									<div class="weui-uploader__input-box" :style="displayAddBtn">
-										<input id="uploaderInput" class="weui-uploader__input" type="file" accept="application/vnd.ms-excel" v-on:change="selectFile($event)">
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<input id="qnInput" style="display: none;">
-				<div class="weui-gallery" :style="displayGallery">
-					<span class="weui-gallery__img" @click="clickGigImg" :style="{backgroundImage:'url('+selectImgPath+')'}"></span>
-					<div class="weui-gallery__opr">
-						<a href="javascript:" class="weui-gallery__del">
-							<i class="weui-icon-delete weui-icon_gallery-delete" @click="deleteImg"></i>
-						</a>
-					</div>
-				</div>
-			</div>
-			<div class="weui-btn-area">
-				<button onclick="addExama()" id="submit" class="weui-btn weui-btn_primary">添加成绩单</button>
-			</div>
+			<input style="margin-left: 10px;margin-bottom: 10px;" id="uploaderInput" type="file" accept=".csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" v-on:change="selectFile($event)">
+
 		</div>
-
+		<div class="weui-btn-area">
+			<button style="width: 300px;" onclick="addExama()" id="submit" class="weui-btn weui-btn_primary">添加成绩单</button>
+		</div>
 		<script src="../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../../js/demoCssJs/jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../../js/demoCssJs/iscroll.js"></script>
@@ -111,7 +83,7 @@
 		<script src="../../../js/appweb/choose-file.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../../js/utils/consts.js"></script>
 		<script src="../../../js/utils/events.js"></script>
-		<script src="../../../js/compress.js"></script>
+		<!--<script src="../../../js/compress.js"></script>-->
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../../js/lib/exif/exif.min.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../../js/lib/plupload/moxie.min.js?" + Math.random() + "'></s" + "cript>");
@@ -127,18 +99,9 @@
 			var content = new Vue({
 				el: '#content',
 				data: {
-					cname: "开发部成绩单",
+					cname: "",
 					depart_array: [],
-					displayGallery: {
-						display: 'none'
-					},
-					displayAddBtn: {
-						display: 'block'
-					},
-
-					selectIndex: 0,
-					selectImgPath: '',
-					uploadedFiles: []
+					uploadedFile: {}
 
 				},
 				methods: {
@@ -153,53 +116,46 @@
 							return;
 						} else {
 							compress.postFile(data, function(filePath) {
-								content.uploadedFiles.push(filePath);
-								displayAddBtnFun();
+								if(filePath.RspCode == 0) {
+									console.log(JSON.stringify(filePath));
+									content.uploadedFile = filePath.RspData;
+									alert("上传文件成功");
+
+								}
+
 							});
 						}
 					},
-
-					clickImg: function(index) { //点击列表中的附件，给别的地方赋值
-						content.selectIndex = index;
-						content.selectImgPath = content.uploadedFiles[index].ImgUrl;
-						content.displayGallery = {
-							display: 'block'
-						};
-					},
-					clickGigImg: function() { //点击放大后的图片，隐藏显示
-						content.displayGallery = {
-							display: 'none'
-						};
-					},
-					deleteImg: function() { //删除图片
-						$.confirm({
-							title: '提示',
-							text: '确认删除？',
-							onOK: function() {
-								content.displayGallery = {
-									display: 'none'
-								};
-								content.uploadedFiles.splice(content.selectIndex, 1);
-								displayAddBtnFun();
-							}
-						});
-					}
 				}
 
 			})
 
 			window.onload = function() {
-				//				initQNUploader();
 				getDepart();
 
 			}
 
 			function addExama() {
+				if(content.cname==""){
+					alert("请输入名称");
+					return;
+					
+				}
+				if(content.uploadedFile.length==0){
+					alert("请添加文件");
+					return;
+					
+				}
+				if(document.getElementById("depart").data_id==undefined||document.getElementById("depart").data_id==""){
+					alert("请选择部门");
+					return;
+					
+				}
 				var tempData = {
 					cmd: 'examadmin',
 					type: 'add',
 					cname: content.cname,
-					enc: content.uploadedFiles[0].filephypath,
+					enc: content.uploadedFile.filephypath,
 					//					dptname: "开发部",
 					//					dptid: 11,
 					dptname: document.getElementById("depart").innerHTML,
@@ -212,6 +168,7 @@
 				unitWebsitePro(tempData, function(data) {
 					console.log('添加成绩单数据：' + JSON.stringify(data.RspData))
 					if(data.RspCode == 0) {
+						alert("添加成功")
 						content = JSON.parse(data.RspData);
 					} else {
 						alert(data.RspTxt)
@@ -236,10 +193,10 @@
 								continue;
 							} else {
 								model.label = model.title;
-								userInfo.depart_array.push(model);
+								content.depart_array.push(model);
 							}
 						}
-						console.log('重组部门:' + JSON.stringify(userInfo.depart_array));
+						console.log('重组部门:' + JSON.stringify(content.depart_array));
 
 					} else {
 						alert(data.RspTxt)
@@ -260,80 +217,6 @@
 						document.getElementById("depart").data_id = result[0].value;
 					}
 				});
-			}
-			//从相册中选择照片后，上传
-			//index--从相册选择照片回调里面，照片的索引，files--选择的照片信息，filesSum--选择照片之前，现存的照片张数
-			function uploadFiles(index, files, filesSum) {
-				console.log('index:' + index + ',files.count:' + files.length + ',filesSum.length:' + filesSum.length);
-				if(index < files.length) {
-					if(filesSum + index > 0) {
-						$.alert("最多只能上传1张照片");
-					} else {
-						var file = files[index];
-						var types = file.type.toLowerCase().split("/");
-						console.log("types:" + types);
-						if(types[1] == "vnd.ms-excel") {
-							EXIF.getData(file, function() {
-								$.showLoading('加载中...');
-
-								//显示文件
-								var reader = new FileReader();
-								reader.onload = function() {
-									qnFileUploader.addFile(file, Date.now() + '.xls');
-									index++;
-									uploadFiles(index, files, filesSum);
-									if(index == files.length - 1) {
-										$('#uploaderInput').val('');
-									}
-
-								}
-								reader.readAsDataURL(file);
-							});
-						} else {
-							if(index + 1 < filesSum.length) {
-								index++;
-								uploadFiles(index, files, filesSum);
-							}
-							$('#uploaderInput').val('');
-							$.toast("请选择xls,csv,xlsx类型的图片");
-						}
-					}
-				}
-			}
-
-			//判断照片添加按钮是否显示，大于9张时隐藏
-			function displayAddBtnFun() {
-				if(content.uploadedFiles.length >= 1) {
-					content.displayAddBtn = {
-						display: 'none'
-					};
-				} else {
-					content.displayAddBtn = {
-						display: 'block'
-					};
-				}
-			}
-			/**
-			 * 获取七牛上传token
-			 */
-			function getQNUpToken(file) {
-				var myDate = new Date();
-				var fileName = myDate.getTime() + "" + parseInt(Math.random() * 1000);
-				var types = file.name.split(".");
-				fileName = fileName + "." + types[types.length - 1];
-				var getTokenData = {
-					appId: storageutil.QNQYWXKID,
-					mainSpace: storageutil.QNPUBSPACE,
-					saveSpace: storageutil.QNSSPACEWEBCON,
-					fileArray: [{
-						qnFileName: fileName,
-					}]
-				}
-				var upToken;
-				cloudutil.getFileUpTokens(getTokenData, function(data) {
-					upToken = data;
-				});
-				return upToken;
 			}
 		</script>
 	</body>

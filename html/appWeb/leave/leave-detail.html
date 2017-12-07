@@ -47,6 +47,29 @@
 			.weui-cells {
 				padding: 8px 16px;
 			}
+			
+			.check-person {
+				color: dodgerblue;
+			}
+			
+			.input-container {
+				position: fixed;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				background: white;
+				box-shadow: 0 -2px 5px darkgray;
+			}
+			
+			.input-item {
+				border: solid 1px gray;
+				border-radius: 2px;
+				margin-right: 5px;
+			}
+			
+			.weui-actionsheet__title {
+				height: auto;
+			}
 		</style>
 	</head>
 
@@ -88,9 +111,36 @@
 				审批详情
 			</div>
 			<div class="weui-cells">
-
+				<div v-for="check in checkList" class="weui-cell apply-info-container">
+					<p>{{check.ApprTime}}</p>
+					<p><span class="check-person check-button">{{check.ApprManName}}:</span>{{check.ApprNote}}</p>
+				</div>
 			</div>
 			<!--</template>-->
+			<div class="weui-cell weui-cell_vcode input-container">
+				<div class="weui-cell__bd">
+					<input type="text" class="weui-input" placeholder="请输入内容" />
+				</div>
+				<div class="weui-cell__ft">
+					<button class="weui-vcode-btn">审核</button>
+				</div>
+			</div>
+			<div>
+				<div class="weui-mask" id="iosMask" style="opacity: 1;"></div>
+				<div class="weui-actionsheet weui-actionsheet_toggle" id="iosActionsheet">
+					<div class="weui-actionsheet__title">
+						<p class="weui-actionsheet__title-text">选择审核状态</p>
+					</div>
+					<div class="weui-actionsheet__menu">
+						<div class="weui-actionsheet__cell">同意</div>
+						<div class="weui-actionsheet__cell">拒绝</div>
+						<div class="weui-actionsheet__cell">驳回</div>
+					</div>
+					<div class="weui-actionsheet__action">
+						<div class="weui-actionsheet__cell">取消</div>
+					</div>
+				</div>
+			</div>
 		</div>
 		<script src="../../../js/jquery.min.js"></script>
 		<script src="../../../js/jquery-weui.min.js"></script>
@@ -119,7 +169,15 @@
 						ApplyPic: "https://github.com/rockan007/photos/blob/master/cookie-example.png?raw=true",
 						ApplyReasonThumb: "https://github.com/rockan007/photos/blob/master/cookie-example.png?raw=true",
 						ApplyTime: "2017-12-06"
-					}
+					},
+					checkList: [{
+						ApprMan: 1,
+						ApprManName: "审核人员",
+						ApprNote: "我的意见就是没有意见",
+						ApprStat: 2,
+						ApprStatNote: "审核状态说明",
+						ApprTime: "2017-12-07"
+					}]
 				},
 				mounted: function() {
 

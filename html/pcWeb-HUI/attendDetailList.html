@@ -29,9 +29,9 @@
 			<div class="mt-20">
 				<table class="table table-border table-bordered table-hover table-bg">
 					<thead>
-						<!--<tr class="text-c" v-for='(timeModel,index) in attendTimeArray' v-show="flag>0" style="display: none;">-->
+						<!--<tr class="text-c" v-for='(timeModel,index) in attendTimeArrayAll' v-show="flag>0" style="display: none;">-->
 						<tr class="text-c">
-							<td width="100" v-for='(timeModel,index) in attendTimeArray' style="font-weight: bold;">
+							<td width="100" v-for='(timeModel,index) in attendTimeArrayAll' style="font-weight: bold;">
 								{{timeModel.AttendTypeNote}}
 							</td>
 						</tr>
@@ -40,7 +40,7 @@
 						<tr class="text-c" v-for='(attend,index) in peopleArray' v-show="flag>0" style="display: none;">
 							<td><u style="cursor:pointer" class="text-primary">{{attend.name}}</u></td>
 							<td><u style="cursor:pointer" class="text-primary">{{attend.departName}}</u></td>
-							<td  v-for='(timeModel,index) in attend.timeList'>
+							<td v-for='(timeModel,index) in attend.timeList'>
 								<u style="cursor:pointer" class="text-primary">{{timeModel.AttendResult}}</u>
 							</td>
 						</tr>
@@ -82,7 +82,6 @@
 				});
 				//获取当前人员信息
 				getUserInfo();
-//				getAttendTime();
 			});
 
 			var attendData = new Vue({
@@ -90,9 +89,10 @@
 				data: {
 					flag: 0,
 					userInfo: {}, //当前人员信息
-					attendTimeArray: [], //考勤时间段列表
+					attendTimeArrayAll: [], //考勤时间段列表,合并姓名、部门
+					attendTimeArray: [], //考勤时间段列表,从协议获取到的
 					departArray: [], //管理的所有部门数组
-					peopleArray: [], //管理的所有部门数组
+					peopleArray: [], //管理的所有部门人员数组
 					peopleIdArray: [] //管理的所有部门的人员id数组
 				},
 				methods: {
@@ -154,9 +154,11 @@
 						var tempModel1 = {
 							AttendTypeNote: '部门'
 						}
-						data.RspData.Data.splice(0, 0, tempModel1);
-						data.RspData.Data.splice(0, 0, tempModel);
 						attendData.attendTimeArray = [].concat(data.RspData.Data);
+						attendData.attendTimeArrayAll = [].concat(data.RspData.Data);
+						attendData.attendTimeArrayAll.splice(0, 0, tempModel1);
+						attendData.attendTimeArrayAll.splice(0, 0, tempModel);
+
 						//获取管理的部门
 						getPersonDepart();
 					} else {
@@ -177,6 +179,7 @@
 						attendData.departArray = [].concat(JSON.parse(data.RspData));
 						//把获取到的部门，按层级组合
 						var tempArr = getNodeTree(JSON.parse(data.RspData));
+						console.log('tempArr:' + JSON.stringify(tempArr));
 						//得到最顶层的部门id数组
 						var tempDepartArr = [];
 						for(var i = 0; i < tempArr.length; i++) {
@@ -207,14 +210,58 @@
 							var tempModel = data.RspData[i];
 							tempArr.push(tempModel.userid);
 							//给每一个人添加时间段数组
-							tempModel.timeList = attendData.attendTimeArray;
+							tempModel.timeList = attendData.attendTimeArray.slice(0);
+							//					tempModel.timeList = attendData.attendTimeArray.concat();
 							attendData.peopleArray.push(tempModel);
 						}
+						console.log('attendData.peopleArray0000:' + JSON.stringify(attendData.peopleArray));
 						attendData.peopleIdArray = attendData.peopleIdArray.concat(tempArr);
+						//去重
+						attendData.peopleArray = uniqeByKeys(attendData.peopleArray, ['userid']);
+						attendData.peopleIdArray = attendData.peopleIdArray.distinct();
 					} else {
 						//layer.alert('获取部门出现问题');
 					}
 				});
+			}
+
+			//将对象元素转换成字符串以作比较  
+			function obj2key(obj, keys) {
+				var n = keys.length,
+					key = [];
+				while(n--) {
+					key.push(obj[keys[n]]);
+				}
+				return key.join('|');
+			}
+			//去重操作  
+			function uniqeByKeys(array, keys) {
+				var arr = [];
+				var hash = {};
+				for(var i = 0, j = array.length; i < j; i++) {
+					var k = obj2key(array[i], keys);
+					if(!(k in hash)) {
+						hash[k] = true;
+						arr.push(array[i]);
+					}
+				}
+				return arr;
+			}
+
+			//给数组去重
+			Array.prototype.distinct = function() {
+				var arr = this,
+					i,
+					obj = {},
+					result = [],
+					len = arr.length;
+				for(i = 0; i < arr.length; i++) {
+					if(!obj[arr[i]]) { //如果能查找到，证明数组元素重复了
+						obj[arr[i]] = 1;
+						result.push(arr[i]);
+					}
+				}
+				return result;
 			}
 
 			//把获取到的部门，按层级组合
@@ -240,7 +287,7 @@
 						}
 					}
 				}
-				console.log('getChildrenTree获取的数据：' + JSON.stringify(roots))
+				//				console.log('getChildrenTree获取的数据：' + JSON.stringify(roots))
 				return roots
 			}
 
@@ -263,7 +310,7 @@
 						attendTypeId: '0', //0 为全部
 						attendAreaId: '0', //0 为全部
 						pageIndex: '1',
-						pageSize: '10' //0 为全部
+						pageSize: '0' //0 为全部
 					}
 				} else {
 					var myDate = new Date().format('yyyy-MM-dd');
@@ -277,13 +324,14 @@
 						attendTypeId: '0', //0 为全部
 						attendAreaId: '0', //0 为全部
 						pageIndex: '1',
-						pageSize: '10' //0 为全部
+						pageSize: '0' //0 为全部
 					}
 				}
 				console.log('tempData:' + JSON.stringify(tempData));
 				getAttendPro(tempData, function(data) {
 					if(data.RspCode == 0) {
 						if(data.RspData.Data.length > 0) {
+							console.log('data:' + JSON.stringify(data));
 							for(var i = 0; i < data.RspData.Data.length; i++) {
 								var tempModel = data.RspData.Data[i];
 								for(var m = 0; m < attendData.departArray.length; m++) {
@@ -292,11 +340,13 @@
 										tempModel.departName = tempModel1.title;
 									}
 								}
-								for(var i = 0; i < attendData.peopleArray.length; i++) {
-									var tempModel1 = attendData.peopleArray[i];
+								for(var a = 0; a < attendData.peopleArray.length; a++) {
+									var tempModel1 = attendData.peopleArray[a];
 									if(tempModel.UserId == tempModel1.userid) {
-										for(var i = 0; i < tempModel1.timeList.length; i++) {
-											var timeModel = tempModel1.timeList[i];
+										console.log('tempModel.UserId:' + tempModel.UserId + ',' + tempModel1.userid);
+										tempModel1.departName = tempModel.departName;
+										for(var b = 0; b < tempModel1.timeList.length; b++) {
+											var timeModel = tempModel1.timeList[b];
 											if(tempModel.AttendType == timeModel.AttendType) {
 												//合并对象
 												timeModel = $.extend(timeModel, tempModel);

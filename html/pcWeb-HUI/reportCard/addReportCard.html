@@ -123,7 +123,7 @@
 			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/pluploadutil.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 		<script>
-//			var qnFileUploader; //七牛上传控件对象
+			//			var qnFileUploader; //七牛上传控件对象
 			var content = new Vue({
 				el: '#content',
 				data: {
@@ -145,12 +145,14 @@
 					selectFile: function(event) { //从手机中选择图片后到界面的回调
 						// 如果没有选中文件，直接返回  
 						var files = event.target.files;
+						var data = new FormData();
+						data.append('file', files[0]);
 						console.log(files)
 						if(files.length === 0) {
 							$.hideLoading();
 							return;
 						} else {
-							compress.postFile(files, function(filePath){
+							compress.postFile(data, function(filePath) {
 								content.uploadedFiles.push(filePath);
 								displayAddBtnFun();
 							});
@@ -187,7 +189,7 @@
 			})
 
 			window.onload = function() {
-//				initQNUploader();
+				//				initQNUploader();
 				getDepart();
 
 			}
@@ -198,15 +200,15 @@
 					type: 'add',
 					cname: content.cname,
 					enc: content.uploadedFiles[0].filephypath,
-//					dptname: "开发部",
-//					dptid: 11,
+					//					dptname: "开发部",
+					//					dptid: 11,
 					dptname: document.getElementById("depart").innerHTML,
 					dptid: document.getElementById("depart").data_id,
 
 				}
 
-				console.log("添加成绩单参数："+JSON.stringify(tempData))
-//				return;
+				console.log("添加成绩单参数：" + JSON.stringify(tempData))
+				//				return;
 				unitWebsitePro(tempData, function(data) {
 					console.log('添加成绩单数据：' + JSON.stringify(data.RspData))
 					if(data.RspCode == 0) {
@@ -298,8 +300,6 @@
 					}
 				}
 			}
-
-
 
 			//判断照片添加按钮是否显示，大于9张时隐藏
 			function displayAddBtnFun() {

@@ -194,7 +194,7 @@ var processRequest = (function(mod) {
 			} else {
 				callback(data);
 			}
-		}).error(function(e) {
+		}).fail(function(e) {
 			console.log("JQP:onerror:", e);
 			callback({
 				RspCode: 404,

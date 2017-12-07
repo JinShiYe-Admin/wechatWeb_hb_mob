@@ -78,8 +78,6 @@ Vue.component("select-load-pic", {
 				console.log("获取的上传七牛图片信息：" + JSON.stringify(response));
 				com.$emit("uploadedfile", response, com.index); //通知父组件 上传的图片
 			})
-			//在上传成功回调中使用
-
 		},
 		isInType: function(type) {
 			switch(type) {

@@ -57,7 +57,7 @@
 				left: 0;
 				right: 0;
 				background: white;
-				box-shadow: 0 -2px 5px darkgray;
+				box-shadow: 0 -1px 5px darkgray;
 			}
 			
 			.input-item {
@@ -66,9 +66,15 @@
 				margin-right: 5px;
 			}
 			
-			/*.weui-actionsheet__title {
-				height: auto;
-			}*/
+			.display-none {
+				opacity: 0;
+				display: none;
+			}
+			
+			.display-block {
+				opacity: 1;
+				display: block;
+			}
 		</style>
 	</head>
 
@@ -98,7 +104,7 @@
 					</div>
 					<div class="weui-uploader__bd">
 						<ul class="weui-uploader__files">
-							<li class="weui-uploader__file" v-bind:style="{backgroundImage:'url(' +applyDetail.ApplyReasonThumb+ ')'}">
+							<li class="weui-uploader__file" v-on:click="showGallery=true" v-bind:style="{backgroundImage:'url(' +applyDetail.ApplyReasonThumb+ ')'}">
 
 							</li>
 						</ul>
@@ -118,52 +124,43 @@
 			<!--</template>-->
 			<div class="weui-cell weui-cell_vcode input-container">
 				<div class="weui-cell__bd">
-					<input type="text" class="weui-input" placeholder="请输入内容" />
+					<input type="text" class="weui-input" v-model.trim="approveNote" placeholder="请输入内容" />
 				</div>
 				<div class="weui-cell__ft">
-					<button class="weui-vcode-btn" id="showIOSActionSheet">审核</button>
+					<button class="weui-vcode-btn" id="showIOSActionSheet" v-on:click="showOptions=true">审核</button>
 				</div>
 			</div>
 			<div>
-				<div class="weui-mask" id="iosMask" style="display: none;"></div>
-				<div class="weui-actionsheet" id="iosActionsheet">
+				<div class="weui-mask" id="iosMask" v-on:click="showOptions=false" v-bind:class="[{'display-block':showOptions},{'display-none':!showOptions}]"></div>
+				<div class="weui-actionsheet" v-bind:class="[{'weui-actionsheet_toggle':showOptions}]" id="iosActionsheet">
 					<div class="weui-actionsheet__title">
 						<p class="weui-actionsheet__title-text">选择审核状态</p>
 					</div>
 					<div class="weui-actionsheet__menu">
-						<div class="weui-actionsheet__cell">同意</div>
-						<div class="weui-actionsheet__cell">拒绝</div>
-						<div class="weui-actionsheet__cell">驳回</div>
+						<div class="weui-actionsheet__cell" v-on:click="setProcessApprove(1)">同意</div>
+						<div class="weui-actionsheet__cell" v-on:click="setProcessApprove(2)">驳回</div>
 					</div>
-					<div class="weui-actionsheet__action">
+					<div class="weui-actionsheet__action" v-on:click="showOptions=false">
 						<div class="weui-actionsheet__cell" id="iosActionsheetCancel">取消</div>
 					</div>
 				</div>
 			</div>
+			<div class="weui-gallery" id="gallery" v-on:click="showGallery=false" v-bind:class="[{'display-block':showGallery},{'display-none':!showGallery}]">
+				<span class="weui-gallery__img" id="galleryImg" v-bind:style="{backgroundImage:'url('+applyDetail.ApplyPic+')'}"></span>
+			</div>
+			<div id="loadingToast" v-bind:class="[{'display-none':!showToast},{'display-block':showToast}]">
+				<div class="weui-mask_transparent"></div>
+				<div class="weui-toast">
+					<i class="weui-loading weui-icon_toast"></i>
+					<p class="weui-toast__content">数据加载中</p>
+				</div>
+			</div>
 		</div>
 		<script src="../../../js/jquery.min.js"></script>
-		<!--<script src="../../../js/jquery-weui.min.js"></script>-->
 		<script src="../../../js/vue.js"></script>
 		<script src="../../../js/vue-router.js"></script>
-		<script>
-			// ios
-			$(function() {
-				var $iosActionsheet = $('#iosActionsheet');
-				var $iosMask = $('#iosMask');
-
-				function hideActionSheet() {
-					$iosActionsheet.removeClass('weui-actionsheet_toggle');
-					$iosMask.fadeOut(200);
-				}
-
-				$iosMask.on('click', hideActionSheet);
-				$('#iosActionsheetCancel').on('click', hideActionSheet);
-				$("#showIOSActionSheet").on("click", function() {
-					$iosActionsheet.addClass('weui-actionsheet_toggle');
-					$iosMask.fadeIn(200);
-				});
-			});
-		</script>
+		<script src="../../../js/utils/consts.js"></script>
+		<script src="../../../js/utils/request.js"></script>
 		<script type="text/javascript">
 			var detail = new Vue({
 				el: "#detail-container",
@@ -195,7 +192,11 @@
 						ApprStat: 2,
 						ApprStatNote: "审核状态说明",
 						ApprTime: "2017-12-07"
-					}]
+					}],
+					showGallery: false,
+					showOptions: false,
+					showToast: false,
+					approveNote: ""
 				},
 				mounted: function() {
 
@@ -203,6 +204,27 @@
 				methods: {
 					getDetail: function() {
 
+					},
+					/**
+					 * 修改审核流程
+					 * @param {Object} type 设置的审核流程
+					 */
+					setProcessApprove: function(type) {
+						var com = this;
+						com.showToast = true;
+						processRequest.postProcessData("setProcessApprove", {
+							procApproveId: com.applyDetail.ProcApproveId,
+							procApproveNote: com.approveNote,
+							proApproveStat: type
+						}, function(response) {
+							com.showToast = false;
+							if(response.RspCode == 0) {
+								com.showOptions = false
+								com.approveNote = "";
+							} else {
+
+							}
+						});
 					}
 				}
 			})

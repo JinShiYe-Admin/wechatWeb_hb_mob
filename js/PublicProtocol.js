@@ -221,3 +221,8 @@ var getAttendStatPro = function(data0, callback) {
 	data0 = extendParameter(data0);
 	xhrPost(tempUrl + 'getAttendStat', JSON.stringify(data0), callback);
 }
+//17.获取选择用考勤类型
+var getAttendTypeForSelPro = function(data0, callback) {
+	data0 = extendParameter(data0);
+	xhrPost(tempUrl + 'getAttendTypeForSel', JSON.stringify(data0), callback);
+}

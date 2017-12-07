@@ -46,6 +46,7 @@
 						<tr class="text-c">
 							<th width="100">考勤类型说明</th>
 							<th width="100">考勤类型属性</th>
+							<th width="50">排序</th>
 							<th width="100">操作</th>
 						</tr>
 					</thead>
@@ -53,6 +54,7 @@
 						<tr class="text-c" v-for='(attend,index) in attendArray' v-show="flag>0" style="display: none;">
 							<td><u style="cursor:pointer" class="text-primary">{{attend.AttendTypeNote}}</u></td>
 							<td class="td-status"><span><a v-if="attend.attendTypeProp==1">上班/上学</a><a v-else>下班/放学</a></span></td>
+							<td><u style="cursor:pointer" class="text-primary">{{attend.OrderId}}</u></td>
 							<td class="td-manage">
 								<a title="修改考勤类型" href="javascript:;" @click="modifyAttend(attend,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>
 								<a title="删除考勤类型" href="javascript:;" @click="removeAttend(attend,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
@@ -79,6 +81,18 @@
 								<option value="2">下班/放学</option>
 							</select>
 						</span>
+					</div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">考勤排序ID：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<select :id="'select'+attendModel.OrderId" @change="selectOrder(attendModel)">
+							<template v-for="item in selectArray">
+								<option v-if="item==attendModel.OrderId" selected :value="item">{{item}}</option>
+								<option v-else :value="item">{{item}}</option>
+							</template>
+						</select>
+						  (*排序id越小越靠前)
 					</div>
 				</div>
 				<div class="row cl submit-button">
@@ -170,8 +184,10 @@
 			addAttendLayer = new Vue({
 				el: "#addAttendLayer",
 				data: {
-					AttendTypeNote: "", //图片说明
-					attendTypeProp: "1", //排序ID
+					selectArray: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+					AttendTypeNote: "", //考勤类型说明
+					attendTypeProp: "1", //考勤类型属性,1 上班/上学,2 下班/放学
+					orderID:'0',//排序
 					attendModel: {} //要修改的的类型model
 				},
 				methods: {
@@ -210,12 +226,13 @@
 						}
 						if(attendData.attendFlag == 0) { //添加
 							//添加类型时，判断是否输入了值，有没有重复
-							if(checkInput(addAttendLayer.AttendTypeNote,0)) {
+							if(checkInput(addAttendLayer.AttendTypeNote, 0)) {
 								//发送添加协议
 								var tempData = {
 									corpId: attendData.userInfo.corpid, //单位ID
 									attendTypeNote: addAttendLayer.AttendTypeNote, //考勤类型说明
-									attendTypeProp: addAttendLayer.attendTypeProp //1 上班/上学,2 下班/放学
+									attendTypeProp: addAttendLayer.attendTypeProp, //1 上班/上学,2 下班/放学
+									orderId:addAttendLayer.orderID//排序id
 								}
 								console.log('tempData:' + JSON.stringify(tempData));
 								addAttendTypePro(tempData, function(data) {
@@ -229,18 +246,19 @@
 											getAttendType();
 										}
 									} else {
-										//						layer.alert('请重新登录获取个人信息');
+										layer.alert(data.RspTxt);
 									}
 								});
 							}
 
 						} else {
 							//重新编辑类型时，判断是否输入了值，有没有重复
-							if(checkInput(addAttendLayer.AttendTypeNote,1)) {
+							if(checkInput(addAttendLayer.AttendTypeNote, 1)) {
 								var tempData = {
 									attendTypeId: this.attendModel.AttendTypeId, //考勤类型ID
 									attendTypeNote: addAttendLayer.AttendTypeNote, //考勤类型说明
-									attendTypeProp: addAttendLayer.attendTypeProp //1 上班/上学,2 下班/放学
+									attendTypeProp: addAttendLayer.attendTypeProp, //1 上班/上学,2 下班/放学
+									orderId:addAttendLayer.orderID//排序id
 								}
 								console.log('tempData:' + JSON.stringify(tempData));
 								setAttendTypePro(tempData, function(data) {
@@ -254,7 +272,7 @@
 											layer.alert('修改失败');
 										}
 									} else {
-										//						layer.alert('请重新登录获取个人信息');
+										layer.alert(data.RspTxt);
 									}
 								});
 							}
@@ -273,6 +291,16 @@
 					}
 				}
 			});
+
+			//修改排序id
+			var selectOrder = function(model) {
+				var obj = document.getElementById('select' + model.OrderId);
+				var index = obj.selectedIndex; //序号，取当前选中选项的序号
+				var val = obj.options[index].value;
+				model.orderid = val;
+//				alert('model.orderid:'+model.orderid);
+				addAttendLayer.orderID =model.orderid;
+			}
 			//13.获取当前人员信息
 			var getUserInfo = function() {
 				var tempData = {
@@ -329,7 +357,7 @@
 				});
 			};
 			//添加课程时，判断是否输入了值，有没有重复,flag=0添加，flag=1修改
-			var checkInput = function(text,flag) {
+			var checkInput = function(text, flag) {
 				if(text.trim().length == 0) {
 					alert('考勤类型说明不能为空');
 					return false;
@@ -347,7 +375,7 @@
 				}
 				if(tempFlag == 0) {
 					return true;
-				}else if(tempFlag == 1&&flag == 1) {
+				} else if(tempFlag == 1 && flag == 1) {
 					return true;
 				} else {
 					alert('存在同名的考勤类型');

@@ -457,12 +457,12 @@
 						var optionElementText_M = selectElementObject_M.options[optionElementObjectIndex_M].text;
 						console.log("optionElementText_M====" + optionElementText_M);
 
-						var beginHour = document.getElementById("beginHour").value;
+//						var beginHour = document.getElementById("beginHour").value;
 						//alert("attendAdressValue==="+attendAdressValue);
 						var beginMinute = optionElementText_M;
 						var selectElementObject_H = document.getElementById("beginHour");
 						//						console.log("selectElementObject===" + selectElementObject);
-						var optionElementObjectIndex_H = selectElementObject_H.selectedIndex;
+						var optionElementObjectIndex_H = selectElementObject_H.selectedIndex+1;
 						console.log("optionElementObjectIndex_H===" + optionElementObjectIndex_H);
 						var optionElementText_H = selectElementObject_M.options[optionElementObjectIndex_H].text;
 						console.log("optionElementText_H====" + optionElementText_H);
@@ -520,7 +520,7 @@
 //										window.location = "../pcWeb-HUI/attendenceManage.html";
 
 									} else if(data.RspCode == 1018) {
-										alert("存在相同时间的考勤时间段");
+										alert("签到时间不能交叉");
 									} else if(data.RspCode == 1019) {
 										alert("同一个考勤类型记录也只能有一个时间段");
 									}

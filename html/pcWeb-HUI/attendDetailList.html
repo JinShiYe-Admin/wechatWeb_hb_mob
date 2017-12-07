@@ -12,40 +12,37 @@
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
-		<title>考勤统计</title>
+		<title>考勤详单查询</title>
 
 	</head>
 
 	<body>
-		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 考勤 <span class="c-gray en">&gt;</span> 考勤统计
+		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 考勤 <span class="c-gray en">&gt;</span> 考勤详单查询
 			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
 		</nav>
-
 		<div class="page-container" id="attendData">
-			<div class="text-c"> 日期范围：
-				<input placeholder="开始时间" type="text" onfocus="WdatePicker({ maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}' })" id="datemin" class="input-text Wdate" style="width:120px;"> -
-				<input placeholder="结束时间" type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax" class="input-text Wdate" style="width:120px;">
+			<div class="text-c"> 查询日期：
+				<input placeholder="查询日期" type="text" onfocus="WdatePicker({maxDate:'%y-%M-%d' })" id="datemax" class="input-text Wdate" style="width:120px;">
 				<button type="submit" class="btn btn-success radius" id="" name="" @click="searchAttendList()"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
 				<button type="submit" class="btn btn-success radius" id="" name="" @click="exportAttendList()"> 导出</button>
 			</div>
 			<div class="mt-20">
 				<table class="table table-border table-bordered table-hover table-bg">
 					<thead>
+						<!--<tr class="text-c" v-for='(timeModel,index) in attendTimeArray' v-show="flag>0" style="display: none;">-->
 						<tr class="text-c">
-							<th width="100">用户姓名</th>
-							<th width="100">考勤部门</th>
-							<th width="100">考勤次数</th>
-							<th width="100">迟到次数</th>
-							<th width="100">早退次数</th>
+							<td width="100" v-for='(timeModel,index) in attendTimeArray' style="font-weight: bold;">
+								{{timeModel.AttendTypeNote}}
+							</td>
 						</tr>
 					</thead>
 					<tbody>
-						<tr class="text-c" v-for='(attend,index) in attendArray' v-show="flag>0" style="display: none;">
-							<td><u style="cursor:pointer" class="text-primary">{{attend.UserName}}</u></td>
+						<tr class="text-c" v-for='(attend,index) in peopleArray' v-show="flag>0" style="display: none;">
+							<td><u style="cursor:pointer" class="text-primary">{{attend.name}}</u></td>
 							<td><u style="cursor:pointer" class="text-primary">{{attend.departName}}</u></td>
-							<td><u style="cursor:pointer" class="text-primary">{{attend.AttendCnt}}</u></td>
-							<td><u style="cursor:pointer" class="text-primary">{{attend.LateCnt}}</u></td>
-							<td><u style="cursor:pointer" class="text-primary">{{attend.EarlyCnt}}</u></td>
+							<td  v-for='(timeModel,index) in attend.timeList'>
+								<u style="cursor:pointer" class="text-primary">{{timeModel.AttendResult}}</u>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -67,7 +64,7 @@
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
-		<script src='https://jsypay.jiaobaowang.net/suitetest/js/lib/vconsole/vconsole.min.js'></script>
+		<script src='../../js/lib/vconsole/vconsole.min.js'></script>
 		<script type="text/javascript">
 			$(function() {
 				$('.table-sort').dataTable({
@@ -85,6 +82,7 @@
 				});
 				//获取当前人员信息
 				getUserInfo();
+//				getAttendTime();
 			});
 
 			var attendData = new Vue({
@@ -92,17 +90,18 @@
 				data: {
 					flag: 0,
 					userInfo: {}, //当前人员信息
-					attendArray: [], //考勤统计列表
+					attendTimeArray: [], //考勤时间段列表
 					departArray: [], //管理的所有部门数组
-					peopleArray: [] //管理的所有部门的人员数组
+					peopleArray: [], //管理的所有部门数组
+					peopleIdArray: [] //管理的所有部门的人员id数组
 				},
 				methods: {
 					searchAttendList: function() {
-						//16.获取考勤统计
-						getAttendStat(attendData.peopleArray);
+						//15.获取考勤记录
+						getAttend();
 					},
 					exportAttendList: function() {
-						if (attendData.attendArray.length ==0) {
+						if(attendData.peopleArray.length == 0) {
 							layer.alert('当前日期没有考勤统计数据');
 							return false;
 						}
@@ -131,10 +130,37 @@
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
 						attendData.userInfo = JSON.parse(data.RspData);
+						//13.获取考勤时间段
+						getAttendTime();
+					} else {
+						layer.alert('请重新登录获取个人信息');
+					}
+				});
+			};
+
+			//13.获取考勤时间段
+			var getAttendTime = function() {
+				var tempData = {
+					corpId: attendData.userInfo.corpid, //单位ID
+					pageIndex: 1, //当前页数
+					pageSize: 0 //每页记录数，0 为全部
+				}
+				console.log('tempData:' + JSON.stringify(tempData));
+				getAttendTimePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						var tempModel = {
+							AttendTypeNote: '姓名'
+						}
+						var tempModel1 = {
+							AttendTypeNote: '部门'
+						}
+						data.RspData.Data.splice(0, 0, tempModel1);
+						data.RspData.Data.splice(0, 0, tempModel);
+						attendData.attendTimeArray = [].concat(data.RspData.Data);
 						//获取管理的部门
 						getPersonDepart();
 					} else {
-						layer.alert('请重新登录获取个人信息');
+						//						layer.alert('请重新登录获取个人信息');
 					}
 				});
 			};
@@ -180,8 +206,11 @@
 						for(var i = 0; i < data.RspData.length; i++) {
 							var tempModel = data.RspData[i];
 							tempArr.push(tempModel.userid);
+							//给每一个人添加时间段数组
+							tempModel.timeList = attendData.attendTimeArray;
+							attendData.peopleArray.push(tempModel);
 						}
-						attendData.peopleArray = attendData.peopleArray.concat(tempArr);
+						attendData.peopleIdArray = attendData.peopleIdArray.concat(tempArr);
 					} else {
 						//layer.alert('获取部门出现问题');
 					}
@@ -215,42 +244,74 @@
 				return roots
 			}
 
-			//16.获取考勤统计
-			var getAttendStat = function(tempDepartArr) {
-				var startTime = $("#datemin").val();
-				var endTime = $("#datemax").val();
-				if(startTime == '') {
-					layer.alert('请选择开始时间');
-					return false;
-				} else if(endTime == '') {
-					layer.alert('请选择结束时间');
+			//15.获取考勤记录
+			var getAttend = function() {
+				var beginTime = $("#datemax").val();
+				beginTime = beginTime.replace(/-/g, '');
+				if(beginTime == '') {
+					layer.alert('请选择查询日期');
 					return false;
 				}
-				startTime = startTime.replace(/-/g, '');
-				endTime = endTime.replace(/-/g, '');
-				var tempData = {
-					corpId: attendData.userInfo.corpid, //单位ID
-					userId: tempDepartArr, //用户ID,例如：[“1”, “2”, “3”]
-					beginTime: startTime, //统计开始时间,年月日共八位如：20011010
-					endTime: endTime //统计结束时间,年月日共八位如：20011010
+				var tempData = {};
+				if(beginTime.length > 0) {
+					tempData = {
+						corpId: attendData.userInfo.corpid, //单位ID
+						userId: attendData.peopleIdArray, //用户ID,例如：[“1”, “2”, “3”]
+						beginTime: beginTime, //统计开始时间,年月日共八位如：20011010
+						endTime: beginTime, //统计结束时间,年月日共八位如：20011010
+						attendResultId: '0', //0：全部,1: 正常,2：迟到,3：早退
+						attendTypeId: '0', //0 为全部
+						attendAreaId: '0', //0 为全部
+						pageIndex: '1',
+						pageSize: '10' //0 为全部
+					}
+				} else {
+					var myDate = new Date().format('yyyy-MM-dd');
+					var endTime = myDate.toString().replace(/-/g, '');
+					tempData = {
+						corpId: attendData.userInfo.corpid, //单位ID
+						userId: attendData.peopleIdArray, //用户ID,例如：[“1”, “2”, “3”]
+						beginTime: endTime, //统计开始时间,年月日共八位如：20011010
+						endTime: endTime, //统计结束时间,年月日共八位如：20011010
+						attendResultId: '0', //0：全部,1: 正常,2：迟到,3：早退
+						attendTypeId: '0', //0 为全部
+						attendAreaId: '0', //0 为全部
+						pageIndex: '1',
+						pageSize: '10' //0 为全部
+					}
 				}
 				console.log('tempData:' + JSON.stringify(tempData));
-				getAttendStatPro(tempData, function(data) {
+				getAttendPro(tempData, function(data) {
 					if(data.RspCode == 0) {
-						//将获取到的统计，添加部门名称
-						for(var i = 0; i < data.RspData.Data.length; i++) {
-							var tempModel = data.RspData.Data[i];
-							for(var m = 0; m < attendData.departArray.length; m++) {
-								var tempModel1 = attendData.departArray[m];
-								if(tempModel.DeptId == tempModel1.value) {
-									tempModel.departName = tempModel1.title;
+						if(data.RspData.Data.length > 0) {
+							for(var i = 0; i < data.RspData.Data.length; i++) {
+								var tempModel = data.RspData.Data[i];
+								for(var m = 0; m < attendData.departArray.length; m++) {
+									var tempModel1 = attendData.departArray[m];
+									if(tempModel.DeptId == tempModel1.value) {
+										tempModel.departName = tempModel1.title;
+									}
+								}
+								for(var i = 0; i < attendData.peopleArray.length; i++) {
+									var tempModel1 = attendData.peopleArray[i];
+									if(tempModel.UserId == tempModel1.userid) {
+										for(var i = 0; i < tempModel1.timeList.length; i++) {
+											var timeModel = tempModel1.timeList[i];
+											if(tempModel.AttendType == timeModel.AttendType) {
+												//合并对象
+												timeModel = $.extend(timeModel, tempModel);
+											}
+										}
+									}
 								}
 							}
+							console.log('合并后的数据为:' + JSON.stringify(attendData.peopleArray));
+							attendData.flag = 1;
+						} else {
+
 						}
-						attendData.attendArray = [].concat(data.RspData.Data);
-						attendData.flag = 1;
 					} else {
-						//						layer.alert('请重新登录获取个人信息');
+						alert(data.RspTxt);
 					}
 				});
 			};

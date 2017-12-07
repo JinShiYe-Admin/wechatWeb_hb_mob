@@ -51,12 +51,24 @@
 			.weui-form-preview__label {
 				margin-right: 15px;
 			}
+
+			.weui-tab__bd {
+				margin-top: -50px;
+			}
+
+			.weui-tab__bd-item {
+				width: 100%;
+			}
+
+			.weui-tabbar {
+				bottom: -50px;
+			}
 		</style>
 		<script>
 			//动态设置样式
 			(function() {
 				var wsWidth = window.screen.width;
-				var valueWidth = wsWidth - 30 - 15 - 60 - 64 - 16 - 13;
+				var valueWidth = wsWidth - 30 - 15 - 62 - 64 - 16 - 13;
 				var style = document.createElement("style");
 				style.type = "text/css";
 				var sstr_0 = ".weui-form-preview__value{width: " + valueWidth + "px;}";
@@ -67,21 +79,9 @@
 	</head>
 
 	<body>
-		<!--<div id="pullDown" class="weui-pull-to-refresh__layer" style="display: none;">
-			<div class='weui-pull-to-refresh__arrow'></div>
-			<div class='weui-pull-to-refresh__preloader'></div>
-			<div class="down">下拉刷新</div>
-			<div class="up">释放刷新</div>
-			<div class="refresh">正在刷新</div>
-		</div>
-		<div id="leaveList" class="weui-cells weui-form-preview"></div>
-		<div id="pullUp" class="weui-loadmore">
-			<i class="weui-loading"></i>
-			<span class="weui-loadmore__tips">正在加载</span>
-		</div>-->
 		<div class="weui-tab">
-			<div class="weui-tab__bd" style="margin-top: -50px;">
-				<div class="weui-tab__bd-item weui-tab__bd-item--active weui-pull-to-refresh" style="width: 100%;">
+			<div class="weui-tab__bd">
+				<div class="weui-tab__bd-item weui-tab__bd-item--active weui-pull-to-refresh">
 					<div id="pullDown" class="weui-pull-to-refresh__layer" style="display: none;">
 						<div class='weui-pull-to-refresh__arrow'></div>
 						<div class='weui-pull-to-refresh__preloader'></div>
@@ -95,30 +95,30 @@
 						<span class="weui-loadmore__tips">正在加载</span>
 					</div>
 				</div>
-				<div class="weui-tabbar" style="bottom: -50px;">
+				<div class="weui-tabbar">
 					<a href="https://jsypay.jiaobaowang.net/wxth/appschweb/app/index.aspx" class="weui-tabbar__item">
 						<div class="weui-tabbar__icon">
-							<img class="img" src="../../../image/考勤/pic_ico_index0.png" alt="">
+							<img class="img" src="../../../image/utils/wxhome.png">
 						</div>
 						<p class="weui-tabbar__label">微校园</p>
 					</a>
 					<a href="addleaveapply.html" class="weui-tabbar__item">
 						<div class="weui-tabbar__icon">
-							<img class="img" src="../../../image/考勤/打卡灰.png" alt="">
+							<img class="img" src="../../../image/leave/apply.png">
 						</div>
 						<p class="weui-tabbar__label">请假申请</p>
 					</a>
 					<a href="mineleavelist.html" class="weui-tabbar__item weui-bar__item--on">
 						<div class="weui-tabbar__icon">
-							<img src="../../../image/考勤/考勤查询.png" alt="">
+							<img src="../../../image/leave/applyqueryactive.png">
 						</div>
 						<p class="weui-tabbar__label">请假查询</p>
 					</a>
 					<a id="checkItem" href="leave-check.html" class="weui-tabbar__item" style="display: none;">
 						<div class="weui-tabbar__icon">
-							<img src="../../../image/考勤/考勤查询灰.png" alt="">
+							<img src="../../../image/leave/checkquery.png">
 						</div>
-						<p class="weui-tabbar__label">审核查询</p>
+						<p class="weui-tabbar__label">请假审核</p>
 					</a>
 				</div>
 			</div>
@@ -136,6 +136,7 @@
 				var loading = false; //下拉,上拉状态标记
 				var page = 1; //当前页码
 				var mineUserInfo; //个人信息
+				var clickIndex; //点击的序号
 				var leaveApply = {
 					key: [],
 					value: {}
@@ -146,25 +147,42 @@
 
 				function initListener() {
 					$(".weui-cells").on("click", ".weui-cell", function(e) {
-						var index = $(".weui-cells .weui-cell").index(this);
-						var leave = leaveApply.value[leaveApply.key[index]];
+						clickIndex = $(".weui-cells .weui-cell").index(this);
+						var leave = leaveApply.value[leaveApply.key[clickIndex]];
 						console.log("leave", leave);
 						if(leave.ApplyStat == 0) {
 							//未审核
-							//							var myDate = new Date();
-							//							var skey = myDate.getTime() + "" + parseInt(Math.random() * 1000);
-							//							storageutil.setSessionStorage(skey, JSON.stringify(leave));
-							//							location.href = "addleaveapply.html?change=" + skey;
 							$.actions({
 								actions: [{
 									text: "编辑",
 									onClick: function() {
-										//do something
+										var myDate = new Date();
+										var sKey = myDate.getTime() + "" + parseInt(Math.random() * 1000);
+										var sValue = {
+											leave: leave,
+											mineUserInfo: mineUserInfo
+										}
+										storageutil.setSessionStorage(sKey, JSON.stringify(sValue));
+										location.href = "addleaveapply.html?change=" + sKey;
 									}
 								}, {
 									text: "删除",
+									className: "color-danger",
 									onClick: function() {
-										//do something
+										$.modal({
+											title: "提示",
+											text: "确定删除?",
+											buttons: [{
+												text: "取消",
+												className: "default",
+											}, {
+												text: "确定",
+												className: "color-danger",
+												onClick: function() {
+													delLeaveApply(leave.ApplyId);
+												}
+											}]
+										});
 									}
 								}]
 							});
@@ -192,32 +210,33 @@
 							className = "apply-state-nopassed";
 							stateName = "驳回";
 						}
+
 						html = html + '\
-					<div class="weui-cell weui-cell_access">\
-						<div class="weui-cell__bd weui-form-preview__bd">\
-							<div class="weui-form-preview__item">\
-								<label class="weui-form-preview__label">流程类型</label>\
-								<span class="weui-form-preview__value">' + data[i].ProcTypeName + '</span>\
-							</div>\
-							<div class="weui-form-preview__item">\
-								<label class="weui-form-preview__label">请假类型</label>\
-								<span class="weui-form-preview__value">' + data[i].LeaveTypeName + '</span>\
-							</div>\
-							<div class="weui-form-preview__item">\
-								<label class="weui-form-preview__label">开始时间</label>\
-								<span class="weui-form-preview__value">' + data[i].ApplyBeginTime + '</span>\
-							</div>\
-							<div class="weui-form-preview__item">\
-								<label class="weui-form-preview__label">结束时间</label>\
-								<span class="weui-form-preview__value">' + data[i].ApplyEndTime + '</span>\
-							</div>\
-							<div class="weui-form-preview__item">\
-								<label class="weui-form-preview__label">请假事由</label>\
-								<span class="weui-form-preview__value">' + data[i].ApplyReason + '</span>\
-							</div>\
-						</div>\
-						<div class="weui-cell__ft ' + className + '">' + stateName + '</div>\
-					</div>';
+							<div class="weui-cell weui-cell_access">\
+								<div class="weui-cell__bd weui-form-preview__bd">\
+									<div class="weui-form-preview__item">\
+										<label class="weui-form-preview__label">流程类型</label>\
+										<span class="weui-form-preview__value">' + data[i].ProcTypeName + '</span>\
+									</div>\
+									<div class="weui-form-preview__item">\
+										<label class="weui-form-preview__label">请假类型</label>\
+										<span class="weui-form-preview__value">' + data[i].LeaveTypeName + '</span>\
+									</div>\
+									<div class="weui-form-preview__item">\
+										<label class="weui-form-preview__label">开始时间</label>\
+										<span class="weui-form-preview__value">' + utils.initTime(data[i].ApplyBeginTime) + '</span>\
+									</div>\
+									<div class="weui-form-preview__item">\
+										<label class="weui-form-preview__label">结束时间</label>\
+										<span class="weui-form-preview__value">' + utils.initTime(data[i].ApplyEndTime) + '</span>\
+									</div>\
+									<div class="weui-form-preview__item">\
+										<label class="weui-form-preview__label">请假事由</label>\
+										<span class="weui-form-preview__value">' + data[i].ApplyReason + '</span>\
+									</div>\
+								</div>\
+								<div class="weui-cell__ft ' + className + '">' + stateName + '</div>\
+							</div>';
 					}
 					$("#leaveList").append(html);
 				}
@@ -272,6 +291,7 @@
 							initPullDown();
 							initPullUp();
 							initListener();
+							checkPower();
 							getLeaveApply(1);
 						} else {
 							$("#pullUp i").css("display", "none");
@@ -327,6 +347,41 @@
 							showData(data.RspData.Data);
 						} else {
 							$.alert("获取请假列表失败(" + data.RspTxt + ")", "提示");
+						}
+					});
+				}
+
+				/**
+				 * 删除请假申请
+				 */
+				function delLeaveApply(leaveApplyId) {
+					$.showLoading();
+					processRequest.postProcessData("delLeaveApply ", {
+						leaveApplyId: leaveApplyId
+					}, function(data) {
+						$.hideLoading();
+						if(data.RspCode == 0) {
+							$.toast("删除成功");
+							$(".weui-cells").find(".weui-cell")[clickIndex].remove();
+							leaveApply.key.splice(clickIndex, 1);
+							delete leaveApply.value[leaveApplyId];
+						} else {
+							$.alert("删除失败(" + data.RspTxt + ")", "提示");
+						}
+					});
+				}
+
+				/**
+				 * 检查是否有审核权限
+				 */
+				function checkPower() {
+					var tempData = {
+						corpId: mineUserInfo.corpid,
+						userId: mineUserInfo.userid,
+					}
+					processRequest.postProcessData("getApprPowerByUser ", tempData, function(data) {
+						if(data.RspCode == 0 && data.RspData.Result != 0) {
+							$("#checkItem").css("display", "block")
 						}
 					});
 				}

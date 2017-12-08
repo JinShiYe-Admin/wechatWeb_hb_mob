@@ -14,16 +14,16 @@
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
 		<style>
-			.edit_container {
+			/*.edit_container {
 				margin: 0 auto;
 				width: 1080px;
 			}
 			
-			.input-text:not(.piece) {
+			/*.input-text:not(.piece) {
 				width: 100%;
 				border: 0;
 				border-bottom: 1px solid #DDDDDD;
-			}
+			}*/
 			
 			.input-text.piece {
 				border: 0;
@@ -70,41 +70,94 @@
 		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 文章 <span class="c-gray en">&gt;</span> 文章添加编辑
 			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
 		</nav>
-		<div id="artical-pub" v-show="flag>0" style="display: none;">
-			<div class="edit_container">
-				<div>
-					<select class="select" id="chnid" name="one" v-model="curColIndex" style="height: 45px;font-size: 17px;color: #929292;" v-on:change="getStatus($event)">
-						<option value="-1">请选择所属栏目....</option>
-						<option v-for="(item,index) in columns" :value="index">{{item.cname}}</option>
-					</select>
+		<div id="artical-pub" v-show="flag>0">
+			<form class="edit_container form form-horizontal">
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>分类栏目：</label>
+					<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+				<select name="articlecolumn" class="select" id="chnid" name="one" v-model="curColIndex" v-on:change="getStatus($event)">
+					<option value="-1">请选择所属栏目....</option>
+					<option v-for="(item,index) in columns" :value="index">{{item.cname}}</option>
+				</select>
+				</span> </div>
 				</div>
-				<input v-model.trim.lazy="artical.topic" id="cname" class="artical-title input-text size-L" type="text" maxlength="64" placeholder="在此输入标题" />
-				<input v-model.trim.lazy="artical.subtopic" id="fname" class="artical-subtitle input-text size-L" type="text" maxlength="64" placeholder="在此输入副标题" />
-				<textarea v-model.trim.lazy="artical.summas" id="summas" class="textarea" placeholder="在此输入文章摘要"></textarea>
-				<!--<select-load-pic v-bind:index="-1" v-on:uploadedfile="getHeadImg" :files="artical.encs" @delete-file="deleteHeadImg"></select-load-pic>-->
-				<p class="artical-pieces-title">文章内容</p>
-				<template v-for="(piece,index) in pieces">
-					<div class="artical-piece">
-						<input class="piece-title input-text size-L" v-model.trim.lazy="piece.title" type="text" maxlength="64" placeholder="在此输入节标题" />
-						<textarea class="piece-container textarea radius" v-model.trim.lazy="piece.content" placeholder="在此输入节内容"></textarea>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>文章标题：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" class="input-text" v-model.trim.lazy="artical.topic" id="cname" class="artical-title input-text size-L" type="text" maxlength="64" placeholder="在此输入标题">
 					</div>
-					<div>
-						<p v-if="piece.files.lenth>0"></p>
-						<select-load-pic :index="index" v-on:uploadedfile="getPieceImg" :files="piece.files" @delete-file="deletePieceImg(index)" v-bind:original-name="piece.files|getFileName"></select-load-pic>
-						<input id="add-piece" v-if="pieces.length<5" v-on:click="addPiece(piece,index)" class="btn btn-primary radius float-right" type="button" value="添加段落">
-						<input id="del-piece" v-if="pieces.length>1" v-on:click="delPiece(piece,index)" class="btn btn-warning radius float-right" type="button" value="删除段落">
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">文章副标题：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input v-model.trim.lazy="artical.subtopic" id="fname" class="input-text" type="text" maxlength="64" placeholder="在此输入副标题">
+					</div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">文章摘要：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<textarea v-model.trim.lazy="artical.summas" id="summas" class="textarea" placeholder="在此输入文章摘要" onKeyUp="$.Huitextarealength(this,200)"></textarea>
+						<!--<p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>-->
+					</div>
+				</div>
+				<!--<select-load-pic v-bind:index="-1" v-on:uploadedfile="getHeadImg" :files="artical.encs" @delete-file="deleteHeadImg"></select-load-pic>-->
+				<div class="row cl">
+					<h5 class="form-label col-xs-4 col-sm-2" style="color: darkgray;">文章内容</h5>
+				</div>
+				<template v-for="(piece,index) in pieces">
+					<div class="row cl">
+						<label class="form-label col-xs-4 col-sm-2">节标题：</label>
+						<div class="formControls col-xs-8 col-sm-9">
+							<input class="input-text" v-model.trim.lazy="piece.title" type="text" maxlength="64" placeholder="在此输入节标题">
+						</div>
+					</div>
+					<div class="row cl">
+						<label class="form-label col-xs-4 col-sm-2">节内容：</label>
+						<div class="formControls col-xs-8 col-sm-9">
+							<textarea v-model.trim.lazy="artical.summas" id="summas" class="textarea" v-model.trim.lazy="piece.content" placeholder="在此输入节内容" onKeyUp="$.Huitextarealength(this,200)"></textarea>
+							<!--<p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>-->
+						</div>
+					</div>
+					<div class="row cl">
+						<label class="form-label col-xs-4 col-sm-2">缩略图：</label>
+						<div class="formControls col-xs-8 col-sm-9">
+							<div class="uploader-thum-container">
+								<select-load-pic style="width: 100%;" :index="index" v-on:uploadedfile="getPieceImg" :files="piece.files" @delete-file="deletePieceImg(index)" v-bind:original-name="piece.files|getFileName"></select-load-pic>
+
+							</div>
+						</div>
+
+					</div>
+					<div class="row cl">
+						<label class="form-label col-xs-4 col-sm-2"></label>
+						<div class="formControls col-xs-8 col-sm-9">
+							<div class="uploader-thum-container">
+								<input id="add-piece" v-if="pieces.length<5" v-on:click="addPiece(piece,index)" class="btn btn-primary radius float-right" type="button" value="添加段落">
+								<input id="del-piece" v-if="pieces.length>1" v-on:click="delPiece(piece,index)" class="btn btn-warning radius float-right" type="button" value="删除段落">
+
+							</div>
+						</div>
+
 					</div>
 				</template>
 				<br />
-				<span><i class="icon Hui-iconfont Hui-iconfont-more2"></i></span><input type="url" id="islink" v-model.trim.lazy="artical.quourl" class="artical-url input-text size-L" placeholder="请输入原文链接" />
-				<div>
-					<div class="check-box">
-						<label for="checkbox-1">是否可评论</label>
-						<input type="checkbox" id="isReply" v-model.lazy="artical.isreply">
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2"><span><i class="icon Hui-iconfont Hui-iconfont-link"></i>原文链接：</span></label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input class="input-text" type="url" id="islink" v-model.trim.lazy="artical.quourl" class="artical-url input-text" placeholder="请输入原文链接">
 					</div>
-					<input class="btn btn-primary radius float-right" v-if="artical.type=='add'" v-on:click="publishArtical" type="button" value="发送">
 				</div>
-			</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">允许评论：</label>
+					<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+						<div class="check-box">
+							<input type="checkbox" type="checkbox" id="isReply" v-model.lazy="artical.isreply">
+							<label for="checkbox-pinglun">&nbsp;</label>
+						</div>
+						<button class="btn btn-primary radius float-right" v-if="artical.type=='add'" type="button" v-on:click="publishArtical"><i class="Hui-iconfont">&#xe632;</i> 提交审核</button>
+					</div>
+				</div>
+			</form>
 			<div id="dia-delPiece" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content radius">
@@ -125,9 +178,9 @@
 		</div>
 		<template id="temp_select_load_pic">
 			<div>
-				<span :id="index|idFilter" class="btn-upload form-group">
+				<span style="width: 100%;" :id="index|idFilter" class="btn-upload form-group">
 					<input :value="originalName" accept="image/jpeg,image/png"  class="input-text upload-url radius piece" type="text" readonly :placeholder="index|placeHolder" />
-					<a href="" id="upload" class="btn btn-primary radius"><i class="Hui-iconfont Hui-iconfont-upload"></i> 浏览文件</a>
+					<a href="" id="upload" class="btn btn-primary radius float-right"><i class="Hui-iconfont Hui-iconfont-upload"></i> 浏览文件</a>
 					<input type="file" accept="image/jpeg,image/png" value="dsafd" v-on:change="selectFile($event)" class="input-file" />
 				</span>
 				<div class="select-file" style="" v-if="files.length!=0">
@@ -203,15 +256,15 @@
 				//			},
 				//			deep: true
 				//		}
-								pieces: function(newVal, oldVal) { //片段增减的判断
-									console.log("newVal" + JSON.stringify(newVal));
-									console.log("oldVal:" + JSON.stringify(oldVal));
-								}
+				pieces: function(newVal, oldVal) { //片段增减的判断
+					console.log("newVal" + JSON.stringify(newVal));
+					console.log("oldVal:" + JSON.stringify(oldVal));
+				}
 			},
 			filters: {
-				getFileName:function(val){
-					console.log("************#######2@@@@@@@@@@@@@"+JSON.stringify(val));
-					if(val.length==0){
+				getFileName: function(val) {
+					console.log("************#######2@@@@@@@@@@@@@" + JSON.stringify(val));
+					if(val.length == 0) {
 						return ''
 					}
 					return val[0].newname
@@ -264,14 +317,14 @@
 					if(articalPublish.artical.quourl.trim().length > 0) {
 						tempQuo = 1;
 						//判断是否为链接
-						if (CheckUrl(articalPublish.artical.quourl.trim())) {
-							
-						}else{
+						if(CheckUrl(articalPublish.artical.quourl.trim())) {
+
+						} else {
 							alert('请输入正确的url');
 							return false;
 						}
 					} else {
-						
+
 					}
 					//拼接内容，
 					var tempContent0 = ''; //检查总段落内容，是否全部为空

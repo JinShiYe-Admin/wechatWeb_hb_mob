@@ -47,13 +47,15 @@
 			.item-info {
 				font-size: 0.8em;
 			}
-			.weui-tab__bd{
+			
+			.weui-tab__bd {
 				position: fixed;
 				top: 0;
 				bottom: 50px;
 				left: 0;
 				right: 0;
 			}
+			
 			.weui-tab__bd {
 				height: auto;
 			}
@@ -199,6 +201,9 @@
 					});
 				},
 				methods: {
+					/**
+					 * 初始化界面
+					 */
 					initialData: function() {
 						for(var i = 0; i < 10; i++) {
 							this.tabs[this.activeId].list.push({
@@ -223,11 +228,46 @@
 					setActiveId: function(id) {
 						this.activeId = id;
 					},
+					/**
+					 * 请求数据
+					 */
 					requestList: function() {
+						console.log("****reauestList获取审核列表****")
+						var com = this;
+						processRequest.postProcessData("getProcessApprove", {
+							corpId: com.corpId,
+							apprMan: com.selfId,
+							apprStat: com.activeId,
+							pageIndex: com.tabs[com.activeId].pageIndex,
+							pageSize: 10
+						}, function(response) {
+							console.log("获取的审核列表数据：" + JSON.stringify(response))
+							if(response.RspCode == 0) {
+								com.setData(response.RspData);
+							} else {
 
+							}
+						})
 					},
+					/**
+					 * 设置数据
+					 * @param {Object} data
+					 */
+					setData: function(data) {
+						var activeTab = this.tabs[this.activeId];
+						if(activeTab.pageIndex === 1) {
+							activeTab.list = data;
+						} else {
+							activeTab.list = activeTab.list.concat(data);
+						}
+					},
+					/**
+					 * 刷新列表
+					 */
 					refreshList: function() {
-
+						var activeTab = this.tabs[this.activeId];
+						activeTab.pageIndex = 1;
+						this.requestList();
 					},
 					loadMore: function() {
 						this.tabs[this.activeId].list.push({

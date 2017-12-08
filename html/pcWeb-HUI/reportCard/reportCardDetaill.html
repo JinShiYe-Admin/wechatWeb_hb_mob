@@ -38,79 +38,29 @@
 
 	<body>
 
-		<div id="content" class="weui-cells weui-cells_form">
-			<!--输入列表-->
-			<div id="input_list">
-				<div class="weui-cells__title">成绩单名称</div>
-				<div class="weui-cells">
-					<div class="weui-cell">
-						<div class="weui-cell__bd">
-							<input v-model="cname" class="weui-input" type="text">
-						</div>
-					</div>
-				</div>
-				<div class="weui-cells__title">部门名称</div>
-				<div class="weui-cells">
-					<div class="weui-cell">
-						<div class="weui-cell__bd">
-							<input v-model="dptname" class="weui-input" type="text">
-						</div>
-					</div>
-				</div>
-				<div id="column_table" class="page-container">
-			<div class="cl pd-5 bg-1 bk-gray">
-				<span class="l">
-					<a class="btn btn-primary radius" @click="add"><i class="Hui-iconfont"></i> 添加成绩单</a>
-				</span>
-				<span class="select-box inline">
-					<select id="stateSelect" class="select" title="选择部门">
-						<option value="-1">开发部</option>
-						<option value="0">行政部</option>
-						<option value="1">财务部</option>
-					</select>
-				</span>
-				<span class="select-box inline">
-					<select id="stateSelect" class="select" title="选择成绩单名称">
-						<option value="-1">开发部成绩单</option>
-						<option value="0">行政部成绩单</option>
-						<option value="1">财务部成绩单</option>
-					</select>
-				</span>
+		<div id="content">
+
+			<div id="column_table" class="page-container">
+
+				<table class="table table-border table-bordered table-bg">
+					<thead class="text-c">
+						<tr >
+							<th v-for="(item,index) in subs">{{item.subname}}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!--<tr class="text-c" v-for="(item,index) in dt2">
+							<td>{{item.cname}}</td>
+							<td>{{item.dptname}}</td>
+
+						</tr>-->
+					</tbody>
+				</table>
 			</div>
-						<table class="table table-border table-bordered table-bg">
-				<thead class="text-c">
-					<tr>
-						<th>成绩单名称</th>
-						<th>部门名称</th>
-						<th>记录者</th>
-						<th>记录时间</th>
-						<th>操作</th>
+			<div id="pages" style="margin-top: 20px;"></div>
 
-					</tr>
-				</thead>
-				<tbody>
-					<tr class="text-c" v-for="(item,index) in dt">
-						<td>{{item.cname}}</td>
-						<td>{{item.dptname}}</td>
-						<td>{{item.recname}}</td>
-						<td>{{item.rectime}}</td>
-						<td class="sorting_1">
-							<a class="operate-edit" @click="clickEdit(item)" title="浏览"><i class="Hui-iconfont"></i></a>
-							<a style="text-decoration:none" class="ml-5" @click="clickDel(item)" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
-
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		<div id="pages" style="margin-top: 20px;"></div>
 		</div>
 
-
-			</div>
-
-	
-	
 		</div>
 
 		<script src="../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
@@ -142,22 +92,88 @@
 			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/pluploadutil.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 		<script>
-
 			var content = new Vue({
 				el: '#content',
 				data: {
-					cname: "开发部成绩单",
-					dptname:"开发部",
-					
+					subs: [{
+						subid:1,
+						subname:"数学"
+					},{
+						subid:2,
+						subname:"数学"
+					},{
+						subid:3,
+						subname:"数学"
+					},{
+						subid:4,
+						subname:"数学"
+					},{
+						subid:5,
+						subname:"数学"
+					},{
+						subid:6,
+						subname:"数学"
+					}],
+					dt2: [{
+						cname: "开发部成绩单",
+						dptname: "开发部"
+					}],
+
 				},
 				methods: {}
 
 			})
+			var dptid;
+			var examid;
 			window.onload = function() {
-
+				var detail = utils.getDataFromUrl(window.location.href);
+				console.log('detail=' + JSON.stringify(detail));
+				dptid = detail.dptid;
+				examid = detail.examid;
+				getexam()
+			}
+			//给数组去重
+			var arrayDupRemoval = function(array) {
+				var res = [];
+				var json = {};
+				for(var i = 0; i < array.length; i++) {
+					if(!json[array[i]]) {
+						res.push(array[i]);
+						json[array[i]] = 1;
+					}
+				}
+				return res;
 			}
 
-
+			function getexam() {
+				var tempData = {
+					cmd: 'examadmin',
+					type: 'findpage',
+					dptid: dptid,
+					examid: examid,
+					pagesize: 10,
+					pageindex: 1
+				}
+				console.log("查询参数：" + JSON.stringify(tempData));
+				unitWebsitePro(tempData, function(data) {
+					console.log("成绩单" + JSON.stringify(data));
+					if(data.RspCode == 0) {
+						content.dt2 = data.RspData.dt2;
+						var subid_arr = [];
+						for(var i = 0; i < content.dt2.length; i++) {
+							var model = content.dt2[i];
+							var tempObj = {
+								subid: model.subid,
+								subname: model.subname,
+							}
+							if(!subid_arr.contains(model.subid))
+								subid_arr.push(model.subid);
+								content.subs.push(tempObj);
+						}
+					} else {
+					}
+				});
+			}
 		</script>
 	</body>
 

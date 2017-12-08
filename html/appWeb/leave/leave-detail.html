@@ -75,53 +75,60 @@
 				opacity: 1;
 				display: block;
 			}
+			
+			.check-detail {
+				margin-bottom: 50px;
+			}
 		</style>
 	</head>
 
 	<body>
-		<div id="detail-container" class="page actionsheet js_show">
-			<div class="weui-cells person-container weui-flex">
-				<img v-bind:src="applyDetail.ApplyManPic" class="head-portrait display-inline">
-				<div class="display-inline name-time-container">
-					<p class="apply-name">{{applyDetail.ApplyManName}}</p>
-					<p class="apply-time apply-info-container"><span class="apply-hint">申请时间:</span>{{applyDetail.ApplyTime}}</p>
-				</div>
-			</div>
-			<div class="apply-type-container weui-cells">
-				<p class="leave-type apply-info-container"><span class="apply-hint">请假类型:</span>{{applyDetail.LeaveTypeName}}</p>
-				<p class="process-type apply-info-container"><span class="apply-hint">流程类型:</span>{{applyDetail.ProcTypeName}}</p>
-			</div>
-			<div class="apply-time-container weui-cells">
-				<p class="time-length apply-info-container"><span class="apply-hint">请假时长:</span>{{applyDetail.ApplyBeginEndCnt}}</p>
-				<p class="begin-time apply-info-container"><span class="apply-hint">开始时间:</span>{{applyDetail.ApplyBeginTime}}</p>
-				<p class="end-time apply-info-container"><span class="apply-hint">结束时间:</span>{{applyDetail.ApplyEndTime}}</p>
-			</div>
-			<div class="detail-info weui-cells">
-				<p class="apply-reason apply-info-container"><span class="apply-hint">请假缘由:</span>{{applyDetail.ApplyReason}}</p>
-				<div class="apply-imgs apply-info-container weui-uploader">
-					<div class="weui-uploader__hd">
-						<p><span class="apply-hint">图片附件:</span></p>
-					</div>
-					<div class="weui-uploader__bd">
-						<ul class="weui-uploader__files">
-							<li class="weui-uploader__file" v-on:click="showGallery=true" v-bind:style="{backgroundImage:'url(' +applyDetail.ApplyReasonThumb+ ')'}">
 
-							</li>
-						</ul>
+		<div id="detail-container" class="page actionsheet js_show" style="position: relative;">
+			<div class="check-detail">
+				<div class="weui-cells person-container weui-flex">
+					<img v-bind:src="applyDetail.ApplyManPic" class="head-portrait display-inline">
+					<div class="display-inline name-time-container">
+						<p class="apply-name">{{applyDetail.ApplyManName}}</p>
+						<p class="apply-time apply-info-container"><span class="apply-hint">申请时间:</span>{{applyDetail.ApplyTime}}</p>
 					</div>
 				</div>
-			</div>
-			<!--<template>-->
-			<div class="weui-cells__title">
-				审批详情
-			</div>
-			<div class="weui-cells">
-				<div v-for="check in checkList" class="weui-cell apply-info-container">
-					<p>{{check.ApprTime}}</p>
-					<p><span class="check-person check-button">{{check.ApprManName}}:</span>{{check.ApprNote}}</p>
+				<div class="apply-type-container weui-cells">
+					<p class="leave-type apply-info-container"><span class="apply-hint">请假类型:</span>{{applyDetail.LeaveTypeName}}</p>
+					<p class="process-type apply-info-container"><span class="apply-hint">流程类型:</span>{{applyDetail.ProcTypeName}}</p>
 				</div>
+				<div class="apply-time-container weui-cells">
+					<p class="time-length apply-info-container"><span class="apply-hint">请假时长:</span>{{applyDetail.ApplyBeginEndCnt}}</p>
+					<p class="begin-time apply-info-container"><span class="apply-hint">开始时间:</span>{{applyDetail.ApplyBeginTime}}</p>
+					<p class="end-time apply-info-container"><span class="apply-hint">结束时间:</span>{{applyDetail.ApplyEndTime}}</p>
+				</div>
+				<div class="detail-info weui-cells">
+					<p class="apply-reason apply-info-container"><span class="apply-hint">请假缘由:</span>{{applyDetail.ApplyReason}}</p>
+					<div class="apply-imgs apply-info-container weui-uploader">
+						<div class="weui-uploader__hd">
+							<p><span class="apply-hint">图片附件:</span></p>
+						</div>
+						<div class="weui-uploader__bd">
+							<ul class="weui-uploader__files">
+								<li class="weui-uploader__file" v-on:click="showGallery=true" v-bind:style="{backgroundImage:'url(' +applyDetail.ApplyReasonThumb+ ')'}">
+
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!--<template>-->
+				<div class="weui-cells__title">
+					审批详情
+				</div>
+				<div class="weui-cells">
+					<div v-for="check in checkList" class="weui-cell apply-info-container">
+						<p>{{check.ApprTime}}</p>
+						<p><span class="check-person check-button">{{check.ApprManName}}:</span>{{check.ApprNote}}</p>
+					</div>
+				</div>
+				<!--</template>-->
 			</div>
-			<!--</template>-->
 			<div class="weui-cell weui-cell_vcode input-container">
 				<div class="weui-cell__bd">
 					<input type="text" class="weui-input" v-model.trim="approveNote" placeholder="请输入内容" />
@@ -196,7 +203,9 @@
 					showGallery: false,
 					showOptions: false,
 					showToast: false,
-					approveNote: ""
+					approveNote: "",
+					pageIndex: 1,
+					pageSize: 0
 				},
 				mounted: function() {
 
@@ -205,11 +214,28 @@
 					getDetail: function() {
 
 					},
+					getApprList: function() {
+						console.log("获取审核数据")
+						var com = this;
+						processRequest.postProcessData("getProcessApproveById", {
+							applyId: 1,
+							pageIndex: this.pageIndex,
+							pageSize: this.pageSize
+						}, function(response) {
+							console.log("获取的数据：" + JSON.stringify(response));
+							if(response.RspCode == 0) {
+								com.checkList = data.RspData;
+							} else {
+
+							}
+						})
+					},
 					/**
 					 * 修改审核流程
 					 * @param {Object} type 设置的审核流程
 					 */
 					setProcessApprove: function(type) {
+						console.log("设置审核流程")
 						var com = this;
 						com.showToast = true;
 						processRequest.postProcessData("setProcessApprove", {
@@ -217,6 +243,7 @@
 							procApproveNote: com.approveNote,
 							proApproveStat: type
 						}, function(response) {
+							console.log("设置审核流程的结果：" + JSON.stringify(response))
 							com.showToast = false;
 							if(response.RspCode == 0) {
 								com.showOptions = false
@@ -225,6 +252,12 @@
 
 							}
 						});
+					},
+					/**
+					 * 返回前一页
+					 */
+					historyBack: function() {
+						window.history.go(-1);
 					}
 				}
 			})

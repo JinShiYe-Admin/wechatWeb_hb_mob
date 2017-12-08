@@ -44,16 +44,17 @@
 
 				<table class="table table-border table-bordered table-bg">
 					<thead class="text-c">
-						<tr >
+						<tr>
+							<th>姓名</th>
 							<th v-for="(item,index) in subs">{{item.subname}}</th>
 						</tr>
 					</thead>
 					<tbody>
-						<!--<tr class="text-c" v-for="(item,index) in dt2">
-							<td>{{item.cname}}</td>
-							<td>{{item.dptname}}</td>
+						<tr class="text-c" v-for="(item,index) in stu_data">
+							<td>{{item.stuname}}</td>
+							<td v-for="(item1,index1) in subs">{{item.subscore[index1].subscore}}</td>
 
-						</tr>-->
+						</tr>
 					</tbody>
 				</table>
 			</div>
@@ -96,24 +97,19 @@
 				el: '#content',
 				data: {
 					subs: [{
-						subid:1,
-						subname:"数学"
-					},{
-						subid:2,
-						subname:"数学"
-					},{
-						subid:3,
-						subname:"数学"
-					},{
-						subid:4,
-						subname:"数学"
-					},{
-						subid:5,
-						subname:"数学"
-					},{
-						subid:6,
-						subname:"数学"
+						subid: 1,
+						subname: "数学"
+					}, {
+						subid: 2,
+						subname: "语文"
+					}, {
+						subid: 3,
+						subname: "英语"
+					}, {
+						subid: 4,
+						subname: "物理"
 					}],
+					stu_data: [],
 					dt2: [{
 						cname: "开发部成绩单",
 						dptname: "开发部"
@@ -130,19 +126,8 @@
 				console.log('detail=' + JSON.stringify(detail));
 				dptid = detail.dptid;
 				examid = detail.examid;
+
 				getexam()
-			}
-			//给数组去重
-			var arrayDupRemoval = function(array) {
-				var res = [];
-				var json = {};
-				for(var i = 0; i < array.length; i++) {
-					if(!json[array[i]]) {
-						res.push(array[i]);
-						json[array[i]] = 1;
-					}
-				}
-				return res;
 			}
 
 			function getexam() {
@@ -160,17 +145,82 @@
 					if(data.RspCode == 0) {
 						content.dt2 = data.RspData.dt2;
 						var subid_arr = [];
+						var stuname_arr = [];
 						for(var i = 0; i < content.dt2.length; i++) {
 							var model = content.dt2[i];
 							var tempObj = {
 								subid: model.subid,
 								subname: model.subname,
 							}
-							if(!subid_arr.contains(model.subid))
+							if(!subid_arr.contains(model.subid)) {
 								subid_arr.push(model.subid);
 								content.subs.push(tempObj);
+							}
+							if(!stuname_arr.contains(model.stuname)) {
+								stuname_arr.push(model.stuname);
+							}
+
+						}
+						for(var i = 0; i < stuname_arr.length; i++) {
+							var stuname = stuname_arr[i];
+							var score_arr = [];
+							for(var j = 0; j < content.dt2.length; j++) {
+								var model = content.dt2[j]
+								if(model.stuname == stuname) {
+									var scores = {
+										subid: model.subid,
+										subname: model.subname,
+										subscore: model.subscore,
+									}
+									score_arr.push(scores);
+								}
+							}
+							var tempData = {
+								stuname:stuname,
+								subscore:score_arr
+							}
+							content.stu_data.push(tempData);
 						}
 					} else {
+						content.stu_data = [{
+							stuname: '宋艳明',
+							subscore: [{
+								subid: 1,
+								subname: '数学',
+								subscore: '100'
+							}, {
+								subid: 1,
+								subname: '语文',
+								subscore: '100'
+							}, {
+								subid: 1,
+								subname: '英语',
+								subscore: '100'
+							}, {
+								subid: 1,
+								subname: '物理',
+								subscore: '100'
+							}]
+						}, {
+							stuname: '顾元生',
+							subscore: [{
+								subid: 1,
+								subname: '数学',
+								subscore: '90'
+							}, {
+								subid: 2,
+								subname: '语文',
+								subscore: '90'
+							}, {
+								subid: 3,
+								subname: '英语',
+								subscore: '90'
+							}, {
+								subid: 4,
+								subname: '物理',
+								subscore: '90'
+							}]
+						}, ]
 					}
 				});
 			}

@@ -35,7 +35,8 @@ Vue.component("process-setting", {
 			totalPage: 1,
 			name: "",
 			note: "",
-			stat: 1
+			stat: 1,
+			pageNo: 1
 		}
 	},
 	methods: {

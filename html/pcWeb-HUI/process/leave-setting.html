@@ -132,6 +132,10 @@
 				margin-left: 0;
 				margin-right: 0;
 			}
+			
+			.select-page {
+				color: dodgerblue;
+			}
 		</style>
 	</head>
 
@@ -152,9 +156,9 @@
 						<tr class="text-c">
 							<th width="300">请假类型</th>
 							<th width="300">请假关系</th>
-							<th >备注</th>
+							<th>备注</th>
 							<th width="100">状态</th>
-							<th width="100">操作</th>
+							<th width="120">操作</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -174,6 +178,11 @@
 						</tr>
 					</tbody>
 				</table>
+				<div class="float-right pageNo-container">
+					<button v-on:click="lastPage()">上一页</button>
+					<span v-for="pageNo in totalPage" v-bind:class="[{'select-page':pageNo==pageIndex},'page-no']">{{pageNo}}</span>
+					<button v-on:click="nextPage()">下一页</button>
+				</div>
 				<form id="edit-pocessInfo" style="display: none;" class="form form-horizontal" id="form-member-add">
 					<div class="row cl">
 						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>请假类型：</label>

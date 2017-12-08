@@ -39,7 +39,8 @@
 	<body>
 
 		<div id="content">
-
+			<p style="color: black;margin-top: 10px;margin-left: 10px;">{{info.cname}}</p>
+			<p style="font-size: 12px;color: darkgray;margin-left: 10px;">{{info.dptname+" "+info.recname+" "+info.rectime.replace("T"," ")}}</p>
 			<div id="column_table" class="page-container">
 
 				<table class="table table-border table-bordered table-bg">
@@ -52,13 +53,12 @@
 					<tbody>
 						<tr class="text-c" v-for="(item,index) in stu_data">
 							<td>{{item.stuname}}</td>
-							<td v-for="(item1,index1) in subs">{{item.subscore[index1].subscore}}</td>
+							<td v-for="(item1,index1) in subs">{{item['score'+item1.subid]}}</td>
 
 						</tr>
 					</tbody>
 				</table>
 			</div>
-			<div id="pages" style="margin-top: 20px;"></div>
 
 		</div>
 
@@ -96,6 +96,7 @@
 			var content = new Vue({
 				el: '#content',
 				data: {
+					info: {},
 					subs: [{
 						subid: 1,
 						subname: "数学"
@@ -110,10 +111,6 @@
 						subname: "物理"
 					}],
 					stu_data: [],
-					dt2: [{
-						cname: "开发部成绩单",
-						dptname: "开发部"
-					}],
 
 				},
 				methods: {}
@@ -143,84 +140,61 @@
 				unitWebsitePro(tempData, function(data) {
 					console.log("成绩单" + JSON.stringify(data));
 					if(data.RspCode == 0) {
-						content.dt2 = data.RspData.dt2;
 						var subid_arr = [];
 						var stuname_arr = [];
-						for(var i = 0; i < content.dt2.length; i++) {
-							var model = content.dt2[i];
+						var dt2 = data.RspData.dt2;
+						content.info = data.RspData.dt[0];
+						for(var i = 0; i < dt2.length; i++) {
+							var model = dt2[i];
 							var tempObj = {
 								subid: model.subid,
 								subname: model.subname,
 							}
-							if(!subid_arr.contains(model.subid)) {
+							if(subid_arr.indexOf(model.subid) == -1) {
 								subid_arr.push(model.subid);
 								content.subs.push(tempObj);
 							}
-							if(!stuname_arr.contains(model.stuname)) {
+							if(stuname_arr.indexOf(model.stuname) == -1) {
 								stuname_arr.push(model.stuname);
 							}
 
 						}
 						for(var i = 0; i < stuname_arr.length; i++) {
 							var stuname = stuname_arr[i];
-							var score_arr = [];
-							for(var j = 0; j < content.dt2.length; j++) {
-								var model = content.dt2[j]
+							var score_obj = {};
+							for(var k = 1; k < subid_arr.length; k++) {
+								var subid = subid_arr[k]
+								score_obj['score' + subid] = "";
+							}
+							for(var j = 0; j < dt2.length; j++) {
+								var model = dt2[j]
 								if(model.stuname == stuname) {
-									var scores = {
-										subid: model.subid,
-										subname: model.subname,
-										subscore: model.subscore,
-									}
-									score_arr.push(scores);
+									score_obj['score' + model.subid] = model.subscore;
 								}
 							}
-							var tempData = {
-								stuname:stuname,
-								subscore:score_arr
-							}
-							content.stu_data.push(tempData);
+							score_obj.stuname = stuname;
+							content.stu_data.push(score_obj);
 						}
 					} else {
+						content.info = {
+							cname: "开发部成绩单",
+							dptname: "开发部",
+							recname: "宋艳明",
+							rectime: "2017/12/6T14:00"
+						}
 						content.stu_data = [{
 							stuname: '宋艳明',
-							subscore: [{
-								subid: 1,
-								subname: '数学',
-								subscore: '100'
-							}, {
-								subid: 1,
-								subname: '语文',
-								subscore: '100'
-							}, {
-								subid: 1,
-								subname: '英语',
-								subscore: '100'
-							}, {
-								subid: 1,
-								subname: '物理',
-								subscore: '100'
-							}]
+							score1: 100,
+							score2: 100,
+							score3: "",
+							score4: 100,
 						}, {
 							stuname: '顾元生',
-							subscore: [{
-								subid: 1,
-								subname: '数学',
-								subscore: '90'
-							}, {
-								subid: 2,
-								subname: '语文',
-								subscore: '90'
-							}, {
-								subid: 3,
-								subname: '英语',
-								subscore: '90'
-							}, {
-								subid: 4,
-								subname: '物理',
-								subscore: '90'
-							}]
-						}, ]
+							score1: 90,
+							score2: 90,
+							score3: 90,
+							score4: 90,
+						}]
 					}
 				});
 			}

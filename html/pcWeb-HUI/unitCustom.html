@@ -1,9 +1,695 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
-		<meta charset="UTF-8">
-		<title></title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>单位自定义模块</title>
+		<script type="text/javascript">
+			var WebVersion = "?" + Math.random();
+		</script>
+		<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css" />
+		<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css" />
+		<link rel="stylesheet" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+		<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" />
+		<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
+		<style>
+			.operate-edit,
+			.operate-del {
+				text-decoration: none;
+			}
+
+			#pages {
+				margin-top: 20px;
+			}
+
+			#dataAdd .row {
+				margin-left: 0;
+				margin-right: 0;
+			}
+
+			.submit-button,
+			.select-state {
+				margin-bottom: 15px;
+			}
+
+			.bk-gray .select-box {
+				margin-left: 5px;
+			}
+
+			.picture-show {
+				width: 100px;
+				height: 100px;
+				overflow: hidden;
+				margin: 15px 0;
+				display: flex;
+				display: -webkit-flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.picture-show img,
+			#dataList img {
+				width: 100%;
+			}
+
+			.check-box {
+				padding-left: 0;
+				cursor: initial;
+			}
+
+			.operate-edit {
+				margin-left: 10px;
+			}
+
+			.Hui-iconfont-del3 {
+				color: red;
+			}
+
+			.Hui-iconfont-yanjing {
+				color: #5eb95e;
+			}
+
+			.Hui-iconfont-niming {
+				color: #999;
+			}
+		</style>
 	</head>
+
 	<body>
+		<nav class="breadcrumb"><i class="Hui-iconfont Hui-iconfont-home2"></i> 首页 <span class="c-gray en">&gt;</span> 单位配置 <span class="c-gray en">&gt;</span> 单位自定义模块
+			<a class="btn btn-success radius r" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont Hui-iconfont-huanyipi"></i></a>
+		</nav>
+		<div class="page-container">
+			<div class="cl pd-5 bg-1 bk-gray">
+				<span class="l">
+					<a id="addBtn" class="btn btn-primary radius"><i class="Hui-iconfont Hui-iconfont-add"></i> 添加模块</a>
+				</span>
+				<span class="select-box inline">
+					<select id="stateSelect" class="select" title="修改查询模块状态">
+						<option value="-1">全部状态</option>
+						<option value="0">屏蔽状态</option>
+						<option value="1">正常状态</option>
+					</select>
+				</span>
+			</div>
+			<table class="table table-border table-bordered table-bg">
+				<thead class="text-c">
+					<tr>
+						<th style="width: 15%;">模块名称</th>
+						<th style="width: 20%;">超链接地址</th>
+						<th style="width: 10%;">图标</th>
+						<th style="width: 5%;">排序ID</th>
+						<th style="width: 10%;">状态</th>
+						<th style="width: 10%;">记录者</th>
+						<th style="width: 15%;">记录时间</th>
+						<th style="width: 15%;">操作</th>
+					</tr>
+				</thead>
+				<tbody id="dataList" class="text-c"></tbody>
+			</table>
+			<div id="pages"></div>
+		</div>
+		<!--添加地址-->
+		<div id="dataAdd" style="display: none;">
+			<form class="form form-horizontal">
+				<div id="clCname" class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">模块名称：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input id="dataCname" type="text" class="input-text" placeholder="请输入模块名称"></input>
+					</div>
+				</div>
+				<div id="clMurl" class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">超链接地址：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input id="dataMurl" type="text" class="input-text" placeholder="请输入超链接地址"></input>
+					</div>
+				</div>
+				<div id="clOrderid" class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">排序ID：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<span class="select-box">
+							<select id="dataOrderid" class="select" size="1" title="请选择排序ID，越小越前">
+								<option value="0">0</option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+								<option value="9">9</option>
+							</select>
+						</span>
+					</div>
+				</div>
+				<div id="clMimg" class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">图标上传：</label>
+					<div class="formControls skin-minimal col-xs-8 col-sm-9">
+						<div class="check-box">
+							<span class="btn-upload">
+							  <a class="btn btn-primary radius">选取文件</a>
+							  <input id="uploaderInput" type="file" class="input-file" accept="image/png, image/jpeg, image/jpg" title="jpg,png格式;大小不超过512KB;宽高比例为1:1">
+							</span>
+							<div class="picture-show">
+								<img id="showImage" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="submitArea" class="row cl submit-button">
+					<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+						<input id="submitBtn" class="btn btn-primary radius" type="button" value="提交" />
+					</div>
+				</div>
+			</form>
+		</div>
+		<input id="qnInput" style="display: none;" />
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/layer/2.4/layer.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/static/h-ui.admin/js/H-ui.admin.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/laypage/1.2/laypage.js"></script>
+		<script type="text/javascript" src="../../js/lib/plupload/moxie.min.js"></script>
+		<script type="text/javascript" src="../../js/lib/plupload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../../js/lib/qiniu/qiniu.min.js"></script>
+		<script type="text/javascript" src="../../js/utils/cryption.js"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cloudutil.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/compress.js?" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../temp/mineinfo.js" + WebVersion + "'></s" + "cript>");
+		</script>
+		<script>
+			var webData; //地址列表的数据
+			var dataIndex; //当前编辑的数据序列
+			var selectState = -1; //查询状态.-1,全部；0，屏蔽；1，正常；
+			var page = 1; //当前页数
+			var qnUploader; //上传图片七牛对象
+			var uptokenData; //上传凭证对象
+			var uploadFile = {}; //上传的文件
+			var editState; //编辑的状态。0，添加模块；1，修改模块名称
+			window.onload = function() {
+				layer.load(2);
+				initListener();
+				initUploader();
+				getData(page);
+			}
+
+			function initListener() {
+				//点击添加地址
+				$("#addBtn").click(function() {
+					$("#clCname").css("display", "block");
+					$("#clMurl").css("display", "block");
+					$("#clOrderid").css("display", "block");
+					$("#clMimg").css("display", "block");
+					$("#dataCname").val("");
+					$("#dataMurl").val("");
+					$("#dataOrderid").val(0);
+					$("#uploaderInput").val("");
+					$(".picture-show").css("display", "none");
+					$("#showImage").attr("src", "");
+					editState = 0;
+					uploadFile = null;
+					uploadFile = {};
+					layer.open({
+						type: 1,
+						title: "添加",
+						area: '500px',
+						zIndex: 999,
+						content: $('#dataAdd')
+					});
+				});
+
+				//选取文件
+				$("#uploaderInput").change(function(e) {
+					console.log("uploaderInput:value", e.target.value);
+					console.log("uploaderInput:files", e.target.files);
+					var files = e.target.files;
+					if(files[0].size == 0 || files[0].name == "/") { //"未选择图片"
+						$('#uploaderInput').val('');
+						return false;
+					}
+					var types = files[0].type.toLowerCase().split("/");
+					if(types[1] != "png" && types[1] != "jpg" && types[1] != "jpeg") {
+						$('#uploaderInput').val('');
+						layer.confirm('请选择png,jpg,jpeg类型的图片', {
+							icon: 2,
+							title: '图片选取'
+						});
+						return false;
+					}
+					if(files[0].size > 512 * 1024) {
+						$('#uploaderInput').val('');
+						layer.confirm('文件大小超出512KB限制', {
+							icon: 2,
+							title: '图片选取'
+						});
+						return false;
+					}
+					var reader = new FileReader();
+					reader.onload = function() {
+						var result = this.result;
+						console.log("result.length:" + result.length);
+						compress.getImgInfo(result, function(img, imgInfo) {
+							var ratio = img.naturalWidth / img.naturalHeight;
+							console.log("ratio", ratio);
+							if(ratio == 1) {
+								uploadFile.success = false;
+								uploadFile.file = result;
+								$("#showImage").attr("src", result);
+								$(".picture-show").css("display", "block");
+							} else {
+								layer.confirm('图片宽高比例不是1:1', {
+									icon: 2,
+									title: '图片选取'
+								});
+							}
+							$('#uploaderInput').val('');
+						});
+					}
+					reader.readAsDataURL(files[0]);
+				})
+
+				//点击提交按钮
+				$("#submitBtn").click(function() {
+					switch(editState) {
+						case 0:
+							createData();
+							break;
+						case 1:
+							editCname();
+							break;
+						default:
+							break;
+					}
+				});
+
+				//修改查询地址状态
+				$("#stateSelect").change(function() {
+					selectState = $("#stateSelect").val() * 1;
+					page = 1;
+					getData(page);
+				});
+
+				/**
+				 * 点击修改模块名称
+				 */
+				$("#dataList").on("click", ".Hui-iconfont-edit", function() {
+					dataIndex = $("#dataList tr").index(this.parentNode.parentNode.parentNode);
+					console.log("dataIndex:" + dataIndex);
+					$("#clCname").css("display", "block");
+					$("#clMurl").css("display", "none");
+					$("#clOrderid").css("display", "none");
+					$("#clMimg").css("display", "none");
+					$("#dataCname").val(webData[dataIndex].cname);
+					editState = 1;
+					layer.open({
+						type: 1,
+						title: "修改",
+						area: '500px',
+						zIndex: 999,
+						content: $('#dataAdd')
+					});
+				});
+
+				/**
+				 * 点击修改超链接地址
+				 */
+				$("#dataList").on("click", ".Hui-iconfont-link", function() {
+					dataIndex = $("#dataList tr").index(this.parentNode.parentNode.parentNode);
+					console.log("dataIndex:" + dataIndex);
+					$("#clCname").css("display", "none");
+					$("#clMurl").css("display", "block");
+					$("#clOrderid").css("display", "none");
+					$("#clMimg").css("display", "none");
+					$("#dataMurl").val(webData[dataIndex].murl);
+					editState = 1;
+					layer.open({
+						type: 1,
+						title: "修改",
+						area: '500px',
+						zIndex: 999,
+						content: $('#dataAdd')
+					});
+				});
+
+				/**
+				 * 点击删除按钮
+				 */
+				$("#dataList").on("click", ".Hui-iconfont-del3", function() {
+					dataIndex = $("#dataList tr").index(this.parentNode.parentNode.parentNode);
+					console.log("dataIndex:" + dataIndex);
+					layer.open({
+						content: "确定删除？",
+						icon: 0,
+						title: '提示',
+						yes: function(index) {
+							layer.close(index);
+							dataDel();
+						}
+					});
+				});
+			}
+
+			function initUploader() {
+				var qnOption = cloudutil.getQiNiuInitOption("qnInput");
+				qnOption.auto_start = true;
+				qnOption.uptoken_func = function(file) {
+					// 在需要获取 uptoken 时，该方法会被调用
+					var getTokenData = {
+						appId: storageutil.QNQYWXKID,
+						mainSpace: storageutil.QNPUBSPACE,
+						saveSpace: storageutil.QNSSPACEWEBCON,
+						fileArray: [{
+							qnFileName: cloudutil.getQNName(file.name),
+						}]
+					}
+					uptokenData = null;
+					cloudutil.getFileUpTokens(getTokenData, function(data) {
+						uptokenData = data;
+					});
+					console.log("uptokenData", uptokenData);
+					if(uptokenData && uptokenData.code) { //成功
+						console.log("furl:" + uptokenData.data.Data[0].Domain + uptokenData.data.Data[0].Key);
+						return uptokenData.data.Data[0].Token;
+					} else {
+						qnUploader.stop();
+						uploadImageError("获取上传凭证失败");
+					}
+				}
+				qnOption.init = {
+					'FilesAdded': function(up, files) {
+						plupload.each(files, function(file) {
+							// 文件添加进队列后,处理相关的事情
+							console.log("FilesAdded:", file);
+						});
+					},
+					'UploadProgress': function(up, file) {
+						// 每个文件上传时,处理相关的事情
+						console.log("UploadProgress:" + file.percent);
+					},
+					'FileUploaded': function(up, file, info) {
+						// 每个文件上传结束后,处理相关的事情
+						console.log("FileUploaded:up", up);
+						console.log("FileUploaded:info", info);
+						if(info.status == 200) {
+							//成功
+							console.log("上传成功");
+							uploadFile.success = true;
+							uploadFile.furl = uptokenData.data.Data[0].Domain + uptokenData.data.Data[0].Key;
+							submitData();
+						} else {
+							uploadImageError(info.response);
+						}
+					},
+					'Error': function(up, err, errTip) {
+						//上传出错时,处理相关的事情
+						console.log("Error:", err, errTip);
+						uploadImageError(errTip);
+					},
+					'FilesRemoved ': function() {
+						//文件移出队列
+						console.log("FilesRemoved:文件移出队列");
+					},
+					'Key': function(up, file) {
+						// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
+						// 该配置必须要在 unique_names: false , save_key: false 时才生效
+						if(uptokenData && uptokenData.code) { //成功
+							return uptokenData.data.Data[0].Key;
+						}
+					}
+				}
+				qnUploader = Qiniu.uploader(qnOption);
+			}
+			/**
+			 * 上传图片失败
+			 */
+			function uploadImageError(errTip) {
+				qnUploader.splice(0, 1); //移除当前队列文件
+				layer.closeAll('loading');
+				layer.confirm(errTip, {
+					icon: 2,
+					title: '上传图片'
+				});
+			}
+
+			/**
+			 * 上传图片
+			 */
+			function uploadImage() {
+				var blob = compress.base64ToBlob(uploadFile.file, 'image/jpeg');
+				qnUploader.addFile(blob, new Date().getTime() + "" + parseInt(Math.random() * 1000) + ".jpg");
+			}
+
+			/**
+			 * 列表添加数据
+			 * @param {Array} data
+			 */
+			function showData(data) {
+				var html = "";
+				for(var i = 0; i < data.length; i++) {
+					var cname = '<tr><td>' + data[i].cname + '</td>';
+					var murl = '<td>' + data[i].murl + '</td>';
+					var mimg = '<td><img src="' + data[i].mimg + '" /></td>';
+					var orderid = '<td>' + data[i].orderid + '</td>';
+					var stat = '';
+					var editStatIcon = '';
+					if(data[i].stat == 0) {
+						stat = '<td><span class="label label-defaunt radius">屏蔽</span></td>';
+						editStatIcon = 'Hui-iconfont-niming';
+					} else {
+						stat = '<td><span class="label label-success radius">正常</span></td>';
+						editStatIcon = 'Hui-iconfont-yanjing';
+					}
+					var recname = '<td>' + data[i].recname + '</td>';
+					//格式化时间
+					data[i].rectime = data[i].rectime.replace("T", " ");
+					var index = data[i].rectime.indexOf(".");
+					if(index != -1) {
+						data[i].rectime = data[i].rectime.substring(0, index);
+					}
+					var rectime = '<td>' + data[i].rectime + '</td>';
+					var edit = '<td>\
+							<a class="operate-edit " title="修改模块名称"><i class="Hui-iconfont Hui-iconfont-edit"></i></a>\
+							<a class="operate-edit " title="修改超链接地址"><i class="Hui-iconfont Hui-iconfont-link"></i></a>\
+							<a class="operate-edit " title="修改图标"><i class="Hui-iconfont Hui-iconfont-tuku"></i></a>\
+							<a class="operate-edit " title="修改排序ID"><i class="Hui-iconfont Hui-iconfont-ordered-list"></i></a>\
+							<a class="operate-edit " title="修改状态"><i class="Hui-iconfont ' + editStatIcon + '"></i></a>\
+							<a class="operate-edit " title="删除"><i class="Hui-iconfont Hui-iconfont-del3"></i></a>\
+						</td>\
+					</tr>';
+					html = html + cname + murl + mimg + orderid + stat + recname + rectime + edit;
+				}
+				$("#dataList").append(html);
+			}
+
+			/**
+			 * 初始化页码
+			 * @param {Object} pages 通过后台拿到的总页数
+			 * @param {Object} curr 初始化当前页
+			 */
+			function initLaypage(pages, curr) {
+				laypage({
+					cont: 'pages', //容器
+					pages: pages, //通过后台拿到的总页数
+					curr: curr, //初始化当前页
+					jump: function(e, first) { //触发分页后的回调
+						if(!first) {
+							page = e.curr;
+							getData(e.curr);
+						}
+					}
+				});
+			}
+
+			/**
+			 * 获取第几页
+			 * @param {Number} pageindex 页码
+			 */
+			function getData(pageindex) {
+				var tempData = {
+					cmd: 'corpmodinfoadmin',
+					type: 'findpage',
+					pagesize: 10,
+					pageindex: pageindex,
+				}
+				if(selectState !== -1) {
+					tempData.stat = selectState;
+				}
+				unitWebsitePro(tempData, function(data) {
+					layer.closeAll('loading');
+					$("#dataList").empty();
+					webData = [];
+					data = temp_corpmodinfoadmin_findpage;
+					if(data.RspCode == 0) {
+						webData = data.RspData.dt;
+						showData(webData);
+						initLaypage(data.RspData.pg.PageCount, pageindex);
+					} else {
+						layer.confirm(data.RspTxt, {
+							icon: 2,
+							title: '获取列表'
+						});
+					}
+				});
+			}
+
+			/**
+			 * 提交添加数据
+			 */
+			function submitData() {
+				var tempData = {
+					cmd: 'corpmodinfoadmin',
+					type: 'add',
+					cname: $.trim($("#dataCname").val()),
+					orderid: $("#dataOrderid").val(),
+					murl: $.trim($("#dataMurl").val()),
+					mimg: uploadFile.furl
+				}
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						layer.closeAll("page");
+						$.Huimodalalert("添加成功", 2000);
+						uploadFile = null;
+						uploadFile = {};
+						$(".picture-show").css("display", "none");
+						$("#showImage").attr("src", "");
+						getData(page);
+					} else {
+						layer.closeAll('loading');
+						layer.confirm(data.RspTxt, {
+							icon: 2,
+							title: '添加模块'
+						});
+					}
+				});
+			}
+
+			/**
+			 * 修改数据信息
+			 * @param {String} callcol 类型
+			 * @param {String or Number} colv 值
+			 */
+			function dataEdit(callcol, colv) {
+				console.log("dataEdit:" + callcol + " " + colv);
+				layer.load(2);
+				var tempData = {
+					cmd: 'corpmodinfoadmin',
+					type: 'edit',
+					callcol: callcol,
+					colv: colv,
+					colid: webData[dataIndex].modinfoid
+				}
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						layer.closeAll("page");
+						$.Huimodalalert("修改成功", 2000);
+						getData(page);
+					} else {
+						layer.closeAll('loading');
+						layer.confirm(data.RspTxt, {
+							icon: 2,
+							title: '修改'
+						});
+					}
+				});
+			}
+
+			/**
+			 * 删除数据
+			 */
+			function dataDel() {
+				var tempData = {
+					cmd: 'corpmodinfoadmin',
+					type: 'del',
+					colid: webData[dataIndex].modinfoid,
+				}
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						layer.closeAll("page");
+						$.Huimodalalert("删除成功", 2000);
+						getData(page);
+					} else {
+						layer.closeAll('loading');
+						layer.confirm(data.RspTxt, {
+							icon: 2,
+							title: '删除模块'
+						});
+					}
+				});
+			}
+
+			/**
+			 * 创建新的数据
+			 */
+			function createData() {
+				var dataCname = $.trim($("#dataCname").val());
+				if(dataCname == "") {
+					layer.confirm('请输入模块名称', {
+						icon: 2,
+						title: '提示'
+					})
+					return false;
+				}
+				var dataMurl = $.trim($("#dataMurl").val());
+				if(dataMurl == "") {
+					layer.confirm('请输入超链接地址', {
+						icon: 2,
+						title: '提示'
+					});
+					return false;
+				} else {
+					var RegUrl = new RegExp();
+					RegUrl.compile("^[A-Za-z]+://[A-Za-z0-9-_]+\\.[A-Za-z0-9-_%&\?\/.=]+$");
+					if(!RegUrl.test(dataMurl)) {
+						layer.confirm('请输入正确的超链接地址', {
+							icon: 2,
+							title: '提示'
+						});
+						return false;
+					}
+				}
+				if(uploadFile.file) {
+					layer.load(2);
+					if(uploadFile.success) {
+						submitData();
+					} else {
+						uploadImage();
+					}
+				} else {
+					layer.confirm('请选取图标', {
+						icon: 2,
+						title: '提示'
+					});
+				}
+			}
+
+			/**
+			 * 修改模块名称
+			 */
+			function editCname() {
+				var dataCname = $.trim($("#dataCname").val());
+				if(dataCname == "") {
+					layer.confirm('请输入模块名称', {
+						icon: 2,
+						title: '提示'
+					});
+					return false;
+				}
+				if(dataCname == webData[dataIndex].cname) {
+					layer.confirm('请输入新的模块名称', {
+						icon: 2,
+						title: '提示'
+					});
+					return false;
+				}
+				dataEdit("cname", dataCname);
+			}
+		</script>
 	</body>
+
 </html>

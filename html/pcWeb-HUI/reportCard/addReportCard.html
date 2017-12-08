@@ -24,7 +24,7 @@
 		<link rel="stylesheet" href="../../../js/demoCssJs/jquery-weui.css">
 		<link rel="stylesheet" href="../../../js/demoCssJs/demos.css">
 		<link rel="stylesheet" href="../../../css/demos.css" />
-		<link href="../../../css/mui.min.css" rel="stylesheet" />
+		<!--<link href="../../../css/mui.min.css" rel="stylesheet" />-->
 		<style>
 			.weui-cells {
 				margin-top: 0px;
@@ -38,13 +38,13 @@
 
 	<body style="background-color: white;">
 
-		<div id="content" class="weui-cells weui-cells_form">
+		<div id="content">
 			<!--输入列表-->
-			<div id="input_list">
-
+			<div  class="weui-cells">
 				<div class="weui-cell">
 					<div class="weui-cell__hd"><label class="weui-label">成绩单名称</label></div>
 					<div class="weui-cell__bd">
+
 						<input v-model="cname" class="weui-input" placeholder="请输入成绩单名称">
 					</div>
 				</div>
@@ -63,7 +63,7 @@
 
 		</div>
 		<div class="weui-btn-area">
-			<button style="width: 300px;" onclick="addExama()" id="submit" class="weui-btn weui-btn_primary">添加成绩单</button>
+			<button style="width: 300px;height: 40px;" onclick="addExama()" id="submit" class="weui-btn weui-btn_primary">添加成绩单</button>
 		</div>
 		<script src="../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../../js/demoCssJs/jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>

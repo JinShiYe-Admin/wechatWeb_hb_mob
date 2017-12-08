@@ -39,6 +39,8 @@
 	<body>
 
 		<div id="content">
+			<p style="color: black;margin-top: 10px;margin-left: 10px;">{{info.cname}}</p>
+			<p style="font-size: 12px;color: darkgray;margin-left: 10px;">{{info.dptname+" "+info.recname+" "+info.rectime.replace("T"," ")}}</p>
 			<div id="column_table" class="page-container">
 
 				<table class="table table-border table-bordered table-bg">
@@ -94,6 +96,7 @@
 			var content = new Vue({
 				el: '#content',
 				data: {
+					info: {},
 					subs: [{
 						subid: 1,
 						subname: "数学"
@@ -140,17 +143,18 @@
 						var subid_arr = [];
 						var stuname_arr = [];
 						var dt2 = data.RspData.dt2;
+						content.info = data.RspData.dt[0];
 						for(var i = 0; i < dt2.length; i++) {
 							var model = dt2[i];
 							var tempObj = {
 								subid: model.subid,
 								subname: model.subname,
 							}
-							if(subid_arr.indexOf(model.subid)==-1) {
+							if(subid_arr.indexOf(model.subid) == -1) {
 								subid_arr.push(model.subid);
 								content.subs.push(tempObj);
 							}
-							if(stuname_arr.indexOf(model.stuname)==-1) {
+							if(stuname_arr.indexOf(model.stuname) == -1) {
 								stuname_arr.push(model.stuname);
 							}
 
@@ -158,20 +162,26 @@
 						for(var i = 0; i < stuname_arr.length; i++) {
 							var stuname = stuname_arr[i];
 							var score_obj = {};
-							for(var k=1;k<subid_arr.length;k++){
+							for(var k = 1; k < subid_arr.length; k++) {
 								var subid = subid_arr[k]
-								score_obj['score'+subid]="";
+								score_obj['score' + subid] = "";
 							}
 							for(var j = 0; j < dt2.length; j++) {
 								var model = dt2[j]
 								if(model.stuname == stuname) {
-									score_obj['score'+subid] = model.subscore;
+									score_obj['score' + model.subid] = model.subscore;
 								}
 							}
 							score_obj.stuname = stuname;
 							content.stu_data.push(score_obj);
 						}
 					} else {
+						content.info = {
+							cname: "开发部成绩单",
+							dptname: "开发部",
+							recname: "宋艳明",
+							rectime: "2017/12/6T14:00"
+						}
 						content.stu_data = [{
 							stuname: '宋艳明',
 							score1: 100,

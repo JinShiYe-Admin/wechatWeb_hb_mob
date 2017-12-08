@@ -163,13 +163,8 @@
 							<td>{{leave.ProcTypeName}}</td>
 							<!--流程链-->
 							<td>
-								<!--<div v-for="">
-								<div></div>
-							</div>-->
 							</td>
 							<td class="text-c">{{leave.ProTypeNote}}</td>
-							<!--<td>{{leave.rectime|formatTime}}</td>
-						<td class="td-status"><span class="label  radius" v-bind:class="[{'label-defaunt':!leave.stat},{'label-success':leave.stat}]">{{leave.stat?"显示":"屏蔽"}}</span></td>-->
 							<td class="td-manage">
 								<span class="Hui-iconfont Hui-iconfont-edit edit-groupName manage-item" title="编辑请假信息" v-on:click.stop="changeLeaveInfo(leave)"></span>
 								<span class="Hui-iconfont Hui-iconfont-del2 del-leave manage-item" title="删除请假类型" v-on:click.stop="delLeave(leave)"></span>

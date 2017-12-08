@@ -1,56 +1,43 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
 
 	<head>
-		<title>新闻</title>
 		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-		<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.">
-		<link rel="stylesheet" href="../../js/demoCssJs/weui.min.css">
-		<link rel="stylesheet" href="../../js/demoCssJs/jquery-weui.css">
-		<link rel="stylesheet" href="../../js/demoCssJs/demos.css">
+		<meta name="renderer" content="webkit|ie-comp|ie-stand">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+</head>
+<body>
 
-	</head>
+<script language="JavaScript">
+<!--
+function checkselect(){
+var x = document.getElementById("objsel");
+var t = document.getElementById("output");
+var count=0;
+var intvalue="";
+for(i=0;i<x.length;i++){
+if(x.options[i].selected){
+intvalue+=x.options[i].value+",";
+count++;
+}
+}
+t.value=intvalue.substr(0,intvalue.length-1);
+alert(count);
 
-	<body ontouchstart>
-		<div class="weui-tab">
-			 <div class="weui-tab__bd" style="padding-bottom: 60px;">
-    <div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active">
-  <h1>我们0</h1><h1>我们</h1><h1>我们</h1><h1>我们</h1><h1>我们</h1><h1>我们</h1><h1>我们</h1><h1>我们</h1><h1>我们</h1><h1>我们</h1><h1>我们</h1><h1>我们</h1>
-  <h1>我们</h1><h1>我们</h1><h1>我们</h1><h1>我们</h1><h1>我们</h1><h1>我们</h1><h1>我们</h1><h1>我们</h1><h1>我们</h1><h1>我们</h1><h1>我们</h1><h1>我们</h1>
-  <h1>我们</h1><h1>我们</h1><h1>我们</h1><h1>我们</h1><h1>我们</h1><h1>我们</h1><h1>我们</h1><h1>我们</h1><h1>我们3</h1><h1>我们2</h1><h1>我们1</h1>
-  </div>
-  </div>
-
-  <div class="weui-tabbar">
-    <a href="#tab1" class="weui-tabbar__item weui-bar__item--on">
-      <span class="weui-badge" style="">8</span>
-      <div class="weui-tabbar__icon">
-        <img src="./images/icon_nav_button.png" alt="">
-      </div>
-      <p class="weui-tabbar__label">微信</p>
-    </a>
-    <a href="javascript:;" class="weui-tabbar__item">
-      <div class="weui-tabbar__icon">
-        <img src="./images/icon_nav_msg.png" alt="">
-      </div>
-      <p class="weui-tabbar__label">通讯录</p>
-    </a>
-    <a href="javascript:;" class="weui-tabbar__item">
-      <div class="weui-tabbar__icon">
-        <img src="./images/icon_nav_article.png" alt="">
-      </div>
-      <p class="weui-tabbar__label">发现</p>
-    </a>
-    <a href="javascript:;" class="weui-tabbar__item">
-      <div class="weui-tabbar__icon">
-        <img src="./images/icon_nav_cell.png" alt="">
-      </div>
-      <p class="weui-tabbar__label">我</p>
-    </a>
-  </div>
-</div>
-	</body>
-
-</html>
+}
+//-->
+</script>
+<select id="objsel" name="objsel" size=8 multiple>
+<option value="0" selected>请选择
+<option value="1">测试一
+<option value="2">测试二
+<option value="3">测试三
+<option value="4">测试四
+<option value="5">测试五
+</select>
+<input type="button" onclick="checkselect();" value="输出">
+选中的项目：<input type="text" id="output" name="output">
+</body>
+</html> 

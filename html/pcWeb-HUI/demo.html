@@ -1,0 +1,339 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+	<head>
+		<title>CheckboxSelect demo</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+		<script src="../../js/CheckboxSelect.js" type="text/javascript" charset="utf-8"></script>
+		<!--为防止出现乱码，引用的时候最好加上charset="UTF-8"-->
+
+		<script type="text/javascript">
+			/*****************************************************控*件*方*法*参*数*详*解***************************************************************
+						一、主要调用的方法：
+						        （一）方法描述:
+									CheckboxSelect方法：通过select标签创建下拉多选组件的方法
+									CheckboxSelectJson方法：通过json数据创建下拉多选组件的方法
+						        （二）方法语法：
+									1、CheckboxSelect语法：
+										CheckboxSelect(seleid,jsonPar);
+											① seleid 参数：必填，select标签的id
+											② jsonPar 参数：可选填，参数类型为一个json，用于定制个性化多选控件，这个json所有有效属性见下面附注1
+									2、CheckboxSelectJson语法：
+										CheckboxSelectJson(tabId,seleName,jsondata,width,height,jsonPar);
+											① tabId 参数：必填，一个标签的id（参数作用：在这个标签下创建下拉多选组件）
+											② seleName 参数：必填，下拉多选组件name（参数作用：用于提交form表单时获取值）
+											③ jsondata 参数：必填，json格式，下拉选项数据（参数作用：创建供选择的选项）
+											④ width 参数：必填，控件宽度（参数作用：设置下拉多选组件的长度）
+											⑤ height 参数：必填，控件高度（参数作用：设置下拉多选组件的高度）
+											⑥ jsonPar 参数：可选填，参数类型为一个json，用于定制个性化多选控件，这个json所有有效属性见下面附注1
+					   二、辅助方法：
+							  （一）实例方法：
+								   var box = new CheckboxSelect("seleid");
+								   box.onChange(function(newV,oldV){//值改变事件
+									alert("内容改变！\n\t新值："+newV+"\n\t旧值："+oldV);
+								   });
+								   box.disabledTrue();//禁用多选框
+								   box.disabledFalse();//启用多选框
+								   box.resetSelecteds();//清空选项值
+								   box.setValues("000001,000002,000005",",");//赋值
+								   box.setDefaultWord("请选择");//设置未选择值时的缺省字体
+								   box.setRadio(true);//设置控件是否只能单选（true：单选，false：多选）
+								   box.setMaxOptNum(2);//设置最多能选择的选项数（设置为0则不限制）
+							  （二）非实例方法：
+								   getCheckboxOptionValues("seleid");//获取value值
+								   getCheckboxOptionTexts("seleid");//获取text值
+								   resetCheckboxOptionSelecteds("seleid");//清空选项值
+								   setCheckboxOptionSelecteds("seleid","000001,000002,000005",",");//赋值
+								   setCheckboxOptionRadio("seleid",true);//设置控件是否只能单选（true：单选，false：多选）
+								   setCheckboxOptionMaxOptNum("seleid",1);//设置最多能选择的选项数（设置为0则不限制）
+								   CheckboxSelectDisabledFalse("seleid");//启用多选框
+								   CheckboxSelectDisabledTrue("seleid");//禁用多选框
+								   setCheckboxOptionDefaultWord("seleid","请选择");//设置未选择值时的缺省字体
+								   setCheckboxOptionCheckAll("seleid");//设置全选
+								   CheckboxSelectOnChange("seleid",function(newV,oldV){//值改变事件
+									  alert("内容改变！\n\t新值："+newV+"\n\t旧值："+oldV);
+								   });
+								   var jsondata = {'01':'aaaaa','02':'bbbbb','03':'ccccc','04':'ddddd','05':'eeeee','06':'fffff'};
+								   setCheckboxOptions("seleid",jsondata);//设置下拉选项内容
+
+				      * 附注：
+				     	      【附注1】jsonPar参数所有有效的属性：
+								   var jsonPar={
+											valueSplitChar: ";",//多选框选择的value值（保存到后台的值）用什么符号隔开，这里默认为英文分号隔开
+											textSplitChar: "; ",//多选框选择的text值（页面展现的值）用什么符号隔开，这里默认为英文分号加一个空格隔开
+											borderColorOver: "#26A0DA",//鼠标经过或获取焦点时的边框颜色
+											icoBackgColorOver: "#EAF6FD",//鼠标经过或获取焦点时的图标背景颜色
+											borderColorOut: "#95B8E7",//鼠标离开或没获取焦点时的边框颜色
+											icoBackgColorOut: "#FFFFFF",//鼠标离开或没获取焦点时的图标背景颜色
+											icoToChar: false, //设置下拉图标为字符还是为图片(true-用字符的下拉图标，false-用图片的下拉图标)
+											icoURL: "/images/combo_arrow.png",//设置下拉图标为图片时的图片路径
+											optionBorderColor: "#95B8E7", //选项面板边框颜色
+											selectAllButton: true, //设置是否有全选按钮(true-有，false-没有)
+											valueShowOrder : 0,//设置选择的值按哪种方式展现（0-按下拉选项顺序展现选中的值，1-按用户选择的顺序展现选中的值）
+											maxSelectCount : 0, //设置最多能选择的选项数（设置为0则不限制）
+											maxSelectedOperMode: 0,//配合maxSelectCount参数来设置，当maxSelectCount设置0以上的数时这个设置才有效，可设置的值（0-达到最大选择数后可继续选中，但会把前一个选中的取消，改为当前选中的，1-达到最大选择数后不可以再选择了）
+											oneLineOptionNumber: 1 //设置选项面板中，一行显示多少个选项
+											onChange : function(a,b){//值改变事件
+
+											}, 
+											defaultWord : "", //设置未选择值时的缺省字体
+											disabled : false //设置是否禁用多选框(false-启用，true-禁用)
+								   }
+					*****************************************************控*件*方*法*参*数*详*解***************************************************************/
+
+			window.onload = function() {
+				/*******************************************通过select标签创建下拉多选组件******************************************************/
+				/**-----1、实例的方式调用-----**/
+				var box = new CheckboxSelect("seleid");
+				box.onChange(function(newV, oldV) { //值改变事件
+					document.getElementById("select_valueMonitoring_new").value = newV;
+					document.getElementById("select_valueMonitoring_old").value = oldV;
+				});
+				box.setValues("000001,000002,000003", ","); //赋值
+				box.setDefaultWord("请选择"); //设置未选择值时的缺省字体
+				box.setMaxOptNum(0); //设置最多能选择的选项数（设置为0则不限制）
+
+				/**-----2、脱离实例的方式调用-----
+					CheckboxSelect("seleid");//创建控件
+					CheckboxSelectOnChange("seleid",function(newV,oldV){//值改变事件
+						document.getElementById("select_valueMonitoring_new").value=newV;
+						document.getElementById("select_valueMonitoring_old").value=oldV;
+					});
+					setCheckboxOptionSelecteds("seleid","000001,000002,000005",",");//赋值
+					setCheckboxOptionDefaultWord("seleid","请选择值");//设置未选择值时的缺省字体
+				**/
+				/**-----3、带json配置的方式调用-----
+					var box = new CheckboxSelect("seleid",{
+						onChange : function(newV,oldV){//值改变事件
+							document.getElementById("select_valueMonitoring_new").value=newV;
+							document.getElementById("select_valueMonitoring_old").value=oldV;
+						},
+						defaultWord : "请选择选项"//设置未选择值时的缺省字体
+					});
+					box.setValues("000001,000002,000006",",");//赋值
+				**/
+
+				/*************************************通过select标签创建一个有特点的下拉多选组件***********************************************/
+				var boxCus = new CheckboxSelect("seleidCustomized", {
+					onChange: function(newV, oldV) { //值改变事件
+						document.getElementById("seleidCustomized_valueMonitoring_new").value = newV;
+						document.getElementById("seleidCustomized_valueMonitoring_old").value = oldV;
+					},
+					defaultWord: "请选择选项", //设置未选择值时的缺省字体
+					valueShowOrder: 1, //设置选择的值按哪种方式展现（0-按下拉选项顺序展现选中的值，1-按用户选择的顺序展现选中的值）
+					maxSelectCount: 3, //设置最多能选择的选项数（设置为0则不限制）
+					maxSelectedOperMode: 0, //配合maxSelectCount参数来设置，当maxSelectCount设置0以上的数时这个设置才有效，可设置的值（0-达到最大选择数后可继续选中，但会把前一个选中的取消，改为当前选中的，1-达到最大选择数后不可以再选择了）
+					oneLineOptionNumber: 2 //设置选项面板中，一行显示多少个选项
+				});
+				boxCus.setValues("000001,000002,000006", ","); //赋值
+
+				/*******************************************通过json数据创建下拉多选组件******************************************************/
+				var tabId = "selectjsonId"; //标签id，这里表示这个json数据创建的下拉多选组件放在这个id为selectjsonId的标签下
+				var selecName = "selecName"; //下拉多选组件的name，方便于提交form表单
+				var jsondata = {
+					'shanghai': '上海',
+					'beijing': '北京',
+					'guangzhou': '广州',
+					'shenzhen': '深圳',
+					'chongqing': '重庆'
+				}; //选项数据
+				var boxJson = new CheckboxSelectJson(tabId, selecName, jsondata, '150px', '22px'); //150px是设置下拉多选组件的长度，22px是设置下拉多选组件的宽度
+				boxJson.onChange(function(newV, oldV) { //内容改变事件
+					document.getElementById("json_valueMonitoring_new").value = newV;
+					document.getElementById("json_valueMonitoring_old").value = oldV;
+				});
+				boxJson.setDefaultWord("请选一个"); //设置未选择值时的缺省字体
+				boxJson.setValues("guangzhou,chongqing,beijing", ","); //赋值
+			}
+
+			/*---------------------通过select标签创建的下拉多选组件页面按钮事件调用方法---------------------*/
+			function select_getSelectValue(id) { //取值
+				alert("Option Value：" + getCheckboxOptionValues(id) + "\nOption Text：" + getCheckboxOptionTexts(id));
+			}
+
+			function select_reset(id) { //清空
+				resetCheckboxOptionSelecteds(id);
+			}
+
+			function select_setSelectOptionSelecteds(id) { //赋值
+				var selectid = id; //select的id
+				var SelectedOptions = "000001,000002,000005"; //一串用特定符号（这里用英文逗号）隔开的value值
+				var SelectedOptionsSplitChar = ","; //Value值是用什么分割的，这里是用英文逗号分割的
+				setCheckboxOptionSelecteds(selectid, SelectedOptions, SelectedOptionsSplitChar);
+			}
+
+			function select_setSelectOptions(id, id2) { //重构下拉多选选项
+				var jsondata = document.getElementById(id2).value;
+				setCheckboxOptions(id, jsondata);
+			}
+
+			function select_checkboxDisabledFalse(id) { //启用多选框
+				CheckboxSelectDisabledFalse(id);
+			}
+
+			function select_checkboxDisabledTrue(id) { //禁用多选框
+				CheckboxSelectDisabledTrue(id);
+			}
+
+			function select_checkboxRadio(id) { //设置只能单选
+				setCheckboxOptionRadio(id, true);
+			}
+			/*---------------------通过json数据创建的下拉多选组件页面按钮事件调用方法---------------------*/
+			function json_getSelectValue() { //取值
+				alert("Option Value：" + getCheckboxOptionValues("selectjsonId") + "\nOption Text：" + getCheckboxOptionTexts("selectjsonId"));
+			}
+
+			function json_reset() { //清空
+				resetCheckboxOptionSelecteds("selectjsonId");
+			}
+
+			function json_setSelectOptionSelecteds() { //赋值
+				setCheckboxOptionSelecteds("selectjsonId", "beijing,shenzhen", ",");
+			}
+
+			function json_checkboxDisabledFalse() { //启用多选框
+				CheckboxSelectDisabledFalse("selectjsonId");
+			}
+
+			function json_checkboxDisabledTrue() { //禁用多选框
+				CheckboxSelectDisabledTrue("selectjsonId");
+			}
+		</script>
+	</head>
+
+	<body>
+		<table width="100%">
+			<tr>
+				<td height="5px" colspan="2"></td>
+			</tr>
+			<tr>
+				<td>
+					<table align="center">
+						<tr>
+							<td align="center" colspan="7" height="55px" style="color: #000099;font-size: 16;">通过select标签创建的下拉多选框</td>
+						</tr>
+						<tr>
+							
+							<td> <input type="button" onclick="select_getSelectValue('seleid');" value="取值"></td>
+							<td align="center" style="">
+								<select id="seleid" name="selename" style="width: 150px;height: 25px;">
+									<!-- 这里设置的宽度和高度对控件有效，宽度和高度设置成百分比也有效 -->
+									<option value="000001">aaaaa</option>
+									<option value="000002">bbbbb</option>
+									<option value="000003">ccccc</option>
+									<option value="000004">ddddd</option>
+									<option value="000005">eeeee</option>
+									<option value="000006">fffff</option>
+								</select>
+							</td>
+							<td> <input type="reset" onclick="select_reset('seleid');" value="清空"></td>
+							<td> <input type="reset" onclick="select_setSelectOptionSelecteds('seleid');" value="赋值"></td>
+							<td> <input type="button" onclick="select_checkboxDisabledFalse('seleid');" value="启用多选框"></td>
+							<td> <input type="button" onclick="select_checkboxDisabledTrue('seleid');" value="禁用多选框"></td>
+							<td> <input type="button" onclick="select_checkboxRadio('seleid');" value="设置只能单选"></td>
+							
+						</tr>
+						<tr>
+							<td></td>
+							<td colspan="6">新值：<input type="text" id="select_valueMonitoring_new" style="width: 80%" readonly="readonly"></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td colspan="6">旧值：<input type="text" id="select_valueMonitoring_old" style="width: 80%" readonly="readonly"></td>
+						</tr>
+						<tr>
+							<td colspan="6" align="center"><textarea id="select_setSelectOptions_new" style="width: 99%; height: 85px;">{'01':'uuuuu','02':'vvvvv','03':'wwwww','04':'xxxxx','05':'yyyyy','06':'zzzzz'}</textarea></td>
+							<td><input type="reset" onclick="select_setSelectOptions('seleid','select_setSelectOptions_new');" value="重构下拉选项"></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td height="50px" colspan="2"></td>
+			</tr>
+			<tr>
+				<td>
+					<table align="center" border="0">
+						<tr>
+							<td align="center" colspan="7" style="color: #000099;font-size: 16;">通过select标签创建一个有特点的下拉多选组件</td>
+						</tr>
+						<tr>
+							<td colspan="7" height="20px"></td>
+						</tr>
+						<tr>
+							<td colspan="7" style="color: #000099;font-size:12;padding-left:15px;">特点：1、最多只能选择3个，达到3个后，再选择时会把前一次选中的取消改为当前选中的值<br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2、按用户选择的顺序展现选中的值
+								<br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3、下拉选项面板每行显示2个选项
+								<br/>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="7" height="12px"></td>
+						</tr>
+						<tr>
+							<td align="center" style="">
+								<select id="seleidCustomized" name="selename" style="width: 150px;height: 25px;">
+									<!-- 这里设置的宽度和高度对控件有效，宽度和高度设置成百分比也有效 -->
+									<option value="000001">aaaaa</option>
+									<option value="000002">bbbbb</option>
+									<option value="000003">ccccc</option>
+									<option value="000004">ddddd</option>
+									<option value="000005">eeeee</option>
+									<option value="000006">fffff</option>
+									<option value="000007">ggggg</option>
+									<option value="000008">hhhhh</option>
+								</select>
+							</td>
+							<td> <input type="button" onclick="select_getSelectValue('seleidCustomized');" value="取值"></td>
+							<td> <input type="reset" onclick="select_reset('seleidCustomized');" value="清空"></td>
+							<td> <input type="reset" onclick="select_setSelectOptionSelecteds('seleidCustomized');" value="赋值"></td>
+							<td> <input type="button" onclick="select_checkboxDisabledFalse('seleidCustomized');" value="启用多选框"></td>
+							<td colspan="2"> <input type="button" onclick="select_checkboxDisabledTrue('seleidCustomized');" value="禁用多选框"></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td colspan="6">新值：<input type="text" id="seleidCustomized_valueMonitoring_new" style="width: 80%" readonly="readonly"></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td colspan="6">旧值：<input type="text" id="seleidCustomized_valueMonitoring_old" style="width: 80%" readonly="readonly"></td>
+						</tr>
+						<tr>
+							<td colspan="6" align="center"><textarea id="seleidCustomized_setSelectOptions_new" style="width: 99%; height: 85px;">{'HZ':'猴子','DX':'大象','LH':'老虎','HL':'狐狸','QE':'企鹅','XM':'熊猫'}</textarea></td>
+							<td><input type="reset" onclick="select_setSelectOptions('seleidCustomized','seleidCustomized_setSelectOptions_new');" value="重构下拉选项"></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td height="80px" colspan="2"></td>
+			</tr>
+			<tr>
+				<td>
+					<table align="center">
+						<tr>
+							<td align="center" colspan="6" height="55px" style="color: #000099;font-size: 16;">通过json数据创建的下拉多选框</td>
+						</tr>
+						<tr>
+							<td id="selectjsonId"></td>
+							<td> <input type="button" onclick="json_getSelectValue();" value="取值"></td>
+							<td> <input type="reset" onclick="json_reset();" value="清空"></td>
+							<td> <input type="reset" onclick="json_setSelectOptionSelecteds();" value="赋值"></td>
+							<td> <input type="button" onclick="json_checkboxDisabledFalse();" value="启用多选框"></td>
+							<td> <input type="button" onclick="json_checkboxDisabledTrue();" value="禁用多选框"></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td colspan="5">新值：<input type="text" id="json_valueMonitoring_new" style="width: 80%" readonly="readonly"></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td colspan="5">旧值：<input type="text" id="json_valueMonitoring_old" style="width: 80%" readonly="readonly"></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</body>
+
+</html>

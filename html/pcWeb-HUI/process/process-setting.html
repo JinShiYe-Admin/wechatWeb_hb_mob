@@ -29,6 +29,7 @@
 				width: 80%;
 			}
 			
+			.show-process,
 			.del-process,
 			.edit-process,
 			.edit-groupName {
@@ -130,6 +131,9 @@
 				margin-left: 0;
 				margin-right: 0;
 			}
+			.select-page {
+				color: dodgerblue;
+			}
 		</style>
 	</head>
 
@@ -189,8 +193,8 @@
 							<th>流程链</th>
 							<th width="500">备注</th>
 							<!--<th width="150"></th>-->
-							<!--<th width="100">状态</th>-->
-							<th width="100">操作</th>
+							<th width="100">状态</th>
+							<th width="150">操作</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -198,21 +202,24 @@
 							<td>{{process.ProcTypeName}}</td>
 							<!--流程链-->
 							<td>
-								<!--<div v-for="">
-								<div></div>
-							</div>-->
+								{{process.ApprManList}}
 							</td>
 							<td class="text-c">{{process.ProTypeNote}}</td>
-							<!--<td>{{process.rectime|formatTime}}</td>
-						<td class="td-status"><span class="label  radius" v-bind:class="[{'label-defaunt':!process.stat},{'label-success':process.stat}]">{{process.stat?"显示":"屏蔽"}}</span></td>-->
+							<td class="td-status"><span class="label  radius" v-bind:class="[{'label-defaunt':!process.Stat},{'label-success':process.Stat}]">{{process.Stat?"有效":"屏蔽"}}</span></td>
 							<td class="td-manage">
 								<span class="Hui-iconfont Hui-iconfont-edit edit-groupName manage-item" title="编辑流程信息" v-on:click.stop="changeProcessInfo(process)"></span>
 								<span class="Hui-iconfont Hui-iconfont-user-group edit-process manage-item" title="更改流程链" v-on:click.stop="changeProcessList(process)"></span>
+								<span class="Hui-iconfont manage-item" title="显示/屏蔽" v-bind:class="[{'Hui-iconfont-yanjing':process.Stat}, {'Hui-iconfont-niming':!process.Stat},{'close-process':!process.Stat},{'show-process':process.Stat}]" v-on:click.stop="changeState(process,index)"></span>
 								<span class="Hui-iconfont Hui-iconfont-del2 del-process manage-item" title="删除流程" v-on:click.stop="delProcess(process)"></span>
 							</td>
 						</tr>
 					</tbody>
 				</table>
+				<div class="float-right pageNo-container">
+					<button v-on:click="lastPage()">上一页</button>
+					<span v-for="pageNo in totalPage" v-bind:class="[{'select-page':pageNo==pageIndex},'page-no']">{{pageNo}}</span>
+					<button v-on:click="nextPage()">下一页</button>
+				</div>
 				<form id="edit-pocessInfo" style="display: none;" action="" class="form form-horizontal" id="form-member-add">
 					<div class="row cl">
 						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>流程类型：</label>

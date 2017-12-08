@@ -30,7 +30,7 @@
 				width: 80%;
 			}
 			
-			.add-perdson,
+			.add-person,
 			.del-leave,
 			.show-leave,
 			.edit-groupName {
@@ -132,6 +132,10 @@
 				margin-left: 0;
 				margin-right: 0;
 			}
+			
+			.select-page {
+				color: dodgerblue;
+			}
 		</style>
 	</head>
 
@@ -152,10 +156,9 @@
 						<tr class="text-c">
 							<th width="300">请假类型</th>
 							<th width="300">请假关系</th>
-							<th width="500">备注</th>
-							<!--<th width="150"></th>-->
-							<!--<th width="100">状态</th>-->
-							<th width="100">操作</th>
+							<th>备注</th>
+							<th width="100">状态</th>
+							<th width="120">操作</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -163,20 +166,23 @@
 							<td>{{leave.ProcTypeName}}</td>
 							<!--流程链-->
 							<td>
-								<!--<div v-for="">
-								<div></div>
-							</div>-->
+								{{leave.ApprManList}}
 							</td>
 							<td class="text-c">{{leave.ProTypeNote}}</td>
-							<!--<td>{{leave.rectime|formatTime}}</td>
-						<td class="td-status"><span class="label  radius" v-bind:class="[{'label-defaunt':!leave.stat},{'label-success':leave.stat}]">{{leave.stat?"显示":"屏蔽"}}</span></td>-->
+							<td class="td-status"><span class="label  radius" v-bind:class="[{'label-defaunt':!leave.Stat},{'label-success':leave.Stat}]">{{leave.Stat?"有效":"屏蔽"}}</span></td>
 							<td class="td-manage">
 								<span class="Hui-iconfont Hui-iconfont-edit edit-groupName manage-item" title="编辑请假信息" v-on:click.stop="changeLeaveInfo(leave)"></span>
+								<span class="Hui-iconfont manage-item" title="显示/屏蔽" v-bind:class="[{'Hui-iconfont-yanjing':leave.Stat}, {'Hui-iconfont-niming':!leave.Stat},{'close-leave':!leave.Stat},{'show-leave':leave.Stat}]" v-on:click.stop="changeState(leave,index)"></span>
 								<span class="Hui-iconfont Hui-iconfont-del2 del-leave manage-item" title="删除请假类型" v-on:click.stop="delLeave(leave)"></span>
 							</td>
 						</tr>
 					</tbody>
 				</table>
+				<div class="float-right pageNo-container">
+					<button v-on:click="lastPage()">上一页</button>
+					<span v-for="pageNo in totalPage" v-bind:class="[{'select-page':pageNo==pageIndex},'page-no']">{{pageNo}}</span>
+					<button v-on:click="nextPage()">下一页</button>
+				</div>
 				<form id="edit-pocessInfo" style="display: none;" class="form form-horizontal" id="form-member-add">
 					<div class="row cl">
 						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>请假类型：</label>

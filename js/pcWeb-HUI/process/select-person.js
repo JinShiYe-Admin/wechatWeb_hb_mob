@@ -1,12 +1,14 @@
 Vue.component("choose-person", {
 	template: "#person-list",
 	props: {
+		//选择的部门
 		choseDepart: {
 			type: Object,
 			default: function() {
 				return {}
 			}
 		},
+		//选择的人员
 		choosePerson: {
 			type: Object,
 			default: function() {
@@ -18,7 +20,6 @@ Vue.component("choose-person", {
 	},
 	data: function() {
 		return {
-			isAllCheck: false,
 			personList: [],
 			selectPerson: this.choosePerson
 		}
@@ -31,7 +32,6 @@ Vue.component("choose-person", {
 		 */
 		choseDepart: function(newVal, oldVal) {
 			this.personList = [];
-			this.isAllCheck = false;
 			this.requireDepartPerson();
 		},
 		/**

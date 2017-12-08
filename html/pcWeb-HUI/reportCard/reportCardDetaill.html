@@ -39,25 +39,28 @@
 	<body>
 
 		<div id="content">
-
+			<p style="color: black;margin-top: 10px;margin-left: 10px;">{{info.cname+" "}}<a id="exportExcel" type="button" class="btn btn-success radius" onclick="clickExport()">导出</a></p>
+			
+			<p style="font-size: 12px;color: darkgray;margin-left: 10px;">{{info.dptname+" "+info.recname+" "+info.rectime.replace("T"," ")}}</p>
+			
 			<div id="column_table" class="page-container">
 
 				<table class="table table-border table-bordered table-bg">
 					<thead class="text-c">
-						<tr >
+						<tr>
+							<th>姓名</th>
 							<th v-for="(item,index) in subs">{{item.subname}}</th>
 						</tr>
 					</thead>
 					<tbody>
-						<!--<tr class="text-c" v-for="(item,index) in dt2">
-							<td>{{item.cname}}</td>
-							<td>{{item.dptname}}</td>
+						<tr class="text-c" v-for="(item,index) in stu_data">
+							<td>{{item.stuname}}</td>
+							<td v-for="(item1,index1) in subs">{{item['score'+item1.subid]}}</td>
 
-						</tr>-->
+						</tr>
 					</tbody>
 				</table>
 			</div>
-			<div id="pages" style="margin-top: 20px;"></div>
 
 		</div>
 
@@ -95,29 +98,9 @@
 			var content = new Vue({
 				el: '#content',
 				data: {
-					subs: [{
-						subid:1,
-						subname:"数学"
-					},{
-						subid:2,
-						subname:"数学"
-					},{
-						subid:3,
-						subname:"数学"
-					},{
-						subid:4,
-						subname:"数学"
-					},{
-						subid:5,
-						subname:"数学"
-					},{
-						subid:6,
-						subname:"数学"
-					}],
-					dt2: [{
-						cname: "开发部成绩单",
-						dptname: "开发部"
-					}],
+					info: {},
+					subs: [],
+					stu_data: [],
 
 				},
 				methods: {}
@@ -130,19 +113,8 @@
 				console.log('detail=' + JSON.stringify(detail));
 				dptid = detail.dptid;
 				examid = detail.examid;
+
 				getexam()
-			}
-			//给数组去重
-			var arrayDupRemoval = function(array) {
-				var res = [];
-				var json = {};
-				for(var i = 0; i < array.length; i++) {
-					if(!json[array[i]]) {
-						res.push(array[i]);
-						json[array[i]] = 1;
-					}
-				}
-				return res;
 			}
 
 			function getexam() {
@@ -158,21 +130,78 @@
 				unitWebsitePro(tempData, function(data) {
 					console.log("成绩单" + JSON.stringify(data));
 					if(data.RspCode == 0) {
-						content.dt2 = data.RspData.dt2;
 						var subid_arr = [];
-						for(var i = 0; i < content.dt2.length; i++) {
-							var model = content.dt2[i];
+						var stuname_arr = [];
+						var dt2 = data.RspData.dt2;
+						content.info = data.RspData.dt[0];
+						for(var i = 0; i < dt2.length; i++) {
+							var model = dt2[i];
 							var tempObj = {
 								subid: model.subid,
 								subname: model.subname,
 							}
-							if(!subid_arr.contains(model.subid))
+							if(subid_arr.indexOf(model.subid) == -1) {
 								subid_arr.push(model.subid);
 								content.subs.push(tempObj);
+							}
+							if(stuname_arr.indexOf(model.stuname) == -1) {
+								stuname_arr.push(model.stuname);
+							}
+
+						}
+						for(var i = 0; i < stuname_arr.length; i++) {
+							var stuname = stuname_arr[i];
+							var score_obj = {};
+							for(var k = 1; k < subid_arr.length; k++) {
+								var subid = subid_arr[k]
+								score_obj['score' + subid] = "";
+							}
+							for(var j = 0; j < dt2.length; j++) {
+								var model = dt2[j]
+								if(model.stuname == stuname) {
+									score_obj['score' + model.subid] = model.subscore;
+								}
+							}
+							score_obj.stuname = stuname;
+							content.stu_data.push(score_obj);
 						}
 					} else {
+						content.info = {
+							cname: "开发部成绩单",
+							dptname: "开发部",
+							recname: "宋艳明",
+							rectime: "2017/12/6T14:00"
+						}
+						content.stu_data = [{
+							stuname: '宋艳明',
+							score1: 100,
+							score2: 100,
+							score3: "",
+							score4: 100,
+						}, {
+							stuname: '顾元生',
+							score1: 90,
+							score2: 90,
+							score3: 90,
+							score4: 90,
+						}]
 					}
 				});
+			}
+						//导出统计表
+			var clickExport = function() {
+				// 使用outerHTML属性获取整个table元素的HTML代码（包括<table>标签），然后包装成一个完整的HTML文档，设置charset为urf-8以防止中文乱码
+				var html = "<html><head><meta charset='utf-8' /></head><body>" + document.getElementsByTagName("table")[0].outerHTML + "</body></html>";
+				html = html.replace('<table', '<table border="1"');
+				// 实例化一个Blob对象，其构造函数的第一个参数是包含文件内容的数组，第二个参数是包含文件类型属性的对象
+				var blob = new Blob([html], {
+					type: "application/vnd.ms-excel"
+				});
+				var a = document.getElementById("exportExcel");
+				// 利用URL.createObjectURL()方法为a元素生成blob URL
+				a.href = URL.createObjectURL(blob);
+				// 设置文件名，目前只有Chrome和FireFox支持此属性
+				a.download = content.info.cname+".xls";
 			}
 		</script>
 	</body>

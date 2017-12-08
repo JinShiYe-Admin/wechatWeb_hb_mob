@@ -1,0 +1,384 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="renderer" content="webkit|ie-comp|ie-stand">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
+		<title>考勤详单查询</title>
+
+	</head>
+
+	<body>
+		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 考勤 <span class="c-gray en">&gt;</span> 考勤详单查询
+			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
+		</nav>
+		<div class="page-container" id="attendData">
+			<div class="text-c"> 查询日期：
+				<input placeholder="查询日期" type="text" onfocus="WdatePicker({maxDate:'%y-%M-%d' })" id="datemax" class="input-text Wdate" style="width:120px;">
+				<button type="submit" class="btn btn-success radius" id="" name="" @click="searchAttendList()"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
+				<button type="submit" class="btn btn-success radius" id="" name="" @click="exportAttendList()"> 导出</button>
+			</div>
+			<div class="mt-20">
+				<table class="table table-border table-bordered table-hover table-bg">
+					<thead>
+						<!--<tr class="text-c" v-for='(timeModel,index) in attendTimeArrayAll' v-show="flag>0" style="display: none;">-->
+						<tr class="text-c">
+							<td width="100" v-for='(timeModel,index) in attendTimeArrayAll' style="font-weight: bold;">
+								{{timeModel.AttendTypeNote}}
+							</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="text-c" v-for='(attend,index) in peopleArray' v-show="flag>0" style="display: none;">
+							<td><u style="cursor:pointer" class="text-primary">{{attend.name}}</u></td>
+							<td><u style="cursor:pointer" class="text-primary">{{attend.departName}}</u></td>
+							<td v-for='(timeModel,index) in attend.timeList'>
+								<u style="cursor:pointer" class="text-primary">{{timeModel.AttendResult}}</u>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!--_footer 作为公共模版分离出去-->
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/layer/2.4/layer.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/static/h-ui.admin/js/H-ui.admin.js"></script>
+		<!--/_footer 作为公共模版分离出去-->
+
+		<!--请在下方写此页面业务相关的脚本-->
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/laypage/1.2/laypage.js"></script>
+		<!--vue-->
+		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
+		</script>
+		<script src='../../js/lib/vconsole/vconsole.min.js'></script>
+		<script type="text/javascript">
+			$(function() {
+				$('.table-sort').dataTable({
+					"aaSorting": [
+						[1, "desc"]
+					], //默认第几个排序
+					"bStateSave": true, //状态保存
+					"aoColumnDefs": [
+						//{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+						{
+							"orderable": false,
+							"aTargets": [0, 8, 9]
+						} // 制定列不参与排序
+					]
+				});
+				//获取当前人员信息
+				getUserInfo();
+			});
+
+			var attendData = new Vue({
+				el: "#attendData",
+				data: {
+					flag: 0,
+					userInfo: {}, //当前人员信息
+					attendTimeArrayAll: [], //考勤时间段列表,合并姓名、部门
+					attendTimeArray: [], //考勤时间段列表,从协议获取到的
+					departArray: [], //管理的所有部门数组
+					peopleArray: [], //管理的所有部门人员数组
+					peopleIdArray: [] //管理的所有部门的人员id数组
+				},
+				methods: {
+					searchAttendList: function() {
+						//15.获取考勤记录
+						getAttend();
+					},
+					exportAttendList: function() {
+						if(attendData.peopleArray.length == 0) {
+							layer.alert('当前日期没有考勤统计数据');
+							return false;
+						}
+						// 使用outerHTML属性获取整个table元素的HTML代码（包括<table>标签），然后包装成一个完整的HTML文档，设置charset为urf-8以防止中文乱码
+						var html = "<html><head><meta charset='utf-8' /></head><body>" + document.getElementsByTagName("table")[0].outerHTML + "</body></html>";
+						// 实例化一个Blob对象，其构造函数的第一个参数是包含文件内容的数组，第二个参数是包含文件类型属性的对象
+						var blob = new Blob([html], {
+							type: "application/vnd.ms-excel"
+						});
+						var a = document.getElementsByTagName("button")[1];
+						// 利用URL.createObjectURL()方法为a元素生成blob URL
+						a.href = URL.createObjectURL(blob);
+						// 设置文件名，目前只有Chrome和FireFox支持此属性
+						a.download = "考勤统计.xls";
+					}
+				}
+			});
+			//13.获取当前人员信息
+			var getUserInfo = function() {
+				var tempData = {
+					cmd: 'userinfoadmin',
+					type: 'findpage', //获取某个详细信息
+					colv: '' //留空为取当前人员信息,不为空则为具体人员信息
+				}
+				//				console.log('tempData:' + JSON.stringify(tempData));
+				//				unitWebsitePro(tempData, function(data) {
+				//					if(data.RspCode == 0) {
+				//						attendData.userInfo = JSON.parse(data.RspData);
+				attendData.userInfo = JSON.parse('{\"corpid\":\"wx6c4528c675d4a9c9\",\"userid\":\"zhaoqiwang\",\"name\":\"赵启旺\",\"department\":null,\"order\":null,\"position\":null,\"mobile\":null,\"english_name\":null,\"gender\":0,\"isleader\":0,\"telephone\":null,\"email\":null,\"weixinid\":null,\"avatar\":null,\"status\":0,\"extattr\":null,\"errcode\":0,\"errmsg\":null,\"P2PData\":null}');
+				//13.获取考勤时间段
+				getAttendTime();
+				//					} else {
+				//						layer.alert('请重新登录获取个人信息');
+				//					}
+				//				});
+			};
+
+			//13.获取考勤时间段
+			var getAttendTime = function() {
+				var tempData = {
+					corpId: attendData.userInfo.corpid, //单位ID
+					pageIndex: 1, //当前页数
+					pageSize: 0 //每页记录数，0 为全部
+				}
+				console.log('tempData:' + JSON.stringify(tempData));
+
+				//				getAttendTimePro(tempData, function(data) {
+				//					if(data.RspCode == 0) {
+				var data = JSON.parse('{\"RspTxt\":\"正常\",\"RspCode\":\"0000\",\"RspData\":{\"TotalCnt\":4,\"TotalPage\":1,\"Data\":[{\"AttendType\":4,\"AttendMessage\":\"#T#N在#A打卡成功\",\"ContinuousMinute\":10,\"LateMinute\":20,\"attendTypeProp\":2,\"AttendTimeId\":4,\"BeginHour\":16,\"AttendTypeNote\":\"上午下班\",\"BeginMinute\":20},{\"AttendType\":3,\"AttendMessage\":\"上班\",\"ContinuousMinute\":10,\"LateMinute\":10,\"attendTypeProp\":1,\"AttendTimeId\":3,\"BeginHour\":16,\"AttendTypeNote\":\"上午上班\",\"BeginMinute\":0},{\"AttendType\":2,\"AttendMessage\":\"#N在#A#T下班签退\",\"ContinuousMinute\":60,\"LateMinute\":30,\"attendTypeProp\":2,\"AttendTimeId\":2,\"BeginHour\":17,\"AttendTypeNote\":\"下午下班\",\"BeginMinute\":30},{\"AttendType\":1,\"AttendMessage\":\"#T#N在#A上午上班签到\",\"ContinuousMinute\":40,\"LateMinute\":20,\"attendTypeProp\":1,\"AttendTimeId\":1,\"BeginHour\":13,\"AttendTypeNote\":\"下午上班\",\"BeginMinute\":30}]}}');
+				var tempModel = {
+					AttendTypeNote: '姓名'
+				}
+				var tempModel1 = {
+					AttendTypeNote: '部门'
+				}
+//				attendData.attendTimeArray = [].concat(data.RspData.Data);
+				attendData.attendTimeArrayAll = [].concat(data.RspData.Data);
+				attendData.attendTimeArrayAll.splice(0, 0, tempModel1);
+				attendData.attendTimeArrayAll.splice(0, 0, tempModel);
+				
+				//获取管理的部门
+				getPersonDepart(data.RspData.Data);
+				//					} else {
+				//						//						layer.alert('请重新登录获取个人信息');
+				//					}
+				//				});
+			};
+
+			//获取管理的部门
+			var getPersonDepart = function(timeArray) {
+				var tempData = {
+					cmd: 'persondepartsadmin',
+					type: 'findpage' //获取管理员全部管理部门
+				}
+				console.log('tempData:' + JSON.stringify(tempData));
+				//				unitWebsitePro(tempData, function(data) {
+				//					if(data.RspCode == 0) {
+				var data = JSON.parse('{\"RspCode\":\"0000\",\"RspTxt\":\"正常\",\"RspData\":\"[{\\\"value\\\":2,\\\"title\\\":\\\"湖北大区\\\",\\\"parentvalue\\\":1,\\\"order\\\":2147483447},{\\\"value\\\":3,\\\"title\\\":\\\"荆门办事处\\\",\\\"parentvalue\\\":2,\\\"order\\\":2147483447},{\\\"value\\\":4,\\\"title\\\":\\\"大区办公室\\\",\\\"parentvalue\\\":2,\\\"order\\\":2147483247},{\\\"value\\\":5,\\\"title\\\":\\\"黄冈办事处\\\",\\\"parentvalue\\\":2,\\\"order\\\":2147483047},{\\\"value\\\":6,\\\"title\\\":\\\"黄石咸宁鄂州办事处\\\",\\\"parentvalue\\\":2,\\\"order\\\":2147482847},{\\\"value\\\":7,\\\"title\\\":\\\"襄阳孝感随州办事处\\\",\\\"parentvalue\\\":2,\\\"order\\\":2147482647},{\\\"value\\\":8,\\\"title\\\":\\\"宜昌恩施办事处\\\",\\\"parentvalue\\\":2,\\\"order\\\":2147482447},{\\\"value\\\":9,\\\"title\\\":\\\"荆州江汉办事处\\\",\\\"parentvalue\\\":2,\\\"order\\\":2147482247},{\\\"value\\\":11,\\\"title\\\":\\\"开发部\\\",\\\"parentvalue\\\":1,\\\"order\\\":2147483047},{\\\"value\\\":12,\\\"title\\\":\\\"测试子部门\\\",\\\"parentvalue\\\":11,\\\"order\\\":100000000},{\\\"value\\\":13,\\\"title\\\":\\\"测试孙部门\\\",\\\"parentvalue\\\":12,\\\"order\\\":100000000},{\\\"value\\\":14,\\\"title\\\":\\\"测试子部门2\\\",\\\"parentvalue\\\":11,\\\"order\\\":99999000},{\\\"value\\\":15,\\\"title\\\":\\\"临时部门一\\\",\\\"parentvalue\\\":11,\\\"order\\\":99998000},{\\\"value\\\":16,\\\"title\\\":\\\"临时部门二\\\",\\\"parentvalue\\\":11,\\\"order\\\":99997000},{\\\"value\\\":17,\\\"title\\\":\\\"临时部门三\\\",\\\"parentvalue\\\":11,\\\"order\\\":99996000},{\\\"value\\\":18,\\\"title\\\":\\\"临时部门四\\\",\\\"parentvalue\\\":11,\\\"order\\\":99995000},{\\\"value\\\":19,\\\"title\\\":\\\"临时部门五\\\",\\\"parentvalue\\\":11,\\\"order\\\":99994000},{\\\"value\\\":20,\\\"title\\\":\\\"临时部门六\\\",\\\"parentvalue\\\":11,\\\"order\\\":99993000},{\\\"value\\\":21,\\\"title\\\":\\\"临时部门七\\\",\\\"parentvalue\\\":11,\\\"order\\\":99992000},{\\\"value\\\":22,\\\"title\\\":\\\"临时部门八\\\",\\\"parentvalue\\\":11,\\\"order\\\":99991000},{\\\"value\\\":23,\\\"title\\\":\\\"临时部门九\\\",\\\"parentvalue\\\":11,\\\"order\\\":99990000},{\\\"value\\\":24,\\\"title\\\":\\\"临时部门十\\\",\\\"parentvalue\\\":11,\\\"order\\\":99989000},{\\\"value\\\":25,\\\"title\\\":\\\"4-level depart\\\",\\\"parentvalue\\\":13,\\\"order\\\":100000000},{\\\"value\\\":-1,\\\"title\\\":\\\"全部\\\",\\\"parentvalue\\\":0,\\\"order\\\":0}]\"}');
+				attendData.departArray = [].concat(JSON.parse(data.RspData));
+				//把获取到的部门，按层级组合
+				var tempArr = getNodeTree(JSON.parse(data.RspData));
+				//						console.log('tempArr:'+JSON.stringify(tempArr));
+				//得到最顶层的部门id数组
+				var tempDepartArr = [];
+				//						for(var i = 0; i < tempArr.length; i++) {
+				//							var tempModel = tempArr[i];
+				//获取部门下的所有人员
+				//							getDepartPerson(tempModel.value);
+				getDepartPerson(0,timeArray);
+				//						}
+				//					} else {
+				//						layer.alert('获取部门出现问题');
+				//					}
+				//				});
+			}
+
+			//17.获取某部门ID下所有人员(PC管理端)
+			var getDepartPerson = function(departID,timeArray) {
+				//				var tempData = {
+				//					cmd: 'departpersonsadmin',
+				//					type: 'findpage', //获取管理员全部管理部门
+				//					colid: departID, //部门ID
+				//					colv: '1', //是否递归获取子级部门中所有人员,0否1是
+				//					callcol: 'base' //获取详细信息:info,获取普通信息:base
+				//				}
+				//				console.log('tempData:' + JSON.stringify(tempData));
+				//				unitWebsitePro(tempData, function(data) {
+				//					if(data.RspCode == 0) {
+				var temp0 = JSON.parse('[{\"userid\":\"chaeay\",\"name\":\"杨清斌\",\"department\":[1,4]},{\"userid\":\"YaoYing\",\"name\":\"姚莹\",\"department\":[4]},{\"userid\":\"LiuPingLi\",\"name\":\"刘平丽\",\"department\":[4]},{\"userid\":\"mougz\",\"name\":\"牟光兆\",\"department\":[4]},{\"userid\":\"zhaoxj\",\"name\":\"赵小静\",\"department\":[3]},{\"userid\":\"yangj\",\"name\":\"杨静\",\"department\":[9]},{\"userid\":\"daigj\",\"name\":\"代国军\",\"department\":[9]},{\"userid\":\"zhuxm\",\"name\":\"朱晓梅\",\"department\":[9]},{\"userid\":\"zhul\",\"name\":\"朱琳\",\"department\":[9]},{\"userid\":\"dengm\",\"name\":\"邓敏\",\"department\":[9]},{\"userid\":\"ouyf\",\"name\":\"欧阳芬\",\"department\":[9]},{\"userid\":\"wangf\",\"name\":\"王芬\",\"department\":[3]},{\"userid\":\"wuxj\",\"name\":\"吴先姣\",\"department\":[9]},{\"userid\":\"wangyn\",\"name\":\"王艳妮\",\"department\":[3]},{\"userid\":\"chenm\",\"name\":\"陈明\",\"department\":[3]},{\"userid\":\"gongjm\",\"name\":\"龚进美\",\"department\":[3]},{\"userid\":\"huxy\",\"name\":\"胡孝钰\",\"department\":[3]},{\"userid\":\"chenf\",\"name\":\"陈芳\",\"department\":[3]},{\"userid\":\"guoxy\",\"name\":\"郭晓雁\",\"department\":[3]},{\"userid\":\"yangff\",\"name\":\"杨芬芬\",\"department\":[3]},{\"userid\":\"liuw\",\"name\":\"刘伟\",\"department\":[3]},{\"userid\":\"dengjx\",\"name\":\"邓进霞\",\"department\":[3]},{\"userid\":\"chenl\",\"name\":\"陈丽\",\"department\":[3]},{\"userid\":\"zhangwf\",\"name\":\"张卫峰\",\"department\":[6]},{\"userid\":\"qianr\",\"name\":\"钱荣\",\"department\":[3]},{\"userid\":\"shaomj\",\"name\":\"邵明杰\",\"department\":[6]},{\"userid\":\"xuwj\",\"name\":\"徐文捷\",\"department\":[6]},{\"userid\":\"xuyx\",\"name\":\"徐玉霞\",\"department\":[6]},{\"userid\":\"zhanglh\",\"name\":\"张丽惠\",\"department\":[6]},{\"userid\":\"wangxm\",\"name\":\"汪晓梅\",\"department\":[6]},{\"userid\":\"tianl\",\"name\":\"田琳\",\"department\":[6]},{\"userid\":\"yangg\",\"name\":\"杨淦\",\"department\":[6]},{\"userid\":\"chenyy\",\"name\":\"陈亚芸\",\"department\":[6]},{\"userid\":\"xum\",\"name\":\"徐梦\",\"department\":[6]},{\"userid\":\"zhangbx\",\"name\":\"章彬香\",\"department\":[6]},{\"userid\":\"dingf\",\"name\":\"丁峰\",\"department\":[6]},{\"userid\":\"wugh\",\"name\":\"吴桂红\",\"department\":[6]},{\"userid\":\"xuey\",\"name\":\"薛杨\",\"department\":[6]},{\"userid\":\"zhengj\",\"name\":\"郑娇\",\"department\":[6]},{\"userid\":\"libo\",\"name\":\"李波\",\"department\":[5]},{\"userid\":\"zouy\",\"name\":\"邹莹\",\"department\":[5]},{\"userid\":\"ruanlq\",\"name\":\"阮丽琴\",\"department\":[5]},{\"userid\":\"taocm\",\"name\":\"陶彩梅\",\"department\":[5]},{\"userid\":\"guancl\",\"name\":\"管彩丽\",\"department\":[5]},{\"userid\":\"fuhx\",\"name\":\"傅海霞\",\"department\":[5]},{\"userid\":\"wuy\",\"name\":\"吴燕\",\"department\":[5]},{\"userid\":\"zhangq\",\"name\":\"张琴\",\"department\":[5]},{\"userid\":\"daisc\",\"name\":\"戴双慈\",\"department\":[5]},{\"userid\":\"minsq\",\"name\":\"闵双勤\",\"department\":[5]},{\"userid\":\"bayp\",\"name\":\"巴永平\",\"department\":[5]},{\"userid\":\"wangy\",\"name\":\"汪英\",\"department\":[5]},{\"userid\":\"zhangym\",\"name\":\"张祎明\",\"department\":[5]},{\"userid\":\"zhouy\",\"name\":\"周逸\",\"department\":[5]},{\"userid\":\"gaoxl\",\"name\":\"高小玲\",\"department\":[5]},{\"userid\":\"pengxy\",\"name\":\"彭晓燕\",\"department\":[5]},{\"userid\":\"caosf\",\"name\":\"操盛芳\",\"department\":[5]},{\"userid\":\"zhanghy\",\"name\":\"张海燕\",\"department\":[5]},{\"userid\":\"heyz\",\"name\":\"何玉珍\",\"department\":[5]},{\"userid\":\"lvqy\",\"name\":\"吕巧云\",\"department\":[5]},{\"userid\":\"chengf\",\"name\":\"陈桂芬\",\"department\":[5]},{\"userid\":\"zhangxw\",\"name\":\"张学稳\",\"department\":[8]},{\"userid\":\"xiongcl\",\"name\":\"熊昌兰\",\"department\":[8]},{\"userid\":\"zhoun\",\"name\":\"周宁\",\"department\":[8]},{\"userid\":\"wuh\",\"name\":\"吴华\",\"department\":[8]},{\"userid\":\"yetl\",\"name\":\"叶天乐\",\"department\":[8]},{\"userid\":\"zhangtt\",\"name\":\"张甜甜\",\"department\":[8]},{\"userid\":\"zhangxl\",\"name\":\"张晓林\",\"department\":[8]},{\"userid\":\"yaody\",\"name\":\"姚邓宜\",\"department\":[8]},{\"userid\":\"liugm\",\"name\":\"刘功弥\",\"department\":[4]},{\"userid\":\"chenqy\",\"name\":\"陈秋艳\",\"department\":[8]},{\"userid\":\"wanx\",\"name\":\"万秀\",\"department\":[4]},{\"userid\":\"zhangan\",\"name\":\"张阿妮\",\"department\":[4]},{\"userid\":\"quyj\",\"name\":\"曲玉健\",\"department\":[7]},{\"userid\":\"chens\",\"name\":\"陈双\",\"department\":[7]},{\"userid\":\"yangq\",\"name\":\"杨琼\",\"department\":[7]},{\"userid\":\"weijj\",\"name\":\"魏晶晶\",\"department\":[7]},{\"userid\":\"chenjz\",\"name\":\"陈继征\",\"department\":[7]},{\"userid\":\"wuj\",\"name\":\"伍静\",\"department\":[7]},{\"userid\":\"yuss\",\"name\":\"余珊珊\",\"department\":[7]},{\"userid\":\"zhangjl\",\"name\":\"张剑灵\",\"department\":[7]},{\"userid\":\"pengq\",\"name\":\"彭庆\",\"department\":[7]},{\"userid\":\"lvqinyu\",\"name\":\"吕芹玉\",\"department\":[8]},{\"userid\":\"qinsq\",\"name\":\"秦诗群\",\"department\":[5]},{\"userid\":\"15866690035\",\"name\":\"莫名\",\"department\":[10,4]},{\"userid\":\"guyuansheng\",\"name\":\"顾元生\",\"department\":[11,13,2]},{\"userid\":\"anqi\",\"name\":\"安琪\",\"department\":[25,2,14]},{\"userid\":\"konglingming\",\"name\":\"孔令明\",\"department\":[2,11,23,22,21,20,19,18,17,16,15]},{\"userid\":\"liupr\",\"name\":\"刘平容\",\"department\":[5]},{\"userid\":\"liuk\",\"name\":\"刘凯\",\"department\":[7]},{\"userid\":\"like\",\"name\":\"李珂\",\"department\":[11,1]},{\"userid\":\"momo\",\"name\":\"莫灿新\",\"department\":[1,11]},{\"userid\":\"chenuodong\",\"name\":\"陈国栋\",\"department\":[11]},{\"userid\":\"zhaoqiwang\",\"name\":\"赵启旺\",\"department\":[11]},{\"userid\":\"moshanglin\",\"name\":\"莫尚霖\",\"department\":[14,11]},{\"userid\":\"yangjinyu\",\"name\":\"杨金燏\",\"department\":[11]},{\"userid\":\"guyuansheng\",\"name\":\"顾元生\",\"department\":[11,13,2]},{\"userid\":\"niyongshuai\",\"name\":\"倪永帅\",\"department\":[11]},{\"userid\":\"songyanming\",\"name\":\"宋艳明\",\"department\":[11]},{\"userid\":\"maohuimin\",\"name\":\"毛慧敏\",\"department\":[23,22,21,20,19,24,14,11,18,15,17]},{\"userid\":\"anqi\",\"name\":\"安琪\",\"department\":[25,2,14]},{\"userid\":\"liuyang\",\"name\":\"刘洋\",\"department\":[11]},{\"userid\":\"konglingming\",\"name\":\"孔令明\",\"department\":[2,11,23,22,21,20,19,18,17,16,15]},{\"userid\":\"xubangsheng\",\"name\":\"徐邦圣\",\"department\":[11]},{\"userid\":\"xuantonghuan\",\"name\":\"轩同欢\",\"department\":[11]},{\"userid\":\"zhangzesheng\",\"name\":\"张泽升\",\"department\":[11]},{\"userid\":\"liangxuwei\",\"name\":\"梁续伟\",\"department\":[10,11]}]');
+				var data = {};
+				data.RspData = temp0;
+				
+				var tempArr = [];
+				for(var i = 0; i < data.RspData.length; i++) {
+					var tempModel = data.RspData[i];
+					tempArr.push(tempModel.userid);
+					//给每一个人添加时间段数组
+//					tempModel.timeList = attendData.attendTimeArray.slice(0);
+					tempModel.timeList = timeArray.slice(0);
+//					tempModel.timeList = attendData.attendTimeArray.concat();
+					attendData.peopleArray.push(tempModel);
+				}
+				console.log('attendData.peopleArray0000:' + JSON.stringify(attendData.peopleArray));
+				attendData.peopleIdArray = attendData.peopleIdArray.concat(tempArr);
+				//去重
+				attendData.peopleArray = uniqeByKeys(attendData.peopleArray,['userid']);  
+				attendData.peopleIdArray = attendData.peopleIdArray.distinct();
+				//					} else {
+				//						//layer.alert('获取部门出现问题');
+				//					}
+				//				});
+			}
+			
+			 //将对象元素转换成字符串以作比较  
+function obj2key(obj, keys){  
+    var n = keys.length,  
+        key = [];  
+    while(n--){  
+        key.push(obj[keys[n]]);  
+    }  
+    return key.join('|');  
+}  
+//去重操作  
+function uniqeByKeys(array,keys){  
+    var arr = [];  
+    var hash = {};  
+    for (var i = 0, j = array.length; i < j; i++) {  
+        var k = obj2key(array[i], keys);  
+        if (!(k in hash)) {  
+            hash[k] = true;  
+            arr .push(array[i]);  
+        }  
+    }  
+    return arr ;  
+} 
+
+			//给数组去重
+			Array.prototype.distinct = function(){
+  var arr = this,
+    i,
+    obj = {},
+    result = [],
+    len = arr.length;
+  for(i = 0; i< arr.length; i++){
+    if(!obj[arr[i]]){  //如果能查找到，证明数组元素重复了
+      obj[arr[i]] = 1;
+      result.push(arr[i]);
+    }
+  }
+  return result;
+}
+
+			//把获取到的部门，按层级组合
+			var getNodeTree = function(nodes) {
+				if(typeof(nodes) === 'undefined' || nodes.length === 0) {
+					return []
+				}
+				nodes.sort(function(a, b) {
+					return a.value - b.value
+				})
+				var map = {},
+					node, roots = [];
+				for(var i = 0; i < nodes.length; i++) {
+					node = nodes[i]
+					node.departList = []
+					node.personList = []
+					map[node.value] = i // use map to look-up the parents
+					if(typeof(map[node.parentvalue]) !== 'undefined') {
+						nodes[map[node.parentvalue]].departList.push(node)
+					} else {
+						if(node.value >= 0) {
+							roots.push(node);
+						}
+					}
+				}
+				//				console.log('getChildrenTree获取的数据：' + JSON.stringify(roots))
+				return roots
+			}
+
+			//15.获取考勤记录
+			var getAttend = function() {
+				var beginTime = $("#datemax").val();
+				beginTime = beginTime.replace(/-/g, '');
+				if(beginTime == '') {
+					layer.alert('请选择查询日期');
+					return false;
+				}
+				var tempData = {};
+				if(beginTime.length > 0) {
+					tempData = {
+						corpId: attendData.userInfo.corpid, //单位ID
+						userId: attendData.peopleIdArray, //用户ID,例如：[“1”, “2”, “3”]
+						beginTime: beginTime, //统计开始时间,年月日共八位如：20011010
+						endTime: beginTime, //统计结束时间,年月日共八位如：20011010
+						attendResultId: '0', //0：全部,1: 正常,2：迟到,3：早退
+						attendTypeId: '0', //0 为全部
+						attendAreaId: '0', //0 为全部
+						pageIndex: '1',
+						pageSize: '0' //0 为全部
+					}
+				} else {
+					var myDate = new Date().format('yyyy-MM-dd');
+					var endTime = myDate.toString().replace(/-/g, '');
+					tempData = {
+						corpId: attendData.userInfo.corpid, //单位ID
+						userId: attendData.peopleIdArray, //用户ID,例如：[“1”, “2”, “3”]
+						beginTime: endTime, //统计开始时间,年月日共八位如：20011010
+						endTime: endTime, //统计结束时间,年月日共八位如：20011010
+						attendResultId: '0', //0：全部,1: 正常,2：迟到,3：早退
+						attendTypeId: '0', //0 为全部
+						attendAreaId: '0', //0 为全部
+						pageIndex: '1',
+						pageSize: '0' //0 为全部
+					}
+				}
+				console.log('tempData:' + JSON.stringify(tempData));
+				console.log('合并前的数据为:' + JSON.stringify(attendData.peopleArray));
+				getAttendPro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						if(data.RspData.Data.length > 0) {
+							console.log('data:'+JSON.stringify(data));
+							for(var i = 0; i < data.RspData.Data.length; i++) {
+								var tempModel = data.RspData.Data[i];
+								for(var m = 0; m < attendData.departArray.length; m++) {
+									var tempModel1 = attendData.departArray[m];
+									if(tempModel.DeptId == tempModel1.value) {
+										tempModel.departName = tempModel1.title;
+									}
+								}
+								for(var a = 0; a < attendData.peopleArray.length; a++) {
+									var tempModel1 = attendData.peopleArray[a];
+									if(tempModel.UserId == tempModel1.userid) {
+										console.log('tempModel.UserId:'+tempModel.UserId+','+tempModel1.userid);
+										tempModel1.departName = tempModel.departName;
+										for(var b = 0; b < tempModel1.timeList.length; b++) {
+											var timeModel = tempModel1.timeList[b];
+											if(tempModel.AttendType == timeModel.AttendType) {
+												alert('2222');
+//												timeModel.AttendResult = tempModel.AttendResult;
+												//合并对象
+												timeModel = $.extend(timeModel, tempModel);
+											}
+										}
+									}
+								} 
+							}
+							console.log('合并后的数据为:' + JSON.stringify(attendData.peopleArray));
+							attendData.flag = 1;
+						} else {
+
+						}
+					} else {
+						alert(data.RspTxt);
+					}
+				});
+			};
+		</script>
+	</body>
+
+</html>

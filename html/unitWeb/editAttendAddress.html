@@ -235,42 +235,7 @@
 			//												alert(attendAddressObject.AreaX+"---"+attendAddressObject.AreaY);
 			var point = new BMap.Point(attendAddressObject.AreaX,
 				attendAddressObject.AreaY);
-			map.centerAndZoom(point, 12);
-			map.enableScrollWheelZoom(true);
-			//添加地图类型控件
-			map.addControl(new BMap.MapTypeControl({
-				mapTypes: [BMAP_NORMAL_MAP, BMAP_HYBRID_MAP]
-			}));
-			var top_left_control = new BMap.ScaleControl({
-				anchor: BMAP_ANCHOR_BOTTOM_RIGHT
-			}); // 左上角，添加比例尺
-			var top_left_navigation = new BMap.NavigationControl({
-				anchor: BMAP_ANCHOR_BOTTOM_RIGHT
 
-			}); //左上角，添加默认缩放平移控件
-			map.addControl(top_left_control);
-			map.addControl(top_left_navigation);
-
-			/**
-			 * 城市列表控件
-			 */
-			map.enableInertialDragging();
-
-			map.enableContinuousZoom();
-
-			var size = new BMap.Size(10, 20);
-			map.addControl(new BMap.CityListControl({
-				anchor: BMAP_ANCHOR_TOP_LEFT,
-				offset: size,
-				// 切换城市之间事件
-				// onChangeBefore: function(){
-				//    alert('before');
-				// },
-				// 切换城市之后事件
-				// onChangeAfter:function(){
-				//   alert('after');
-				// }
-			}));
 			var map;
 
 			function getAddress(longitude, latitude) {
@@ -281,59 +246,129 @@
 				//通过baiduMap API获取街道名称
 				map = new BMap.Map("allmap");
 				var point = new BMap.Point(longitude, latitude);
+				map.centerAndZoom(point, 16);
+				var marker = new BMap.Marker(point); //创建标注对象
+				map.addOverlay(marker);
+				//给标注对象授权可拖动并监听拖动事件
+				marker.enableDragging(); //设置可拖拽
+				marker
+					.addEventListener(
+						"dragend",
+						function(e) { //拖动事件 
+							var pt = e.point;
+							geoc
+								.getLocation(
+									pt,
+									function(rs) {
+										//addressComponents对象可以获取到详细的地址信息
+										var addComp = rs.addressComponents;
+										var site = addComp.province +
+
+											addComp.city +
+
+											addComp.district +
+
+											addComp.street +
+
+											addComp.streetNumber;
+										//将对应的HTML元素设置值
+										document
+											.getElementById("attendAdressText").value = site;
+										document
+											.getElementById("attendAdressX").value = pt.lng;
+										document
+											.getElementById("attendAdressY").value = pt.lat;
+									});
+
+						})
 				var gc = new BMap.Geocoder();
+				map.centerAndZoom(point, 12);
+				map.enableScrollWheelZoom(true);
+				//添加地图类型控件
+				map.addControl(new BMap.MapTypeControl({
+					mapTypes: [BMAP_NORMAL_MAP, BMAP_HYBRID_MAP]
+				}));
+				var top_left_control = new BMap.ScaleControl({
+					anchor: BMAP_ANCHOR_BOTTOM_RIGHT
+				}); // 左上角，添加比例尺
+				var top_left_navigation = new BMap.NavigationControl({
+					anchor: BMAP_ANCHOR_BOTTOM_RIGHT
 
-				gc.getLocation(point, function(rs) {
-					console.log("getAddress===rs====" + JSON.stringify(rs));
-					var addComp = rs.addressComponents;
-					console.log("getAddress===addComp====" + JSON.stringify(addComp));
-					address = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
-					console.log("getAddress--在回调函数里面====address=====" + address);
-					gc
-						.getPoint(
-							address,
-							function(point) {
-								if(point) {
-									map.centerAndZoom(point, 16);
-									var marker = new BMap.Marker(point); //创建标注对象
-									map.addOverlay(marker);
-									//给标注对象授权可拖动并监听拖动事件
-									marker.enableDragging(); //设置可拖拽
-									marker
-										.addEventListener(
-											"dragend",
-											function(e) { //拖动事件 
-												var pt = e.point;
-												geoc
-													.getLocation(
-														pt,
-														function(rs) {
-															//addressComponents对象可以获取到详细的地址信息
-															var addComp = rs.addressComponents;
-															var site = addComp.province +
+				}); //左上角，添加默认缩放平移控件
+				map.addControl(top_left_control);
+				map.addControl(top_left_navigation);
 
-																addComp.city +
+				/**
+				 * 城市列表控件
+				 */
+				map.enableInertialDragging();
 
-																addComp.district +
+				map.enableContinuousZoom();
 
-																addComp.street +
-
-																addComp.streetNumber;
-															//将对应的HTML元素设置值
-															document
-																.getElementById("attendAdressText").value = site;
-															document
-																.getElementById("attendAdressX").value = pt.lng;
-															document
-																.getElementById("attendAdressY").value = pt.lat;
-														});
-
-											})
-								} else {
-									alert("您选择地址没有解析到结果!");
-								}
-							});
-				});
+				var size = new BMap.Size(10, 20);
+				map.addControl(new BMap.CityListControl({
+					anchor: BMAP_ANCHOR_TOP_LEFT,
+					offset: size,
+					// 切换城市之间事件
+					// onChangeBefore: function(){
+					//    alert('before');
+					// },
+					// 切换城市之后事件
+					// onChangeAfter:function(){
+					//   alert('after');
+					// }
+				}));
+//				gc.getLocation(point, function(rs) {
+//					console.log("getAddress===rs====" + JSON.stringify(rs));
+//					var addComp = rs.addressComponents;
+//					console.log("getAddress===addComp====" + JSON.stringify(addComp));
+//					address = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+//					console.log("getAddress--在回调函数里面====address=====" + address);
+//					gc
+//						.getPoint(
+//							address,
+//							function(point) {
+//								if(point) {
+//									map.centerAndZoom(point, 16);
+//									var marker = new BMap.Marker(point); //创建标注对象
+//									map.addOverlay(marker);
+//									//给标注对象授权可拖动并监听拖动事件
+//									marker.enableDragging(); //设置可拖拽
+//									marker
+//										.addEventListener(
+//											"dragend",
+//											function(e) { //拖动事件 
+//												var pt = e.point;
+//												geoc
+//													.getLocation(
+//														pt,
+//														function(rs) {
+//															//addressComponents对象可以获取到详细的地址信息
+//															var addComp = rs.addressComponents;
+//															var site = addComp.province +
+//
+//																addComp.city +
+//
+//																addComp.district +
+//
+//																addComp.street +
+//
+//																addComp.streetNumber;
+//															//将对应的HTML元素设置值
+//															document
+//																.getElementById("attendAdressText").value = site;
+//															document
+//																.getElementById("attendAdressX").value = pt.lng;
+//															document
+//																.getElementById("attendAdressY").value = pt.lat;
+//														});
+//
+//											})
+//								} else {
+//									alert("您选择地址没有解析到结果!");
+//								}
+//							});
+//				});
 				//				console.log("getAddress====address=====" + address);
 				//				return address;
 
@@ -371,15 +406,15 @@
 										addComp.district + addComp.street +
 										addComp.streetNumber;
 									//将对应的HTML元素设置值
-									document
-										.getElementById("attendAdressText").value = site;
-									document
-										.getElementById("attendAdressX").value = pt.lng;
-									document
-										.getElementById("attendAdressY").value = pt.lat;
-									$("#site").val(site);
-									$("#longitude").val(pt.lng);
-									$("#latitude").val(pt.lat);
+									//									document
+									//										.getElementById("attendAdressText").value = site;
+									//									document
+									//										.getElementById("attendAdressX").value = pt.lng;
+									//									document
+									//										.getElementById("attendAdressY").value = pt.lat;
+									//									$("#site").val(site);
+									//									$("#longitude").val(pt.lng);
+									//									$("#latitude").val(pt.lat);
 									//          alert("pt.lng=="+pt.lng);
 									//           alert("pt.lat=="+pt.lat);
 									/**
@@ -388,63 +423,63 @@
 									// 将地址解析结果显示在地图上,并调整地图视野.并将考勤地点记录的名称传进去
 									console.log("点击的地址site======" +
 										site);
-									geoc
-										.getPoint(
-											site,
-											function(point) {
-												console
-													.log("22222222222222222");
-												if(point) {
-													map
-														.centerAndZoom(
-															point,
-															16);
-													/**
-													 * 将之前标注的红点清空
-													 */
-													map
-														.clearOverlays();
-													var marker = new BMap.Marker(
-														point);
-													map
-														.addOverlay(marker);
-													marker
-														.enableDragging(); //设置可拖拽
-													marker
-														.addEventListener(
-															"dragend",
-															function(
-																e) { //拖动事件 
-																var pt = e.point;
-																geoc
-																	.getLocation(
-																		pt,
-																		function(
-																			rs) {
-																			//addressComponents对象可以获取到详细的地址信息
-																			var addComp = rs.addressComponents;
-																			var site = addComp.province +
-																				addComp.city +
-
-																				addComp.district +
-
-																				addComp.street +
-
-																				addComp.streetNumber;
-																			//将对应的HTML元素设置值
-																			document
-																				.getElementById("attendAdressText").value = site;
-																			document
-																				.getElementById("attendAdressX").value = pt.lng;
-																			document
-																				.getElementById("attendAdressY").value = pt.lat;
-																		});
-
-															})
-												} else {
-													alert("点击地图---------您选择地址没有解析到结果!");
-												}
-											});
+									//									geoc
+									//										.getPoint(
+									//											site,
+									//											function(point) {
+									//												console
+									//													.log("22222222222222222");
+									//												if(point) {
+									//													map
+									//														.centerAndZoom(
+									//															point,
+									//															16);
+									//													/**
+									//													 * 将之前标注的红点清空
+									//													 */
+									//													map
+									//														.clearOverlays();
+									//													var marker = new BMap.Marker(
+									//														point);
+									//													map
+									//														.addOverlay(marker);
+									//													marker
+									//														.enableDragging(); //设置可拖拽
+									//													marker
+									//														.addEventListener(
+									//															"dragend",
+									//															function(
+									//																e) { //拖动事件 
+									//																var pt = e.point;
+									//																geoc
+									//																	.getLocation(
+									//																		pt,
+									//																		function(
+									//																			rs) {
+									//																			//addressComponents对象可以获取到详细的地址信息
+									//																			var addComp = rs.addressComponents;
+									//																			var site = addComp.province +
+									//																				addComp.city +
+									//
+									//																				addComp.district +
+									//
+									//																				addComp.street +
+									//
+									//																				addComp.streetNumber;
+									//																			//将对应的HTML元素设置值
+									//																			document
+									//																				.getElementById("attendAdressText").value = site;
+									//																			document
+									//																				.getElementById("attendAdressX").value = pt.lng;
+									//																			document
+									//																				.getElementById("attendAdressY").value = pt.lat;
+									//																		});
+									//
+									//															})
+									//												} else {
+									//													alert("点击地图---------您选择地址没有解析到结果!");
+									//												}
+									//											});
 
 								});
 

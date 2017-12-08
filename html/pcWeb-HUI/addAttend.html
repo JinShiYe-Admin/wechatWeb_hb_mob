@@ -44,8 +44,8 @@
 				<table class="table table-border table-bordered table-hover table-bg">
 					<thead>
 						<tr class="text-c">
-							<th width="100">考勤类型说明</th>
-							<th width="100">考勤类型属性</th>
+							<th width="100">考勤名称</th>
+							<th width="100">考勤类型</th>
 							<th width="50">排序</th>
 							<th width="100">操作</th>
 						</tr>
@@ -53,7 +53,7 @@
 					<tbody>
 						<tr class="text-c" v-for='(attend,index) in attendArray' v-show="flag>0" style="display: none;">
 							<td><u style="cursor:pointer" class="text-primary">{{attend.AttendTypeNote}}</u></td>
-							<td class="td-status"><span><a v-if="attend.attendTypeProp==1">上班/上学</a><a v-else>下班/放学</a></span></td>
+							<td class="td-status"><span><a v-if="attend.attendTypeProp==1">签到</a><a v-else>签退</a></span></td>
 							<td><u style="cursor:pointer" class="text-primary">{{attend.OrderId}}</u></td>
 							<td class="td-manage">
 								<a title="修改考勤类型" href="javascript:;" @click="modifyAttend(attend,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>
@@ -67,18 +67,18 @@
 		<div id="addAttendLayer" style="display: none;">
 			<form class="form form-horizontal">
 				<div class="row cl">
-					<label class="form-label col-xs-4 col-sm-3">考勤类型说明：</label>
+					<label class="form-label col-xs-4 col-sm-3">考勤名称：</label>
 					<div class="formControls col-xs-8 col-sm-9">
-						<input type="text" class="input-text" maxlength="20" v-model="AttendTypeNote" placeholder="请输入考勤类型说明">
+						<input type="text" class="input-text" maxlength="20" v-model="AttendTypeNote" placeholder="请输入考勤名称">
 					</div>
 				</div>
 				<div class="row cl">
-					<label class="form-label col-xs-4 col-sm-3">考勤类型属性：</label>
+					<label class="form-label col-xs-4 col-sm-3">考勤类型：</label>
 					<div class="formControls col-xs-8 col-sm-9">
 						<span class="select-box">
-							<select id="attendTypePropSelect" class="select" size="1" title="请选择考勤类型属性" @change="attendTypePropChange">
-								<option value="1">上班/上学</option>
-								<option value="2">下班/放学</option>
+							<select id="attendTypePropSelect" class="select" size="1" title="请选择考勤类型" @change="attendTypePropChange">
+								<option value="1">签到</option>
+								<option value="2">签退</option>
 							</select>
 						</span>
 					</div>
@@ -222,7 +222,7 @@
 					},
 					btnAdd: function() {
 						if(addAttendLayer.AttendTypeNote.length == 0) {
-							layer.alert('请输入考勤类型说明');
+							layer.alert('请输入考勤名称');
 							return false;
 						}
 						if(attendData.attendFlag == 0) { //添加
@@ -360,11 +360,11 @@
 			//添加课程时，判断是否输入了值，有没有重复,flag=0添加，flag=1修改
 			var checkInput = function(text, flag) {
 				if(text.trim().length == 0) {
-					alert('考勤类型说明不能为空');
+					alert('考勤名称不能为空');
 					return false;
 				}
 				if(isNull(text)) {
-					alert('考勤类型说明不能为空');
+					alert('考勤名称不能为空');
 					return false;
 				}
 				var tempFlag = 0;

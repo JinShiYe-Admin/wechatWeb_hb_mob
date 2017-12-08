@@ -166,7 +166,7 @@
 					}
 				})
 				//给corpId赋值假数据
-				//								corpId = "wx6c4528c675d4a9c9";
+//												corpId = "wx6c4528c675d4a9c9";
 				//	getWebsitConfig();
 				var detail = utils.getDataFromUrl(window.location.href);
 				//				alert("detail " + JSON.stringify(detail));
@@ -570,12 +570,12 @@
 					var addComp = rs.addressComponents;
 					var site = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
 					//将对应的HTML元素设置值
-					document.getElementById("attendAdressText").value = site;
-					document.getElementById("longitude").value = pt.lng;
-					document.getElementById("latitude").value = pt.lat;
-					$("#site").val(site);
-					$("#longitude").val(pt.lng);
-					$("#latitude").val(pt.lat);
+//					document.getElementById("attendAdressText").value = site;
+//					document.getElementById("longitude").value = pt.lng;
+//					document.getElementById("latitude").value = pt.lat;
+//					$("#site").val(site);
+//					$("#longitude").val(pt.lng);
+//					$("#latitude").val(pt.lat);
 					//          alert("pt.lng=="+pt.lng);
 					//           alert("pt.lat=="+pt.lat);
 					/**
@@ -583,35 +583,35 @@
 					 */
 					// 将地址解析结果显示在地图上,并调整地图视野.并将考勤地点记录的名称传进去
 					console.log("点击的地址site======" + site);
-					geoc.getPoint(site, function(point) {
-						console.log("22222222222222222");
-						if(point) {
-							map.centerAndZoom(point, 16);
-							/**
-							 * 将之前标注的红点清空
-							 */
-							map.clearOverlays();
-							//创建标注对象
-							var marker = new BMap.Marker(point);
-							map.addOverlay(marker);
-							marker.enableDragging(); //设置可拖拽
-							marker.addEventListener("dragend", function(e) { //拖动事件 
-								var pt = e.point;
-								geoc.getLocation(pt, function(rs) {
-									//addressComponents对象可以获取到详细的地址信息
-									var addComp = rs.addressComponents;
-									var site = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
-									//将对应的HTML元素设置值
-									document.getElementById("attendAdressText").value = site;
-									document.getElementById("longitude").value = pt.lng;
-									document.getElementById("latitude").value = pt.lat;
-								});
-
-							})
-						} else {
-							alert("点击地图---------您选择地址没有解析到结果!");
-						}
-					});
+//					geoc.getPoint(site, function(point) {
+//						console.log("22222222222222222");
+//						if(point) {
+//							map.centerAndZoom(point, 16);
+//							/**
+//							 * 将之前标注的红点清空
+//							 */
+//							map.clearOverlays();
+//							//创建标注对象
+//							var marker = new BMap.Marker(point);
+//							map.addOverlay(marker);
+//							marker.enableDragging(); //设置可拖拽
+//							marker.addEventListener("dragend", function(e) { //拖动事件 
+//								var pt = e.point;
+//								geoc.getLocation(pt, function(rs) {
+//									//addressComponents对象可以获取到详细的地址信息
+//									var addComp = rs.addressComponents;
+//									var site = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+//									//将对应的HTML元素设置值
+//									document.getElementById("attendAdressText").value = site;
+//									document.getElementById("longitude").value = pt.lng;
+//									document.getElementById("latitude").value = pt.lat;
+//								});
+//
+//							})
+//						} else {
+//							alert("点击地图---------您选择地址没有解析到结果!");
+//						}
+//					});
 				});
 			});
 

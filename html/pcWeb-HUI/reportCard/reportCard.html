@@ -125,7 +125,7 @@
 		<script src="../../../js/appweb/choose-file.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../../js/utils/consts.js"></script>
 		<script src="../../../js/utils/events.js"></script>
-		<script src="../../../js/compress.js"></script>
+		<!--<script src="../../../js/compress.js"></script>-->
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
@@ -230,6 +230,7 @@
 			}];
 
 			window.onload = function() {
+				getDepart()
 				getexam(1);
 
 			}

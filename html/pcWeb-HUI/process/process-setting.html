@@ -131,6 +131,9 @@
 				margin-left: 0;
 				margin-right: 0;
 			}
+			.select-page {
+				color: dodgerblue;
+			}
 		</style>
 	</head>
 
@@ -212,6 +215,11 @@
 						</tr>
 					</tbody>
 				</table>
+				<div class="float-right pageNo-container">
+					<button v-on:click="lastPage()">上一页</button>
+					<span v-for="pageNo in totalPage" v-bind:class="[{'select-page':pageNo==pageIndex},'page-no']">{{pageNo}}</span>
+					<button v-on:click="nextPage()">下一页</button>
+				</div>
 				<form id="edit-pocessInfo" style="display: none;" action="" class="form form-horizontal" id="form-member-add">
 					<div class="row cl">
 						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>流程类型：</label>

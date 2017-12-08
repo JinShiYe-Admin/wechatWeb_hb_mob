@@ -34,7 +34,8 @@ Vue.component("leave-setting", {
 			note: "",
 			pageIndex: 1,
 			totalPage: 1,
-			corpId: 0
+			corpId: 0,
+			pageNo:1
 		}
 	},
 	methods: {

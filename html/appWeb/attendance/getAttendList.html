@@ -75,7 +75,7 @@
 									<a class="classA">{{attend.AttendArea}}</a>
 								</p>
 								<p class="classP">类型:
-									<a class="classA">{{attend.AttendType}}</a>
+									<a class="classA">{{attend.AttendTypeNote}}</a>
 								</p>
 								<p class="classP">结果:
 									<a class="classA">{{attend.AttendResult}}</a>
@@ -202,7 +202,6 @@
 				}
 				console.log('tempData:' + JSON.stringify(tempData));
 				unitWebsitePro(tempData, function(data) {
-					getAttend(0);
 					if(data.RspCode == 0) {
 						attendData.userInfo = JSON.parse(data.RspData);
 						//16.获取考勤统计
@@ -273,8 +272,8 @@
 					var myDate = new Date().format('yyyy-MM-dd');
 					var endTime = myDate.toString().replace(/-/g, '');
 					tempData = {
-						corpId: 'wx6c4528c675d4a9c9', //单位ID
-						userId: ["zhaoqiwang"], //用户ID,例如：[“1”, “2”, “3”]
+						corpId: attendData.userInfo.corpid, //单位ID
+						userId: tempId, //用户ID,例如：[“1”, “2”, “3”]
 						beginTime: '19900101', //统计开始时间,年月日共八位如：20011010
 						endTime: endTime, //统计结束时间,年月日共八位如：20011010
 						attendResultId: '0', //0：全部,1: 正常,2：迟到,3：早退

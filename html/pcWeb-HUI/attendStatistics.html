@@ -26,7 +26,7 @@
 				<input placeholder="开始时间" type="text" onfocus="WdatePicker({ maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}' })" id="datemin" class="input-text Wdate" style="width:120px;"> -
 				<input placeholder="结束时间" type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax" class="input-text Wdate" style="width:120px;">
 				<button type="submit" class="btn btn-success radius" id="" name="" @click="searchAttendList()"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
-				<button type="submit" class="btn btn-success radius" id="" name="" @click="exportAttendList()"> 导出</button>
+				<a id="exportExcel" type="button" class="btn btn-success radius" onclick="clickExport()">导出</a>
 			</div>
 			<div class="mt-20">
 				<table class="table table-border table-bordered table-hover table-bg">
@@ -100,26 +100,28 @@
 					searchAttendList: function() {
 						//16.获取考勤统计
 						getAttendStat(attendData.peopleArray);
-					},
-					exportAttendList: function() {
-						if (attendData.attendArray.length ==0) {
-							layer.alert('当前日期没有考勤统计数据');
-							return false;
-						}
-						// 使用outerHTML属性获取整个table元素的HTML代码（包括<table>标签），然后包装成一个完整的HTML文档，设置charset为urf-8以防止中文乱码
-						var html = "<html><head><meta charset='utf-8' /></head><body>" + document.getElementsByTagName("table")[0].outerHTML + "</body></html>";
-						// 实例化一个Blob对象，其构造函数的第一个参数是包含文件内容的数组，第二个参数是包含文件类型属性的对象
-						var blob = new Blob([html], {
-							type: "application/vnd.ms-excel"
-						});
-						var a = document.getElementsByTagName("button")[1];
-						// 利用URL.createObjectURL()方法为a元素生成blob URL
-						a.href = URL.createObjectURL(blob);
-						// 设置文件名，目前只有Chrome和FireFox支持此属性
-						a.download = "考勤统计.xls";
 					}
 				}
 			});
+			//导出统计表
+			var clickExport = function() {
+				if(attendData.peopleArray.length == 0) {
+					layer.alert('当前日期没有考勤统计数据');
+					return false;
+				}
+				// 使用outerHTML属性获取整个table元素的HTML代码（包括<table>标签），然后包装成一个完整的HTML文档，设置charset为urf-8以防止中文乱码
+				var html = "<html><head><meta charset='utf-8' /></head><body>" + document.getElementsByTagName("table")[0].outerHTML + "</body></html>";
+				html = html.replace('<table', '<table border="1"');
+				// 实例化一个Blob对象，其构造函数的第一个参数是包含文件内容的数组，第二个参数是包含文件类型属性的对象
+				var blob = new Blob([html], {
+					type: "application/vnd.ms-excel"
+				});
+				var a = document.getElementById("exportExcel");
+				// 利用URL.createObjectURL()方法为a元素生成blob URL
+				a.href = URL.createObjectURL(blob);
+				// 设置文件名，目前只有Chrome和FireFox支持此属性
+				a.download = "考勤统计.xls";
+			}
 			//13.获取当前人员信息
 			var getUserInfo = function() {
 				var tempData = {

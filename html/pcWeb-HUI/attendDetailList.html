@@ -24,14 +24,13 @@
 			<div class="text-c"> 查询日期：
 				<input placeholder="查询日期" type="text" onfocus="WdatePicker({maxDate:'%y-%M-%d' })" id="datemax" class="input-text Wdate" style="width:120px;">
 				<button type="submit" class="btn btn-success radius" id="" name="" @click="searchAttendList()"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
-				<button type="submit" class="btn btn-success radius" id="" name="" @click="exportAttendList()"> 导出</button>
+				<a id="exportExcel" type="button" class="btn btn-success radius" onclick="clickExport()">导出</a>
 			</div>
 			<div class="mt-20">
 				<table class="table table-border table-bordered table-hover table-bg">
 					<thead>
-						<!--<tr class="text-c" v-for='(timeModel,index) in attendTimeArrayAll' v-show="flag>0" style="display: none;">-->
 						<tr class="text-c">
-							<td width="100" v-for='(timeModel,index) in attendTimeArrayAll' style="font-weight: bold;">
+							<td width="100" v-for='(timeModel,index) in attendTimeArrayAll' v-show="flag>0" style="display: none;" style="font-weight: bold;">
 								{{timeModel.AttendTypeNote}}
 							</td>
 						</tr>
@@ -99,26 +98,28 @@
 					searchAttendList: function() {
 						//15.获取考勤记录
 						getAttend();
-					},
-					exportAttendList: function() {
-						if(attendData.peopleArray.length == 0) {
-							layer.alert('当前日期没有考勤统计数据');
-							return false;
-						}
-						// 使用outerHTML属性获取整个table元素的HTML代码（包括<table>标签），然后包装成一个完整的HTML文档，设置charset为urf-8以防止中文乱码
-						var html = "<html><head><meta charset='utf-8' /></head><body>" + document.getElementsByTagName("table")[0].outerHTML + "</body></html>";
-						// 实例化一个Blob对象，其构造函数的第一个参数是包含文件内容的数组，第二个参数是包含文件类型属性的对象
-						var blob = new Blob([html], {
-							type: "application/vnd.ms-excel"
-						});
-						var a = document.getElementsByTagName("button")[1];
-						// 利用URL.createObjectURL()方法为a元素生成blob URL
-						a.href = URL.createObjectURL(blob);
-						// 设置文件名，目前只有Chrome和FireFox支持此属性
-						a.download = "考勤统计.xls";
 					}
 				}
 			});
+			var clickExport = function() {
+				if(attendData.peopleArray.length == 0) {
+					layer.alert('当前日期没有考勤统计数据');
+					return false;
+				}
+				// 使用outerHTML属性获取整个table元素的HTML代码（包括<table>标签），然后包装成一个完整的HTML文档，设置charset为urf-8以防止中文乱码
+				var html = "<html><head><meta charset='utf-8' /></head><body>" + document.getElementsByTagName("table")[0].outerHTML + "</body></html>";
+				html = html.replace('<table', '<table border="1"');
+				// 实例化一个Blob对象，其构造函数的第一个参数是包含文件内容的数组，第二个参数是包含文件类型属性的对象
+				var blob = new Blob([html], {
+					type: "application/vnd.ms-excel"
+				});
+				var a = document.getElementById("exportExcel");
+				// 利用URL.createObjectURL()方法为a元素生成blob URL
+				a.href = URL.createObjectURL(blob);
+				// 设置文件名，目前只有Chrome和FireFox支持此属性
+				a.download = "考勤详单.xls";
+			}
+
 			//13.获取当前人员信息
 			var getUserInfo = function() {
 				var tempData = {
@@ -146,6 +147,7 @@
 					pageSize: 0 //每页记录数，0 为全部
 				}
 				console.log('tempData:' + JSON.stringify(tempData));
+
 				getAttendTimePro(tempData, function(data) {
 					if(data.RspCode == 0) {
 						var tempModel = {
@@ -158,9 +160,8 @@
 						attendData.attendTimeArrayAll = [].concat(data.RspData.Data);
 						attendData.attendTimeArrayAll.splice(0, 0, tempModel1);
 						attendData.attendTimeArrayAll.splice(0, 0, tempModel);
-
 						//获取管理的部门
-						getPersonDepart();
+						getPersonDepart(data.RspData.Data);
 					} else {
 						//						layer.alert('请重新登录获取个人信息');
 					}
@@ -168,7 +169,7 @@
 			};
 
 			//获取管理的部门
-			var getPersonDepart = function() {
+			var getPersonDepart = function(timeArray) {
 				var tempData = {
 					cmd: 'persondepartsadmin',
 					type: 'findpage' //获取管理员全部管理部门
@@ -179,13 +180,13 @@
 						attendData.departArray = [].concat(JSON.parse(data.RspData));
 						//把获取到的部门，按层级组合
 						var tempArr = getNodeTree(JSON.parse(data.RspData));
-						console.log('tempArr:' + JSON.stringify(tempArr));
+						//						console.log('tempArr:'+JSON.stringify(tempArr));
 						//得到最顶层的部门id数组
 						var tempDepartArr = [];
 						for(var i = 0; i < tempArr.length; i++) {
 							var tempModel = tempArr[i];
 							//获取部门下的所有人员
-							getDepartPerson(tempModel.value);
+							getDepartPerson(tempModel.value, timeArray);
 						}
 					} else {
 						layer.alert('获取部门出现问题');
@@ -194,7 +195,7 @@
 			}
 
 			//17.获取某部门ID下所有人员(PC管理端)
-			var getDepartPerson = function(departID) {
+			var getDepartPerson = function(departID, timeArray) {
 				var tempData = {
 					cmd: 'departpersonsadmin',
 					type: 'findpage', //获取管理员全部管理部门
@@ -209,9 +210,24 @@
 						for(var i = 0; i < data.RspData.length; i++) {
 							var tempModel = data.RspData[i];
 							tempArr.push(tempModel.userid);
+							tempModel.timeList = [];
 							//给每一个人添加时间段数组
-							tempModel.timeList = attendData.attendTimeArray.slice(0);
-							//					tempModel.timeList = attendData.attendTimeArray.concat();
+							for(var m = 0; m < timeArray.length; m++) {
+								var temp00 = timeArray[m];
+								var temp01 = {
+									AttendType: temp00.AttendType,
+									AttendResult: '缺勤',
+									AttendMessage: temp00.AttendMessage,
+									ContinuousMinute: temp00.ContinuousMinute,
+									LateMinute: temp00.LateMinute,
+									attendTypeProp: temp00.attendTypeProp,
+									AttendTimeId: temp00.AttendTimeId,
+									BeginHour: temp00.BeginHour,
+									AttendTypeNote: temp00.AttendTypeNote,
+									BeginMinute: temp00.BeginMinute
+								}
+								tempModel.timeList.push(temp01);
+							}
 							attendData.peopleArray.push(tempModel);
 						}
 						console.log('attendData.peopleArray0000:' + JSON.stringify(attendData.peopleArray));
@@ -350,6 +366,9 @@
 											if(tempModel.AttendType == timeModel.AttendType) {
 												//合并对象
 												timeModel = $.extend(timeModel, tempModel);
+												if(timeModel.AttendResult.length == 0) {
+													timeModel.AttendResult = '缺勤';
+												}
 											}
 										}
 									}

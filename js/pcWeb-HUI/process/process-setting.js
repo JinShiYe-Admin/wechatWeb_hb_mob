@@ -5,34 +5,59 @@ Vue.component("process-setting", {
 			processList: [{
 				ProcessTypeId: 0, //流程Id
 				ProcTypeName: "流程0", //流程名称
-				ProTypeNote: "流程0备注" //流程备注
+				ProTypeNote: "流程0备注", //流程备注
+				Stat: 1
 			}, {
 				ProcessTypeId: 1, //流程Id
 				ProcTypeName: "流程1", //流程名称
-				ProTypeNote: "流程1备注" //流程备注
+				ProTypeNote: "流程1备注", //流程备注
+				Stat: 1
 			}, {
 				ProcessTypeId: 2, //流程Id
 				ProcTypeName: "流程2", //流程名称
-				ProTypeNote: "流程2备注" //流程备注
+				ProTypeNote: "流程2备注", //流程备注
+				Stat: 1
 			}, {
 				ProcessTypeId: 3, //流程Id
 				ProcTypeName: "流程3", //流程名称
-				ProTypeNote: "流程3备注" //流程备注
+				ProTypeNote: "流程3备注", //流程备注
+				Stat: 1
 			}],
 			activeProcess: {
 				ProcessTypeId: 0, //流程Id
 				ProcTypeName: "流程4", //流程名称
-				ProTypeNote: "流程4备注" //流程备注
+				ProTypeNote: "流程4备注", //流程备注
+				Stat: 1
 			},
 			changeType: 0, //0 新建流程 1修改流程
 			corpId: 0,
 			pageIndex: 1,
 			totalPage: 1,
 			name: "",
-			note: ""
+			note: "",
+			stat: 1
 		}
 	},
 	methods: {
+		/**
+		 * 更改显示状态
+		 * @param {Object} process
+		 */
+		changeState: function(process) {
+			processRequest.postProcessData("setProcessType", {
+				corpId: this.corpId,
+				procTypeId: process.ProcessTypeId,
+				procTypeName: process.ProcTypeName,
+				proTypeNote: process.ProTypeNote,
+				stat: (process.Stat + 1) % 2
+			}, function(response) {
+				if(response.RspCode == 0) {
+					process.Stat = (process.Stat + 1) % 2;
+				} else {
+					alert(response.RspTxt);
+				}
+			})
+		},
 		/**
 		 * 添加流程
 		 */
@@ -130,12 +155,17 @@ Vue.component("process-setting", {
 				this.requireProcess();
 			}
 		},
+		/**
+		 * 更改流程类型说明
+		 */
 		setProcessType: function() {
 			var com = this;
 			processRequest.postProcessData("setProcessType", {
 				procTypeId: this.activeProcess.ProcessTypeId,
+				corpId: this.corpId,
 				procTypeName: this.name,
-				procTypeNote: this.note
+				procTypeNote: this.note,
+				stat: this.stat
 			}, function(response) {
 				if(response.RspCode == 0) {
 					com.activeProcess.ProcTypeName = this.name;
@@ -151,6 +181,7 @@ Vue.component("process-setting", {
 			var com = this;
 			processRequest.postProcessData("getProcessList", {
 				corpId: this.corpId,
+				stat: 0,
 				pageIndex: this.pageIndex,
 				pageSize: 20
 			}, function(response) {

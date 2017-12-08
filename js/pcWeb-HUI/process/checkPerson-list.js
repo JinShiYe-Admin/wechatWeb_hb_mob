@@ -23,7 +23,7 @@ Vue.component("check-person-list", {
 			changeType: 0, //0 新建流程 1修改流程
 			corpId: 0,
 			pageIndex: 1,
-			totalPage: 10,
+			totalPage: 1,
 			name: "",
 			note: "",
 			selectedInputPerson: {},

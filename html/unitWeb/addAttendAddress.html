@@ -74,7 +74,8 @@
 
 				</div>
 				考勤地点X坐标（经度）：<input type="text" id="longitude" /> 考勤地点Y坐标（纬度）：
-				<input type="text" id="latitude" />
+				<input type="text" id="latitude" /> &nbsp; &nbsp;
+				<!--<button id="search">查询</button>--><input type="button" onclick="search()" value="查询" />
 				<div class="weui-cells__title ">考勤地点半径</div>
 				<div class="weui-cells ">
 					<div class="weui-cell ">
@@ -83,8 +84,8 @@
 						</div>
 					</div>
 				</div>
-				<div class="tips">系统无法获取经纬度时，请使用高德地图查询后手动输入
-					<a style="color: #737373; text-decoration: underline;" href="https://lbs.amap.com/console/show/picker">查询</a>
+				<div class="tips">系统无法获取经纬度时，请使用拾取坐标系统查询后手动输入
+					<a target="_blank" style="color: #737373; text-decoration: underline;" href="http://api.map.baidu.com/lbsapi/getpoint/index.html">查询</a>
 				</div>
 			</div>
 			<!--开关列表-->
@@ -166,7 +167,7 @@
 					}
 				})
 				//给corpId赋值假数据
-//												corpId = "wx6c4528c675d4a9c9";
+				//												corpId = "wx6c4528c675d4a9c9";
 				//	getWebsitConfig();
 				var detail = utils.getDataFromUrl(window.location.href);
 				//				alert("detail " + JSON.stringify(detail));
@@ -570,12 +571,12 @@
 					var addComp = rs.addressComponents;
 					var site = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
 					//将对应的HTML元素设置值
-//					document.getElementById("attendAdressText").value = site;
-//					document.getElementById("longitude").value = pt.lng;
-//					document.getElementById("latitude").value = pt.lat;
-//					$("#site").val(site);
-//					$("#longitude").val(pt.lng);
-//					$("#latitude").val(pt.lat);
+					//					document.getElementById("attendAdressText").value = site;
+					//					document.getElementById("longitude").value = pt.lng;
+					//					document.getElementById("latitude").value = pt.lat;
+					//					$("#site").val(site);
+					//					$("#longitude").val(pt.lng);
+					//					$("#latitude").val(pt.lat);
 					//          alert("pt.lng=="+pt.lng);
 					//           alert("pt.lat=="+pt.lat);
 					/**
@@ -583,35 +584,35 @@
 					 */
 					// 将地址解析结果显示在地图上,并调整地图视野.并将考勤地点记录的名称传进去
 					console.log("点击的地址site======" + site);
-//					geoc.getPoint(site, function(point) {
-//						console.log("22222222222222222");
-//						if(point) {
-//							map.centerAndZoom(point, 16);
-//							/**
-//							 * 将之前标注的红点清空
-//							 */
-//							map.clearOverlays();
-//							//创建标注对象
-//							var marker = new BMap.Marker(point);
-//							map.addOverlay(marker);
-//							marker.enableDragging(); //设置可拖拽
-//							marker.addEventListener("dragend", function(e) { //拖动事件 
-//								var pt = e.point;
-//								geoc.getLocation(pt, function(rs) {
-//									//addressComponents对象可以获取到详细的地址信息
-//									var addComp = rs.addressComponents;
-//									var site = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
-//									//将对应的HTML元素设置值
-//									document.getElementById("attendAdressText").value = site;
-//									document.getElementById("longitude").value = pt.lng;
-//									document.getElementById("latitude").value = pt.lat;
-//								});
-//
-//							})
-//						} else {
-//							alert("点击地图---------您选择地址没有解析到结果!");
-//						}
-//					});
+					//					geoc.getPoint(site, function(point) {
+					//						console.log("22222222222222222");
+					//						if(point) {
+					//							map.centerAndZoom(point, 16);
+					//							/**
+					//							 * 将之前标注的红点清空
+					//							 */
+					//							map.clearOverlays();
+					//							//创建标注对象
+					//							var marker = new BMap.Marker(point);
+					//							map.addOverlay(marker);
+					//							marker.enableDragging(); //设置可拖拽
+					//							marker.addEventListener("dragend", function(e) { //拖动事件 
+					//								var pt = e.point;
+					//								geoc.getLocation(pt, function(rs) {
+					//									//addressComponents对象可以获取到详细的地址信息
+					//									var addComp = rs.addressComponents;
+					//									var site = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+					//									//将对应的HTML元素设置值
+					//									document.getElementById("attendAdressText").value = site;
+					//									document.getElementById("longitude").value = pt.lng;
+					//									document.getElementById("latitude").value = pt.lat;
+					//								});
+					//
+					//							})
+					//						} else {
+					//							alert("点击地图---------您选择地址没有解析到结果!");
+					//						}
+					//					});
 				});
 			});
 
@@ -635,6 +636,38 @@
 				map.addOverlay(marker);
 				map.addOverlay(circle);
 			}
+
+			//输入坐标查询地点，代码开始
+			function search() {
+				//				alert(0000)
+				var X = document.getElementById("longitude").value;
+				var Y = document.getElementById("latitude").value;
+				if(X == "" && Y == "") {
+					alert("请输入坐标");
+					return;
+				}
+
+				var point = new BMap.Point(X, Y);
+				map.clearOverlays();
+				//创建标注对象
+				var marker = new BMap.Marker(point);
+				map.addOverlay(marker);
+
+				//根据点解析出地址
+				geoc.getLocation(point, function(rs) {
+					console.log("rs===========" + JSON.stringify(rs));
+					//addressComponents对象可以获取到详细的地址信息
+					var addComp = rs.addressComponents;
+					var site = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+//					//将对应的HTML元素设置值
+					document.getElementById("attendAdressText").value = site;
+//					document.getElementById("longitude").value = pt.lng;
+//					document.getElementById("latitude").value = pt.lat;
+
+				});
+
+			}
+			//输入坐标查询地点，代码结束
 		</script>
 	</body>
 

@@ -35,8 +35,7 @@ Vue.component("process-setting", {
 			totalPage: 1,
 			name: "",
 			note: "",
-			stat: 1,
-			pageNo: 1
+			stat: 1
 		}
 	},
 	methods: {
@@ -45,6 +44,7 @@ Vue.component("process-setting", {
 		 * @param {Object} process
 		 */
 		changeState: function(process) {
+			console.log("*****changeState******");
 			processRequest.postProcessData("setProcessType", {
 				corpId: this.corpId,
 				procTypeId: process.ProcessTypeId,
@@ -63,7 +63,7 @@ Vue.component("process-setting", {
 		 * 添加流程
 		 */
 		addProcess: function() {
-			//todo 添加流程
+			console.log("*****添加流程*******");
 			this.changeType = 0;
 			this.name = "";
 			this.note = "";
@@ -75,6 +75,7 @@ Vue.component("process-setting", {
 		 * @param {Object} title
 		 */
 		toggleLayer: function(isOpen, title) {
+			console.log("****显示/关闭对话框****");
 			if(isOpen) {
 				layer.open({
 					type: 1,
@@ -93,6 +94,7 @@ Vue.component("process-setting", {
 		 * @param {Object} process 要更改流程链的流程
 		 */
 		changeProcessList: function(process) {
+			console.log("****changeProcessList****")
 			this.activeProcess = process;
 			console.log("更改流程链：" + JSON.stringify(process))
 			this.$emit("process-info", this.activeProcess);
@@ -105,6 +107,7 @@ Vue.component("process-setting", {
 		 * @param {Object} process
 		 */
 		changeProcessInfo: function(process) {
+			console.log("******更改流程信息changeProcessInfo******")
 			this.changeType = 1;
 			this.name = process.ProcTypeName;
 			this.note = process.ProTypeNote;
@@ -115,6 +118,7 @@ Vue.component("process-setting", {
 		 * 提交流程
 		 */
 		submitProcess: function() {
+			console.log("*****submitProcess*****");
 			if(changeType === 0) {
 				this.addProcessType();
 			} else {
@@ -125,12 +129,14 @@ Vue.component("process-setting", {
 		 * 添加流程類型信息
 		 */
 		addProcessType: function() {
+			console.log("*****addProcessType******");
 			var com = this;
 			processRequest.postProcessData("addProcessType", {
 				corpId: this.corpId,
 				procTypeName: this.name,
 				proTypeNote: this.note
 			}, function(response) {
+				console.log("添加流程类型信息的结果:" + JSON.stringify(response));
 				if(response.RspCode == 0) {
 					com.addDataToList(response.RspData.Result);
 				}
@@ -141,6 +147,7 @@ Vue.component("process-setting", {
 		 * @param {Object} processId
 		 */
 		addDataToList: function(processId) {
+			console.log("*****addDataToList*****");
 			var process = {
 				ProcessTypeId: processId,
 				ProcTypeName: this.name,
@@ -160,6 +167,7 @@ Vue.component("process-setting", {
 		 * 更改流程类型说明
 		 */
 		setProcessType: function() {
+			console.log("*****更改流程类型说明setProcessType*****")
 			var com = this;
 			processRequest.postProcessData("setProcessType", {
 				procTypeId: this.activeProcess.ProcessTypeId,
@@ -168,9 +176,10 @@ Vue.component("process-setting", {
 				procTypeNote: this.note,
 				stat: this.stat
 			}, function(response) {
+				console.log("更改流程类型结果:" + JSON.stringify(response));
 				if(response.RspCode == 0) {
-					com.activeProcess.ProcTypeName = this.name;
-					com.activeProcess.procTypeNote = this.note;
+					com.activeProcess.ProcTypeName = com.name;
+					com.activeProcess.procTypeNote = com.note;
 				}
 			})
 		},
@@ -179,6 +188,7 @@ Vue.component("process-setting", {
 		 * 分页获取流程
 		 */
 		requireProcess: function() {
+			console.log("****requireProcess****")
 			var com = this;
 			processRequest.postProcessData("getProcessList", {
 				corpId: this.corpId,
@@ -186,6 +196,7 @@ Vue.component("process-setting", {
 				pageIndex: this.pageIndex,
 				pageSize: 20
 			}, function(response) {
+				console.log("获取流程信息结果:" + JSON.stringify(response));
 				if(response.RspCode == 0) {
 					com.totalPage = response.TotalPage;
 					com.processList = response.RspData.Data
@@ -194,6 +205,7 @@ Vue.component("process-setting", {
 		},
 		//array to obj
 		changeArrayToObj: function(arrays) {
+			console.log("*****changeArrayToObj*****");
 			var obj = {};
 			for(var i in arrays) {
 				obj[arrays[i].ApprMan] = arrays[i].ApprManName;
@@ -205,12 +217,16 @@ Vue.component("process-setting", {
 		 * @param {Object} process
 		 */
 		delProcess: function(process) {
+			console.log("*****delProcess*****");
 			var com = this;
 			processRequest.postProcessData("delProcessType", {
 				procTypeId: process.ProcessTypeId
 			}, function(response) {
+				console.log("删除流程结果:" + JSON.stringify(response));
 				if(response.RspCode == 0) {
-					com.requireProcess()
+					com.requireProcess();
+				} else {
+					alert(response.RspTxt);
 				}
 			})
 		}

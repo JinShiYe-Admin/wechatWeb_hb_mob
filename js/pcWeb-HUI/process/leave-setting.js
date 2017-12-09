@@ -4,28 +4,35 @@ Vue.component("leave-setting", {
 		return {
 			leaveList: [{
 				LeaveTypeId: 0, //流程Id
-				ProcTypeName: "流程0", //流程名称
-				ProTypeNote: "流程0备注", //流程备注
+				LeaveTypeName: "请假类型0", //流程名称
+				LeaveTypeNote: "请假类型0备注", //流程备注
+				IsLeader: 0,
 				Stat: 1
 			}, {
 				LeaveTypeId: 1, //流程Id
-				ProcTypeName: "流程1", //流程名称
-				ProTypeNote: "流程1备注", //流程备注
+				LeaveTypeName: "请假类型1", //流程名称
+				LeaveTypeNote: "请假类型1备注", //流程备注
+				IsLeader: 2,
 				Stat: 1
 			}, {
 				LeaveTypeId: 2, //流程Id
-				ProcTypeName: "流程2", //流程名称
-				ProTypeNote: "流程2备注" //流程备注
+				LeaveTypeName: "请假类型2", //流程名称
+				LeaveTypeNote: "请假类型2备注", //流程备注
+				IsLeader: 1,
+				Stat: 0
 			}, {
 				LeaveTypeId: 3, //流程Id
-				ProcTypeName: "流程3", //流程名称
-				ProTypeNote: "流程3备注", //流程备注
+				LeaveTypeName: "请假类型3", //流程名称
+				LeaveTypeNote: "请假类型3备注", //流程备注
+				IsLeader: 0,
 				Stat: 0
 			}],
 			activeLeave: {
 				LeaveTypeId: 0, //流程Id
-				ProcTypeName: "流程4", //流程名称
-				ProTypeNote: "流程4备注" //流程备注
+				LeaveTypeName: "请假类型4", //流程名称
+				LeaveTypeNote: "请假类型4备注", //流程备注
+				Stat: 1,
+				Isleader: 2
 			},
 			changeType: 0, //0 新建流程 1修改流程
 			checkedTea: false,
@@ -34,8 +41,21 @@ Vue.component("leave-setting", {
 			note: "",
 			pageIndex: 1,
 			totalPage: 1,
-			corpId: 0,
-			pageNo:1
+			corpId: 0
+		}
+	},
+	filters: {
+		getLeaveRelation: function(isLeader) {
+			switch(isLeader) {
+				case 0:
+					return "老师和家长请假";
+				case 1:
+					return "老师请假";
+				case 2:
+					return "家长请假";
+				default:
+					return ""
+			}
 		}
 	},
 	methods: {
@@ -45,6 +65,7 @@ Vue.component("leave-setting", {
 		 * @param {Object} index
 		 */
 		changeState: function(leave, index) {
+			console.log("*****Leave-changeState*****");
 			processRequest.postProcessData("setLeaveType", {
 				corpId: this.corpId,
 				leaveTypeId: leave.LeaveTypeId,
@@ -60,7 +81,9 @@ Vue.component("leave-setting", {
 				}
 			})
 		},
-		//添加流程类型
+		/**
+		 * 添加leave类型
+		 */
 		addLeave: function() {
 			console.log("****addLeave*****")
 			//todo 添加流程
@@ -77,6 +100,7 @@ Vue.component("leave-setting", {
 		 * @param {Object} title
 		 */
 		toggleLayer: function(isOpen, title) {
+			console.log("****toggleLayer****");
 			if(isOpen) {
 				layer.open({
 					type: 1,
@@ -95,17 +119,19 @@ Vue.component("leave-setting", {
 		 * @param {Object} leave
 		 */
 		changeLeaveInfo: function(leave) {
+			console.log("*****changeLeaveInfo*****");
 			this.changeType = 1;
 			this.activeLeave = leave;
 			this.name = leave.LeaveTypeName;
 			this.note = leave.LeaveTypeNote;
-			this.setCheckCon(leave.isLeader);
+			this.setCheckCon(leave.IsLeader);
 			this.toggleLayer(true, "更改请假类型信息");
 		},
 		/**
 		 * 編輯請假信息
 		 */
 		editLeave: function() {
+			console.log("****editLeave****");
 			if(this.changeType == 0) {
 				this.addLeaveType();
 			} else {
@@ -116,6 +142,7 @@ Vue.component("leave-setting", {
 		 * 添加請假類型
 		 */
 		addLeaveType: function() {
+			console.log("*****addLeaveType*****");
 			var com = this;
 			processRequest.postProcessData("addLeaveType", {
 				corpId: this.corpId,
@@ -123,6 +150,7 @@ Vue.component("leave-setting", {
 				leaveTypeNote: this.note,
 				isLeader: this.getIsLeader()
 			}, function(response) {
+				console.log("添加流程类型的结果:" + JSON.stringify(response));
 				if(response.RspCode == 0) {
 					com.requireLeave(); //刷新数据
 				} else {
@@ -134,6 +162,7 @@ Vue.component("leave-setting", {
 		 * 獲取關聯類型
 		 */
 		getIsLeader: function() {
+			console.log("*****getIsLeader*****");
 			if(this.checkedTea && this.checkedPar) {
 				return 0;
 			}
@@ -149,6 +178,7 @@ Vue.component("leave-setting", {
 		 * 修改請假信息
 		 */
 		setLeave: function() {
+			console.log("****setLeave****");
 			var com = this;
 			processRequest.postProcessData("setLeaveType", {
 				corpId: this.corpId,
@@ -158,6 +188,7 @@ Vue.component("leave-setting", {
 				isLeader: this.getIsLeader(),
 				stat: this.activeLeave.Stat
 			}, function(response) {
+				console.log("修改请假信息的结果:" + JSON.stringify(response));
 				if(response.RspCode == 0) {
 					com.activeLeave.LeaveTypeName = com.name;
 					com.activeLeave.LeaveTypeNote.com.note;
@@ -171,6 +202,7 @@ Vue.component("leave-setting", {
 		 * 设置选择状况
 		 */
 		setCheckCon: function(isLeader) {
+			console.log("****setCheckCon****");
 			switch(isLeader) {
 				case 0:
 					this.checkedTea = true;
@@ -194,6 +226,7 @@ Vue.component("leave-setting", {
 		 * 獲取全部請假類型信息
 		 */
 		requireLeave: function() {
+			console.log("*****requireLeave*****");
 			var com = this;
 			processRequest.postProcessData("getLeaveType", {
 				corpId: this.corpId,
@@ -203,6 +236,8 @@ Vue.component("leave-setting", {
 			}, function(response) {
 				if(response.RspCode == 0) {
 					com.leaveList = response.RspData.Data;
+				} else {
+
 				}
 			})
 		},
@@ -211,6 +246,7 @@ Vue.component("leave-setting", {
 		 * @param {Object} leave
 		 */
 		delLeave: function(leave) {
+			console.log("****delLeave*****");
 			var com = this;
 			processRequest.postProcessData("delLeaveType", {
 				leaveTypeId: leave.LeaveTypeId

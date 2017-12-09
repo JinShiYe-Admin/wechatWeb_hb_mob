@@ -1,28 +1,28 @@
 Vue.component("select-load-pic", {
 	props: {
-		index:{
-			type:Number
+		index: {
+			type: Number
 		},
-		files:{
-			default:function(){
+		files: {
+			default: function() {
 				return []
 			},
-			type:Array
+			type: Array
 		},
-		originalName:{
-			default:'',
-			type:String
+		originalName: {
+			default: '',
+			type: String
 		}
 	}, //0 原图 最大2M 1缩略图
 	template: '#temp_select_load_pic',
 	data: function() {
 		return {
-		
+
 		}
 	},
 	mounted: function() {
 		console.log("当前pic类型:" + this.index)
-		console.log("*******isDel"+this.isdel)
+		console.log("*******isDel" + this.isdel)
 		this.uploadFile();
 	},
 	filters: {

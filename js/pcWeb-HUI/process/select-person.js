@@ -16,8 +16,7 @@ Vue.component("choose-person", {
 			}
 		}
 	},
-	mounted: function() {
-	},
+	mounted: function() {},
 	data: function() {
 		return {
 			personList: [],
@@ -31,6 +30,7 @@ Vue.component("choose-person", {
 		 * @param {Object} oldVal
 		 */
 		choseDepart: function(newVal, oldVal) {
+			console.log("****choseDepart*****");
 			this.personList = [];
 			this.requireDepartPerson();
 		},
@@ -92,6 +92,7 @@ Vue.component("choose-person", {
 		 * 获取部门人员
 		 */
 		requireDepartPerson: function() {
+			console.log("****reuireDepartPerson*****");
 			var com = this;
 			request.getDepartPersons(this.choseDepart, 1, 0, function(data) {
 				com.personList = data;

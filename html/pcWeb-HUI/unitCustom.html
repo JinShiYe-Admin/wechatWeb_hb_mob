@@ -116,13 +116,13 @@
 				<div id="clCname" class="row cl">
 					<label class="form-label col-xs-4 col-sm-3">模块名称：</label>
 					<div class="formControls col-xs-8 col-sm-9">
-						<input id="dataCname" type="text" class="input-text" placeholder="请输入模块名称"></input>
+						<input id="dataCname" type="text" class="input-text" maxlength="20" placeholder="请输入模块名称，最多20字"></input>
 					</div>
 				</div>
 				<div id="clMurl" class="row cl">
 					<label class="form-label col-xs-4 col-sm-3">超链接地址：</label>
 					<div class="formControls col-xs-8 col-sm-9">
-						<input id="dataMurl" type="text" class="input-text" placeholder="请输入超链接地址"></input>
+						<textarea id="dataMurl" type="text" class="textarea radius" placeholder="请输入超链接地址"></textarea>
 					</div>
 				</div>
 				<div id="clOrderid" class="row cl">
@@ -181,7 +181,7 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cloudutil.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/compress.js?" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../temp/mineinfo.js" + WebVersion + "'></s" + "cript>");
+			//document.write("<s" + "cript type='text/javascript' src='../../temp/mineinfo.js" + WebVersion + "'></s" + "cript>");
 		</script>
 		<script>
 			var webData; //地址列表的数据
@@ -191,7 +191,7 @@
 			var qnUploader; //上传图片七牛对象
 			var uptokenData; //上传凭证对象
 			var uploadFile = {}; //上传的文件
-			var editState; //编辑的状态。0，添加模块；1，修改模块名称
+			var editState; //编辑的状态。0，添加模块；1，修改模块名称；2，修改超链接地址；3，修改图标；4，修改排序ID
 			window.onload = function() {
 				layer.load(2);
 				initListener();
@@ -283,6 +283,15 @@
 						case 1:
 							editCname();
 							break;
+						case 2:
+							editMurl();
+							break;
+						case 3:
+							editMimg();
+							break;
+						case 4:
+							editOrderid();
+							break;
 						default:
 							break;
 					}
@@ -299,42 +308,36 @@
 				 * 点击修改模块名称
 				 */
 				$("#dataList").on("click", ".Hui-iconfont-edit", function() {
-					dataIndex = $("#dataList tr").index(this.parentNode.parentNode.parentNode);
-					console.log("dataIndex:" + dataIndex);
-					$("#clCname").css("display", "block");
-					$("#clMurl").css("display", "none");
-					$("#clOrderid").css("display", "none");
-					$("#clMimg").css("display", "none");
-					$("#dataCname").val(webData[dataIndex].cname);
-					editState = 1;
-					layer.open({
-						type: 1,
-						title: "修改",
-						area: '500px',
-						zIndex: 999,
-						content: $('#dataAdd')
-					});
+					showEdit(1, this);
 				});
 
 				/**
 				 * 点击修改超链接地址
 				 */
 				$("#dataList").on("click", ".Hui-iconfont-link", function() {
+					showEdit(2, this);
+				});
+
+				/**
+				 * 点击修改图标
+				 */
+				$("#dataList").on("click", ".Hui-iconfont-tuku", function() {
+					showEdit(3, this);
+				});
+
+				/**
+				 * 点击修改排序ID
+				 */
+				$("#dataList").on("click", ".Hui-iconfont-ordered-list", function() {
+					showEdit(4, this);
+				});
+
+				/**
+				 * 点击修改状态
+				 */
+				$("#dataList").on("click", ".change-state", function() {
 					dataIndex = $("#dataList tr").index(this.parentNode.parentNode.parentNode);
-					console.log("dataIndex:" + dataIndex);
-					$("#clCname").css("display", "none");
-					$("#clMurl").css("display", "block");
-					$("#clOrderid").css("display", "none");
-					$("#clMimg").css("display", "none");
-					$("#dataMurl").val(webData[dataIndex].murl);
-					editState = 1;
-					layer.open({
-						type: 1,
-						title: "修改",
-						area: '500px',
-						zIndex: 999,
-						content: $('#dataAdd')
-					});
+					dataEdit("stat", !webData[dataIndex].stat * 1);
 				});
 
 				/**
@@ -401,7 +404,11 @@
 							console.log("上传成功");
 							uploadFile.success = true;
 							uploadFile.furl = uptokenData.data.Data[0].Domain + uptokenData.data.Data[0].Key;
-							submitData();
+							if(editState == 3) {
+								dataEdit("mimg", uploadFile.furl);
+							} else {
+								submitData();
+							}
 						} else {
 							uploadImageError(info.response);
 						}
@@ -478,7 +485,7 @@
 							<a class="operate-edit " title="修改超链接地址"><i class="Hui-iconfont Hui-iconfont-link"></i></a>\
 							<a class="operate-edit " title="修改图标"><i class="Hui-iconfont Hui-iconfont-tuku"></i></a>\
 							<a class="operate-edit " title="修改排序ID"><i class="Hui-iconfont Hui-iconfont-ordered-list"></i></a>\
-							<a class="operate-edit " title="修改状态"><i class="Hui-iconfont ' + editStatIcon + '"></i></a>\
+							<a class="operate-edit " title="修改状态"><i class="Hui-iconfont change-state ' + editStatIcon + '"></i></a>\
 							<a class="operate-edit " title="删除"><i class="Hui-iconfont Hui-iconfont-del3"></i></a>\
 						</td>\
 					</tr>';
@@ -523,8 +530,9 @@
 				unitWebsitePro(tempData, function(data) {
 					layer.closeAll('loading');
 					$("#dataList").empty();
+					webData = null;
 					webData = [];
-					data = temp_corpmodinfoadmin_findpage;
+					//data = temp_unitCustom_list;
 					if(data.RspCode == 0) {
 						webData = data.RspData.dt;
 						showData(webData);
@@ -588,7 +596,17 @@
 					if(data.RspCode == 0) {
 						layer.closeAll("page");
 						$.Huimodalalert("修改成功", 2000);
-						getData(page);
+						if(callcol == "murl") {
+							webData[dataIndex].murl = colv;
+							$($("#dataList tr")[dataIndex]).find("td")[1].innerText = colv;
+							layer.closeAll('loading');
+						} else if(callcol == "mimg") {
+							webData[dataIndex].mimg = colv;
+							$($("#dataList tr")[dataIndex]).find("img").attr("src", colv);
+							layer.closeAll('loading');
+						} else {
+							getData(page);
+						}
 					} else {
 						layer.closeAll('loading');
 						layer.confirm(data.RspTxt, {
@@ -688,6 +706,111 @@
 					return false;
 				}
 				dataEdit("cname", dataCname);
+			}
+
+			/**
+			 * 修改超链接
+			 */
+			function editMurl() {
+				var dataMurl = $.trim($("#dataMurl").val());
+				if(dataMurl == "") {
+					layer.confirm('请输入超链接地址', {
+						icon: 2,
+						title: '提示'
+					});
+					return false;
+				} else {
+					var RegUrl = new RegExp();
+					RegUrl.compile("^[A-Za-z]+://[A-Za-z0-9-_]+\\.[A-Za-z0-9-_%&\?\/.=]+$");
+					if(!RegUrl.test(dataMurl)) {
+						layer.confirm('请输入正确的超链接地址', {
+							icon: 2,
+							title: '提示'
+						});
+						return false;
+					}
+				}
+				if(dataMurl == webData[dataIndex].murl) {
+					layer.confirm('请输入新的超链接地址', {
+						icon: 2,
+						title: '提示'
+					});
+					return false;
+				}
+				dataEdit("murl", dataMurl);
+			}
+
+			/**
+			 * 修改图标
+			 */
+			function editMimg() {
+				if(uploadFile.file) {
+					layer.load(2);
+					if(uploadFile.success) {
+						dataEdit("mimg", uploadFile.furl);
+					} else {
+						uploadImage();
+					}
+				} else {
+					layer.confirm('请选取图标', {
+						icon: 2,
+						title: '提示'
+					});
+				}
+			}
+
+			/**
+			 * 修改排序ID
+			 */
+			function editOrderid() {
+				var dataOrderid = $("#dataOrderid").val();
+				if(dataOrderid == webData[dataIndex].orderid) {
+					layer.confirm('请选择新的排序ID', {
+						icon: 2,
+						title: '提示'
+					});
+					return false;
+				}
+				dataEdit("orderid", dataOrderid);
+			}
+
+			/**
+			 * 显示编辑页面
+			 * @param {Object} type
+			 */
+			function showEdit(type, ele) {
+				dataIndex = $("#dataList tr").index(ele.parentNode.parentNode.parentNode);
+				editState = type;
+				$("#clCname").css("display", "none");
+				$("#clMurl").css("display", "none");
+				$("#clOrderid").css("display", "none");
+				$("#clMimg").css("display", "none");
+				switch(type) {
+					case 1:
+						$("#clCname").css("display", "block");
+						$("#dataCname").val(webData[dataIndex].cname);
+						break;
+					case 2:
+						$("#clMurl").css("display", "block");
+						$("#dataMurl").val(webData[dataIndex].murl);
+						break;
+					case 3:
+						$("#clMimg").css("display", "block");
+						$(".picture-show").css("display", "block");
+						$("#showImage").attr("src", webData[dataIndex].mimg);
+						break;
+					case 4:
+						$("#clOrderid").css("display", "block");
+						$("#dataOrderid").val(webData[dataIndex].orderid);
+						break;
+				}
+				layer.open({
+					type: 1,
+					title: "修改",
+					area: '500px',
+					zIndex: 999,
+					content: $('#dataAdd')
+				});
 			}
 		</script>
 	</body>

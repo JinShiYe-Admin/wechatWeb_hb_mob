@@ -103,8 +103,7 @@
 					attendTimeArray: [], //考勤时间段列表,从协议获取到的
 					departArray: [], //管理的所有部门数组
 					showDepartModel: {}, //显示的部门
-					showPeopleArray: [], //显示部门对应的人员数组
-					peopleIdArray: [] //显示部门对应的人员id数组
+					showPeopleArray: [] //显示部门对应的人员数组
 				},
 				methods: {
 					searchAttendList: function() {
@@ -128,7 +127,7 @@
 				var a = document.getElementById("exportExcel");
 				// 利用URL.createObjectURL()方法为a元素生成blob URL
 				a.href = URL.createObjectURL(blob);
-				var tempTitle = attendData.showDepartModel.title + $("#datemax").val() + '考勤详单.xls';
+				var tempTitle = $("#datemax").val() + '考勤详单.xls';
 				// 设置文件名，目前只有Chrome和FireFox支持此属性
 				a.download = tempTitle;
 			}
@@ -231,9 +230,9 @@
 									var tempModel = attendData.departArray[i];
 									if(tempModel.value == node.id) {
 										if(node.checked) {
-											tempModel = 1;
+											tempModel.flag = 1;
 										} else {
-											tempModel = 0;
+											tempModel.flag = 0;
 										}
 									}
 								}
@@ -246,11 +245,11 @@
 			}
 
 			//17.获取某部门ID下所有人员(PC管理端)
-			var getDepartPerson = function() {
+			var getDepartPerson = function(model) {
 				var tempData = {
 					cmd: 'departpersonsadmin',
 					type: 'findpage', //获取管理员全部管理部门
-					colid: attendData.showDepartModel.value, //部门ID
+					colid: model.value, //部门ID
 					colv: '1', //是否递归获取子级部门中所有人员,0否1是
 					callcol: 'base' //获取详细信息:info,获取普通信息:base
 				}
@@ -260,6 +259,7 @@
 						for(var i = 0; i < data.RspData.length; i++) {
 							var tempModel = data.RspData[i];
 							tempModel.departName = model.title;
+							tempModel.value = model.value;
 						}
 						for(var a = 0; a < attendData.departArray.length; a++) {
 							var tempModel = attendData.departArray[a];
@@ -360,8 +360,8 @@
 							tempPeopleArray.push(tempModel1.userid);
 							tempModel1.timeList = [];
 							//给每一个人添加时间段数组
-							for(var m = 0; m < attendData.attendTimeArray.length; m++) {
-								var temp00 = attendData.attendTimeArray[m];
+							for(var n = 0; n < attendData.attendTimeArray.length; n++) {
+								var temp00 = attendData.attendTimeArray[n];
 								var temp01 = {
 									AttendType: temp00.AttendType,
 									AttendResult: '缺勤',
@@ -423,15 +423,11 @@
 								if(tempModel.DeptId == tempModel1.value) {
 									if(tempModel.UserId == tempModel1.userid) {
 										console.log('tempModel.UserId:' + tempModel.UserId + ',' + tempModel1.userid);
-										tempModel1.departName = tempModel.departName;
 										for(var b = 0; b < tempModel1.timeList.length; b++) {
 											var timeModel = tempModel1.timeList[b];
 											if(tempModel.AttendType == timeModel.AttendType) {
 												//合并对象
 												timeModel = $.extend(timeModel, tempModel);
-												if(timeModel.AttendResult.length == 0) {
-													timeModel.AttendResult = '缺勤';
-												}
 											}
 										}
 									}

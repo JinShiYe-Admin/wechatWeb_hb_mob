@@ -238,14 +238,15 @@
 
 					},
 					onClick: function(node, checked) {
+						alert(111);
 						console.log('node:' + JSON.stringify(node) + ',' + checked);
 						for(var i = 0; i < attendData.departArray.length; i++) {
 							var tempModel = attendData.departArray[i];
 							if(tempModel.value == node.id) {
 								if(node.checked) {
-									tempModel = 1;
+									tempModel.flag = 1;
 								} else {
-									tempModel = 0;
+									tempModel.flag = 0;
 								}
 							}
 						}
@@ -391,8 +392,8 @@
 							tempPeopleArray.push(tempModel1.userid);
 							tempModel1.timeList = [];
 							//给每一个人添加时间段数组
-							for(var m = 0; m < attendData.attendTimeArray.length; m++) {
-								var temp00 = attendData.attendTimeArray[m];
+							for(var n = 0; n < attendData.attendTimeArray.length; n++) {
+								var temp00 = attendData.attendTimeArray[n];
 								var temp01 = {
 									AttendType: temp00.AttendType,
 									AttendResult: '缺勤',

@@ -12,8 +12,8 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<title>新增考勤时间段</title>
-		<link rel="stylesheet" href="../../css/weui.min.css" />
-		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<!--<link rel="stylesheet" href="../../css/weui.min.css" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />-->
 		<style>
 			.weui-cells {
 				margin-top: 0px;
@@ -36,22 +36,55 @@
 			<!--输入列表-->
 			<div id="input_list">
 				<div>
-					<div class="weui-cells__title">考勤类型说明</div>
-					<div class="weui-cells">
-						<div class="weui-cell">
-							<div class="weui-cell__bd">
-								<!--<input id="beginHour" v-model.lazy="cname.message" class="weui-input" type="text" :placeholder="'请'">-->
+					<div class="weui-cells__title">考勤类型说明：
+						<select id="attendTypeNote" name="sel" onFocus="Myselect()">
+							<option value=""></option>
+						</select>
+					</div>
+					<!--<div>
+						<div>
+							<div>
+								<input id="beginHour" v-model.lazy="cname.message" class="weui-input" type="text" :placeholder="'请'">
 								<select id="attendTypeNote" name="sel" onFocus="Myselect()">
-
+									<option value=""></option>
 								</select>
 							</div>
 						</div>
+					</div>-->
+					<br />
+					<div class="weui-cells__title">打卡开始时间（小时）：
+						<select id="beginHour">
+							<option value=""></option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+							<option value="8">8</option>
+							<option value="9">9</option>
+							<option value="10">10</option>
+							<option value="11">11</option>
+							<option value="12">12</option>
+							<option value="13">13</option>
+							<option value="14">14</option>
+							<option value="15">15</option>
+							<option value="16">16</option>
+							<option value="17">17</option>
+							<option value="18">18</option>
+							<option value="19">19</option>
+							<option value="20">20</option>
+							<option value="21">21</option>
+							<option value="22">22</option>
+							<option value="23">23</option>
+							<option value="24">24</option>
+						</select>
 					</div>
-					<div class="weui-cells__title">开始时间（小时）</div>
-					<div class="weui-cells">
+					<!--<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
-								<!--<input id="beginHour" v-model.lazy="cname.message" class="weui-input" type="text" :placeholder="'请'">-->
+								<input id="beginHour" v-model.lazy="cname.message" class="weui-input" type="text" :placeholder="'请'">
 								<select id="beginHour">
 									<option value=""></option>
 									<option value="1">1</option>
@@ -81,19 +114,83 @@
 								</select>
 							</div>
 						</div>
-					</div>
+					</div>-->
 				</div>
-
+				<br />
 				<div>
 					<!--<div class="weui-cells__title">{{linkurl.title+" (有链接时，不允许投稿；链接默认打开。)"}}</div>-->
 					<!--<div class="weui-cell__ft" style="margin-top: -35px;margin-right: 15px;">
 						<input class="weui-switch" type="checkbox" v-model="islink.check">
 					</div>-->
 					<!--<div v-if="islink.check" class="weui-cells">-->
-					<div class="weui-cells__title">开始时间（分钟）</div>
-					<div class="weui-cell">
+					<div class="weui-cells__title">打卡开始时间（分钟）：
+						<select id="beginMinute">
+							<option value=""></option>
+							<option value="0">0</option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+							<option value="8">8</option>
+							<option value="9">9</option>
+							<option value="10">10</option>
+							<option value="11">11</option>
+							<option value="12">12</option>
+							<option value="13">13</option>
+							<option value="14">14</option>
+							<option value="15">15</option>
+							<option value="16">16</option>
+							<option value="17">17</option>
+							<option value="18">18</option>
+							<option value="19">19</option>
+							<option value="20">20</option>
+							<option value="21">21</option>
+							<option value="22">22</option>
+							<option value="23">23</option>
+							<option value="24">24</option>
+							<option value="25">25</option>
+							<option value="26">26</option>
+							<option value="27">27</option>
+							<option value="28">28</option>
+							<option value="29">29</option>
+							<option value="30">30</option>
+							<option value="31">31</option>
+							<option value="32">32</option>
+							<option value="33">33</option>
+							<option value="34">34</option>
+							<option value="35">35</option>
+							<option value="36">36</option>
+							<option value="37">37</option>
+							<option value="38">38</option>
+							<option value="39">39</option>
+							<option value="40">40</option>
+							<option value="41">41</option>
+							<option value="42">42</option>
+							<option value="43">43</option>
+							<option value="44">44</option>
+							<option value="45">45</option>
+							<option value="46">46</option>
+							<option value="47">47</option>
+							<option value="48">48</option>
+							<option value="49">49</option>
+							<option value="50">50</option>
+							<option value="51">51</option>
+							<option value="52">52</option>
+							<option value="53">53</option>
+							<option value="54">54</option>
+							<option value="55">55</option>
+							<option value="56">56</option>
+							<option value="57">57</option>
+							<option value="58">58</option>
+							<option value="59">59</option>
+						</select>
+					</div>
+					<!--<div class="weui-cell">
 						<div class="weui-cell__bd">
-							<!--<input id="beginMinute" class="weui-input" type="text" :placeholder="'请输入考勤开始时间'">-->
+							<input id="beginMinute" class="weui-input" type="text" :placeholder="'请输入考勤开始时间'">
 							<select id="beginMinute">
 								<option value=""></option>
 								<option value="0">0</option>
@@ -158,36 +255,41 @@
 								<option value="59">59</option>
 							</select>
 						</div>
-					</div>
+					</div>-->
 					<!--</div>-->
 				</div>
-
+				<br />
 				<div>
-					<div class="weui-cells__title">持续时间（分钟）</div>
-					<div class="weui-cells">
+					<div class="weui-cells__title">正常打卡持续分钟数：<input size="5" id="continuousTime" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"></div>
+					<!--<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
-								<!--<input id="continuousTime" class="weui-input" type="number" :placeholder="'请输入考勤持续时间'">-->
+								<input id="continuousTime" class="weui-input" type="number" :placeholder="'请输入考勤持续时间'">
 								<input id="continuousTime" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">
 							</div>
 						</div>
-					</div>
+					</div>-->
 				</div>
+				<br />
 				<div>
-					<div class="weui-cells__title">迟到、早退时间（分钟</div>
-					<div class="weui-cells">
+					<div class="weui-cells__title">异常打卡（迟到、早退）持续分钟数：<input size="5" id="lateMinutes" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^0-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"></div>
+					<!--<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
-								<!--<input id="lateMinutes" class="weui-input" type="text" :placeholder="'请输入考勤迟到时间'">-->
-								<input id="lateMinutes" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^0-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">
+								<input id="lateMinutes" class="weui-input" type="text" :placeholder="'请输入考勤迟到时间'">
+								<input size="5" id="lateMinutes" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^0-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">
 
 							</div>
 						</div>
-					</div>
+					</div>-->
 				</div>
+				<br />
 				<div>
-					<div class="weui-cells__title">考勤短信内容</div>
-					<div class="weui-cells">
+					<div class="weui-cells__title">考勤短信内容：</div>
+					<div style="margin-left: 109px; margin-top: -20px;"><textarea rows="8" cols="50" style=" resize:none;" id="attendMessage" class="weui-input" type="text"></textarea></div>
+					<div style="color: #737373;
+				font-size: 13px;">请输入考勤短信内容，#N代表考勤人姓名，#T代表考勤时间，#A代表考勤地点，举例：#T#N在#A上午上班签到</div>
+					<!--<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
 
@@ -195,7 +297,7 @@
 								<h6>请输入考勤短信内容，#N代表考勤人姓名，#T代表考勤时间，#A代表考勤地点，举例：#T#N在#A上午上班签到</h6>
 							</div>
 						</div>
-					</div>
+					</div>-->
 				</div>
 			</div>
 			<!--开关列表-->
@@ -227,15 +329,16 @@
 					</div>
 				</div>-->
 			</div>
-			<div class="weui-btn-area" >
+			<br />
+			<div class="weui-btn-area" style="margin-left:200px; ">
 				<button id="submit" v-on:click="submitClick" class="weui-btn weui-btn_primary">添加</button>
 			</div>
 		</div>
 		<!--</template>-->
 		<script src="../../js/mui.min.js"></script>
-		<script type="text/javascript" src="../../js/weui.min.js"></script>
+		<!--<script type="text/javascript" src="../../js/weui.min.js"></script>-->
 		<script type="text/javascript" src="../../js/vue.min.js"></script>
-		<script type="text/javascript" src="../../js/jweixin.js"></script>
+		<!--<script type="text/javascript" src="../../js/jweixin.js"></script>-->
 		<script type="text/javascript" src="../../js/jquery.min.js"></script>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
@@ -347,7 +450,7 @@
 
 			//所需要的考勤类型记录的编号
 			//								attendTypeId=detail.AttendTypeId;
-//			attendTypeId = 5
+			//			attendTypeId = 5
 			//				vm.type = detail.type;
 			//				if(vm.type == 'edit') {
 			//					var tempData = {
@@ -445,11 +548,11 @@
 						 * 得到各input输入框的值
 						 */
 						var selectObject_Note = document.getElementById("attendTypeNote");
-						var optionObjectNoteIndex=selectObject_Note.selectedIndex;
-						var optionObjectNoteText=selectObject_Note.options[optionObjectNoteIndex].text;
-						console.log("optionObjectNoteText======"+optionObjectNoteText);
-						var optionObjectNoteValue=selectObject_Note.options[optionObjectNoteIndex].value;
-						console.log("optionObjectNoteValue====="+optionObjectNoteValue);
+						var optionObjectNoteIndex = selectObject_Note.selectedIndex;
+						var optionObjectNoteText = selectObject_Note.options[optionObjectNoteIndex].text;
+						console.log("optionObjectNoteText======" + optionObjectNoteText);
+						var optionObjectNoteValue = selectObject_Note.options[optionObjectNoteIndex].value;
+						console.log("optionObjectNoteValue=====" + optionObjectNoteValue);
 						var selectElementObject_M = document.getElementById("beginMinute");
 						//						console.log("selectElementObject===" + selectElementObject_M);
 						var optionElementObjectIndex_M = selectElementObject_M.selectedIndex;
@@ -457,12 +560,12 @@
 						var optionElementText_M = selectElementObject_M.options[optionElementObjectIndex_M].text;
 						console.log("optionElementText_M====" + optionElementText_M);
 
-//						var beginHour = document.getElementById("beginHour").value;
+						//						var beginHour = document.getElementById("beginHour").value;
 						//alert("attendAdressValue==="+attendAdressValue);
 						var beginMinute = optionElementText_M;
 						var selectElementObject_H = document.getElementById("beginHour");
 						//						console.log("selectElementObject===" + selectElementObject);
-						var optionElementObjectIndex_H = selectElementObject_H.selectedIndex+1;
+						var optionElementObjectIndex_H = selectElementObject_H.selectedIndex + 1;
 						console.log("optionElementObjectIndex_H===" + optionElementObjectIndex_H);
 						var optionElementText_H = selectElementObject_M.options[optionElementObjectIndex_H].text;
 						console.log("optionElementText_H====" + optionElementText_H);
@@ -471,17 +574,20 @@
 						var continuousTime = document.getElementById("continuousTime").value;
 
 						var attendMessage = document.getElementById("attendMessage").value;
-						if(beginHour == "") {
-							alert("开始时间（小时）不能为空！");
+						if(optionObjectNoteText == "") {
+							alert("考勤类型说明不能为空！");
+							return;
+						} else if(beginHour == "") {
+							alert("打卡开始时间（小时）不能为空！");
 							return;
 						} else if(beginMinute == "") {
-							alert("开始时间（分钟）不能为空！");
+							alert("打卡开始时间（分钟）不能为空！");
 							return;
 						} else if(lateMinutes == "") {
-							alert("迟到时间（分钟）不能为空！");
+							alert("异常打卡（迟到、早退）持续分钟数不能为空！");
 							return;
 						} else if(continuousTime == "") {
-							alert("持续时间（分钟）不能为空！");
+							alert("正常打卡持续分钟数不能为空！");
 							return;
 						} else if(attendMessage == "") {
 							alert("考勤短信内容不能为空！");
@@ -517,7 +623,7 @@
 									if(data.RspCode == 0) {
 										//给用户提示，添加成功
 										alert("添加成功");
-//										window.location = "../pcWeb-HUI/attendenceManage.html";
+										//										window.location = "../pcWeb-HUI/attendenceManage.html";
 
 									} else if(data.RspCode == 1018) {
 										alert("签到时间不能交叉");

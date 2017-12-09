@@ -12,6 +12,10 @@
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/multiple/easyui.css" />
+		<!--<script type="text/javascript" src="../../js/multiple/jquery.min.js"></script>-->
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/multiple/jquery.easyui.min.js"></script>
 		<title>考勤详单查询</title>
 
 	</head>
@@ -23,11 +27,13 @@
 		<div class="page-container" id="attendData">
 			<div class="text-c"> 查询日期：
 				<input placeholder="查询日期" type="text" onfocus="WdatePicker({maxDate:'%y-%M-%d' })" id="datemax" class="input-text Wdate" style="width:120px;">
-				<select :id="'select'+showDepartModel.value" @change="selectOrder(showDepartModel)">
+				<select id="ddlLine" class="easyui-combotree" style="width: 205px; height: 24px;">
+				</select>
+				<!--<select :id="'select'+showDepartModel.value" @change="selectOrder(showDepartModel)">
 					<template v-for="item in departArray">
 						<option :value="item.value">{{item.title}}</option>
 					</template>
-				</select>
+				</select>-->
 				<button type="submit" class="btn btn-success radius" id="" name="" @click="searchAttendList()"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
 				<a id="exportExcel" type="button" class="btn btn-success radius" onclick="clickExport()">导出</a>
 			</div>
@@ -53,7 +59,7 @@
 			</div>
 		</div>
 		<!--_footer 作为公共模版分离出去-->
-		<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+		<!--<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>-->
 		<script type="text/javascript" src="../../js/H-ui.admin/lib/layer/2.4/layer.js"></script>
 		<script type="text/javascript" src="../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
 		<script type="text/javascript" src="../../js/H-ui.admin/static/h-ui.admin/js/H-ui.admin.js"></script>
@@ -123,7 +129,6 @@
 				// 利用URL.createObjectURL()方法为a元素生成blob URL
 				a.href = URL.createObjectURL(blob);
 				var tempTitle = attendData.showDepartModel.title + $("#datemax").val() + '考勤详单.xls';
-				alert(tempTitle);
 				// 设置文件名，目前只有Chrome和FireFox支持此属性
 				a.download = tempTitle;
 			}
@@ -176,14 +181,14 @@
 			};
 
 			//选择切换部门
-			var selectOrder = function(model) {
-				var obj = document.getElementById('select' + model.value);
-				var index = obj.selectedIndex; //序号，取当前选中选项的序号
-				//将选择的部门，给vue中赋值
-				attendData.showDepartModel = attendData.departArray[index];
-				//获取选择部门的所有人员
-				getDepartPerson();
-			}
+			//			var selectOrder = function(model) {
+			//				var obj = document.getElementById('select' + model.value);
+			//				var index = obj.selectedIndex; //序号，取当前选中选项的序号
+			//				//将选择的部门，给vue中赋值
+			//				attendData.showDepartModel = attendData.departArray[index];
+			//				//获取选择部门的所有人员
+			//				getDepartPerson();
+			//			}
 
 			//获取管理的部门
 			var getPersonDepart = function() {
@@ -195,11 +200,45 @@
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
 						attendData.departArray = [].concat(JSON.parse(data.RspData));
-						//默认获取第1个单位的人员数组
-						if(attendData.departArray.length > 0) {
-							attendData.showDepartModel = attendData.departArray[0];
-							getDepartPerson();
+						var tempArray = [];
+						//去掉得到的部门中的‘全部’
+						for(var i = 0; i < attendData.departArray.length; i++) {
+							var tempModel = attendData.departArray[i];
+							tempModel.flag = 0; //未选择
+							tempModel.peopleArray = []; //每个部门的人员数组
+							if(tempModel.value == -1) {
+								attendData.departArray.splice(i, 1);
+							} else {
+								getDepartPerson(tempModel);
+								var temp000 = {
+									id: tempModel.value,
+									text: tempModel.title
+								}
+								tempArray.push(temp000);
+							}
 						}
+						$('#ddlLine').combotree({
+							valueField: "id",
+							textField: "text",
+							multiple: true,
+							data: tempArray,
+							onCheck: function(node, checked) {
+
+							},
+							onClick: function(node, checked) {
+								console.log('node:' + JSON.stringify(node) + ',' + checked);
+								for(var i = 0; i < attendData.departArray.length; i++) {
+									var tempModel = attendData.departArray[i];
+									if(tempModel.value == node.id) {
+										if(node.checked) {
+											tempModel = 1;
+										} else {
+											tempModel = 0;
+										}
+									}
+								}
+							}
+						});
 					} else {
 						layer.alert('获取部门出现问题');
 					}
@@ -218,35 +257,16 @@
 				console.log('tempData:' + JSON.stringify(tempData));
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
-						var tempArr = [];
 						for(var i = 0; i < data.RspData.length; i++) {
 							var tempModel = data.RspData[i];
-							tempArr.push(tempModel.userid);
-							tempModel.timeList = [];
-							//给每一个人添加时间段数组
-							for(var m = 0; m < attendData.attendTimeArray.length; m++) {
-								var temp00 = attendData.attendTimeArray[m];
-								var temp01 = {
-									AttendType: temp00.AttendType,
-									AttendResult: '缺勤',
-									AttendMessage: temp00.AttendMessage,
-									ContinuousMinute: temp00.ContinuousMinute,
-									LateMinute: temp00.LateMinute,
-									attendTypeProp: temp00.attendTypeProp,
-									AttendTimeId: temp00.AttendTimeId,
-									BeginHour: temp00.BeginHour,
-									AttendTypeNote: temp00.AttendTypeNote,
-									BeginMinute: temp00.BeginMinute
-								}
-								tempModel.timeList.push(temp01);
-							}
-							attendData.showPeopleArray.push(tempModel);
+							tempModel.departName = model.title;
 						}
-						console.log('attendData.showPeopleArray0000:' + JSON.stringify(attendData.showPeopleArray));
-						attendData.peopleIdArray = [].concat(tempArr);
-						//去重
-						attendData.showPeopleArray = uniqeByKeys(attendData.showPeopleArray, ['userid']);
-						attendData.peopleIdArray = attendData.peopleIdArray.distinct();
+						for(var a = 0; a < attendData.departArray.length; a++) {
+							var tempModel = attendData.departArray[a];
+							if(tempModel.value == model.value) {
+								tempModel.peopleArray = [].concat(data.RspData);
+							}
+						}
 					} else {
 						//layer.alert('获取部门出现问题');
 					}
@@ -327,11 +347,48 @@
 					layer.alert('请选择查询日期');
 					return false;
 				}
+				//检查有没有选择部门
+				var tempFlag = 0; //是否选择部门
+				var tempPeopleArray = []; //人员id数组
+				attendData.showPeopleArray = []; //清空
+				for(var a = 0; a < attendData.departArray.length; a++) {
+					var tempModel = attendData.departArray[a];
+					if(tempModel.flag == 1) {
+						tempFlag++;
+						for(var m = 0; m < tempModel.peopleArray.length; m++) {
+							var tempModel1 = tempModel.peopleArray[m];
+							tempPeopleArray.push(tempModel1.userid);
+							tempModel1.timeList = [];
+							//给每一个人添加时间段数组
+							for(var m = 0; m < attendData.attendTimeArray.length; m++) {
+								var temp00 = attendData.attendTimeArray[m];
+								var temp01 = {
+									AttendType: temp00.AttendType,
+									AttendResult: '缺勤',
+									AttendMessage: temp00.AttendMessage,
+									ContinuousMinute: temp00.ContinuousMinute,
+									LateMinute: temp00.LateMinute,
+									attendTypeProp: temp00.attendTypeProp,
+									AttendTimeId: temp00.AttendTimeId,
+									BeginHour: temp00.BeginHour,
+									AttendTypeNote: temp00.AttendTypeNote,
+									BeginMinute: temp00.BeginMinute
+								}
+								tempModel1.timeList.push(temp01);
+							}
+							attendData.showPeopleArray.push(tempModel1);
+						}
+					}
+				}
+				if(tempFlag == 0) {
+					layer.alert('请选择查询部门');
+					return false;
+				}
 				var tempData = {};
 				if(beginTime.length > 0) {
 					tempData = {
 						corpId: attendData.userInfo.corpid, //单位ID
-						userId: attendData.peopleIdArray, //用户ID,例如：[“1”, “2”, “3”]
+						userId: tempPeopleArray, //用户ID,例如：[“1”, “2”, “3”]
 						beginTime: beginTime, //统计开始时间,年月日共八位如：20011010
 						endTime: beginTime, //统计结束时间,年月日共八位如：20011010
 						attendResultId: '0', //0：全部,1: 正常,2：迟到,3：早退
@@ -345,7 +402,7 @@
 					var endTime = myDate.toString().replace(/-/g, '');
 					tempData = {
 						corpId: attendData.userInfo.corpid, //单位ID
-						userId: attendData.peopleIdArray, //用户ID,例如：[“1”, “2”, “3”]
+						userId: tempPeopleArray, //用户ID,例如：[“1”, “2”, “3”]
 						beginTime: endTime, //统计开始时间,年月日共八位如：20011010
 						endTime: endTime, //统计结束时间,年月日共八位如：20011010
 						attendResultId: '0', //0：全部,1: 正常,2：迟到,3：早退
@@ -361,24 +418,20 @@
 						console.log('data:' + JSON.stringify(data));
 						for(var i = 0; i < data.RspData.Data.length; i++) {
 							var tempModel = data.RspData.Data[i];
-							for(var m = 0; m < attendData.departArray.length; m++) {
-								var tempModel1 = attendData.departArray[m];
-								if(tempModel.DeptId == tempModel1.value) {
-									tempModel.departName = tempModel1.title;
-								}
-							}
 							for(var a = 0; a < attendData.showPeopleArray.length; a++) {
 								var tempModel1 = attendData.showPeopleArray[a];
-								if(tempModel.UserId == tempModel1.userid) {
-									console.log('tempModel.UserId:' + tempModel.UserId + ',' + tempModel1.userid);
-									tempModel1.departName = tempModel.departName;
-									for(var b = 0; b < tempModel1.timeList.length; b++) {
-										var timeModel = tempModel1.timeList[b];
-										if(tempModel.AttendType == timeModel.AttendType) {
-											//合并对象
-											timeModel = $.extend(timeModel, tempModel);
-											if(timeModel.AttendResult.length == 0) {
-												timeModel.AttendResult = '缺勤';
+								if(tempModel.DeptId == tempModel1.value) {
+									if(tempModel.UserId == tempModel1.userid) {
+										console.log('tempModel.UserId:' + tempModel.UserId + ',' + tempModel1.userid);
+										tempModel1.departName = tempModel.departName;
+										for(var b = 0; b < tempModel1.timeList.length; b++) {
+											var timeModel = tempModel1.timeList[b];
+											if(tempModel.AttendType == timeModel.AttendType) {
+												//合并对象
+												timeModel = $.extend(timeModel, tempModel);
+												if(timeModel.AttendResult.length == 0) {
+													timeModel.AttendResult = '缺勤';
+												}
 											}
 										}
 									}

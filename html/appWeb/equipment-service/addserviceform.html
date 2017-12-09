@@ -108,7 +108,7 @@
 			<div class="weui-cells weui-cells_form">
 				<div class="weui-cell">
 					<div class="weui-cell__bd">
-						<input id="deviceNumber" type="number" class="weui-input" placeholder="请输入设备数量"></input>
+						<input id="deviceNumber" type="number" class="weui-input" placeholder="请输入设备数量，最多1000"></input>
 					</div>
 				</div>
 			</div>
@@ -248,6 +248,20 @@
 					}
 					if(deviceNumber == "" || !reg.test(deviceNumber)) {
 						$.alert("请输入正确的设备数量");
+						return false;
+					}
+					if(deviceNumber > 1000) {
+						$.alert("设备数量超出限制");
+						return false;
+					}
+					var addrid = $("#addressInput").attr("data-values");
+					if(!addrid) {
+						$.alert("请选择设备地点");
+						return false;
+					}
+					var classid = $("#deviceTypeInput").attr("data-values");
+					if(!classid) {
+						$.alert("请选择设备类型");
 						return false;
 					}
 					$.showLoading();
@@ -527,12 +541,12 @@
 					if(data.RspCode == 0) {
 						$.toast("提交成功");
 						$("#represon").val("");
-						$("#address p").text(addressData.select[0].title);
-						$("#addressInput").attr("value", addressData.select[0].title);
-						$("#addressInput").attr("data-values", addressData.select[0].value);
-						$("#deviceType p").text(deviceTypeData.select[0].title);
-						$("#deviceTypeInput").attr("value", deviceTypeData.select[0].title);
-						$("#deviceTypeInput").attr("data-values", deviceTypeData.select[0].value);
+						$("#address p").text("");
+						$("#addressInput").attr("value", "");
+						$("#addressInput").attr("data-values", "");
+						$("#deviceType p").text("");
+						$("#deviceTypeInput").attr("value", "");
+						$("#deviceTypeInput").attr("data-values", "");
 						$("#deviceNumber").val("");
 						$("#imageAmount").text("0/9");
 						uploadFile = null;
@@ -566,9 +580,6 @@
 							addressData.value[data.RspData.dt[i].addrid] = data.RspData.dt[i];
 						}
 						if(data.RspData.dt.length != 0) {
-							$("#address p").text(addressData.select[0].title);
-							$("#addressInput").attr("value", addressData.select[0].title);
-							$("#addressInput").attr("data-values", addressData.select[0].value);
 							$("#addressInput").select({
 								title: "请选择设备地点",
 								closeText: "关闭",
@@ -609,9 +620,6 @@
 							deviceTypeData.value[data.RspData.dt[i].classid] = data.RspData.dt[i];
 						}
 						if(data.RspData.dt.length != 0) {
-							$("#deviceType p").text(deviceTypeData.select[0].title);
-							$("#deviceTypeInput").attr("value", deviceTypeData.select[0].title);
-							$("#deviceTypeInput").attr("data-values", deviceTypeData.select[0].value);
 							$("#deviceTypeInput").select({
 								title: "请选择设备类型",
 								closeText: "关闭",

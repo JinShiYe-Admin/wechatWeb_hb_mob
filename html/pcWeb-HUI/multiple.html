@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="renderer" content="webkit|ie-comp|ie-stand">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="stylesheet" type="text/css" href="../../js/multiple/easyui.css" />
+    <script type="text/javascript" src="../../js/multiple/jquery.min.js"></script>
+    <script type="text/javascript" src="../../js/multiple/jquery.easyui.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#ddlLine').combotree({
+                valueField: "id", //Value�ֶ�
+                textField: "text", //Text�ֶ�
+                multiple: true,
+//              data: [{ "id": 1, "text": "All", "children": [{ "id": 13, "text": "C1" }, { "id": 14, "text": "C2" }, { "id": 15, "text": "C3"}]}],
+				data: [{ "id": 13, "text": "C1" }, { "id": 14, "text": "C2" }, { "id": 15, "text": "C3"}],
+                //                url: "tree_data2.json", //���Դ
+                onCheck: function (node, checked) {
+                    //��ȫѡ����ʾ
+                    $("#ddlLine").combotree("setText", $("#ddlLine").combobox("getText").toString().replace("ȫѡ,", ""));
+                },
+                onClick: function (node, checked) {
+                    //��ȫѡ����ʾ
+                    $("#ddlLine").combotree("setText", $("#ddlLine").combobox("getText").toString().replace("ȫѡ,", ""));
+                }
+            });
+        })
+    </script>
+</head>
+<body>
+   多选:<select id="ddlLine" class="easyui-combotree" style="width: 205px; height: 24px;">
+    </select>
+</body>
+</html>

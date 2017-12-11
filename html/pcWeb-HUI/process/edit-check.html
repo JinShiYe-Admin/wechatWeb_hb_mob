@@ -144,7 +144,7 @@
 				padding: 10px 0;
 			}
 			
-			.is-chose {
+			.is-checked {
 				background-color: lightgray;
 				color: white;
 			}
@@ -156,7 +156,7 @@
 			<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 流程配置 <span class="c-gray en">&gt;</span> 审核权限配置
 			</nav>
 			<div class="page-container">
-				<router-view v-on:person-info="getChosedPerson" v-bind:chosed-person="chosedPerson"></router-view>
+				<router-view v-on:person-info="getCheckedPerson" v-bind:checked-person="checkedPerson"></router-view>
 			</div>
 		</div>
 		<!--人员选择-->
@@ -168,7 +168,7 @@
 				<div class="choose-person-container">
 					<p>人员选择</p>
 					<div class="choose-person">
-						<choose-person v-bind:chose-depart="activeDepart" v-bind:choose-person="selectPerson" v-on:select-person="getSelectPerson"></choose-person>
+						<choose-person v-bind:chose-depart="activeDepart" v-bind:checked-person="checkedPerson" v-bind:choose-person="selectPerson" v-on:select-person="getSelectPerson"></choose-person>
 					</div>
 					<div class="person-foot">
 						<div v-if="Object.keys(selectPerson).length>0">
@@ -186,7 +186,7 @@
 		<!--人员选择-->
 		<template id="person-list">
 			<div>
-				<div v-for="(person,index) in personList" class="person-container" v-bind:class="[{'is-checked':person.isCheck}]" v-on:click="toggleChoosePerson(person,index)">
+				<div v-for="(person,index) in personList" class="person-container" v-bind:class="[{'is-checked':person.isCheck},{'is-checked':person.isChecked}]" v-on:click="toggleChoosePerson(person,index)">
 					{{person.name}}
 				</div>
 			</div>
@@ -272,11 +272,10 @@
 			}
 			const multiChoose = {
 				template: '#multi-choose',
-				props: ['chosedPerson'],
+				props: ['checkedPerson'],
 				data: function() {
 					return {
-						activeDepart: {},
-						personList: this.chosedPerson,
+						activeDepart: {}, //当前部门
 						selectPerson: {},
 						corpId: 0
 					}
@@ -299,9 +298,8 @@
 					 * @param {Object} newVal 
 					 * @param {Object} oldVal
 					 */
-					chosedPerson: function(newVal, oldVal) {
-						console.log("wacth:监听classify:" + JSON.stringify(newVal))
-						this.selectPerson = this.Person.apprManList;
+					checkedPerson: function(newVal, oldVal) {
+						console.log("wacth:监听checkedPerson:" + JSON.stringify(newVal))
 					}
 				},
 				methods: {
@@ -393,14 +391,14 @@
 				el: "#checkPerson-container",
 				router: router,
 				data: {
-					chosedPerson: {}
+					checkedPerson: {}
 				},
 				mounted: function() {
 
 				},
 				methods: {
-					getChosedPerson: function(person) {
-						this.chosedPerson = person;
+					getCheckedPerson: function(person) {
+						this.checkedPerson = person;
 					}
 				}
 			})

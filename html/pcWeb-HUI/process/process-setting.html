@@ -152,7 +152,7 @@
 				<div class="choose-person-container">
 					<p>人员选择</p>
 					<div class="choose-person">
-						<choose-person v-bind:all-check-person="allCheckPerson" v-bind:choose-person="selectPerson" v-on:select-person="getSelectPerson"></choose-person>
+						<choose-person v-bind:check-persons="checkPowerPersons" v-bind:choose-person="selectPerson" v-on:select-person="getSelectPerson"></choose-person>
 					</div>
 					<div class="person-foot">
 						<div v-if="Object.keys(selectPerson).length>0">
@@ -171,16 +171,8 @@
 		<template id="person-list">
 			<div>
 				<div v-for="(person,index) in personList" class="person-container" v-bind:class="[{'is-checked':person.isCheck}]" v-on:click="toggleChoosePerson(person,index)">
-					{{person.name}}
+					{{person.ApprManName}}
 				</div>
-			</div>
-		</template>
-		<!--部门选择-->
-		<template id="choose-depart">
-			<div>
-				<ul v-for="depart in rootDeparts">
-					<depart-tree-node v-bind:depart-info="depart" v-bind:active-depart="activeDepart" v-on:active-depart="getActiveDepart"></depart-tree-node>
-				</ul>
 			</div>
 		</template>
 		<!--流程列表-->
@@ -203,7 +195,7 @@
 							<td>{{process.ProcTypeName}}</td>
 							<!--流程链-->
 							<td>
-								{{process.ApprManList}}
+								<span v-for="(apprMan,index) in process.ApprManList">{{apprMan.ApprManName}}<span v-if="index<process.ApprManList.length-2" class="Hui-iconfont Hui-iconfont-slider-right"></span></span>
 							</td>
 							<td class="text-c">{{process.ProTypeNote}}</td>
 							<td class="td-status"><span class="label  radius" v-bind:class="[{'label-defaunt':!process.Stat},{'label-success':process.Stat}]">{{process.Stat?"有效":"屏蔽"}}</span></td>
@@ -269,10 +261,13 @@
 				props: ['process'],
 				data: function() {
 					return {
-						activeDepart: {},
 						personList: this.process.apprManList,
-						allCheckPerson: []
+						checkPowerPersons: [],
+						corpId: 0
 					}
+				},
+				mounted: function() {
+					this.getCorpId(this.getAllCheckPerson)
 				},
 				watch: {
 					/**
@@ -296,6 +291,16 @@
 					}
 				},
 				methods: {
+					getCorpId: function(callback) {
+						var com = this;
+						request.requestPersonalInfo(function(response) {
+							console.log("获取的corpId数据：" + JSON.stringify(response));
+							if(response.RspCode == 0) {
+								com.corpId = response.RspData.userlist[0].corpid;
+								callback();
+							}
+						})
+					},
 					/**
 					 * 获取所有审核人员
 					 */
@@ -307,7 +312,7 @@
 							pageSize: 0
 						}, function(response) {
 							if(response.RspCode == 0) {
-								com.addCheckPerson = response.RspData.Data;
+								com.checkPowerPersons = response.RspData.Data;
 							} else {
 								alert(response.RspTxt);
 							}

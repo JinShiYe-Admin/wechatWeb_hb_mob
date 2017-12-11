@@ -1,39 +1,28 @@
 Vue.component("choose-person", {
 	template: "#person-list",
 	props: {
-		//选择的部门
-		choseDepart: {
-			type: Object,
-			default: function() {
-				return {}
-			}
-		},
 		//选择的人员
 		choosePerson: {
 			type: Object,
 			default: function() {
 				return {}
 			}
+		},
+		checkPersons: {
+			type: Array,
+			default: function() {
+				return []
+			}
 		}
 	},
 	mounted: function() {},
 	data: function() {
 		return {
-			personList: [],
+			personList: this.checkPersons,
 			selectPerson: this.choosePerson
 		}
 	},
 	watch: {
-		/**
-		 * 
-		 * @param {Object} newVal
-		 * @param {Object} oldVal
-		 */
-		choseDepart: function(newVal, oldVal) {
-			console.log("****choseDepart*****");
-			this.personList = [];
-			this.requireDepartPerson();
-		},
 		/**
 		 * 选择
 		 * @param {Object} newVal
@@ -82,9 +71,9 @@ Vue.component("choose-person", {
 			console.log("toggleChoosePerson:" + JSON.stringify(person))
 			Vue.set(this.personList[index], "isCheck", !person.isCheck);
 			if(person.isCheck) {
-				this.selectPerson[person.userid] = person.name;
+				this.selectPerson[person.TabId] = person.ApprManName;
 			} else {
-				delete this.selectPerson[person.userid];
+				delete this.selectPerson[person.TabId];
 			}
 			this.updateSelectPerson();
 		},

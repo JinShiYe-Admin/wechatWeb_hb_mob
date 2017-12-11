@@ -7,8 +7,6 @@ Vue.component("check-person-list", {
 			checkedPerson: {},
 			changeType: 0, //0 新建流程 1修改流程
 			corpId: 0,
-			pageIndex: 1,
-			totalPage: 1,
 			name: "",
 			note: "",
 			selectedInputPerson: {},
@@ -59,7 +57,7 @@ Vue.component("check-person-list", {
 			console.log("****getStatus*****");
 			var isAdd = e.target.checked;
 			if(isAdd) {
-				this.selectedInputPerson[person.ApprMan] = person.ApprManName;
+				this.selectedInputPerson[person.TabId] = person.ApprManName;
 			} else {
 				delete this.selectedInputPerson[person.ApprMan];
 				this.isAllCheck = false;
@@ -81,7 +79,7 @@ Vue.component("check-person-list", {
 			console.log("****inputToggleAll****");
 			if(isAdd) {
 				for(var checkPerson in checkPersonList) {
-					this.selectedInputPerson[checkPerson.ApprMan] = checkPerson.ApprManName;
+					this.selectedInputPerson[checkPerson.TabId] = checkPerson.ApprManName;
 				}
 			} else {
 				this.selectedInputPerson = {};
@@ -94,13 +92,6 @@ Vue.component("check-person-list", {
 			console.log("****getAllCheckPerson*****");
 			this.getCheckPerson(1, 0);
 		},
-		/**
-		 * 获取当前页面审核人员
-		 */
-		//		getCurPagePerson: function() {
-		//			console.log("****getCurPagePerson****");
-		//			this.getCheckPerson(this.pageIndex, 20);
-		//		},
 		/**
 		 * 获取审核人员
 		 * @param {Object} pageIndex
@@ -148,8 +139,8 @@ Vue.component("check-person-list", {
 		delCurPerson: function(person) {
 			console.log("****delCurPerson*****");
 			var com = this;
-			this.delPerson(person.ApprMan, function() {
-				delete com.chosedPerson[perosn.ApprMan];
+			this.delPerson(person.TabId, function() {
+				delete com.checkedPerson[perosn.ApprMan];
 				com.getAllCheckPerson();
 			});
 		},

@@ -10,13 +10,13 @@ Vue.component("choose-person", {
 				return {}
 			}
 		},
-		checkedPerson: {//當前审核人员数据
+		checkedPerson: { //當前审核人员数据
 			type: Object,
 			default: function() {
 				return {}
 			}
 		},
-		choseDepart: {//选择的部门
+		choseDepart: { //选择的部门
 			type: Object,
 			default: function() {
 				return {}
@@ -65,6 +65,16 @@ Vue.component("choose-person", {
 		}
 	},
 	methods: {
+		getCorpId: function() {
+			var com = this;
+			request.requestPersonalInfo(function(response) {
+				console.log("获取的corpId数据：" + JSON.stringify(response));
+				if(response.RspCode == 0) {
+					com.corpId = response.RspData.userlist[0].corpid;
+					com.requireProcess();
+				}
+			})
+		},
 		/**
 		 * 请求部门人员
 		 */

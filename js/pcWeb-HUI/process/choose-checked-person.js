@@ -30,6 +30,7 @@ Vue.component("choose-person", {
 	},
 	watch: {
 		choseDepart: function(newVal, oldVal) {
+			console.log("****choseDepart****");
 			this.personList = [];
 			this.isAllCheck = false;
 			this.requireDepartPerson();
@@ -40,6 +41,7 @@ Vue.component("choose-person", {
 		 * @param {Object} oldVal
 		 */
 		allCheckPerson: function(newVal, oldVal) {
+			console.log("*****allCheckPerson*****");
 			this.personList = newVal;
 		},
 		/**
@@ -63,6 +65,7 @@ Vue.component("choose-person", {
 	},
 	methods: {
 		requireDepartPerson: function() {
+			console.log("*****requireDepartPerson*****");
 			var com = this;
 			request.getDepartPersons(this.choseDepart, 1, 0, function(data) {
 				com.personList = data;

@@ -64,6 +64,7 @@ Vue.component("check-person-list", {
 		 * @param {Object} isAdd
 		 */
 		inputToggleAll: function(isAdd) {
+			console.log("****inputToggleAll****");
 			if(isAdd) {
 				for(var checkPerson in checkPersonList) {
 					this.selectedInputPerson[checkPerson.ApprMan] = checkPerson.ApprManName;

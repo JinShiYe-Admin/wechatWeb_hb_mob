@@ -163,12 +163,12 @@
 					</thead>
 					<tbody>
 						<tr class="text-c" v-for="(leave,index) in leaveList">
-							<td>{{leave.ProcTypeName}}</td>
+							<td>{{leave.LeaveTypeName}}</td>
 							<!--流程链-->
 							<td>
-								{{leave.ApprManList}}
+								{{leave.IsLeader|getLeaveRelation}}
 							</td>
-							<td class="text-c">{{leave.ProTypeNote}}</td>
+							<td class="text-c">{{leave.LeaveTypeNote}}</td>
 							<td class="td-status"><span class="label  radius" v-bind:class="[{'label-defaunt':!leave.Stat},{'label-success':leave.Stat}]">{{leave.Stat?"有效":"屏蔽"}}</span></td>
 							<td class="td-manage">
 								<span class="Hui-iconfont Hui-iconfont-edit edit-groupName manage-item" title="编辑请假信息" v-on:click.stop="changeLeaveInfo(leave)"></span>
@@ -187,7 +187,7 @@
 					<div class="row cl">
 						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>请假类型：</label>
 						<div class="formControls col-xs-8 col-sm-9">
-							<input type="text" class="input-text" value="" v-model="activeLeave.ProcTypeName" placeholder="" id="username" name="username">
+							<input type="text" class="input-text" value="" v-model="name" placeholder="" id="username" name="username">
 						</div>
 					</div>
 					<div class="row cl">
@@ -206,7 +206,7 @@
 					<div class="row cl">
 						<label class="form-label col-xs-4 col-sm-3">备注：</label>
 						<div class="formControls col-xs-8 col-sm-9">
-							<textarea name="beizhu" cols="" rows="" class="textarea" placeholder="请输入备注" v-model="activeLeave.ProTypeNote" onKeyUp="$.Huitextarealength(this,100)"></textarea>
+							<textarea name="beizhu" cols="" rows="" class="textarea" placeholder="请输入备注" v-model="note" onKeyUp="$.Huitextarealength(this,100)"></textarea>
 							<p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>
 						</div>
 					</div>

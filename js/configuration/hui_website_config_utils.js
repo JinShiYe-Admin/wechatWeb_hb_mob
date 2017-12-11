@@ -26,7 +26,7 @@ Vue.component('input-item', {
 					//为空
 					vm_input.inputArray[index].message = webConfig[vm_input.inputArray[index].callcol];
 				} else {
-					vm_loading.isShow = true;
+					layer.load(2);
 					var data = {
 						type: 0,
 						index: index,
@@ -39,48 +39,10 @@ Vue.component('input-item', {
 		}
 	}
 });
-//皮肤选项组件
-Vue.component('skin-item', {
-	props: ['value'],
-	template: '#temp_skin_item',
-	methods: {
-		onclick: function(value) {
-			var dialog = weui.dialog({
-				title: "操作失败",
-				content: "修改皮肤功能暂未开放",
-				className: "custom-classname",
-				buttons: [{
-					label: "确定",
-					type: "primary",
-					onClick: function() {
-						dialog.hide();
-					}
-				}]
-			});
-		}
-	}
-});
 //图片组件
 Vue.component("image-item", {
 	props: ['value', 'index'],
 	template: '#temp_image_item',
-	methods: {
-		showImage: function(index, type) {
-			vm_image.imageArray[index].showimage = type;
-		},
-		showLocalImage: function(index, type) {
-			vm_image.imageArray[index].showlocalimage = type;
-		},
-		upLoadFile: function(index) {
-			vm_loading.content = "上传中 0%";
-			vm_loading.isShow = true;
-			if(index == 0) {
-				logoUploader.start();
-			} else {
-				bannerUploader.start();
-			}
-		}
-	}
 });
 
 //开关组件
@@ -90,7 +52,7 @@ Vue.component('switch-item', {
 	methods: {
 		onchange: function(index) {
 			if(vm_switch.switchArray[index].check != webConfig[vm_switch.switchArray[index].callcol]) {
-				vm_loading.isShow = true;
+				layer.load(2);
 				var data = {
 					type: 1,
 					index: index,

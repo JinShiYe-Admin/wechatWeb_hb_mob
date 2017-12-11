@@ -79,7 +79,7 @@
 				<!-- </div> -->
 				<!-- 	</div> -->
 				考勤地点X坐标<input id="attendAdressX" type="text"> 考勤地点Y坐标
-				<input id="attendAdressY" type="text">
+				<input id="attendAdressY" type="text">&nbsp; &nbsp;<input type="button" onclick="search()" value="查询" />
 				<!-- <div>
 				<div class="weui-cells__title">考勤地点Y坐标</div>
 				<div class="weui-cells">
@@ -101,8 +101,8 @@
 					</div>
 				</div>
 				<div class="tips">
-					系统无法获取经纬度时，请使用高德地图查询后手动输入
-					<a style="color: #737373; text-decoration: underline;" href="https://lbs.amap.com/console/show/picker">查询</a>
+					系统无法获取经纬度时，请使用拾取坐标系统查询后手动输入
+					<a target="_blank" style="color: #737373; text-decoration: underline;" href="http://api.map.baidu.com/lbsapi/getpoint/index.html">查询</a>
 				</div>
 			</div>
 			<!--开关列表-->
@@ -318,57 +318,57 @@
 					//   alert('after');
 					// }
 				}));
-//				gc.getLocation(point, function(rs) {
-//					console.log("getAddress===rs====" + JSON.stringify(rs));
-//					var addComp = rs.addressComponents;
-//					console.log("getAddress===addComp====" + JSON.stringify(addComp));
-//					address = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
-//					console.log("getAddress--在回调函数里面====address=====" + address);
-//					gc
-//						.getPoint(
-//							address,
-//							function(point) {
-//								if(point) {
-//									map.centerAndZoom(point, 16);
-//									var marker = new BMap.Marker(point); //创建标注对象
-//									map.addOverlay(marker);
-//									//给标注对象授权可拖动并监听拖动事件
-//									marker.enableDragging(); //设置可拖拽
-//									marker
-//										.addEventListener(
-//											"dragend",
-//											function(e) { //拖动事件 
-//												var pt = e.point;
-//												geoc
-//													.getLocation(
-//														pt,
-//														function(rs) {
-//															//addressComponents对象可以获取到详细的地址信息
-//															var addComp = rs.addressComponents;
-//															var site = addComp.province +
-//
-//																addComp.city +
-//
-//																addComp.district +
-//
-//																addComp.street +
-//
-//																addComp.streetNumber;
-//															//将对应的HTML元素设置值
-//															document
-//																.getElementById("attendAdressText").value = site;
-//															document
-//																.getElementById("attendAdressX").value = pt.lng;
-//															document
-//																.getElementById("attendAdressY").value = pt.lat;
-//														});
-//
-//											})
-//								} else {
-//									alert("您选择地址没有解析到结果!");
-//								}
-//							});
-//				});
+				//				gc.getLocation(point, function(rs) {
+				//					console.log("getAddress===rs====" + JSON.stringify(rs));
+				//					var addComp = rs.addressComponents;
+				//					console.log("getAddress===addComp====" + JSON.stringify(addComp));
+				//					address = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+				//					console.log("getAddress--在回调函数里面====address=====" + address);
+				//					gc
+				//						.getPoint(
+				//							address,
+				//							function(point) {
+				//								if(point) {
+				//									map.centerAndZoom(point, 16);
+				//									var marker = new BMap.Marker(point); //创建标注对象
+				//									map.addOverlay(marker);
+				//									//给标注对象授权可拖动并监听拖动事件
+				//									marker.enableDragging(); //设置可拖拽
+				//									marker
+				//										.addEventListener(
+				//											"dragend",
+				//											function(e) { //拖动事件 
+				//												var pt = e.point;
+				//												geoc
+				//													.getLocation(
+				//														pt,
+				//														function(rs) {
+				//															//addressComponents对象可以获取到详细的地址信息
+				//															var addComp = rs.addressComponents;
+				//															var site = addComp.province +
+				//
+				//																addComp.city +
+				//
+				//																addComp.district +
+				//
+				//																addComp.street +
+				//
+				//																addComp.streetNumber;
+				//															//将对应的HTML元素设置值
+				//															document
+				//																.getElementById("attendAdressText").value = site;
+				//															document
+				//																.getElementById("attendAdressX").value = pt.lng;
+				//															document
+				//																.getElementById("attendAdressY").value = pt.lat;
+				//														});
+				//
+				//											})
+				//								} else {
+				//									alert("您选择地址没有解析到结果!");
+				//								}
+				//							});
+				//				});
 				//				console.log("getAddress====address=====" + address);
 				//				return address;
 
@@ -511,7 +511,37 @@
 				map.addOverlay(marker);
 				map.addOverlay(circle);
 			}
-
+			//输入坐标查询地点，代码开始
+//			function search() {
+//				//				alert(0000)
+//				var X = document.getElementById("attendAdressX").value;
+//				var Y = document.getElementById("attendAdressY").value;
+//				if(X == "" && Y == "") {
+//					alert("请输入坐标");
+//					return;
+//				}
+//
+//				var point = new BMap.Point(X, Y);
+//				map.clearOverlays();
+//				//创建标注对象
+//				var marker = new BMap.Marker(point);
+//				map.addOverlay(marker);
+//
+//				//根据点解析出地址
+//				geoc.getLocation(point, function(rs) {
+//					console.log("rs===========" + JSON.stringify(rs));
+//					//addressComponents对象可以获取到详细的地址信息
+//					var addComp = rs.addressComponents;
+//					var site = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+//					//					//将对应的HTML元素设置值
+//					document.getElementById("attendAdressText").value = site;
+//					//					document.getElementById("longitude").value = pt.lng;
+//					//					document.getElementById("latitude").value = pt.lat;
+//
+//				});
+//
+//			}
+			//输入坐标查询地点，代码结束
 			/* var vm = new Vue({
 				el: '#conetent',
 				data: {

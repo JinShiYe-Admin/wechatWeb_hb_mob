@@ -166,7 +166,7 @@ var request = (function(mod) {
 	/**
 	 * 获取的个人信息
 	 */
-	mod.requestPersonalInfo = function() {
+	mod.requestPersonalInfo = function(callback) {
 		var comData = {
 			cmd: "userinfo",
 			type: "findpage",

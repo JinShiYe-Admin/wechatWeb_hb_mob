@@ -3,12 +3,8 @@ Vue.component("check-person-list", {
 	data: function() {
 		return {
 			checkPersonList: [],
-			activeProcess: {
-				ApprMan: 4, //人员id
-				ApprManName: "人员4", //人员名称
-			},
 			tablebases: null,
-			chosedPerson: {},
+			checkedPerson: {},
 			changeType: 0, //0 新建流程 1修改流程
 			corpId: 0,
 			pageIndex: 1,
@@ -20,7 +16,7 @@ Vue.component("check-person-list", {
 		}
 	},
 	watch: {
-		chosedPerson: function(newVal, oldVal) {
+		checkedPerson: function(newVal, oldVal) {
 			console.log("*****chosedPerson******")
 			this.$emit("person-info", newVal);
 
@@ -119,12 +115,8 @@ Vue.component("check-person-list", {
 				pageSize: 0
 			}, function(response) {
 				if(response.RspCode == 0) {
-					if(pageSize === 0) {
-						com.chosedPerson = com.changeArrToObj(response.RspData.Data);
-					} else {
-						com.checkPersonList = response.RspData.Data;
-						com.totalPage = response.RspData.TotalPage;
-					}
+					com.checkPersonList = response.RspData.Data;
+					com.checkedPerson = com.changeArrToObj(response.RspData.Data);
 				}
 			})
 		},

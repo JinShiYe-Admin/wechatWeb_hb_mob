@@ -29,6 +29,7 @@ Vue.component("process-setting", {
 				ProTypeNote: "流程4备注", //流程备注
 				Stat: 1
 			},
+			tablebases: null,
 			changeType: 0, //0 新建流程 1修改流程
 			corpId: 0,
 			pageIndex: 1,
@@ -38,7 +39,24 @@ Vue.component("process-setting", {
 			stat: 1
 		}
 	},
+	mounted: function() {
+		this.requireProcess();
+	},
+	watch: {
+		processList: function(newVal, oldVal) {
+			this.$nextTick(this.newTablebases)
+		}
+	},
 	methods: {
+		newTablebases: function() {
+			if(this.tablebases != null) {
+				this.tablebases.destroy();
+			}
+			this.tablebases = $('.table-sort').DataTable({
+				pageLength: 10,
+				lengthChange: false
+			});
+		},
 		/**
 		 * 更改显示状态
 		 * @param {Object} process
@@ -156,12 +174,11 @@ Vue.component("process-setting", {
 				ApprManList: [],
 				ProcNote: ""
 			}
-			if(this.pageIndex === 1) {
-				this.processList.splice(0, 0, process);
-				this.ProcessList.splice(20, 1);
-			} else {
-				this.requireProcess();
-			}
+			//			if(this.pageIndex === 1) {
+			this.processList.splice(0, 0, process);
+			//			} else {
+			//				this.requireProcess();
+			//			}
 		},
 		/**
 		 * 更改流程类型说明
@@ -180,6 +197,8 @@ Vue.component("process-setting", {
 				if(response.RspCode == 0) {
 					com.activeProcess.ProcTypeName = com.name;
 					com.activeProcess.procTypeNote = com.note;
+				} else {
+
 				}
 			})
 		},
@@ -193,8 +212,8 @@ Vue.component("process-setting", {
 			processRequest.postProcessData("getProcessList", {
 				corpId: this.corpId,
 				stat: 0,
-				pageIndex: this.pageIndex,
-				pageSize: 20
+				pageIndex: 1,
+				pageSize: 0
 			}, function(response) {
 				console.log("获取流程信息结果:" + JSON.stringify(response));
 				if(response.RspCode == 0) {

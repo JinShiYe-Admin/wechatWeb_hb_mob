@@ -2,23 +2,12 @@ Vue.component("check-person-list", {
 	template: "#checkPerson-list",
 	data: function() {
 		return {
-			checkPersonList: [{
-				ApprMan: 0, //人员id
-				ApprManName: "人员0", //人员名称
-			}, {
-				ApprMan: 1, //人员id
-				ApprManName: "人员1", //人员名称
-			}, {
-				ApprMan: 2, //人员id
-				ApprManName: "人员2", //人员名称
-			}, {
-				ApprMan: 3, //人员id
-				ApprManName: "人员3", //人员名称
-			}],
+			checkPersonList: [],
 			activeProcess: {
 				ApprMan: 4, //人员id
 				ApprManName: "人员4", //人员名称
 			},
+			tablebases: null,
 			chosedPerson: {},
 			changeType: 0, //0 新建流程 1修改流程
 			corpId: 0,
@@ -33,9 +22,25 @@ Vue.component("check-person-list", {
 	watch: {
 		chosedPerson: function(newVal, oldVal) {
 			this.$emit("person-info", newVal);
+
+		},
+		checkPersonList: function(newVal, oldVal) {
+			this.$nextTick(this.newTablebases)
 		}
 	},
+	mounted: function() {
+		this.getAllCheckPerson();
+	},
 	methods: {
+		newTablebases: function() {
+			if(this.tablebases != null) {
+				this.tablebases.destroy();
+			}
+			this.tablebases = $('.table-sort').DataTable({
+				pageLength: 10,
+				lengthChange: false
+			});
+		},
 		/**
 		 * 获取状态
 		 * @param {Object} e
@@ -83,10 +88,10 @@ Vue.component("check-person-list", {
 		/**
 		 * 获取当前页面审核人员
 		 */
-		getCurPagePerson: function() {
-			console.log("****getCurPagePerson****");
-			this.getCheckPerson(this.pageIndex, 20);
-		},
+		//		getCurPagePerson: function() {
+		//			console.log("****getCurPagePerson****");
+		//			this.getCheckPerson(this.pageIndex, 20);
+		//		},
 		/**
 		 * 获取审核人员
 		 * @param {Object} pageIndex
@@ -97,8 +102,8 @@ Vue.component("check-person-list", {
 			var com = this;
 			processRequest.postProcessData("getApprMan", {
 				corpId: this.corpId,
-				pageIndex: this.pageIndex,
-				pageSize: pageSize
+				pageIndex: 1,
+				pageSize: 0
 			}, function(response) {
 				if(response.RspCode == 0) {
 					if(pageSize === 0) {
@@ -124,7 +129,6 @@ Vue.component("check-person-list", {
 						count++;
 						if(count == keys.length) {
 							com.getAllCheckPerson();
-							com.getCurPagePerson();
 						}
 					})
 				}
@@ -141,7 +145,7 @@ Vue.component("check-person-list", {
 			var com = this;
 			this.delPerson(person.ApprMan, function() {
 				delete com.chosedPerson[perosn.ApprMan];
-				com.getCurPagePerson();
+				com.getAllCheckPerson();
 			});
 		},
 		/**
@@ -173,26 +177,6 @@ Vue.component("check-person-list", {
 				obj[item.ApprMan] = obj[item.ApprManName]
 			});
 			return obj;
-		},
-		/**
-		 * 下一页
-		 */
-		nextPage: function() {
-			console.log("****nextPage*****");
-			if(this.pageIndex < this.totalPage) {
-				this.pageIndex++;
-				this.getCurPagePerson();
-			}
-		},
-		/**
-		 * 上一页
-		 */
-		lastPage: function() {
-			console.log("****lastPage****");
-			if(this.pageIndex > 1) {
-				this.pageIndex--;
-				this.getCurPagePerson();
-			}
 		},
 		addPersons: function() {
 			router.push({

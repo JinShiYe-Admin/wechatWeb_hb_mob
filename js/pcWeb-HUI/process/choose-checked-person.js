@@ -20,7 +20,11 @@ Vue.component("choose-person", {
 			}
 		}
 	},
-	mounted: function() {},
+	mounted: function() {
+		$('.table-sort').DataTable({
+			pageLength: 10
+		});
+	},
 	data: function() {
 		return {
 			isAllCheck: false,

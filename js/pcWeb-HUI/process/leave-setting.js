@@ -2,31 +2,7 @@ Vue.component("leave-setting", {
 	template: "#leave-list",
 	data: function() {
 		return {
-			leaveList: [{
-				LeaveTypeId: 0, //流程Id
-				LeaveTypeName: "请假类型0", //流程名称
-				LeaveTypeNote: "请假类型0备注", //流程备注
-				IsLeader: 0,
-				Stat: 1
-			}, {
-				LeaveTypeId: 1, //流程Id
-				LeaveTypeName: "请假类型1", //流程名称
-				LeaveTypeNote: "请假类型1备注", //流程备注
-				IsLeader: 2,
-				Stat: 1
-			}, {
-				LeaveTypeId: 2, //流程Id
-				LeaveTypeName: "请假类型2", //流程名称
-				LeaveTypeNote: "请假类型2备注", //流程备注
-				IsLeader: 1,
-				Stat: 0
-			}, {
-				LeaveTypeId: 3, //流程Id
-				LeaveTypeName: "请假类型3", //流程名称
-				LeaveTypeNote: "请假类型3备注", //流程备注
-				IsLeader: 0,
-				Stat: 0
-			}],
+			leaveList: [],
 			activeLeave: {
 				LeaveTypeId: 0, //流程Id
 				LeaveTypeName: "请假类型4", //流程名称
@@ -34,6 +10,7 @@ Vue.component("leave-setting", {
 				Stat: 1,
 				Isleader: 2
 			},
+			tablebases: null,
 			changeType: 0, //0 新建流程 1修改流程
 			checkedTea: false,
 			checkedPar: false,
@@ -58,7 +35,24 @@ Vue.component("leave-setting", {
 			}
 		}
 	},
+	mounted: function() {
+		this.requireLeave();
+	},
+	watch: {
+		leaveList: function(newVal, oldVal) {
+			this.$nextTick(this.newTablebases);
+		}
+	},
 	methods: {
+		newTablebases: function() {
+			if(this.tablebases != null) {
+				this.tablebases.destroy();
+			}
+			this.tablebases = $('.table-sort').DataTable({
+				pageLength: 10,
+				lengthChange: false
+			});
+		},
 		/**
 		 * 更改请假流程状态
 		 * @param {Object} leave
@@ -232,7 +226,7 @@ Vue.component("leave-setting", {
 				corpId: this.corpId,
 				stat: 0,
 				pageIndex: this.pageIndex,
-				pageSize: 20
+				pageSize: 0
 			}, function(response) {
 				if(response.RspCode == 0) {
 					com.leaveList = response.RspData.Data;

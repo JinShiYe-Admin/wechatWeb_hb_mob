@@ -81,7 +81,7 @@ Vue.component("choose-person", {
 		requireDepartPerson: function() {
 			console.log("*****requireDepartPerson*****");
 			var com = this;
-			request.getDepartPersons(this.choseDepart, 1, 0, function(data) {
+			request.getDepartPersons(com.choseDepart, 1, 0, function(data) {
 				com.personList = data;
 				com.setCheckedStatus();
 				com.setChooseStatus();

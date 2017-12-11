@@ -173,7 +173,7 @@
 					<div class="person-foot">
 						<div v-if="Object.keys(selectPerson).length>0">
 							<p>已选人员</p>
-							<div v-for="key of Object.keys(selectPerson)" v-if="key" class="person-container is-checked" v-on:click="delChoosePerson(key)">
+							<div v-for="key of Object.keys(selectPerson)" v-if="key" class="person-container is-check" v-on:click="delChoosePerson(key)">
 								{{selectPerson[key]}}
 							</div>
 						</div>
@@ -354,7 +354,7 @@
 					 */
 					addCheckPerson: function(personInfo, callback) {
 						console.log("*******choosePerson*******")
-						processRequest.postPersonData("addApprMan", {
+						processRequest.postProcessData("addApprMan", {
 							corpId: this.corpId,
 							apprMan: personInfo.userid,
 							apprManName: personInfo.name

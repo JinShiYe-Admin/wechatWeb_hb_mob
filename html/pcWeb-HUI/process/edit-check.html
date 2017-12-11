@@ -109,7 +109,7 @@
 				margin: 5px;
 			}
 			
-			.person-container.is-checked {
+			.person-container.is-check {
 				border-color: dodgerblue;
 			}
 			
@@ -144,7 +144,7 @@
 				padding: 10px 0;
 			}
 			
-			.is-checked {
+			.person-container.is-checked {
 				background-color: lightgray;
 				color: white;
 			}
@@ -186,7 +186,7 @@
 		<!--人员选择-->
 		<template id="person-list">
 			<div>
-				<div v-for="(person,index) in personList" class="person-container" v-bind:class="[{'is-checked':person.isCheck},{'is-checked':person.isChecked}]" v-on:click="toggleChoosePerson(person,index)">
+				<div v-for="(person,index) in personList" class="person-container" v-bind:class="[{'is-check':person.isCheck},{'is-checked':person.isChecked}]" v-on:click="toggleChoosePerson(person,index)">
 					{{person.name}}
 				</div>
 			</div>

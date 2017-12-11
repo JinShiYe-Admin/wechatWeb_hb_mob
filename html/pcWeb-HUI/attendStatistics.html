@@ -200,7 +200,7 @@
 							}
 						});
 					} else {
-						layer.alert('获取部门出现问题');
+						layer.alert(data.RspTxt);
 					}
 				});
 			}
@@ -233,7 +233,7 @@
 							}
 						}
 					} else {
-						//layer.alert('获取部门出现问题');
+						layer.alert(data.RspTxt);
 					}
 				});
 			}
@@ -325,7 +325,7 @@
 						}
 						attendData.flag = 1;
 					} else {
-						//						layer.alert('请重新登录获取个人信息');
+						layer.alert(data.RspTxt);
 					}
 				});
 			};

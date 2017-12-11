@@ -70,7 +70,7 @@ Vue.component("choose-person", {
 			request.requestPersonalInfo(function(response) {
 				console.log("获取的corpId数据：" + JSON.stringify(response));
 				if(response.RspCode == 0) {
-					com.corpId = response.RspData.userlist[0].corpid;
+					com.corpId = JSON.parse(response.RspData).corpid;
 					com.requireProcess();
 				}
 			})
@@ -85,7 +85,6 @@ Vue.component("choose-person", {
 				com.personList = data;
 				com.setCheckedStatus();
 				com.setChooseStatus();
-
 			})
 		},
 		setCheckedStatus: function() {

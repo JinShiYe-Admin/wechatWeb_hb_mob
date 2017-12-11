@@ -97,6 +97,7 @@
 				el: "#attendData",
 				data: {
 					flag: 0,
+					requestFlag : 0,
 					userInfo: {}, //当前人员信息
 					attendArray: [], //考勤统计列表
 					departArray: [], //管理的所有部门数组
@@ -167,6 +168,7 @@
 							if(tempModel.value == -1) {
 								attendData.departArray.splice(i, 1);
 							} else {
+								layer.load(2);
 								getDepartPerson(tempModel);
 								var temp000 = {
 									id: tempModel.value,
@@ -214,6 +216,10 @@
 				}
 				console.log('tempData:' + JSON.stringify(tempData));
 				unitWebsitePro(tempData, function(data) {
+					attendData.requestFlag++;
+					if (attendData.requestFlag>=attendData.departArray.length) {
+						layer.closeAll('loading');
+					}
 					if(data.RspCode == 0) {
 						for(var i = 0; i < data.RspData.length; i++) {
 							var tempModel = data.RspData[i];

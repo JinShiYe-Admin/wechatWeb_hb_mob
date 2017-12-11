@@ -58,6 +58,12 @@ Vue.component("leave-setting", {
 			}
 		}
 	},
+	mounted: function() {
+		$('.table-sort').DataTable({
+			pageLength: 10,
+			lengthChange: false
+		});
+	},
 	methods: {
 		/**
 		 * 更改请假流程状态
@@ -232,7 +238,7 @@ Vue.component("leave-setting", {
 				corpId: this.corpId,
 				stat: 0,
 				pageIndex: this.pageIndex,
-				pageSize: 20
+				pageSize: 0
 			}, function(response) {
 				if(response.RspCode == 0) {
 					com.leaveList = response.RspData.Data;

@@ -38,6 +38,12 @@ Vue.component("process-setting", {
 			stat: 1
 		}
 	},
+	mounted: function() {
+		$('.table-sort').DataTable({
+			pageLength: 10,
+			lengthChange: false
+		});
+	},
 	methods: {
 		/**
 		 * 更改显示状态
@@ -156,12 +162,11 @@ Vue.component("process-setting", {
 				ApprManList: [],
 				ProcNote: ""
 			}
-			if(this.pageIndex === 1) {
-				this.processList.splice(0, 0, process);
-				this.ProcessList.splice(20, 1);
-			} else {
-				this.requireProcess();
-			}
+			//			if(this.pageIndex === 1) {
+			this.processList.splice(0, 0, process);
+			//			} else {
+			//				this.requireProcess();
+			//			}
 		},
 		/**
 		 * 更改流程类型说明
@@ -180,6 +185,8 @@ Vue.component("process-setting", {
 				if(response.RspCode == 0) {
 					com.activeProcess.ProcTypeName = com.name;
 					com.activeProcess.procTypeNote = com.note;
+				} else {
+
 				}
 			})
 		},
@@ -193,8 +200,8 @@ Vue.component("process-setting", {
 			processRequest.postProcessData("getProcessList", {
 				corpId: this.corpId,
 				stat: 0,
-				pageIndex: this.pageIndex,
-				pageSize: 20
+				pageIndex: 1,
+				pageSize: 0
 			}, function(response) {
 				console.log("获取流程信息结果:" + JSON.stringify(response));
 				if(response.RspCode == 0) {

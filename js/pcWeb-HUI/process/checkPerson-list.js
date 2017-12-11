@@ -35,6 +35,12 @@ Vue.component("check-person-list", {
 			this.$emit("person-info", newVal);
 		}
 	},
+	mounted: function() {
+		$('.table-sort').DataTable({
+			pageLength: 10,
+			lengthChange: false
+		});
+	},
 	methods: {
 		/**
 		 * 获取状态
@@ -97,8 +103,8 @@ Vue.component("check-person-list", {
 			var com = this;
 			processRequest.postProcessData("getApprMan", {
 				corpId: this.corpId,
-				pageIndex: this.pageIndex,
-				pageSize: pageSize
+				pageIndex: 1,
+				pageSize: 0
 			}, function(response) {
 				if(response.RspCode == 0) {
 					if(pageSize === 0) {

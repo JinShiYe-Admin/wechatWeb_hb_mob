@@ -177,6 +177,8 @@
 			document.getElementById("attendAdressText").value = attendAddressObject.AreaName;
 			document.getElementById("attendAdressX").value = attendAddressObject.AreaX;
 			document.getElementById("attendAdressY").value = attendAddressObject.AreaY;
+
+			
 			//				vm.type = detail.type;
 			//					if(vm.type == 'edit') {
 			//						var tempData = {
@@ -378,6 +380,8 @@
 			 */
 			var address = getAddress(attendAddressObject.AreaX, attendAddressObject.AreaY);
 			console.log("address===============" + address);
+			//一加载页面，调用getRedius函数，显示半径范围
+			getRedius(attendAddressObject.AreaRedius);
 			var geoc = new BMap.Geocoder();
 			/**
 			 * 根据原先的地址解析之，将其对应的位置在地图上显示
@@ -512,35 +516,35 @@
 				map.addOverlay(circle);
 			}
 			//输入坐标查询地点，代码开始
-//			function search() {
-//				//				alert(0000)
-//				var X = document.getElementById("attendAdressX").value;
-//				var Y = document.getElementById("attendAdressY").value;
-//				if(X == "" && Y == "") {
-//					alert("请输入坐标");
-//					return;
-//				}
-//
-//				var point = new BMap.Point(X, Y);
-//				map.clearOverlays();
-//				//创建标注对象
-//				var marker = new BMap.Marker(point);
-//				map.addOverlay(marker);
-//
-//				//根据点解析出地址
-//				geoc.getLocation(point, function(rs) {
-//					console.log("rs===========" + JSON.stringify(rs));
-//					//addressComponents对象可以获取到详细的地址信息
-//					var addComp = rs.addressComponents;
-//					var site = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
-//					//					//将对应的HTML元素设置值
-//					document.getElementById("attendAdressText").value = site;
-//					//					document.getElementById("longitude").value = pt.lng;
-//					//					document.getElementById("latitude").value = pt.lat;
-//
-//				});
-//
-//			}
+			//			function search() {
+			//				//				alert(0000)
+			//				var X = document.getElementById("attendAdressX").value;
+			//				var Y = document.getElementById("attendAdressY").value;
+			//				if(X == "" && Y == "") {
+			//					alert("请输入坐标");
+			//					return;
+			//				}
+			//
+			//				var point = new BMap.Point(X, Y);
+			//				map.clearOverlays();
+			//				//创建标注对象
+			//				var marker = new BMap.Marker(point);
+			//				map.addOverlay(marker);
+			//
+			//				//根据点解析出地址
+			//				geoc.getLocation(point, function(rs) {
+			//					console.log("rs===========" + JSON.stringify(rs));
+			//					//addressComponents对象可以获取到详细的地址信息
+			//					var addComp = rs.addressComponents;
+			//					var site = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+			//					//					//将对应的HTML元素设置值
+			//					document.getElementById("attendAdressText").value = site;
+			//					//					document.getElementById("longitude").value = pt.lng;
+			//					//					document.getElementById("latitude").value = pt.lat;
+			//
+			//				});
+			//
+			//			}
 			//输入坐标查询地点，代码结束
 			/* var vm = new Vue({
 				el: '#conetent',

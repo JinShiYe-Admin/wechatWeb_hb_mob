@@ -21,18 +21,31 @@ Vue.component("check-person-list", {
 	},
 	watch: {
 		chosedPerson: function(newVal, oldVal) {
+			console.log("*****chosedPerson******")
 			this.$emit("person-info", newVal);
 
 		},
 		checkPersonList: function(newVal, oldVal) {
-			this.$nextTick(this.newTablebases)
+			console.log("*****checkPersonList******");
+			this.$nextTick(this.newTablebases);
 		}
 	},
 	mounted: function() {
-		this.getAllCheckPerson();
+		this.getCorpId();
 	},
 	methods: {
+		getCorpId: function() {
+			var com = this;
+			request.requestPersonalInfo(function(response) {
+				console.log("获取的corpId数据：" + JSON.stringify(response));
+				if(response.RspCode == 0) {
+					com.corpId = response.RspData.userlist[0].corpid;
+					com.getAllCheckPerson();
+				}
+			})
+		},
 		newTablebases: function() {
+			console.log("******newTablebases******");
 			if(this.tablebases != null) {
 				this.tablebases.destroy();
 			}

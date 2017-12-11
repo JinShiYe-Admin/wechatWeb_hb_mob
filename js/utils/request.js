@@ -180,7 +180,7 @@ var request = (function(mod) {
 	return mod;
 })(request || {})
 var processRequest = (function(mod) {
-	mod.URL = "";
+	mod.URL = "https://jbyj.jiaobaowang.net/LeaveService/";
 	mod.postData = function(url, data, callback) {
 		data = JSON.stringify(jQuery.extend({
 			uuid: "",

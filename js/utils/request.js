@@ -188,7 +188,9 @@ var processRequest = (function(mod) {
 			token: "",
 			sign: ""
 		}, data));
+		console.log("JQP:data:", url, data);
 		jQuery.post(url, data, function(data) {
+			console.log("JQP:callback:", url, data);
 			if(data.RspCode == 13) {
 				alert("用户没有登录或已超时，关闭当前页面，从新从企业管理端登录")
 			} else {

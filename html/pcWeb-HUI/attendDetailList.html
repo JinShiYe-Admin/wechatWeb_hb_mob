@@ -103,7 +103,7 @@
 				el: "#attendData",
 				data: {
 					flag: 0,
-					requestFlag : 0;
+					requestFlag : 0,
 					userInfo: {}, //当前人员信息
 					attendTimeArrayAll: [], //考勤时间段列表,合并姓名、部门
 					attendTimeArray: [], //考勤时间段列表,从协议获取到的
@@ -176,12 +176,8 @@
 						var tempModel1 = {
 							AttendTypeNote: '部门'
 						}
-						var tempModel2 = {
-							AttendTypeNote: '签到照片'
-						}
 						attendData.attendTimeArray = [].concat(data.RspData.Data);
 						attendData.attendTimeArrayAll = [].concat(data.RspData.Data);
-						attendData.attendTimeArrayAll.splice(0, 0, tempModel2);
 						attendData.attendTimeArrayAll.splice(0, 0, tempModel);
 						attendData.attendTimeArrayAll.splice(0, 0, tempModel1);
 						//获取管理的部门

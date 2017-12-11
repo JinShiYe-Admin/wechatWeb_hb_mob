@@ -40,7 +40,7 @@ Vue.component("process-setting", {
 		}
 	},
 	mounted: function() {
-		this.requireProcess();
+		this.getCorpId();
 	},
 	watch: {
 		processList: function(newVal, oldVal) {
@@ -48,6 +48,16 @@ Vue.component("process-setting", {
 		}
 	},
 	methods: {
+		getCorpId: function() {
+			var com = this;
+			request.requestPersonalInfo(function(response) {
+				console.log("获取的corpId数据：" + JSON.stringify(response));
+				if(response.RspCode == 0) {
+					com.corpId = response.RspData.userlist[0].corpid;
+					com.requireProcess();
+				}
+			})
+		},
 		newTablebases: function() {
 			if(this.tablebases != null) {
 				this.tablebases.destroy();

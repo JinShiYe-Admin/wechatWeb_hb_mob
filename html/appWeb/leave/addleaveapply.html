@@ -759,15 +759,23 @@
 							if(changeData && changeData.ProcessTypeId == data.RspData.Data[i].ProcessTypeId) {
 								procTypeSelectIndex = procTypeData.select.length;
 							}
-							procTypeData.select.push({
-								title: data.RspData.Data[i].ProcTypeName,
-								value: data.RspData.Data[i].ProcessTypeId
-							});
+							if(data.RspData.Data[i].Stat == 1) {
+								procTypeData.select.push({
+									title: data.RspData.Data[i].ProcTypeName,
+									value: data.RspData.Data[i].ProcessTypeId
+								});
+							}
 						}
-						getLeaveType();
-					} else {
+					}
+					if(procTypeData.select.length == 0) {
+						var errStr = "";
+						if(data.RspCode != 0) {
+							errStr = "(" + data.RspTxt + ")";
+						}
 						$.hideLoading();
-						$.alert("未获取到有效的流程类型，无法" + webType + "请假申请(" + data.RspTxt + ")", "提示");
+						$.alert("未获取到有效的流程类型，无法" + webType + "请假申请" + errStr + "", "提示");
+					} else {
+						getLeaveType();
 					}
 				});
 			}
@@ -790,10 +798,12 @@
 								if(changeData && changeData.LeaveTypeId == data.RspData.Data[i].LeaveTypeId) {
 									leaveTypeSelectIndex = leaveTypeData.select.length;
 								}
-								leaveTypeData.select.push({
-									title: data.RspData.Data[i].LeaveTypeName,
-									value: data.RspData.Data[i].LeaveTypeId
-								});
+								if(data.RspData.Data[i].Stat == 1) {
+									leaveTypeData.select.push({
+										title: data.RspData.Data[i].LeaveTypeName,
+										value: data.RspData.Data[i].LeaveTypeId
+									});
+								}
 							}
 						}
 					}

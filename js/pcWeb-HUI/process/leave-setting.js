@@ -36,7 +36,7 @@ Vue.component("leave-setting", {
 		}
 	},
 	mounted: function() {
-		this.requireLeave();
+		this.getCorpId();
 	},
 	watch: {
 		leaveList: function(newVal, oldVal) {
@@ -44,6 +44,16 @@ Vue.component("leave-setting", {
 		}
 	},
 	methods: {
+		getCorpId: function() {
+			var com = this;
+			request.requestPersonalInfo(function(response) {
+				console.log("获取的corpId数据：" + JSON.stringify(response));
+				if(response.RspCode == 0) {
+					com.corpId = response.RspData.userlist[0].corpid;
+					com.requireLeave();
+				}
+			})
+		},
 		newTablebases: function() {
 			if(this.tablebases != null) {
 				this.tablebases.destroy();

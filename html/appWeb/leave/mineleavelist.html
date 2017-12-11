@@ -281,6 +281,7 @@
 					colv: ""
 				}
 				unitWebsitePro(tempData, function(data) {
+					//data = getMineInfoCallBack;
 					if(data.RspCode == 0) {
 						mineUserInfo = JSON.parse(data.RspData);
 						$("#pullUp").css("margin-top", "1.5em");
@@ -305,6 +306,7 @@
 				var tempData = {
 					corpId: mineUserInfo.corpid,
 					applyMan: mineUserInfo.userid,
+					applyStat: 0,
 					pageSize: 10,
 					pageIndex: pageIndex
 				}

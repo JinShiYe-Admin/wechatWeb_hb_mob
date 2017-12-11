@@ -143,7 +143,8 @@
 			.pageNo-container {
 				padding: 10px 0;
 			}
-			.is-chose{
+			
+			.is-chose {
 				background-color: lightgray;
 				color: white;
 			}
@@ -276,8 +277,12 @@
 					return {
 						activeDepart: {},
 						personList: this.chosedPerson,
-						selectPerson: {}
+						selectPerson: {},
+						corpId: 0
 					}
+				},
+				mounted: function() {
+					this.getCorpId();
 				},
 				watch: {
 					/**
@@ -300,6 +305,15 @@
 					}
 				},
 				methods: {
+					getCorpId: function() {
+						var com = this;
+						request.requestPersonalInfo(function(response) {
+							console.log("获取的corpId数据：" + JSON.stringify(response));
+							if(response.RspCode == 0) {
+								com.corpId = response.RspData.userlist[0].corpid;
+							}
+						})
+					},
 					getActiveDepart: function(activeDepart) {
 						console.log("*******getActiveDepart*******")
 						this.activeDepart = activeDepart;
@@ -320,6 +334,7 @@
 					 * 添加审核人员
 					 */
 					addCheckPersons: function() {
+						console.log("*******添加审核人员********");
 						var com = this;
 						var count = 0;
 						for(var key in com.selectPerson) {
@@ -341,13 +356,15 @@
 					 */
 					addCheckPerson: function(personInfo, callback) {
 						console.log("*******choosePerson*******")
-						PersonRequest.postPersonData("addApprMan", {
+						processRequest.postPersonData("addApprMan", {
 							corpId: this.corpId,
 							apprMan: personInfo.userid,
 							apprManName: personInfo.name
 						}, function(response) {
 							if(response.RspCode == 0) {
 								callback();
+							} else {
+
 							}
 						})
 

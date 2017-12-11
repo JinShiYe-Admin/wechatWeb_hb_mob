@@ -180,7 +180,7 @@ var request = (function(mod) {
 	return mod;
 })(request || {})
 var processRequest = (function(mod) {
-	mod.URL = "";
+	mod.URL = "https://jbyj.jiaobaowang.net/LeaveService/";
 	mod.postData = function(url, data, callback) {
 		data = JSON.stringify(jQuery.extend({
 			uuid: "",
@@ -188,7 +188,9 @@ var processRequest = (function(mod) {
 			token: "",
 			sign: ""
 		}, data));
+		console.log("JQP:data:", url, data);
 		jQuery.post(url, data, function(data) {
+			console.log("JQP:callback:", url, data);
 			if(data.RspCode == 13) {
 				alert("用户没有登录或已超时，关闭当前页面，从新从企业管理端登录")
 			} else {

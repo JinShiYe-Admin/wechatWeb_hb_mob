@@ -29,6 +29,7 @@ Vue.component("process-setting", {
 				ProTypeNote: "流程4备注", //流程备注
 				Stat: 1
 			},
+			tablebases: null,
 			changeType: 0, //0 新建流程 1修改流程
 			corpId: 0,
 			pageIndex: 1,
@@ -39,12 +40,23 @@ Vue.component("process-setting", {
 		}
 	},
 	mounted: function() {
-		$('.table-sort').DataTable({
-			pageLength: 10,
-			lengthChange: false
-		});
+		this.requireProcess();
+	},
+	watch: {
+		processList: function(newVal, oldVal) {
+			this.$nextTick(this.newTablebases)
+		}
 	},
 	methods: {
+		newTablebases: function() {
+			if(this.tablebases != null) {
+				this.tablebases.destroy();
+			}
+			this.tablebases = $('.table-sort').DataTable({
+				pageLength: 10,
+				lengthChange: false
+			});
+		},
 		/**
 		 * 更改显示状态
 		 * @param {Object} process

@@ -247,9 +247,11 @@
 				initSelect();
 				if(changeData) { //修改请假申请
 					$("#represon").val(changeData.ApplyReason);
+					initDatePicker(changeData.ApplyBeginTime, changeData.ApplyEndTime);
+					changeData.ApplyBeginTime = changeData.ApplyBeginTime.replace(/-|:|\s/g, "");
+					changeData.ApplyEndTime = changeData.ApplyEndTime.replace(/-|:|\s/g, "");
 					beginTime = changeData.ApplyBeginTime;
 					endTime = changeData.ApplyEndTime;
-					initDatePicker(utils.initTime(changeData.ApplyBeginTime), utils.initTime(changeData.ApplyEndTime));
 					initPic();
 				} else {
 					initDatePicker();

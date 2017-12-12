@@ -265,7 +265,7 @@
 				template: '<check-person-list v-on:person-info="getPersonInfo"></check-person-list>',
 				methods: {
 					getPersonInfo: function(person) {
-						console.log("获取的classify:" + JSON.stringify(person));
+						console.log("checkPersonList获取的person:" + JSON.stringify(person));
 						this.$emit("person-info", person);
 					}
 				}
@@ -299,7 +299,7 @@
 					 * @param {Object} oldVal
 					 */
 					checkedPerson: function(newVal, oldVal) {
-						console.log("wacth:监听checkedPerson:" + JSON.stringify(newVal))
+						console.log("multiChoosewacth:监听checkedPerson:" + JSON.stringify(newVal))
 					}
 				},
 				methods: {
@@ -398,6 +398,8 @@
 				},
 				methods: {
 					getCheckedPerson: function(person) {
+						console.log("******getCheckedPerson*****");
+						console.log("获取的审核人员：" + JSON.stringify(person));
 						this.checkedPerson = person;
 					}
 				}

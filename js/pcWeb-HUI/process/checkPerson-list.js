@@ -175,11 +175,14 @@ Vue.component("check-person-list", {
 			console.log("****changeArrToObj****");
 			var obj = {};
 			arr.forEach(function(item, index, arr) {
-				obj[item.ApprMan] = obj[item.ApprManName]
+				obj[item.ApprMan] = item.ApprManName;
 			});
 			console.log("checkedPerson:" + JSON.stringify(obj));
 			return obj;
 		},
+		/**
+		 * 添加人员
+		 */
 		addPersons: function() {
 			router.push({
 				name: "chooseDepart"

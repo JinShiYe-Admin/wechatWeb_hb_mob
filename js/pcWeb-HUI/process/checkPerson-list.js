@@ -59,7 +59,7 @@ Vue.component("check-person-list", {
 			if(isAdd) {
 				this.selectedInputPerson[person.TabId] = person.ApprManName;
 			} else {
-				delete this.selectedInputPerson[person.ApprMan];
+				delete this.selectedInputPerson[person.TabId];
 				this.isAllCheck = false;
 			}
 		},
@@ -140,7 +140,7 @@ Vue.component("check-person-list", {
 			console.log("****delCurPerson*****");
 			var com = this;
 			this.delPerson(person.TabId, function() {
-				delete com.checkedPerson[perosn.ApprMan];
+				delete com.checkedPerson[person.ApprMan];
 				com.getAllCheckPerson();
 			});
 		},

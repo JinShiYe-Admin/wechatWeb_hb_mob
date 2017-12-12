@@ -28,6 +28,9 @@ Vue.component("process-setting", {
 		}
 	},
 	methods: {
+		/**
+		 * 获取单位Id
+		 */
 		getCorpId: function() {
 			var com = this;
 			request.requestPersonalInfo(function(response) {
@@ -38,6 +41,9 @@ Vue.component("process-setting", {
 				}
 			})
 		},
+		/**
+		 * 表格
+		 */
 		newTablebases: function() {
 			if(this.tablebases != null) {
 				this.tablebases.destroy();

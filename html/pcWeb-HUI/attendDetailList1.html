@@ -53,7 +53,7 @@
 							<td><u style="cursor:pointer" class="text-primary">{{attend.name}}</u></td>
 							<td v-for='(timeModel,index) in attend.timeList'>
 								<u style="cursor:pointer" class="text-primary">{{timeModel.AttendResult}}
-									<a :href="timeModel.AttendPic" data-lightbox="gallery" data-title="签到/签退照片"><img class="imgclass" width="100%" :src=timeModel.AttendPic></a>
+									<a :href="timeModel.AttendPic" data-lightbox="gallery" data-title="签到/签退照片"><img class="imgclass" width="50px" :src=timeModel.AttendPic></a>
 									</u>
 							</td>
 						</tr>

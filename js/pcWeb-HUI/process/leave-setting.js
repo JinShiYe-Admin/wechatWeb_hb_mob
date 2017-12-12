@@ -40,11 +40,16 @@ Vue.component("leave-setting", {
 	},
 	watch: {
 		leaveList: function(newVal, oldVal) {
+			console.log("watch:leaveList:" + JSON.stringify(newVal))
+			if(this.tablebases != null) {
+				this.tablebases.destroy();
+			}
 			this.$nextTick(this.newTablebases);
 		}
 	},
 	methods: {
 		getCorpId: function() {
+			console.log("******getCorpId*********")
 			var com = this;
 			request.requestPersonalInfo(function(response) {
 				console.log("获取的corpId数据：" + JSON.stringify(response));
@@ -55,9 +60,7 @@ Vue.component("leave-setting", {
 			})
 		},
 		newTablebases: function() {
-			if(this.tablebases != null) {
-				this.tablebases.destroy();
-			}
+			console.log("*****newTablebases******");
 			this.tablebases = $('.table-sort').DataTable({
 				pageLength: 10,
 				lengthChange: false
@@ -79,7 +82,7 @@ Vue.component("leave-setting", {
 				stat: (leave.Stat + 1) % 2
 			}, function(response) {
 				if(response.RspCode == 0) {
-					leave.Stat = (process.Stat + 1) % 2;
+					leave.Stat = (leave.Stat + 1) % 2;
 				} else {
 					alert(response.RspTxt);
 				}

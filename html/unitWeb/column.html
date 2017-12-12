@@ -59,7 +59,7 @@
 				</div>
 
 				<div>
-					<div class="weui-cells__title">{{orderid.title+" (只能输入数字)"}}</div>
+					<div class="weui-cells__title">{{orderid.title+" (只能输入数字1~9)"}}</div>
 					<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
@@ -108,7 +108,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="weui-btn-area"  v-if="editName =='添加'">
+			<div class="weui-btn-area" v-if="editName =='添加'">
 				<button id="submit" v-on:click="submitClick" class="weui-btn weui-btn_primary">{{editName}}</button>
 			</div>
 		</div>
@@ -128,46 +128,45 @@
 				//				alert("detail " + JSON.stringify(detail));
 				vm.type = detail.type;
 				if(vm.type == 'edit') {
-								var tempData = {
-				cmd: 'chn',
-				type: 'findpage',
-				pagesize: '1',
-				pageindex: '1',
-				chnid: detail.chnid
-				//				cname: '',
-				//				stat: '',
-				//				iswrite: '',
-				//				islink: ''
-			}
-			unitWebsitePro(tempData, function(data) {
-				//				alert(JSON.stringify(data));
-				if(data.RspCode == 0) {
-					detail= data.RspData.dt[0];
-					vm.editName = '删除'
-					vm.colid = detail.chnid;
-					vm.cname.message = detail.cname;
-					vm.orderid.message = detail.orderid;
-					vm.linkurl.message = detail.linkurl;
-					vm.islink.check = detail.islink == 1 ? true : false;
-					vm.iswrite.check = detail.iswrite == 1 ? true : false;
-					vm.istop.check = detail.istop == 1 ? true : false;
-					vm.note.message = detail.note
-					for(var item in vm.$data) {
-						(function addwatch(key) {
-							vm.$watch(key + '.message', function(newVal, oldVal) {
-								edit(oldVal, newVal, key)
-							})
-							vm.$watch(key + '.check', function(newVal, oldVal) {
-								edit(oldVal, newVal, key)
-							})
-						})(item)
-
+					var tempData = {
+						cmd: 'chn',
+						type: 'findpage',
+						pagesize: '1',
+						pageindex: '1',
+						chnid: detail.chnid
+						//				cname: '',
+						//				stat: '',
+						//				iswrite: '',
+						//				islink: ''
 					}
-				} else {
-					alert(data.RspTxt);
-				}
-			});
+					unitWebsitePro(tempData, function(data) {
+						//				alert(JSON.stringify(data));
+						if(data.RspCode == 0) {
+							detail = data.RspData.dt[0];
+							vm.editName = '删除'
+							vm.colid = detail.chnid;
+							vm.cname.message = detail.cname;
+							vm.orderid.message = detail.orderid;
+							vm.linkurl.message = detail.linkurl;
+							vm.islink.check = detail.islink == 1 ? true : false;
+							vm.iswrite.check = detail.iswrite == 1 ? true : false;
+							vm.istop.check = detail.istop == 1 ? true : false;
+							vm.note.message = detail.note
+							for(var item in vm.$data) {
+								(function addwatch(key) {
+									vm.$watch(key + '.message', function(newVal, oldVal) {
+										edit(oldVal, newVal, key)
+									})
+									vm.$watch(key + '.check', function(newVal, oldVal) {
+										edit(oldVal, newVal, key)
+									})
+								})(item)
 
+							}
+						} else {
+							alert(data.RspTxt);
+						}
+					});
 
 				} else {
 					vm.editName = '添加'
@@ -230,34 +229,41 @@
 								pid: 0,
 								istop: boolToInt(vm.istop.check)
 							}
-							if(para.cname==""){
+							if(para.cname == "") {
 								alert("请输入栏目名称");
 								return;
 							}
-							if(para.islink==1&&para.linkurl==''){
+							if(para.cname.length < 20) {
+								alert("栏目名称不能超过20字");
+								return;
+							}
+							if(para.islink == 1 && para.linkurl == '') {
 								alert("请输入链接地址");
 								return;
 							}
-							if(para.note==""){
+							if(para.note == "") {
 								alert("请输入备注");
 								return;
 							}
 
-							var reg = /^[1-9]\d*$/
-								var numFlag = reg.test(vm.orderid.message);
-								if(numFlag == false) {
-									alert('请输入正确排序ID')
-									return;
-								}
-							
-							
+							var reg = /[1-9]/
+							var numFlag = reg.test(vm.orderid.message);
+							if(numFlag == false) {
+								alert('请输入正确排序ID')
+								return;
+							}
+							if(parseInt(vm.orderid.message) > 9) {
+								alert('请输入正确排序ID')
+								return;
+							}
+
 							//							alert(JSON.stringify(para))
 							unitWebsitePro(para, function(data) {
 								if(data.RspCode == 0) {
 									alert('添加成功');
 									vm.resetData();
 									vm.editName = '添加'
-//									mui.back()
+									//									mui.back()
 								}
 								//								alert(JSON.stringify(data));
 							});
@@ -271,7 +277,7 @@
 							unitWebsitePro(para, function(data) {
 								if(data.RspCode == 0) {
 									vm.resetData();
-//									mui.back()
+									//									mui.back()
 								}
 								//								alert(JSON.stringify(data));
 							});

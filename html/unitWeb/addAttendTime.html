@@ -52,7 +52,7 @@
 						</div>
 					</div>-->
 					<br />
-					<div class="weui-cells__title">打卡开始时间（小时）：
+					<div class="weui-cells__title">打卡开始时间：
 						<select id="beginHour">
 							<option value=""></option>
 							<option value="1">1</option>
@@ -80,50 +80,7 @@
 							<option value="23">23</option>
 							<option value="24">24</option>
 						</select>
-					</div>
-					<!--<div class="weui-cells">
-						<div class="weui-cell">
-							<div class="weui-cell__bd">
-								<input id="beginHour" v-model.lazy="cname.message" class="weui-input" type="text" :placeholder="'请'">
-								<select id="beginHour">
-									<option value=""></option>
-									<option value="1">1</option>
-									<option value="2">2</option>
-									<option value="3">3</option>
-									<option value="4">4</option>
-									<option value="5">5</option>
-									<option value="6">6</option>
-									<option value="7">7</option>
-									<option value="8">8</option>
-									<option value="9">9</option>
-									<option value="10">10</option>
-									<option value="11">11</option>
-									<option value="12">12</option>
-									<option value="13">13</option>
-									<option value="14">14</option>
-									<option value="15">15</option>
-									<option value="16">16</option>
-									<option value="17">17</option>
-									<option value="18">18</option>
-									<option value="19">19</option>
-									<option value="20">20</option>
-									<option value="21">21</option>
-									<option value="22">22</option>
-									<option value="23">23</option>
-									<option value="24">24</option>
-								</select>
-							</div>
-						</div>
-					</div>-->
-				</div>
-				<br />
-				<div>
-					<!--<div class="weui-cells__title">{{linkurl.title+" (有链接时，不允许投稿；链接默认打开。)"}}</div>-->
-					<!--<div class="weui-cell__ft" style="margin-top: -35px;margin-right: 15px;">
-						<input class="weui-switch" type="checkbox" v-model="islink.check">
-					</div>-->
-					<!--<div v-if="islink.check" class="weui-cells">-->
-					<div class="weui-cells__title">打卡开始时间（分钟）：
+						时
 						<select id="beginMinute">
 							<option value=""></option>
 							<option value="0">0</option>
@@ -187,7 +144,244 @@
 							<option value="58">58</option>
 							<option value="59">59</option>
 						</select>
+						分
 					</div>
+					<br />
+					<div class="weui-cells__title">上班或下班时间：
+						<select id="workTimePoint_Hour">
+							<option value=""></option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+							<option value="8">8</option>
+							<option value="9">9</option>
+							<option value="10">10</option>
+							<option value="11">11</option>
+							<option value="12">12</option>
+							<option value="13">13</option>
+							<option value="14">14</option>
+							<option value="15">15</option>
+							<option value="16">16</option>
+							<option value="17">17</option>
+							<option value="18">18</option>
+							<option value="19">19</option>
+							<option value="20">20</option>
+							<option value="21">21</option>
+							<option value="22">22</option>
+							<option value="23">23</option>
+							<option value="24">24</option>
+						</select>
+						时
+						<select id="workTimePoint_Minute">
+							<option value=""></option>
+							<option value="0">0</option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+							<option value="8">8</option>
+							<option value="9">9</option>
+							<option value="10">10</option>
+							<option value="11">11</option>
+							<option value="12">12</option>
+							<option value="13">13</option>
+							<option value="14">14</option>
+							<option value="15">15</option>
+							<option value="16">16</option>
+							<option value="17">17</option>
+							<option value="18">18</option>
+							<option value="19">19</option>
+							<option value="20">20</option>
+							<option value="21">21</option>
+							<option value="22">22</option>
+							<option value="23">23</option>
+							<option value="24">24</option>
+							<option value="25">25</option>
+							<option value="26">26</option>
+							<option value="27">27</option>
+							<option value="28">28</option>
+							<option value="29">29</option>
+							<option value="30">30</option>
+							<option value="31">31</option>
+							<option value="32">32</option>
+							<option value="33">33</option>
+							<option value="34">34</option>
+							<option value="35">35</option>
+							<option value="36">36</option>
+							<option value="37">37</option>
+							<option value="38">38</option>
+							<option value="39">39</option>
+							<option value="40">40</option>
+							<option value="41">41</option>
+							<option value="42">42</option>
+							<option value="43">43</option>
+							<option value="44">44</option>
+							<option value="45">45</option>
+							<option value="46">46</option>
+							<option value="47">47</option>
+							<option value="48">48</option>
+							<option value="49">49</option>
+							<option value="50">50</option>
+							<option value="51">51</option>
+							<option value="52">52</option>
+							<option value="53">53</option>
+							<option value="54">54</option>
+							<option value="55">55</option>
+							<option value="56">56</option>
+							<option value="57">57</option>
+							<option value="58">58</option>
+							<option value="59">59</option>
+						</select>
+						分
+					</div>
+					<br />
+
+					<div class="weui-cells__title">打卡结束时间：
+						<select id="cardEndTimePoint_Hour">
+							<option value=""></option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+							<option value="8">8</option>
+							<option value="9">9</option>
+							<option value="10">10</option>
+							<option value="11">11</option>
+							<option value="12">12</option>
+							<option value="13">13</option>
+							<option value="14">14</option>
+							<option value="15">15</option>
+							<option value="16">16</option>
+							<option value="17">17</option>
+							<option value="18">18</option>
+							<option value="19">19</option>
+							<option value="20">20</option>
+							<option value="21">21</option>
+							<option value="22">22</option>
+							<option value="23">23</option>
+							<option value="24">24</option>
+						</select>
+						时
+						<select id="cardEndTimePoint_Minute">
+							<option value=""></option>
+							<option value="0">0</option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+							<option value="8">8</option>
+							<option value="9">9</option>
+							<option value="10">10</option>
+							<option value="11">11</option>
+							<option value="12">12</option>
+							<option value="13">13</option>
+							<option value="14">14</option>
+							<option value="15">15</option>
+							<option value="16">16</option>
+							<option value="17">17</option>
+							<option value="18">18</option>
+							<option value="19">19</option>
+							<option value="20">20</option>
+							<option value="21">21</option>
+							<option value="22">22</option>
+							<option value="23">23</option>
+							<option value="24">24</option>
+							<option value="25">25</option>
+							<option value="26">26</option>
+							<option value="27">27</option>
+							<option value="28">28</option>
+							<option value="29">29</option>
+							<option value="30">30</option>
+							<option value="31">31</option>
+							<option value="32">32</option>
+							<option value="33">33</option>
+							<option value="34">34</option>
+							<option value="35">35</option>
+							<option value="36">36</option>
+							<option value="37">37</option>
+							<option value="38">38</option>
+							<option value="39">39</option>
+							<option value="40">40</option>
+							<option value="41">41</option>
+							<option value="42">42</option>
+							<option value="43">43</option>
+							<option value="44">44</option>
+							<option value="45">45</option>
+							<option value="46">46</option>
+							<option value="47">47</option>
+							<option value="48">48</option>
+							<option value="49">49</option>
+							<option value="50">50</option>
+							<option value="51">51</option>
+							<option value="52">52</option>
+							<option value="53">53</option>
+							<option value="54">54</option>
+							<option value="55">55</option>
+							<option value="56">56</option>
+							<option value="57">57</option>
+							<option value="58">58</option>
+							<option value="59">59</option>
+						</select>
+						分
+					</div>
+					<!--<div class="weui-cells">
+						<div class="weui-cell">
+							<div class="weui-cell__bd">
+								<input id="beginHour" v-model.lazy="cname.message" class="weui-input" type="text" :placeholder="'请'">
+								<select id="beginHour">
+									<option value=""></option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+									<option value="6">6</option>
+									<option value="7">7</option>
+									<option value="8">8</option>
+									<option value="9">9</option>
+									<option value="10">10</option>
+									<option value="11">11</option>
+									<option value="12">12</option>
+									<option value="13">13</option>
+									<option value="14">14</option>
+									<option value="15">15</option>
+									<option value="16">16</option>
+									<option value="17">17</option>
+									<option value="18">18</option>
+									<option value="19">19</option>
+									<option value="20">20</option>
+									<option value="21">21</option>
+									<option value="22">22</option>
+									<option value="23">23</option>
+									<option value="24">24</option>
+								</select>
+							</div>
+						</div>
+					</div>-->
+				</div>
+				<br />
+				<div>
+					<!--<div class="weui-cells__title">{{linkurl.title+" (有链接时，不允许投稿；链接默认打开。)"}}</div>-->
+					<!--<div class="weui-cell__ft" style="margin-top: -35px;margin-right: 15px;">
+						<input class="weui-switch" type="checkbox" v-model="islink.check">
+					</div>-->
+					<!--<div v-if="islink.check" class="weui-cells">-->
+					<!--<div class="weui-cells__title">打卡开始时间：-->
+
+					<!--</div>-->
 					<!--<div class="weui-cell">
 						<div class="weui-cell__bd">
 							<input id="beginMinute" class="weui-input" type="text" :placeholder="'请输入考勤开始时间'">
@@ -258,22 +452,22 @@
 					</div>-->
 					<!--</div>-->
 				</div>
-				<br />
-				<div>
+				<!--<br />-->
+				<!--<div>
 					<div class="weui-cells__title">正常打卡持续分钟数：<input size="5" id="continuousTime" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"></div>
-					<!--<div class="weui-cells">
+					<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
 								<input id="continuousTime" class="weui-input" type="number" :placeholder="'请输入考勤持续时间'">
 								<input id="continuousTime" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">
 							</div>
 						</div>
-					</div>-->
-				</div>
-				<br />
-				<div>
+					</div>
+				</div>-->
+				<!--<br />-->
+				<!--<div>
 					<div class="weui-cells__title">异常打卡（迟到、早退）持续分钟数：<input size="5" id="lateMinutes" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^0-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"></div>
-					<!--<div class="weui-cells">
+					<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
 								<input id="lateMinutes" class="weui-input" type="text" :placeholder="'请输入考勤迟到时间'">
@@ -281,9 +475,9 @@
 
 							</div>
 						</div>
-					</div>-->
-				</div>
-				<br />
+					</div>
+				</div>-->
+
 				<div>
 					<div class="weui-cells__title">考勤短信内容：</div>
 					<div style="margin-left: 109px; margin-top: -20px;"><textarea rows="8" cols="50" style=" resize:none;" id="attendMessage" class="weui-input" type="text"></textarea></div>
@@ -349,6 +543,7 @@
 			var attendTypeId;
 			var selectArray = new Array();
 			var optionValueArray = new Array();
+			var optionAttendTypePropertyArray = new Array();
 			//			window.onload = function() {
 			console.log(222222222222222222);
 			attendTypeId = getUrlParam('attendTypeId');
@@ -428,6 +623,7 @@
 							console.log("data.RspData.Data[i]====" + data.RspData.Data[i]);
 							selectArray.push(data.RspData.Data[i].AttendTypeNote);
 							optionValueArray.push(data.RspData.Data[i].AttendTypeId);
+							optionAttendTypePropertyArray.push(data.RspData.Data[i].attendTypeProp);
 						}
 
 						//							column_table.dt = data.RspData.Data;
@@ -440,7 +636,7 @@
 			})
 			console.log("selectArray--==========" + selectArray);
 			console.log("selectArray---json======" + JSON.stringify(selectArray));
-
+			console.log("optionAttendTypePropertyArray---json======" + JSON.stringify(optionAttendTypePropertyArray));
 			//	getWebsitConfig();
 			/**
 			 * 从考勤类型列表数据每一行记录点超链接跳转到此页面，将考勤类型记录对象得到，detail即是
@@ -549,6 +745,9 @@
 						 */
 						var selectObject_Note = document.getElementById("attendTypeNote");
 						var optionObjectNoteIndex = selectObject_Note.selectedIndex;
+						//得到考勤类型说明每个选项的自定义的考勤类型属性值
+						var optionObjectNoteProperty = selectObject_Note.options[optionObjectNoteIndex].getAttribute("attendTypeProperty");
+						console.log("optionObjectNoteProperty====" + optionObjectNoteProperty);
 						var optionObjectNoteText = selectObject_Note.options[optionObjectNoteIndex].text;
 						console.log("optionObjectNoteText======" + optionObjectNoteText);
 						var optionObjectNoteValue = selectObject_Note.options[optionObjectNoteIndex].value;
@@ -570,24 +769,87 @@
 						var optionElementText_H = selectElementObject_M.options[optionElementObjectIndex_H].text;
 						console.log("optionElementText_H====" + optionElementText_H);
 						var beginHour = optionElementText_H;
-						var lateMinutes = document.getElementById("lateMinutes").value;
-						var continuousTime = document.getElementById("continuousTime").value;
+						//						var lateMinutes = document.getElementById("lateMinutes").value;
+						//						var continuousTime = document.getElementById("continuousTime").value;
+
+						//获取上、下班时间小时值.代码开始
+						var selectObject_WH = document.getElementById("workTimePoint_Hour");
+						//						console.log("selectElementObject===" + selectElementObject);
+						var optionObjectIndex_WH = selectObject_WH.selectedIndex;
+						//						console.log("optionElementObjectIndex_H===" + optionElementObjectIndex_H);
+						var optionElementText_WH = selectObject_WH.options[optionObjectIndex_WH].text;
+						//						console.log("optionElementText_H====" + optionElementText_H);
+						var workTimePoint_Hour = optionElementText_WH;
+						//获取上、下班时间小时值.代码结束
+
+						//获取上、下班时间分钟值.代码开始
+						var selectObject_WM = document.getElementById("workTimePoint_Minute");
+						//						console.log("selectElementObject===" + selectElementObject);
+						var optionObjectIndex_WM = selectObject_WM.selectedIndex;
+						//						console.log("optionElementObjectIndex_H===" + optionElementObjectIndex_H);
+						var optionElementText_WM = selectObject_WM.options[optionObjectIndex_WM].text;
+						//						console.log("optionElementText_H====" + optionElementText_H);
+						var workTimePoint_Minute = optionElementText_WM;
+						//获取上、下班时间分钟值.代码结束
+
+						//获取打卡结束时间小时值.代码开始
+						var selectObject_CEH = document.getElementById("cardEndTimePoint_Hour");
+						//						console.log("selectElementObject===" + selectElementObject);
+						var optionObjectIndex_CEH = selectObject_CEH.selectedIndex;
+						//						console.log("optionElementObjectIndex_H===" + optionElementObjectIndex_H);
+						var optionElementText_CEH = selectObject_CEH.options[optionObjectIndex_CEH].text;
+						//						console.log("optionElementText_H====" + optionElementText_H);
+						var cardEndTimePoint_Hour = optionElementText_CEH;
+						//获取打卡结束时间小时值.代码结束
+
+						//获取打卡结束时间分钟值.代码开始
+						var selectObject_CEM = document.getElementById("cardEndTimePoint_Minute");
+						//						console.log("selectElementObject===" + selectElementObject);
+						var optionObjectIndex_CEM = selectObject_CEM.selectedIndex;
+						//						console.log("optionElementObjectIndex_H===" + optionElementObjectIndex_H);
+						var optionElementText_CEM = selectObject_CEM.options[optionObjectIndex_CEM].text;
+						//						console.log("optionElementText_H====" + optionElementText_H);
+						var cardEndTimePoint_Minute = optionElementText_CEM;
+						//获取打卡结束时间分钟值.代码结束
 
 						var attendMessage = document.getElementById("attendMessage").value;
+						console.log("beginHour-====" + beginHour + "\nbeginMinute====" + beginMinute + "\nworkTimePoint_Hour=" + workTimePoint_Hour + "\nworkTimePoint_Minute===" + workTimePoint_Minute + "\ncardEndTimePoint_Hour==" + cardEndTimePoint_Hour + "\ncardEndTimePoint_Minute==" + cardEndTimePoint_Minute);
+
+						/**
+						 * 计算接口传参所需值
+						 */
+						//正常打卡持续时间分钟数。需根据上下班不同情况判断，谁减去谁不一样
+						var continuousTime; //正常打卡持续时间
+						var lateMinutes; //异常打卡持续时间
+						//						if (optionObjectNoteText.contains("上班")) {
+						//							continuousTime=(workTimePoint_Hour*60+workTimePoint_Minute)-(beginHour*60+beginMinute);
+						//							lateMinutes=(cardEndTimePoint_Hour*60+cardEndTimePoint_Minute)-(workTimePoint_Hour*60+workTimePoint_Minute);
+						//						} else{
+						//							continuousTime=(cardEndTimePoint_Hour*60+cardEndTimePoint_Minute)-(workTimePoint_Hour*60+workTimePoint_Minute);
+						////							lateMinutes=
+						//						}
+						//异常常打卡（迟到、早退）持续时间分钟数
+
 						if(optionObjectNoteText == "") {
 							alert("考勤类型说明不能为空！");
 							return;
-						} else if(beginHour == "") {
+						} else if(beginHour == "" || beginHour == 0) {
 							alert("打卡开始时间（小时）不能为空！");
 							return;
 						} else if(beginMinute == "") {
 							alert("打卡开始时间（分钟）不能为空！");
 							return;
-						} else if(lateMinutes == "") {
-							alert("异常打卡（迟到、早退）持续分钟数不能为空！");
+						} else if(workTimePoint_Hour == "" || workTimePoint_Hour == 0) {
+							alert("上班或下班时间（小时）不能为空！");
 							return;
-						} else if(continuousTime == "") {
-							alert("正常打卡持续分钟数不能为空！");
+						} else if(workTimePoint_Minute == "") {
+							alert("上班或下班时间（分钟）不能为空！");
+							return;
+						} else if(cardEndTimePoint_Hour == "" || cardEndTimePoint_Hour == 0) {
+							alert("打卡结束时间（小时）不能为空！");
+							return;
+						} else if(cardEndTimePoint_Minute == "") {
+							alert("打卡结束时间（分钟）不能为空！");
 							return;
 						} else if(attendMessage == "") {
 							alert("考勤短信内容不能为空！");
@@ -814,8 +1076,12 @@
 				var i;
 				for(i = 0; i < counts; i++) {
 					console.log("selectArray[i]====" + selectArray[i]);
-					console.log("options[i]=====" + document.getElementById("attendTypeNote").options[i]);
+
 					document.getElementById("attendTypeNote").options[i] = new Option(selectArray[i], optionValueArray[i]);
+					document.getElementById("attendTypeNote").options[i].setAttribute("attendTypeProperty", optionAttendTypePropertyArray[i]);
+					
+					console.log("options[i]=====" + document.getElementById("attendTypeNote").options[i]);
+					//					document.getElementById("attendTypeNote").options[i] = new Option("attendTypeProperty", optionAttendTypePropertyArray[i]);
 				}
 			}
 		</script>

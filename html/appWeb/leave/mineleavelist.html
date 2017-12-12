@@ -17,6 +17,10 @@
 		<link rel="stylesheet" href="../../../js/demoCssJs/jquery-weui.min.css" />
 		<link rel="stylesheet" href="../../../js/demoCssJs/demos.css" />
 		<style>
+			body {
+				-webkit-overflow-scrolling: touch;
+			}
+
 			.weui-cells {
 				margin-top: 0;
 			}
@@ -240,6 +244,10 @@
 									<div class="weui-form-preview__item">\
 										<label class="weui-form-preview__label">结束时间</label>\
 										<span class="weui-form-preview__value">' + data[i].ApplyEndTime + '</span>\
+									</div>\
+									<div class="weui-form-preview__item">\
+										<label class="weui-form-preview__label">申请共计</label>\
+										<span class="weui-form-preview__value">' + data[i].ApplyBeginEndCnt + '</span>\
 									</div>\
 									<div class="weui-form-preview__item">\
 										<label class="weui-form-preview__label">请假事由</label>\

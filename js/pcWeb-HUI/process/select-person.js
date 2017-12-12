@@ -23,6 +23,11 @@ Vue.component("choose-person", {
 		}
 	},
 	watch: {
+		checkPersons: function(newVal, oldVal) {
+			console.log("*****checkPersons*******")
+			console.log("newVal:" + JSON.stringify(newVal));
+			this.personList = this.checkPersons;
+		},
 		/**
 		 * 选择
 		 * @param {Object} newVal
@@ -41,7 +46,13 @@ Vue.component("choose-person", {
 		selectPerson: function(newVal) {
 			console.log("selectPerson的新值：" + JSON.stringify(this.selectPerson))
 			this.setChooseStatus();
+		},
+		personList: function() {
+			console.log("*******watch:personList********");
+			console.log("personList:" + JSON.stringify(newVal));
+			this.setChooseStatus();
 		}
+
 	},
 	methods: {
 		/**
@@ -77,16 +88,5 @@ Vue.component("choose-person", {
 			}
 			this.updateSelectPerson();
 		},
-		/**
-		 * 获取部门人员
-		 */
-		requireDepartPerson: function() {
-			console.log("****reuireDepartPerson*****");
-			var com = this;
-			request.getDepartPersons(this.choseDepart, 1, 0, function(data) {
-				com.personList = data;
-				com.setChooseStatus();
-			})
-		}
 	}
 })

@@ -22,6 +22,9 @@ Vue.component("check-person-list", {
 		checkPersonList: function(newVal, oldVal) {
 			console.log("*****checkPersonList******");
 			console.log("newVal:" + JSON.stringify(newVal));
+			if(this.tablebases != null) {
+				this.tablebases.destroy();
+			}
 			this.$nextTick(this.newTablebases);
 		}
 	},
@@ -41,9 +44,7 @@ Vue.component("check-person-list", {
 		},
 		newTablebases: function() {
 			console.log("******newTablebases******");
-			if(this.tablebases != null) {
-				this.tablebases.destroy();
-			}
+
 			this.tablebases = $('.table-sort').DataTable({
 				pageLength: 10,
 				lengthChange: false

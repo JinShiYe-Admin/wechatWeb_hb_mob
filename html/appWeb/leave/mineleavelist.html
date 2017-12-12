@@ -189,6 +189,14 @@
 						});
 					} else {
 						//已审核
+						var myDate = new Date();
+						var sKey = myDate.getTime() + "" + parseInt(Math.random() * 1000);
+						var sValue = {
+							leave: leave,
+							mineUserInfo: mineUserInfo
+						}
+						storageutil.setSessionStorage(sKey, JSON.stringify(sValue));
+						location.href = "leave-detail.html?sKey=" + sKey;
 					}
 				});
 			}
@@ -200,6 +208,8 @@
 			function showData(data) {
 				var html = "";
 				for(var i = 0; i < data.length; i++) {
+					data[i].ApplyBeginTime = data[i].ApplyBeginTime.substring(0, data[i].ApplyBeginTime.length - 3);
+					data[i].ApplyEndTime = data[i].ApplyEndTime.substring(0, data[i].ApplyEndTime.length - 3);
 					leaveApply.key.push(data[i].ApplyId);
 					leaveApply.value[data[i].ApplyId] = data[i];
 					var className = "apply-state-naudited";
@@ -225,11 +235,11 @@
 									</div>\
 									<div class="weui-form-preview__item">\
 										<label class="weui-form-preview__label">开始时间</label>\
-										<span class="weui-form-preview__value">' + utils.initTime(data[i].ApplyBeginTime) + '</span>\
+										<span class="weui-form-preview__value">' + data[i].ApplyBeginTime + '</span>\
 									</div>\
 									<div class="weui-form-preview__item">\
 										<label class="weui-form-preview__label">结束时间</label>\
-										<span class="weui-form-preview__value">' + utils.initTime(data[i].ApplyEndTime) + '</span>\
+										<span class="weui-form-preview__value">' + data[i].ApplyEndTime + '</span>\
 									</div>\
 									<div class="weui-form-preview__item">\
 										<label class="weui-form-preview__label">请假事由</label>\
@@ -254,7 +264,6 @@
 					};
 					loading = true;
 					getLeaveApply(1);
-
 				});
 			}
 
@@ -281,6 +290,7 @@
 					colv: ""
 				}
 				unitWebsitePro(tempData, function(data) {
+					//data = getMineInfoCallBack;
 					if(data.RspCode == 0) {
 						mineUserInfo = JSON.parse(data.RspData);
 						$("#pullUp").css("margin-top", "1.5em");
@@ -305,6 +315,8 @@
 				var tempData = {
 					corpId: mineUserInfo.corpid,
 					applyMan: mineUserInfo.userid,
+					deptId: 0,
+					applyStat: 0,
 					pageSize: 10,
 					pageIndex: pageIndex
 				}

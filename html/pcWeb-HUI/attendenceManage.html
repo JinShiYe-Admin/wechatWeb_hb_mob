@@ -70,11 +70,11 @@
 				<thead class="text-c">
 					<tr>
 						<th>考勤类型说明</th>
-						<th>开始时间（小时）</th>
-						<th>开始时间（分钟）</th>
-						<th>持续时间</th>
+						<th>打卡开始时间</th>
+						<!--<th>开始时间（分钟）</th>-->
+						<th>正常打卡持续分钟数</th>
 						
-						<th>迟到、早退时间（分钟）</th>
+						<th>异常打卡（迟到、早退）持续分钟数</th>
 						<th>考勤短信</th>
 						<th>操作</th>
 					</tr>
@@ -82,8 +82,9 @@
 				<tbody>
 					<tr class="text-c" v-for="(item,index) in value">
 						<td>{{item.AttendTypeNote}}</td>
-						<td>{{item.BeginHour}}</td>
-						<td>{{item.BeginMinute}}</td>
+						<td v-if="item.BeginMinute<10">{{item.BeginHour}}:0{{item.BeginMinute}}</td>
+						<td v-else="">{{item.BeginHour}}:{{item.BeginMinute}}</td>
+						<!--<td>{{item.BeginMinute}}</td>-->
 						<td>{{item.ContinuousMinute}}</td>
 						
 						<td>{{item.LateMinute}}</td>

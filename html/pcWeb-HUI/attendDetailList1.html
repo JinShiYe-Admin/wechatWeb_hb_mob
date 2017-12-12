@@ -13,6 +13,7 @@
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
 		<link rel="stylesheet" type="text/css" href="../../js/multiple/easyui.css" />
+		<link href="../../js/H-ui.admin/lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css" >
 		<!--<script type="text/javascript" src="../../js/multiple/jquery.min.js"></script>-->
 		<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
 		<script type="text/javascript" src="../../js/multiple/jquery.easyui.min.js"></script>
@@ -51,7 +52,14 @@
 							<td><u style="cursor:pointer" class="text-primary">{{attend.departName}}</u></td>
 							<td><u style="cursor:pointer" class="text-primary">{{attend.name}}</u></td>
 							<td v-for='(timeModel,index) in attend.timeList'>
-								<u style="cursor:pointer" class="text-primary">{{timeModel.AttendResult}}</u>
+								<u v-if='timeModel.AttendPic' style="cursor:pointer" class="text-primary">{{timeModel.AttendResult}}
+									<a :href="timeModel.AttendPic" data-lightbox="gallery" data-title="签到/签退照片"><img class="imgclass" width="50px" :src=timeModel.AttendPic></a>
+									</u>
+								<u v-else style="cursor:pointer" class="text-primary">{{timeModel.AttendResult}}
+									</u>
+								<!--<u style="cursor:pointer" class="text-primary">{{timeModel.AttendResult}}
+									<a :href="timeModel.AttendPic" data-lightbox="gallery" data-title="签到/签退照片"><img class="imgclass" width="50px" :src=timeModel.AttendPic></a>
+									</u>-->
 							</td>
 						</tr>
 					</tbody>
@@ -69,6 +77,7 @@
 		<script type="text/javascript" src="../../js/H-ui.admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
 		<script type="text/javascript" src="../../js/H-ui.admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
 		<script type="text/javascript" src="../../js/H-ui.admin/lib/laypage/1.2/laypage.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/lightbox2/2.8.1/js/lightbox.min.js"></script> 
 		<!--vue-->
 		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
@@ -121,6 +130,8 @@
 				// 使用outerHTML属性获取整个table元素的HTML代码（包括<table>标签），然后包装成一个完整的HTML文档，设置charset为urf-8以防止中文乱码
 				var html = "<html><head><meta charset='utf-8' /></head><body>" + document.getElementsByTagName("table")[0].outerHTML + "</body></html>";
 				html = html.replace('<table', '<table border="1"');
+				html = html.replace(/(<\/?a.*?>)/g, '');
+				html = html.replace(/(<\/?img.*?>)/g, '');
 				// 实例化一个Blob对象，其构造函数的第一个参数是包含文件内容的数组，第二个参数是包含文件类型属性的对象
 				var blob = new Blob([html], {
 					type: "application/vnd.ms-excel"
@@ -128,7 +139,7 @@
 				var a = document.getElementById("exportExcel");
 				// 利用URL.createObjectURL()方法为a元素生成blob URL
 				a.href = URL.createObjectURL(blob);
-				var tempTitle = attendData.showDepartModel.title + $("#datemax").val() + '考勤详单.xls';
+				var tempTitle = $("#datemax").val() + '考勤详单.xls';
 				//				alert(tempTitle);
 				// 设置文件名，目前只有Chrome和FireFox支持此属性
 				a.download = tempTitle;
@@ -238,7 +249,7 @@
 
 					},
 					onClick: function(node, checked) {
-						alert(111);
+//						alert(111);
 						console.log('node:' + JSON.stringify(node) + ',' + checked);
 						for(var i = 0; i < attendData.departArray.length; i++) {
 							var tempModel = attendData.departArray[i];
@@ -461,9 +472,10 @@
 											if(tempModel.AttendType == timeModel.AttendType) {
 												//合并对象
 												timeModel = $.extend(timeModel, tempModel);
-												if(timeModel.AttendResult.length == 0) {
-													timeModel.AttendResult = '缺勤';
-												}
+												timeModel.AttendPic ='http://qn-cspb.jiaobaowang.net/wechat/webcon/1512630695178320.jpg';
+//												if(timeModel.AttendResult.length == 0) {
+//													timeModel.AttendResult = '缺勤';
+//												}
 											}
 										}
 									}

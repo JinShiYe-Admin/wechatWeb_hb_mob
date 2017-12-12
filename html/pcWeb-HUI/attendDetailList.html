@@ -11,8 +11,10 @@
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css" />
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
+		<link href="../../js/H-ui.admin/lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
 		<link rel="stylesheet" type="text/css" href="../../js/multiple/easyui.css" />
+		<link href="../../js/H-ui.admin/lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css">
 		<!--<script type="text/javascript" src="../../js/multiple/jquery.min.js"></script>-->
 		<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
 		<script type="text/javascript" src="../../js/multiple/jquery.easyui.min.js"></script>
@@ -51,7 +53,11 @@
 							<td><u style="cursor:pointer" class="text-primary">{{attend.departName}}</u></td>
 							<td><u style="cursor:pointer" class="text-primary">{{attend.name}}</u></td>
 							<td v-for='(timeModel,index) in attend.timeList'>
-								<u style="cursor:pointer" class="text-primary">{{timeModel.AttendResult}}</u>
+								<u v-if='timeModel.AttendPic' style="cursor:pointer" class="text-primary">{{timeModel.AttendResult}}
+									<a :href="timeModel.AttendPic" data-lightbox="gallery" data-title="签到/签退照片"><img class="imgclass" width="50px" :src=timeModel.AttendPic></a>
+									</u>
+								<u v-else style="cursor:pointer" class="text-primary">{{timeModel.AttendResult}}
+									</u>
 							</td>
 						</tr>
 					</tbody>
@@ -69,12 +75,13 @@
 		<script type="text/javascript" src="../../js/H-ui.admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
 		<script type="text/javascript" src="../../js/H-ui.admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
 		<script type="text/javascript" src="../../js/H-ui.admin/lib/laypage/1.2/laypage.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/lightbox2/2.8.1/js/lightbox.min.js"></script>
 		<!--vue-->
 		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
-		<script src='../../js/lib/vconsole/vconsole.min.js'></script>
+		<!--<script src='../../js/lib/vconsole/vconsole.min.js'></script>-->
 		<script type="text/javascript">
 			$(function() {
 				$('.table-sort').dataTable({
@@ -98,6 +105,7 @@
 				el: "#attendData",
 				data: {
 					flag: 0,
+					requestFlag: 0,
 					userInfo: {}, //当前人员信息
 					attendTimeArrayAll: [], //考勤时间段列表,合并姓名、部门
 					attendTimeArray: [], //考勤时间段列表,从协议获取到的
@@ -120,6 +128,9 @@
 				// 使用outerHTML属性获取整个table元素的HTML代码（包括<table>标签），然后包装成一个完整的HTML文档，设置charset为urf-8以防止中文乱码
 				var html = "<html><head><meta charset='utf-8' /></head><body>" + document.getElementsByTagName("table")[0].outerHTML + "</body></html>";
 				html = html.replace('<table', '<table border="1"');
+				html = html.replace(/(<\/?a.*?>)/g, '');
+				html = html.replace(/(<\/?img.*?>)/g, '');
+				//				/<a>((?!<\/a>)[\w\W])*<\/a>/g
 				// 实例化一个Blob对象，其构造函数的第一个参数是包含文件内容的数组，第二个参数是包含文件类型属性的对象
 				var blob = new Blob([html], {
 					type: "application/vnd.ms-excel"
@@ -174,7 +185,7 @@
 						//获取管理的部门
 						getPersonDepart();
 					} else {
-						//						layer.alert('请重新登录获取个人信息');
+						layer.alert(data.RspTxt);
 					}
 				});
 			};
@@ -208,6 +219,7 @@
 							if(tempModel.value == -1) {
 								attendData.departArray.splice(i, 1);
 							} else {
+								layer.load(2);
 								getDepartPerson(tempModel);
 								var temp000 = {
 									id: tempModel.value,
@@ -222,10 +234,20 @@
 							multiple: true,
 							data: tempArray,
 							onCheck: function(node, checked) {
-
+								console.log('onCheck.node:' + JSON.stringify(node) + ',' + checked);
+								for(var i = 0; i < attendData.departArray.length; i++) {
+									var tempModel = attendData.departArray[i];
+									if(tempModel.value == node.id) {
+										if(node.checked) {
+											tempModel.flag = 1;
+										} else {
+											tempModel.flag = 0;
+										}
+									}
+								}
 							},
 							onClick: function(node, checked) {
-								console.log('node:' + JSON.stringify(node) + ',' + checked);
+								console.log('onClick.node:' + JSON.stringify(node) + ',' + checked);
 								for(var i = 0; i < attendData.departArray.length; i++) {
 									var tempModel = attendData.departArray[i];
 									if(tempModel.value == node.id) {
@@ -239,7 +261,7 @@
 							}
 						});
 					} else {
-						layer.alert('获取部门出现问题');
+						layer.alert(data.RspTxt);
 					}
 				});
 			}
@@ -255,6 +277,10 @@
 				}
 				console.log('tempData:' + JSON.stringify(tempData));
 				unitWebsitePro(tempData, function(data) {
+					attendData.requestFlag++;
+					if(attendData.requestFlag >= attendData.departArray.length) {
+						layer.closeAll('loading');
+					}
 					if(data.RspCode == 0) {
 						for(var i = 0; i < data.RspData.length; i++) {
 							var tempModel = data.RspData[i];
@@ -268,7 +294,7 @@
 							}
 						}
 					} else {
-						//layer.alert('获取部门出现问题');
+						layer.alert(data.RspTxt);
 					}
 				});
 			}

@@ -1,3 +1,6 @@
+/**
+ * 选取审核人员
+ */
 Vue.component("choose-person", {
 	template: "#person-list",
 	props: {
@@ -7,24 +10,23 @@ Vue.component("choose-person", {
 				return {}
 			}
 		},
-		allCheckPerson: { //所有已选人员
+		checkedPerson: { //當前审核人员数据
 			type: Object,
 			default: function() {
 				return {}
 			}
 		},
-		choseDepart: {
+		choseDepart: { //选择的部门
 			type: Object,
 			default: function() {
 				return {}
 			}
-		}
+		},
 	},
 	mounted: function() {},
 	data: function() {
 		return {
-			isAllCheck: false,
-			personList: this.allCheckPerson,
+			personList: [],
 			selectPerson: this.choosePerson
 		}
 	},
@@ -32,7 +34,6 @@ Vue.component("choose-person", {
 		choseDepart: function(newVal, oldVal) {
 			console.log("****choseDepart****");
 			this.personList = [];
-			this.isAllCheck = false;
 			this.requireDepartPerson();
 		},
 		/**
@@ -40,9 +41,9 @@ Vue.component("choose-person", {
 		 * @param {Object} newVal
 		 * @param {Object} oldVal
 		 */
-		allCheckPerson: function(newVal, oldVal) {
-			console.log("*****allCheckPerson*****");
-			this.personList = newVal;
+		checkedPerson: function(newVal, oldVal) {
+			console.log("*****checkedPerson*****");
+			console.log("所有已选人员：" + JSON.stringify(newVal));
 		},
 		/**
 		 * 选择人员
@@ -64,12 +65,32 @@ Vue.component("choose-person", {
 		}
 	},
 	methods: {
+		getCorpId: function() {
+			var com = this;
+			request.requestPersonalInfo(function(response) {
+				console.log("获取的corpId数据：" + JSON.stringify(response));
+				if(response.RspCode == 0) {
+					com.corpId = JSON.parse(response.RspData).corpid;
+					com.requireProcess();
+				}
+			})
+		},
+		/**
+		 * 请求部门人员
+		 */
 		requireDepartPerson: function() {
 			console.log("*****requireDepartPerson*****");
 			var com = this;
-			request.getDepartPersons(this.choseDepart, 1, 0, function(data) {
+			request.getDepartPersons(com.choseDepart, 1, 0, function(data) {
 				com.personList = data;
+				com.setCheckedStatus();
 				com.setChooseStatus();
+			})
+		},
+		setCheckedStatus: function() {
+			var com = this;
+			this.personList.forEach(function(person, index, personList) {
+				Vue.set(personList[index], "isChecked", !!com.checkedPerson[person.userid])
 			})
 		},
 		/**
@@ -97,6 +118,9 @@ Vue.component("choose-person", {
 		 */
 		toggleChoosePerson: function(person, index) {
 			console.log("toggleChoosePerson:" + JSON.stringify(person))
+			if(person.isChecked) {
+				return;
+			}
 			Vue.set(this.personList[index], "isCheck", !person.isCheck);
 			if(person.isCheck) {
 				this.selectPerson[person.userid] = person.name;

@@ -2,28 +2,11 @@ Vue.component("check-person-list", {
 	template: "#checkPerson-list",
 	data: function() {
 		return {
-			checkPersonList: [{
-				ApprMan: 0, //人员id
-				ApprManName: "人员0", //人员名称
-			}, {
-				ApprMan: 1, //人员id
-				ApprManName: "人员1", //人员名称
-			}, {
-				ApprMan: 2, //人员id
-				ApprManName: "人员2", //人员名称
-			}, {
-				ApprMan: 3, //人员id
-				ApprManName: "人员3", //人员名称
-			}],
-			activeProcess: {
-				ApprMan: 4, //人员id
-				ApprManName: "人员4", //人员名称
-			},
-			chosedPerson: {},
+			checkPersonList: [],
+			tablebases: null,
+			checkedPerson: {},
 			changeType: 0, //0 新建流程 1修改流程
 			corpId: 0,
-			pageIndex: 1,
-			totalPage: 1,
 			name: "",
 			note: "",
 			selectedInputPerson: {},
@@ -31,11 +14,41 @@ Vue.component("check-person-list", {
 		}
 	},
 	watch: {
-		chosedPerson: function(newVal, oldVal) {
+		checkedPerson: function(newVal, oldVal) {
+			console.log("*****chosedPerson******")
 			this.$emit("person-info", newVal);
+
+		},
+		checkPersonList: function(newVal, oldVal) {
+			console.log("*****checkPersonList******");
+			console.log("newVal:" + JSON.stringify(newVal));
+			this.$nextTick(this.newTablebases);
 		}
 	},
+	mounted: function() {
+		this.getCorpId();
+	},
 	methods: {
+		getCorpId: function() {
+			var com = this;
+			request.requestPersonalInfo(function(response) {
+				console.log("获取的corpId数据：" + JSON.stringify(response));
+				if(response.RspCode == 0) {
+					com.corpId = JSON.parse(response.RspData).corpid;
+					com.getAllCheckPerson();
+				}
+			})
+		},
+		newTablebases: function() {
+			console.log("******newTablebases******");
+			if(this.tablebases != null) {
+				this.tablebases.destroy();
+			}
+			this.tablebases = $('.table-sort').DataTable({
+				pageLength: 10,
+				lengthChange: false
+			});
+		},
 		/**
 		 * 获取状态
 		 * @param {Object} e
@@ -45,9 +58,9 @@ Vue.component("check-person-list", {
 			console.log("****getStatus*****");
 			var isAdd = e.target.checked;
 			if(isAdd) {
-				this.selectedInputPerson[person.ApprMan] = person.ApprManName;
+				this.selectedInputPerson[person.TabId] = person.ApprManName;
 			} else {
-				delete this.selectedInputPerson[person.ApprMan];
+				delete this.selectedInputPerson[person.TabId];
 				this.isAllCheck = false;
 			}
 		},
@@ -57,7 +70,7 @@ Vue.component("check-person-list", {
 		getAllCheckStatus: function(e) {
 			console.log("*****getAllCheckSatus*****")
 			var isAllAdd = e.target.checked;
-			this.inputToggleAll(isAllAdd)
+			this.inputToggleAll(isAllAdd);
 		},
 		/**
 		 * 全选逻辑
@@ -67,7 +80,7 @@ Vue.component("check-person-list", {
 			console.log("****inputToggleAll****");
 			if(isAdd) {
 				for(var checkPerson in checkPersonList) {
-					this.selectedInputPerson[checkPerson.ApprMan] = checkPerson.ApprManName;
+					this.selectedInputPerson[checkPerson.TabId] = checkPerson.ApprManName;
 				}
 			} else {
 				this.selectedInputPerson = {};
@@ -81,13 +94,6 @@ Vue.component("check-person-list", {
 			this.getCheckPerson(1, 0);
 		},
 		/**
-		 * 获取当前页面审核人员
-		 */
-		getCurPagePerson: function() {
-			console.log("****getCurPagePerson****");
-			this.getCheckPerson(this.pageIndex, 20);
-		},
-		/**
 		 * 获取审核人员
 		 * @param {Object} pageIndex
 		 * @param {Object} pageSize
@@ -97,16 +103,12 @@ Vue.component("check-person-list", {
 			var com = this;
 			processRequest.postProcessData("getApprMan", {
 				corpId: this.corpId,
-				pageIndex: this.pageIndex,
-				pageSize: pageSize
+				pageIndex: 1,
+				pageSize: 0
 			}, function(response) {
 				if(response.RspCode == 0) {
-					if(pageSize === 0) {
-						com.chosedPerson = com.changeArrToObj(response.RspData.Data);
-					} else {
-						com.checkPersonList = response.RspData.Data;
-						com.totalPage = response.RspData.TotalPage;
-					}
+					com.checkPersonList = response.RspData.Data;
+					com.checkedPerson = com.changeArrToObj(response.RspData.Data);
 				}
 			})
 		},
@@ -117,14 +119,17 @@ Vue.component("check-person-list", {
 			console.log("****批量删除人员****");
 			var com = this;
 			var keys = Object.keys(com.selectedInputPerson);
+			console.log("selectedInputPerson:" + JSON.stringify(com.selectedInputPerson))
+			console.log("theKeys:" + JSON.stringify(keys));
 			if(keys.length > 0) {
 				var count = 0;
-				for(var theKey in keys) {
+				for(var theKey in com.selectedInputPerson) {
 					com.delPerson(theKey, function() {
 						count++;
+						console.log("数据数量：" + count);
+						console.log("keys:" + keys.length);
 						if(count == keys.length) {
 							com.getAllCheckPerson();
-							com.getCurPagePerson();
 						}
 					})
 				}
@@ -139,9 +144,9 @@ Vue.component("check-person-list", {
 		delCurPerson: function(person) {
 			console.log("****delCurPerson*****");
 			var com = this;
-			this.delPerson(person.ApprMan, function() {
-				delete com.chosedPerson[perosn.ApprMan];
-				com.getCurPagePerson();
+			this.delPerson(person.TabId, function() {
+				delete com.checkedPerson[person.ApprMan];
+				com.getAllCheckPerson();
 			});
 		},
 		/**
@@ -170,30 +175,14 @@ Vue.component("check-person-list", {
 			console.log("****changeArrToObj****");
 			var obj = {};
 			arr.forEach(function(item, index, arr) {
-				obj[item.ApprMan] = obj[item.ApprManName]
+				obj[item.ApprMan] = item.ApprManName;
 			});
+			console.log("checkedPerson:" + JSON.stringify(obj));
 			return obj;
 		},
 		/**
-		 * 下一页
+		 * 添加人员
 		 */
-		nextPage: function() {
-			console.log("****nextPage*****");
-			if(this.pageIndex < this.totalPage) {
-				this.pageIndex++;
-				this.getCurPagePerson();
-			}
-		},
-		/**
-		 * 上一页
-		 */
-		lastPage: function() {
-			console.log("****lastPage****");
-			if(this.pageIndex > 1) {
-				this.pageIndex--;
-				this.getCurPagePerson();
-			}
-		},
 		addPersons: function() {
 			router.push({
 				name: "chooseDepart"

@@ -48,7 +48,7 @@
 					<tbody>
 						<tr class="text-c" v-for='(attend,index) in showPeopleArray' v-show="flag>0" style="display: none;">
 							<td><u style="cursor:pointer" class="text-primary">{{attend.departName}}</u></td>
-							<td><u style="cursor:pointer" class="text-primary">{{attend.UserName}}</u></td>
+							<td><u style="cursor:pointer" class="text-primary">{{attend.name}}</u></td>
 							<td><u style="cursor:pointer" class="text-primary">{{attend.AttendCnt}}</u></td>
 							<td><u style="cursor:pointer" class="text-primary">{{attend.LateCnt}}</u></td>
 							<td><u style="cursor:pointer" class="text-primary">{{attend.EarlyCnt}}</u></td>
@@ -97,6 +97,7 @@
 				el: "#attendData",
 				data: {
 					flag: 0,
+					requestFlag: 0,
 					userInfo: {}, //当前人员信息
 					attendArray: [], //考勤统计列表
 					departArray: [], //管理的所有部门数组
@@ -167,6 +168,7 @@
 							if(tempModel.value == -1) {
 								attendData.departArray.splice(i, 1);
 							} else {
+								layer.load(2);
 								getDepartPerson(tempModel);
 								var temp000 = {
 									id: tempModel.value,
@@ -181,10 +183,20 @@
 							multiple: true,
 							data: tempArray,
 							onCheck: function(node, checked) {
-
+								console.log('onCheck.node:' + JSON.stringify(node) + ',' + checked);
+								for(var i = 0; i < attendData.departArray.length; i++) {
+									var tempModel = attendData.departArray[i];
+									if(tempModel.value == node.id) {
+										if(node.checked) {
+											tempModel.flag = 1;
+										} else {
+											tempModel.flag = 0;
+										}
+									}
+								}
 							},
 							onClick: function(node, checked) {
-								console.log('node:' + JSON.stringify(node) + ',' + checked);
+								console.log('onClick.node:' + JSON.stringify(node) + ',' + checked);
 								for(var i = 0; i < attendData.departArray.length; i++) {
 									var tempModel = attendData.departArray[i];
 									if(tempModel.value == node.id) {
@@ -198,7 +210,7 @@
 							}
 						});
 					} else {
-						layer.alert('获取部门出现问题');
+						layer.alert(data.RspTxt);
 					}
 				});
 			}
@@ -214,6 +226,10 @@
 				}
 				console.log('tempData:' + JSON.stringify(tempData));
 				unitWebsitePro(tempData, function(data) {
+					attendData.requestFlag++;
+					if(attendData.requestFlag >= attendData.departArray.length) {
+						layer.closeAll('loading');
+					}
 					if(data.RspCode == 0) {
 						for(var i = 0; i < data.RspData.length; i++) {
 							var tempModel = data.RspData[i];
@@ -227,7 +243,7 @@
 							}
 						}
 					} else {
-						//layer.alert('获取部门出现问题');
+						layer.alert(data.RspTxt);
 					}
 				});
 			}
@@ -285,6 +301,7 @@
 							tempModel1.LateCnt = 0;
 							tempModel1.EarlyCnt = 0;
 							tempModel1.AttendCnt = 0;
+							attendData.showPeopleArray.push(tempModel1);
 						}
 					}
 				}
@@ -318,7 +335,7 @@
 						}
 						attendData.flag = 1;
 					} else {
-						//						layer.alert('请重新登录获取个人信息');
+						layer.alert(data.RspTxt);
 					}
 				});
 			};

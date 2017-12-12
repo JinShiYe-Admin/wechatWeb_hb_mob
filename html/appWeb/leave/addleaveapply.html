@@ -197,6 +197,7 @@
 			var changeData; //修改请假申请的数据
 			var procTypeSelectIndex = 0; //流程类型选项初始化时的序号
 			var leaveTypeSelectIndex = 0; //请假类型选项初始化时的序号
+			var typeStat = 0; //获取的流程类型，请假类型的状态；0，全部；1，有效
 			window.onload = function() {
 				$.showLoading();
 				initData();
@@ -231,6 +232,7 @@
 						$.alert("未获取到有效的初始数据，无法修改请假申请", "提示");
 					}
 				} else {
+					typeStat = 1;
 					$("#tabbar").css("display", "flex");
 					getMineInfo();
 				}
@@ -245,9 +247,11 @@
 				initSelect();
 				if(changeData) { //修改请假申请
 					$("#represon").val(changeData.ApplyReason);
+					initDatePicker(changeData.ApplyBeginTime, changeData.ApplyEndTime);
+					changeData.ApplyBeginTime = changeData.ApplyBeginTime.replace(/-|:|\s/g, "");
+					changeData.ApplyEndTime = changeData.ApplyEndTime.replace(/-|:|\s/g, "");
 					beginTime = changeData.ApplyBeginTime;
 					endTime = changeData.ApplyEndTime;
-					initDatePicker(utils.initTime(changeData.ApplyBeginTime), utils.initTime(changeData.ApplyEndTime));
 					initPic();
 				} else {
 					initDatePicker();
@@ -666,6 +670,7 @@
 				}
 				if(webType == "提交") {
 					submitForm.corpId = mineUserInfo.corpid;
+					submitForm.deptId = mineUserInfo.department[0];
 					submitForm.applyMan = mineUserInfo.userid;
 					submitForm.applyManName = mineUserInfo.name;
 					submitForm.applyManPic = mineUserInfo.avatar;
@@ -748,6 +753,7 @@
 			function getProcType() {
 				var tempData = {
 					corpId: mineUserInfo.corpid,
+					stat: typeStat,
 					pageIndex: 1,
 					pageSize: 0
 				}
@@ -759,15 +765,23 @@
 							if(changeData && changeData.ProcessTypeId == data.RspData.Data[i].ProcessTypeId) {
 								procTypeSelectIndex = procTypeData.select.length;
 							}
-							procTypeData.select.push({
-								title: data.RspData.Data[i].ProcTypeName,
-								value: data.RspData.Data[i].ProcessTypeId
-							});
+							if(data.RspData.Data[i].Stat == 1) {
+								procTypeData.select.push({
+									title: data.RspData.Data[i].ProcTypeName,
+									value: data.RspData.Data[i].ProcessTypeId
+								});
+							}
 						}
-						getLeaveType();
-					} else {
+					}
+					if(procTypeData.select.length == 0) {
+						var errStr = "";
+						if(data.RspCode != 0) {
+							errStr = "(" + data.RspTxt + ")";
+						}
 						$.hideLoading();
-						$.alert("未获取到有效的流程类型，无法" + webType + "请假申请(" + data.RspTxt + ")", "提示");
+						$.alert("未获取到有效的流程类型，无法" + webType + "请假申请" + errStr + "", "提示");
+					} else {
+						getLeaveType();
 					}
 				});
 			}
@@ -777,6 +791,7 @@
 			function getLeaveType() {
 				var tempData = {
 					corpId: mineUserInfo.corpid,
+					stat: typeStat,
 					pageIndex: 1,
 					pageSize: 0
 				}
@@ -790,10 +805,12 @@
 								if(changeData && changeData.LeaveTypeId == data.RspData.Data[i].LeaveTypeId) {
 									leaveTypeSelectIndex = leaveTypeData.select.length;
 								}
-								leaveTypeData.select.push({
-									title: data.RspData.Data[i].LeaveTypeName,
-									value: data.RspData.Data[i].LeaveTypeId
-								});
+								if(data.RspData.Data[i].Stat == 1) {
+									leaveTypeData.select.push({
+										title: data.RspData.Data[i].LeaveTypeName,
+										value: data.RspData.Data[i].LeaveTypeId
+									});
+								}
 							}
 						}
 					}
@@ -821,6 +838,7 @@
 					colv: ""
 				}
 				unitWebsitePro(tempData, function(data) {
+					//data = getMineInfoCallBack;
 					if(data.RspCode == 0) {
 						mineUserInfo = JSON.parse(data.RspData);
 						checkPower();

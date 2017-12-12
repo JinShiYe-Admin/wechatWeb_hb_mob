@@ -2,33 +2,14 @@ Vue.component("process-setting", {
 	template: "#process-list",
 	data: function() {
 		return {
-			processList: [{
-				ProcessTypeId: 0, //流程Id
-				ProcTypeName: "流程0", //流程名称
-				ProTypeNote: "流程0备注", //流程备注
-				Stat: 1
-			}, {
-				ProcessTypeId: 1, //流程Id
-				ProcTypeName: "流程1", //流程名称
-				ProTypeNote: "流程1备注", //流程备注
-				Stat: 1
-			}, {
-				ProcessTypeId: 2, //流程Id
-				ProcTypeName: "流程2", //流程名称
-				ProTypeNote: "流程2备注", //流程备注
-				Stat: 1
-			}, {
-				ProcessTypeId: 3, //流程Id
-				ProcTypeName: "流程3", //流程名称
-				ProTypeNote: "流程3备注", //流程备注
-				Stat: 1
-			}],
+			processList: [],
 			activeProcess: {
 				ProcessTypeId: 0, //流程Id
 				ProcTypeName: "流程4", //流程名称
 				ProTypeNote: "流程4备注", //流程备注
 				Stat: 1
 			},
+			tablebases: null,
 			changeType: 0, //0 新建流程 1修改流程
 			corpId: 0,
 			pageIndex: 1,
@@ -38,7 +19,40 @@ Vue.component("process-setting", {
 			stat: 1
 		}
 	},
+	mounted: function() {
+		this.getCorpId();
+	},
+	watch: {
+		processList: function(newVal, oldVal) {
+			this.$nextTick(this.newTablebases)
+		}
+	},
 	methods: {
+		/**
+		 * 获取单位Id
+		 */
+		getCorpId: function() {
+			var com = this;
+			request.requestPersonalInfo(function(response) {
+				console.log("获取的corpId数据：" + JSON.stringify(response));
+				if(response.RspCode == 0) {
+					com.corpId = JSON.parse(response.RspData).corpid;
+					com.requireProcess();
+				}
+			})
+		},
+		/**
+		 * 表格
+		 */
+		newTablebases: function() {
+			if(this.tablebases != null) {
+				this.tablebases.destroy();
+			}
+			this.tablebases = $('.table-sort').DataTable({
+				pageLength: 10,
+				lengthChange: false
+			});
+		},
 		/**
 		 * 更改显示状态
 		 * @param {Object} process
@@ -119,7 +133,7 @@ Vue.component("process-setting", {
 		 */
 		submitProcess: function() {
 			console.log("*****submitProcess*****");
-			if(changeType === 0) {
+			if(this.changeType === 0) {
 				this.addProcessType();
 			} else {
 				this.setProcessType();
@@ -139,6 +153,7 @@ Vue.component("process-setting", {
 				console.log("添加流程类型信息的结果:" + JSON.stringify(response));
 				if(response.RspCode == 0) {
 					com.addDataToList(response.RspData.Result);
+					com.toggleLayer(false);
 				}
 			})
 		},
@@ -156,12 +171,7 @@ Vue.component("process-setting", {
 				ApprManList: [],
 				ProcNote: ""
 			}
-			if(this.pageIndex === 1) {
-				this.processList.splice(0, 0, process);
-				this.ProcessList.splice(20, 1);
-			} else {
-				this.requireProcess();
-			}
+			this.processList.splice(0, 0, process);
 		},
 		/**
 		 * 更改流程类型说明
@@ -180,6 +190,8 @@ Vue.component("process-setting", {
 				if(response.RspCode == 0) {
 					com.activeProcess.ProcTypeName = com.name;
 					com.activeProcess.procTypeNote = com.note;
+				} else {
+
 				}
 			})
 		},
@@ -193,13 +205,14 @@ Vue.component("process-setting", {
 			processRequest.postProcessData("getProcessList", {
 				corpId: this.corpId,
 				stat: 0,
-				pageIndex: this.pageIndex,
-				pageSize: 20
+				pageIndex: 1,
+				pageSize: 0
 			}, function(response) {
 				console.log("获取流程信息结果:" + JSON.stringify(response));
 				if(response.RspCode == 0) {
-					com.totalPage = response.TotalPage;
 					com.processList = response.RspData.Data
+				} else {
+					alert(response.RspTxt);
 				}
 			})
 		},

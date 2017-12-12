@@ -109,7 +109,7 @@
 				margin: 5px;
 			}
 			
-			.person-container.is-checked {
+			.person-container.is-check {
 				border-color: dodgerblue;
 			}
 			
@@ -143,7 +143,8 @@
 			.pageNo-container {
 				padding: 10px 0;
 			}
-			.is-chose{
+			
+			.person-container.is-checked {
 				background-color: lightgray;
 				color: white;
 			}
@@ -155,7 +156,7 @@
 			<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 流程配置 <span class="c-gray en">&gt;</span> 审核权限配置
 			</nav>
 			<div class="page-container">
-				<router-view v-on:person-info="getChosedPerson" v-bind:chosed-person="chosedPerson"></router-view>
+				<router-view v-on:person-info="getCheckedPerson" v-bind:checked-person="checkedPerson"></router-view>
 			</div>
 		</div>
 		<!--人员选择-->
@@ -167,12 +168,12 @@
 				<div class="choose-person-container">
 					<p>人员选择</p>
 					<div class="choose-person">
-						<choose-person v-bind:chose-depart="activeDepart" v-bind:choose-person="selectPerson" v-on:select-person="getSelectPerson"></choose-person>
+						<choose-person v-bind:chose-depart="activeDepart" v-bind:checked-person="checkedPerson" v-bind:choose-person="selectPerson" v-on:select-person="getSelectPerson"></choose-person>
 					</div>
 					<div class="person-foot">
 						<div v-if="Object.keys(selectPerson).length>0">
 							<p>已选人员</p>
-							<div v-for="key of Object.keys(selectPerson)" v-if="key" class="person-container is-checked" v-on:click="delChoosePerson(key)">
+							<div v-for="key of Object.keys(selectPerson)" v-if="key" class="person-container is-check" v-on:click="delChoosePerson(key)">
 								{{selectPerson[key]}}
 							</div>
 						</div>
@@ -185,7 +186,7 @@
 		<!--人员选择-->
 		<template id="person-list">
 			<div>
-				<div v-for="(person,index) in personList" class="person-container" v-bind:class="[{'is-checked':person.isCheck}]" v-on:click="toggleChoosePerson(person,index)">
+				<div v-for="(person,index) in personList" class="person-container" v-bind:class="[{'is-check':person.isCheck},{'is-checked':person.isChecked}]" v-on:click="toggleChoosePerson(person,index)">
 					{{person.name}}
 				</div>
 			</div>
@@ -224,11 +225,6 @@
 						</tr>
 					</tbody>
 				</table>
-				<div class="float-right pageNo-container">
-					<button v-on:click="lastPage()">上一页</button>
-					<span v-for="pageNo in totalPage" v-bind:class="[{'select-page':pageNo==pageIndex},'page-no']">{{pageNo}}</span>
-					<button v-on:click="nextPage()">下一页</button>
-				</div>
 				<form id="edit-pocessInfo" style="display: none;" action="" class="form form-horizontal" id="form-member-add">
 					<div class="row cl">
 						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>流程类型：</label>
@@ -256,6 +252,7 @@
 		<script src="../../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
 		<script src="../../../js/H-ui.admin/static/h-ui/js/H-ui.js"></script>
 		<script type="text/javascript" src="../../../js/H-ui.admin/lib/layer/2.4/layer.js"></script>
+		<script src="../../../js/H-ui.admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
 		<script src="../../../js/utils/events.js"></script>
 		<script src="../../../js/utils/consts.js"></script>
 		<script src="../../../js/utils/request.js"></script>
@@ -268,20 +265,23 @@
 				template: '<check-person-list v-on:person-info="getPersonInfo"></check-person-list>',
 				methods: {
 					getPersonInfo: function(person) {
-						console.log("获取的classify:" + JSON.stringify(person));
+						console.log("checkPersonList获取的person:" + JSON.stringify(person));
 						this.$emit("person-info", person);
 					}
 				}
 			}
 			const multiChoose = {
 				template: '#multi-choose',
-				props: ['chosedPerson'],
+				props: ['checkedPerson'],
 				data: function() {
 					return {
-						activeDepart: {},
-						personList: this.chosedPerson,
-						selectPerson: {}
+						activeDepart: {}, //当前部门
+						selectPerson: {},
+						corpId: 0
 					}
+				},
+				mounted: function() {
+					this.getCorpId();
 				},
 				watch: {
 					/**
@@ -298,12 +298,20 @@
 					 * @param {Object} newVal 
 					 * @param {Object} oldVal
 					 */
-					chosedPerson: function(newVal, oldVal) {
-						console.log("wacth:监听classify:" + JSON.stringify(newVal))
-						this.selectPerson = this.Person.apprManList;
+					checkedPerson: function(newVal, oldVal) {
+						console.log("multiChoosewacth:监听checkedPerson:" + JSON.stringify(newVal))
 					}
 				},
 				methods: {
+					getCorpId: function() {
+						var com = this;
+						request.requestPersonalInfo(function(response) {
+							console.log("获取的corpId数据：" + JSON.stringify(response));
+							if(response.RspCode == 0) {
+								com.corpId = JSON.parse(response.RspData).corpid;
+							}
+						})
+					},
 					getActiveDepart: function(activeDepart) {
 						console.log("*******getActiveDepart*******")
 						this.activeDepart = activeDepart;
@@ -324,6 +332,7 @@
 					 * 添加审核人员
 					 */
 					addCheckPersons: function() {
+						console.log("*******添加审核人员********");
 						var com = this;
 						var count = 0;
 						for(var key in com.selectPerson) {
@@ -345,13 +354,15 @@
 					 */
 					addCheckPerson: function(personInfo, callback) {
 						console.log("*******choosePerson*******")
-						PersonRequest.postPersonData("addApprMan", {
+						processRequest.postProcessData("addApprMan", {
 							corpId: this.corpId,
 							apprMan: personInfo.userid,
 							apprManName: personInfo.name
 						}, function(response) {
 							if(response.RspCode == 0) {
 								callback();
+							} else {
+
 							}
 						})
 
@@ -380,14 +391,16 @@
 				el: "#checkPerson-container",
 				router: router,
 				data: {
-					chosedPerson: {}
+					checkedPerson: {}
 				},
 				mounted: function() {
 
 				},
 				methods: {
-					getChosedPerson: function(person) {
-						this.chosedPerson = person;
+					getCheckedPerson: function(person) {
+						console.log("******getCheckedPerson*****");
+						console.log("获取的审核人员：" + JSON.stringify(person));
+						this.checkedPerson = person;
 					}
 				}
 			})

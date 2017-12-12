@@ -12,138 +12,112 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<title>网站配置</title>
+		<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css" />
+		<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css" />
+		<link rel="stylesheet" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+		<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" />
+		<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
+		<link rel="stylesheet" href="../../js/H-ui.admin/lib/lightbox2/2.8.1/css/lightbox.css" />
 		<script type="text/javascript">
 			var WebVersion = "?" + Math.random();
-			document.write('<link rel="stylesheet" href="../../css/weui.min.css' + WebVersion + '" />');
-			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css' + WebVersion + '" />');
-			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css' + WebVersion + '" />');
-			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css' + WebVersion + '" />');
-			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css' + WebVersion + '" />');
-			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css' + WebVersion + '" id="skin" />');
-			document.write('<link rel="stylesheet" href="../../css/configuration/hui_website_config.css' + WebVersion + '" />');
 		</script>
+		<style>
+			.check-box {
+				padding-left: 0;
+				cursor: default;
+			}
+
+			.form-horizontal {
+				width: 70%;
+				margin-left: 15%;
+			}
+
+			.website-image {
+				display: block;
+				margin-top: 10px;
+			}
+
+			.website-image img {
+				width: 25%;
+			}
+		</style>
 	</head>
 
 	<body>
 		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 网站配置 <span class="c-gray en">&gt;</span> 修改网站配置
 			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
 		</nav>
-		<div id="loading" v-show="isShow" style="display: none;">
-			<div class="weui-mask_transparent"></div>
-			<div class="weui-toast">
-				<i class="weui-loading weui-icon_toast"></i>
-				<p class="weui-toast__content">{{content}}</p>
-			</div>
-		</div>
 		<div class="page-container">
-			<div id="input_list">
-				<input-item v-for="(value,index) in inputArray" :value="value" :key="index" :index="index" v-show="isShow"></input-item>
-			</div>
-			<div id="skin_change">
-				<skin-item :value="skinId" :key="skinId" v-show="isShow"></skin-item>
-			</div>
-			<div id="image_list">
-				<image-item v-for="(value,index) in imageArray" :value="value" :key="index" :index="index" v-show="isShow"></image-item>
-			</div>
-			<div id="switch_list">
-				<switch-item v-for="(value,index) in switchArray" :value="value" :key="index" :index="index" v-show="isShow"></switch-item>
-			</div>
+			<form class="form form-horizontal" novalidate="novalidate">
+				<div id="input_list">
+					<input-item v-for="(value,index) in inputArray" :value="value" :key="index" :index="index" v-show="isShow"></input-item>
+				</div>
+				<div id="skin_change">
+					<skin-item :value="skinId" :key="skinId" v-show="isShow"></skin-item>
+				</div>
+				<div id="image_list">
+					<image-item v-for="(value,index) in imageArray" :value="value" :key="index" :index="index" v-show="isShow"></image-item>
+				</div>
+				<div id="switch_list">
+					<switch-item v-for="(value,index) in switchArray" :value="value" :key="index" :index="index" v-show="isShow"></switch-item>
+				</div>
+			</form>
 		</div>
 		<template id="temp_input_item">
-			<table class="table table-border table-bordered table-striped">
-				<thead>
-					<tr>
-						<th>{{value.title}}</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td><input class="input-text" type="text" v-model="value.message" :maxlength="value.maxlength" :type="value.type" :placeholder="'请输入'+value.title" @input="oninput(index);" @blur="onblur(index);"></td>
-					</tr>
-				</tbody>
-			</table>
-		</template>
-		<template id="temp_skin_item">
-			<table class="table table-border table-bordered table-striped">
-				<thead>
-					<tr>
-						<th>皮肤</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td @click="onclick(value);">{{value}}</td>
-					</tr>
-				</tbody>
-			</table>
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-3">{{value.title}}：</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input class="input-text" type="text" v-model="value.message" :maxlength="value.maxlength" :type="value.type" :placeholder="'请输入'+value.title" @input="oninput(index);" @blur="onblur(index);">
+				</div>
+			</div>
 		</template>
 		<template id="temp_image_item">
-			<table class="table table-border table-bordered table-striped">
-				<thead>
-					<tr>
-						<th>{{value.title}}</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>
-							<div class="weui-cells">
-								<div class="weui-cell">
-									<div class="weui-cell__bd" :id="value.parid">
-										<div class="website-image" :style="{backgroundImage:'url('+ value.imageurl+')'}" @click="showImage(index,true);"></div>
-										<button class="btn btn-primary radius" :id="value.id">修改</button>
-										<div class="website-file-type">(JPG,PNG|10M)</div>
-										<div class="website-upload-image" v-show="value.showupload">
-											<div class="website-image" :style="{backgroundImage:'url('+ value.fbase+')'}" @click="showLocalImage(index,true);"></div>
-											<div>文件:</div>
-											<div>{{value.fname}}</div>
-											<div>大小:</div>
-											<div>{{value.fsize}}</div>
-											<button class="btn btn-primary radius" @click="upLoadFile(index);">上传</button>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="weui-gallery" v-if="value.showimage" @click="showImage(index,false);">
-								<span class="weui-gallery__img" :style="{backgroundImage:'url('+ value.imageurl+')'}"></span>
-							</div>
-							<div class="weui-gallery" v-if="value.showlocalimage" @click="showLocalImage(index,false);">
-								<span class="weui-gallery__img" :style="{backgroundImage:'url('+ value.fbase+')'}"></span>
-							</div>
-						</td>
-					</tr>
-				</tbody>
-			</table>
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-3">{{value.title}}：</label>
+				<div class="formControls skin-minimal col-xs-8 col-sm-9">
+					<div class="check-box">
+						<span class="btn-upload">
+						    <a class="btn btn-primary radius">选取图片</a>
+						    <input :id="value.id" type="file" class="input-file" accept="image/png, image/jpeg, image/jpg" title="jpg,png格式;大小不超过2M">
+						</span>
+						<a class="website-image" :href="value.imageurl" data-lightbox="gallery">
+							<img :src="value.imageurl" />
+						</a>
+					</div>
+				</div>
+			</div>
+			</div>
 		</template>
 		<template id="temp_switch_item">
-			<table class="table table-border table-bordered table-striped">
-				<thead>
-					<tr>
-						<th>
-							<div class="check-box">
-								<input type="checkbox" v-model="value.check" @change="onchange(index);">
-								<label>{{value.title}}</label>
-							</div>
-						</th>
-					</tr>
-				</thead>
-			</table>
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-3">{{value.title}}：</label>
+				<div class="formControls skin-minimal col-xs-8 col-sm-9">
+					<div class="check-box">
+						<input type="checkbox" v-model="value.check" @change="onchange(index);">
+					</div>
+				</div>
+			</div>
 		</template>
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/layer/2.4/layer.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/static/h-ui.admin/js/H-ui.admin.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/laypage/1.2/laypage.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/lightbox2/2.8.1/js/lightbox.min.js"></script>
+		<script type="text/javascript" src="../../js/lib/plupload/moxie.min.js"></script>
+		<script type="text/javascript" src="../../js/lib/plupload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../../js/lib/qiniu/qiniu.min.js"></script>
+		<script type="text/javascript" src="../../js/utils/cryption.js"></script>
+		<script type="text/javascript" src="../../js/vue.min.js"></script>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/jquery.min.js" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/weui.min.js" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/vue.min.js" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.min.js" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/lib/qiniu/qiniu.min.js" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cryption.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cloudutil.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../js/utils/compress.js?" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/configuration/hui_website_config_utils.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/configuration/hui_website_config.js" + WebVersion + "'></s" + "cript>");
-			//document.write("<s" + "cript type='text/javascript' src='../../js/configuration/website_config_temp_data.js" + WebVersion + "'></s" + "cript>");
+			//document.write("<s" + "cript type='text/javascript' src='../../temp/webconfig.js" + WebVersion + "'></s" + "cript>");
 		</script>
 	</body>
 

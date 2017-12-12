@@ -60,7 +60,6 @@
 				position: relative;
 			}
 			
-			
 			.choose-person-container {
 				position: absolute;
 				left: 5%;
@@ -145,7 +144,7 @@
 					<div class="person-foot">
 						<div v-if="Object.keys(selectPerson).length>0">
 							<p>流程链人员</p>
-							<div v-for="(key,index) in Object.keys(selectPerson)" v-if="key" class="inline-block" >
+							<div v-for="(key,index) in Object.keys(selectPerson)" v-if="key" class="inline-block">
 								<span class="person-container is-checked" v-on:click="delChoosePerson(key)">{{selectPerson[key]}}</span><span v-if="index<Object.keys(selectPerson).length-1" class="Hui-iconfont Hui-iconfont-arrow2-right"></span>
 							</div>
 

@@ -21,6 +21,7 @@ Vue.component("check-person-list", {
 		},
 		checkPersonList: function(newVal, oldVal) {
 			console.log("*****checkPersonList******");
+			console.log("newVal:" + JSON.stringify(newVal));
 			this.$nextTick(this.newTablebases);
 		}
 	},
@@ -118,11 +119,15 @@ Vue.component("check-person-list", {
 			console.log("****批量删除人员****");
 			var com = this;
 			var keys = Object.keys(com.selectedInputPerson);
+			console.log("selectedInputPerson:" + JSON.stringify(com.selectedInputPerson))
+			console.log("theKeys:" + JSON.stringify(keys));
 			if(keys.length > 0) {
 				var count = 0;
-				for(var theKey in keys) {
+				for(var theKey in com.selectedInputPerson) {
 					com.delPerson(theKey, function() {
 						count++;
+						console.log("数据数量：" + count);
+						console.log("keys:" + keys.length);
 						if(count == keys.length) {
 							com.getAllCheckPerson();
 						}
@@ -170,10 +175,14 @@ Vue.component("check-person-list", {
 			console.log("****changeArrToObj****");
 			var obj = {};
 			arr.forEach(function(item, index, arr) {
-				obj[item.ApprMan] = obj[item.ApprManName]
+				obj[item.ApprMan] = item.ApprManName;
 			});
+			console.log("checkedPerson:" + JSON.stringify(obj));
 			return obj;
 		},
+		/**
+		 * 添加人员
+		 */
 		addPersons: function() {
 			router.push({
 				name: "chooseDepart"

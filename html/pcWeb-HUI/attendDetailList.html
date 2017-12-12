@@ -53,7 +53,7 @@
 							<td><u style="cursor:pointer" class="text-primary">{{attend.departName}}</u></td>
 							<td><u style="cursor:pointer" class="text-primary">{{attend.name}}</u></td>
 							<td v-for='(timeModel,index) in attend.timeList'>
-								<u v-if='timeModel.AttendPic.length>0' style="cursor:pointer" class="text-primary">{{timeModel.AttendResult}}
+								<u v-if='timeModel.AttendPic' style="cursor:pointer" class="text-primary">{{timeModel.AttendResult}}
 									<a :href="timeModel.AttendPic" data-lightbox="gallery" data-title="签到/签退照片"><img class="imgclass" width="50px" :src=timeModel.AttendPic></a>
 									</u>
 								<u v-else style="cursor:pointer" class="text-primary">{{timeModel.AttendResult}}
@@ -234,10 +234,20 @@
 							multiple: true,
 							data: tempArray,
 							onCheck: function(node, checked) {
-
+								console.log('onCheck.node:' + JSON.stringify(node) + ',' + checked);
+								for(var i = 0; i < attendData.departArray.length; i++) {
+									var tempModel = attendData.departArray[i];
+									if(tempModel.value == node.id) {
+										if(node.checked) {
+											tempModel.flag = 1;
+										} else {
+											tempModel.flag = 0;
+										}
+									}
+								}
 							},
 							onClick: function(node, checked) {
-								console.log('node:' + JSON.stringify(node) + ',' + checked);
+								console.log('onClick.node:' + JSON.stringify(node) + ',' + checked);
 								for(var i = 0; i < attendData.departArray.length; i++) {
 									var tempModel = attendData.departArray[i];
 									if(tempModel.value == node.id) {

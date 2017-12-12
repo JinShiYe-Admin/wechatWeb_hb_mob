@@ -182,10 +182,9 @@
 				<table v-if="processList.length>0" class="table table-border table-bordered table-bg table-hover table-sort">
 					<thead>
 						<tr class="text-c">
-							<th width="300">流程</th>
+							<th width="200">流程</th>
 							<th>流程链</th>
-							<th width="500">备注</th>
-							<!--<th width="150"></th>-->
+							<th width="200">备注</th>
 							<th width="100">状态</th>
 							<th width="150">操作</th>
 						</tr>
@@ -208,11 +207,6 @@
 						</tr>
 					</tbody>
 				</table>
-				<!--<div class="float-right pageNo-container">
-					<button v-on:click="lastPage()">上一页</button>
-					<span v-for="pageNo in totalPage" v-bind:class="[{'select-page':pageNo==pageIndex},'page-no']">{{pageNo}}</span>
-					<button v-on:click="nextPage()">下一页</button>
-				</div>-->
 				<form id="edit-pocessInfo" style="display: none;" action="" class="form form-horizontal" id="form-member-add">
 					<div class="row cl">
 						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>流程类型：</label>
@@ -323,12 +317,19 @@
 						this.selectPerson = jQuery.extend({}, person);
 						console.log("getSelectPerson:" + JSON.stringify(this.selectPerson))
 					},
+					/**
+					 * 删除人员
+					 * @param {Object} key
+					 */
 					delChoosePerson: function(key) {
 						console.log("*******delChoosePerson*******")
 						delete this.selectPerson[key];
 						this.selectPerson = jQuery.extend({}, this.selectPerson);
 						console.log("删除人员后的数据：" + JSON.stringify(this.selectPerson))
 					},
+					/**
+					 * 选择人员
+					 */
 					choosePerson: function() {
 						console.log("*******choosePerson*******")
 						var url = "";

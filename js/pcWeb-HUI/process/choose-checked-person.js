@@ -88,6 +88,7 @@ Vue.component("choose-person", {
 			})
 		},
 		setCheckedStatus: function() {
+			var com = this;
 			this.personList.forEach(function(person, index, personList) {
 				Vue.set(personList[index], "isChecked", !!com.checkedPerson[person.userid])
 			})

@@ -70,7 +70,7 @@ Vue.component("check-person-list", {
 		getAllCheckStatus: function(e) {
 			console.log("*****getAllCheckSatus*****")
 			var isAllAdd = e.target.checked;
-			this.inputToggleAll(isAllAdd)
+			this.inputToggleAll(isAllAdd);
 		},
 		/**
 		 * 全选逻辑

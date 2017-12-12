@@ -323,7 +323,7 @@
 
 	}
 	getUserInfo();
-	getDepart();
+
 	//签到
 	function save() {
 		addAttend(attendType.tempAttendType);
@@ -339,7 +339,7 @@
 	function getAttendType() {
 		var tempData = {
 			corpId: userInfo.corpid, //单位ID
-//									corpId: "wx6c4528c675d4a9c9",
+			//									corpId: "wx6c4528c675d4a9c9",
 			pageIndex: '1', //当前页数
 			pageSize: '0' //每页记录数，0 为全部
 		}
@@ -477,13 +477,14 @@
 			type: 'findpage',
 			colv: ''
 		}
-//				getAttendType();
+		//				getAttendType();
 		//		getAttendArea();
 		console.log(JSON.stringify(tempData))
 		unitWebsitePro(tempData, function(data) {
 			console.log('获取当前人员信息' + JSON.stringify(data.RspData))
 			if(data.RspCode == 0) {
 				userInfo = JSON.parse(data.RspData);
+				getDepart();
 				getAttendType();
 				getAttendArea();
 			} else {
@@ -551,8 +552,14 @@
 					if(model.value == -1) {
 						continue;
 					} else {
-						model.label = model.title;
-						userInfo.depart_array.push(model);
+						for(var j = 0; j < userInfo.department.length; j++) {
+							if(model.value == userInfo.department[j]) {
+								model.label = model.title;
+								userInfo.depart_array.push(model);
+							}
+
+						}
+
 					}
 				}
 				console.log('重组部门:' + JSON.stringify(userInfo.depart_array));
@@ -565,11 +572,12 @@
 	}
 	var map = new BMap.Map("allmap"); // 创建地图实例
 	var mk = new BMap.Marker(0, 0);
+
 	function setMap() {
 		// 百度地图API功能
 
 		var geolocation = new BMap.Geolocation();
-		
+
 		geolocation.getCurrentPosition(function(r) {
 			if(this.getStatus() == BMAP_STATUS_SUCCESS) {
 				//				mk = new BMap.Marker(r.point);
@@ -611,7 +619,7 @@
 				//				mk = new BMap.Marker(r.point);
 				//				map.addOverlay(mk);
 				mk.setPosition(r.point);
-//				map.addOverlay(mk);
+				//				map.addOverlay(mk);
 				map.panTo(r.point);
 				var myGeo = new BMap.Geocoder();
 				myGeo.getLocation(r.point, function(result) {

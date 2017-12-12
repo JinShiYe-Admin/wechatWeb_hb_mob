@@ -257,6 +257,7 @@
 					return {
 						personList: this.process.apprManList,
 						checkPowerPersons: [],
+						selectPerson: {}, //已选人员
 						corpId: 0
 					}
 				},
@@ -281,10 +282,17 @@
 					 */
 					process: function(newVal, oldVal) {
 						console.log("wacth:监听classify:" + JSON.stringify(newVal))
-						this.selectPerson = this.process.apprManList;
+						this.selectPerson = this.setArrToObj(newVal.apprManList);
 					}
 				},
 				methods: {
+					setArrToObj: function(list) {
+						var obj = {};
+						list.forEach(function(item, index, list) {
+							obj[item.ApprMan] = item.ApprManName;
+						})
+						return obj;
+					},
 					getCorpId: function(callback) {
 						var com = this;
 						request.requestPersonalInfo(function(response) {
@@ -299,6 +307,7 @@
 					 * 获取所有审核人员
 					 */
 					getAllCheckPerson: function() {
+						console.log("****getAllCheckPerson*****");
 						var com = this;
 						processRequest.postProcessData("getApprMan", {
 							corpId: this.corpId,
@@ -306,6 +315,7 @@
 							pageSize: 0
 						}, function(response) {
 							if(response.RspCode == 0) {
+								console.log("获取的审核人员列表：" + JSON.stringify(response))
 								com.checkPowerPersons = response.RspData.Data;
 							} else {
 								alert(response.RspTxt);
@@ -333,6 +343,7 @@
 					choosePerson: function() {
 						console.log("*******choosePerson*******")
 						var url = "";
+						var isAdd = this.process.ApprManList.lengh == 0;
 						if(isAdd) {
 							url = "addProcessList";
 						} else {
@@ -344,6 +355,7 @@
 							apprManList: this.personToArray(this.selectPerson),
 							procNote: ""
 						}, function(response) {
+							console.log("添加或修改流程链结果：" + JSON.stringify(response))
 							if(response.RspCode == 0) {
 								router.go(-1);
 							}
@@ -354,6 +366,7 @@
 						console.log("*******personToString*******")
 						console.log("要提交的person值：" + JSON.stringify(person))
 						var strArr = [];
+
 						for(var key in person) {
 							strArr.push([key, person[key]]);
 						}

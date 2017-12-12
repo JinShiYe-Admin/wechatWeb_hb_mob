@@ -52,7 +52,6 @@ Vue.component("choose-person", {
 			console.log("personList:" + JSON.stringify(newVal));
 			this.setChooseStatus();
 		}
-
 	},
 	methods: {
 		/**

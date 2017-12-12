@@ -56,10 +56,6 @@
 				color: white;
 			}
 			
-			.display-inline {
-				/*display: inline-block;*/
-			}
-			
 			.multi-choose-container {
 				position: relative;
 			}
@@ -156,10 +152,11 @@
 					</div>
 					<div class="person-foot">
 						<div v-if="Object.keys(selectPerson).length>0">
-							<p>已选人员</p>
-							<div v-for="key of Object.keys(selectPerson)" v-if="key" class="person-container is-checked" v-on:click="delChoosePerson(key)">
-								{{selectPerson[key]}}
+							<p>流程链人员</p>
+							<div v-for="(key,index) in Object.keys(selectPerson)" v-if="key" class="inline-block" >
+								<span class="person-container is-checked" v-on:click="delChoosePerson(key)">{{selectPerson[key]}}</span><span v-if="index<Object.keys(selectPerson).length-1" class="Hui-iconfont Hui-iconfont-arrow2-right"></span>
 							</div>
+
 						</div>
 						<a v-if="Object.keys(selectPerson).length>0" class="btn btn-primary radius float-right" v-on:click="choosePerson()">更改人员</a>
 						<a class="btn btn-default radius float-right" v-on:click="cancelChoose()">取消</a>
@@ -287,6 +284,7 @@
 				},
 				methods: {
 					setArrToObj: function(list) {
+						console.log("******setArrToObj*****");
 						var obj = {};
 						list.forEach(function(item, index, list) {
 							obj[item.ApprMan] = item.ApprManName;
@@ -294,6 +292,7 @@
 						return obj;
 					},
 					getCorpId: function(callback) {
+						console.log("*****getCorpId*****");
 						var com = this;
 						request.requestPersonalInfo(function(response) {
 							console.log("获取的corpId数据：" + JSON.stringify(response));
@@ -405,7 +404,7 @@
 				}
 			})
 			router.replace({
-				name: 'process-setting'
+				name: 'chooseDepart'
 			})
 		</script>
 	</body>

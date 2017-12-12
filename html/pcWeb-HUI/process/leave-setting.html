@@ -163,8 +163,7 @@
 							<td class="td-status"><span class="label  radius" v-bind:class="[{'label-defaunt':!leave.Stat},{'label-success':leave.Stat}]">{{leave.Stat?"有效":"屏蔽"}}</span></td>
 							<td class="td-manage">
 								<span class="Hui-iconfont Hui-iconfont-edit edit-groupName manage-item" title="编辑请假信息" v-on:click.stop="changeLeaveInfo(leave)"></span>
-								<span class="Hui-iconfont manage-item" title="显示/屏蔽" v-bind:class="[{'Hui-iconfont-yanjing':leave.Stat}, {'Hui-iconfont-niming':!leave.Stat},{'close-leave':!leave.Stat},{'show-leave':leave.Stat}]"
-									 v-on:click.stop="changeState(leave,index)"></span>
+								<span class="Hui-iconfont manage-item" title="显示/屏蔽" v-bind:class="[{'Hui-iconfont-yanjing':leave.Stat}, {'Hui-iconfont-niming':!leave.Stat},{'close-leave':!leave.Stat},{'show-leave':leave.Stat}]" v-on:click.stop="changeState(leave,index)"></span>
 								<span class="Hui-iconfont Hui-iconfont-del2 del-leave manage-item" title="删除请假类型" v-on:click.stop="delLeave(leave)"></span>
 							</td>
 						</tr>

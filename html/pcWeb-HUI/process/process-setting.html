@@ -182,7 +182,7 @@
 							<td>{{process.ProcTypeName}}</td>
 							<!--流程链-->
 							<td>
-								<span v-for="(apprMan,index) in process.ApprManList">{{apprMan.ApprManName}}<span v-if="index<process.ApprManList.length-2" class="Hui-iconfont Hui-iconfont-slider-right"></span></span>
+								<span v-for="(apprMan,index) in process.ApprManList">{{apprMan.ApprManName}}<span v-if="index<process.ApprManList.length-1" class="Hui-iconfont Hui-iconfont-slider-right"></span></span>
 							</td>
 							<td class="text-c">{{process.ProTypeNote}}</td>
 							<td class="td-status"><span class="label  radius" v-bind:class="[{'label-defaunt':!process.Stat},{'label-success':process.Stat}]">{{process.Stat?"有效":"屏蔽"}}</span></td>
@@ -350,6 +350,10 @@
 					 */
 					choosePerson: function() {
 						console.log("*******choosePerson*******")
+						if(this.selectPerson.length == 0) {
+							alert("请选择审核人员！");
+							return;
+						}
 						var url = "";
 						console.log("this.process:" + JSON.stringify(this.process));
 						var isAdd = this.process.ApprManList.length == 0;

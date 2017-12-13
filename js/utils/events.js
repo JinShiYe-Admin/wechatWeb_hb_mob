@@ -10,8 +10,8 @@ var events = (function(mod) {
 		console.log("获取的本地的值：" + JSON.stringify(arr));
 		sessionStorage.setItem(key, JSON.stringify(mod.toggleValueInArray(arr, value, isAdd)));
 	}
-	mod.setSessionArray=function(key,arr){
-		sessionStorage.setItem(key,JSON.stringify(arr));
+	mod.setSessionArray = function(key, arr) {
+		sessionStorage.setItem(key, JSON.stringify(arr));
 	}
 	/**
 	 * 数组中删除或添加值
@@ -78,11 +78,20 @@ var events = (function(mod) {
 		sessionStorage.setItem(storageKey, JSON.stringify(map));
 		console.log("****setSessionMapValue***放置的本地值：" + JSON.stringify(map));
 	}
-	mod.getSessionObject=function(key){
-		if(sessionStorage.getItem(key)){
+	mod.getSessionObject = function(key) {
+		if(sessionStorage.getItem(key)) {
 			return JSON.parse(sessionStorage.getItem(key))
 		}
 		return {}
+	}
+	/**
+	 * 获取参数
+	 * @param {Object} url_string
+	 * @param {Object} param
+	 */
+	mod.geUrlParam = function(url_string,param) {
+		var eurl = new URL(url_string);
+		return eurl.searchParams.get(param);
 	}
 	return mod;
 })(events || {})

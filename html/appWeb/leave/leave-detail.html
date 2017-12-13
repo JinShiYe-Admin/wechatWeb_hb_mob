@@ -15,47 +15,47 @@
 			body {
 				background-color: #F8F8F8;
 			}
-
+			
 			.head-portrait {
 				width: 20%;
 				height: 20%;
 				border-radius: 50%;
 			}
-
+			
 			.display-inline {
 				display: inline-block;
 			}
-
+			
 			.name-time-container {
 				margin: auto 0;
 				padding-left: 16px;
 			}
-
+			
 			.apply-name {
 				font-size: 1em;
 				font-weight: bold;
 			}
-
+			
 			.apply-info-container {
 				font-size: .8em;
 			}
-
+			
 			.apply-hint {
 				color: darkgray;
 			}
-
+			
 			.person-container.weui-cells {
 				margin-top: 0;
 			}
-
+			
 			.weui-cells {
 				padding: 8px 16px;
 			}
-
+			
 			.check-person {
 				color: dodgerblue;
 			}
-
+			
 			.input-container {
 				position: fixed;
 				bottom: 0;
@@ -64,23 +64,23 @@
 				background: white;
 				box-shadow: 0 -1px 5px darkgray;
 			}
-
+			
 			.input-item {
 				border: solid 1px gray;
 				border-radius: 2px;
 				margin-right: 5px;
 			}
-
+			
 			.display-none {
 				opacity: 0;
 				display: none;
 			}
-
+			
 			.display-block {
 				opacity: 1;
 				display: block;
 			}
-
+			
 			.check-detail {
 				margin-bottom: 50px;
 			}
@@ -174,6 +174,8 @@
 		<script src="../../../js/vue-router.js"></script>
 		<script src="../../../js/utils/consts.js"></script>
 		<script src="../../../js/utils/request.js"></script>
+		<script src="../../../js/utils/events.js"></script>
+		<script src="../../../js/utils/storageutil.js"></script>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
@@ -183,55 +185,35 @@
 			var detail = new Vue({
 				el: "#detail-container",
 				data: {
-					applyDetail: {
-						ApprId: 0,
-						ApprStat: 1,
-						ApprStatNote: "未审核",
-						ApplyId: 1,
-						ApplyMan: 123,
-						ApplyManName: "申请人",
-						ApplyManPic: "https://github.com/rockan007/photos/blob/master/bug.png?raw=true",
-						ProcessTypeId: 2,
-						ProcTypeName: "流程类型名称",
-						LeaveTypeId: 1,
-						LeaveTypeName: "请假类型名称",
-						ApplyBeginTime: "2017-12-07 08:30",
-						ApplyEndTime: "2017-01-01 17:30",
-						ApplyBeginEndCnt: 123,
-						ApplyReason: "请假原因",
-						ApplyPic: "https://github.com/rockan007/photos/blob/master/cookie-example.png?raw=true",
-						ApplyReasonThumb: "https://github.com/rockan007/photos/blob/master/cookie-example.png?raw=true",
-						ApplyTime: "2017-12-06"
-					},
-					checkList: [{
-						ApprMan: 1,
-						ApprManName: "审核人员",
-						ApprNote: "我的意见就是没有意见",
-						ApprStat: 2,
-						ApprStatNote: "审核状态说明",
-						ApprTime: "2017-12-07"
-					}],
+					applyDetail: {},
+					checkList: [],
 					showGallery: false,
 					showOptions: false,
 					showToast: false,
 					approveNote: "",
 					pageIndex: 1,
-					pageSize: 0
+					pageSize: 0,
+					flag: 0 //0查看 1审核
 				},
 				mounted: function() {
-
+					this.getInitialData();
 				},
 				methods: {
+					getInitialData: function() {
+						this.getDetail();
+					},
 					getDetail: function() {
-
+						var sKey = events.getUrlParam(location.href, "sKey");
+						this.applyDetail = storageutil.getSessionStorage(sKey);
+						this.flag = events.getUrlParam(location.href, "flag");
 					},
 					getApprList: function() {
 						console.log("获取审核数据")
 						var com = this;
 						processRequest.postProcessData("getProcessApproveById", {
-							applyId: 1,
+							applyId: this.applyDetail.ApprId,
 							pageIndex: this.pageIndex,
-							pageSize: this.pageSize
+							pageSize: 0
 						}, function(response) {
 							console.log("获取的数据：" + JSON.stringify(response));
 							if(response.RspCode == 0) {
@@ -272,42 +254,6 @@
 					}
 				}
 			});
-
-			var webType; //页面类型；0，请假详情；1，请假审核
-			var webData; //页面获取的数据
-			window.onload = function() {
-				initLocalData();
-			}
-
-			/**
-			 * 获取本地数据
-			 */
-			function initLocalData() {
-				var search = location.search.toString();
-				var keyword = "?flag=";
-				var index = search.indexOf(keyword);
-				if(index != -1) {
-					var dataArray = search.substring(index + 1).split("&");
-					var flagArray = dataArray[0].split("=");
-					var sKeyArray = dataArray[1].split("=");
-					webType = flagArray[1];
-					var sValue = storageutil.getSessionStorage(sKeyArray[1]);
-					if(sValue) {
-						webData = JSON.parse(sValue);
-					}
-				}
-				console.log("webType", webType);
-				console.log("webData", webData);
-				if(webData) {
-					if(webType == 0) { //请假详情
-						detail.applyDetail = webData.leave;
-						detail.applyDetail.ApplyManName = webData.mineUserInfo.name;
-						detail.applyDetail.ApplyManPic = webData.mineUserInfo.avatar;
-					}
-				} else {
-					$.alert("未获取到有效的数据", "提示 ");
-				}
-			}
 		</script>
 	</body>
 

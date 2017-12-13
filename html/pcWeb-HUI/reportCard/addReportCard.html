@@ -59,7 +59,7 @@
 			</div>
 			<div class="weui-cell"></div>
 
-			<input style="margin-left: 10px;margin-bottom: 10px;" id="uploaderInput" type="file" accept=".csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" v-on:change="selectFile($event)">
+			<input style="margin-left: 10px;margin-bottom: 10px;" id="uploaderInput" type="file"  v-on:change="selectFile($event)">
 
 		</div>
 		<div class="weui-btn-area">
@@ -115,7 +115,10 @@
 							$.hideLoading();
 							return;
 						} else {
-							compress.postFile(data, function(filePath) {
+							var types = files[0].type.toLowerCase().split("/");
+				console.log("types:" + types);
+				if(types[1] == "vnd.ms-excel"||types[1] == "csv"||types[1] == 'vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+												compress.postFile(data, function(filePath) {
 								if(filePath.RspCode == 0) {
 									console.log(JSON.stringify(filePath));
 									content.uploadedFile = filePath.RspData;
@@ -124,6 +127,11 @@
 								}
 
 							});
+				}else{
+					$('#uploaderInput').val('');
+					alert("文件格式不是excel格式")
+				}
+
 						}
 					},
 				}

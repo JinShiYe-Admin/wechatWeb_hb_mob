@@ -787,12 +787,10 @@
 							if(changeData && changeData.ProcessTypeId == data.RspData.Data[i].ProcessTypeId) {
 								procTypeSelectIndex = procTypeData.select.length;
 							}
-							if(data.RspData.Data[i].Stat == 1) {
-								procTypeData.select.push({
-									title: data.RspData.Data[i].ProcTypeName,
-									value: data.RspData.Data[i].ProcessTypeId
-								});
-							}
+							procTypeData.select.push({
+								title: data.RspData.Data[i].ProcTypeName,
+								value: data.RspData.Data[i].ProcessTypeId
+							});
 						}
 					}
 					if(procTypeData.select.length == 0) {

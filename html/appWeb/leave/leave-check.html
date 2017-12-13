@@ -7,7 +7,7 @@
 		<link href="../../../css/weui.min.css" rel="stylesheet" />
 		<link href="../../../css/jquery-weui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" href="../../../js/demoCssJs/demos.css" />
-		<title>维修状况</title>
+		<title>请假审核</title>
 		<style type="text/css">
 			body {
 				-webkit-overflow-scrolling: touch;
@@ -55,7 +55,7 @@
 	<body ontouchstart>
 		<div class="weui-tab" id="tabs">
 			<div class="weui-navbar">
-				<div v-for="tab in tabs" class="weui-navbar__item" v-bind:class="[{'weui-bar__item--on':tab.apprStat===activeIndex}]" v-bind:href="'#tab'+tab.apprStat" v-on:click="setactiveIndex(tab.apprStat)">{{tab.title}}</div>
+				<div v-for="tab in tabs" class="weui-navbar__item" v-bind:class="[{'weui-bar__item--on':tab.apprStat===activeIndex}]" v-bind:href="'#tab'+tab.apprStat" v-on:click="setActiveIndex(tab.apprStat)">{{tab.title}}</div>
 			</div>
 			<div class="weui-tab__bd">
 				<div v-for="tab in tabs" :id="'tab'+tab.apprStat" class="weui-tab__bd-item  weui-pull-to-refresh infinite" :class="[{'weui-tab__bd-item--active':tab.apprStat===activeIndex}]">
@@ -69,7 +69,7 @@
 					<div class="weui-cells">
 						<div v-for="item in tab.list" class="weui-cell" v-on:click="jumpToDetail(item)">
 							<div class="weui-flex">
-								<div class="head-container"><img class="head-portrait" src="https://github.com/rockan007/photos/blob/master/bug.png?raw=true" /></div>
+								<div class="head-container"><img class="head-portrait" v-bind:src="item.ApplyManPic" /></div>
 								<div class="weui-flex__item">
 									<p><span class="item-hint">姓名:</span><span class="item-info">{{item.ApplyManName}}</span></p>
 									<p><span class="item-hint">请假类型:</span><span class="item-info">{{item.LeaveTypeName}}</span></p>
@@ -77,7 +77,7 @@
 									<p><span class="item-hint">结束时间:</span><span class="item-info">{{item.ApplyEndTime}}</span></p>
 								</div>
 								<div>
-									<p class="apply-date">{{item.ApplyTime}}</p>
+									<p class="apply-date">{{item.ApplyTime|shortForDate}}</p>
 								</div>
 							</div>
 						</div>
@@ -115,13 +115,14 @@
 				</a>
 			</div>
 		</div>
-
+		<script src="../../../js/lib/vconsole/vconsole.min.js"></script>
 		<script src="../../../js/jquery.min.js"></script>
 		<script src="../../../js/jquery-weui.min.js"></script>
 		<script src="../../../js/vue.js"></script>
 		<script src="../../../js/vue-router.js"></script>
 		<script src="../../../js/utils/consts.js"></script>
 		<script src="../../../js/utils/request.js"></script>
+		<script src="../../../js/utils/storageutil.js"></script>
 		<script>
 			var list = new Vue({
 				el: "#tabs",
@@ -155,12 +156,18 @@
 						pageIndex: 1,
 						totalPage: 0,
 						list: []
-					}]
+					}],
+					personalInfo: {}
 				},
 				mounted: function() {
 					console.log("*****mounted*****");
 					this.initialData();
 					this.initialLoad();
+				},
+				filters: {
+					shortForDate: function(date) {
+						return date.split(" ")[0];
+					}
 				},
 				methods: {
 					/**
@@ -168,19 +175,21 @@
 					 */
 					initialData: function() {
 						console.log("****initialData******")
-						this.getCorpId(this.requestList);
-						this.tabs[this.activeIndex].haveMore = true
+						var com = this;
+						this.getPersonalInfo(function() {
+							console.log("****getPersonalInfo*****");
+							com.refreshList(com.setData);
+						});
 					},
 					initialLoad: function() {
 						console.log("*****initialLoad*****");
 						var com = this;
 						$('.weui-tab__bd-item').pullToRefresh().on('pull-to-refresh', function(done) {
 							var self = this
-							setTimeout(function() {
-								com.tabs[com.activeIndex].list = []
-								//								com.initialData();
+							com.refreshList(function(data) {
+								com.setData(data);
 								$(self).pullToRefreshDone();
-							}, 2000)
+							});
 						});
 						$('.infinite').infinite().on("infinite", function() {
 							var self = this;
@@ -188,21 +197,21 @@
 							if(self.loading) return;
 							self.loading = true;
 							console.log(self);
-							setTimeout(function() {
-								com.loadMore();
+							com.loadMore(function(data) {
+								com.setData(data);
 								self.loading = false;
-							}, 2000); //模拟延迟
+							})
 						});
 					},
 					/**
 					 * 获取单位Id
 					 */
-					getCorpId: function(callback) {
+					getPersonalInfo: function(callback) {
 						var com = this;
 						request.requestPersonalInfo(function(response) {
-							console.log("获取的corpId数据：" + JSON.stringify(response));
+							console.log("获取的personalInfo数据：" + JSON.stringify(response));
 							if(response.RspCode == 0) {
-								com.corpId = JSON.parse(response.RspData).corpid;
+								com.personalInfo = JSON.parse(response.RspData);
 								callback();
 							}
 						})
@@ -211,27 +220,31 @@
 					 * 设置活动的id
 					 * @param {Object} id
 					 */
-					setactiveIndex: function(id) {
+					setActiveIndex: function(id) {
 						this.activeIndex = id;
+						var activeTab = this.tabs[this.activeIndex];
+						if(activeTab.list.length == 0) {
+							this.refreshList(this.setData);
+						}
 					},
 					/**
 					 * 请求数据
 					 */
-					requestList: function() {
+					requestList: function(callback) {
 						console.log("****reauestList获取审核列表****")
 						var com = this;
 						processRequest.postProcessData("getProcessApprove", {
-							corpId: com.corpId,
-							apprMan: com.selfId,
+							corpId: com.personalInfo.corpid,
+							apprMan: com.personalInfo.userid,
 							apprStat: com.activeIndex,
 							pageIndex: com.tabs[com.activeIndex].pageIndex,
 							pageSize: 10
 						}, function(response) {
 							console.log("获取的审核列表数据：" + JSON.stringify(response))
 							if(response.RspCode == 0) {
-								com.setData(response.RspData);
+								callback(response.RspData);
 							} else {
-								
+
 							}
 						})
 					},
@@ -243,33 +256,51 @@
 						console.log("****setData******");
 						var activeTab = this.tabs[this.activeIndex];
 						if(activeTab.pageIndex === 1) {
-							activeTab.list = data;
+							activeTab.list = data.Data;
 						} else {
-							activeTab.list = activeTab.list.concat(data);
+							activeTab.list = activeTab.list.concat(data.Data);
 						}
+						activeTab.totalPage = data.TotalPage;
+						activeTab.haveMore = activeTab.totalPage > activeTab.pageIndex;
+						console.log("获取的列表数据:" + JSON.stringify(activeTab));
 					},
 					/**
 					 * 刷新列表
+					 * @param {Object} callback
 					 */
-					refreshList: function() {
+					refreshList: function(callback) {
 						console.log("*****refreshList******");
 						this.tabs[this.activeIndex].pageIndex = 1;
-						this.requestList();
+						this.requestList(callback);
 					},
-					loadMore: function() {
+					/**
+					 * 加载更多
+					 * @param {Object} callback
+					 */
+					loadMore: function(callback) {
 						console.log("*****loadMore******");
 						this.tabs[this.activeIndex].pageIndex++;
-						this.requestList();
+						this.requestList(callback);
 					},
+					/**
+					 * 
+					 * @param {Object} item
+					 */
 					jumpToDetail: function(item) {
 						console.log("******jumpToDetail*******");
-						var sKey = new Date().getTime() + "" + parseInt(Math.random() * 1000);
+						var sKey = new Date().getTime();
 						var sValue = {
 							leave: item,
-							mineUserInfo: ""
+							mineUserInfo: this.personalInfo
 						}
 						storageutil.setSessionStorage(sKey, JSON.stringify(sValue));
-						location.href = "leave-detail.html?flag=1&sKey=" + sKey;
+						location.href = "leave-detail.html?flag=" + this.getFlag(item) + "&sKey=" + sKey;
+					},
+					getFlag: function(item) {
+						if(item.ApprStat == 0) {
+							return 1
+						}
+						return 0
 					}
 				}
 			})

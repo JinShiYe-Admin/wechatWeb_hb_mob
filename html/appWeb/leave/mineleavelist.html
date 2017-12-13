@@ -198,7 +198,7 @@
 							mineUserInfo: mineUserInfo
 						}
 						storageutil.setSessionStorage(sKey, JSON.stringify(sValue));
-						location.href = "leave-detail.html?flage=0&sKey=" + sKey;
+						location.href = "leave-detail.html?flag=0&sKey=" + sKey;
 					}
 				});
 			}
@@ -210,6 +210,7 @@
 			function showData(data) {
 				var html = "";
 				for(var i = 0; i < data.length; i++) {
+					//data[i].ApplyStat = 1;
 					data[i].ApplyBeginTime = data[i].ApplyBeginTime.substring(0, data[i].ApplyBeginTime.length - 3);
 					data[i].ApplyEndTime = data[i].ApplyEndTime.substring(0, data[i].ApplyEndTime.length - 3);
 					leaveApply.key.push(data[i].ApplyId);

@@ -290,7 +290,13 @@
 						})
 					},
 					jumpToDetail: function(item) {
-						location.href = "leave-detail.html?id=" + item.id;
+						var sKey = new Date().getTime() + "" + parseInt(Math.random() * 1000);
+						var sValue = {
+							leave: item,
+							mineUserInfo: ""
+						}
+						storageutil.setSessionStorage(sKey, JSON.stringify(sValue));
+						location.href = "leave-detail.html?flage=1&sKey=" + sKey;
 					},
 					/**
 					 * 添加新维修

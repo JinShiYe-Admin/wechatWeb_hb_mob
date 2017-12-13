@@ -115,7 +115,7 @@ Vue.component("process-setting", {
 			console.log("更改流程链：" + JSON.stringify(process))
 			this.$emit("process-info", this.activeProcess);
 			router.push({
-				name: 'chooseDepart'
+				name: 'multi-choose'
 			})
 		},
 		/**

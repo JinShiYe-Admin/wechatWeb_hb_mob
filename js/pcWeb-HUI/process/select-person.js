@@ -50,7 +50,7 @@ Vue.component("choose-person", {
 		/**
 		 * 人員列表
 		 */
-		personList: function() {
+		personList: function(newVal) {
 			console.log("*******watch:personList********");
 			console.log("personList:" + JSON.stringify(newVal));
 			this.setChooseStatus();

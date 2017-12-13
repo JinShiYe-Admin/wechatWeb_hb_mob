@@ -413,6 +413,10 @@
 					$.alert("请选取请假结束时间");
 					return false;
 				}
+				if(endTime <= beginTime) {
+					$.alert("请假结束时间应大于开始时间");
+					return false;
+				}
 				var represon = $.trim($("#represon").val()); //请假事由
 				if(represon == "") {
 					$.alert("请输入请假事由");
@@ -771,7 +775,7 @@
 			function getProcType() {
 				var tempData = {
 					corpId: mineUserInfo.corpid,
-//					stat: 1,
+					//stat: 1,
 					pageIndex: 1,
 					pageSize: 0
 				}
@@ -783,12 +787,10 @@
 							if(changeData && changeData.ProcessTypeId == data.RspData.Data[i].ProcessTypeId) {
 								procTypeSelectIndex = procTypeData.select.length;
 							}
-							if(data.RspData.Data[i].Stat == 1) {
-								procTypeData.select.push({
-									title: data.RspData.Data[i].ProcTypeName,
-									value: data.RspData.Data[i].ProcessTypeId
-								});
-							}
+							procTypeData.select.push({
+								title: data.RspData.Data[i].ProcTypeName,
+								value: data.RspData.Data[i].ProcessTypeId
+							});
 						}
 					}
 					if(procTypeData.select.length == 0) {

@@ -217,7 +217,7 @@
 					</thead>
 					<tbody>
 						<tr class="text-c" v-for="(person,index) in checkPersonList">
-							<td><input type="checkbox" name="selectCheckedPerson" v-on:change="getStatus($event,person)" v-bind:value="person.ApprMan" /></td>
+							<td><input type="checkbox" name="selectCheckedPerson" v-on:change="getStatus($event,person)" v-model:checked="person.isSelect" v-bind:value="person.ApprMan" /></td>
 							<td>{{person.ApprManName}}</td>
 							<td class="td-manage">
 								<span class="Hui-iconfont Hui-iconfont-del2 del-person manage-item" title="删除审核人员" v-on:click.stop="delCurPerson(person)"></span>

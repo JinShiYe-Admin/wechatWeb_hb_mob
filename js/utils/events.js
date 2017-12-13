@@ -89,7 +89,7 @@ var events = (function(mod) {
 	 * @param {Object} url_string
 	 * @param {Object} param
 	 */
-	mod.geUrlParam = function(url_string,param) {
+	mod.getUrlParam = function(url_string, param) {
 		var eurl = new URL(url_string);
 		return eurl.searchParams.get(param);
 	}

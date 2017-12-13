@@ -151,7 +151,7 @@
 					<div class="person-foot">
 						<div v-if="Object.keys(selectPerson).length>0">
 							<p>已选人员({{Object.keys(selectPerson).length}}/50)</p>
-							<div v-for="key of Object.keys(selectPerson)" v-if="key" class="person-container is-checked" v-on:click="delChoosePerson(key)">
+							<div v-for="key of Object.keys(selectPerson)" v-if="selectPerson[key]" class="person-container is-checked" v-on:click="delChoosePerson(key)">
 								{{selectPerson[key]}}
 							</div>
 						</div>
@@ -257,6 +257,10 @@
 						activeDepart: {},
 						selectPerson: this.classify.gusers
 					}
+				},
+				mounted: function() {
+					console.log("获取的维修组人员：" + JSON.stringify(this.classify.gusers));
+					console.log("multi-choose:classify" + JSON.stringify(this.classify));
 				},
 				watch: {
 					selectPerson: function(newVal, oldVal) {

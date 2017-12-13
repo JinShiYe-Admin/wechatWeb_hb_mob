@@ -53,6 +53,17 @@
 			.weui-cell.weui-check_label {
 				text-align: center;
 			}
+
+			.select-mask {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background-color: rgba(0, 0, 0, 0.6);
+				z-index: 999;
+				display: none;
+			}
 		</style>
 	</head>
 
@@ -157,6 +168,7 @@
 				</a>
 			</div>
 		</div>
+		<div id="selectMask" class="select-mask"></div>
 		<script type="text/javascript" src="../../../js/lib/vconsole/vconsole.min.js"></script>
 		<script type="text/javascript" src="../../../js/demoCssJs/jquery-2.1.4.js"></script>
 		<script type="text/javascript" src="../../../js/demoCssJs/jquery-weui.min.js"></script>
@@ -201,6 +213,8 @@
 			var changeData; //修改请假申请的数据
 			var procTypeSelectIndex; //流程类型选项初始化时的序号
 			var leaveTypeSelectIndex; //请假类型选项初始化时的序号
+			var selectIndex; //当前显示的select
+
 			window.onload = function() {
 				$.showLoading();
 				initData();
@@ -276,7 +290,15 @@
 				$("#selectTypeFirstInput").select({
 					title: "流程类型",
 					closeText: "关闭",
+					autoClose: false,
 					items: procTypeData.select,
+					onOpen: function() {
+						selectIndex = 1;
+						openSelectMask();
+					},
+					onClose: function() {
+						closeSelectMask();
+					}
 				});
 				var leaveType = leaveTypeData.select[leaveTypeSelectIndex];
 				if(leaveType) {
@@ -286,7 +308,15 @@
 				$("#selectTypeSecondInput").select({
 					title: "请假类型",
 					closeText: "关闭",
+					autoClose: false,
 					items: leaveTypeData.select,
+					onOpen: function() {
+						selectIndex = 2;
+						openSelectMask();
+					},
+					onClose: function() {
+						closeSelectMask();
+					}
 				});
 			}
 
@@ -299,18 +329,32 @@
 				$("#selectTypeThirdInput").datetimePicker({
 					title: "开始时间",
 					toolbarCloseText: "关闭",
+					value: begin,
 					onChange: function(data) {
 						beginTime = data.value.join("");
 					},
-					value: begin
+					onOpen: function() {
+						selectIndex = 3;
+						openSelectMask();
+					},
+					onClose: function() {
+						closeSelectMask();
+					}
 				});
 				$("#selectTypeFourthInput").datetimePicker({
 					title: "结束时间",
 					toolbarCloseText: "关闭",
+					value: end,
 					onChange: function(data) {
 						endTime = data.value.join("");
 					},
-					value: end
+					onOpen: function() {
+						selectIndex = 4;
+						openSelectMask();
+					},
+					onClose: function() {
+						closeSelectMask();
+					}
 				});
 			}
 
@@ -388,6 +432,20 @@
 							}
 						}]
 					});
+				});
+
+				/**
+				 * 点击select的遮罩
+				 */
+				$("#selectMask").click(function() {
+					switch(selectIndex) {
+						case 1:
+							$("#selectTypeFirstInput").select("close");
+							break;
+						case 2:
+							$("#selectTypeSecondInput").select("close");
+							break;
+					}
 				});
 			}
 
@@ -883,6 +941,19 @@
 						$("#checkItem").css("display", "block")
 					}
 				});
+			}
+
+			/**
+			 * 打开选择器的遮罩
+			 */
+			function openSelectMask() {
+				$("#selectMask").css("display", "block");
+			}
+			/**
+			 * 关闭选择器的遮罩
+			 */
+			function closeSelectMask() {
+				$("#selectMask").css("display", "none");
 			}
 		</script>
 	</body>

@@ -67,8 +67,8 @@ Vue.component("classify-list", {
 		changeServiceGroupName: function() {
 			console.log("****changeServiceGroupName****");
 			var com = this;
-			if(com.serviceGroupName.length > 0) {
-				alert("组名最多20字！");
+			if(com.serviceGroupName.length > 20) {
+				layer.alert("组名最多20字！");
 				return;
 			}
 			request.editSeviceGroup({
@@ -85,8 +85,8 @@ Vue.component("classify-list", {
 		addServiceGroup: function() {
 			console.log("****addServiceGroup****");
 			var com = this;
-			if(com.serviceGroupName.length > 0) {
-				alert("组名最多20字！");
+			if(com.serviceGroupName.length > 20) {
+				layer.alert("组名最多20字！");
 				return;
 			}
 			request.addServiceGroup(this.serviceGroupName, function(response) {

@@ -280,8 +280,8 @@
 					var myDate = new Date().format('yyyy-MM-dd');
 					var endTime = myDate.toString().replace(/-/g, '');
 					tempData = {
-						corpId: 'wx6c4528c675d4a9c9', //单位ID
-						userId: ["zhaoqiwang"], //用户ID,例如：[“1”, “2”, “3”]
+						corpId: attendData.userInfo.corpid, //单位ID
+						userId: tempId, //用户ID,例如：[“1”, “2”, “3”]
 						beginTime: '19900101', //统计开始时间,年月日共八位如：20011010
 						endTime: endTime, //统计结束时间,年月日共八位如：20011010
 						attendResultId: '0', //0：全部,1: 正常,2：迟到,3：早退

@@ -233,7 +233,7 @@
 				template: '<process-setting v-on:process-info="getProcessInfo"></process-setting>',
 				methods: {
 					getProcessInfo: function(process) {
-						console.log("获取的classify:" + JSON.stringify(process));
+						console.log("获取的process:" + JSON.stringify(process));
 						this.$emit("process-info", process);
 					}
 				}
@@ -244,7 +244,7 @@
 				data: function() {
 					return {
 						checkPowerPersons: [],
-						selectPerson: this.process.ApprManList, //已选人员
+						selectPerson: [].concat(this.process.ApprManList), //已选人员
 						corpId: 0
 					}
 				},
@@ -268,8 +268,8 @@
 					 * @param {Object} oldVal
 					 */
 					process: function(newVal, oldVal) {
-						console.log("wacth:监听classify:" + JSON.stringify(newVal))
-						this.selectPerson = newVal.ApprManList;
+						console.log("wacth:监听process:" + JSON.stringify(newVal))
+						this.selectPerson = [].concat(newVal.ApprManList);
 					}
 				},
 				methods: {
@@ -351,7 +351,9 @@
 					choosePerson: function() {
 						console.log("*******choosePerson*******")
 						var url = "";
+						console.log("this.process:" + JSON.stringify(this.process));
 						var isAdd = this.process.ApprManList.length == 0;
+						console.log("isAdd:" + isAdd);
 						if(isAdd) {
 							url = "addProcessList";
 						} else {

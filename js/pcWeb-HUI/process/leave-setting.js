@@ -140,6 +140,14 @@ Vue.component("leave-setting", {
 		 */
 		editLeave: function() {
 			console.log("****editLeave****");
+			if(this.name.length == 0) {
+				layer.alert("请输入请假类型名称！");
+				return;
+			}
+			if(!this.chekedTea && !this.checkedPar) {
+				layer.alert("请选择请假类型！");
+				return;
+			}
 			if(this.changeType == 0) {
 				this.addLeaveType();
 			} else {

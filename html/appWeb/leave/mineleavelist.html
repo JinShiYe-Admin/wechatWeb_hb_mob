@@ -161,8 +161,7 @@
 							actions: [{
 								text: "编辑",
 								onClick: function() {
-									var myDate = new Date();
-									var sKey = myDate.getTime() + "" + parseInt(Math.random() * 1000);
+									var sKey = new Date().getTime() + "" + parseInt(Math.random() * 1000);
 									var sValue = {
 										leave: leave,
 										mineUserInfo: mineUserInfo
@@ -193,14 +192,13 @@
 						});
 					} else {
 						//已审核
-						var myDate = new Date();
-						var sKey = myDate.getTime() + "" + parseInt(Math.random() * 1000);
+						var sKey = new Date().getTime() + "" + parseInt(Math.random() * 1000);
 						var sValue = {
 							leave: leave,
 							mineUserInfo: mineUserInfo
 						}
 						storageutil.setSessionStorage(sKey, JSON.stringify(sValue));
-						location.href = "leave-detail.html?sKey=" + sKey;
+						location.href = "leave-detail.html?flage=0&sKey=" + sKey;
 					}
 				});
 			}

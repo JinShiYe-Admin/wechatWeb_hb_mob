@@ -6,58 +6,67 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../../../css/weui.min.css" rel="stylesheet" />
 		<link href="../../../css/jquery-weui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../../js/demoCssJs/demos.css" />
 		<title>维修状况</title>
 		<style type="text/css">
-			.weui-tab {
+			body {
+				-webkit-overflow-scrolling: touch;
+			}
+			/*.weui-tab {
 				position: absolute;
 				left: 0;
 				right: 0;
 				bottom: 0;
-			}
-			
+			}*/
+
 			.weui-tab__bd .weui-tab__bd-item {
 				width: 100%;
 			}
-			
-			.weui-cells {
+			/*.weui-cells {
 				margin: 0;
-			}
-			
+			}*/
+
 			.weui-cell {
 				display: block;
 			}
-			
+
 			.head-portrait {
 				width: 80%;
 				border-radius: 50%;
 			}
-			
+
 			.head-container {
 				width: 15%;
 				text-align: center;
 			}
-			
+
 			.item-hint,
 			.apply-date {
 				color: darkgrey;
 			}
-			
+
 			.item-hint,
 			.apply-date,
 			.item-info {
 				font-size: 0.8em;
 			}
-			
-			.weui-tab__bd {
+			/*.weui-tab__bd {
 				position: fixed;
 				top: 0;
 				bottom: 50px;
 				left: 0;
 				right: 0;
-			}
-			
-			.weui-tab__bd {
+			}*/
+			/*.weui-tab__bd {
 				height: auto;
+			}*/
+
+			.weui-pull-to-refresh__layer {
+				padding: 0;
+			}
+
+			.weui-loadmore {
+				margin-bottom: 71px;
 			}
 		</style>
 	</head>
@@ -281,7 +290,13 @@
 						})
 					},
 					jumpToDetail: function(item) {
-						location.href = "leave-detail.html?id=" + item.id;
+						var sKey = new Date().getTime() + "" + parseInt(Math.random() * 1000);
+						var sValue = {
+							leave: item,
+							mineUserInfo: ""
+						}
+						storageutil.setSessionStorage(sKey, JSON.stringify(sValue));
+						location.href = "leave-detail.html?flage=1&sKey=" + sKey;
 					},
 					/**
 					 * 添加新维修

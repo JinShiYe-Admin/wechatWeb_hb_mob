@@ -24,6 +24,10 @@ Vue.component("process-setting", {
 	},
 	watch: {
 		processList: function(newVal, oldVal) {
+			console.log("******watch:processList******");
+			if(this.tablebases != null) {
+				this.tablebases.destroy();
+			}
 			this.$nextTick(this.newTablebases)
 		}
 	},
@@ -45,9 +49,7 @@ Vue.component("process-setting", {
 		 * 表格
 		 */
 		newTablebases: function() {
-			if(this.tablebases != null) {
-				this.tablebases.destroy();
-			}
+			console.log("****newTablebases****")
 			this.tablebases = $('.table-sort').DataTable({
 				pageLength: 10,
 				lengthChange: false
@@ -113,7 +115,7 @@ Vue.component("process-setting", {
 			console.log("更改流程链：" + JSON.stringify(process))
 			this.$emit("process-info", this.activeProcess);
 			router.push({
-				name: 'chooseDepart'
+				name: 'multi-choose'
 			})
 		},
 		/**

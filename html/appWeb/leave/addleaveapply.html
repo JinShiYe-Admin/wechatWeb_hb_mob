@@ -49,6 +49,10 @@
 			.weui-tab__bd .weui-tab__bd-item {
 				width: 100%;
 			}
+
+			.weui-cell.weui-check_label {
+				text-align: center;
+			}
 		</style>
 	</head>
 
@@ -91,7 +95,7 @@
 						</div>
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
-								<textarea id="represon" class="weui-textarea" placeholder="请输入请假事由" rows="3" maxlength="500"></textarea>
+								<textarea id="represon" class="weui-textarea" placeholder="请输入请假事由，最多100字" rows="4" maxlength="100"></textarea>
 							</div>
 						</div>
 						<div class="weui-cell">
@@ -195,9 +199,8 @@
 			} //请假类型
 
 			var changeData; //修改请假申请的数据
-			var procTypeSelectIndex = 0; //流程类型选项初始化时的序号
-			var leaveTypeSelectIndex = 0; //请假类型选项初始化时的序号
-			var typeStat = 0; //获取的流程类型，请假类型的状态；0，全部；1，有效
+			var procTypeSelectIndex; //流程类型选项初始化时的序号
+			var leaveTypeSelectIndex; //请假类型选项初始化时的序号
 			window.onload = function() {
 				$.showLoading();
 				initData();
@@ -232,7 +235,6 @@
 						$.alert("未获取到有效的初始数据，无法修改请假申请", "提示");
 					}
 				} else {
-					typeStat = 1;
 					$("#tabbar").css("display", "flex");
 					getMineInfo();
 				}
@@ -266,15 +268,21 @@
 			 * 初始化流程类型和请假类型控件
 			 */
 			function initSelect() {
-				$("#selectTypeFirstInput").attr("value", procTypeData.select[procTypeSelectIndex].title);
-				$("#selectTypeFirstInput").attr("data-values", procTypeData.select[procTypeSelectIndex].value);
+				var procType = procTypeData.select[procTypeSelectIndex];
+				if(procType) {
+					$("#selectTypeFirstInput").attr("value", procType.title);
+					$("#selectTypeFirstInput").attr("data-values", procType.value);
+				}
 				$("#selectTypeFirstInput").select({
 					title: "流程类型",
 					closeText: "关闭",
 					items: procTypeData.select,
 				});
-				$("#selectTypeSecondInput").attr("value", leaveTypeData.select[leaveTypeSelectIndex].title);
-				$("#selectTypeSecondInput").attr("data-values", leaveTypeData.select[leaveTypeSelectIndex].value);
+				var leaveType = leaveTypeData.select[leaveTypeSelectIndex];
+				if(leaveType) {
+					$("#selectTypeSecondInput").attr("value", leaveType.title);
+					$("#selectTypeSecondInput").attr("data-values", leaveType.value);
+				}
 				$("#selectTypeSecondInput").select({
 					title: "请假类型",
 					closeText: "关闭",
@@ -387,6 +395,16 @@
 			 * 提交请假申请
 			 */
 			function clickSubmitForm() {
+				var procTypeId = $("#selectTypeFirstInput").attr("data-values");
+				if(!procTypeId) {
+					$.alert("请选取流程类型");
+					return false;
+				}
+				var leaveTypeId = $("#selectTypeSecondInput").attr("data-values");
+				if(!leaveTypeId) {
+					$.alert("请选取请假类型");
+					return false;
+				}
 				if(!beginTime) {
 					$.alert("请选取请假开始时间");
 					return false;
@@ -702,10 +720,10 @@
 					$.hideLoading();
 					if(data.RspCode == 0) {
 						$.toast("提交成功");
-						$("#selectTypeFirstInput").attr("value", procTypeData.select[0].title);
-						$("#selectTypeFirstInput").attr("data-values", procTypeData.select[0].value);
-						$("#selectTypeSecondInput").attr("value", leaveTypeData.select[0].title);
-						$("#selectTypeSecondInput").attr("data-values", leaveTypeData.select[0].value);
+						$("#selectTypeFirstInput").attr("value", "");
+						$("#selectTypeFirstInput").attr("data-values", "");
+						$("#selectTypeSecondInput").attr("value", "");
+						$("#selectTypeSecondInput").attr("data-values", "");
 						$("#selectTypeThirdInput").removeAttr("readonly");
 						$("#selectTypeFourthInput").removeAttr("readonly");
 						$("#selectTypeThirdInput").val("");
@@ -753,11 +771,11 @@
 			function getProcType() {
 				var tempData = {
 					corpId: mineUserInfo.corpid,
-					stat: typeStat,
+//					stat: 1,
 					pageIndex: 1,
 					pageSize: 0
 				}
-				processRequest.postProcessData("getProcessType", tempData, function(data) {
+				processRequest.postProcessData("getProcessTypeForSel", tempData, function(data) {
 					if(data.RspCode == 0 && data.RspData.Data.length != 0) {
 						for(var i = 0; i < data.RspData.Data.length; i++) {
 							procTypeData.key.push(data.RspData.Data[i].ProcessTypeId);
@@ -791,7 +809,7 @@
 			function getLeaveType() {
 				var tempData = {
 					corpId: mineUserInfo.corpid,
-					stat: typeStat,
+					stat: 1,
 					pageIndex: 1,
 					pageSize: 0
 				}

@@ -56,29 +56,16 @@
 				color: white;
 			}
 			
-			.display-inline {
-				/*display: inline-block;*/
-			}
-			
 			.multi-choose-container {
 				position: relative;
 			}
 			
-			.choose-depart-container {
-				position: absolute;
-				left: 20%;
-				top: 10%;
-				width: 20%;
-				height: 600px;
-				overflow: auto;
-			}
-			
 			.choose-person-container {
 				position: absolute;
-				left: 40%;
+				left: 5%;
 				top: 10%;
-				right: 10%;
-				width: 40%;
+				right: 5%;
+				width: 90%;
 				height: 600px;
 			}
 			
@@ -155,11 +142,12 @@
 						<choose-person v-bind:check-persons="checkPowerPersons" v-bind:choose-person="selectPerson" v-on:select-person="getSelectPerson"></choose-person>
 					</div>
 					<div class="person-foot">
-						<div v-if="Object.keys(selectPerson).length>0">
-							<p>已选人员</p>
-							<div v-for="key of Object.keys(selectPerson)" v-if="key" class="person-container is-checked" v-on:click="delChoosePerson(key)">
-								{{selectPerson[key]}}
+						<div v-if="selectPerson.length>0">
+							<p>流程链人员</p>
+							<div v-for="(person,index) in selectPerson" class="inline-block">
+								<span class="person-container is-checked" v-on:click="delChoosePerson(person)">{{person.ApprManName}}</span><span v-if="index<selectPerson.length-1" class="Hui-iconfont Hui-iconfont-arrow2-right"></span>
 							</div>
+
 						</div>
 						<a v-if="Object.keys(selectPerson).length>0" class="btn btn-primary radius float-right" v-on:click="choosePerson()">更改人员</a>
 						<a class="btn btn-default radius float-right" v-on:click="cancelChoose()">取消</a>
@@ -255,9 +243,8 @@
 				props: ['process'],
 				data: function() {
 					return {
-						personList: this.process.apprManList,
 						checkPowerPersons: [],
-						selectPerson: {}, //已选人员
+						selectPerson: this.process.ApprManList, //已选人员
 						corpId: 0
 					}
 				},
@@ -282,18 +269,12 @@
 					 */
 					process: function(newVal, oldVal) {
 						console.log("wacth:监听classify:" + JSON.stringify(newVal))
-						this.selectPerson = this.setArrToObj(newVal.apprManList);
+						this.selectPerson = newVal.ApprManList;
 					}
 				},
 				methods: {
-					setArrToObj: function(list) {
-						var obj = {};
-						list.forEach(function(item, index, list) {
-							obj[item.ApprMan] = item.ApprManName;
-						})
-						return obj;
-					},
 					getCorpId: function(callback) {
+						console.log("*****getCorpId*****");
 						var com = this;
 						request.requestPersonalInfo(function(response) {
 							console.log("获取的corpId数据：" + JSON.stringify(response));
@@ -322,20 +303,47 @@
 							}
 						})
 					},
+					/**
+					 * 
+					 * @param {Object} person
+					 */
 					getSelectPerson: function(person) {
 						console.log("*******getSelectPerson*******")
-						this.selectPerson = jQuery.extend({}, person);
+						this.selectPerson = person;
 						console.log("getSelectPerson:" + JSON.stringify(this.selectPerson))
 					},
 					/**
 					 * 删除人员
 					 * @param {Object} key
 					 */
-					delChoosePerson: function(key) {
+					delChoosePerson: function(person) {
 						console.log("*******delChoosePerson*******")
-						delete this.selectPerson[key];
-						this.selectPerson = jQuery.extend({}, this.selectPerson);
-						console.log("删除人员后的数据：" + JSON.stringify(this.selectPerson))
+						this.delItemInArray(person);
+					},
+					/**
+					 * 删除
+					 * @param {Object} person
+					 */
+					delItemInArray: function(person) {
+						console.log("******delItemInArray*******");
+						var index = this.getIndexInArray(person)
+						if(index >= 0) {
+							this.selectPerson.splice(index, 1);
+						}
+						console.log("删除人员后的数组：" + JSON.stringify(this.selectPerson));
+					},
+					/**
+					 * 获取顺序
+					 * @param {Object} person
+					 */
+					getIndexInArray: function(person) {
+						console.log("*****getIndexInArray******");
+						for(var i in this.selectPerson) {
+							if(this.selectPerson[i].ApprMan == person.ApprMan) {
+								return parseInt(i);
+							}
+						}
+						return -1;
 					},
 					/**
 					 * 选择人员
@@ -343,7 +351,7 @@
 					choosePerson: function() {
 						console.log("*******choosePerson*******")
 						var url = "";
-						var isAdd = this.process.ApprManList.lengh == 0;
+						var isAdd = this.process.ApprManList.length == 0;
 						if(isAdd) {
 							url = "addProcessList";
 						} else {
@@ -351,8 +359,8 @@
 						}
 						processRequest.postProcessData(url, {
 							corpId: this.corpId,
-							procTypeId: this.process.kindsid,
-							apprManList: this.personToArray(this.selectPerson),
+							procTypeId: this.process.ProcessTypeId,
+							apprManList: this.personToArray(),
 							procNote: ""
 						}, function(response) {
 							console.log("添加或修改流程链结果：" + JSON.stringify(response))
@@ -362,16 +370,19 @@
 						})
 
 					},
-					personToArray: function(person) {
+					/**
+					 * 
+					 * @param {Object} person
+					 */
+					personToArray: function() {
 						console.log("*******personToString*******")
-						console.log("要提交的person值：" + JSON.stringify(person))
-						var strArr = [];
-
-						for(var key in person) {
-							strArr.push([key, person[key]]);
-						}
-						return strArr;
+						return this.selectPerson.map(function(person, index) {
+							return [person.ApprMan, person.ApprManName]
+						})
 					},
+					/**
+					 * 
+					 */
 					cancelChoose: function() {
 						router.go(-1);
 					}
@@ -384,8 +395,8 @@
 					name: 'process-setting',
 					component: processSetting
 				}, {
-					path: '/chooseDepart',
-					name: 'chooseDepart',
+					path: '/multi-choose',
+					name: 'multi-choose',
 					component: multiChoose
 				}]
 			})

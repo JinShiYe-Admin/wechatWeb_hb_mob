@@ -17,6 +17,10 @@
 		<link rel="stylesheet" href="../../../js/demoCssJs/jquery-weui.min.css" />
 		<link rel="stylesheet" href="../../../js/demoCssJs/demos.css" />
 		<style>
+			body {
+				-webkit-overflow-scrolling: touch;
+			}
+
 			.weui-cells {
 				margin-top: 0;
 			}
@@ -157,8 +161,7 @@
 							actions: [{
 								text: "编辑",
 								onClick: function() {
-									var myDate = new Date();
-									var sKey = myDate.getTime() + "" + parseInt(Math.random() * 1000);
+									var sKey = new Date().getTime() + "" + parseInt(Math.random() * 1000);
 									var sValue = {
 										leave: leave,
 										mineUserInfo: mineUserInfo
@@ -189,14 +192,13 @@
 						});
 					} else {
 						//已审核
-						var myDate = new Date();
-						var sKey = myDate.getTime() + "" + parseInt(Math.random() * 1000);
+						var sKey = new Date().getTime() + "" + parseInt(Math.random() * 1000);
 						var sValue = {
 							leave: leave,
 							mineUserInfo: mineUserInfo
 						}
 						storageutil.setSessionStorage(sKey, JSON.stringify(sValue));
-						location.href = "leave-detail.html?sKey=" + sKey;
+						location.href = "leave-detail.html?flage=0&sKey=" + sKey;
 					}
 				});
 			}
@@ -240,6 +242,10 @@
 									<div class="weui-form-preview__item">\
 										<label class="weui-form-preview__label">结束时间</label>\
 										<span class="weui-form-preview__value">' + data[i].ApplyEndTime + '</span>\
+									</div>\
+									<div class="weui-form-preview__item">\
+										<label class="weui-form-preview__label">申请共计</label>\
+										<span class="weui-form-preview__value">' + data[i].ApplyBeginEndCnt + '</span>\
 									</div>\
 									<div class="weui-form-preview__item">\
 										<label class="weui-form-preview__label">请假事由</label>\

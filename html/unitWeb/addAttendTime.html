@@ -818,18 +818,21 @@
 						/**
 						 * 计算接口传参所需值
 						 */
-						//正常打卡持续时间分钟数。需根据上下班不同情况判断，谁减去谁不一样
+
 						var continuousTime; //正常打卡持续时间
 						var lateMinutes; //异常打卡持续时间
-						//						if (optionObjectNoteText.contains("上班")) {
-						//							continuousTime=(workTimePoint_Hour*60+workTimePoint_Minute)-(beginHour*60+beginMinute);
-						//							lateMinutes=(cardEndTimePoint_Hour*60+cardEndTimePoint_Minute)-(workTimePoint_Hour*60+workTimePoint_Minute);
-						//						} else{
-						//							continuousTime=(cardEndTimePoint_Hour*60+cardEndTimePoint_Minute)-(workTimePoint_Hour*60+workTimePoint_Minute);
-						////							lateMinutes=
-						//						}
-						//异常常打卡（迟到、早退）持续时间分钟数
+						if(optionObjectNoteProperty == 1) { //属性是上班
+//							console.log("(workTimePoint_Hour * 60 + workTimePoint_Minute)===="+workTimePoint_Hour * 60 + workTimePoint_Minute)
+//							console.log("(beginHour * 60 + beginMinute)==="+beginHour * 60 + beginMinute)
+							continuousTime = (workTimePoint_Hour * 60 +parseInt( workTimePoint_Minute)) - (beginHour * 60 + parseInt(beginMinute));
+							lateMinutes = (cardEndTimePoint_Hour * 60 + parseInt(cardEndTimePoint_Minute)) - (workTimePoint_Hour * 60 + parseInt(workTimePoint_Minute));
+						} else {
+							continuousTime = (cardEndTimePoint_Hour * 60 + parseInt(cardEndTimePoint_Minute)) - (workTimePoint_Hour * 60 + parseInt(workTimePoint_Minute));
+							lateMinutes = (workTimePoint_Hour * 60 + parseInt(workTimePoint_Minute)) - (beginHour * 60 + parseInt(beginMinute));
+						}
 
+						console.log("continuousTime====" + continuousTime);
+						console.log("lateMinutes====" + lateMinutes);
 						if(optionObjectNoteText == "") {
 							alert("考勤类型说明不能为空！");
 							return;
@@ -1079,7 +1082,7 @@
 
 					document.getElementById("attendTypeNote").options[i] = new Option(selectArray[i], optionValueArray[i]);
 					document.getElementById("attendTypeNote").options[i].setAttribute("attendTypeProperty", optionAttendTypePropertyArray[i]);
-					
+
 					console.log("options[i]=====" + document.getElementById("attendTypeNote").options[i]);
 					//					document.getElementById("attendTypeNote").options[i] = new Option("attendTypeProperty", optionAttendTypePropertyArray[i]);
 				}

@@ -4,53 +4,58 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<link href="../../../css/weui.min.css" rel="stylesheet" />
+		<script type="text/javascript">
+			var WebVersion = "?" + Math.random();
+		</script>
+		<link rel="stylesheet" href="../../../css/weui.min.css" />
+		<link rel="stylesheet" href="../../../js/demoCssJs/jquery-weui.min.css" />
+		<link rel="stylesheet" href="../../../js/demoCssJs/demos.css" />
 		<title>请假详情</title>
 		<style>
 			body {
 				background-color: #F8F8F8;
 			}
-			
+
 			.head-portrait {
 				width: 20%;
 				height: 20%;
 				border-radius: 50%;
 			}
-			
+
 			.display-inline {
 				display: inline-block;
 			}
-			
+
 			.name-time-container {
 				margin: auto 0;
 				padding-left: 16px;
 			}
-			
+
 			.apply-name {
 				font-size: 1em;
 				font-weight: bold;
 			}
-			
+
 			.apply-info-container {
 				font-size: .8em;
 			}
-			
+
 			.apply-hint {
 				color: darkgray;
 			}
-			
+
 			.person-container.weui-cells {
 				margin-top: 0;
 			}
-			
+
 			.weui-cells {
 				padding: 8px 16px;
 			}
-			
+
 			.check-person {
 				color: dodgerblue;
 			}
-			
+
 			.input-container {
 				position: fixed;
 				bottom: 0;
@@ -59,23 +64,23 @@
 				background: white;
 				box-shadow: 0 -1px 5px darkgray;
 			}
-			
+
 			.input-item {
 				border: solid 1px gray;
 				border-radius: 2px;
 				margin-right: 5px;
 			}
-			
+
 			.display-none {
 				opacity: 0;
 				display: none;
 			}
-			
+
 			.display-block {
 				opacity: 1;
 				display: block;
 			}
-			
+
 			.check-detail {
 				margin-bottom: 50px;
 			}
@@ -163,11 +168,17 @@
 				</div>
 			</div>
 		</div>
-		<script src="../../../js/jquery.min.js"></script>
+		<script type="text/javascript" src="../../../js/demoCssJs/jquery-2.1.4.js"></script>
+		<script type="text/javascript" src="../../../js/demoCssJs/jquery-weui.min.js"></script>
 		<script src="../../../js/vue.js"></script>
 		<script src="../../../js/vue-router.js"></script>
 		<script src="../../../js/utils/consts.js"></script>
 		<script src="../../../js/utils/request.js"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
+		</script>
 		<script type="text/javascript">
 			var detail = new Vue({
 				el: "#detail-container",
@@ -260,7 +271,43 @@
 						window.history.go(-1);
 					}
 				}
-			})
+			});
+
+			var webType; //页面类型；0，请假详情；1，请假审核
+			var webData; //页面获取的数据
+			window.onload = function() {
+				initLocalData();
+			}
+
+			/**
+			 * 获取本地数据
+			 */
+			function initLocalData() {
+				var search = location.search.toString();
+				var keyword = "?flag=";
+				var index = search.indexOf(keyword);
+				if(index != -1) {
+					var dataArray = search.substring(index + 1).split("&");
+					var flagArray = dataArray[0].split("=");
+					var sKeyArray = dataArray[1].split("=");
+					webType = flagArray[1];
+					var sValue = storageutil.getSessionStorage(sKeyArray[1]);
+					if(sValue) {
+						webData = JSON.parse(sValue);
+					}
+				}
+				console.log("webType", webType);
+				console.log("webData", webData);
+				if(webData) {
+					if(webType == 0) { //请假详情
+						detail.applyDetail = webData.leave;
+						detail.applyDetail.ApplyManName = webData.mineUserInfo.name;
+						detail.applyDetail.ApplyManPic = webData.mineUserInfo.avatar;
+					}
+				} else {
+					$.alert("未获取到有效的数据", "提示 ");
+				}
+			}
 		</script>
 	</body>
 

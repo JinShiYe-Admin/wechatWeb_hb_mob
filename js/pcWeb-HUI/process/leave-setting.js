@@ -81,6 +81,7 @@ Vue.component("leave-setting", {
 				isLeader: leave.IsLeader,
 				stat: (leave.Stat + 1) % 2
 			}, function(response) {
+				console.log("获取的显示/屏蔽状态结果：" + JSON.stringify(response));
 				if(response.RspCode == 0) {
 					leave.Stat = (leave.Stat + 1) % 2;
 				} else {
@@ -241,6 +242,7 @@ Vue.component("leave-setting", {
 				pageIndex: this.pageIndex,
 				pageSize: 0
 			}, function(response) {
+				console.log("获取的请假类型数据：" + JSON.stringify(response));
 				if(response.RspCode == 0) {
 					com.leaveList = response.RspData.Data;
 				} else {

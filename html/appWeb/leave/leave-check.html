@@ -49,6 +49,18 @@
 			.weui-loadmore {
 				margin-bottom: 71px;
 			}
+			
+			.apply-pass {
+				color: limegreen;
+			}
+			
+			.apply-reject {
+				color: red;
+			}
+			
+			.apply-uncheck {
+				color: dodgerblue;
+			}
 		</style>
 	</head>
 
@@ -75,6 +87,7 @@
 									<p><span class="item-hint">请假类型:</span><span class="item-info">{{item.LeaveTypeName}}</span></p>
 									<p><span class="item-hint">开始时间:</span><span class="item-info">{{item.ApplyBeginTime}}</span></p>
 									<p><span class="item-hint">结束时间:</span><span class="item-info">{{item.ApplyEndTime}}</span></p>
+									<p><span class="item-hint">状态:</span><span class="item-info" v-bind:class="[{'apply-uncheck':checkApprStat==0},{'apply-pass':check.ApprStat==1},{'apply-reject':check.ApprStat==2}]">{{item.ApprStatNote}}</span></p>
 								</div>
 								<div>
 									<p class="apply-date">{{item.ApplyTime|shortForDate}}</p>

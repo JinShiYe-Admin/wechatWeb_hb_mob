@@ -96,94 +96,95 @@
 	</head>
 
 	<body>
-
-		<div id="detail-container" class="page actionsheet js_show" style="position: relative;">
-			<div v-bind:class="[{'check-detail':flag>0}]">
-				<div class="weui-cells person-container weui-flex">
-					<img v-bind:src="applyDetail.ApplyManPic" class="head-portrait display-inline">
-					<div class="display-inline name-time-container">
-						<p class="apply-name">{{applyDetail.ApplyManName}}</p>
-						<p class="apply-time apply-info-container"><span class="apply-hint">申请时间:</span>{{applyDetail.ApplyTime}}</p>
-					</div>
-				</div>
-				<div class="apply-type-container weui-cells">
-					<p class="leave-type apply-info-container"><span class="apply-hint">请假类型:</span>{{applyDetail.LeaveTypeName}}</p>
-					<p class="process-type apply-info-container"><span class="apply-hint">流程类型:</span>{{applyDetail.ProcTypeName}}</p>
-				</div>
-				<div class="apply-time-container weui-cells">
-					<p class="time-length apply-info-container"><span class="apply-hint">请假时长:</span>{{applyDetail.ApplyBeginEndCnt}}</p>
-					<p class="begin-time apply-info-container"><span class="apply-hint">开始时间:</span>{{applyDetail.ApplyBeginTime}}</p>
-					<p class="end-time apply-info-container"><span class="apply-hint">结束时间:</span>{{applyDetail.ApplyEndTime}}</p>
-				</div>
-				<div class="detail-info weui-cells">
-					<p class="apply-reason apply-info-container"><span class="apply-hint">请假缘由:</span>{{applyDetail.ApplyReason}}</p>
-					<div v-if="applyDetail.ApplyReasonThumb&&applyDetail.ApplyReasonThumb.length>0" class="apply-imgs apply-info-container weui-uploader">
-						<div class="weui-uploader__hd">
-							<p><span class="apply-hint">图片附件:</span></p>
-						</div>
-						<div class="weui-uploader__bd">
-							<ul class="weui-uploader__files">
-								<li class="weui-uploader__file" v-for="(img,index) in applyDetail.ApplyReasonThumb" v-on:click="showGallery(index)" v-bind:style="{backgroundImage:'url(' +img+ ')'}">
-
-								</li>
-							</ul>
+		<template id="detail-container">
+			<div class="page actionsheet js_show" style="position: relative;">
+				<div v-bind:class="[{'check-detail':flag>0}]">
+					<div class="weui-cells person-container weui-flex">
+						<img v-bind:src="applyDetail.ApplyManPic" class="head-portrait display-inline">
+						<div class="display-inline name-time-container">
+							<p class="apply-name">{{applyDetail.ApplyManName}}</p>
+							<p class="apply-time apply-info-container"><span class="apply-hint">申请时间:</span>{{applyDetail.ApplyTime}}</p>
 						</div>
 					</div>
-				</div>
-				<template v-if="checkList.length>0">
-					<div class="weui-cells__title">
-						审批详情
+					<div class="apply-type-container weui-cells">
+						<p class="leave-type apply-info-container"><span class="apply-hint">请假类型:</span>{{applyDetail.LeaveTypeName}}</p>
+						<p class="process-type apply-info-container"><span class="apply-hint">流程类型:</span>{{applyDetail.ProcTypeName}}</p>
 					</div>
-					<div class="check-list weui-cells">
-						<div v-for="check in checkList" class="weui-cell apply-info-container">
-							<div class="weui-cell__hd" style="padding-right: 15px;">
-								<span v-bind:class="[{'apply-pass':check.ApprStat==1},{'apply-reject':check.ApprStat==2}]">{{check.ApprStatNote}}</span>
+					<div class="apply-time-container weui-cells">
+						<p class="time-length apply-info-container"><span class="apply-hint">请假时长:</span>{{applyDetail.ApplyBeginEndCnt}}</p>
+						<p class="begin-time apply-info-container"><span class="apply-hint">开始时间:</span>{{applyDetail.ApplyBeginTime}}</p>
+						<p class="end-time apply-info-container"><span class="apply-hint">结束时间:</span>{{applyDetail.ApplyEndTime}}</p>
+					</div>
+					<div class="detail-info weui-cells">
+						<p class="apply-reason apply-info-container"><span class="apply-hint">请假缘由:</span>{{applyDetail.ApplyReason}}</p>
+						<div v-if="applyDetail.ApplyReasonThumb&&applyDetail.ApplyReasonThumb.length>0" class="apply-imgs apply-info-container weui-uploader">
+							<div class="weui-uploader__hd">
+								<p><span class="apply-hint">图片附件:</span></p>
 							</div>
-							<div class="weui-cell__bd">
-								<p><span class="check-person check-button">{{check.ApprManName}}:</span>{{check.ApprNote}}</p>
-							</div>
-							<div class="weui-cell__ft">
-								<p>{{check.ApprTime}}</p>
-							</div>
+							<div class="weui-uploader__bd">
+								<ul class="weui-uploader__files">
+									<li class="weui-uploader__file" v-for="(img,index) in applyDetail.ApplyReasonThumb" v-on:click="showGallery(index)" v-bind:style="{backgroundImage:'url(' +img+ ')'}">
 
+									</li>
+								</ul>
+							</div>
 						</div>
 					</div>
-				</template>
-			</div>
-			<div v-if="flag" class="weui-cell weui-cell_vcode input-container">
-				<div class="weui-cell__bd">
-					<input type="text" class="weui-input" v-model.trim="approveNote" placeholder="请输入内容" />
+					<template v-if="checkList.length>0">
+						<div class="weui-cells__title">
+							审批详情
+						</div>
+						<div class="check-list weui-cells">
+							<div v-for="check in checkList" class="weui-cell apply-info-container">
+								<div class="weui-cell__hd" style="padding-right: 15px;">
+									<span v-bind:class="[{'apply-pass':check.ApprStat==1},{'apply-reject':check.ApprStat==2}]">{{check.ApprStatNote}}</span>
+								</div>
+								<div class="weui-cell__bd">
+									<p><span class="check-person check-button">{{check.ApprManName}}:</span>{{check.ApprNote}}</p>
+								</div>
+								<div class="weui-cell__ft">
+									<p>{{check.ApprTime}}</p>
+								</div>
+
+							</div>
+						</div>
+					</template>
 				</div>
-				<div class="weui-cell__ft">
-					<button class="weui-vcode-btn" id="showIOSActionSheet" v-on:click="showOptions=true">审核</button>
-				</div>
-			</div>
-			<div>
-				<div class="weui-mask" id="iosMask" v-on:click="showOptions=false" v-bind:class="[{'display-block':showOptions},{'display-none':!showOptions}]"></div>
-				<div class="weui-actionsheet" v-bind:class="[{'weui-actionsheet_toggle':showOptions}]" id="iosActionsheet">
-					<div class="weui-actionsheet__title">
-						<p class="weui-actionsheet__title-text">选择审核状态</p>
+				<div v-if="flag" class="weui-cell weui-cell_vcode input-container">
+					<div class="weui-cell__bd">
+						<input type="text" class="weui-input" v-model.trim="approveNote" placeholder="请输入内容" />
 					</div>
-					<div class="weui-actionsheet__menu">
-						<div class="weui-actionsheet__cell" v-on:click="setProcessApprove(1)">同意</div>
-						<div class="weui-actionsheet__cell" v-on:click="setProcessApprove(2)">驳回</div>
+					<div class="weui-cell__ft">
+						<button class="weui-vcode-btn" id="showIOSActionSheet" v-on:click="showOptions=true">审核</button>
 					</div>
-					<div class="weui-actionsheet__action" v-on:click="showOptions=false">
-						<div class="weui-actionsheet__cell" id="iosActionsheetCancel">取消</div>
+				</div>
+				<div>
+					<div class="weui-mask" id="iosMask" v-on:click="showOptions=false" v-bind:class="[{'display-block':showOptions},{'display-none':!showOptions}]"></div>
+					<div class="weui-actionsheet" v-bind:class="[{'weui-actionsheet_toggle':showOptions}]" id="iosActionsheet">
+						<div class="weui-actionsheet__title">
+							<p class="weui-actionsheet__title-text">选择审核状态</p>
+						</div>
+						<div class="weui-actionsheet__menu">
+							<div class="weui-actionsheet__cell" v-on:click="setProcessApprove(1)">同意</div>
+							<div class="weui-actionsheet__cell" v-on:click="setProcessApprove(2)">驳回</div>
+						</div>
+						<div class="weui-actionsheet__action" v-on:click="showOptions=false">
+							<div class="weui-actionsheet__cell" id="iosActionsheetCancel">取消</div>
+						</div>
+					</div>
+				</div>
+				<div class="weui-gallery" id="gallery" v-on:click="showGallery=false" v-bind:class="[{'display-block':showGallery},{'display-none':!showGallery}]">
+					<span class="weui-gallery__img" id="galleryImg" v-bind:style="{backgroundImage:'url('+previewImg+')'}"></span>
+				</div>
+				<div id="loadingToast" v-bind:class="[{'display-none':!showToast},{'display-block':showToast}]">
+					<div class="weui-mask_transparent"></div>
+					<div class="weui-toast">
+						<i class="weui-loading weui-icon_toast"></i>
+						<p class="weui-toast__content">数据加载中</p>
 					</div>
 				</div>
 			</div>
-			<div class="weui-gallery" id="gallery" v-on:click="showGallery=false" v-bind:class="[{'display-block':showGallery},{'display-none':!showGallery}]">
-				<span class="weui-gallery__img" id="galleryImg" v-bind:style="{backgroundImage:'url('+previewImg+')'}"></span>
-			</div>
-			<div id="loadingToast" v-bind:class="[{'display-none':!showToast},{'display-block':showToast}]">
-				<div class="weui-mask_transparent"></div>
-				<div class="weui-toast">
-					<i class="weui-loading weui-icon_toast"></i>
-					<p class="weui-toast__content">数据加载中</p>
-				</div>
-			</div>
-		</div>
+		</template>
 		<script type="text/javascript" src="../../../js/demoCssJs/jquery-2.1.4.js"></script>
 		<script type="text/javascript" src="../../../js/demoCssJs/jquery-weui.min.js"></script>
 		<script src="../../../js/lib/vconsole/vconsole.min.js"></script>

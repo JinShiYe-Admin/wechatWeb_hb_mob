@@ -63,7 +63,7 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<!--表格-->
 		<template id="temp_column_table">
 			<table class="table table-border table-bordered table-bg">
@@ -72,22 +72,25 @@
 						<th>考勤类型说明</th>
 						<th>打卡开始时间</th>
 						<!--<th>开始时间（分钟）</th>-->
-						<th>正常打卡持续分钟数</th>
-						
-						<th>异常打卡（迟到、早退）持续分钟数</th>
+						<th>上班或下班时间</th>
+
+						<th>打卡结束时间</th>
 						<th>考勤短信</th>
 						<th>操作</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr class="text-c" v-for="(item,index) in value">
-						<td>{{item.AttendTypeNote}}</td>
+						<td>{{item.AttendTypeNote1}}</td>
 						<td v-if="item.BeginMinute<10">{{item.BeginHour}}:0{{item.BeginMinute}}</td>
 						<td v-else="">{{item.BeginHour}}:{{item.BeginMinute}}</td>
 						<!--<td>{{item.BeginMinute}}</td>-->
-						<td>{{item.ContinuousMinute}}</td>
-						
-						<td>{{item.LateMinute}}</td>
+						<!--<td>{{item.ContinuousMinute}}</td>-->
+						<td v-if="item.workTimePoint_Minute<10">{{item.workTimePoint_Hour}}:0{{item.workTimePoint_Minute}}</td>
+						<td v-else="">{{item.workTimePoint_Hour}}:{{item.workTimePoint_Minute}}</td>
+						<td v-if="item.cardEndTimePoint_Minute<10">{{item.cardEndTimePoint_Hour}}:0{{item.cardEndTimePoint_Minute}}</td>
+						<td v-else="">{{item.cardEndTimePoint_Hour}}:{{item.cardEndTimePoint_Minute}}</td>
+						<!--<td>{{item.LateMinute}}</td>-->
 						<td>{{item.AttendMessage}}</td>
 						<td class="sorting_1">
 							<a class="operate-edit" @click="clickEdit(item)" title="编辑">编辑</a>
@@ -230,17 +233,14 @@
 
 					},
 					del: function(item) { //删除栏目
-						console.log("item===="+JSON.stringify(item));
+						console.log("item====" + JSON.stringify(item));
 						console.log("删除--item===" + item.AttendTimeId);
 						layer.confirm('删除后无法恢复,确认要删除吗？', function(index) {
-							
+
 							console.log("删除--index==" + index);
-							
-							
-							
+
 							layer.close(index);
-							
-							
+
 							/**
 							 * 通过考勤时间段记录的编号删除该条记录
 							 */
@@ -253,7 +253,7 @@
 								"token": "",
 								"sign": ""
 							}
-							
+
 							$.ajax({
 								url: "https://jbyj.jiaobaowang.net/AttendanceService/delAttendTime",
 								type: "POST",
@@ -271,7 +271,7 @@
 										alert("删除成功");
 										window.location = "../pcWeb-HUI/attendenceManage.html";
 
-									}else if(data.RspCode == 1014){
+									} else if(data.RspCode == 1014) {
 										alert("该考勤时间段内有关联的考勤记录！");
 									}
 								},
@@ -281,24 +281,24 @@
 									});
 								}
 							})
-							
-//							var para = {
-//								cmd: 'chn',
-//								type: 'del',
-//								colid: item.chnid
-//							}
-//							//							alert(JSON.stringify(para))
-//							unitWebsitePro(para, function(data) {
-//								if(data.RspCode == 0) {
-//									layer.msg('已删除!', {
-//										icon: 1,
-//										time: 1000
-//									});
-//									location.reload();
-//								} else {
-//									alert(data.RspTxt);
-//								}
-//							});
+
+							//							var para = {
+							//								cmd: 'chn',
+							//								type: 'del',
+							//								colid: item.chnid
+							//							}
+							//							//							alert(JSON.stringify(para))
+							//							unitWebsitePro(para, function(data) {
+							//								if(data.RspCode == 0) {
+							//									layer.msg('已删除!', {
+							//										icon: 1,
+							//										time: 1000
+							//									});
+							//									location.reload();
+							//								} else {
+							//									alert(data.RspTxt);
+							//								}
+							//							});
 						});
 
 					},
@@ -375,15 +375,16 @@
 					}
 				}
 			});
-						window.onload = function() {
-							getColumnData(1);
-						}
+			window.onload = function() {
+				getColumnData(1);
+			}
 
 			/**
 			 * 获取栏目列表
 			 * @param {Object} pageindex 列表序号
 			 */
-			var corpId="";
+			var corpId = "";
+
 			function getColumnData(pageindex) {
 				//				var tempData = {
 				//					cmd: 'chn',
@@ -391,10 +392,8 @@
 				//					pagesize: '10',
 				//					pageindex: pageindex
 				//				}
-				
-				
-				
-					/**
+
+				/**
 				 * 先从c#接口获取登录者的单位标识
 				 */
 				var tempData = {
@@ -428,9 +427,9 @@
 						console.log("error");
 					}
 				})
-//				corpId="wx6c4528c675d4a9c9";
+//				corpId = "wx6c4528c675d4a9c9";
 				var requestDataForAttendTime = {
-					"corpId": corpId ,//暂时写死，此值是从顾工c#接口中获取登陆者的单位标识
+					"corpId": corpId, //暂时写死，此值是从顾工c#接口中获取登陆者的单位标识
 					"pageIndex": pageindex,
 					"pageSize": 10,
 					"uuid": "",
@@ -444,10 +443,71 @@
 					async: false,
 					data: JSON.stringify(requestDataForAttendTime),
 					success: function(data) {
-						console.log("data===="+JSON.stringify(data));
+						console.log("data====" + JSON.stringify(data));
 						if(data.RspCode == 0) {
-							
-							column_table.dt = data.RspData.Data;
+							console.log("data.RspData.Data====" + data.RspData.Data)
+
+							for(i = 0, len = data.RspData.Data.length; i < len; i++) {
+								var attendTypeProp = data.RspData.Data[i].attendTypeProp;
+								var BeginHour = data.RspData.Data[i].BeginHour;
+								var BeginMinute = data.RspData.Data[i].BeginMinute;
+								var ContinuousMinute = data.RspData.Data[i].ContinuousMinute;
+								var LateMinute = data.RspData.Data[i].LateMinute;
+								//上班或下班时间
+								var workTimePoint_Hour;
+								var workTimePoint_Minute;
+								var cardEndTimePoint_Hour;
+								var cardEndTimePoint_Minute;
+								if(attendTypeProp == 1) { //上班属性，
+									//									//					算出上班时间和打卡结束时间
+									var sum_Work = BeginHour * 60 + parseInt(BeginMinute) + parseInt(ContinuousMinute);
+									console.log("sum_Work11111====" + sum_Work)
+									//除以60商就是小时数，余数就是分钟数
+									workTimePoint_Hour = parseInt(sum_Work / 60)
+									workTimePoint_Minute = sum_Work % 60
+									console.log("workTimePoint_Hour====" + workTimePoint_Hour)
+									console.log("workTimePoint_Minute====" + workTimePoint_Minute)
+									var sum_End = sum_Work + parseInt(LateMinute)
+									console.log("sum_End====" + sum_End)
+									cardEndTimePoint_Hour = parseInt(sum_End / 60)
+									console.log("cardEndTimePoint_Hour====" + cardEndTimePoint_Hour)
+									cardEndTimePoint_Minute = sum_End % 60
+									console.log("cardEndTimePoint_Minute====" + cardEndTimePoint_Minute)
+								} else {
+									//下班属性，
+									//									//					算出上班时间和打卡结束时间
+									var sum_Work = BeginHour * 60 + parseInt(BeginMinute) + parseInt(LateMinute);
+									console.log("sum_Work====" + sum_Work)
+									//除以60商就是小时数，余数就是分钟数
+									workTimePoint_Hour = parseInt(sum_Work / 60)
+									workTimePoint_Minute = sum_Work % 60
+									console.log("workTimePoint_Hour====" + workTimePoint_Hour)
+									console.log("workTimePoint_Minute====" + workTimePoint_Minute)
+									var sum_End = sum_Work + parseInt(ContinuousMinute)
+									console.log("sum_End====" + sum_End)
+									cardEndTimePoint_Hour = parseInt(sum_End / 60)
+									console.log("cardEndTimePoint_Hour====" + cardEndTimePoint_Hour)
+									cardEndTimePoint_Minute = sum_End % 60
+									console.log("cardEndTimePoint_Minute====" + cardEndTimePoint_Minute)
+								}
+
+								//dt是数组
+								column_table.dt.push({
+									AttendTypeNote1: data.RspData.Data[i].AttendTypeNote,
+									BeginHour: BeginHour,
+									BeginMinute: BeginMinute,
+									workTimePoint_Hour:workTimePoint_Hour,
+									workTimePoint_Minute: workTimePoint_Minute,
+									cardEndTimePoint_Hour: cardEndTimePoint_Hour,
+									cardEndTimePoint_Minute:cardEndTimePoint_Minute,
+									AttendMessage:data.RspData.Data[i].AttendMessage
+								})
+								//								if(dt.attendTypeProp == 1) { //上班属性，
+								//									//					算出上班时间和打卡结束时间
+								//									
+								//								} else {}
+							}
+
 							/**
 							 * 根据总页数初始化页码数
 							 */

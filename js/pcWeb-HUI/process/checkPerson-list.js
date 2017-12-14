@@ -93,15 +93,16 @@ Vue.component("check-person-list", {
 		 */
 		inputToggleAll: function(isAdd) {
 			console.log("****inputToggleAll****");
+			var com = this;
 			if(isAdd) {
-				this.checkPersonList.forEach(function(checkPerson, index) {
-					if(index >= this.curPage * 10 && index < (this.curPage + 1) * 10) {
+				com.checkPersonList.forEach(function(checkPerson, index) {
+					if(index >= com.curPage * 10 && index < (com.curPage + 1) * 10) {
 						checkPerson.isSelect = true;
-						this.selectedInputPerson[checkPerson.TabId] = checkPerson.ApprManName;
+						com.selectedInputPerson[checkPerson.TabId] = checkPerson.ApprManName;
 					}
 				})
 			} else {
-				this.selectedInputPerson = {};
+				com.selectedInputPerson = {};
 			}
 		},
 		/**

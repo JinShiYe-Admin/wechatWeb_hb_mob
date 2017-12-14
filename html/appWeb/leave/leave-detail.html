@@ -97,7 +97,7 @@
 
 	<body>
 		<div id="detail-container" class="page actionsheet js_show" style="position: relative;">
-			<template>
+			<template v-show="applyDetail.ApplyManName">
 				<div v-bind:class="[{'check-detail':flag>0}]">
 					<div class="weui-cells person-container weui-flex">
 						<img v-bind:src="applyDetail.ApplyManPic" class="head-portrait display-inline">

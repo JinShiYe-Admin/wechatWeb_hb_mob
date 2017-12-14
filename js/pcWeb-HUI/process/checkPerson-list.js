@@ -47,7 +47,15 @@ Vue.component("check-person-list", {
 
 			this.tablebases = $('.table-sort').DataTable({
 				pageLength: 10,
-				lengthChange: false
+				lengthChange: false,
+				columns: [{
+						"orderable": false
+					},
+					null,
+					{
+						"orderable": false
+					}
+				]
 			});
 		},
 		/**

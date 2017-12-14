@@ -63,7 +63,18 @@ Vue.component("leave-setting", {
 			console.log("*****newTablebases******");
 			this.tablebases = $('.table-sort').DataTable({
 				pageLength: 10,
-				lengthChange: false
+				lengthChange: false,
+				columns: [
+					null,
+					null,
+					null,
+					{
+						"orderable": false
+					},
+					{
+						"orderable": false
+					}
+				]
 			});
 		},
 		/**

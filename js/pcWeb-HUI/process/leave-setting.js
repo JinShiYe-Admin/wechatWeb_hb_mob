@@ -18,7 +18,8 @@ Vue.component("leave-setting", {
 			note: "",
 			pageIndex: 1,
 			totalPage: 1,
-			corpId: 0
+			corpId: 0,
+			curPage: 0
 		}
 	},
 	filters: {
@@ -45,6 +46,7 @@ Vue.component("leave-setting", {
 				this.tablebases.destroy();
 			}
 			this.$nextTick(this.newTablebases);
+			this.tablebases.table(0).page(this.curPage).draw(false);
 		}
 	},
 	methods: {
@@ -63,8 +65,22 @@ Vue.component("leave-setting", {
 			console.log("*****newTablebases******");
 			this.tablebases = $('.table-sort').DataTable({
 				pageLength: 10,
-				lengthChange: false
+				lengthChange: false,
+				columns: [
+					null,
+					null,
+					null,
+					{
+						"orderable": false
+					},
+					{
+						"orderable": false
+					}
+				]
 			});
+		},
+		getCurPage: function() {
+			this.curPage = this.tablebases.page.info().page;
 		},
 		/**
 		 * 更改请假流程状态
@@ -265,6 +281,7 @@ Vue.component("leave-setting", {
 		delLeave: function(leave) {
 			console.log("****delLeave*****");
 			var com = this;
+			com.getCurPage();
 			processRequest.postProcessData("delLeaveType", {
 				leaveTypeId: leave.LeaveTypeId
 			}, function(response) {

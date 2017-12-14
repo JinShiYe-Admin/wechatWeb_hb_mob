@@ -10,7 +10,8 @@ Vue.component("check-person-list", {
 			name: "",
 			note: "",
 			selectedInputPerson: {},
-			isAllCheck: false
+			isAllCheck: false,
+			curPage: 0
 		}
 	},
 	watch: {
@@ -47,8 +48,17 @@ Vue.component("check-person-list", {
 
 			this.tablebases = $('.table-sort').DataTable({
 				pageLength: 10,
-				lengthChange: false
+				lengthChange: false,
+				columns: [{
+						"orderable": false
+					},
+					null,
+					{
+						"orderable": false
+					}
+				]
 			});
+			this.tablebases.table(0).page(this.curPage).draw(false);
 		},
 		/**
 		 * 获取状态
@@ -71,7 +81,11 @@ Vue.component("check-person-list", {
 		getAllCheckStatus: function(e) {
 			console.log("*****getAllCheckSatus*****")
 			var isAllAdd = e.target.checked;
+			this.getCurPage();
 			this.inputToggleAll(isAllAdd);
+		},
+		getCurPage: function() {
+			this.curPage = this.tablebases.page.info().page;
 		},
 		/**
 		 * 全选逻辑
@@ -80,9 +94,12 @@ Vue.component("check-person-list", {
 		inputToggleAll: function(isAdd) {
 			console.log("****inputToggleAll****");
 			if(isAdd) {
-				for(var checkPerson in checkPersonList) {
-					this.selectedInputPerson[checkPerson.TabId] = checkPerson.ApprManName;
-				}
+				checkPersonList.forEach(function(checkPerson, index) {
+					if(index >= this.curPage * 10 && index < (this.curPage + 1) * 10) {
+						checkPerson.isSelect = true;
+						this.selectedInputPerson[checkPerson.TabId] = checkPerson.ApprManName;
+					}
+				})
 			} else {
 				this.selectedInputPerson = {};
 			}
@@ -145,6 +162,7 @@ Vue.component("check-person-list", {
 		delCurPerson: function(person) {
 			console.log("****delCurPerson*****");
 			var com = this;
+			com.getCurPage();
 			this.delPerson(person.TabId, function() {
 				delete com.checkedPerson[person.ApprMan];
 				com.getAllCheckPerson();

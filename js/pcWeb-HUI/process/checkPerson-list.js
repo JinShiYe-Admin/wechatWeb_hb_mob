@@ -94,7 +94,7 @@ Vue.component("check-person-list", {
 		inputToggleAll: function(isAdd) {
 			console.log("****inputToggleAll****");
 			if(isAdd) {
-				checkPersonList.forEach(function(checkPerson, index) {
+				this.checkPersonList.forEach(function(checkPerson, index) {
 					if(index >= this.curPage * 10 && index < (this.curPage + 1) * 10) {
 						checkPerson.isSelect = true;
 						this.selectedInputPerson[checkPerson.TabId] = checkPerson.ApprManName;

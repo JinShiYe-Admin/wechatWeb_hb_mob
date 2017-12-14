@@ -252,6 +252,15 @@ Vue.component("process-setting", {
 		 * @param {Object} process
 		 */
 		delProcess: function(process) {
+			var com = this;
+			layerPlus.confirm({
+				title: "删除流程",
+				content: "确认删除此流程？"
+			}, function() {
+				com.delTheProcess();
+			})
+		},
+		delTheProcess: function(process) {
 			console.log("*****delProcess*****");
 			var com = this;
 			com.getCurPage();

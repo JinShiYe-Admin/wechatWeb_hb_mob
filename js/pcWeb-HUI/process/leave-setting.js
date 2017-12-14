@@ -279,6 +279,15 @@ Vue.component("leave-setting", {
 		 * @param {Object} leave
 		 */
 		delLeave: function(leave) {
+			var com = this;
+			layerPlus.confirm({
+				title: "删除请假类型",
+				content: "确定删除此请假类型？"
+			}, function() {
+				com.delCurLeave(leave);
+			})
+		},
+		delCurLeave: function(leave) {
 			console.log("****delLeave*****");
 			var com = this;
 			com.getCurPage();

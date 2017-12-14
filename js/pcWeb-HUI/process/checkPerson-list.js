@@ -136,24 +136,34 @@ Vue.component("check-person-list", {
 		 */
 		delPersons: function() {
 			console.log("****批量删除人员****");
+			if(Object.keys(this.selectedInputPerson).length == 0) {
+				layer.alert("请选择人员！");
+			} else {
+				layerPlus.confirm({
+					title: "删除审核人员",
+					content: "确定要删除这些审核人员？"
+				}, this.delSelectedPersons);
+			}
+		},
+		/**
+		 * 
+		 */
+		delSelectedPersons: function() {
+			console.log("****delSelectedPersons****");
 			var com = this;
 			var keys = Object.keys(com.selectedInputPerson);
 			console.log("selectedInputPerson:" + JSON.stringify(com.selectedInputPerson))
 			console.log("theKeys:" + JSON.stringify(keys));
-			if(keys.length > 0) {
-				var count = 0;
-				for(var theKey in com.selectedInputPerson) {
-					com.delPerson(theKey, function() {
-						count++;
-						console.log("数据数量：" + count);
-						console.log("keys:" + keys.length);
-						if(count == keys.length) {
-							com.getAllCheckPerson();
-						}
-					})
-				}
-			} else {
-				alert("请选择人员！");
+			var count = 0;
+			for(var theKey in com.selectedInputPerson) {
+				com.delPerson(theKey, function() {
+					count++;
+					console.log("数据数量：" + count);
+					console.log("keys:" + keys.length);
+					if(count == keys.length) {
+						com.getAllCheckPerson();
+					}
+				})
 			}
 		},
 		/**
@@ -161,13 +171,18 @@ Vue.component("check-person-list", {
 		 * @param {Object} person
 		 */
 		delCurPerson: function(person) {
-			console.log("****delCurPerson*****");
 			var com = this;
-			com.getCurPage();
-			this.delPerson(person.TabId, function() {
-				delete com.checkedPerson[person.ApprMan];
-				com.getAllCheckPerson();
-			});
+			layerPlus.confirm({
+				title: "删除人员",
+				content: "确定要删除此人？"
+			}, function() {
+				console.log("****delCurPerson*****");
+				com.getCurPage();
+				com.delPerson(person.TabId, function() {
+					delete com.checkedPerson[person.ApprMan];
+					com.getAllCheckPerson();
+				});
+			})
 		},
 		/**
 		 * 刪除人員
@@ -184,7 +199,6 @@ Vue.component("check-person-list", {
 				if(response.RspCode == 0) {
 
 				} else {
-
 					alert(response.RspTxt);
 				}
 			})

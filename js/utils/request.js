@@ -216,3 +216,14 @@ var processRequest = (function(mod) {
 	}
 	return mod;
 })(processRequest || {})
+var layerPlus = (function(mod) {
+	mod.confirm = function(data, callback) {
+		layer.confirm(data.content, {
+			title: data.title
+		}, function(index) {
+			callback();
+			layer.close(index);
+		});
+	}
+	return mod;
+})(layerPlus || {})

@@ -1,0 +1,397 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="renderer" content="webkit|ie-comp|ie-stand">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
+		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
+		<title>添加点评学生模块</title>
+		<style>
+			#addEvaluateLayer .row {
+				margin-left: 0;
+				margin-right: 0;
+			}
+			
+			#addEvaluateLayer .submit-button {
+				margin-bottom: 15px;
+			}
+			
+			#addEvaluateLayer .input-text[type="number"] {
+				width: 100%;
+			}
+			
+			#addEvaluateLayer .check-box {
+				padding-left: 0;
+				cursor: auto;
+			}
+		</style>
+	</head>
+
+	<body>
+		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 学生点评 <span class="c-gray en">&gt;</span> 学生点评模板配置
+			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
+		</nav>
+		<div class="page-container" id="evaluateData">
+			<div class="cl pd-5 bg-1 bk-gray"> <span class="l"> <a href="javascript:;" @click="addEvaluate()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加点评模板</a></span></div>
+			<div class="mt-20">
+				<table class="table table-border table-bordered table-hover table-bg">
+					<thead>
+						<tr class="text-c">
+							<th width="100">点评模板内容</th>
+							<th width="100">点评模板分类</th>
+							<th width="50">排序</th>
+							<th width="100">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="text-c" v-for='(attend,index) in evaluateArray' v-show="flag>0" style="display: none;">
+							<td><u style="cursor:pointer" class="text-primary">{{attend.AttendTypeNote}}</u></td>
+							<td class="td-status"><span><a v-if="attend.attendTypeProp==1">签到</a><a v-else>签退</a></span></td>
+							<td><u style="cursor:pointer" class="text-primary">{{attend.OrderId}}</u></td>
+							<td class="td-manage">
+								<a title="修改考勤类型" href="javascript:;" @click="modifyEvaluate(attend,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>
+								<a title="删除考勤类型" href="javascript:;" @click="removeEvaluate(attend,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div id="addEvaluateLayer" style="display: none;">
+			<form class="form form-horizontal">
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">考勤名称：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" class="input-text" maxlength="20" v-model="AttendTypeNote" placeholder="请输入考勤名称">
+					</div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">考勤类型：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<span class="select-box">
+							<select id="attendTypePropSelect" class="select" size="1" title="请选择考勤类型" @change="attendTypePropChange">
+								<option value="1">签到</option>
+								<option value="2">签退</option>
+							</select>
+						</span>
+					</div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">考勤排序ID：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<select :id="'select'+attendModel.OrderId" @change="selectOrder(attendModel)">
+							<template v-for="item in selectArray">
+								<option v-if="item==attendModel.OrderId" selected :value="item">{{item}}</option>
+								<option v-else :value="item">{{item}}</option>
+							</template>
+						</select>
+						  (*排序id越小越靠前)
+					</div>
+				</div>
+				<div class="row cl submit-button">
+					<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+						<input class="btn btn-primary radius" type="button" value="确定" @click="btnAdd()">
+					</div>
+				</div>
+			</form>
+		</div>
+		<!--_footer 作为公共模版分离出去-->
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/layer/2.4/layer.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/static/h-ui.admin/js/H-ui.admin.js"></script>
+		<!--/_footer 作为公共模版分离出去-->
+
+		<!--请在下方写此页面业务相关的脚本-->
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/laypage/1.2/laypage.js"></script>
+		<!--vue-->
+		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
+		</script>
+		<script src='https://jsypay.jiaobaowang.net/suitetest/js/lib/vconsole/vconsole.min.js'></script>
+		<script type="text/javascript">
+			$(function() {
+				$('.table-sort').dataTable({
+					"aaSorting": [
+						[1, "desc"]
+					], //默认第几个排序
+					"bStateSave": true, //状态保存
+					"aoColumnDefs": [
+						//{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+						{
+							"orderable": false,
+							"aTargets": [0, 8, 9]
+						} // 制定列不参与排序
+					]
+				});
+				//获取当前人员信息
+				getUserInfo();
+			});
+
+			var evaluateData = new Vue({
+				el: "#evaluateData",
+				data: {
+					flag: 0,
+					subFlag: 0, //0刷新，1加载更多
+					subIndex: 1, //获取第几页数据
+					userInfo: {}, //当前人员信息
+					evaluateArray: [],
+					evaluateFlag: 0 //0添加，1编辑
+				},
+				methods: {
+					modifyEvaluate: function(model, index) {
+						evaluateData.evaluateFlag = 1;
+						addEvaluateLayer.showEdit(model);
+					},
+					addEvaluate: function() {
+						evaluateData.evaluateFlag = 0;
+						addEvaluateLayer.showAdd();
+					},
+					removeEvaluate: function(model, index) {
+						layer.confirm('确认要删除吗？', function(index) {
+							layer.close(index);
+							var tempData = {
+								templId: model.templId
+							}
+							delAttendTypePro(tempData, function(data) {
+								if(data.RspCode == 0) {
+									if(data.RspData.Result == 1) {
+										layer.alert('删除成功');
+										//获取现有的考勤类型
+										getEvalTemplate();
+									} else {
+										layer.alert('删除失败');
+									}
+								} else {
+									alert(data.RspTxt);
+								}
+							});
+						});
+					}
+				}
+			});
+			//图片信息
+			addEvaluateLayer = new Vue({
+				el: "#addEvaluateLayer",
+				data: {
+					selectArray: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+					AttendTypeNote: "", //考勤类型说明
+					attendTypeProp: "1", //考勤类型属性,1 上班/上学,2 下班/放学
+					orderID:'0',//排序
+					attendModel: {} //要修改的的类型model
+				},
+				methods: {
+					/**
+					 * 显示添加图片
+					 */
+					showAdd: function() {
+						this.AttendTypeNote = "";
+						$("#attendTypePropSelect").val(1);
+						this.show("添加考勤类型");
+					},
+					/**
+					 * 显示编辑图片
+					 */
+					showEdit: function(value) {
+						this.AttendTypeNote = value.AttendTypeNote;
+						this.orderID = value.OrderId;
+						$("#attendTypePropSelect").val(value.attendTypeProp);
+						this.show("编辑考勤类型");
+						this.attendModel = value;
+					},
+					/**
+					 * 显示页面
+					 */
+					show: function(title) {
+						layer.open({
+							type: 1,
+							title: title,
+							area: '550px',
+							content: $('#addEvaluateLayer') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+						});
+					},
+					btnAdd: function() {
+						if(addEvaluateLayer.AttendTypeNote.length == 0) {
+							layer.alert('请输入考勤名称');
+							return false;
+						}
+						if(evaluateData.evaluateFlag == 0) { //添加
+							//添加类型时，判断是否输入了值，有没有重复
+							if(checkInput(addEvaluateLayer.AttendTypeNote, 0)) {
+								//发送添加协议
+								var tempData = {
+									corpId: evaluateData.userInfo.corpid, //单位ID
+									attendTypeNote: addEvaluateLayer.AttendTypeNote, //考勤类型说明
+									attendTypeProp: addEvaluateLayer.attendTypeProp, //1 上班/上学,2 下班/放学
+									orderId:addEvaluateLayer.orderID//排序id
+								}
+								console.log('tempData:' + JSON.stringify(tempData));
+								addEvaluateTypePro(tempData, function(data) {
+									layer.closeAll();
+									if(data.RspCode == 0) {
+										if(data.RspData.Result == 0) {
+											layer.alert('添加失败');
+										} else {
+											layer.alert('添加成功');
+											//获取现有的考勤类型
+											getEvalTemplate();
+										}
+									} else {
+										layer.alert(data.RspTxt);
+									}
+								});
+							}
+
+						} else {
+							//重新编辑类型时，判断是否输入了值，有没有重复
+							if(checkInput(addEvaluateLayer.AttendTypeNote, 1)) {
+								var tempData = {
+									templId: this.attendModel.templId, //考勤类型ID
+									attendTypeNote: addEvaluateLayer.AttendTypeNote, //考勤类型说明
+									attendTypeProp: addEvaluateLayer.attendTypeProp, //1 上班/上学,2 下班/放学
+									orderId:addEvaluateLayer.orderID//排序id
+								}
+								console.log('tempData:' + JSON.stringify(tempData));
+								setAttendTypePro(tempData, function(data) {
+									layer.closeAll();
+									if(data.RspCode == 0) {
+										if(data.RspData.Result == 1) {
+											layer.alert('修改成功');
+											//获取现有的考勤类型
+											getEvalTemplate();
+										} else {
+											layer.alert('修改失败');
+										}
+									} else {
+										layer.alert(data.RspTxt);
+									}
+								});
+							}
+
+						}
+
+					},
+					/**
+					 * 修改排序ID
+					 */
+					attendTypePropChange: function() {
+						var obj = document.getElementById('attendTypePropSelect');
+						var index = obj.selectedIndex; //序号，取当前选中选项的序号
+						var val = obj.options[index].value;
+						addEvaluateLayer.attendTypeProp = val;
+					}
+				}
+			});
+
+			//修改排序id
+			var selectOrder = function(model) {
+				var obj = document.getElementById('select' + model.OrderId);
+				var index = obj.selectedIndex; //序号，取当前选中选项的序号
+				var val = obj.options[index].value;
+				model.orderid = val;
+//				alert('model.orderid:'+model.orderid);
+				addEvaluateLayer.orderID =model.orderid;
+			}
+			//13.获取当前人员信息
+			var getUserInfo = function() {
+				var tempData = {
+					cmd: 'userinfoadmin',
+					type: 'findpage', //获取某个详细信息
+					colv: '' //留空为取当前人员信息,不为空则为具体人员信息
+				}
+				console.log('tempData:' + JSON.stringify(tempData));
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						evaluateData.userInfo = JSON.parse(data.RspData);
+						//获取现有的考勤类型
+						getEvalTemplate();
+					} else {
+						layer.alert('请重新登录获取个人信息');
+					}
+				});
+			};
+			//12.获取考勤类型
+			var getEvalTemplate = function() {
+				var tempData = {
+					corpId: evaluateData.userInfo.corpid, //单位ID
+					pageIndex: 1, //当前页数
+					pageSize: 0 //每页记录数，0 为全部
+				}
+				console.log('tempData:' + JSON.stringify(tempData));
+				getEvalTemplatePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						evaluateData.evaluateArray = [].concat(data.RspData.Data);
+						evaluateData.flag = 1;
+					} else {
+						//						layer.alert('请重新登录获取个人信息');
+					}
+				});
+			};
+			//重新编辑课程名称
+			var editSub = function(model, newName) {
+				var tempData = {
+					cmd: 'subadmin',
+					type: 'edit',
+					callcol: 'cname',
+					colid: model.subid,
+					colv: newName
+				}
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						evaluateData.subIndex = 1;
+						evaluateData.subFlag = 0;
+						//获取科目列表
+						getUserInfo();
+					} else {
+						alert(data.RspTxt);
+					}
+				});
+			};
+			//添加课程时，判断是否输入了值，有没有重复,flag=0添加，flag=1修改
+			var checkInput = function(text, flag) {
+				if(text.trim().length == 0) {
+					alert('考勤名称不能为空');
+					return false;
+				}
+				if(isNull(text)) {
+					alert('考勤名称不能为空');
+					return false;
+				}
+				var tempFlag = 0;
+				for(var i = 0; i < evaluateData.evaluateArray.length; i++) {
+					var tempModel = evaluateData.evaluateArray[i];
+					if(tempModel.AttendTypeNote == text) {
+						tempFlag++;
+					}
+				}
+				if(tempFlag == 0) {
+					return true;
+				} else if(tempFlag == 1 && flag == 1) {
+					return true;
+				} else {
+					alert('存在同名的考勤类型');
+					return false;
+				}
+			}
+
+			//判断输入字符串是否为空或者全部都是空格
+			function isNull(str) {
+				if(str == "") return true;
+				var regu = "^[ ]+$";
+				var re = new RegExp(regu);
+				return re.test(str);
+			}
+		</script>
+	</body>
+
+</html>

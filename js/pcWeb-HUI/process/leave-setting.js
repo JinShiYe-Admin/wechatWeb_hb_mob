@@ -78,7 +78,7 @@ Vue.component("leave-setting", {
 					}
 				]
 			});
-			this.tablebases.table[0].page(this.curPage).draw(false);
+			com.tablebases.table(0).page(com.curPage).draw(false);
 		},
 		getCurPage: function() {
 			this.curPage = this.tablebases.page.info().page;

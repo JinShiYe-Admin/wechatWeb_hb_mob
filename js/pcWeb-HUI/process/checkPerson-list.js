@@ -81,8 +81,11 @@ Vue.component("check-person-list", {
 		getAllCheckStatus: function(e) {
 			console.log("*****getAllCheckSatus*****")
 			var isAllAdd = e.target.checked;
-			this.curPage = tablebases.page.info().page;
+			this.getCurPage();
 			this.inputToggleAll(isAllAdd);
+		},
+		getCurPage: function() {
+			this.curPage = this.tablebases.page.info().page;
 		},
 		/**
 		 * 全选逻辑
@@ -159,6 +162,7 @@ Vue.component("check-person-list", {
 		delCurPerson: function(person) {
 			console.log("****delCurPerson*****");
 			var com = this;
+			com.getCurPage();
 			this.delPerson(person.TabId, function() {
 				delete com.checkedPerson[person.ApprMan];
 				com.getAllCheckPerson();

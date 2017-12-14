@@ -37,8 +37,7 @@
 	</head>
 
 	<body>
-
-		<div id="content">
+		<div id="content" style="display: none;">
 			<p style="color: black;margin-top: 10px;margin-left: 10px;">{{info.cname+" "}}<a id="exportExcel" type="button" class="btn btn-success radius" onclick="clickExport()">导出</a></p>
 			
 			<p style="font-size: 12px;color: darkgray;margin-left: 10px;">{{info.dptname+" "+info.recname+" "+info.rectime.replace("T"," ")}}</p>
@@ -98,7 +97,12 @@
 			var content = new Vue({
 				el: '#content',
 				data: {
-					info: {},
+					info: {
+							cname: "开发部成绩单1",
+							dptname: "开发部",
+							recname: "宋艳明",
+							rectime: "2017/12/6T14:00"
+						},
 					subs: [],
 					stu_data: [],
 
@@ -164,16 +168,18 @@
 							}
 							score_obj.stuname = stuname;
 							content.stu_data.push(score_obj);
+							document.getElementById("content").style.display = "block";
 						}
 					} else {
 						content.info = {
-							cname: "开发部成绩单",
+							cname: "开发部成绩单1",
 							dptname: "开发部",
 							recname: "宋艳明",
 							rectime: "2017/12/6T14:00"
 						}
+						content.subs = [{subname:'a',subid:1},{subname:'b',subid:2},{subname:'c',subid:3},{subname:'d',subid:4}]
 						content.stu_data = [{
-							stuname: '宋艳明',
+							stuname: '宋艳明1',
 							score1: 100,
 							score2: 100,
 							score3: "",
@@ -185,6 +191,7 @@
 							score3: 90,
 							score4: 90,
 						}]
+						document.getElementById("content").style.display = "block";
 					}
 				});
 			}

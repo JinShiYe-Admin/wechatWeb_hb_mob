@@ -161,9 +161,11 @@ Vue.component("check-person-list", {
 			processRequest.postProcessData("delApprMan", {
 				apprManId: personId
 			}, function(response) {
+				callback();
 				if(response.RspCode == 0) {
-					callback();
+
 				} else {
+
 					alert(response.RspTxt);
 				}
 			})

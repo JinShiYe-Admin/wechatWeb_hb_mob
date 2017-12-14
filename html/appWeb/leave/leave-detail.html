@@ -96,8 +96,8 @@
 	</head>
 
 	<body>
-		<template id="detail-container">
-			<div class="page actionsheet js_show" style="position: relative;">
+		<div id="detail-container" class="page actionsheet js_show" style="position: relative;">
+			<template>
 				<div v-bind:class="[{'check-detail':flag>0}]">
 					<div class="weui-cells person-container weui-flex">
 						<img v-bind:src="applyDetail.ApplyManPic" class="head-portrait display-inline">
@@ -183,11 +183,12 @@
 						<p class="weui-toast__content">数据加载中</p>
 					</div>
 				</div>
-			</div>
-		</template>
+			</template>
+		</div>
+
 		<script type="text/javascript" src="../../../js/demoCssJs/jquery-2.1.4.js"></script>
 		<script type="text/javascript" src="../../../js/demoCssJs/jquery-weui.min.js"></script>
-		<script src="../../../js/lib/vconsole/vconsole.min.js"></script>
+		<!--<script src="../../../js/lib/vconsole/vconsole.min.js"></script>-->
 		<script src="../../../js/vue.js"></script>
 		<script src="../../../js/vue-router.js"></script>
 		<script src="../../../js/utils/consts.js"></script>

@@ -123,7 +123,7 @@
 							</div>
 							<div class="weui-uploader__bd">
 								<ul class="weui-uploader__files">
-									<li class="weui-uploader__file" v-for="(img,index) in applyDetail.ApplyReasonThumb" v-on:click="showGallery(index)" v-bind:style="{backgroundImage:'url(' +img+ ')'}">
+									<li class="weui-uploader__file" v-for="(img,index) in applyDetail.ApplyReasonThumb" v-on:click="showGalleryFun(index)" v-bind:style="{backgroundImage:'url(' +img+ ')'}">
 
 									</li>
 								</ul>
@@ -219,6 +219,9 @@
 				mounted: function() {
 					this.initialData();
 				},
+				watch: {
+
+				},
 				methods: {
 					changeToPics: function(picStr) {
 						console.log("******changeToPics*****");
@@ -227,18 +230,18 @@
 						}
 						return []
 					},
-					showGallery: function(index) {
+					showGalleryFun: function(index) {
 						console.log("****showGallery*****");
-						this.imgIndex = index;
+						this.getPreviewImg(index);
 						this.showGallery = true;
 					},
 					initialData: function() {
 						console.log("*****getInitialData****");
 						this.requireDetail();
 					},
-					getPreviewImg: function() {
+					getPreviewImg: function(index) {
 						console.log("******getPreviewImg******");
-						this.previewImg = this.applyDetail.ApplyPic.split("|")[this.imgIndex];
+						this.previewImg = this.applyDetail.ApplyPic.split("|")[index];
 					},
 					requireDetail: function() {
 						console.log("****requireDetail******");

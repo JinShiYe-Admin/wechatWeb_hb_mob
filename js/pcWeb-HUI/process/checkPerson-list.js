@@ -10,7 +10,8 @@ Vue.component("check-person-list", {
 			name: "",
 			note: "",
 			selectedInputPerson: {},
-			isAllCheck: false
+			isAllCheck: false,
+			curPage: 0
 		}
 	},
 	watch: {
@@ -57,6 +58,7 @@ Vue.component("check-person-list", {
 					}
 				]
 			});
+			this.tablebases.table(0).page(this.curPage).draw(false);
 		},
 		/**
 		 * 获取状态
@@ -79,6 +81,7 @@ Vue.component("check-person-list", {
 		getAllCheckStatus: function(e) {
 			console.log("*****getAllCheckSatus*****")
 			var isAllAdd = e.target.checked;
+			this.curPage = tablebases.page.info().page;
 			this.inputToggleAll(isAllAdd);
 		},
 		/**
@@ -88,9 +91,12 @@ Vue.component("check-person-list", {
 		inputToggleAll: function(isAdd) {
 			console.log("****inputToggleAll****");
 			if(isAdd) {
-				for(var checkPerson in checkPersonList) {
-					this.selectedInputPerson[checkPerson.TabId] = checkPerson.ApprManName;
-				}
+				checkPersonList.forEach(function(checkPerson, index) {
+					if(index >= this.curPage * 10 && index < (this.curPage + 1) * 10) {
+						checkPerson.isSelect = true;
+						this.selectedInputPerson[checkPerson.TabId] = checkPerson.ApprManName;
+					}
+				})
 			} else {
 				this.selectedInputPerson = {};
 			}

@@ -46,7 +46,6 @@ Vue.component("leave-setting", {
 				this.tablebases.destroy();
 			}
 			this.$nextTick(this.newTablebases);
-			this.tablebases.table(0).page(this.curPage).draw(false);
 		}
 	},
 	methods: {
@@ -63,6 +62,7 @@ Vue.component("leave-setting", {
 		},
 		newTablebases: function() {
 			console.log("*****newTablebases******");
+			var com = this;
 			this.tablebases = $('.table-sort').DataTable({
 				pageLength: 10,
 				lengthChange: false,
@@ -78,6 +78,7 @@ Vue.component("leave-setting", {
 					}
 				]
 			});
+			this.tablebases.table[0].page(this.curPage).draw(false);
 		},
 		getCurPage: function() {
 			this.curPage = this.tablebases.page.info().page;
@@ -101,7 +102,7 @@ Vue.component("leave-setting", {
 				if(response.RspCode == 0) {
 					leave.Stat = (leave.Stat + 1) % 2;
 				} else {
-					alert(response.RspTxt);
+					layer.alert(response.RspTxt);
 				}
 			})
 		},
@@ -186,7 +187,7 @@ Vue.component("leave-setting", {
 				if(response.RspCode == 0) {
 					com.requireLeave(); //刷新数据
 				} else {
-
+					layer.alert(response.RspTxt)
 				}
 			})
 		},
@@ -226,7 +227,7 @@ Vue.component("leave-setting", {
 					com.activeLeave.LeaveTypeNote.com.note;
 					com.activeLeave.IsLeader = com.getIsLeader();
 				} else {
-
+					layer.alert(response.RspTxt)
 				}
 			})
 		},
@@ -270,7 +271,7 @@ Vue.component("leave-setting", {
 				if(response.RspCode == 0) {
 					com.leaveList = response.RspData.Data;
 				} else {
-
+					layer.alert(response.RspTxt)
 				}
 			})
 		},
@@ -297,7 +298,7 @@ Vue.component("leave-setting", {
 				if(response.RspCode == 0) {
 					com.requireLeave();
 				} else {
-					alert(response.RspTxt);
+					layer.alert(response.RspTxt);
 				}
 			})
 		}

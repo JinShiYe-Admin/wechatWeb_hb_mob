@@ -281,6 +281,8 @@
 							if(response.RspCode == 0) {
 								com.corpId = JSON.parse(response.RspData).corpid;
 								callback();
+							}else{
+								layer.alert(response.RspTxt);
 							}
 						})
 					},
@@ -299,7 +301,7 @@
 								console.log("获取的审核人员列表：" + JSON.stringify(response))
 								com.checkPowerPersons = response.RspData.Data;
 							} else {
-								alert(response.RspTxt);
+								layer.alert(response.RspTxt);
 							}
 						})
 					},
@@ -372,6 +374,8 @@
 							console.log("添加或修改流程链结果：" + JSON.stringify(response))
 							if(response.RspCode == 0) {
 								router.go(-1);
+							}else{
+								layer.alert(response.RspTxt);
 							}
 						})
 

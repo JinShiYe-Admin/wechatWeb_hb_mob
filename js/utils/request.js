@@ -215,7 +215,7 @@ var processRequest = (function(mod) {
 		mod.postData(mod.URL + portName, postData, callback);
 	}
 	return mod;
-})(processRequest || {})
+})(processRequest || {});
 var layerPlus = (function(mod) {
 	mod.confirm = function(data, callback) {
 		layer.confirm(data.content, {

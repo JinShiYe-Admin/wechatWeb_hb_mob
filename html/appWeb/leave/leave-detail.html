@@ -145,7 +145,7 @@
 							<div class="weui-cell__ft">
 								<p>{{check.ApprTime}}</p>
 							</div>
-							
+
 						</div>
 					</div>
 				</template>
@@ -245,30 +245,31 @@
 						var leaveInfo = JSON.parse(storageutil.getSessionStorage(sKey));
 						this.flag = events.getUrlParam(location.href, "flag");
 						if(leaveInfo == null) {
-							leaveInfo = {
-									leave: {
-										"ApplyTime": "2017-12-13 15:22:32",
-										"ProcessTypeId": 7,
-										"ApplyMan": "anqi",
-										"ApplyBeginEndCnt": "734天8小时",
-										"ApprId": 2,
-										"ApplyBeginTime": "2017-12-13 15:21:00",
-										"ApplyManName": "安琪",
-										"ProcTypeName": "流程测试",
-										"ApplyReason": "我想请假",
-										"LeaveTypeId": 2,
-										"ApprStatNote": "未审批",
-										"ApplyPic": "",
-										"ApplyReasonThumb": "",
-										"ApprStat": 0,
-										"ApplyId": 15,
-										"LeaveTypeName": "老師請假",
-										"ApplyEndTime": "2019-12-17 23:21:00",
-										"ApplyManPic": "http://shp.qpic.cn/bizmp/LlAHpaR9WIbXvzjGTAPgEfe6lmhQqEkJmaTza7r6u7EoSWaWgITucA/"
-									},
-									mineUserInfo: JSON.parse("{\"corpid\":\"wx6c4528c675d4a9c9\",\"userid\":\"anqi\",\"name\":\"安琪\",\"department\":null,\"order\":null,\"position\":null,\"mobile\":null,\"english_name\":null,\"gender\":0,\"isleader\":0,\"telephone\":null,\"email\":null,\"weixinid\":null,\"avatar\":null,\"status\":0,\"extattr\":null,\"errcode\":0,\"errmsg\":null,\"P2PData\":null}")
-								},
-								this.flag = 0;
+							//							leaveInfo = {
+							//									leave: {
+							//										"ApplyTime": "2017-12-13 15:22:32",
+							//										"ProcessTypeId": 7,
+							//										"ApplyMan": "anqi",
+							//										"ApplyBeginEndCnt": "734天8小时",
+							//										"ApprId": 2,
+							//										"ApplyBeginTime": "2017-12-13 15:21:00",
+							//										"ApplyManName": "安琪",
+							//										"ProcTypeName": "流程测试",
+							//										"ApplyReason": "我想请假",
+							//										"LeaveTypeId": 2,
+							//										"ApprStatNote": "未审批",
+							//										"ApplyPic": "",
+							//										"ApplyReasonThumb": "",
+							//										"ApprStat": 0,
+							//										"ApplyId": 15,
+							//										"LeaveTypeName": "老師請假",
+							//										"ApplyEndTime": "2019-12-17 23:21:00",
+							//										"ApplyManPic": "http://shp.qpic.cn/bizmp/LlAHpaR9WIbXvzjGTAPgEfe6lmhQqEkJmaTza7r6u7EoSWaWgITucA/"
+							//									},
+							//									mineUserInfo: JSON.parse("{\"corpid\":\"wx6c4528c675d4a9c9\",\"userid\":\"anqi\",\"name\":\"安琪\",\"department\":null,\"order\":null,\"position\":null,\"mobile\":null,\"english_name\":null,\"gender\":0,\"isleader\":0,\"telephone\":null,\"email\":null,\"weixinid\":null,\"avatar\":null,\"status\":0,\"extattr\":null,\"errcode\":0,\"errmsg\":null,\"P2PData\":null}")
+							//								},
+							//								this.flag = 0;
+							return;
 						}
 						console.log("获取的levaeInfo:" + JSON.stringify(leaveInfo));
 						leaveInfo.leave.ApplyReasonThumb = this.changeToPics(leaveInfo.leave.ApplyReasonThumb);

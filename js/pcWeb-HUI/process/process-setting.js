@@ -16,7 +16,8 @@ Vue.component("process-setting", {
 			totalPage: 1,
 			name: "",
 			note: "",
-			stat: 1
+			stat: 1,
+			curPage: 0
 		}
 	},
 	mounted: function() {
@@ -28,7 +29,8 @@ Vue.component("process-setting", {
 			if(this.tablebases != null) {
 				this.tablebases.destroy();
 			}
-			this.$nextTick(this.newTablebases)
+			this.$nextTick(this.newTablebases);
+			this.tablebases.table(0).page(this.curPage).draw(false);
 		}
 	},
 	methods: {
@@ -52,8 +54,22 @@ Vue.component("process-setting", {
 			console.log("****newTablebases****")
 			this.tablebases = $('.table-sort').DataTable({
 				pageLength: 10,
-				lengthChange: false
+				lengthChange: false,
+				columns: [
+					null,
+					null,
+					null,
+					{
+						"orderable": false
+					},
+					{
+						"orderable": false
+					}
+				]
 			});
+		},
+		getCurPage: function() {
+			this.curPage = this.tablebases.page.info().page;
 		},
 		/**
 		 * 更改显示状态
@@ -236,8 +252,18 @@ Vue.component("process-setting", {
 		 * @param {Object} process
 		 */
 		delProcess: function(process) {
+			var com = this;
+			layerPlus.confirm({
+				title: "删除流程",
+				content: "确认删除此流程？"
+			}, function() {
+				com.delTheProcess();
+			})
+		},
+		delTheProcess: function(process) {
 			console.log("*****delProcess*****");
 			var com = this;
+			com.getCurPage();
 			processRequest.postProcessData("delProcessType", {
 				procTypeId: process.ProcessTypeId
 			}, function(response) {

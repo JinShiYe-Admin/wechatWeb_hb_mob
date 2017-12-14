@@ -10,7 +10,8 @@ Vue.component("check-person-list", {
 			name: "",
 			note: "",
 			selectedInputPerson: {},
-			isAllCheck: false
+			isAllCheck: false,
+			curPage: 0
 		}
 	},
 	watch: {
@@ -47,8 +48,17 @@ Vue.component("check-person-list", {
 
 			this.tablebases = $('.table-sort').DataTable({
 				pageLength: 10,
-				lengthChange: false
+				lengthChange: false,
+				columns: [{
+						"orderable": false
+					},
+					null,
+					{
+						"orderable": false
+					}
+				]
 			});
+			this.tablebases.table(0).page(this.curPage).draw(false);
 		},
 		/**
 		 * 获取状态
@@ -71,7 +81,11 @@ Vue.component("check-person-list", {
 		getAllCheckStatus: function(e) {
 			console.log("*****getAllCheckSatus*****")
 			var isAllAdd = e.target.checked;
+			this.getCurPage();
 			this.inputToggleAll(isAllAdd);
+		},
+		getCurPage: function() {
+			this.curPage = this.tablebases.page.info().page;
 		},
 		/**
 		 * 全选逻辑
@@ -79,12 +93,16 @@ Vue.component("check-person-list", {
 		 */
 		inputToggleAll: function(isAdd) {
 			console.log("****inputToggleAll****");
+			var com = this;
 			if(isAdd) {
-				for(var checkPerson in checkPersonList) {
-					this.selectedInputPerson[checkPerson.TabId] = checkPerson.ApprManName;
-				}
+				com.checkPersonList.forEach(function(checkPerson, index) {
+					if(index >= com.curPage * 10 && index < (com.curPage + 1) * 10) {
+						checkPerson.isSelect = true;
+						com.selectedInputPerson[checkPerson.TabId] = checkPerson.ApprManName;
+					}
+				})
 			} else {
-				this.selectedInputPerson = {};
+				com.selectedInputPerson = {};
 			}
 		},
 		/**
@@ -118,24 +136,34 @@ Vue.component("check-person-list", {
 		 */
 		delPersons: function() {
 			console.log("****批量删除人员****");
+			if(Object.keys(this.selectedInputPerson).length == 0) {
+				layer.alert("请选择人员！");
+			} else {
+				layerPlus.confirm({
+					title: "删除审核人员",
+					content: "确定要删除这些审核人员？"
+				}, this.delSelectedPersons);
+			}
+		},
+		/**
+		 * 
+		 */
+		delSelectedPersons: function() {
+			console.log("****delSelectedPersons****");
 			var com = this;
 			var keys = Object.keys(com.selectedInputPerson);
 			console.log("selectedInputPerson:" + JSON.stringify(com.selectedInputPerson))
 			console.log("theKeys:" + JSON.stringify(keys));
-			if(keys.length > 0) {
-				var count = 0;
-				for(var theKey in com.selectedInputPerson) {
-					com.delPerson(theKey, function() {
-						count++;
-						console.log("数据数量：" + count);
-						console.log("keys:" + keys.length);
-						if(count == keys.length) {
-							com.getAllCheckPerson();
-						}
-					})
-				}
-			} else {
-				alert("请选择人员！");
+			var count = 0;
+			for(var theKey in com.selectedInputPerson) {
+				com.delPerson(theKey, function() {
+					count++;
+					console.log("数据数量：" + count);
+					console.log("keys:" + keys.length);
+					if(count == keys.length) {
+						com.getAllCheckPerson();
+					}
+				})
 			}
 		},
 		/**
@@ -143,12 +171,18 @@ Vue.component("check-person-list", {
 		 * @param {Object} person
 		 */
 		delCurPerson: function(person) {
-			console.log("****delCurPerson*****");
 			var com = this;
-			this.delPerson(person.TabId, function() {
-				delete com.checkedPerson[person.ApprMan];
-				com.getAllCheckPerson();
-			});
+			layerPlus.confirm({
+				title: "删除人员",
+				content: "确定要删除此人？"
+			}, function() {
+				console.log("****delCurPerson*****");
+				com.getCurPage();
+				com.delPerson(person.TabId, function() {
+					delete com.checkedPerson[person.ApprMan];
+					com.getAllCheckPerson();
+				});
+			})
 		},
 		/**
 		 * 刪除人員
@@ -161,8 +195,9 @@ Vue.component("check-person-list", {
 			processRequest.postProcessData("delApprMan", {
 				apprManId: personId
 			}, function(response) {
+				callback();
 				if(response.RspCode == 0) {
-					callback();
+
 				} else {
 					alert(response.RspTxt);
 				}

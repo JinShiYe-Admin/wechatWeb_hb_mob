@@ -100,9 +100,9 @@
 			<template v-show="applyDetail.ApplyManName">
 				<div v-bind:class="[{'check-detail':flag>0}]">
 					<div class="weui-cells person-container weui-flex">
-						<img v-bind:src="applyDetail.ApplyManPic" class="head-portrait display-inline">
+						<img v-bind:src="applyDetail.ApplyManPic?applyDetail.ApplyManPic:personalInfo.avatar" class="head-portrait display-inline">
 						<div class="display-inline name-time-container">
-							<p class="apply-name">{{applyDetail.ApplyManName}}</p>
+							<p class="apply-name">{{applyDetail.ApplyManName?applyDetail.ApplyManName:personalInfo.name}}</p>
 							<p class="apply-time apply-info-container"><span class="apply-hint">申请时间:</span>{{applyDetail.ApplyTime}}</p>
 						</div>
 					</div>
@@ -123,7 +123,7 @@
 							</div>
 							<div class="weui-uploader__bd">
 								<ul class="weui-uploader__files">
-									<li class="weui-uploader__file" v-for="(img,index) in applyDetail.ApplyReasonThumb" v-on:click="showGallery(index)" v-bind:style="{backgroundImage:'url(' +img+ ')'}">
+									<li class="weui-uploader__file" v-for="(img,index) in applyDetail.ApplyReasonThumb" v-on:click="showGalleryFun(index)" v-bind:style="{backgroundImage:'url(' +img+ ')'}">
 
 									</li>
 								</ul>
@@ -188,7 +188,7 @@
 
 		<script type="text/javascript" src="../../../js/demoCssJs/jquery-2.1.4.js"></script>
 		<script type="text/javascript" src="../../../js/demoCssJs/jquery-weui.min.js"></script>
-		<!--<script src="../../../js/lib/vconsole/vconsole.min.js"></script>-->
+		<script src="../../../js/lib/vconsole/vconsole.min.js"></script>
 		<script src="../../../js/vue.js"></script>
 		<script src="../../../js/vue-router.js"></script>
 		<script src="../../../js/utils/consts.js"></script>
@@ -219,6 +219,9 @@
 				mounted: function() {
 					this.initialData();
 				},
+				watch: {
+
+				},
 				methods: {
 					changeToPics: function(picStr) {
 						console.log("******changeToPics*****");
@@ -227,50 +230,28 @@
 						}
 						return []
 					},
-					showGallery: function(index) {
+					showGalleryFun: function(index) {
 						console.log("****showGallery*****");
-						this.imgIndex = index;
+						this.getPreviewImg(index);
 						this.showGallery = true;
 					},
 					initialData: function() {
 						console.log("*****getInitialData****");
 						this.requireDetail();
 					},
-					getPreviewImg: function() {
+					getPreviewImg: function(index) {
 						console.log("******getPreviewImg******");
-						this.previewImg = this.applyDetail.ApplyPic.split("|")[this.imgIndex];
+						this.previewImg = this.applyDetail.ApplyPic.split("|")[index];
 					},
 					requireDetail: function() {
 						console.log("****requireDetail******");
 						var sKey = events.getUrlParam(location.href, "sKey");
 						console.log("skey" + sKey);
 						var leaveInfo = JSON.parse(storageutil.getSessionStorage(sKey));
-						this.flag = events.getUrlParam(location.href, "flag");
+						this.flag = parseInt(events.getUrlParam(location.href, "flag"));
+						console.log("获取的flag:" + this.flag);
+						console.log("this.flag type:" + typeof(this.flag));
 						if(leaveInfo == null) {
-							//							leaveInfo = {
-							//									leave: {
-							//										"ApplyTime": "2017-12-13 15:22:32",
-							//										"ProcessTypeId": 7,
-							//										"ApplyMan": "anqi",
-							//										"ApplyBeginEndCnt": "734天8小时",
-							//										"ApprId": 2,
-							//										"ApplyBeginTime": "2017-12-13 15:21:00",
-							//										"ApplyManName": "安琪",
-							//										"ProcTypeName": "流程测试",
-							//										"ApplyReason": "我想请假",
-							//										"LeaveTypeId": 2,
-							//										"ApprStatNote": "未审批",
-							//										"ApplyPic": "",
-							//										"ApplyReasonThumb": "",
-							//										"ApprStat": 0,
-							//										"ApplyId": 15,
-							//										"LeaveTypeName": "老師請假",
-							//										"ApplyEndTime": "2019-12-17 23:21:00",
-							//										"ApplyManPic": "http://shp.qpic.cn/bizmp/LlAHpaR9WIbXvzjGTAPgEfe6lmhQqEkJmaTza7r6u7EoSWaWgITucA/"
-							//									},
-							//									mineUserInfo: JSON.parse("{\"corpid\":\"wx6c4528c675d4a9c9\",\"userid\":\"anqi\",\"name\":\"安琪\",\"department\":null,\"order\":null,\"position\":null,\"mobile\":null,\"english_name\":null,\"gender\":0,\"isleader\":0,\"telephone\":null,\"email\":null,\"weixinid\":null,\"avatar\":null,\"status\":0,\"extattr\":null,\"errcode\":0,\"errmsg\":null,\"P2PData\":null}")
-							//								},
-							//								this.flag = 0;
 							return;
 						}
 						console.log("获取的levaeInfo:" + JSON.stringify(leaveInfo));

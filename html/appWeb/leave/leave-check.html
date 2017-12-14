@@ -310,8 +310,8 @@
 						location.href = "leave-detail.html?flag=" + this.getFlag(item) + "&sKey=" + sKey;
 					},
 					getFlag: function(item) {
-						if(item.ApprStat == 0) {
-							return 1
+						if(item.ApprStat == 0) {//未审
+							return 1//审核
 						}
 						return 0
 					}

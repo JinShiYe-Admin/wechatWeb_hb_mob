@@ -10,7 +10,7 @@ Vue.component("check-person-list", {
 			name: "",
 			note: "",
 			selectedInputPerson: {},
-			isAllCheck: false,
+			isAllSelect: false,
 			curPage: 0
 		}
 	},
@@ -45,7 +45,6 @@ Vue.component("check-person-list", {
 		},
 		newTablebases: function() {
 			console.log("******newTablebases******");
-
 			this.tablebases = $('.table-sort').DataTable({
 				pageLength: 10,
 				lengthChange: false,
@@ -57,6 +56,12 @@ Vue.component("check-person-list", {
 						"orderable": false
 					}
 				]
+			});
+			$('.table-sort').on('page.dt', function() {
+				var info = table.page.info();
+				$('#pageInfo').html('Showing page: ' + info.page + ' of ' + info.pages);
+				com.isAllSelect = false;
+				com.setAllUnselect();
 			});
 			this.tablebases.table(0).page(this.curPage).draw(false);
 		},
@@ -72,7 +77,7 @@ Vue.component("check-person-list", {
 				this.selectedInputPerson[person.TabId] = person.ApprManName;
 			} else {
 				delete this.selectedInputPerson[person.TabId];
-				this.isAllCheck = false;
+				this.isAllSelect = false;
 			}
 		},
 		/**
@@ -80,12 +85,18 @@ Vue.component("check-person-list", {
 		 */
 		getAllCheckStatus: function(e) {
 			console.log("*****getAllCheckSatus*****")
-			var isAllAdd = e.target.checked;
+			this.isAllSelect = e.target.checked;
 			this.getCurPage();
 			this.inputToggleAll(isAllAdd);
 		},
 		getCurPage: function() {
 			this.curPage = this.tablebases.page.info().page;
+		},
+		setAllUnselect: function() {
+			var com = this;
+			com.checkPersonList.forEach(function(checkPerson, index) {
+				checkPerson.isSelect = false;
+			})
 		},
 		/**
 		 * 全选逻辑
@@ -94,15 +105,16 @@ Vue.component("check-person-list", {
 		inputToggleAll: function(isAdd) {
 			console.log("****inputToggleAll****");
 			var com = this;
-			if(isAdd) {
-				com.checkPersonList.forEach(function(checkPerson, index) {
-					if(index >= com.curPage * 10 && index < (com.curPage + 1) * 10) {
-						checkPerson.isSelect = true;
+			com.checkPersonList.forEach(function(checkPerson, index) {
+				if(index >= com.curPage * 10 && index < (com.curPage + 1) * 10) {
+					checkPerson.isSelect = isAllAdd;
+					if(com.isAllSelect) {
 						com.selectedInputPerson[checkPerson.TabId] = checkPerson.ApprManName;
 					}
-				})
-			} else {
-				com.selectedInputPerson = {};
+				}
+			})
+			if(!com.isAllSelect) {
+				com.selectedInputPerson = {}
 			}
 		},
 		/**
@@ -128,6 +140,8 @@ Vue.component("check-person-list", {
 				if(response.RspCode == 0) {
 					com.checkPersonList = response.RspData.Data;
 					com.checkedPerson = com.changeArrToObj(response.RspData.Data);
+				} else {
+					layer.alert(response.RspTxt);
 				}
 			})
 		},
@@ -196,10 +210,8 @@ Vue.component("check-person-list", {
 				apprManId: personId
 			}, function(response) {
 				callback();
-				if(response.RspCode == 0) {
-
-				} else {
-					alert(response.RspTxt);
+				if(response.RspCode != 0) {
+					layer.alert(response.RspTxt);
 				}
 			})
 		},

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>通讯录</title>
+		<script type="text/javascript">
+			var WebVersion = "?" + Math.random();
+		</script>
+		<link rel="stylesheet" href="../../../css/weui.min.css" />
+		<link rel="stylesheet" href="../../../js/demoCssJs/jquery-weui.min.css" />
+		<link rel="stylesheet" href="../../../js/demoCssJs/demos.css" />
+		<style>
+			body {
+				-webkit-overflow-scrolling: touch;
+			}
+
+			.weui-tab__bd-item {
+				width: 100%;
+			}
+
+			.weui-tab__bd {
+				margin-top: -50px;
+			}
+
+			.weui-tabbar {
+				bottom: -50px;
+			}
+
+			.weui-cells {
+				margin-top: 0;
+			}
+
+			.weui-media-box {
+				padding: 0;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="weui-tab">
+			<div class="weui-tab__bd">
+				<div class="weui-tab__bd-item weui-tab__bd-item--active weui-pull-to-refresh">
+					<div id="pullDown" class="weui-pull-to-refresh__layer" style="display: none;">
+						<div class='weui-pull-to-refresh__arrow'></div>
+						<div class='weui-pull-to-refresh__preloader'></div>
+						<div class="down">下拉刷新</div>
+						<div class="up">释放刷新</div>
+						<div class="refresh">正在刷新</div>
+					</div>
+					<div id="dataList" class="weui-cells weui-form-preview"></div>
+				</div>
+			</div>
+			<div class="weui-tabbar">
+				<a href="https://jsypay.jiaobaowang.net/wxth/appschweb/app/index.aspx" class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
+						<img class="img" src="../../../image/utils/wxhome.png">
+					</div>
+					<p class="weui-tabbar__label">微校园</p>
+				</a>
+				<a href="classlist.html" class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
+						<img class="img" src="../../../image/leave/apply.png">
+					</div>
+					<p class="weui-tabbar__label">通讯录</p>
+				</a>
+			</div>
+		</div>
+		<script type="text/javascript" src="../../../js/lib/vconsole/vconsole.min.js"></script>
+		<script type="text/javascript" src="../../../js/demoCssJs/jquery-2.1.4.js"></script>
+		<script type="text/javascript" src="../../../js/demoCssJs/jquery-weui.min.js"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
+			//document.write("<s" + "cript type='text/javascript' src='../../../temp/mineinfo.js" + WebVersion + "'></s" + "cript>");
+		</script>
+		<script>
+			var loading = false; //下拉状态标记
+			window.onload = function() {
+				$.showLoading();
+				initPullDown();
+				getDepartments();
+			}
+
+			/**
+			 * 初始化下拉刷新
+			 */
+			function initPullDown() {
+				$("#pullDown").css("display", "block");
+				$(".weui-tab__bd-item").pullToRefresh();
+				$(".weui-tab__bd-item").on("pull-to-refresh", function() {
+					if(loading) {
+						return false
+					};
+					loading = true;
+					getDepartments();
+				});
+			}
+
+			/**
+			 * 获取部门
+			 */
+			function getDepartments() {
+				var tempData = {
+					cmd: 'persondeparts',
+					type: 'findpage',
+				}
+				unitWebsitePro(tempData, function(data) {
+					$.hideLoading();
+					//data = persondepartsCallBack;
+					loading = false;
+					$(".weui-tab__bd-item").pullToRefreshDone();
+					if(data.RspCode == 0) {
+						$("#dataList").empty();
+						var departments = JSON.parse(data.RspData);
+						console.log("departments",departments);
+						showData(departments);
+					} else {
+						$.alert(data.RspTxt, "提示");
+					}
+				});
+			}
+
+			function showData(departments) {
+				var html = "";
+				for(var i = 0; i < departments.length; i++) {
+					if(departments[i].value == -1) {
+						continue;
+					} else {
+						html = html + '\
+							<a href="stulist.html?id=' + departments[i].value + '" class="weui-cell weui-cell_access">\
+								<div class="weui-cell__bd">\
+									<div class="weui-media-box weui-media-box_appmsg">\
+										<div class="weui-media-box__hd">\
+											<img class="weui-media-box__thumb" src="../../../image/classCircle/nodata.png">\
+										</div>\
+										<div class="weui-media-box__bd">\
+											<h4 class="weui-media-box__title">' + departments[i].title + '</h4>\
+										</div>\
+									</div>\
+								</div>\
+								<div class="weui-cell__ft">\
+								</div>\
+							</a>';
+					}
+				}
+				$("#dataList").append(html);
+			}
+		</script>
+	</body>
+
+</html>

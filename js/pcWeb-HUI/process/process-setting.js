@@ -30,7 +30,6 @@ Vue.component("process-setting", {
 				this.tablebases.destroy();
 			}
 			this.$nextTick(this.newTablebases);
-			this.tablebases.table(0).page(this.curPage).draw(false);
 		}
 	},
 	methods: {
@@ -67,6 +66,7 @@ Vue.component("process-setting", {
 					}
 				]
 			});
+			this.tablebases.table(0).page(this.curPage).draw(false);
 		},
 		getCurPage: function() {
 			this.curPage = this.tablebases.page.info().page;
@@ -87,7 +87,7 @@ Vue.component("process-setting", {
 				if(response.RspCode == 0) {
 					process.Stat = (process.Stat + 1) % 2;
 				} else {
-					alert(response.RspTxt);
+					layer.alert(response.RspTxt);
 				}
 			})
 		},
@@ -271,7 +271,7 @@ Vue.component("process-setting", {
 				if(response.RspCode == 0) {
 					com.requireProcess();
 				} else {
-					alert(response.RspTxt);
+					layer.alert(response.RspTxt);
 				}
 			})
 		}

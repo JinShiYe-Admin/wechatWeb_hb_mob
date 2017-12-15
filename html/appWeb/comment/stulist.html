@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>学生列表</title>
+		<script type="text/javascript">
+			var WebVersion = "?" + Math.random();
+		</script>
+		<link rel="stylesheet" href="../../../css/weui.min.css" />
+		<link rel="stylesheet" href="../../../js/demoCssJs/jquery-weui.min.css" />
+		<link rel="stylesheet" href="../../../js/demoCssJs/demos.css" />
+		<style>
+			body {
+				-webkit-overflow-scrolling: touch;
+			}
+
+			.weui-tab {
+				display: none;
+			}
+
+			.weui-tab__bd-item {
+				width: 100%;
+			}
+
+			.weui-grid {
+				/*一行四个成员*/
+				width: 25%;
+			}
+
+			.weui-grid:before,
+			.weui-grid:after {
+				/*去掉边框*/
+				border: none;
+			}
+			/*成员头像---start---*/
+
+			.stu-headimage {
+				border-radius: 50%;
+			}
+
+			.weui-grid__icon {
+				width: 50px;
+				height: 50px;
+			}
+			/*成员头像---end---*/
+			/*多选框---start---*/
+
+			.stu-checkbox {
+				position: absolute;
+				right: 12px;
+				top: 12px;
+			}
+
+			.weui-cells_checkbox .weui-icon-checked:before {
+				content: "\EA06";
+				font-size: 20px;
+			}
+
+			.weui-cells_checkbox .weui-cell__hd {
+				padding-right: 0;
+			}
+
+			.stu-checkbox-hide .stu-checkbox {
+				display: none;
+			}
+			/*多选框---end---*/
+			/*身份是老师---start---*/
+
+			.teacher-show .weui-tab__bd {
+				padding-bottom: 50px;
+			}
+
+			.weui-tabbar {
+				display: none;
+			}
+
+			.teacher-show .weui-tabbar {
+				display: flex;
+			}
+			/*身份是老师---end---*/
+			/*底部多选---start---*/
+
+			.weui-tabbar__item {
+				height: 50px;
+				display: flex;
+				align-items: center;
+				text-align: center;
+				justify-content: center;
+				padding: 0;
+			}
+
+			.weui-tabbar__label {
+				font-size: 15px;
+				display: inline-block;
+			}
+
+			.weui-tabbar__icon {
+				display: inline-block;
+				vertical-align: top;
+				margin-right: 5px;
+				width: 20px;
+				height: 20px;
+			}
+			/*底部多选---end---*/
+		</style>
+	</head>
+
+	<body>
+		<div id="weuitab" class="weui-tab">
+			<div class="weui-tab__bd">
+				<div class="weui-tab__bd-item weui-tab__bd-item--active">
+					<div id="dataList" class="weui-grids weui-cells_checkbox stu-checkbox-hide">
+						<!--<label class="weui-grid">
+							<div class="weui-cell__hd stu-checkbox">
+								<input type="checkbox" class="weui-check" name="checkbox1" checked="checked">
+								<i class="weui-icon-checked"></i>
+							</div>
+							<div class="weui-cell__hd">
+								<div class="weui-grid__icon">
+									<img class="stu-headimage" src="../../../image/config/func_actssm.jpg">
+								</div>
+								<p class="weui-grid__label">Grid</p>
+							</div>
+						</label>-->
+					</div>
+				</div>
+			</div>
+			<div class="weui-tabbar">
+				<div class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
+						<img src="../../../image/comment/addactive.png" />
+					</div>
+					<div class="weui-tabbar__label">点评多人</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../../../js/lib/vconsole/vconsole.min.js"></script>
+		<script type="text/javascript" src="../../../js/demoCssJs/jquery-2.1.4.js"></script>
+		<script type="text/javascript" src="../../../js/demoCssJs/jquery-weui.min.js"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
+			//document.write("<s" + "cript type='text/javascript' src='../../../temp/mineinfo.js" + WebVersion + "'></s" + "cript>");
+		</script>
+		<script type="text/javascript">
+			var depId; //部门id
+			var mineUserInfo; //个人信息
+			var evalTemplate; //点评模板
+			var members = {
+				key: [],
+				value: {}
+			} //成员信息
+			window.onload = function() {
+				$.showLoading();
+				var search = location.search.toString();
+				var keyword = "?id=";
+				var index = search.indexOf(keyword);
+				var isChange = false; //是否是修改请假申请
+				if(index != -1) {
+					isChange = true;
+					depId = search.substring(index + keyword.length);
+					getMineInfo();
+				} else {
+					$.hideLoading();
+					$.alert("未获取到有效的数据", "提示");
+				}
+				console.log("depId:" + depId);
+			}
+			/**
+			 * 获取我的信息
+			 */
+			function getMineInfo() {
+				var tempData = {
+					cmd: 'userinfo',
+					type: 'findpage',
+					colv: ""
+				}
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						mineUserInfo = JSON.parse(data.RspData);
+						getMembers();
+					} else {
+						$.hideLoading();
+						$.alert("未获取到个人信息(" + data.RspTxt + ")", "提示");
+					}
+				});
+			}
+
+			/**
+			 * 获取成员
+			 */
+			function getMembers() {
+				var tempData = {
+					cmd: 'departpersons',
+					type: 'findpage',
+					colid: depId,
+					colv: 0,
+					callcol: "info"
+				}
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						addMemberData(data.RspData);
+						getEvalTemplate();
+					} else {
+						$.hideLoading();
+						$.alert("未获取到成员信息(" + data.RspTxt + ")", "提示");
+					}
+				});
+			}
+			/**
+			 * 获取点评模版
+			 */
+			function getEvalTemplate() {
+				var tempData = {
+					corpId: mineUserInfo.corpid,
+					templType: 0,
+					pageIndex: 1,
+					pageSize: 0
+				}
+				getEvalTemplatePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						for(var i = 0; i < data.RspData.Data.length; i++) {
+							console.log("EvalTemplate", data.RspData.Data[i]);
+						}
+						initData();
+						initListener();
+						$.hideLoading();
+					} else {
+						$.hideLoading();
+						$.alert("未获取到点评模版(" + data.RspTxt + ")", "提示");
+					}
+				});
+			}
+
+			/**
+			 * 显示成员数据
+			 */
+			function addMemberData(data) {
+				var html = "";
+				for(var i = 0; i < data.length; i++) {
+					console.log("addMemberData", data[i]);
+					html = html + '\
+						<label class="weui-grid" for="' + data[i].userid + '">\
+							<div class="weui-cell__hd stu-checkbox">\
+								<input id="' + data[i].userid + '" type="checkbox" class="weui-check" name="checkbox1">\
+								<i class="weui-icon-checked"></i>\
+							</div>\
+							<div class="weui-cell__hd">\
+								<div class="weui-grid__icon">\
+									<img class="stu-headimage" src="' + data[i].avatar + '">\
+								</div>\
+								<p class="weui-grid__label">' + data[i].name + '</p>\
+							</div>\
+						</label>';
+				}
+				$("#dataList").append(html);
+			}
+
+			/**
+			 * 初始化数据
+			 */
+			function initData() {
+				if(mineUserInfo.isleader == 1) {
+					//上级，老师
+					$("#weuitab").addClass("teacher-show");
+				}
+				$("#weuitab").css("display", "block");
+
+			}
+
+			function initListener() {
+				$(".weui-grids").on("click", ".weui-grid input", function() {
+					console.log("click");
+				});
+			}
+		</script>
+	</body>
+
+</html>

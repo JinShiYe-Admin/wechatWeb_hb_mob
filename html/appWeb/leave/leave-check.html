@@ -61,13 +61,28 @@
 			.apply-uncheck {
 				color: dodgerblue;
 			}
+			
+			.weui-navbar__item:after {
+				border-right: 0;
+			}
+			
+			.weui-navbar__item {
+				padding: 5px 0;
+			}
+			
+			.weui-navbar__item.weui-bar__item--on {
+				border-bottom: 2px solid #46bdff;
+				color: #46bdff;
+			}
 		</style>
 	</head>
 
 	<body ontouchstart>
 		<div class="weui-tab" id="tabs">
 			<div class="weui-navbar">
-				<div v-for="tab in tabs" class="weui-navbar__item" v-bind:class="[{'weui-bar__item--on':tab.apprStat===activeIndex}]" v-bind:href="'#tab'+tab.apprStat" v-on:click="setActiveIndex(tab.apprStat)">{{tab.title}}</div>
+				<template>
+					<div v-for="tab in tabs" class="weui-navbar__item" v-bind:class="[{'weui-bar__item--on':tab.apprStat===activeIndex}]" v-bind:href="'#tab'+tab.apprStat" v-on:click="setActiveIndex(tab.apprStat)">{{tab.title}}</div>
+				</template>
 			</div>
 			<div class="weui-tab__bd">
 				<div v-for="tab in tabs" :id="'tab'+tab.apprStat" class="weui-tab__bd-item  weui-pull-to-refresh infinite" :class="[{'weui-tab__bd-item--active':tab.apprStat===activeIndex}]">
@@ -257,7 +272,7 @@
 							if(response.RspCode == 0) {
 								callback(response.RspData);
 							} else {
-
+								$.alert("获取审核列表失败(" + response.RspTxt + ")", "提示");
 							}
 						})
 					},

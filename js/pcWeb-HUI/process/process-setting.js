@@ -176,6 +176,8 @@ Vue.component("process-setting", {
 				if(response.RspCode == 0) {
 					com.addDataToList(response.RspData.Result);
 					com.toggleLayer(false);
+				} else {
+					layer.alert(response.RspTxt);
 				}
 			})
 		},
@@ -213,7 +215,7 @@ Vue.component("process-setting", {
 					com.activeProcess.ProcTypeName = com.name;
 					com.activeProcess.procTypeNote = com.note;
 				} else {
-
+					layer.alert(response.RspTxt);
 				}
 			})
 		},
@@ -234,7 +236,7 @@ Vue.component("process-setting", {
 				if(response.RspCode == 0) {
 					com.processList = response.RspData.Data
 				} else {
-					alert(response.RspTxt);
+					layer.alert(response.RspTxt);
 				}
 			})
 		},

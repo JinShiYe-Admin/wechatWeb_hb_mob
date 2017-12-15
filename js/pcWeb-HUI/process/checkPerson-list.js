@@ -101,14 +101,13 @@ Vue.component("check-person-list", {
 		},
 		/**
 		 * 全选逻辑
-		 * @param {Object} isAdd
 		 */
-		inputToggleAll: function(isAdd) {
+		inputToggleAll: function() {
 			console.log("****inputToggleAll****");
 			var com = this;
 			com.checkPersonList.forEach(function(checkPerson, index) {
 				if(index >= com.curPage * 10 && index < (com.curPage + 1) * 10) {
-					checkPerson.isSelect = isAllAdd;
+					checkPerson.isSelect = com.isAllSelect;
 					if(com.isAllSelect) {
 						com.selectedInputPerson[checkPerson.TabId] = checkPerson.ApprManName;
 					}

@@ -95,6 +95,20 @@
 						(*排序id越小越靠前)
 					</div>
 				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">图片上传：</label>
+					<div class="formControls skin-minimal col-xs-8 col-sm-9">
+						<div class="check-box">
+							<span class="btn-upload">
+							  <a class="btn btn-primary radius">选取文件</a>
+							  <input id="uploaderInput" type="file" class="input-file" accept="image/png, image/jpeg, image/jpg" @change="fileChange">
+							</span>
+							<div v-if="localPath!=''" class="picture-show">
+								<img :src="localPath" />
+							</div>
+						</div>
+					</div>
+				</div>
 				<div class="row cl submit-button">
 					<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
 						<input class="btn btn-primary radius" type="button" value="确定" @click="btnAdd()">
@@ -147,8 +161,10 @@
 					userInfo: {}, //当前人员信息
 					evaluateArray: [],
 					evaluateFlag: 0 //0添加，1编辑
+
 				},
 				methods: {
+
 					modifyEvaluate: function(model, index) {
 						evaluateData.evaluateFlag = 1;
 						addEvaluateLayer.showEdit(model);
@@ -188,9 +204,47 @@
 					TemplContent: "", //点评模板内容
 					TemplType: "1", //点评模板分类，1 表扬，2 待改进
 					OrderId: '0', //排序
-					evaluateModel: {} //要修改的的类型model
+					evaluateModel: {}, //要修改的的类型model
+					localPath: ""
 				},
 				methods: {
+					fileChange: function(e) {
+						console.log("fileChange:value", e.target.value);
+						console.log("fileChange:files", e.target.files);
+						var files = e.target.files;
+						if(files[0].size == 0 || files[0].name == "/") { //"未选择图片"
+							$('#uploaderInput').val('');
+							return false;
+						}
+						var types = files[0].type.toLowerCase().split("/");
+						if(types[1] != "png" && types[1] != "jpg" && types[1] != "jpeg") {
+							$('#uploaderInput').val('');
+							pictureModal.show("图片选取失败", "请选择png,jpg,jpeg类型的图片");
+							return false;
+						}
+
+						var reader = new FileReader();
+						reader.onload = function() {
+							var result = this.result;
+							var maxSize = 1 * 1024 * 1024;
+							compress.getImgInfo(result, function(img, imgInfo) {
+								console.log("获取的文件信息", imgInfo);
+								console.log("原图尺寸", result.length);
+								var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)));
+								var blob = compress.base64ToBlob(newDataUrl, 'image/jpeg');
+								console.log('文件大小:' + blob.size);
+								blob.lastModifiedDate = new Date();
+//								if(pictureInfo.type == "删除") {
+//									layer.load(2);
+//									pictureUploader.addFile(blob, Date.now() + "" + parseInt(Math.random() * 1000) + ".jpg");
+//								} else {
+//									pictureInfo.localPath = newDataUrl;
+//									pictureInfo.localFile = blob;
+//								}
+							});
+						}
+						reader.readAsDataURL(files[0]);
+					},
 					/**
 					 * 显示添加图片
 					 */

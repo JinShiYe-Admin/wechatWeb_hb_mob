@@ -185,9 +185,8 @@
 				</div>
 			</template>
 		</div>
-
-		<script type="text/javascript" src="../../../js/demoCssJs/jquery-2.1.4.js"></script>
-		<script type="text/javascript" src="../../../js/demoCssJs/jquery-weui.min.js"></script>
+		<script src="../../../js/jquery.min.js"></script>
+		<script src="../../../js/jquery-weui.min.js"></script>
 		<script src="../../../js/lib/vconsole/vconsole.min.js"></script>
 		<script src="../../../js/vue.js"></script>
 		<script src="../../../js/vue-router.js"></script>
@@ -272,7 +271,7 @@
 							if(response.RspCode == 0) {
 								com.checkList = response.RspData.Data;
 							} else {
-
+								$.alert("获取审核人员列表失败(" + data.RspTxt + ")", "提示");
 							}
 						})
 					},

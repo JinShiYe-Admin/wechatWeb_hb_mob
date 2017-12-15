@@ -20,50 +20,55 @@
 			body {
 				-webkit-overflow-scrolling: touch;
 			}
-			
+
 			.weui-cells {
 				margin-top: 0;
 			}
-			
+
 			.weui-form-preview__bd {
 				text-align: left;
 				padding: 0 15px 0 0;
 				line-height: inherit;
 			}
-			
+
 			.apply-state-naudited {
 				/*未审批*/
 				color: #46BDFF;
 			}
-			
+
 			.apply-state-passed {
 				/*已通过*/
 				color: #09BB07;
 			}
-			
+
 			.apply-state-nopassed {
 				/*驳回*/
 				color: #F76260;
 			}
-			
+
+			.apply-state-waiting {
+				/*正在审批*/
+				color: #FFBE00;
+			}
+
 			.weui-form-preview__value {
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				color: black;
 			}
-			
+
 			.weui-form-preview__label {
 				margin-right: 15px;
 			}
-			
+
 			.weui-tab__bd {
 				margin-top: -50px;
 			}
-			
+
 			.weui-tab__bd-item {
 				width: 100%;
 			}
-			
+
 			.weui-tabbar {
 				bottom: -50px;
 			}
@@ -155,8 +160,17 @@
 					clickIndex = $(".weui-cells .weui-cell").index(this);
 					var leave = leaveApply.value[leaveApply.key[clickIndex]];
 					console.log("leave", leave);
-					if(leave.ApplyStat == 0) {
-						//未审核
+					if(leave.ApplyStat == 1 || leave.ApplyStat == 2 || leave.ApplyStat == 3) {
+						//已通过，驳回，正在审核
+						var sKey = new Date().getTime() + "" + parseInt(Math.random() * 1000);
+						var sValue = {
+							leave: leave,
+							mineUserInfo: mineUserInfo
+						}
+						storageutil.setSessionStorage(sKey, JSON.stringify(sValue));
+						location.href = "leave-detail.html?flag=0&sKey=" + sKey;
+					} else {
+						//未审批
 						$.actions({
 							actions: [{
 								text: "编辑",
@@ -190,15 +204,6 @@
 								}
 							}]
 						});
-					} else {
-						//已审核
-						var sKey = new Date().getTime() + "" + parseInt(Math.random() * 1000);
-						var sValue = {
-							leave: leave,
-							mineUserInfo: mineUserInfo
-						}
-						storageutil.setSessionStorage(sKey, JSON.stringify(sValue));
-						location.href = "leave-detail.html?flag=0&sKey=" + sKey;
 					}
 				});
 			}
@@ -210,19 +215,21 @@
 			function showData(data) {
 				var html = "";
 				for(var i = 0; i < data.length; i++) {
-					//data[i].ApplyStat = 1;
 					data[i].ApplyBeginTime = data[i].ApplyBeginTime.substring(0, data[i].ApplyBeginTime.length - 3);
 					data[i].ApplyEndTime = data[i].ApplyEndTime.substring(0, data[i].ApplyEndTime.length - 3);
 					leaveApply.key.push(data[i].ApplyId);
 					leaveApply.value[data[i].ApplyId] = data[i];
 					var className = "apply-state-naudited";
-					var stateName = "未审核";
+					var stateName = "未审批";
 					if(data[i].ApplyStat == 1) {
 						className = "apply-state-passed";
 						stateName = "已通过";
 					} else if(data[i].ApplyStat == 2) {
 						className = "apply-state-nopassed";
 						stateName = "驳回";
+					} else if(data[i].ApplyStat == 3) {
+						className = "apply-state-waiting";
+						stateName = "审批中";
 					}
 
 					html = html + '\

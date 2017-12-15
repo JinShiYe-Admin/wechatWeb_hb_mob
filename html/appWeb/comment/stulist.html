@@ -179,7 +179,6 @@
 					colv: ""
 				}
 				unitWebsitePro(tempData, function(data) {
-					//data = getMineInfoCallBack;
 					if(data.RspCode == 0) {
 						mineUserInfo = JSON.parse(data.RspData);
 						getMembers();
@@ -202,7 +201,6 @@
 					callcol: "info"
 				}
 				unitWebsitePro(tempData, function(data) {
-					//data = getDepartPersonsCallBack;
 					if(data.RspCode == 0) {
 						addMemberData(data.RspData);
 						getEvalTemplate();
@@ -245,16 +243,16 @@
 				for(var i = 0; i < data.length; i++) {
 					console.log("addMemberData", data[i]);
 					html = html + '\
-						<label class="weui-grid">\
+						<label class="weui-grid" for="' + data[i].userid + '">\
 							<div class="weui-cell__hd stu-checkbox">\
-								<input type="checkbox" class="weui-check" name="checkbox1">\
+								<input id="' + data[i].userid + '" type="checkbox" class="weui-check" name="checkbox1">\
 								<i class="weui-icon-checked"></i>\
 							</div>\
 							<div class="weui-cell__hd">\
 								<div class="weui-grid__icon">\
-									<img class="stu-headimage" src="../../../image/config/func_actssm.jpg">\
+									<img class="stu-headimage" src="' + data[i].avatar + '">\
 								</div>\
-								<p class="weui-grid__label">Grid</p>\
+								<p class="weui-grid__label">' + data[i].name + '</p>\
 							</div>\
 						</label>';
 				}
@@ -274,7 +272,7 @@
 			}
 
 			function initListener() {
-				$(".weui-grids").on("click", ".weui-grid", function() {
+				$(".weui-grids").on("click", ".weui-grid input", function() {
 					console.log("click");
 				});
 			}

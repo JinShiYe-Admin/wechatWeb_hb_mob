@@ -38,6 +38,8 @@
 				<div>
 					<div class="weui-cells__title">打卡开始时间：
 						<select id="beginHour">
+							<option value=""></option>
+							<option value="0">0</option>
 							<option value="1">1</option>
 							<option value="2">2</option>
 							<option value="3">3</option>
@@ -61,7 +63,6 @@
 							<option value="21">21</option>
 							<option value="22">22</option>
 							<option value="23">23</option>
-							<option value="24">24</option>
 						</select>时
 						<select id="beginMinute">
 							<option value="0">0</option>
@@ -130,6 +131,7 @@
 					<div class="weui-cells__title">上班或下班时间：
 						<select id="workTimePoint_Hour">
 							<option value=""></option>
+							<option value="0">0</option>
 							<option value="1">1</option>
 							<option value="2">2</option>
 							<option value="3">3</option>
@@ -153,7 +155,6 @@
 							<option value="21">21</option>
 							<option value="22">22</option>
 							<option value="23">23</option>
-							<option value="24">24</option>
 						</select>
 						时
 						<select id="workTimePoint_Minute">
@@ -226,6 +227,7 @@
 					<div class="weui-cells__title">打卡结束时间：
 						<select id="cardEndTimePoint_Hour">
 							<option value=""></option>
+							<option value="0">0</option>
 							<option value="1">1</option>
 							<option value="2">2</option>
 							<option value="3">3</option>
@@ -249,7 +251,6 @@
 							<option value="21">21</option>
 							<option value="22">22</option>
 							<option value="23">23</option>
-							<option value="24">24</option>
 						</select>
 						时
 						<select id="cardEndTimePoint_Minute">
@@ -593,8 +594,18 @@
 				/**
 				 * 将每条考勤地点对象的属性值分别赋值到相应属性上
 				 */
-				document.getElementById("beginHour").value = attendTimeObject.BeginHour;
-				document.getElementById("beginMinute").value = attendTimeObject.BeginMinute;
+				var cardStartTimePoint_HourSelObj = document.getElementById("beginHour")
+				cardStartTimePoint_HourSelObj.options[0].text = attendTimeObject.cardStartTimePoint_Hour;
+
+				//将分钟值进行处理
+				document.getElementById("beginMinute").options[0].text = handlerViewMinute(attendTimeObject.cardStartTimePoint_Minute);
+
+				document.getElementById("workTimePoint_Hour").options[0].text = attendTimeObject.workTimePoint_Hour
+				document.getElementById("workTimePoint_Minute").options[0].text = handlerViewMinute(attendTimeObject.workTimePoint_Minute)
+
+				document.getElementById("cardEndTimePoint_Hour").options[0].text = attendTimeObject.cardEndTimePoint_Hour
+				document.getElementById("cardEndTimePoint_Minute").options[0].text = handlerViewMinute(attendTimeObject.cardEndTimePoint_Minute)
+
 				//				document.getElementById("continuousTime").value = attendTimeObject.ContinuousMinute;
 				//				document.getElementById("lateMinutes").value = attendTimeObject.LateMinute;
 				document.getElementById("attendMessage").value = attendTimeObject.AttendMessage;
@@ -716,32 +727,35 @@
 						//获取打卡开始时间分钟值.代码结束
 
 						//获取打卡开始时间小时值.代码开始
-						var selectElementObject_H = document
+						var selectObject_BH = document
 							.getElementById("beginHour");
 						//						console.log("selectElementObject===" + selectElementObject);
-						var optionElementObjectIndex_H = selectElementObject_H.selectedIndex + 1;
-						console.log("optionElementObjectIndex_H===3333333333333===" +
-							optionElementObjectIndex_H);
-						var optionElementText_H = selectElementObject_M.options[optionElementObjectIndex_H].text;
-						console.log("optionElementText_H====" +
-							optionElementText_H);
-						var beginHour = optionElementText_H;
+						var optionObjectIndex_BH = selectObject_BH.selectedIndex 
+						console.log("optionObjectIndex_BH===" +
+							optionObjectIndex_BH);
+						var optionElementText_BH = selectObject_BH.options[optionObjectIndex_BH].text;
+						console.log("optionElementText_BH====" +
+							optionElementText_BH);
+						var beginHour = optionElementText_BH;
+						console.log("beginHour====" +
+							beginHour);
 						//获取打卡开始时间小时值.代码结束	
 
 						//						var lateMinutes = document
 						//							.getElementById("lateMinutes").value;
 						//						var continuousTime = document
 						//							.getElementById("continuousTime").value;
-						
-						
+
 						//获取上、下班时间小时值.代码开始
 						var selectObject_WH = document.getElementById("workTimePoint_Hour");
 						//						console.log("selectElementObject===" + selectElementObject);
 						var optionObjectIndex_WH = selectObject_WH.selectedIndex;
 						//						console.log("optionElementObjectIndex_H===" + optionElementObjectIndex_H);
 						var optionElementText_WH = selectObject_WH.options[optionObjectIndex_WH].text;
-						//						console.log("optionElementText_H====" + optionElementText_H);
+												console.log("optionElementText_WH====" + optionElementText_WH);
 						var workTimePoint_Hour = optionElementText_WH;
+						console.log("workTimePoint_Hour====" + workTimePoint_Hour);
+						
 						//获取上、下班时间小时值.代码结束
 
 						//获取上、下班时间分钟值.代码开始
@@ -773,47 +787,58 @@
 						//						console.log("optionElementText_H====" + optionElementText_H);
 						var cardEndTimePoint_Minute = optionElementText_CEM;
 						//获取打卡结束时间分钟值.代码结束
-						
+
 						//得到的时间点的分钟值，如果不满2位，需前面补0，以够2位。
-						var afterHandlerBeginMinute=getMinuteLength(beginMinute)
-						var afterHandlerWorkTimePoint_Minute=getMinuteLength(workTimePoint_Minute)
-						var afterHandlerCardEndTimePoint_Minute=getMinuteLength(cardEndTimePoint_Minute)
+						var afterHandlerBeginMinute = getMinuteLength(beginMinute)
+						var afterHandlerWorkTimePoint_Minute = getMinuteLength(workTimePoint_Minute)
+						var afterHandlerCardEndTimePoint_Minute = getMinuteLength(cardEndTimePoint_Minute)
 						//将得到的3个时间点，时、分拼接
-						var cardStartTimePoint = beginHour+afterHandlerBeginMinute;
-						console.log("cardStartTimePoint===="+cardStartTimePoint)
-						var workTimePoint=workTimePoint_Hour+afterHandlerWorkTimePoint_Minute;
-						console.log("workTimePoint===="+workTimePoint)
-						var cardEndTimePoint=cardEndTimePoint_Hour+afterHandlerCardEndTimePoint_Minute;
-						console.log("cardEndTimePoint===="+cardEndTimePoint)
-						
-						
+						var cardStartTimePoint = beginHour + afterHandlerBeginMinute;
+						console.log("cardStartTimePoint====" + cardStartTimePoint)
+						var workTimePoint = workTimePoint_Hour + afterHandlerWorkTimePoint_Minute;
+						console.log("workTimePoint====" + workTimePoint)
+						var cardEndTimePoint = cardEndTimePoint_Hour + afterHandlerCardEndTimePoint_Minute;
+						console.log("cardEndTimePoint====" + cardEndTimePoint)
+
 						//获取考勤短信
 						var attendMessage = document
 							.getElementById("attendMessage").value;
 						if(beginHour == "") {
-							alert("开始时间（小时）不能为空！");
+							alert("打卡开始时间（小时）不能为空！");
 							return;
 						} else if(beginMinute == "") {
-							alert("开始时间（分钟）不能为空！");
+							alert("打卡开始时间（分钟）不能为空！");
 							return;
-						} else if(lateMinutes == "") {
-							alert("迟到时间（分钟）不能为空！");
+						} else if(workTimePoint_Hour == "") {
+							alert("上班或下班时间（小时）不能为空！");
 							return;
-						} else if(continuousTime == "") {
-							alert("持续时间（分钟）不能为空！");
+						} else if(workTimePoint_Minute == "") {
+							alert("上班或下班时间（分钟）不能为空！");
+							return;
+						} else if(cardEndTimePoint_Hour == "") {
+							alert("打卡结束时间（小时）不能为空！");
+							return;
+						} else if(cardEndTimePoint_Minute == "") {
+							alert("打卡结束时间（分钟）不能为空！");
 							return;
 						} else if(attendMessage == "") {
 							alert("考勤短信内容不能为空！");
+							return;
+						} else if(parseInt(workTimePoint) <= parseInt(cardStartTimePoint)) { //上班或下班时间<=打卡开始时间
+							alert("上班或下班时间必须大于打卡开始时间！");
+							return;
+						} else if(parseInt(cardEndTimePoint) <= parseInt(workTimePoint)) { //打卡结束时间<=上班或下班时间
+							alert("打卡结束时间必须大于上班或下班时间！");
 							return;
 						} else {
 							//input 输入框的值都填写了，则提交，进行添加。
 							var tempData = {
 								"attendTimeId": attendTimeId,
 								"attendType": attendTypeId,
-								"beginHour": beginHour,
-								"beginMinute": beginMinute,
-								"continuousMinute": continuousTime,
-								"lateMinute": lateMinutes,
+								"beginHour": 0,
+								"beginMinute": cardStartTimePoint, //打卡开始时间
+								"continuousMinute": workTimePoint, //上班或下班时间
+								"lateMinute": cardEndTimePoint, //打卡结束时间
 								"attendMessage": attendMessage,
 								"uuid": "",
 								"appid": "",
@@ -844,7 +869,7 @@
 											//										window.location = "../pcWeb-HUI/attendenceManage.html";
 
 										} else if(data.RspCode == 1018) {
-											alert("存在相同时间的考勤时间段");
+											alert("签到时间不能交叉");
 										} else if(data.RspCode == 1019) {
 											alert("同一个考勤类型记录也只能有一个时间段");
 										}
@@ -1021,17 +1046,28 @@
 					}
 				});
 			}
-			
-			
+
 			/**
 			 * 函数功能：计算分钟值是否是2位，若是1位即个位数，需十位补0，让其达到2位
 			 * param : 分钟值
 			 */
-			function getMinuteLength(minute){
-				if(minute.length==1){//分钟值是个位数
-					return 0+minute
-				}else{
+			function getMinuteLength(minute) {
+				if(minute.length == 1) { //分钟值是个位数
+					return 0 + minute
+				} else {
 					return minute
+				}
+			}
+
+			/**
+			 * 将得到的分钟值进行处理，<10的2位的变为1位
+			 * param 05、15
+			 */
+			function handlerViewMinute(twoBitsMinute) {
+				if(twoBitsMinute < 10) {
+					return twoBitsMinute.substring(1)
+				} else {
+					return twoBitsMinute
 				}
 			}
 		</script>

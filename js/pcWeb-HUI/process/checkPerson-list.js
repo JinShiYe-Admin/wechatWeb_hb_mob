@@ -86,7 +86,6 @@ Vue.component("check-person-list", {
 		 */
 		getAllCheckStatus: function(e) {
 			console.log("*****getAllCheckSatus*****")
-			this.isAllSelect = e.target.checked;
 			this.getCurPage();
 			this.inputToggleAll();
 		},

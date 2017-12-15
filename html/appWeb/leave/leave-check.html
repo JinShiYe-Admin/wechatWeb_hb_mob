@@ -272,7 +272,7 @@
 							if(response.RspCode == 0) {
 								callback(response.RspData);
 							} else {
-								$.alert("获取审核列表失败(" + data.RspTxt + ")", "提示");
+								$.alert("获取审核列表失败(" + response.RspTxt + ")", "提示");
 							}
 						})
 					},

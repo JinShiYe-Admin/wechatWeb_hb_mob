@@ -271,7 +271,7 @@
 							if(response.RspCode == 0) {
 								com.checkList = response.RspData.Data;
 							} else {
-								$.alert("获取审核人员列表失败(" + data.RspTxt + ")", "提示");
+								$.alert("获取审核人员列表失败(" + response.RspTxt + ")", "提示");
 							}
 						})
 					},
@@ -296,7 +296,7 @@
 								com.flag = 0;
 								com.getApprList();
 							} else {
-								$.alert("审核失败(" + data.RspTxt + ")", "提示");
+								$.alert("审核失败(" + response.RspTxt + ")", "提示");
 							}
 						});
 					}

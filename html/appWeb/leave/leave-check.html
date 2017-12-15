@@ -95,9 +95,9 @@
 							</div>
 						</div>
 					</div>
-					<div v-show="tab.haveMore" class="weui-loadmore">
-						<i class="weui-loading"></i>
-						<span class="weui-loadmore__tips">正在加载</span>
+					<div class="weui-loadmore">
+						<i v-show="tab.haveMore" class="weui-loading"></i>
+						<span class="weui-loadmore__tips">{{tab.haveMore?"正在加载":"没有更多了"}}</span>
 					</div>
 				</div>
 			</div>
@@ -292,6 +292,9 @@
 					 */
 					loadMore: function(callback) {
 						console.log("*****loadMore******");
+						if(!this.tabs[this.activeIndex].haveMore) {
+							return;
+						}
 						this.tabs[this.activeIndex].pageIndex++;
 						this.requestList(callback);
 					},
@@ -310,8 +313,8 @@
 						location.href = "leave-detail.html?flag=" + this.getFlag(item) + "&sKey=" + sKey;
 					},
 					getFlag: function(item) {
-						if(item.ApprStat == 0) {//未审
-							return 1//审核
+						if(item.ApprStat == 0) { //未审
+							return 1 //审核
 						}
 						return 0
 					}

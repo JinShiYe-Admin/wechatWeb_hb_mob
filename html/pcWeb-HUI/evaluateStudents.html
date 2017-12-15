@@ -118,7 +118,7 @@
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
-		<script src='../../js/lib/vconsole/vconsole.min.js'></script>
+		<!--<script src='../../js/lib/vconsole/vconsole.min.js'></script>-->
 		<script type="text/javascript">
 			$(function() {
 				$('.table-sort').dataTable({
@@ -254,29 +254,29 @@
 
 						} else {
 							//重新编辑类型时，判断是否输入了值，有没有重复
-//							if(checkInput(addEvaluateLayer.TemplContent, 1)) {
-//								var tempData = {
-//									templId: this.evaluateModel.templId, //考勤类型ID
-//									TemplContent: addEvaluateLayer.TemplContent, //考勤类型说明
-//									TemplType: addEvaluateLayer.TemplType, //1 表扬，2 待改进
-//									OrderId: addEvaluateLayer.OrderId //排序id
-//								}
-//								console.log('tempData:' + JSON.stringify(tempData));
-//								setAttendTypePro(tempData, function(data) {
-//									layer.closeAll();
-//									if(data.RspCode == 0) {
-//										if(data.RspData.Result == 1) {
-//											layer.alert('修改成功');
-//											//3.获取点评模板
-//											getEvalTemplate();
-//										} else {
-//											layer.alert('修改失败');
-//										}
-//									} else {
-//										layer.alert(data.RspTxt);
-//									}
-//								});
-//							}
+							//							if(checkInput(addEvaluateLayer.TemplContent, 1)) {
+							//								var tempData = {
+							//									templId: this.evaluateModel.templId, //考勤类型ID
+							//									TemplContent: addEvaluateLayer.TemplContent, //考勤类型说明
+							//									TemplType: addEvaluateLayer.TemplType, //1 表扬，2 待改进
+							//									OrderId: addEvaluateLayer.OrderId //排序id
+							//								}
+							//								console.log('tempData:' + JSON.stringify(tempData));
+							//								setAttendTypePro(tempData, function(data) {
+							//									layer.closeAll();
+							//									if(data.RspCode == 0) {
+							//										if(data.RspData.Result == 1) {
+							//											layer.alert('修改成功');
+							//											//3.获取点评模板
+							//											getEvalTemplate();
+							//										} else {
+							//											layer.alert('修改失败');
+							//										}
+							//									} else {
+							//										layer.alert(data.RspTxt);
+							//									}
+							//								});
+							//							}
 						}
 					},
 					/**
@@ -307,17 +307,16 @@
 					type: 'findpage', //获取某个详细信息
 					colv: '' //留空为取当前人员信息,不为空则为具体人员信息
 				}
-				//				console.log('tempData:' + JSON.stringify(tempData));
-				//				unitWebsitePro(tempData, function(data) {
-				//					if(data.RspCode == 0) {
-				//						evaluateData.userInfo = JSON.parse(data.RspData);
-				evaluateData.userInfo = JSON.parse('{\"corpid\":\"wx6c4528c675d4a9c9\",\"userid\":\"zhaoqiwang\",\"name\":\"赵启旺\",\"department\":null,\"order\":null,\"position\":null,\"mobile\":null,\"english_name\":null,\"gender\":0,\"isleader\":0,\"telephone\":null,\"email\":null,\"weixinid\":null,\"avatar\":null,\"status\":0,\"extattr\":null,\"errcode\":0,\"errmsg\":null,\"P2PData\":null}');
-				//3.获取点评模板
-				getEvalTemplate();
-				//					} else {
-				//						layer.alert('请重新登录获取个人信息');
-				//					}
-				//				});
+				console.log('tempData:' + JSON.stringify(tempData));
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						evaluateData.userInfo = JSON.parse(data.RspData);
+						//3.获取点评模板
+						getEvalTemplate();
+					} else {
+						layer.alert('请重新登录获取个人信息');
+					}
+				});
 			};
 			//12.获取考勤类型
 			var getEvalTemplate = function() {

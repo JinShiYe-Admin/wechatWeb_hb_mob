@@ -199,14 +199,14 @@
 					<div class="row cl">
 						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>流程类型：</label>
 						<div class="formControls col-xs-8 col-sm-9">
-							<input type="text" class="input-text" value="" v-model="name" placeholder="" id="username" name="username">
+							<input type="text" class="input-text"  maxlength="100" placeholder="最多100字" v-model.trim="name" placeholder="" id="username" name="username">
 						</div>
 					</div>
 					<div class="row cl">
 						<label class="form-label col-xs-4 col-sm-3">备注：</label>
 						<div class="formControls col-xs-8 col-sm-9">
-							<textarea name="beizhu" cols="" rows="" class="textarea" placeholder="请输入备注" v-model="note"></textarea>
-							<!--<p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>-->
+							<textarea name="beizhu" cols="" rows="" class="textarea" maxlength="500" placeholder="请输入备注" v-model.trim="note"></textarea>
+							<p class="textarea-numberbar"><em class="textarea-length">{{note.length}}</em>/500</p>
 						</div>
 					</div>
 					<div class="row cl">
@@ -281,6 +281,8 @@
 							if(response.RspCode == 0) {
 								com.corpId = JSON.parse(response.RspData).corpid;
 								callback();
+							}else{
+								layer.alert(response.RspTxt);
 							}
 						})
 					},
@@ -299,7 +301,7 @@
 								console.log("获取的审核人员列表：" + JSON.stringify(response))
 								com.checkPowerPersons = response.RspData.Data;
 							} else {
-								alert(response.RspTxt);
+								layer.alert(response.RspTxt);
 							}
 						})
 					},
@@ -372,6 +374,8 @@
 							console.log("添加或修改流程链结果：" + JSON.stringify(response))
 							if(response.RspCode == 0) {
 								router.go(-1);
+							}else{
+								layer.alert(response.RspTxt);
 							}
 						})
 

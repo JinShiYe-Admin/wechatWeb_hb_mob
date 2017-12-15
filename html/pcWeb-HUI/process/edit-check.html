@@ -210,7 +210,7 @@
 				<table v-if="checkPersonList.length>0" class="table table-border table-bordered table-bg table-hover table-sort">
 					<thead>
 						<tr class="text-c">
-							<th width="100"><input type="checkbox" v-on:change="getAllCheckStatus($event)" v-model:checked="isAllCheck" name="selectCheckedPerson" /></th>
+							<th width="100"><input type="checkbox" v-on:change="getAllCheckStatus($event)" v-model:checked="isAllSelect" name="selectCheckedPerson" /></th>
 							<th>审核人员</th>
 							<th width="100">操作</th>
 						</tr>
@@ -309,6 +309,8 @@
 							console.log("获取的corpId数据：" + JSON.stringify(response));
 							if(response.RspCode == 0) {
 								com.corpId = JSON.parse(response.RspData).corpid;
+							}else{
+								layer.alert(response.RspTxt);
 							}
 						})
 					},
@@ -362,7 +364,7 @@
 							if(response.RspCode == 0) {
 								callback();
 							} else {
-
+								layer.alert(response.RspTxt)
 							}
 						})
 

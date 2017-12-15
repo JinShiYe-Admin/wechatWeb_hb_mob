@@ -51,13 +51,13 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr class="text-c" v-for='(attend,index) in evaluateArray' v-show="flag>0" style="display: none;">
-							<td><u style="cursor:pointer" class="text-primary">{{attend.AttendTypeNote}}</u></td>
-							<td class="td-status"><span><a v-if="attend.attendTypeProp==1">签到</a><a v-else>签退</a></span></td>
-							<td><u style="cursor:pointer" class="text-primary">{{attend.OrderId}}</u></td>
+						<tr class="text-c" v-for='(evaluate,index) in evaluateArray' v-show="flag>0" style="display: none;">
+							<td><u style="cursor:pointer" class="text-primary">{{evaluate.TemplContent}}</u></td>
+							<td class="td-status"><span><a v-if="evaluate.TemplType==1">表扬</a><a v-else>待改进</a></span></td>
+							<td><u style="cursor:pointer" class="text-primary">{{evaluate.OrderId}}</u></td>
 							<td class="td-manage">
-								<a title="修改考勤类型" href="javascript:;" @click="modifyEvaluate(attend,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>
-								<a title="删除考勤类型" href="javascript:;" @click="removeEvaluate(attend,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+								<!--<a title="修改考勤类型" href="javascript:;" @click="modifyEvaluate(evaluate,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>-->
+								<a title="删除考勤类型" href="javascript:;" @click="removeEvaluate(evaluate,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
 							</td>
 						</tr>
 					</tbody>
@@ -67,32 +67,32 @@
 		<div id="addEvaluateLayer" style="display: none;">
 			<form class="form form-horizontal">
 				<div class="row cl">
-					<label class="form-label col-xs-4 col-sm-3">考勤名称：</label>
+					<label class="form-label col-xs-4 col-sm-3">模板内容：</label>
 					<div class="formControls col-xs-8 col-sm-9">
-						<input type="text" class="input-text" maxlength="20" v-model="AttendTypeNote" placeholder="请输入考勤名称">
+						<input type="text" class="input-text" maxlength="20" v-model="TemplContent" placeholder="请输入模板内容">
 					</div>
 				</div>
 				<div class="row cl">
-					<label class="form-label col-xs-4 col-sm-3">考勤类型：</label>
+					<label class="form-label col-xs-4 col-sm-3">模板分类：</label>
 					<div class="formControls col-xs-8 col-sm-9">
 						<span class="select-box">
-							<select id="attendTypePropSelect" class="select" size="1" title="请选择考勤类型" @change="attendTypePropChange">
-								<option value="1">签到</option>
-								<option value="2">签退</option>
+							<select id="TemplTypeSelect" class="select" size="1" title="请选择模板分类" @change="TemplTypeChange">
+								<option value="1">表扬</option>
+								<option value="2">待改进</option>
 							</select>
 						</span>
 					</div>
 				</div>
 				<div class="row cl">
-					<label class="form-label col-xs-4 col-sm-3">考勤排序ID：</label>
+					<label class="form-label col-xs-4 col-sm-3">模板排序ID：</label>
 					<div class="formControls col-xs-8 col-sm-9">
-						<select :id="'select'+attendModel.OrderId" @change="selectOrder(attendModel)">
+						<select :id="'select'+evaluateModel.OrderId" @change="selectOrder(evaluateModel)">
 							<template v-for="item in selectArray">
-								<option v-if="item==attendModel.OrderId" selected :value="item">{{item}}</option>
+								<option v-if="item==evaluateModel.OrderId" selected :value="item">{{item}}</option>
 								<option v-else :value="item">{{item}}</option>
 							</template>
 						</select>
-						  (*排序id越小越靠前)
+						(*排序id越小越靠前)
 					</div>
 				</div>
 				<div class="row cl submit-button">
@@ -118,7 +118,7 @@
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
-		<script src='https://jsypay.jiaobaowang.net/suitetest/js/lib/vconsole/vconsole.min.js'></script>
+		<!--<script src='../../js/lib/vconsole/vconsole.min.js'></script>-->
 		<script type="text/javascript">
 			$(function() {
 				$('.table-sort').dataTable({
@@ -161,13 +161,13 @@
 						layer.confirm('确认要删除吗？', function(index) {
 							layer.close(index);
 							var tempData = {
-								templId: model.templId
+								templId: model.TemplId
 							}
-							delAttendTypePro(tempData, function(data) {
+							delEvalTemplatePro(tempData, function(data) {
 								if(data.RspCode == 0) {
 									if(data.RspData.Result == 1) {
 										layer.alert('删除成功');
-										//获取现有的考勤类型
+										//3.获取点评模板
 										getEvalTemplate();
 									} else {
 										layer.alert('删除失败');
@@ -180,34 +180,34 @@
 					}
 				}
 			});
-			//图片信息
+			//添加的弹出框
 			addEvaluateLayer = new Vue({
 				el: "#addEvaluateLayer",
 				data: {
 					selectArray: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-					AttendTypeNote: "", //考勤类型说明
-					attendTypeProp: "1", //考勤类型属性,1 上班/上学,2 下班/放学
-					orderID:'0',//排序
-					attendModel: {} //要修改的的类型model
+					TemplContent: "", //点评模板内容
+					TemplType: "1", //点评模板分类，1 表扬，2 待改进
+					OrderId: '0', //排序
+					evaluateModel: {} //要修改的的类型model
 				},
 				methods: {
 					/**
 					 * 显示添加图片
 					 */
 					showAdd: function() {
-						this.AttendTypeNote = "";
-						$("#attendTypePropSelect").val(1);
-						this.show("添加考勤类型");
+						this.TemplContent = "";
+						$("#TemplTypeSelect").val(1);
+						this.show("添加点评模板");
 					},
 					/**
 					 * 显示编辑图片
 					 */
 					showEdit: function(value) {
-						this.AttendTypeNote = value.AttendTypeNote;
-						this.orderID = value.OrderId;
-						$("#attendTypePropSelect").val(value.attendTypeProp);
-						this.show("编辑考勤类型");
-						this.attendModel = value;
+						this.TemplContent = value.TemplContent;
+						this.OrderId = value.OrderId;
+						$("#TemplTypeSelect").val(value.TemplType);
+						this.show("编辑点评模板");
+						this.evaluateModel = value;
 					},
 					/**
 					 * 显示页面
@@ -221,29 +221,29 @@
 						});
 					},
 					btnAdd: function() {
-						if(addEvaluateLayer.AttendTypeNote.length == 0) {
-							layer.alert('请输入考勤名称');
+						if(addEvaluateLayer.TemplContent.length == 0) {
+							layer.alert('请输入点评模板内容');
 							return false;
 						}
 						if(evaluateData.evaluateFlag == 0) { //添加
 							//添加类型时，判断是否输入了值，有没有重复
-							if(checkInput(addEvaluateLayer.AttendTypeNote, 0)) {
+							if(checkInput(addEvaluateLayer.TemplContent, 0)) {
 								//发送添加协议
 								var tempData = {
 									corpId: evaluateData.userInfo.corpid, //单位ID
-									attendTypeNote: addEvaluateLayer.AttendTypeNote, //考勤类型说明
-									attendTypeProp: addEvaluateLayer.attendTypeProp, //1 上班/上学,2 下班/放学
-									orderId:addEvaluateLayer.orderID//排序id
+									templContent: addEvaluateLayer.TemplContent, //考勤类型说明
+									templType: addEvaluateLayer.TemplType, //1 表扬，2 待改进
+									orderId: addEvaluateLayer.OrderId //排序id
 								}
 								console.log('tempData:' + JSON.stringify(tempData));
-								addEvaluateTypePro(tempData, function(data) {
+								addEvalTemplatePro(tempData, function(data) {
 									layer.closeAll();
 									if(data.RspCode == 0) {
 										if(data.RspData.Result == 0) {
 											layer.alert('添加失败');
 										} else {
 											layer.alert('添加成功');
-											//获取现有的考勤类型
+											//3.获取点评模板
 											getEvalTemplate();
 										}
 									} else {
@@ -254,41 +254,39 @@
 
 						} else {
 							//重新编辑类型时，判断是否输入了值，有没有重复
-							if(checkInput(addEvaluateLayer.AttendTypeNote, 1)) {
-								var tempData = {
-									templId: this.attendModel.templId, //考勤类型ID
-									attendTypeNote: addEvaluateLayer.AttendTypeNote, //考勤类型说明
-									attendTypeProp: addEvaluateLayer.attendTypeProp, //1 上班/上学,2 下班/放学
-									orderId:addEvaluateLayer.orderID//排序id
-								}
-								console.log('tempData:' + JSON.stringify(tempData));
-								setAttendTypePro(tempData, function(data) {
-									layer.closeAll();
-									if(data.RspCode == 0) {
-										if(data.RspData.Result == 1) {
-											layer.alert('修改成功');
-											//获取现有的考勤类型
-											getEvalTemplate();
-										} else {
-											layer.alert('修改失败');
-										}
-									} else {
-										layer.alert(data.RspTxt);
-									}
-								});
-							}
-
+							//							if(checkInput(addEvaluateLayer.TemplContent, 1)) {
+							//								var tempData = {
+							//									templId: this.evaluateModel.templId, //考勤类型ID
+							//									TemplContent: addEvaluateLayer.TemplContent, //考勤类型说明
+							//									TemplType: addEvaluateLayer.TemplType, //1 表扬，2 待改进
+							//									OrderId: addEvaluateLayer.OrderId //排序id
+							//								}
+							//								console.log('tempData:' + JSON.stringify(tempData));
+							//								setAttendTypePro(tempData, function(data) {
+							//									layer.closeAll();
+							//									if(data.RspCode == 0) {
+							//										if(data.RspData.Result == 1) {
+							//											layer.alert('修改成功');
+							//											//3.获取点评模板
+							//											getEvalTemplate();
+							//										} else {
+							//											layer.alert('修改失败');
+							//										}
+							//									} else {
+							//										layer.alert(data.RspTxt);
+							//									}
+							//								});
+							//							}
 						}
-
 					},
 					/**
 					 * 修改排序ID
 					 */
-					attendTypePropChange: function() {
-						var obj = document.getElementById('attendTypePropSelect');
+					TemplTypeChange: function() {
+						var obj = document.getElementById('TemplTypeSelect');
 						var index = obj.selectedIndex; //序号，取当前选中选项的序号
 						var val = obj.options[index].value;
-						addEvaluateLayer.attendTypeProp = val;
+						addEvaluateLayer.TemplType = val;
 					}
 				}
 			});
@@ -298,9 +296,9 @@
 				var obj = document.getElementById('select' + model.OrderId);
 				var index = obj.selectedIndex; //序号，取当前选中选项的序号
 				var val = obj.options[index].value;
-				model.orderid = val;
-//				alert('model.orderid:'+model.orderid);
-				addEvaluateLayer.orderID =model.orderid;
+				model.OrderId = val;
+				//				alert('model.OrderId:'+model.OrderId);
+				addEvaluateLayer.OrderId = model.OrderId;
 			}
 			//13.获取当前人员信息
 			var getUserInfo = function() {
@@ -313,7 +311,7 @@
 				unitWebsitePro(tempData, function(data) {
 					if(data.RspCode == 0) {
 						evaluateData.userInfo = JSON.parse(data.RspData);
-						//获取现有的考勤类型
+						//3.获取点评模板
 						getEvalTemplate();
 					} else {
 						layer.alert('请重新登录获取个人信息');
@@ -324,6 +322,7 @@
 			var getEvalTemplate = function() {
 				var tempData = {
 					corpId: evaluateData.userInfo.corpid, //单位ID
+					templType: 0, //模板分类,0 全部,1 表扬,2 待改进
 					pageIndex: 1, //当前页数
 					pageSize: 0 //每页记录数，0 为全部
 				}
@@ -333,44 +332,25 @@
 						evaluateData.evaluateArray = [].concat(data.RspData.Data);
 						evaluateData.flag = 1;
 					} else {
-						//						layer.alert('请重新登录获取个人信息');
+						layer.alert(data.RspTxt);
 					}
 				});
 			};
-			//重新编辑课程名称
-			var editSub = function(model, newName) {
-				var tempData = {
-					cmd: 'subadmin',
-					type: 'edit',
-					callcol: 'cname',
-					colid: model.subid,
-					colv: newName
-				}
-				unitWebsitePro(tempData, function(data) {
-					if(data.RspCode == 0) {
-						evaluateData.subIndex = 1;
-						evaluateData.subFlag = 0;
-						//获取科目列表
-						getUserInfo();
-					} else {
-						alert(data.RspTxt);
-					}
-				});
-			};
+
 			//添加课程时，判断是否输入了值，有没有重复,flag=0添加，flag=1修改
 			var checkInput = function(text, flag) {
 				if(text.trim().length == 0) {
-					alert('考勤名称不能为空');
+					alert('模板内容不能为空');
 					return false;
 				}
 				if(isNull(text)) {
-					alert('考勤名称不能为空');
+					alert('模板内容不能为空');
 					return false;
 				}
 				var tempFlag = 0;
 				for(var i = 0; i < evaluateData.evaluateArray.length; i++) {
 					var tempModel = evaluateData.evaluateArray[i];
-					if(tempModel.AttendTypeNote == text) {
+					if(tempModel.TemplContent == text) {
 						tempFlag++;
 					}
 				}
@@ -379,7 +359,7 @@
 				} else if(tempFlag == 1 && flag == 1) {
 					return true;
 				} else {
-					alert('存在同名的考勤类型');
+					alert('存在同内容的模板');
 					return false;
 				}
 			}

@@ -113,7 +113,7 @@ var xhrPost = function(url, data, callback) {
 }
 
 //考勤协议
-var tempUrl = 'https://jbyj.jiaobaowang.net/AttendanceService/';
+var tempAttendUrl = 'https://jbyj.jiaobaowang.net/AttendanceService/';
 
 //合并参数
 var extendParameter = function(data0) {
@@ -129,100 +129,133 @@ var extendParameter = function(data0) {
 //1.新增考勤类型
 var addAttendTypePro = function(data0, callback) {
 	data0 = extendParameter(data0);
-	xhrPost(tempUrl + 'addAttendType', JSON.stringify(data0), callback);
+	xhrPost(tempAttendUrl + 'addAttendType', JSON.stringify(data0), callback);
 }
 
 //2.修改考勤类型
 var setAttendTypePro = function(data0, callback) {
 	data0 = extendParameter(data0);
-	xhrPost(tempUrl + 'setAttendType', JSON.stringify(data0), callback);
+	xhrPost(tempAttendUrl + 'setAttendType', JSON.stringify(data0), callback);
 }
 
 //3.删除考勤类型
 var delAttendTypePro = function(data0, callback) {
 	data0 = extendParameter(data0);
-	xhrPost(tempUrl + 'delAttendType ', JSON.stringify(data0), callback);
+	xhrPost(tempAttendUrl + 'delAttendType ', JSON.stringify(data0), callback);
 }
 
 //12.获取考勤类型
 var getAttendTypePro = function(data0, callback) {
 	data0 = extendParameter(data0);
-	xhrPost(tempUrl + 'getAttendType', JSON.stringify(data0), callback);
+	xhrPost(tempAttendUrl + 'getAttendType', JSON.stringify(data0), callback);
 }
 
 //4.新增考勤时间段
 var addAttendTimePro = function(data0, callback) {
 	data0 = extendParameter(data0);
-	xhrPost(tempUrl + 'addAttendTime', JSON.stringify(data0), callback);
+	xhrPost(tempAttendUrl + 'addAttendTime', JSON.stringify(data0), callback);
 }
 
 //5.修改考勤时间段
 var setAttendTimePro = function(data0, callback) {
 	data0 = extendParameter(data0);
-	xhrPost(tempUrl + 'setAttendTime', JSON.stringify(data0), callback);
+	xhrPost(tempAttendUrl + 'setAttendTime', JSON.stringify(data0), callback);
 }
 
 //6.删除考勤时间段
 var delAttendTimePro = function(data0, callback) {
 	data0 = extendParameter(data0);
-	xhrPost(tempUrl + 'delAttendTime', JSON.stringify(data0), callback);
+	xhrPost(tempAttendUrl + 'delAttendTime', JSON.stringify(data0), callback);
 }
 
 //7.新增考勤地点
 var addAttendAreaPro = function(data0, callback) {
 	data0 = extendParameter(data0);
-	xhrPost(tempUrl + 'addAttendArea', JSON.stringify(data0), callback);
+	xhrPost(tempAttendUrl + 'addAttendArea', JSON.stringify(data0), callback);
 }
 
 //8.修改考勤地点
 var setAttendAreaPro = function(data0, callback) {
 	data0 = extendParameter(data0);
-	xhrPost(tempUrl + 'setAttendArea', JSON.stringify(data0), callback);
+	xhrPost(tempAttendUrl + 'setAttendArea', JSON.stringify(data0), callback);
 }
 
 //9.删除考勤地点
 var delAttendAreaPro = function(data0, callback) {
 	data0 = extendParameter(data0);
-	xhrPost(tempUrl + 'delAttendArea', JSON.stringify(data0), callback);
+	xhrPost(tempAttendUrl + 'delAttendArea', JSON.stringify(data0), callback);
 }
 
 //10.新增考勤记录
 var addAttendPro = function(data0, callback) {
 	data0 = extendParameter(data0);
-	xhrPost(tempUrl + 'addAttend', JSON.stringify(data0), callback);
+	xhrPost(tempAttendUrl + 'addAttend', JSON.stringify(data0), callback);
 }
 
 //11.删除考勤记录
 var delAttendPro = function(data0, callback) {
 	data0 = extendParameter(data0);
-	xhrPost(tempUrl + 'delAttend', JSON.stringify(data0), callback);
+	xhrPost(tempAttendUrl + 'delAttend', JSON.stringify(data0), callback);
 }
 
 //13.获取考勤时间段
 var getAttendTimePro = function(data0, callback) {
 	data0 = extendParameter(data0);
-	xhrPost(tempUrl + 'getAttendTime', JSON.stringify(data0), callback);
+	xhrPost(tempAttendUrl + 'getAttendTime', JSON.stringify(data0), callback);
 }
 
 //14.获取考勤地点
 var getAttendAreaPro = function(data0, callback) {
 	data0 = extendParameter(data0);
-	xhrPost(tempUrl + 'getAttendArea', JSON.stringify(data0), callback);
+	xhrPost(tempAttendUrl + 'getAttendArea', JSON.stringify(data0), callback);
 }
 
 //15.获取考勤记录
 var getAttendPro = function(data0, callback) {
 	data0 = extendParameter(data0);
-	xhrPost(tempUrl + 'getAttend', JSON.stringify(data0), callback);
+	xhrPost(tempAttendUrl + 'getAttend', JSON.stringify(data0), callback);
 }
 
 //16.获取考勤统计
 var getAttendStatPro = function(data0, callback) {
 	data0 = extendParameter(data0);
-	xhrPost(tempUrl + 'getAttendStat', JSON.stringify(data0), callback);
+	xhrPost(tempAttendUrl + 'getAttendStat', JSON.stringify(data0), callback);
 }
 //17.获取选择用考勤类型
 var getAttendTypeForSelPro = function(data0, callback) {
 	data0 = extendParameter(data0);
-	xhrPost(tempUrl + 'getAttendTypeForSel', JSON.stringify(data0), callback);
+	xhrPost(tempAttendUrl + 'getAttendTypeForSel', JSON.stringify(data0), callback);
+}
+
+//学生成长轨迹接口
+var tempAttendUrl = 'https://jbyj.jiaobaowang.net/EvaluationService/';
+
+//1.新增点评模板
+var addEvalTemplatePro = function(data0, callback) {
+	data0 = extendParameter(data0);
+	xhrPost(tempAttendUrl + 'addEvalTemplate', JSON.stringify(data0), callback);
+}
+
+//2.删除点评模板
+var delEvalTemplatePro = function(data0, callback) {
+	data0 = extendParameter(data0);
+	xhrPost(tempAttendUrl + 'delEvalTemplate', JSON.stringify(data0), callback);
+}
+
+//3.获取点评模板
+var getEvalTemplatePro = function(data0, callback) {
+	data0 = extendParameter(data0);
+	xhrPost(tempAttendUrl + 'getEvalTemplate', JSON.stringify(data0), callback);
+}
+
+//4.新增点评
+var addEvaluationPro = function(data0, callback) {
+	data0 = extendParameter(data0);
+	xhrPost(tempAttendUrl + 'addEvaluation', JSON.stringify(data0), callback);
+}
+
+//5.获取点评
+var getEvaluationPro = function(data0, callback) {
+	data0 = extendParameter(data0);
+	xhrPost(tempAttendUrl + 'getEvaluation', JSON.stringify(data0), callback);
 }

@@ -46,7 +46,7 @@ Vue.component("check-person-list", {
 		newTablebases: function() {
 			console.log("******newTablebases******");
 			var com=this;
-			c.tablebases = $('.table-sort').DataTable({
+			com.tablebases = $('.table-sort').DataTable({
 				pageLength: 10,
 				lengthChange: false,
 				columns: [{

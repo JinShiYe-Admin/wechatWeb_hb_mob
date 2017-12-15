@@ -748,10 +748,15 @@
 						//得到考勤类型说明每个选项的自定义的考勤类型属性值
 						var optionObjectNoteProperty = selectObject_Note.options[optionObjectNoteIndex].getAttribute("attendTypeProperty");
 						console.log("optionObjectNoteProperty====" + optionObjectNoteProperty);
+
+						//获取考勤类型说明.代码开始
 						var optionObjectNoteText = selectObject_Note.options[optionObjectNoteIndex].text;
 						console.log("optionObjectNoteText======" + optionObjectNoteText);
 						var optionObjectNoteValue = selectObject_Note.options[optionObjectNoteIndex].value;
 						console.log("optionObjectNoteValue=====" + optionObjectNoteValue);
+						//获取考勤类型说明.代码结束
+
+						//获取打卡开始时间分钟值.代码开始
 						var selectElementObject_M = document.getElementById("beginMinute");
 						//						console.log("selectElementObject===" + selectElementObject_M);
 						var optionElementObjectIndex_M = selectElementObject_M.selectedIndex;
@@ -762,6 +767,9 @@
 						//						var beginHour = document.getElementById("beginHour").value;
 						//alert("attendAdressValue==="+attendAdressValue);
 						var beginMinute = optionElementText_M;
+						//获取打卡开始时间分钟值.代码结束
+
+						//获取打卡开始时间小时值.代码开始
 						var selectElementObject_H = document.getElementById("beginHour");
 						//						console.log("selectElementObject===" + selectElementObject);
 						var optionElementObjectIndex_H = selectElementObject_H.selectedIndex + 1;
@@ -769,6 +777,8 @@
 						var optionElementText_H = selectElementObject_M.options[optionElementObjectIndex_H].text;
 						console.log("optionElementText_H====" + optionElementText_H);
 						var beginHour = optionElementText_H;
+						//获取打卡开始时间小时值.代码结束
+
 						//						var lateMinutes = document.getElementById("lateMinutes").value;
 						//						var continuousTime = document.getElementById("continuousTime").value;
 
@@ -815,24 +825,45 @@
 						var attendMessage = document.getElementById("attendMessage").value;
 						console.log("beginHour-====" + beginHour + "\nbeginMinute====" + beginMinute + "\nworkTimePoint_Hour=" + workTimePoint_Hour + "\nworkTimePoint_Minute===" + workTimePoint_Minute + "\ncardEndTimePoint_Hour==" + cardEndTimePoint_Hour + "\ncardEndTimePoint_Minute==" + cardEndTimePoint_Minute);
 
-						/**
-						 * 计算接口传参所需值
-						 */
 
-						var continuousTime; //正常打卡持续时间
-						var lateMinutes; //异常打卡持续时间
-						if(optionObjectNoteProperty == 1) { //属性是上班
-//							console.log("(workTimePoint_Hour * 60 + workTimePoint_Minute)===="+workTimePoint_Hour * 60 + workTimePoint_Minute)
-//							console.log("(beginHour * 60 + beginMinute)==="+beginHour * 60 + beginMinute)
-							continuousTime = (workTimePoint_Hour * 60 +parseInt( workTimePoint_Minute)) - (beginHour * 60 + parseInt(beginMinute));
-							lateMinutes = (cardEndTimePoint_Hour * 60 + parseInt(cardEndTimePoint_Minute)) - (workTimePoint_Hour * 60 + parseInt(workTimePoint_Minute));
-						} else {
-							continuousTime = (cardEndTimePoint_Hour * 60 + parseInt(cardEndTimePoint_Minute)) - (workTimePoint_Hour * 60 + parseInt(workTimePoint_Minute));
-							lateMinutes = (workTimePoint_Hour * 60 + parseInt(workTimePoint_Minute)) - (beginHour * 60 + parseInt(beginMinute));
-						}
 
-						console.log("continuousTime====" + continuousTime);
-						console.log("lateMinutes====" + lateMinutes);
+
+						//得到的时间点的分钟值，如果不满2位，需前面补0，以够2位。
+						var afterHandlerBeginMinute=getMinuteLength(beginMinute)
+						var afterHandlerWorkTimePoint_Minute=getMinuteLength(workTimePoint_Minute)
+						var afterHandlerCardEndTimePoint_Minute=getMinuteLength(cardEndTimePoint_Minute)
+						//将得到的3个时间点，时、分拼接
+						var cardStartTimePoint = beginHour+afterHandlerBeginMinute;
+						console.log("cardStartTimePoint===="+cardStartTimePoint)
+						var workTimePoint=workTimePoint_Hour+afterHandlerWorkTimePoint_Minute;
+						console.log("workTimePoint===="+workTimePoint)
+						var cardEndTimePoint=cardEndTimePoint_Hour+afterHandlerCardEndTimePoint_Minute;
+						console.log("cardEndTimePoint===="+cardEndTimePoint)
+
+						//						/**
+						//						 * 计算接口传参所需值
+						//						 */
+						//
+						//						var continuousTime; //正常打卡持续时间
+						//						var lateMinutes; //异常打卡持续时间
+						//						if(optionObjectNoteProperty == 1) { //属性是上班
+						////							console.log("(workTimePoint_Hour * 60 + workTimePoint_Minute)===="+workTimePoint_Hour * 60 + workTimePoint_Minute)
+						////							console.log("(beginHour * 60 + beginMinute)==="+beginHour * 60 + beginMinute)
+						//							continuousTime = (workTimePoint_Hour * 60 +parseInt( workTimePoint_Minute)) - (beginHour * 60 + parseInt(beginMinute));
+						//							lateMinutes = (cardEndTimePoint_Hour * 60 + parseInt(cardEndTimePoint_Minute)) - (workTimePoint_Hour * 60 + parseInt(workTimePoint_Minute));
+						//						} else {
+						//							continuousTime = (cardEndTimePoint_Hour * 60 + parseInt(cardEndTimePoint_Minute)) - (workTimePoint_Hour * 60 + parseInt(workTimePoint_Minute));
+						//							lateMinutes = (workTimePoint_Hour * 60 + parseInt(workTimePoint_Minute)) - (beginHour * 60 + parseInt(beginMinute));
+						//						}
+						//
+						//						console.log("continuousTime====" + continuousTime);
+						//						console.log("lateMinutes====" + lateMinutes);
+						
+						
+						
+						
+						
+						//需判断3个时间点的大小关系
 						if(optionObjectNoteText == "") {
 							alert("考勤类型说明不能为空！");
 							return;
@@ -857,15 +888,21 @@
 						} else if(attendMessage == "") {
 							alert("考勤短信内容不能为空！");
 							return;
-						} else {
+						} else if(workTimePoint<=cardStartTimePoint){//上班或下班时间<=打卡开始时间
+							alert("上班或下班时间必须大于打卡开始时间！");
+							return;
+						} else if(cardEndTimePoint<=workTimePoint){//打卡结束时间<=上班或下班时间
+							alert("打卡结束时间必须大于上班或下班时间！");
+							return;
+						}else {
 							//input 输入框的值都填写了，则提交，进行添加。
 							var tempData = {
 								"corpId": corpId,
 								"attendType": optionObjectNoteValue,
-								"beginHour": beginHour,
-								"beginMinute": beginMinute,
-								"continuousMinute": continuousTime,
-								"lateMinute": lateMinutes,
+								"beginHour": 0,
+								"beginMinute": cardStartTimePoint,//打卡开始时间
+								"continuousMinute": workTimePoint,//上班或下班时间
+								"lateMinute": cardEndTimePoint,//打卡结束时间
 								"attendMessage": attendMessage,
 								"uuid": "",
 								"appid": "",
@@ -1087,6 +1124,21 @@
 					//					document.getElementById("attendTypeNote").options[i] = new Option("attendTypeProperty", optionAttendTypePropertyArray[i]);
 				}
 			}
+			
+			
+			/**
+			 * 函数功能：计算分钟值是否是2位，若是1位即个位数，需十位补0，让其达到2位
+			 * param : 分钟值
+			 */
+			function getMinuteLength(minute){
+				if(minute.length==1){//分钟值是个位数
+					return 0+minute
+				}else{
+					return minute
+				}
+			}
+			
+			
 		</script>
 	</body>
 

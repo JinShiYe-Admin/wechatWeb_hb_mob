@@ -257,7 +257,7 @@ Vue.component("process-setting", {
 				title: "删除流程",
 				content: "确认删除此流程？"
 			}, function() {
-				com.delTheProcess();
+				com.delTheProcess(process);
 			})
 		},
 		delTheProcess: function(process) {

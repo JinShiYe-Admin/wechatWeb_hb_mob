@@ -45,7 +45,8 @@ Vue.component("check-person-list", {
 		},
 		newTablebases: function() {
 			console.log("******newTablebases******");
-			this.tablebases = $('.table-sort').DataTable({
+			var com=this;
+			com.tablebases = $('.table-sort').DataTable({
 				pageLength: 10,
 				lengthChange: false,
 				columns: [{
@@ -58,12 +59,12 @@ Vue.component("check-person-list", {
 				]
 			});
 			$('.table-sort').on('page.dt', function() {
-				var info = table.page.info();
+				var info = com.tablebases.page.info();
 				$('#pageInfo').html('Showing page: ' + info.page + ' of ' + info.pages);
 				com.isAllSelect = false;
 				com.setAllUnselect();
 			});
-			this.tablebases.table(0).page(this.curPage).draw(false);
+			com.tablebases.table(0).page(com.curPage).draw(false);
 		},
 		/**
 		 * 获取状态
@@ -87,7 +88,7 @@ Vue.component("check-person-list", {
 			console.log("*****getAllCheckSatus*****")
 			this.isAllSelect = e.target.checked;
 			this.getCurPage();
-			this.inputToggleAll(isAllAdd);
+			this.inputToggleAll();
 		},
 		getCurPage: function() {
 			this.curPage = this.tablebases.page.info().page;
@@ -100,14 +101,13 @@ Vue.component("check-person-list", {
 		},
 		/**
 		 * 全选逻辑
-		 * @param {Object} isAdd
 		 */
-		inputToggleAll: function(isAdd) {
+		inputToggleAll: function() {
 			console.log("****inputToggleAll****");
 			var com = this;
 			com.checkPersonList.forEach(function(checkPerson, index) {
 				if(index >= com.curPage * 10 && index < (com.curPage + 1) * 10) {
-					checkPerson.isSelect = isAllAdd;
+					checkPerson.isSelect = com.isAllSelect;
 					if(com.isAllSelect) {
 						com.selectedInputPerson[checkPerson.TabId] = checkPerson.ApprManName;
 					}

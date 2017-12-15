@@ -65,7 +65,7 @@
 			</div>
 		</div>
 		<!--_footer 作为公共模版分离出去-->
-		<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+		<!--<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>-->
 		<script type="text/javascript" src="../../js/H-ui.admin/lib/layer/2.4/layer.js"></script>
 		<script type="text/javascript" src="../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
 		<script type="text/javascript" src="../../js/H-ui.admin/static/h-ui.admin/js/H-ui.admin.js"></script>
@@ -219,14 +219,22 @@
 							if(tempModel.value == -1) {
 								attendData.departArray.splice(i, 1);
 							} else {
-								layer.load(2);
-								getDepartPerson(tempModel);
 								var temp000 = {
 									id: tempModel.value,
 									text: tempModel.title
 								}
 								tempArray.push(temp000);
 							}
+						}
+						//把获取到的部门，按层级组合
+						var tempArr = getNodeTree(JSON.parse(data.RspData));
+						console.log('tempArr:' + JSON.stringify(tempArr));
+						//循环获取人员
+						for(var i = 0; i < tempArr.length; i++) {
+							var tempModel = tempArr[i];
+							//获取部门下的所有人员
+							layer.load(2);
+							getDepartPerson(tempModel, tempArr.length);
 						}
 						$('#ddlLine').combotree({
 							valueField: "id",
@@ -267,7 +275,7 @@
 			}
 
 			//17.获取某部门ID下所有人员(PC管理端)
-			var getDepartPerson = function(model) {
+			var getDepartPerson = function(model, tempFlag) {
 				var tempData = {
 					cmd: 'departpersonsadmin',
 					type: 'findpage', //获取管理员全部管理部门
@@ -278,19 +286,27 @@
 				console.log('tempData:' + JSON.stringify(tempData));
 				unitWebsitePro(tempData, function(data) {
 					attendData.requestFlag++;
-					if(attendData.requestFlag >= attendData.departArray.length) {
+					if(attendData.requestFlag >= tempFlag) {
 						layer.closeAll('loading');
 					}
 					if(data.RspCode == 0) {
-						for(var i = 0; i < data.RspData.length; i++) {
+						for(var i = 0; i < data.RspData.length; i++) { //循环每个人
 							var tempModel = data.RspData[i];
-							tempModel.departName = model.title;
-							tempModel.value = model.value;
-						}
-						for(var a = 0; a < attendData.departArray.length; a++) {
-							var tempModel = attendData.departArray[a];
-							if(tempModel.value == model.value) {
-								tempModel.peopleArray = [].concat(data.RspData);
+							for(var m = 0; m < tempModel.department.length; m++) { //循环人的部门数组
+								var tempdetart = tempModel.department[m];
+								for(var a = 0; a < attendData.departArray.length; a++) { //循环所有的部门
+									var tempModel000 = attendData.departArray[a];
+									if(tempModel000.value == tempdetart) { //判断人所在的部门，和循环的部门是否相同
+										var tempPeople = {
+											userid: tempModel.userid,
+											name: tempModel.name,
+											department: tempModel.department,
+											departName: tempModel000.title,
+											value: tempModel000.value
+										}
+										tempModel000.peopleArray.push(tempPeople);
+									}
+								}
 							}
 						}
 					} else {

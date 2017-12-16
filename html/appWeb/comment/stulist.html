@@ -24,7 +24,7 @@
 				width: 100%;
 			}
 
-			.weui-grid {
+			#dataList .weui-grid {
 				/*一行四个成员*/
 				width: 25%;
 			}
@@ -58,6 +58,10 @@
 				font-size: 20px;
 			}
 
+			.weui-cells_checkbox .weui-check:checked+.weui-icon-checked:before {
+				color: #46BDFF;
+			}
+
 			.weui-cells_checkbox .weui-cell__hd {
 				padding-right: 0;
 			}
@@ -78,6 +82,7 @@
 
 			.teacher-show .weui-tabbar {
 				display: flex;
+				display: -webkit-flex;
 			}
 			/*身份是老师---end---*/
 			/*底部多选---start---*/
@@ -85,6 +90,7 @@
 			.weui-tabbar__item {
 				height: 50px;
 				display: flex;
+				display: -webkit-flex;
 				align-items: center;
 				text-align: center;
 				justify-content: center;
@@ -103,36 +109,213 @@
 				width: 20px;
 				height: 20px;
 			}
+
+			.weui-tabbar_stu-number {
+				flex: 3;
+				background: #46BDFF;
+			}
+
+			.weui-tabbar_cancle {
+				flex: 1;
+				background: #46BDFF;
+			}
+
+			.weui-tabbar_stu-number .weui-tabbar__label,
+			.weui-tabbar_cancle .weui-tabbar__label {
+				color: white;
+			}
+
+			.stu-checkbox-hide .weui-tabbar_stu-number,
+			.stu-checkbox-hide .weui-tabbar_cancle {
+				display: none;
+			}
+
+			.stu-checkbox-hide .weui-tabbar_students {
+				display: flex;
+				display: -webkit-flex;
+			}
+
+			.weui-tabbar_students {
+				display: none;
+			}
+
+			.weui-popup__container {
+				z-index: 600;
+			}
 			/*底部多选---end---*/
+			/*点评模板---start---*/
+
+			.weui-popup__modal {
+				background: rgba(0, 0, 0, .3);
+			}
+
+			.template_bg {
+				position: absolute;
+				left: 5%;
+				top: 15%;
+				width: 90%;
+				height: 70%;
+				background: white;
+				border-radius: 8px;
+				overflow: hidden;
+			}
+
+			.weui-popup__container .weui-tab {
+				display: block;
+				height: 90%;
+			}
+
+			.weui-popup__container .weui-navbar {
+				background: white;
+			}
+
+			.weui-popup__container .weui-navbar__item.weui-bar__item--on {
+				color: #46BDFF;
+				background: white;
+				border-bottom: 2px solid #46BDFF;
+			}
+
+			.weui-popup__container .weui-navbar:after {
+				border-bottom: none;
+			}
+
+			.weui-popup__container .weui-navbar__item {
+				color: black;
+				padding: 0;
+				font-size: 16px;
+			}
+
+			.weui-popup__container .weui-navbar__item:after {
+				border-right: none;
+			}
+
+			.template_top {
+				display: flex;
+				display: -webkit-flex;
+				height: 8%;
+				justify-content: center;
+				padding: 10px 10px 0 10px;
+			}
+
+			.template_top .weui-icon-cancel {
+				vertical-align: initial;
+			}
+
+			.weui-icon-cancel:before {
+				margin: 0;
+			}
+
+			.template_top_left {
+				flex: 1;
+			}
+
+			.template_top_center {
+				flex: 3;
+				color: black;
+				text-align: center;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				display: -webkit-box;
+				-webkit-line-clamp: 1;
+				-webkit-box-orient: vertical;
+				word-wrap: break-word;
+				word-break: break-all;
+			}
+
+			.template_top_right {
+				flex: 1;
+				color: #46BDFF;
+				font-size: 12px;
+				text-align: end;
+				padding-top: 3px;
+			}
+
+			.weui-navbar__item.template_text_common {
+				flex: 2;
+				text-align: right;
+				padding-right: 12px;
+				font-size: 14px;
+				color: #666666;
+			}
+
+			.weui-navbar__item.template_text_common .template_text_icon {
+				width: 14px;
+				height: 14px;
+				margin-right: 2px;
+				vertical-align: text-top;
+				display: inline-block;
+			}
+
+			.weui-navbar__item.template_text_common .template_text_text {
+				display: inline-block;
+			}
+
+			.weui-popup__container .weui-navbar+.weui-tab__bd {
+				padding-top: 27px;
+				background: #F4F4F4;
+			}
+
+			.weui-popup__container .weui-tab__bd-item {
+				border-radius: 0 0 8px 8px;
+			}
+			/*点评模板---end---*/
+
+			a:active {
+				background-color: transparent !important;
+			}
 		</style>
 	</head>
 
 	<body>
-		<div id="weuitab" class="weui-tab">
+		<div id="weuitab" class="weui-tab stu-checkbox-hide">
 			<div class="weui-tab__bd">
 				<div class="weui-tab__bd-item weui-tab__bd-item--active">
-					<div id="dataList" class="weui-grids weui-cells_checkbox stu-checkbox-hide">
-						<!--<label class="weui-grid">
-							<div class="weui-cell__hd stu-checkbox">
-								<input type="checkbox" class="weui-check" name="checkbox1" checked="checked">
-								<i class="weui-icon-checked"></i>
-							</div>
-							<div class="weui-cell__hd">
-								<div class="weui-grid__icon">
-									<img class="stu-headimage" src="../../../image/config/func_actssm.jpg">
-								</div>
-								<p class="weui-grid__label">Grid</p>
-							</div>
-						</label>-->
+					<div id="dataList" class="weui-grids weui-cells_checkbox">
 					</div>
 				</div>
 			</div>
 			<div class="weui-tabbar">
-				<div class="weui-tabbar__item">
+				<div class="weui-tabbar__item weui-tabbar_students">
 					<div class="weui-tabbar__icon">
 						<img src="../../../image/comment/addactive.png" />
 					</div>
 					<div class="weui-tabbar__label">点评多人</div>
+				</div>
+				<div class="weui-tabbar__item weui-tabbar_stu-number">
+					<div class="weui-tabbar__label">请先选择多个学生</div>
+				</div>
+				<div class="weui-tabbar__item weui-tabbar_cancle">
+					<div class="weui-tabbar__label">取消</div>
+				</div>
+			</div>
+		</div>
+		<div id="evalTemplate" class="weui-popup__container">
+			<div class="weui-popup__overlay"></div>
+			<div class="weui-popup__modal">
+				<div class="template_bg">
+					<div class="template_top">
+						<div class="template_top_left"><i class="weui-icon-cancel close-popup"></i></div>
+						<div class="template_top_center">点评</div>
+						<div class="template_top_right">查看表现</div>
+					</div>
+					<div class="weui-tab">
+						<div class="weui-navbar">
+							<a class="weui-navbar__item weui-bar__item--on" href="#praise">表扬</a>
+							<a class="weui-navbar__item" href="#improved">待改进</a>
+							<a class="weui-navbar__item template_text_common">
+								<img src="../../../image/comment/add.png" class="template_text_icon" />
+								<div class="template_text_text">文字点评</div>
+							</a>
+						</div>
+						<div class="weui-tab__bd">
+							<div id="praise" class="weui-tab__bd-item weui-tab__bd-item--active">
+								<div class="weui-grids"></div>
+							</div>
+							<div id="improved" class="weui-tab__bd-item">
+								<div class="weui-grids"></div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -143,16 +326,21 @@
 			document.write("<s" + "cript type='text/javascript' src='../../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
-			//document.write("<s" + "cript type='text/javascript' src='../../../temp/mineinfo.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../temp/mineinfo.js" + WebVersion + "'></s" + "cript>");
 		</script>
 		<script type="text/javascript">
 			var depId; //部门id
 			var mineUserInfo; //个人信息
-			var evalTemplate; //点评模板
+			var evalTemplate = {
+				key: [],
+				value: {}
+			}; //点评模板
 			var members = {
 				key: [],
 				value: {}
 			} //成员信息
+			var beEvalMans = []; //被点评人数组
+			var multiSelect = false; //是否是多选
 			window.onload = function() {
 				$.showLoading();
 				var search = location.search.toString();
@@ -221,17 +409,14 @@
 					pageSize: 0
 				}
 				getEvalTemplatePro(tempData, function(data) {
+					$.hideLoading();
 					if(data.RspCode == 0) {
-						for(var i = 0; i < data.RspData.Data.length; i++) {
-							console.log("EvalTemplate", data.RspData.Data[i]);
-						}
-						initData();
-						initListener();
-						$.hideLoading();
+						addEvalTemplate(data.RspData.Data);
 					} else {
-						$.hideLoading();
 						$.alert("未获取到点评模版(" + data.RspTxt + ")", "提示");
 					}
+					initData();
+					initListener();
 				});
 			}
 
@@ -241,7 +426,8 @@
 			function addMemberData(data) {
 				var html = "";
 				for(var i = 0; i < data.length; i++) {
-					console.log("addMemberData", data[i]);
+					members.key.push(data[i].userid);
+					members.value[data[i].userid] = data[i];
 					html = html + '\
 						<label class="weui-grid" for="' + data[i].userid + '">\
 							<div class="weui-cell__hd stu-checkbox">\
@@ -260,6 +446,34 @@
 			}
 
 			/**
+			 * 添加点评模板
+			 */
+			function addEvalTemplate(data) {
+				var praiseHtml = "";
+				var improvedHtml = "";
+				for(var i = 0; i < data.length; i++) {
+					evalTemplate.key.push(data[i].TemplId);
+					evalTemplate.value[data[i].TemplId] = data[i];
+					var html = '\
+						<a id="' + data[i].TemplId + '" class="weui-grid">\
+							<div class="weui-grid__icon">\
+								<img src="../../../image/add.png">\
+							</div>\
+							<p class="weui-grid__label">' + data[i].TemplContent + '</p>\
+						</a>';
+					if(data[i].TemplType == 1) {
+						//表扬
+						praiseHtml = praiseHtml + html;
+					} else if(data[i].TemplType == 2) {
+						//待改进
+						improvedHtml = improvedHtml + html;
+					}
+				}
+				$("#praise .weui-grids").append(praiseHtml);
+				$("#improved .weui-grids").append(improvedHtml);
+			}
+
+			/**
 			 * 初始化数据
 			 */
 			function initData() {
@@ -268,13 +482,99 @@
 					$("#weuitab").addClass("teacher-show");
 				}
 				$("#weuitab").css("display", "block");
-
 			}
 
+			/**
+			 * 初始化监听
+			 */
 			function initListener() {
+				/**
+				 * 点击成员
+				 */
 				$(".weui-grids").on("click", ".weui-grid input", function() {
-					console.log("click");
+					console.log("click:" + this.id);
+					if(mineUserInfo.isleader == 1) {
+						//老师
+						if(multiSelect) {
+							//多选，更新选择的学生数量
+							$(".weui-tabbar_stu-number div").text("进行点评(" + $("#dataList input:checked").length + "个学生)");
+						} else {
+							var stu = members.value[this.id];
+							beEvalMans = null;
+							beEvalMans = [
+								[stu.userid, stu.name, stu.avatar]
+							]
+							showEvalTemplate();
+						}
+					} else {
+						//家长跳到详情
+					}
 				});
+
+				//点击点评多人
+				$(".weui-tabbar_students").click(function() {
+					multiSelect = true;
+					$("#dataList input:checked").removeAttr("checked");
+					$(".weui-tabbar_stu-number div").text("进行点评(0个学生)");
+					$("#weuitab").removeClass("stu-checkbox-hide");
+				});
+
+				//多选,点击取消
+				$(".weui-tabbar_cancle").click(function() {
+					multiSelect = false;
+					beEvalMans = null;
+					beEvalMans = [];
+					$("#weuitab").addClass("stu-checkbox-hide");
+				});
+
+				//多选，点击进行点评
+				$(".weui-tabbar_stu-number").click(function() {
+					var checkeds = $("#dataList input:checked");
+					if(checkeds.length != 0) {
+						console.log("checkeds", checkeds);
+						$('.weui-tabbar_cancle').trigger("click");
+						for(var i = 0; i < checkeds.length; i++) {
+							var stu = members.value[checkeds[i].id];
+							var temp = [stu.userid, stu.name, stu.avatar];
+							beEvalMans.push(temp);
+						}
+						showEvalTemplate();
+					}
+				});
+
+				//点评模板，查看表现
+				$(".template_top_right").click(function() {
+					if(beEvalMans.length == 1) {
+						console.log("查看表现");
+					}
+				});
+
+				//表扬和待改进
+				$("#evalTemplate").on("click", ".weui-grid", function() {
+					console.log("evalTemplate", evalTemplate.value[this.id]);
+				});
+			}
+			/**
+			 * 显示点评模板
+			 */
+			function showEvalTemplate() {
+				console.log("showEvalTemplate", beEvalMans);
+				if(beEvalMans.length == 1) {
+					$(".template_top_center").text("点评" + beEvalMans[0][1]);
+					$(".template_top_right").text("查看表现");
+				} else {
+					$(".template_top_center").text("点评" + beEvalMans[0][1] + "等" + beEvalMans.length + "人");
+					$(".template_top_right").text("");
+				}
+
+				$("#evalTemplate").popup();
+			}
+
+			/**
+			 * 新增点评
+			 */
+			function addEvaluation() {
+
 			}
 		</script>
 	</body>

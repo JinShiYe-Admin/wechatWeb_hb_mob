@@ -12,7 +12,7 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<title>管理考勤</title>
-		<link rel="stylesheet" href="../../css/weui.min.css" />
+		<!--<link rel="stylesheet" href="../../css/weui.min.css" />-->
 		<!--<link href="../../css/mui.min.css" rel="stylesheet" />-->
 		<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=Z5iqNpaPerdxLv1m4Vd6PPgHYMZ3YbqH"></script>
 
@@ -52,15 +52,17 @@
 			<!--输入列表-->
 			<div id="input_list">
 				<div>
-					<div class="weui-cells__title">考勤地点名称</div>
-					<div class="weui-cells">
+					<div class="weui-cells__title">考勤地点名称：<input id="attendAdressText" v-model.lazy="cname.message" class="weui-input" type="text"></div>
+					
+					<!--<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
 								<input id="attendAdressText" v-model.lazy="cname.message" class="weui-input" type="text">
 							</div>
 						</div>
-					</div>
+					</div>-->
 				</div>
+				<br />
 				<div class="tips">地址定位不准确时，可拖动地图中的红色水滴调整位置。</div>
 				<!--用来显示地图-->
 				<div id="allmap" style="height: 500px; width: 100%;"></div>
@@ -78,8 +80,10 @@
 				<!-- 	</div> -->
 				<!-- </div> -->
 				<!-- 	</div> -->
+				<br />
 				考勤地点X坐标（经度）<input id="attendAdressX" type="text"> 考勤地点Y坐标（纬度）
-				<input id="attendAdressY" type="text">&nbsp; &nbsp;<input type="button" onclick="search()" value="查询" />
+				<input id="attendAdressY" type="text">&nbsp; &nbsp;<input style="color: white;background:#5a99df ; border: none; width: 60px;height: 25px;"  type="button" onclick="search()" value="查询" />&nbsp;&nbsp;&nbsp;&nbsp;<span class="tips">系统无法获取经纬度时，请使用拾取坐标系统查询后手动输入
+				<a target="_blank" style="color: #737373; text-decoration: underline;" href="http://api.map.baidu.com/lbsapi/getpoint/index.html">查询</a></span>
 				<!-- <div>
 				<div class="weui-cells__title">考勤地点Y坐标</div>
 				<div class="weui-cells">
@@ -90,20 +94,22 @@
 					</div>
 				</div>
 			</div> -->
+			
 				<div>
-					<div class="weui-cells__title">考勤地点半径</div>
-					<div class="weui-cells">
+					<br />
+					<div class="weui-cells__title">考勤地点半径：<input placeholder="请输入半径" size="10" id="attendAddressRedius" class="weui-input" type="text" oninput="getRedius(this.value)">米<span class="tips">（建议500-1000米）</span></div>
+					<!--<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
 								<input id="attendAddressRedius" class="weui-input" type="text" oninput="getRedius(this.value)">米<span class="tips">（建议500-1000米）</span>
 							</div>
 						</div>
-					</div>
+					</div>-->
 				</div>
-				<div class="tips">
+				<!--<div class="tips">
 					系统无法获取经纬度时，请使用拾取坐标系统查询后手动输入
 					<a target="_blank" style="color: #737373; text-decoration: underline;" href="http://api.map.baidu.com/lbsapi/getpoint/index.html">查询</a>
-				</div>
+				</div>-->
 			</div>
 			<!--开关列表-->
 			<div id="switch_list">
@@ -134,8 +140,9 @@
 					</div>
 				</div>-->
 			</div>
+			<br />
 			<!--<div class="weui-btn-area" v-if="editName =='修改'">-->
-			<button id="submit" onclick="submitClick()" class="weui-btn weui-btn_primary">修改</button>
+			<button style=" width:350px ; height: 50px; margin-left: 550px; background:#5a99df  ; border: none; color: white; font-size: 20px;" id="submit" onclick="submitClick()" class="weui-btn weui-btn_primary">修改</button>
 			<!--</div>-->
 		</div>
 		<!--</template>-->

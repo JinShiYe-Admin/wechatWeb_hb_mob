@@ -786,11 +786,13 @@
 				} else {
 					//input 输入框的值都填写了，则提交，进行修改即更新。
 					var tempData = {
+						"corpId": attendAddressObject.corpId,
 						"areaName": attendAdressValue,
 						"attendAreaId": attendAddressObject.AttendAreaId,
 						"areaX": attendAdressX,
 						"areaY": attendAdressY,
 						"areaRedius": attendAddressRedius,
+						"stat": 1,
 						"uuid": "",
 						"appid": "",
 						"token": "",

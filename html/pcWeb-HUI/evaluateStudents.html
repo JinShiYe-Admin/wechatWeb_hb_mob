@@ -99,8 +99,8 @@
 					<label class="form-label col-xs-4 col-sm-3">图片上传：</label>
 					<div class="formControls skin-minimal col-xs-8 col-sm-9">
 						<div class="check-box">
-							<span class="btn-upload">
-							  <a class="btn btn-primary radius" id="select-pic">选取文件</a>
+							<span class="btn-upload" id="select-pic">
+							  <a class="btn btn-primary radius" >选取文件</a>
 							  <input id="uploaderInput" type="file" class="input-file" accept="image/png, image/jpeg, image/jpg" @change="selectFile">
 							</span>
 							<div v-if="localPath!=''" class="picture-show">
@@ -215,6 +215,10 @@
 					evaluateModel: {}, //要修改的的类型model
 					localPath: ""
 				},
+				mounted: function() {
+					console.log("mounted")
+					this.uploadFile();
+				},
 				methods: {
 					selectFile: function(e) {
 						console.log("e.target.value:" + e.target.value);
@@ -222,7 +226,7 @@
 						if(e.target.files.length > 0) {
 							var theFile = e.target.files[0];
 							if(this.isInType(theFile.type)) { //上传文件
-								this.uploadFile();
+								
 							} else {
 								this.emitUndefinedFile(); //清空上传文件
 								e.target.value = "";
@@ -236,13 +240,14 @@
 						this.$emit("uploadedFile", null);
 					},
 					uploadFile: function() { //上传文件方法
+						console.log("*******uploadFile*******")
 						var com = this;
 						var thumbOption = {
 							type: 0
 						};
 						cloudutil.uploadQnSingleImg("select-pic", thumbOption, function(response) {
 							console.log("获取的上传七牛图片信息：" + JSON.stringify(response));
-							com.$emit("uploadedfile", response, com.index); //通知父组件 上传的图片
+							com.localPath=response.saveurl+"?imageView2/5/w/200";
 						})
 					},
 					isInType: function(type) {

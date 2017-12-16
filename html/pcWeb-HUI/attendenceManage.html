@@ -82,14 +82,14 @@
 				<tbody>
 					<tr class="text-c" v-for="(item,index) in value">
 						<td>{{item.AttendTypeNote1}}</td>
-						<td v-if="item.BeginMinute<10">{{item.BeginHour}}:0{{item.BeginMinute}}</td>
-						<td v-else="">{{item.BeginHour}}:{{item.BeginMinute}}</td>
+						<!--<td v-if="item.cardStartTimePoint_Minute<10">{{item.cardStartTimePoint_Hour}}:0{{item.cardStartTimePoint_Minute}}</td>-->
+						<td >{{item.cardStartTimePoint_Hour}}:{{item.cardStartTimePoint_Minute}}</td>
 						<!--<td>{{item.BeginMinute}}</td>-->
 						<!--<td>{{item.ContinuousMinute}}</td>-->
-						<td v-if="item.workTimePoint_Minute<10">{{item.workTimePoint_Hour}}:0{{item.workTimePoint_Minute}}</td>
-						<td v-else="">{{item.workTimePoint_Hour}}:{{item.workTimePoint_Minute}}</td>
-						<td v-if="item.cardEndTimePoint_Minute<10">{{item.cardEndTimePoint_Hour}}:0{{item.cardEndTimePoint_Minute}}</td>
-						<td v-else="">{{item.cardEndTimePoint_Hour}}:{{item.cardEndTimePoint_Minute}}</td>
+						<!--<td v-if="item.workTimePoint_Minute<10">{{item.workTimePoint_Hour}}:0{{item.workTimePoint_Minute}}</td>-->
+						<td >{{item.workTimePoint_Hour}}:{{item.workTimePoint_Minute}}</td>
+						<!--<td v-if="item.cardEndTimePoint_Minute<10">{{item.cardEndTimePoint_Hour}}:0{{item.cardEndTimePoint_Minute}}</td>-->
+						<td >{{item.cardEndTimePoint_Hour}}:{{item.cardEndTimePoint_Minute}}</td>
 						<!--<td>{{item.LateMinute}}</td>-->
 						<td>{{item.AttendMessage}}</td>
 						<td class="sorting_1">
@@ -449,58 +449,76 @@
 
 							for(i = 0, len = data.RspData.Data.length; i < len; i++) {
 								var attendTypeProp = data.RspData.Data[i].attendTypeProp;
-								var BeginHour = data.RspData.Data[i].BeginHour;
-								var BeginMinute = data.RspData.Data[i].BeginMinute;
-								var ContinuousMinute = data.RspData.Data[i].ContinuousMinute;
-								var LateMinute = data.RspData.Data[i].LateMinute;
+								//								var BeginHour = data.RspData.Data[i].BeginHour;
+								var BeginMinute = data.RspData.Data[i].BeginMinute; //得到打卡开始时间，如800、1130
+								var ContinuousMinute = data.RspData.Data[i].ContinuousMinute; //得到上班或下班时间，如830
+								var LateMinute = data.RspData.Data[i].LateMinute; //得到打卡结束时间，如909
+								/**
+								 * 将number 转换为string。3个时间点值
+								 */
+								var BeginMinute_str = new String(BeginMinute)
+								var ContinuousMinute_str = new String(ContinuousMinute)
+								var LateMinute_str = new String(LateMinute)
+
+								var cardStartTimePoint_Hour = getHour(BeginMinute_str);
+								var cardStartTimePoint_Minute = getMinute(BeginMinute_str);
 								//上班或下班时间
-								var workTimePoint_Hour;
-								var workTimePoint_Minute;
-								var cardEndTimePoint_Hour;
-								var cardEndTimePoint_Minute;
-								if(attendTypeProp == 1) { //上班属性，
-									//									//					算出上班时间和打卡结束时间
-									var sum_Work = BeginHour * 60 + parseInt(BeginMinute) + parseInt(ContinuousMinute);
-									console.log("sum_Work11111====" + sum_Work)
-									//除以60商就是小时数，余数就是分钟数
-									workTimePoint_Hour = parseInt(sum_Work / 60)
-									workTimePoint_Minute = sum_Work % 60
-									console.log("workTimePoint_Hour====" + workTimePoint_Hour)
-									console.log("workTimePoint_Minute====" + workTimePoint_Minute)
-									var sum_End = sum_Work + parseInt(LateMinute)
-									console.log("sum_End====" + sum_End)
-									cardEndTimePoint_Hour = parseInt(sum_End / 60)
-									console.log("cardEndTimePoint_Hour====" + cardEndTimePoint_Hour)
-									cardEndTimePoint_Minute = sum_End % 60
-									console.log("cardEndTimePoint_Minute====" + cardEndTimePoint_Minute)
-								} else {
-									//下班属性，
-									//									//					算出上班时间和打卡结束时间
-									var sum_Work = BeginHour * 60 + parseInt(BeginMinute) + parseInt(LateMinute);
-									console.log("sum_Work====" + sum_Work)
-									//除以60商就是小时数，余数就是分钟数
-									workTimePoint_Hour = parseInt(sum_Work / 60)
-									workTimePoint_Minute = sum_Work % 60
-									console.log("workTimePoint_Hour====" + workTimePoint_Hour)
-									console.log("workTimePoint_Minute====" + workTimePoint_Minute)
-									var sum_End = sum_Work + parseInt(ContinuousMinute)
-									console.log("sum_End====" + sum_End)
-									cardEndTimePoint_Hour = parseInt(sum_End / 60)
-									console.log("cardEndTimePoint_Hour====" + cardEndTimePoint_Hour)
-									cardEndTimePoint_Minute = sum_End % 60
-									console.log("cardEndTimePoint_Minute====" + cardEndTimePoint_Minute)
-								}
+								var workTimePoint_Hour = getHour(ContinuousMinute_str);
+								var workTimePoint_Minute = getMinute(ContinuousMinute_str);
+								var cardEndTimePoint_Hour = getHour(LateMinute_str);
+								var cardEndTimePoint_Minute = getMinute(LateMinute_str);
+
+								//根据获取的时间对其进行处理，得到小时值
+
+								//								if(attendTypeProp == 1) { //上班属性，
+								//									//									//					算出上班时间和打卡结束时间
+								//									var sum_Work = BeginHour * 60 + parseInt(BeginMinute) + parseInt(ContinuousMinute);
+								//									console.log("sum_Work11111====" + sum_Work)
+								//									//除以60商就是小时数，余数就是分钟数
+								//									workTimePoint_Hour = parseInt(sum_Work / 60)
+								//									workTimePoint_Minute = sum_Work % 60
+								//									console.log("workTimePoint_Hour====" + workTimePoint_Hour)
+								//									console.log("workTimePoint_Minute====" + workTimePoint_Minute)
+								//									var sum_End = sum_Work + parseInt(LateMinute)
+								//									console.log("sum_End====" + sum_End)
+								//									cardEndTimePoint_Hour = parseInt(sum_End / 60)
+								//									console.log("cardEndTimePoint_Hour====" + cardEndTimePoint_Hour)
+								//									cardEndTimePoint_Minute = sum_End % 60
+								//									console.log("cardEndTimePoint_Minute====" + cardEndTimePoint_Minute)
+								//								} else {
+								//									//下班属性，
+								//									//									//					算出上班时间和打卡结束时间
+								//									var sum_Work = BeginHour * 60 + parseInt(BeginMinute) + parseInt(LateMinute);
+								//									console.log("sum_Work====" + sum_Work)
+								//									//除以60商就是小时数，余数就是分钟数
+								//									workTimePoint_Hour = parseInt(sum_Work / 60)
+								//									workTimePoint_Minute = sum_Work % 60
+								//									console.log("workTimePoint_Hour====" + workTimePoint_Hour)
+								//									console.log("workTimePoint_Minute====" + workTimePoint_Minute)
+								//									var sum_End = sum_Work + parseInt(ContinuousMinute)
+								//									console.log("sum_End====" + sum_End)
+								//									cardEndTimePoint_Hour = parseInt(sum_End / 60)
+								//									console.log("cardEndTimePoint_Hour====" + cardEndTimePoint_Hour)
+								//									cardEndTimePoint_Minute = sum_End % 60
+								//									console.log("cardEndTimePoint_Minute====" + cardEndTimePoint_Minute)
+								//								}
 
 								//dt是数组
 								column_table.dt.push({
 									AttendTypeNote1: data.RspData.Data[i].AttendTypeNote,
-									BeginHour: BeginHour,
-									BeginMinute: BeginMinute,
-									workTimePoint_Hour:workTimePoint_Hour,
+//									BeginHour: BeginHour,
+//									BeginMinute: BeginMinute,
+									cardStartTimePoint_Hour: cardStartTimePoint_Hour,
+									cardStartTimePoint_Minute: cardStartTimePoint_Minute,
+									workTimePoint_Hour: workTimePoint_Hour,
 									workTimePoint_Minute: workTimePoint_Minute,
 									cardEndTimePoint_Hour: cardEndTimePoint_Hour,
-									cardEndTimePoint_Minute:cardEndTimePoint_Minute,
-									AttendMessage:data.RspData.Data[i].AttendMessage
+									cardEndTimePoint_Minute: cardEndTimePoint_Minute,
+									
+									AttendMessage: data.RspData.Data[i].AttendMessage,
+									AttendTimeId:data.RspData.Data[i].AttendTimeId,
+									AttendType:data.RspData.Data[i].AttendType
+									
 								})
 								//								if(dt.attendTypeProp == 1) { //上班属性，
 								//									//					算出上班时间和打卡结束时间
@@ -543,6 +561,29 @@
 						}
 					}
 				});
+			}
+
+			/**
+			 * 根据如800、1130拿去时间值
+			 * param 时间整数
+			 */
+			function getHour(timeInteger) {
+				console.log("type of timeInteger===" +
+					typeof(timeInteger))
+				if(timeInteger.length == 3) { //时间整数是3位,如800
+					return timeInteger.substring(0, 1)
+				} else { //4位,如1130
+					return timeInteger.substring(0, 2)
+				}
+			}
+
+			/**
+			 * 根据如800、1130拿取分钟值
+			 * param 时间整数
+			 */
+			function getMinute(timeInteger) {
+
+				return timeInteger.substring(timeInteger.length - 2)
 			}
 		</script>
 	</body>

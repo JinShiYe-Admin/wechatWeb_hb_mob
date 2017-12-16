@@ -96,7 +96,7 @@ var cloudutil = (function(mod) {
 	 * @param {Object} callback 必填 回调
 	 */
 	mod.getFileUpTokens = function(data, callBack) {
-		//console.log("getFileUpToken:" + JSON.stringify(data));
+		console.log("getFileUpToken:" + JSON.stringify(data));
 		var appId = data.appId; //项目id
 		var desKey = mod.getAppKey(data.appId); //项目名称
 		var mainSpace = data.mainSpace; //文件存放在私有空间或公有空间
@@ -283,8 +283,9 @@ var cloudutil = (function(mod) {
 	 * @param {Object} callback 上传的回调方法
 	 */
 	mod.uploadQnSingleImg = function(buttonSelector, manageOptions, callback) {
+		console.log("uploadQnSingleImg上传图片")
 		var originalName = "";
-		qnFileUploader = Qiniu.uploader({
+		var qnFileUploader = Qiniu.uploader({
 			disable_statistics_report: false, // 禁止自动发送上传统计信息到七牛，默认允许发送
 			runtimes: 'html5,flash,html4', // 上传模式,依次退化
 			browse_button: buttonSelector, // 上传选择的点选按钮，**必需**
@@ -292,7 +293,7 @@ var cloudutil = (function(mod) {
 				originalName = file.name;
 				uptokenData = null;
 				uptokenData = mod.getQNUpToken(file, manageOptions);
-				//console.log("获取uptoken回调:" + JSON.stringify(uptokenData));
+				console.log("获取uptoken回调:" + JSON.stringify(uptokenData));
 				if(uptokenData && uptokenData.code) { //成功
 					return uptokenData.data.Data[0].Token;
 				} else {
@@ -389,6 +390,7 @@ var cloudutil = (function(mod) {
 	 * @param {Object} manageOption { type } 0 原图 3 缩略裁剪图
 	 */
 	mod.getQNUpToken = function(file, manageOption) {
+		console.log("getQNUpToken");
 		var myDate = new Date();
 		var fileName = myDate.getTime() + "" + parseInt(Math.random() * 1000);
 		var types = file.name.split(".");

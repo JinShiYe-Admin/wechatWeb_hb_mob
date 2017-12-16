@@ -29,7 +29,7 @@ var compress = (function(mod) {
 	}
 	mod.postFile = function(formData, callback) {
 		console.log("开始上传");
-//		console.log("url="+consts.UPLOADURL+"data="+formData);
+		//		console.log("url="+consts.UPLOADURL+"data="+formData);
 		jQuery.ajax({
 				url: consts.UPLOADURL,
 				type: "POST",
@@ -65,7 +65,7 @@ var compress = (function(mod) {
 	 * 生成一张图片
 	 * @param {Object} img 原始图片元素
 	 * @param {Object} suitableSize 压缩的配置
-	 * @param {Object} orientation 旋转角度
+	 * @param {Object} orientation 旋转角度 -1
 	 */
 	mod.getCanvasDataUrl = function(img, suitableSize, orientation) {
 		console.log("*****重绘图片的宽高******");
@@ -82,21 +82,31 @@ var compress = (function(mod) {
 				canvas.height = suitableSize.width;
 				ctx.translate(suitableSize.height, 0);
 				ctx.rotate(90 * Math.PI / 180);
+				ctx.drawImage(img, 0, 0, suitableSize.width, suitableSize.height);
 				break;
 			case 8: //需要逆时针（向右）90度旋转
 				canvas.width = suitableSize.height;
 				canvas.height = suitableSize.width;
 				ctx.translate(0, suitableSize.width);
 				ctx.rotate(-90 * Math.PI / 180);
+				ctx.drawImage(img, 0, 0, suitableSize.width, suitableSize.height);
 				break;
 			case 3: //需要180度旋转
 				ctx.translate(suitableSize.width, suitableSize.height);
 				ctx.rotate(-180 * Math.PI / 180);
+				ctx.drawImage(img, 0, 0, suitableSize.width, suitableSize.height);
+				break;
+			case -1: //居中裁剪成圓形
+				ctx.save(); // 保存当前ctx的状态
+				ctx.arc(suitableSize.width/2, suitableSize.height/2, 0, 2*Math.PI); //画出圆
+				ctx.clip(); //裁剪上面的圆形
+				ctx.drawImage(img, 0, 0, suitableSize, suitableSize.height); // 在刚刚裁剪的园上画图
+				ctx.restore(); // 还原状态
 				break;
 			default:
 				break;
 		}
-		ctx.drawImage(img, 0, 0, suitableSize.width, suitableSize.height);
+
 		return canvas.toDataURL(imageType, imageArgu);
 	}
 	mod.getSuitableSize = function(imgInfo, multi) {

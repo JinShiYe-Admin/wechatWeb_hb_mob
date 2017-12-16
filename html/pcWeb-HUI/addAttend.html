@@ -94,7 +94,18 @@
 								<option v-else :value="item">{{item}}</option>
 							</template>
 						</select>
-						  (*排序id越小越靠前)
+						(*排序id越小越靠前)
+					</div>
+				</div>
+				<div class="row cl" v-show="attendFlag==1">
+					<label class="form-label col-xs-4 col-sm-3">状态：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<span class="select-box">
+							<select id="modifyStat" class="select" size="1" title="请选择状态" @change="attendModifyStatChange">
+								<option value="0">屏蔽</option>
+								<option value="1">有效</option>
+							</select>
+						</span>
 					</div>
 				</div>
 				<div class="row cl submit-button">
@@ -120,7 +131,7 @@
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
-		<script src='https://jsypay.jiaobaowang.net/suitetest/js/lib/vconsole/vconsole.min.js'></script>
+		<script src='../../js/lib/vconsole/vconsole.min.js'></script>
 		<script type="text/javascript">
 			$(function() {
 				$('.table-sort').dataTable({
@@ -153,10 +164,12 @@
 				methods: {
 					modifyAttend: function(model, index) {
 						attendData.attendFlag = 1;
+						addAttendLayer.attendFlag = 1;
 						addAttendLayer.showEdit(model);
 					},
 					addAttend: function() {
 						attendData.attendFlag = 0;
+						addAttendLayer.attendFlag = 0;
 						addAttendLayer.showAdd();
 					},
 					removeAttend: function(model, index) {
@@ -189,7 +202,9 @@
 					selectArray: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
 					AttendTypeNote: "", //考勤类型说明
 					attendTypeProp: "1", //考勤类型属性,1 上班/上学,2 下班/放学
-					orderID:'0',//排序
+					orderID: '0', //排序
+					stat: '1', //状态，1有效，0屏蔽
+					attendFlag: 0, //0添加，1编辑
 					attendModel: {} //要修改的的类型model
 				},
 				methods: {
@@ -198,7 +213,15 @@
 					 */
 					showAdd: function() {
 						this.AttendTypeNote = "";
+						this.orderID = 0;
+						this.attendTypeProp = 1;
+						this.stat = 1;
+						var tempModel = {
+							OrderId: 0
+						}
+						this.attendModel = tempModel;
 						$("#attendTypePropSelect").val(1);
+						$("#modifyStat").val(1);
 						this.show("添加考勤类型");
 					},
 					/**
@@ -207,9 +230,12 @@
 					showEdit: function(value) {
 						this.AttendTypeNote = value.AttendTypeNote;
 						this.orderID = value.OrderId;
+						this.attendTypeProp = value.attendTypeProp;
 						$("#attendTypePropSelect").val(value.attendTypeProp);
-						this.show("编辑考勤类型");
+						this.stat = value.Stat;
+						$("#modifyStat").val(value.Stat);
 						this.attendModel = value;
+						this.show("编辑考勤类型");
 					},
 					/**
 					 * 显示页面
@@ -235,7 +261,7 @@
 									corpId: attendData.userInfo.corpid, //单位ID
 									attendTypeNote: addAttendLayer.AttendTypeNote, //考勤类型说明
 									attendTypeProp: addAttendLayer.attendTypeProp, //1 上班/上学,2 下班/放学
-									orderId:addAttendLayer.orderID//排序id
+									orderId: addAttendLayer.orderID //排序id
 								}
 								console.log('tempData:' + JSON.stringify(tempData));
 								addAttendTypePro(tempData, function(data) {
@@ -259,9 +285,11 @@
 							if(checkInput(addAttendLayer.AttendTypeNote, 1)) {
 								var tempData = {
 									attendTypeId: this.attendModel.AttendTypeId, //考勤类型ID
+									corpId: attendData.userInfo.corpid, //单位id
 									attendTypeNote: addAttendLayer.AttendTypeNote, //考勤类型说明
 									attendTypeProp: addAttendLayer.attendTypeProp, //1 上班/上学,2 下班/放学
-									orderId:addAttendLayer.orderID//排序id
+									orderId: addAttendLayer.orderID, //排序id
+									stat: addAttendLayer.stat //状态，1有效，0屏蔽
 								}
 								console.log('tempData:' + JSON.stringify(tempData));
 								setAttendTypePro(tempData, function(data) {
@@ -272,25 +300,29 @@
 											//获取现有的考勤类型
 											getAttendType();
 										} else {
-											layer.alert('修改失败');
+											layer.alert(data.RspTxt);
 										}
 									} else {
 										layer.alert(data.RspTxt);
 									}
 								});
 							}
-
 						}
-
 					},
 					/**
-					 * 修改排序ID
+					 * 修改考勤类型
 					 */
 					attendTypePropChange: function() {
 						var obj = document.getElementById('attendTypePropSelect');
 						var index = obj.selectedIndex; //序号，取当前选中选项的序号
 						var val = obj.options[index].value;
 						addAttendLayer.attendTypeProp = val;
+					},
+					attendModifyStatChange: function() { //修改状态
+						var obj = document.getElementById('modifyStat');
+						var index = obj.selectedIndex; //序号，取当前选中选项的序号
+						var val = obj.options[index].value;
+						addAttendLayer.stat = val;
 					}
 				}
 			});
@@ -301,8 +333,8 @@
 				var index = obj.selectedIndex; //序号，取当前选中选项的序号
 				var val = obj.options[index].value;
 				model.orderid = val;
-//				alert('model.orderid:'+model.orderid);
-				addAttendLayer.orderID =model.orderid;
+				//				alert('model.orderid:'+model.orderid);
+				addAttendLayer.orderID = model.orderid;
 			}
 			//13.获取当前人员信息
 			var getUserInfo = function() {
@@ -335,7 +367,7 @@
 						attendData.attendArray = [].concat(data.RspData.Data);
 						attendData.flag = 1;
 					} else {
-						//						layer.alert('请重新登录获取个人信息');
+						alert(data.RspTxt);
 					}
 				});
 			};

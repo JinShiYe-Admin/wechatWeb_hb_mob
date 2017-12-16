@@ -55,6 +55,7 @@
 					<div class="weui-cells__title">打卡开始时间：
 						<select id="beginHour">
 							<option value=""></option>
+							<option value="0">0</option>
 							<option value="1">1</option>
 							<option value="2">2</option>
 							<option value="3">3</option>
@@ -78,7 +79,6 @@
 							<option value="21">21</option>
 							<option value="22">22</option>
 							<option value="23">23</option>
-							<option value="24">24</option>
 						</select>
 						时
 						<select id="beginMinute">
@@ -150,6 +150,7 @@
 					<div class="weui-cells__title">上班或下班时间：
 						<select id="workTimePoint_Hour">
 							<option value=""></option>
+								<option value="0">0</option>
 							<option value="1">1</option>
 							<option value="2">2</option>
 							<option value="3">3</option>
@@ -173,7 +174,6 @@
 							<option value="21">21</option>
 							<option value="22">22</option>
 							<option value="23">23</option>
-							<option value="24">24</option>
 						</select>
 						时
 						<select id="workTimePoint_Minute">
@@ -246,6 +246,7 @@
 					<div class="weui-cells__title">打卡结束时间：
 						<select id="cardEndTimePoint_Hour">
 							<option value=""></option>
+							<option value="0">0</option>
 							<option value="1">1</option>
 							<option value="2">2</option>
 							<option value="3">3</option>
@@ -269,7 +270,6 @@
 							<option value="21">21</option>
 							<option value="22">22</option>
 							<option value="23">23</option>
-							<option value="24">24</option>
 						</select>
 						时
 						<select id="cardEndTimePoint_Minute">
@@ -888,10 +888,10 @@
 						} else if(attendMessage == "") {
 							alert("考勤短信内容不能为空！");
 							return;
-						} else if(workTimePoint<=cardStartTimePoint){//上班或下班时间<=打卡开始时间
+						} else if(parseInt(workTimePoint)<=parseInt(cardStartTimePoint)){//上班或下班时间<=打卡开始时间
 							alert("上班或下班时间必须大于打卡开始时间！");
 							return;
-						} else if(cardEndTimePoint<=workTimePoint){//打卡结束时间<=上班或下班时间
+						} else if(parseInt(cardEndTimePoint)<=parseInt(workTimePoint)){//打卡结束时间<=上班或下班时间
 							alert("打卡结束时间必须大于上班或下班时间！");
 							return;
 						}else {

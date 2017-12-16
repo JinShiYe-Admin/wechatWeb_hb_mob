@@ -41,7 +41,7 @@ var jQAjaxPost = function(url, data, callback) {
 		url: url,
 		type: "POST",
 		data: data,
-		timeout: 10000,
+		timeout: 30000,
 		dataType: "json",
 		async: true,
 		success: function(success_data) { //请求成功的回调
@@ -70,7 +70,7 @@ var xhrPost = function(url, data, callback) {
 	console.log('XHRP-Data:', data);
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
-	xhr.timeout = 10000; //10秒超时
+	xhr.timeout = 30000; //10秒超时
 	xhr.onload = function(e) {
 		console.log("XHRP:onload:", e);
 		if(this.readyState === 4 && this.status === 200) {
@@ -228,34 +228,34 @@ var getAttendTypeForSelPro = function(data0, callback) {
 }
 
 //学生成长轨迹接口
-var tempAttendUrl = 'https://jbyj.jiaobaowang.net/EvaluationService/';
+var tempEvaluationUrl = 'https://jbyj.jiaobaowang.net/EvaluationService/';
 
 //1.新增点评模板
 var addEvalTemplatePro = function(data0, callback) {
 	data0 = extendParameter(data0);
-	xhrPost(tempAttendUrl + 'addEvalTemplate', JSON.stringify(data0), callback);
+	xhrPost(tempEvaluationUrl + 'addEvalTemplate', JSON.stringify(data0), callback);
 }
 
 //2.删除点评模板
 var delEvalTemplatePro = function(data0, callback) {
 	data0 = extendParameter(data0);
-	xhrPost(tempAttendUrl + 'delEvalTemplate', JSON.stringify(data0), callback);
+	xhrPost(tempEvaluationUrl + 'delEvalTemplate', JSON.stringify(data0), callback);
 }
 
 //3.获取点评模板
 var getEvalTemplatePro = function(data0, callback) {
 	data0 = extendParameter(data0);
-	xhrPost(tempAttendUrl + 'getEvalTemplate', JSON.stringify(data0), callback);
+	xhrPost(tempEvaluationUrl + 'getEvalTemplate', JSON.stringify(data0), callback);
 }
 
 //4.新增点评
 var addEvaluationPro = function(data0, callback) {
 	data0 = extendParameter(data0);
-	xhrPost(tempAttendUrl + 'addEvaluation', JSON.stringify(data0), callback);
+	xhrPost(tempEvaluationUrl + 'addEvaluation', JSON.stringify(data0), callback);
 }
 
 //5.获取点评
 var getEvaluationPro = function(data0, callback) {
 	data0 = extendParameter(data0);
-	xhrPost(tempAttendUrl + 'getEvaluation', JSON.stringify(data0), callback);
+	xhrPost(tempEvaluationUrl + 'getEvaluation', JSON.stringify(data0), callback);
 }

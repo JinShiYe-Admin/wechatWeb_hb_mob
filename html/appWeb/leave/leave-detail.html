@@ -10,6 +10,7 @@
 		<link rel="stylesheet" href="../../../css/weui.min.css" />
 		<link rel="stylesheet" href="../../../js/demoCssJs/jquery-weui.min.css" />
 		<link rel="stylesheet" href="../../../js/demoCssJs/demos.css" />
+		<!--<link rel="stylesheet" href="../../../css/weui-extra.min.css" />-->
 		<title>请假详情</title>
 		<style>
 			body {
@@ -92,13 +93,23 @@
 			.apply-reject {
 				color: red;
 			}
+			
+			.placeholder {
+				margin: 5px;
+				padding: 0 10px;
+				background-color: #ebebeb;
+				height: 2.3em;
+				line-height: 2.3em;
+				text-align: center;
+				color: #cfcfcf;
+			}
 		</style>
 	</head>
 
 	<body>
 		<div id="detail-container" class="page actionsheet js_show" style="position: relative;">
 			<template v-show="applyDetail.ApplyManName">
-				<div v-bind:class="[{'check-detail':flag>0}]">
+				<div v-bind:class="[{'check-detail':flag<2}]">
 					<div class="weui-cells person-container weui-flex">
 						<img v-bind:src="applyDetail.ApplyManPic?applyDetail.ApplyManPic:personalInfo.avatar" class="head-portrait display-inline">
 						<div class="display-inline name-time-container">
@@ -150,12 +161,20 @@
 						</div>
 					</template>
 				</div>
-				<div v-if="flag" class="weui-cell weui-cell_vcode input-container">
+				<div v-if="flag==1" class="weui-cell weui-cell_vcode input-container">
 					<div class="weui-cell__bd">
 						<input type="text" class="weui-input" v-model.trim="approveNote" placeholder="请输入内容" />
 					</div>
 					<div class="weui-cell__ft">
 						<button class="weui-vcode-btn" id="showIOSActionSheet" v-on:click="showOptions=true">审核</button>
+					</div>
+				</div>
+				<div v-if="flag == 0" class="weui-flex input-container">
+					<div class="weui-flex__item">
+						<div class="placeholder" style="color: #46BDFF;" v-on:click="editLeave()">编辑</div>
+					</div>
+					<div class="weui-flex__item">
+						<div class="placeholder" style="color: red;" v-on:click="delLeave()">删除</div>
 					</div>
 				</div>
 				<div>
@@ -222,6 +241,41 @@
 
 				},
 				methods: {
+					editLeave: function() {
+						location.href = "addleaveapply.html?change=" + events.getUrlParam(location.href, "sKey");
+					},
+					delLeave: function() {
+						var com = this;
+						$.modal({
+							title: "提示",
+							text: "确定删除?",
+							buttons: [{
+								text: "取消",
+								className: "default",
+							}, {
+								text: "确定",
+								className: "color-danger",
+								onClick: function() {
+									com.delLeaveApply()
+								}
+							}]
+						});
+					},
+					delLeaveApply: function() {
+						$.showLoading();
+						processRequest.postProcessData("delLeaveApply ", {
+							leaveApplyId: leaveApplyId
+						}, function(data) {
+							$.hideLoading();
+							if(data.RspCode == 0) {
+								$.alert("删除成功(" + data.RspTxt + ")", "消息", function() {
+									history.go(-1);
+								});
+							} else {
+								$.alert("删除失败(" + data.RspTxt + ")", "提示");
+							}
+						});
+					},
 					changeToPics: function(picStr) {
 						console.log("******changeToPics*****");
 						if(picStr.length > 0) {

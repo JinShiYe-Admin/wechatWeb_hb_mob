@@ -134,8 +134,6 @@ Vue.component("leave-setting", {
 					zIndex: 999,
 					content: $('#edit-pocessInfo')
 				});
-			} else {
-				layer.closeAll("page");
 			}
 
 		},
@@ -158,11 +156,11 @@ Vue.component("leave-setting", {
 		editLeave: function() {
 			console.log("****editLeave****");
 			if(this.name.length == 0) {
-				layer.alert("请输入请假类型名称！");
+				layerPlus.alert("请输入请假类型名称！");
 				return;
 			}
-			if(!this.chekedTea && !this.checkedPar) {
-				layer.alert("请选择请假类型！");
+			if(!this.checkedTea && !this.checkedPar) {
+				layerPlus.alert("请选择请假类型关系！");
 				return;
 			}
 			if(this.changeType == 0) {

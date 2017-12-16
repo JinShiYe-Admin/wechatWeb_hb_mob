@@ -225,5 +225,10 @@ var layerPlus = (function(mod) {
 			layer.close(index);
 		});
 	}
+	mod.alert = function(content) {
+		layer.confirm(content, {
+			icon: 2
+		})
+	}
 	return mod;
 })(layerPlus || {})

@@ -106,7 +106,7 @@ Vue.component("check-person-list", {
 			var com = this;
 			com.checkPersonList.forEach(function(checkPerson, index) {
 				if(index >= com.curPage * 10 && index < (com.curPage + 1) * 10) {
-					checkPerson.isSelect = com.isAllSelect;
+					com.$set(com.checkPersonList[index],"isSelect",com.isAllSelect);
 					if(com.isAllSelect) {
 						com.selectedInputPerson[checkPerson.TabId] = checkPerson.ApprManName;
 					}

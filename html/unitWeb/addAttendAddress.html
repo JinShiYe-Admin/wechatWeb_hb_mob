@@ -78,7 +78,7 @@
 			<div>
 				考勤地点X坐标（经度）：<input type="text" id="longitude" /> 考勤地点Y坐标（纬度）：
 				<input type="text" id="latitude" /> &nbsp; &nbsp;
-				<!--<button id="search">查询</button>--><input style="color: #5a99df;" type="button" onclick="search()" value="查询" />&nbsp;&nbsp;&nbsp;&nbsp;<span class="tips">系统无法获取经纬度时，请使用拾取坐标系统查询后手动输入
+				<!--<button style="color: #5a99df;" onclick="search()">查询</button>--><input style="color: white;background:#5a99df ; border: none;" type="button" onclick="search()" value="查询" />&nbsp;&nbsp;&nbsp;&nbsp;<span class="tips">系统无法获取经纬度时，请使用拾取坐标系统查询后手动输入
 				<a target="_blank" style="color: #737373; text-decoration: underline;" href="http://api.map.baidu.com/lbsapi/getpoint/index.html">查询</a></span>
 			</div>
 		</div>
@@ -125,7 +125,7 @@
 				</div>-->
 		</div>
 		<div >
-			<button id="submit" v-on:click="submitClick" class="weui-btn weui-btn_primary">添加</button>
+			<button id="submit" onclick="submitClick()" class="weui-btn weui-btn_primary">添加</button>
 		</div>
 		</div>
 		<!--</template>-->
@@ -174,7 +174,7 @@
 					}
 				})
 				//给corpId赋值假数据
-				//												corpId = "wx6c4528c675d4a9c9";
+//																corpId = "wx6c4528c675d4a9c9";
 				//	getWebsitConfig();
 				var detail = utils.getDataFromUrl(window.location.href);
 				//				alert("detail " + JSON.stringify(detail));
@@ -268,7 +268,7 @@
 						Object.assign(this.$data, getDefaultData());
 					},
 					submitClick: function() {
-						//						alert(99);
+												alert(99);
 						//提交前先判断。如果都不为空，则允许提交
 						/**
 						 * 得到各input输入框的值
@@ -675,6 +675,84 @@
 
 			}
 			//输入坐标查询地点，代码结束
+			
+			
+			
+			//添加考勤地点函数
+			function submitClick(){
+				console.log("点击添加---------------------")
+				//提交前先判断。如果都不为空，则允许提交
+						/**
+						 * 得到各input输入框的值
+						 */
+						var attendAdressValue = document.getElementById("attendAdressText").value;
+						//alert("attendAdressValue==="+attendAdressValue);
+						var attendAdressX = document.getElementById("longitude").value;
+						var attendAdressY = document.getElementById("latitude").value;
+						var attendAddressRedius = document.getElementById("attendAddressRedius").value;
+						//						alert("attendAddressRedius=="+attendAddressRedius);
+						if(attendAdressValue == "") {
+							alert("考勤地点名称不能为空！");
+							return;
+						} else if(attendAdressX == "") {
+							alert("考勤地点X坐标不能为空！");
+							return;
+						} else if(attendAdressY == "") {
+							alert("考勤地点Y坐标不能为空！");
+							return;
+						} else if(attendAddressRedius == "") {
+							alert("考勤地点半径不能为空！");
+							return;
+						} else {
+							//input 输入框的值都填写了，则提交，进行添加。
+							var tempData = {
+								"corpId": corpId,
+								"areaName": attendAdressValue,
+								"areaX": attendAdressX,
+								"areaY": attendAdressY,
+								"areaRedius": attendAddressRedius,
+								"uuid": "",
+								"appid": "",
+								"token": "",
+								"sign": ""
+							}
+							console.log("tempData===="+JSON.stringify(tempData))
+							$.ajax({
+								url: "https://jbyj.jiaobaowang.net/AttendanceService/addAttendArea",
+								type: "POST",
+								data: JSON.stringify(tempData),
+								timeout: 1000,
+								dataType: "json",
+								async: false,
+								success: function(data) {
+									console.log("新增考勤地点接口返回的情况======" + JSON.stringify(data));
+									/**
+									 * 如果接口返回正常，则跳转到显示考勤地点页面
+									 */
+									if(data.RspCode == 0) {
+										//给用户提示，添加成功
+										alert("添加成功");
+										//									window.location="../pcWeb-HUI/attendenceManage_address.html";
+										//										vm.resetData();
+										//										vm.editName = '添加'
+										//清空input输入框
+										document.getElementById("attendAdressText").value = "";
+										document.getElementById("longitude").value = "";
+										document.getElementById("latitude").value = "";
+										document.getElementById("attendAddressRedius").value = "";
+
+									} else if(data.RspCode == 1017) {
+										alert("存在同名的考勤地点");
+									}
+								},
+								error: function() {
+									$.toast("状态错误，请重新进入APP", "cancel", function() {
+										console.log('close');
+									});
+								}
+							})
+						}
+			}
 		</script>
 	</body>
 

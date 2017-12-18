@@ -29,29 +29,25 @@
 				<input placeholder="结束时间" type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax" class="input-text Wdate" style="width:120px;">
 				<select id="ddlLine" class="easyui-combotree" style="width: 205px; height: 24px;">
 				</select>
-				<button type="submit" class="btn btn-success radius" id="" name="" @click="searchAttendList()"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
+				<button type="submit" class="btn btn-success radius" id="" name="" @click="searchpersonLeaveList()"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
 				<a id="exportExcel" type="button" class="btn btn-success radius" onclick="clickExport()">导出</a>
 			</div>
 			<div class="mt-20">
 				<table class="table table-border table-bordered table-hover table-bg">
 					<thead>
 						<tr class="text-c">
-							<th width="100">考勤部门</th>
-							<th width="100">用户姓名</th>
-							<th width="100">考勤次数</th>
-							<th width="100">迟到次数</th>
-							<th width="100">早退次数</th>
-							<th width="100">请假次数</th>
+							<th width="100">部门</th>
+							<th width="100">姓名</th>
+							<th v-for="leaveType in leaveTypes" width="100">{{leaveType.LeaveTypeName}}</th>
+							<th width="100">总计</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr class="text-c" v-for='(attend,index) in showPeopleArray' v-show="flag>0" style="display: none;">
-							<td><u style="cursor:pointer" class="text-primary">{{attend.departName}}</u></td>
-							<td><u style="cursor:pointer" class="text-primary">{{attend.name}}</u></td>
-							<td><u style="cursor:pointer" class="text-primary">{{attend.AttendCnt}}</u></td>
-							<td><u style="cursor:pointer" class="text-primary">{{attend.LateCnt}}</u></td>
-							<td><u style="cursor:pointer" class="text-primary">{{attend.EarlyCnt}}</u></td>
-							<td><u style="cursor:pointer" class="text-primary">{{attend.LeaveCnt}}</u></td>
+						<tr class="text-c" v-for='(personLeave,index) in personLeaves' v-show="flag>0">
+							<td><u style="cursor:pointer" class="text-primary">{{personLeave.DeptId|getDeptName}}</u></td>
+							<td><u style="cursor:pointer" class="text-primary">{{personLeave.UserName}}</u></td>
+							<td v-for="leaveType in leaveTypes"><u style="cursor:pointer" class="text-primary">{{personLeaves|getLeaveDays}}</u></td>
+							<td>{{personLeave||getAllLeaveDays}}</td>
 						</tr>
 					</tbody>
 				</table>
@@ -65,17 +61,17 @@
 		<script type="text/javascript" src="../../../js/H-ui.admin/static/h-ui.admin/js/H-ui.admin.js"></script>
 		<!--/_footer 作为公共模版分离出去-->
 
-
 		<!--请在下方写此页面业务相关的脚本-->
 		<script type="text/javascript" src="../../../js/H-ui.admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
 		<script type="text/javascript" src="../../../js/H-ui.admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
 		<script type="text/javascript" src="../../../js/H-ui.admin/lib/laypage/1.2/laypage.js"></script>
 		<!--vue-->
 		<script src="../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
-		<script type="text/javascript">
-			document.write("<s" + "cript type='text/javascript' src='../../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
-		</script>
-		<!--<script src='../../js/lib/vconsole/vconsole.min.js'></script>-->
+		<script src="../../../js/utils/consts.js" type="text/javascript"></script>
+		<script src="../../../js/utils/request.js" type="text/javascript" />
+		<script src="../../../js/utils/utils.js"></script>
+		<script src="../../../js/utils/storageutil.js"></script>
+		<script src="../../../js/PublicProtocol.js"></script>
 		<script type="text/javascript">
 			$(function() {
 				$('.table-sort').dataTable({
@@ -101,15 +97,19 @@
 					flag: 0,
 					requestFlag: 0,
 					userInfo: {}, //当前人员信息
-					attendArray: [], //考勤统计列表
+					personLeaves: [], //请假统计数据
 					departArray: [], //管理的所有部门数组
 					peopleArray: [], //管理的所有部门的人员数组
-					showPeopleArray: [] //显示部门对应的人员数组
+					showPeopleArray: [], //显示部门对应的人员数组
+					leaveTypes: [] //请假类型
 				},
 				methods: {
-					searchAttendList: function() {
+					searchpersonLeaveList: function() {
 						//16.获取考勤统计
-						getAttendStat();
+						getpersonLeaveStat();
+					},
+					getLeaveTypes: function() {
+
 					}
 				}
 			});
@@ -145,11 +145,27 @@
 						leaveStatList.userInfo = JSON.parse(data.RspData);
 						//获取管理的部门
 						getPersonDepart();
+						getLeaveTypes();
 					} else {
 						layer.alert('请重新登录获取个人信息');
 					}
 				});
 			};
+
+			function getLeaveTypes() {
+				processRequest.postProcessData("getLeaveType", {
+					corpId: leaveStatList.userInfo.corpid,
+					stat: 0,
+					pageIndex: 1,
+					pageSize: 0
+				}, function(response) {
+					if(response.RspCode == 0) {
+						leaveStatList.leaveTypes = response.RspData.Data;
+					} else {
+						layer.alert(response.RspTxt);
+					}
+				})
+			}
 
 			//获取管理的部门
 			var getPersonDepart = function() {
@@ -278,7 +294,7 @@
 			}
 
 			//16.获取考勤统计
-			var getAttendStat = function() {
+			var getpersonLeaveStat = function() {
 				var startTime = $("#datemin").val();
 				var endTime = $("#datemax").val();
 				if(startTime == '') {
@@ -302,7 +318,7 @@
 							//给每一个人添加默认值
 							tempModel1.LateCnt = 0;
 							tempModel1.EarlyCnt = 0;
-							tempModel1.AttendCnt = 0;
+							tempModel1.personLeaveCnt = 0;
 							tempModel1.LeaveCnt = 0;
 							leaveStatList.showPeopleArray.push(tempModel1);
 						}
@@ -321,7 +337,7 @@
 					endTime: endTime //统计结束时间,年月日共八位如：20011010
 				}
 				console.log('tempData:' + JSON.stringify(tempData));
-				getAttendStatPro(tempData, function(data) {
+				getpersonLeaveStatPro(tempData, function(data) {
 					if(data.RspCode == 0) {
 						//将获取到的统计，添加部门名称
 						for(var i = 0; i < data.RspData.Data.length; i++) {

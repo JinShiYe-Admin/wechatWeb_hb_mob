@@ -214,7 +214,7 @@
 			var procTypeSelectIndex; //流程类型选项初始化时的序号
 			var leaveTypeSelectIndex; //请假类型选项初始化时的序号
 			var selectIndex; //当前显示的select
-
+			var sKey; //修改时，页面数据的skey
 			window.onload = function() {
 				$.showLoading();
 				initData();
@@ -228,7 +228,7 @@
 				var isChange = false; //是否是修改请假申请
 				if(index != -1) {
 					isChange = true;
-					var sKey = search.substring(index + keyword.length);
+					sKey = search.substring(index + keyword.length);
 					var sValue = storageutil.getSessionStorage(sKey);
 					if(sValue) {
 						var obj = JSON.parse(sValue)
@@ -821,6 +821,14 @@
 						changeData.ApplyReason = submitForm.applyReason;
 						changeData.ApplyPic = submitForm.applyPic;
 						changeData.ApplyReasonThumb = submitForm.applyPicThumb;
+						var leave = $.extend({}, changeData);
+						leave.ApplyBeginTime = utils.initTime(submitForm.beginTime);
+						leave.ApplyEndTime = utils.initTime(submitForm.endTime);
+						var sValue = {
+							leave: leave,
+							mineUserInfo: mineUserInfo
+						}
+						storageutil.setSessionStorage(sKey, JSON.stringify(sValue));
 					} else {
 						$.alert("修改失败(" + data.RspTxt + ")", "提示");
 					}

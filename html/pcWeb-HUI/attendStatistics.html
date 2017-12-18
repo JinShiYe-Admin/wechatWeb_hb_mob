@@ -312,6 +312,7 @@
 					layer.alert('请选择查询的统计部门');
 					return false;
 				}
+				layer.load(2);
 				startTime = startTime.replace(/-/g, '');
 				endTime = endTime.replace(/-/g, '');
 				var tempData = {
@@ -322,6 +323,7 @@
 				}
 				console.log('tempData:' + JSON.stringify(tempData));
 				getAttendStatPro(tempData, function(data) {
+					layer.closeAll('loading');
 					if(data.RspCode == 0) {
 						//将获取到的统计，添加部门名称
 						for(var i = 0; i < data.RspData.Data.length; i++) {

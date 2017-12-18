@@ -1,0 +1,348 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="renderer" content="webkit|ie-comp|ie-stand">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/static/h-ui/css/H-ui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css" />
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
+		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../../js/multiple/easyui.css" />
+		<!--<script type="text/javascript" src="../../js/multiple/jquery.min.js"></script>-->
+		<title>考勤统计</title>
+
+	</head>
+
+	<body>
+		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 考勤 <span class="c-gray en">&gt;</span> 考勤统计
+			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
+		</nav>
+
+		<div class="page-container" id="leave-stat-list">
+			<div class="text-c"> 日期范围：
+				<input placeholder="开始时间" type="text" onfocus="WdatePicker({ maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}' })" id="datemin" class="input-text Wdate" style="width:120px;"> -
+				<input placeholder="结束时间" type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax" class="input-text Wdate" style="width:120px;">
+				<select id="ddlLine" class="easyui-combotree" style="width: 205px; height: 24px;">
+				</select>
+				<button type="submit" class="btn btn-success radius" id="" name="" @click="searchAttendList()"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
+				<a id="exportExcel" type="button" class="btn btn-success radius" onclick="clickExport()">导出</a>
+			</div>
+			<div class="mt-20">
+				<table class="table table-border table-bordered table-hover table-bg">
+					<thead>
+						<tr class="text-c">
+							<th width="100">考勤部门</th>
+							<th width="100">用户姓名</th>
+							<th width="100">考勤次数</th>
+							<th width="100">迟到次数</th>
+							<th width="100">早退次数</th>
+							<th width="100">请假次数</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="text-c" v-for='(attend,index) in showPeopleArray' v-show="flag>0" style="display: none;">
+							<td><u style="cursor:pointer" class="text-primary">{{attend.departName}}</u></td>
+							<td><u style="cursor:pointer" class="text-primary">{{attend.name}}</u></td>
+							<td><u style="cursor:pointer" class="text-primary">{{attend.AttendCnt}}</u></td>
+							<td><u style="cursor:pointer" class="text-primary">{{attend.LateCnt}}</u></td>
+							<td><u style="cursor:pointer" class="text-primary">{{attend.EarlyCnt}}</u></td>
+							<td><u style="cursor:pointer" class="text-primary">{{attend.LeaveCnt}}</u></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!--_footer 作为公共模版分离出去-->
+		<script type="text/javascript" src="../../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../../../js/multiple/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="../../../js/H-ui.admin/lib/layer/2.4/layer.js"></script>
+		<script type="text/javascript" src="../../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
+		<script type="text/javascript" src="../../../js/H-ui.admin/static/h-ui.admin/js/H-ui.admin.js"></script>
+		<!--/_footer 作为公共模版分离出去-->
+
+
+		<!--请在下方写此页面业务相关的脚本-->
+		<script type="text/javascript" src="../../../js/H-ui.admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+		<script type="text/javascript" src="../../../js/H-ui.admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+		<script type="text/javascript" src="../../../js/H-ui.admin/lib/laypage/1.2/laypage.js"></script>
+		<!--vue-->
+		<script src="../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
+		</script>
+		<!--<script src='../../js/lib/vconsole/vconsole.min.js'></script>-->
+		<script type="text/javascript">
+			$(function() {
+				$('.table-sort').dataTable({
+					"aaSorting": [
+						[1, "desc"]
+					], //默认第几个排序
+					"bStateSave": true, //状态保存
+					"aoColumnDefs": [
+						//{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+						{
+							"orderable": false,
+							"aTargets": [0, 8, 9]
+						} // 制定列不参与排序
+					]
+				});
+				//获取当前人员信息
+				getUserInfo();
+			});
+
+			var leaveStatList = new Vue({
+				el: "#leave-stat-list",
+				data: {
+					flag: 0,
+					requestFlag: 0,
+					userInfo: {}, //当前人员信息
+					attendArray: [], //考勤统计列表
+					departArray: [], //管理的所有部门数组
+					peopleArray: [], //管理的所有部门的人员数组
+					showPeopleArray: [] //显示部门对应的人员数组
+				},
+				methods: {
+					searchAttendList: function() {
+						//16.获取考勤统计
+						getAttendStat();
+					}
+				}
+			});
+			//导出统计表
+			var clickExport = function() {
+				if(leaveStatList.showPeopleArray.length == 0) {
+					layer.alert('当前日期没有考勤统计数据');
+					return false;
+				}
+				// 使用outerHTML属性获取整个table元素的HTML代码（包括<table>标签），然后包装成一个完整的HTML文档，设置charset为urf-8以防止中文乱码
+				var html = "<html><head><meta charset='utf-8' /></head><body>" + document.getElementsByTagName("table")[0].outerHTML + "</body></html>";
+				html = html.replace('<table', '<table border="1"');
+				// 实例化一个Blob对象，其构造函数的第一个参数是包含文件内容的数组，第二个参数是包含文件类型属性的对象
+				var blob = new Blob([html], {
+					type: "application/vnd.ms-excel"
+				});
+				var a = document.getElementById("exportExcel");
+				// 利用URL.createObjectURL()方法为a元素生成blob URL
+				a.href = URL.createObjectURL(blob);
+				// 设置文件名，目前只有Chrome和FireFox支持此属性
+				a.download = "请假统计.xls";
+			}
+			//13.获取当前人员信息
+			var getUserInfo = function() {
+				var tempData = {
+					cmd: 'userinfoadmin',
+					type: 'findpage', //获取某个详细信息
+					colv: '' //留空为取当前人员信息,不为空则为具体人员信息
+				}
+				console.log('tempData:' + JSON.stringify(tempData));
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						leaveStatList.userInfo = JSON.parse(data.RspData);
+						//获取管理的部门
+						getPersonDepart();
+					} else {
+						layer.alert('请重新登录获取个人信息');
+					}
+				});
+			};
+
+			//获取管理的部门
+			var getPersonDepart = function() {
+				var tempData = {
+					cmd: 'persondepartsadmin',
+					type: 'findpage' //获取管理员全部管理部门
+				}
+				console.log('tempData:' + JSON.stringify(tempData));
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						leaveStatList.departArray = [].concat(JSON.parse(data.RspData));
+						var tempArray = []; //下拉框用
+						//去掉得到的部门中的‘全部’
+						for(var i = 0; i < leaveStatList.departArray.length; i++) {
+							var tempModel = leaveStatList.departArray[i];
+							tempModel.flag = 0; //未选择
+							tempModel.peopleArray = []; //每个部门的人员数组
+							if(tempModel.value == -1) {
+								leaveStatList.departArray.splice(i, 1);
+							} else {
+								var temp000 = {
+									id: tempModel.value,
+									text: tempModel.title
+								}
+								tempArray.push(temp000);
+							}
+						}
+						$('#ddlLine').combotree({
+							valueField: "id",
+							textField: "text",
+							multiple: true,
+							data: tempArray,
+							onCheck: function(node, checked) {
+								console.log('onCheck.node:' + JSON.stringify(node) + ',' + checked);
+								for(var i = 0; i < leaveStatList.departArray.length; i++) {
+									var tempModel = leaveStatList.departArray[i];
+									if(tempModel.value == node.id) {
+										if(node.checked) {
+											tempModel.flag = 1; //设置为选中状态
+											//判断是否有人员，没有获取
+											if(tempModel.peopleArray.length == 0) {
+												layer.load(2);
+												getDepartPerson(tempModel);
+											}
+										} else {
+											tempModel.flag = 0;
+										}
+									}
+								}
+							},
+							onClick: function(node, checked) {
+								console.log('onClick.node:' + JSON.stringify(node) + ',' + checked);
+								for(var i = 0; i < leaveStatList.departArray.length; i++) {
+									var tempModel = leaveStatList.departArray[i];
+									if(tempModel.value == node.id) {
+										if(node.checked) {
+											tempModel.flag = 1;
+										} else {
+											tempModel.flag = 0;
+										}
+									}
+								}
+							}
+						});
+					} else {
+						layer.alert(data.RspTxt);
+					}
+				});
+			}
+
+			//17.获取某部门ID下所有人员(PC管理端)
+			var getDepartPerson = function(model) {
+				var tempData = {
+					cmd: 'departpersonsadmin',
+					type: 'findpage', //获取管理员全部管理部门
+					colid: model.value, //部门ID
+					colv: '0', //是否递归获取子级部门中所有人员,0否1是
+					callcol: 'base' //获取详细信息:info,获取普通信息:base
+				}
+				console.log('tempData:' + JSON.stringify(tempData));
+				unitWebsitePro(tempData, function(data) {
+					layer.closeAll('loading');
+					if(data.RspCode == 0) {
+						for(var i = 0; i < data.RspData.length; i++) {
+							var tempModel = data.RspData[i];
+							tempModel.departName = model.title;
+							tempModel.value = model.value;
+						}
+						for(var a = 0; a < leaveStatList.departArray.length; a++) {
+							var tempModel = leaveStatList.departArray[a];
+							if(tempModel.value == model.value) {
+								tempModel.peopleArray = [].concat(data.RspData);
+							}
+						}
+					} else {
+						layer.alert(data.RspTxt);
+					}
+				});
+			}
+
+			//把获取到的部门，按层级组合
+			var getNodeTree = function(nodes) {
+				if(typeof(nodes) === 'undefined' || nodes.length === 0) {
+					return []
+				}
+				nodes.sort(function(a, b) {
+					return a.value - b.value
+				})
+				var map = {},
+					node, roots = [];
+				for(var i = 0; i < nodes.length; i++) {
+					node = nodes[i]
+					node.departList = []
+					node.personList = []
+					map[node.value] = i // use map to look-up the parents
+					if(typeof(map[node.parentvalue]) !== 'undefined') {
+						nodes[map[node.parentvalue]].departList.push(node)
+					} else {
+						if(node.value >= 0) {
+							roots.push(node);
+						}
+					}
+				}
+				console.log('getChildrenTree获取的数据：' + JSON.stringify(roots))
+				return roots
+			}
+
+			//16.获取考勤统计
+			var getAttendStat = function() {
+				var startTime = $("#datemin").val();
+				var endTime = $("#datemax").val();
+				if(startTime == '') {
+					layer.alert('请选择开始时间');
+					return false;
+				} else if(endTime == '') {
+					layer.alert('请选择结束时间');
+					return false;
+				}
+				//检查有没有选择部门
+				var tempFlag = 0; //是否选择部门
+				var tempPeopleArray = []; //人员id数组
+				leaveStatList.showPeopleArray = []; //清空
+				for(var a = 0; a < leaveStatList.departArray.length; a++) {
+					var tempModel = leaveStatList.departArray[a];
+					if(tempModel.flag == 1) {
+						tempFlag++;
+						for(var m = 0; m < tempModel.peopleArray.length; m++) {
+							var tempModel1 = tempModel.peopleArray[m];
+							tempPeopleArray.push(tempModel1.userid);
+							//给每一个人添加默认值
+							tempModel1.LateCnt = 0;
+							tempModel1.EarlyCnt = 0;
+							tempModel1.AttendCnt = 0;
+							tempModel1.LeaveCnt = 0;
+							leaveStatList.showPeopleArray.push(tempModel1);
+						}
+					}
+				}
+				if(tempFlag == 0) {
+					layer.alert('请选择查询的统计部门');
+					return false;
+				}
+				startTime = startTime.replace(/-/g, '');
+				endTime = endTime.replace(/-/g, '');
+				var tempData = {
+					corpId: leaveStatList.userInfo.corpid, //单位ID
+					userId: tempPeopleArray, //用户ID,例如：[“1”, “2”, “3”]
+					beginTime: startTime, //统计开始时间,年月日共八位如：20011010
+					endTime: endTime //统计结束时间,年月日共八位如：20011010
+				}
+				console.log('tempData:' + JSON.stringify(tempData));
+				getAttendStatPro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						//将获取到的统计，添加部门名称
+						for(var i = 0; i < data.RspData.Data.length; i++) {
+							var tempModel = data.RspData.Data[i];
+							for(var a = 0; a < leaveStatList.showPeopleArray.length; a++) {
+								var tempModel1 = leaveStatList.showPeopleArray[a];
+								if(tempModel.DeptId == tempModel1.value) {
+									if(tempModel.UserId == tempModel1.userid) {
+										console.log('tempModel.UserId:' + tempModel.UserId + ',' + tempModel1.userid);
+										tempModel1 = $.extend(tempModel1, tempModel);
+									}
+								}
+							}
+						}
+						leaveStatList.flag = 1;
+					} else {
+						layer.alert(data.RspTxt);
+					}
+				});
+			};
+		</script>
+	</body>
+
+</html>

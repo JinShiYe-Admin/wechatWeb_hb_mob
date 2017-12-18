@@ -148,7 +148,8 @@
 				background-color: lightgray;
 				color: white;
 			}
-			.multi-choose-container{
+			
+			.multi-choose-container {
 				padding-bottom: 16px;
 			}
 		</style>
@@ -181,8 +182,10 @@
 								{{selectPerson[key]}}
 							</div>
 						</div>
-						<a v-if="Object.keys(selectPerson).length>0" class="btn btn-primary radius float-right" v-on:click="addCheckPersons()">添加审核人员</a>
-						<a class="btn btn-default radius float-right" v-on:click="cancelChoose()">取消</a>
+						<div style="margin-bottom: 20px;">
+							<a v-if="Object.keys(selectPerson).length>0" class="btn btn-primary radius float-right" v-on:click="addCheckPersons()">添加审核人员</a>
+							<a class="btn btn-default radius float-right" v-on:click="cancelChoose()">取消</a>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -313,7 +316,7 @@
 							console.log("获取的corpId数据：" + JSON.stringify(response));
 							if(response.RspCode == 0) {
 								com.corpId = JSON.parse(response.RspData).corpid;
-							}else{
+							} else {
 								layer.alert(response.RspTxt);
 							}
 						})

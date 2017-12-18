@@ -326,10 +326,10 @@
 			document.write("<s" + "cript type='text/javascript' src='../../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../../temp/mineinfo.js" + WebVersion + "'></s" + "cript>");
+			//document.write("<s" + "cript type='text/javascript' src='../../../temp/mineinfo.js" + WebVersion + "'></s" + "cript>");
 		</script>
 		<script type="text/javascript">
-			var depId; //部门id
+			var deptId; //部门id
 			var mineUserInfo; //个人信息
 			var evalTemplate = {
 				key: [],
@@ -341,40 +341,21 @@
 			} //成员信息
 			var beEvalMans = []; //被点评人数组
 			var multiSelect = false; //是否是多选
+
 			window.onload = function() {
 				$.showLoading();
-				var search = location.search.toString();
-				var keyword = "?id=";
-				var index = search.indexOf(keyword);
-				var isChange = false; //是否是修改请假申请
-				if(index != -1) {
-					isChange = true;
-					depId = search.substring(index + keyword.length);
-					getMineInfo();
-				} else {
+				var sValue = utils.getSessionStorageByUrlsKey();
+				console.log("sValue", sValue);
+				if(sValue === null) {
 					$.hideLoading();
 					$.alert("未获取到有效的数据", "提示");
+				} else {
+					deptId = sValue.deptId;
+					mineUserInfo = sValue.mineUserInfo;
+					getMembers();
 				}
-				console.log("depId:" + depId);
-			}
-			/**
-			 * 获取我的信息
-			 */
-			function getMineInfo() {
-				var tempData = {
-					cmd: 'userinfo',
-					type: 'findpage',
-					colv: ""
-				}
-				unitWebsitePro(tempData, function(data) {
-					if(data.RspCode == 0) {
-						mineUserInfo = JSON.parse(data.RspData);
-						getMembers();
-					} else {
-						$.hideLoading();
-						$.alert("未获取到个人信息(" + data.RspTxt + ")", "提示");
-					}
-				});
+				console.log("deptId:" + deptId);
+				console.log("mineUserInfo", mineUserInfo);
 			}
 
 			/**
@@ -384,11 +365,12 @@
 				var tempData = {
 					cmd: 'departpersons',
 					type: 'findpage',
-					colid: depId,
+					colid: deptId,
 					colv: 0,
 					callcol: "info"
 				}
 				unitWebsitePro(tempData, function(data) {
+					//data = getDepartPersonsCallBack;
 					if(data.RspCode == 0) {
 						addMemberData(data.RspData);
 						getEvalTemplate();
@@ -398,6 +380,7 @@
 					}
 				});
 			}
+
 			/**
 			 * 获取点评模版
 			 */
@@ -457,7 +440,7 @@
 					var html = '\
 						<a id="' + data[i].TemplId + '" class="weui-grid">\
 							<div class="weui-grid__icon">\
-								<img src="../../../image/add.png">\
+								<img src="' + data[i].TemplPic + '">\
 							</div>\
 							<p class="weui-grid__label">' + data[i].TemplContent + '</p>\
 						</a>';
@@ -545,13 +528,24 @@
 				//点评模板，查看表现
 				$(".template_top_right").click(function() {
 					if(beEvalMans.length == 1) {
-						console.log("查看表现");
+						//location.href = "stulist.html?id=" + deptId;
 					}
 				});
 
 				//表扬和待改进
 				$("#evalTemplate").on("click", ".weui-grid", function() {
 					console.log("evalTemplate", evalTemplate.value[this.id]);
+					addEvaluation({
+						evalType: evalTemplate.value[this.id].TemplType,
+						evalContent: evalTemplate.value[this.id].TemplContent,
+						evalEnc: evalTemplate.value[this.id].TemplPic,
+						evalEncThumb: evalTemplate.value[this.id].TemplPicThumb,
+					});
+				});
+
+				//文字点评
+				$(".template_text_text").click(function() {
+					console.log("文字点评");
 				});
 			}
 			/**
@@ -566,15 +560,35 @@
 					$(".template_top_center").text("点评" + beEvalMans[0][1] + "等" + beEvalMans.length + "人");
 					$(".template_top_right").text("");
 				}
-
+				$("#praise").addClass("weui-tab__bd-item--active");
+				$("#improved").removeClass("weui-tab__bd-item");
 				$("#evalTemplate").popup();
 			}
 
 			/**
 			 * 新增点评
 			 */
-			function addEvaluation() {
-
+			function addEvaluation(addData) {
+				$.showLoading();
+				console.log("addEvaluation", addData);
+				var tempData = {
+					corpId: mineUserInfo.corpid,
+					deptId: deptId,
+					evalMan: mineUserInfo.userid,
+					evalManName: mineUserInfo.name,
+					evalManAvatar: mineUserInfo.avatar,
+					beEvalMans: beEvalMans,
+				}
+				tempData = $.extend(tempData, addData);
+				addEvaluationPro(tempData, function(data) {
+					$.hideLoading();
+					if(data.RspCode == 0) {
+						$.toast("点评成功");
+						$.closePopup();
+					} else {
+						$.alert(data.RspTxt, "提示");
+					}
+				});
 			}
 		</script>
 	</body>

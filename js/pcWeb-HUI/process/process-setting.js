@@ -6,7 +6,7 @@ Vue.component("process-setting", {
 			activeProcess: {
 				ProcessTypeId: 0, //流程Id
 				ProcTypeName: "流程4", //流程名称
-				ProTypeNote: "流程4备注", //流程备注
+				ProcTypeNote: "流程4备注", //流程备注
 				Stat: 1
 			},
 			tablebases: null,
@@ -82,7 +82,7 @@ Vue.component("process-setting", {
 				corpId: this.corpId,
 				procTypeId: process.ProcessTypeId,
 				procTypeName: process.ProcTypeName,
-				proTypeNote: process.ProTypeNote,
+				procTypeNote: process.ProcTypeNote,
 				stat: (process.Stat + 1) % 2
 			}, function(response) {
 				if(response.RspCode == 0) {
@@ -143,7 +143,7 @@ Vue.component("process-setting", {
 			console.log("******更改流程信息changeProcessInfo******")
 			this.changeType = 1;
 			this.name = process.ProcTypeName;
-			this.note = process.ProTypeNote;
+			this.note = process.ProcTypeNote;
 			this.activeProcess = process;
 			this.toggleLayer(true, "更改流程信息");
 		},
@@ -171,7 +171,7 @@ Vue.component("process-setting", {
 			processRequest.postProcessData("addProcessType", {
 				corpId: this.corpId,
 				procTypeName: this.name,
-				proTypeNote: this.note
+				procTypeNote: this.note
 			}, function(response) {
 				console.log("添加流程类型信息的结果:" + JSON.stringify(response));
 				if(response.RspCode == 0) {
@@ -191,7 +191,7 @@ Vue.component("process-setting", {
 			var process = {
 				ProcessTypeId: processId,
 				ProcTypeName: this.name,
-				ProTypeNote: this.note,
+				ProcTypeNote: this.note,
 				ProcessListId: -1,
 				ApprManList: [],
 				ProcNote: ""
@@ -214,7 +214,7 @@ Vue.component("process-setting", {
 				console.log("更改流程类型结果:" + JSON.stringify(response));
 				if(response.RspCode == 0) {
 					com.activeProcess.ProcTypeName = com.name;
-					com.activeProcess.procTypeNote = com.note;
+					com.activeProcess.ProcTypeNote = com.note;
 				} else {
 					layer.alert(response.RspTxt);
 				}

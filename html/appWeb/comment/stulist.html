@@ -476,21 +476,17 @@
 				 */
 				$(".weui-grids").on("click", ".weui-grid input", function() {
 					console.log("click:" + this.id);
-					if(mineUserInfo.isleader == 1) {
-						//老师
-						if(multiSelect) {
-							//多选，更新选择的学生数量
-							$(".weui-tabbar_stu-number div").text("进行点评(" + $("#dataList input:checked").length + "个学生)");
-						} else {
-							var stu = members.value[this.id];
-							beEvalMans = null;
-							beEvalMans = [
-								[stu.userid, stu.name, stu.avatar]
-							]
-							showEvalTemplate();
-						}
+					//老师
+					if(multiSelect) {
+						//多选，更新选择的学生数量
+						$(".weui-tabbar_stu-number div").text("进行点评(" + $("#dataList input:checked").length + "个学生)");
 					} else {
-						//家长跳到详情
+						var stu = members.value[this.id];
+						beEvalMans = null;
+						beEvalMans = [
+							[stu.userid, stu.name, stu.avatar]
+						]
+						showEvalTemplate();
 					}
 				});
 
@@ -528,7 +524,7 @@
 				//点评模板，查看表现
 				$(".template_top_right").click(function() {
 					if(beEvalMans.length == 1) {
-						//location.href = "stulist.html?id=" + deptId;
+						//location.href = "stulist.html?sKey=" + utils.getValueFromUrlByKey("sKey");
 					}
 				});
 

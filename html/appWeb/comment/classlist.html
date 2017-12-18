@@ -78,16 +78,30 @@
 		</script>
 		<script>
 			var loading = false; //下拉状态标记
+			var mineUserInfo; //个人信息
 			window.onload = function() {
 				$.showLoading();
-				initPullDown();
-				getDepartments();
+				getMineInfo();
 			}
 
-			/**
-			 * 初始化下拉刷新
-			 */
-			function initPullDown() {
+			function initListener() {
+				//点击班级
+				$("#dataList").on("click", ".weui-cell", function() {
+					console.log("weui-cell:" + this.id);
+					var data = {
+						deptId: this.id,
+						mineUserInfo: mineUserInfo
+					}
+					var href;
+					if(mineUserInfo.isleader == 1) {
+						href = "stulist.html";
+					} else {
+						href = "stulist.html";
+					}
+					utils.hrefSessionStorage(href, data);
+				});
+
+				//下拉刷新
 				$("#pullDown").css("display", "block");
 				$(".weui-tab__bd-item").pullToRefresh();
 				$(".weui-tab__bd-item").on("pull-to-refresh", function() {
@@ -96,6 +110,27 @@
 					};
 					loading = true;
 					getDepartments();
+				});
+			}
+			/**
+			 * 获取我的信息
+			 */
+			function getMineInfo() {
+				var tempData = {
+					cmd: 'userinfo',
+					type: 'findpage',
+					colv: ""
+				}
+				unitWebsitePro(tempData, function(data) {
+					//data = getMineInfoCallBack;
+					if(data.RspCode == 0) {
+						mineUserInfo = JSON.parse(data.RspData);
+						initListener();
+						getDepartments();
+					} else {
+						$.hideLoading();
+						$.alert("未获取到个人信息(" + data.RspTxt + ")", "提示");
+					}
 				});
 			}
 
@@ -109,13 +144,13 @@
 				}
 				unitWebsitePro(tempData, function(data) {
 					$.hideLoading();
-					//data = persondepartsCallBack;
+					data = persondepartsCallBack;
 					loading = false;
 					$(".weui-tab__bd-item").pullToRefreshDone();
 					if(data.RspCode == 0) {
 						$("#dataList").empty();
 						var departments = JSON.parse(data.RspData);
-						console.log("departments",departments);
+						console.log("departments", departments);
 						showData(departments);
 					} else {
 						$.alert(data.RspTxt, "提示");
@@ -130,7 +165,7 @@
 						continue;
 					} else {
 						html = html + '\
-							<a href="stulist.html?id=' + departments[i].value + '" class="weui-cell weui-cell_access">\
+							<a id="' + departments[i].value + '" class="weui-cell weui-cell_access">\
 								<div class="weui-cell__bd">\
 									<div class="weui-media-box weui-media-box_appmsg">\
 										<div class="weui-media-box__bd">\

@@ -20,21 +20,64 @@
 		<link rel="stylesheet" href="../../../js/demoCssJs/demos.css">
 		<link rel="stylesheet" href="../../../css/demos.css" />
 		<style>
-			.operate-edit {
+			.operate-edit,
+			.operate-del {
 				text-decoration: none;
 			}
 			
-			#column_info .row {
+			#pages {
+				margin-top: 20px;
+			}
+			
+			#dataAdd .row {
 				margin-left: 0;
 				margin-right: 0;
 			}
 			
-			#column_info .submit-button {
+			.submit-button,
+			.select-state {
 				margin-bottom: 15px;
 			}
 			
-			#column_info .input-text[type="number"] {
+			.bk-gray .select-box {
+				margin-left: 5px;
+			}
+			
+			.picture-show {
+				width: 100px;
+				height: 100px;
+				overflow: hidden;
+				margin: 15px 0;
+				display: flex;
+				display: -webkit-flex;
+				align-items: center;
+				justify-content: center;
+			}
+			
+			.picture-show img,
+			#dataList img {
 				width: 100%;
+			}
+			
+			.check-box {
+				padding-left: 0;
+				cursor: initial;
+			}
+			
+			.operate-edit {
+				margin-left: 10px;
+			}
+			
+			.Hui-iconfont-del3 {
+				color: red;
+			}
+			
+			.Hui-iconfont-yanjing {
+				color: #5eb95e;
+			}
+			
+			.Hui-iconfont-niming {
+				color: #999;
 			}
 		</style>
 	</head>
@@ -43,28 +86,22 @@
 		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 成绩单 <span class="c-gray en">&gt;</span>成绩单
 			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
 		</nav>
-			<div id="column_table" class="page-container" style="display: none;">
-
-				<div class="cl pd-5 bg-1 bk-gray">
-					<span class="l">
+		<div id="column_table" class="page-container" style="display: none;">
+			<div class="cl pd-5 bg-1 bk-gray">
+				<span class="l" style="padding-right: 10px;">
 					<a class="btn btn-primary radius" @click="add"><i class="Hui-iconfont"></i> 添加成绩单</a>
 				</span>
-					<!--<span class="select-box inline">
-					<select id="stateSelect" class="select" title="选择部门">
-						<option value="-1">开发部</option>
-						<option value="0">行政部</option>
-						<option value="1">财务部</option>
-					</select>
-				</span>
 				<span class="select-box inline">
-					<select id="stateSelect" class="select" title="选择成绩单名称">
-						<option value="-1">开发部成绩单</option>
-						<option value="0">行政部成绩单</option>
-						<option value="1">财务部成绩单</option>
+					<select id="departSelect" class="select" title="选择部门">
+						<option :value="item.value" v-for="(item,index) in depart_array">{{item.label}}</option>
 					</select>
-				</span>-->
-				</div>
-				<div class="weui-cell">
+				</span> 成绩单名称：
+				<input type="text" name="" id="cname" placeholder="成绩单名称" style="width:250px" class="input-text">
+				<button onclick="query()" name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
+				<!--</div>-->
+
+			</div>
+			<!--<div class="weui-cell mui-hidden">
 					<div class="weui-cell__hd"><label class="weui-label">部门</label></div>
 					<div class="weui-cell__bd">
 						<input id="depart" data_id="" onclick="selectDepart(this)" class="weui-input" placeholder="请选择部门">
@@ -78,35 +115,71 @@
 				</div>
 				<div class="weui-btn-area" style="width: 100px;">
 					<button onclick="query()" id="submit" class="weui-btn weui-btn_primary" style="font-size: 14px;height: 30px;">查询</button>
-				</div>
-				<table class="table table-border table-bordered table-bg">
-					<thead class="text-c">
-						<tr>
-							<th>成绩单名称</th>
-							<th>部门名称</th>
-							<th>记录者</th>
-							<th>记录时间</th>
-							<th>操作</th>
+				</div>-->
+			<table class="table table-border table-bordered table-bg">
+				<thead class="text-c">
+					<tr>
+						<th>成绩单名称</th>
+						<th>部门名称</th>
+						<th>记录者</th>
+						<th>记录时间</th>
+						<th>操作</th>
 
-						</tr>
-					</thead>
-					<tbody>
-						<tr class="text-c" v-for="(item,index) in dt">
-							<td>{{item.cname}}</td>
-							<td>{{item.dptname}}</td>
-							<td>{{item.recname}}</td>
-							<td>{{item.rectime.replace("T"," ")}}</td>
-							<td class="sorting_1">
-								<a class="operate-edit" @click="clickEdit(item)" title="浏览"><i class="Hui-iconfont"></i></a>
-								<a style="text-decoration:none" class="ml-5" @click="clickDel(item)" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="text-c" v-for="(item,index) in dt">
+						<td>{{item.cname}}</td>
+						<td>{{item.dptname}}</td>
+						<td>{{item.recname}}</td>
+						<td>{{item.rectime.replace("T"," ").slice(0,19)}}</td>
+						<td class="sorting_1">
+							<a class="operate-edit" @click="clickEdit(item)" title="浏览"><i class="Hui-iconfont"></i></a>
+							<a style="text-decoration:none" class="ml-5" @click="clickDel(item)" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
 
-							</td>
-						</tr>
-					</tbody>
-				</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<!--添加地址-->
+			<div id="dataAdd" style="display: none;">
+				<form class="form form-horizontal">
+					<div id="clCname" class="row cl">
+						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>成绩单名称：</label>
+						<div class="formControls col-xs-8 col-sm-9">
+							<input  v-model="cname" id="dataCname" type="text" class="input-text" maxlength="20" placeholder="请输入成绩单名称，最多20字"></input>
+						</div>
+					</div>
+					<div id="clOrderid" class="row cl">
+						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>部门：</label>
+						<div class="formControls col-xs-8 col-sm-9">
+							<span class="select-box">
+							<select name="" id="dpt" class="select" size="1" title="请选择部门" :value="dptid">
+						<option :value="item.value" v-for="(item,index) in depart_array">{{item.label}}</option>
+
+							</select>
+						</span>
+						</div>
+					</div>
+					<div class="row cl">
+						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>附件：</label>
+						<div class="formControls col-xs-8 col-sm-9"> <span class="btn-upload form-group">
+				<input class="input-text upload-url" type="text" name="uploadfile" id="uploadfile" readonly nullmsg="请添加附件！" style="width:200px">
+				<a   v-on:change="selectFile($event)" href="javascript:void();" class="btn btn-primary radius upload-btn"><i class="Hui-iconfont">&#xe642;</i> 浏览文件</a>
+				<input type="file" multiple name="file-2" class="input-file" v-on:change="selectFile($event)">
+				</span> </div>
+					</div>
+					<div id="submitArea" class="row cl submit-button">
+						<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+							<input id="submitBtn" onclick="addExama()" class="btn btn-primary radius" type="button" value="提交成绩单" />
+						</div>
+					</div>
+				</form>
 			</div>
+		</div>
 		<div id="pages" style="margin-top: 20px;" class="hidden"></div>
 		</div>
+
 		<script src="../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../../js/demoCssJs/jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../../js/demoCssJs/iscroll.js"></script>
@@ -127,6 +200,7 @@
 		<script src="../../../js/utils/events.js"></script>
 		<!--<script src="../../../js/compress.js"></script>-->
 		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/compress.js?" + Math.random() + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
@@ -138,43 +212,88 @@
 			document.write("<s" + "cript type='text/javascript' src='../../../js/vue.min.js" + WebVersion + "'></s" + "cript>");
 		</script>
 		<script>
+			var flag = 0;
+			var examid = 0;
 			//栏目表
 			var column_table = new Vue({
 				el: "#column_table",
 				data: {
+					cname: "",
+					dptid:0,
+					dptname:"",
+					uploadedFile: {},
 					depart_array: [],
 					dt: [{
-							cname: "开发部成绩单",
-							dptname: "开发部",
-							recname: "宋艳明",
-							rectime: "2017/12/6T14:00"
-						}]
+						cname: "开发部成绩单",
+						dptname: "开发部",
+						recname: "宋艳明",
+						rectime: "2017/12/6T14:00"
+					}]
 				},
 				updated: function() {
 
 				},
 				methods: {
+
+					selectFile: function(event) { //从手机中选择图片后到界面的回调
+						// 如果没有选中文件，直接返回  
+						var files = event.target.files;
+						var data = new FormData();
+						data.append('file', files[0]);
+						console.log(files)
+						if(files.length === 0) {
+							$.hideLoading();
+							return;
+						} else {
+							var types = files[0].type.toLowerCase().split("/");
+							console.log("types:" + types);
+							if(types[1] == "vnd.ms-excel" || types[1] == "csv" || types[1] == 'vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+								compress.postFile(data, function(filePath) {
+									if(filePath.RspCode == 0) {
+										console.log(JSON.stringify(filePath));
+										column_table.uploadedFile = filePath.RspData;
+										alert("上传文件成功");
+
+									}
+
+								});
+							} else {
+								$('#uploaderInput').val('');
+								alert("文件格式不是excel格式")
+							}
+
+						}
+					},
+
 					/**
 					 * 点击添加栏目
 					 */
 					add: function() {
-
-						var tempData = {
-							type: 'add'
-						}
-						var url = "addReportCard.html";
-						var ids = url.split("/");
-						var dataStr = JSON.stringify(tempData);
-						var index = layer.open({
-							type: 2,
-							title: "添加成绩单",
-							content: url + "?v=" + Math.random() + "&data=" + encodeURIComponent(dataStr),
-							end: function() {
-								console.log("刷新")
-								location.reload();
-							}
+						$("#dataCname").val("");
+						$("#uploadfile").val("");
+						layer.open({
+							type: 1,
+							title: "添加",
+							area: '500px',
+							zIndex: 999,
+							content: $('#dataAdd')
 						});
-						layer.full(index);
+						//						var tempData = {
+						//							type: 'add'
+						//						}
+						//						var url = "addReportCard.html";
+						//						var ids = url.split("/");
+						//						var dataStr = JSON.stringify(tempData);
+						//						var index = layer.open({
+						//							type: 2,
+						//							title: "添加成绩单",
+						//							content: url + "?v=" + Math.random() + "&data=" + encodeURIComponent(dataStr),
+						//							end: function() {
+						//								console.log("刷新")
+						//								location.reload();
+						//							}
+						//						});
+						//						layer.full(index);
 
 						//						column_info.showAdd();
 
@@ -204,6 +323,24 @@
 
 					},
 					clickEdit: function(item) {
+//						console.log(888888+JSON.stringify(item))
+//						flag=1;
+//						examid = item.examid;
+//						getexam(1);
+//						flag=0;
+//column_table.cname = item.cname;
+//column_table.dptid = item.dptid;
+////column_table.uploadfile = item.dptid;
+////						$("#dataOrderid").val(item.dptid);
+////						$("#uploadfile").val(item.orderid);
+//						console.log("999999"+$("#dataCname").val())
+//												layer.open({
+//							type: 1,
+//							title: "修改",
+//							area: '500px',
+//							zIndex: 999,
+//							content: $('#dataAdd')
+//						});
 						var url = "reportCardDetaill.html";
 						var ids = url.split("/");
 						var dataStr = JSON.stringify(item);
@@ -223,7 +360,6 @@
 					},
 				}
 			});
-
 
 			window.onload = function() {
 				getDepart()
@@ -259,6 +395,151 @@
 						console.log('重组部门:' + JSON.stringify(column_table.depart_array));
 
 					} else {
+						column_table.depart_array = [{
+							"value": 2,
+							"title": "湖北大区",
+							"parentvalue": 1,
+							"order": 2147483447,
+							"label": "湖北大区"
+						}, {
+							"value": 3,
+							"title": "荆门办事处",
+							"parentvalue": 2,
+							"order": 2147483447,
+							"label": "荆门办事处"
+						}, {
+							"value": 4,
+							"title": "大区办公室",
+							"parentvalue": 2,
+							"order": 2147483247,
+							"label": "大区办公室"
+						}, {
+							"value": 5,
+							"title": "黄冈办事处",
+							"parentvalue": 2,
+							"order": 2147483047,
+							"label": "黄冈办事处"
+						}, {
+							"value": 6,
+							"title": "黄石咸宁鄂州办事处",
+							"parentvalue": 2,
+							"order": 2147482847,
+							"label": "黄石咸宁鄂州办事处"
+						}, {
+							"value": 7,
+							"title": "襄阳孝感随州办事处",
+							"parentvalue": 2,
+							"order": 2147482647,
+							"label": "襄阳孝感随州办事处"
+						}, {
+							"value": 8,
+							"title": "宜昌恩施办事处",
+							"parentvalue": 2,
+							"order": 2147482447,
+							"label": "宜昌恩施办事处"
+						}, {
+							"value": 9,
+							"title": "荆州江汉办事处",
+							"parentvalue": 2,
+							"order": 2147482247,
+							"label": "荆州江汉办事处"
+						}, {
+							"value": 11,
+							"title": "开发部",
+							"parentvalue": 1,
+							"order": 2147483047,
+							"label": "开发部"
+						}, {
+							"value": 12,
+							"title": "测试子部门",
+							"parentvalue": 11,
+							"order": 100000000,
+							"label": "测试子部门"
+						}, {
+							"value": 13,
+							"title": "测试孙部门",
+							"parentvalue": 12,
+							"order": 100000000,
+							"label": "测试孙部门"
+						}, {
+							"value": 14,
+							"title": "测试子部门2",
+							"parentvalue": 11,
+							"order": 99999000,
+							"label": "测试子部门2"
+						}, {
+							"value": 15,
+							"title": "临时部门一",
+							"parentvalue": 11,
+							"order": 99998000,
+							"label": "临时部门一"
+						}, {
+							"value": 16,
+							"title": "临时部门二",
+							"parentvalue": 11,
+							"order": 99997000,
+							"label": "临时部门二"
+						}, {
+							"value": 17,
+							"title": "临时部门三",
+							"parentvalue": 11,
+							"order": 99996000,
+							"label": "临时部门三"
+						}, {
+							"value": 18,
+							"title": "临时部门四",
+							"parentvalue": 11,
+							"order": 99995000,
+							"label": "临时部门四"
+						}, {
+							"value": 19,
+							"title": "临时部门五",
+							"parentvalue": 11,
+							"order": 99994000,
+							"label": "临时部门五"
+						}, {
+							"value": 20,
+							"title": "临时部门六",
+							"parentvalue": 11,
+							"order": 99993000,
+							"label": "临时部门六"
+						}, {
+							"value": 21,
+							"title": "临时部门七",
+							"parentvalue": 11,
+							"order": 99992000,
+							"label": "临时部门七"
+						}, {
+							"value": 22,
+							"title": "临时部门八",
+							"parentvalue": 11,
+							"order": 99991000,
+							"label": "临时部门八"
+						}, {
+							"value": 23,
+							"title": "临时部门九",
+							"parentvalue": 11,
+							"order": 99990000,
+							"label": "临时部门九"
+						}, {
+							"value": 24,
+							"title": "临时部门十",
+							"parentvalue": 11,
+							"order": 99989000,
+							"label": "临时部门十"
+						}, {
+							"value": 25,
+							"title": "4-level depart",
+							"parentvalue": 13,
+							"order": 100000000,
+							"label": "4-level depart"
+						}, {
+							"value": -1,
+							"title": "全部",
+							"parentvalue": 0,
+							"order": 0,
+							"label": "全部"
+						}]
 						alert(data.RspTxt)
 					}
 				})
@@ -270,15 +551,16 @@
 			 * @param {Object} pageindex 列表序号
 			 */
 			function getexam(pageindex) {
+				
 				//				if(document.getElementById("depart").data_id==-1){
 				//					document.getElementById("depart").data_id = "";
 				//				}
-
+				var dptid = $("#departSelect option:selected").val();
 				var tempData = {
 					cmd: 'examadmin',
 					type: 'findpage',
 					cname: document.getElementById("cname").value,
-					dptid: document.getElementById("depart").data_id,
+					dptid: dptid,
 					pagesize: '10',
 					pageindex: pageindex
 				}
@@ -287,11 +569,93 @@
 					console.log("成绩单" + JSON.stringify(data));
 					if(data.RspCode == 0) {
 						column_table.dt = data.RspData.dt;
-						document.getElementById("column_table").style.display  = "block";
+						document.getElementById("column_table").style.display = "block";
 						initLaypage(data.RspData.pg.PageCount, pageindex);
 					} else {
-						document.getElementById("column_table").style.display  = "block";
-						column_table.dt = [];
+						document.getElementById("column_table").style.display = "block";
+						column_table.dt = [{
+							"examid": 13,
+							"dptname": "开发部",
+							"dptid": 11,
+							"cname": "18个",
+							"rectime": "2017-12-15T15:51:44.86",
+							"recname": "毛慧敏",
+							"recuser": "maohuimin",
+							"ROWSTAT": null
+						}, {
+							"examid": 4,
+							"dptname": "开发部",
+							"dptid": 11,
+							"cname": "开发部",
+							"rectime": "2017-12-14T09:21:33.127",
+							"recname": "宋艳明",
+							"recuser": "songyanming",
+							"ROWSTAT": null
+						}, {
+							"examid": 5,
+							"dptname": "开发部",
+							"dptid": 11,
+							"cname": "开发部",
+							"rectime": "2017-12-14T09:37:47.287",
+							"recname": "宋艳明",
+							"recuser": "songyanming",
+							"ROWSTAT": null
+						}, {
+							"examid": 7,
+							"dptname": "开发部",
+							"dptid": 11,
+							"cname": "开发部",
+							"rectime": "2017-12-14T10:22:17.027",
+							"recname": "宋艳明",
+							"recuser": "songyanming",
+							"ROWSTAT": null
+						}, {
+							"examid": 8,
+							"dptname": "测试子部门",
+							"dptid": 12,
+							"cname": "开发部12月份成绩单",
+							"rectime": "2017-12-14T10:37:34.813",
+							"recname": "宋艳明",
+							"recuser": "songyanming",
+							"ROWSTAT": null
+						}, {
+							"examid": 6,
+							"dptname": "开发部",
+							"dptid": 11,
+							"cname": "开发部12月份成绩单",
+							"rectime": "2017-12-14T10:17:16.777",
+							"recname": "宋艳明",
+							"recuser": "songyanming",
+							"ROWSTAT": null
+						}, {
+							"examid": 1,
+							"dptname": "开发部",
+							"dptid": 11,
+							"cname": "开发部9月成绩单",
+							"rectime": "2017-12-07T14:20:25",
+							"recname": "顾元生",
+							"recuser": "guyuansheng",
+							"ROWSTAT": null
+						}, {
+							"examid": 12,
+							"dptname": "开发部",
+							"dptid": 11,
+							"cname": "科目错误",
+							"rectime": "2017-12-15T15:46:47.643",
+							"recname": "毛慧敏",
+							"recuser": "maohuimin",
+							"ROWSTAT": null
+						}, {
+							"examid": 11,
+							"dptname": "开发部",
+							"dptid": 11,
+							"cname": "物理100",
+							"rectime": "2017-12-15T15:31:45.543",
+							"recname": "毛慧敏",
+							"recuser": "maohuimin",
+							"ROWSTAT": null
+						}];
+						//						column_table.dt = [];
 					}
 				});
 			}
@@ -308,6 +672,46 @@
 						document.getElementById("depart").data_id = result[0].value;
 					}
 				});
+			}
+
+			function addExama() {
+				console.log(column_table.uploadedFile.length)
+				if(column_table.cname == "") {
+					alert("请输入名称");
+					return;
+
+				}
+				if(column_table.uploadedFile.length == 0||column_table.uploadedFile.length == undefined) {
+					alert("请添加文件");
+					return;
+
+				}
+
+				var dptid = $("#dpt option:selected").val();
+				var dptname = $("#dpt option:selected").text();
+				var tempData = {
+					cmd: 'examadmin',
+					type: 'add',
+					cname: column_table.cname,
+					enc: column_table.uploadedFile.filephypath,
+					//					dptname: "开发部",
+					//					dptid: 11,
+					dptname: dptname,
+					dptid: dptid,
+
+				}
+
+				console.log("添加成绩单参数：" + JSON.stringify(tempData))
+				//				return;
+				unitWebsitePro(tempData, function(data) {
+					console.log('添加成绩单数据：' + JSON.stringify(data.RspData))
+					if(data.RspCode == 0) {
+						alert("添加成功")
+						content = JSON.parse(data.RspData);
+					} else {
+						alert(data.RspTxt)
+					}
+				})
 			}
 
 			/**

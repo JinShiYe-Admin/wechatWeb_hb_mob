@@ -104,6 +104,12 @@
 							<div class="weui-cell__ft">
 							</div>
 						</div>
+						<div class="weui-cell weui-cell_access">
+							<div class="weui-cell__hd"><label class="weui-label">共计时长(天)</label></div>
+							<div class="weui-cell__bd">
+								<input id="totalTime" class="weui-input" placeholder="请输入共计天数" type="number" />
+							</div>
+						</div>
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
 								<textarea id="represon" class="weui-textarea" placeholder="请输入请假事由，最多100字" rows="4" maxlength="100"></textarea>
@@ -214,7 +220,7 @@
 			var procTypeSelectIndex; //流程类型选项初始化时的序号
 			var leaveTypeSelectIndex; //请假类型选项初始化时的序号
 			var selectIndex; //当前显示的select
-
+			var sKey; //修改时，页面数据的skey
 			window.onload = function() {
 				$.showLoading();
 				initData();
@@ -228,7 +234,7 @@
 				var isChange = false; //是否是修改请假申请
 				if(index != -1) {
 					isChange = true;
-					var sKey = search.substring(index + keyword.length);
+					sKey = search.substring(index + keyword.length);
 					var sValue = storageutil.getSessionStorage(sKey);
 					if(sValue) {
 						var obj = JSON.parse(sValue)
@@ -262,6 +268,7 @@
 				console.log("允许" + webType + "请假申请");
 				initSelect();
 				if(changeData) { //修改请假申请
+					$("#totalTime").val(changeData.ApplyBeginEndCnt);
 					$("#represon").val(changeData.ApplyReason);
 					initDatePicker(changeData.ApplyBeginTime, changeData.ApplyEndTime);
 					changeData.ApplyBeginTime = changeData.ApplyBeginTime.replace(/-|:|\s/g, "");
@@ -473,6 +480,16 @@
 				}
 				if(endTime <= beginTime) {
 					$.alert("请假结束时间应大于开始时间");
+					return false;
+				}
+
+				var totalTime = $.trim($("#totalTime").val()); //请假共计时长
+				if(totalTime == "" || isNaN(totalTime) || totalTime <= 0) {
+					$.alert("请输入正确的请假共计时长");
+					return false;
+				}
+				if(totalTime > 365) {
+					$.alert("请假共计时长最大为365天");
 					return false;
 				}
 				var represon = $.trim($("#represon").val()); //请假事由
@@ -734,6 +751,7 @@
 					leaveTypeId: $("#selectTypeSecondInput").attr("data-values"),
 					beginTime: beginTime,
 					endTime: endTime,
+					beginEndCnt: $.trim($("#totalTime").val()),
 					applyReason: $.trim($("#represon").val()),
 					applyPic: "",
 					applyPicThumb: ""
@@ -760,9 +778,11 @@
 					if(submitForm.procTypeId == changeData.ProcessTypeId && submitForm.leaveTypeId == changeData.LeaveTypeId) {
 						if(submitForm.beginTime == changeData.ApplyBeginTime && submitForm.endTime == changeData.ApplyEndTime) {
 							if(submitForm.applyReason == changeData.ApplyReason && submitForm.applyPic == changeData.ApplyPic) {
-								$.hideLoading();
-								$.alert("未做任何修改", "提示");
-								return false;
+								if(submitForm.beginEndCnt == changeData.ApplyBeginEndCnt) {
+									$.hideLoading();
+									$.alert("未做任何修改", "提示");
+									return false;
+								}
 							}
 						}
 
@@ -794,6 +814,7 @@
 						$("#selectTypeFourthInput").attr("readonly", "readonly");
 						beginTime = "";
 						endTime = "";
+						$("#totalTime").val("");
 						$("#represon").val("");
 						$("#imageAmount").text("0/9");
 						uploadFile = null;
@@ -818,9 +839,18 @@
 						changeData.LeaveTypeId = submitForm.leaveTypeId;
 						changeData.ApplyBeginTime = submitForm.beginTime;
 						changeData.ApplyEndTime = submitForm.endTime;
+						changeData.ApplyBeginEndCnt = submitForm.beginEndCnt;
 						changeData.ApplyReason = submitForm.applyReason;
 						changeData.ApplyPic = submitForm.applyPic;
 						changeData.ApplyReasonThumb = submitForm.applyPicThumb;
+						var leave = $.extend({}, changeData);
+						leave.ApplyBeginTime = utils.initTime(submitForm.beginTime);
+						leave.ApplyEndTime = utils.initTime(submitForm.endTime);
+						var sValue = {
+							leave: leave,
+							mineUserInfo: mineUserInfo
+						}
+						storageutil.setSessionStorage(sKey, JSON.stringify(sValue));
 					} else {
 						$.alert("修改失败(" + data.RspTxt + ")", "提示");
 					}

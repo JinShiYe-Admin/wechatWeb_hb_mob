@@ -393,16 +393,19 @@
 	}
 
 	function addAttend(tempAttendType) {
+		var attendTypeId =  document.getElementById("attendType").data_id;
+		var departId =  document.getElementById("depart").data_id;
+		var attendAreaId =  document.getElementById("attendArea").data_id;
 
-		if(document.getElementById("attendType").data_id == undefined) {
+		if(attendTypeId == undefined||attendTypeId=="") {
 			alert("请选择考勤类型");
 			return;
 		}
-		if(document.getElementById("depart").data_id == undefined) {
+		if(departId == undefined||departId=="") {
 			alert("请选择部门");
 			return;
 		}
-		if(document.getElementById("attendArea").data_id == undefined) {
+		if(attendAreaId == undefined||attendAreaId=="") {
 			alert("请选择考勤地点");
 			return;
 		}
@@ -424,23 +427,30 @@
 		}
 		var tempData = {
 			corpId: userInfo.corpid,
-			deptId: document.getElementById("depart").data_id,
+			deptId: departId,
 			userId: userInfo.userid,
 			userName: userInfo.name,
-			attendType: document.getElementById("attendType").data_id,
-			attendArea: document.getElementById("attendArea").data_id,
+			attendType: attendTypeId,
+			attendArea: attendAreaId,
 			attendAreaX: attendArea.tempAttendArea.lng,
 			attendAreaY: attendArea.tempAttendArea.lat,
 			attendPic: tempEncs[0].imgurl,
 			attendNote: '测试接口',
 		}
 		console.log('添加考勤参数：' + JSON.stringify(tempData));
-
 		addAttendPro(tempData, function(data) {
 			console.log('添加考勤：' + JSON.stringify(data))
 			if(data.RspCode == 0) {
+				document.getElementById("depart").value = "";
+				document.getElementById("attendType").value = "";
+				document.getElementById("attendArea").value = "";
+				document.getElementById("depart").data_id = "";
+				document.getElementById("attendType").data_id = "";
+				document.getElementById("attendArea").data_id = "";
+				submitHomework.uploadedFiles = [];
 				alert('添加成功')
 				sendmsg(data.RspData);
+				
 			} else {
 				alert(data.RspTxt)
 			}

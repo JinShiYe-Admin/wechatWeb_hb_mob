@@ -41,7 +41,7 @@ var jQAjaxPost = function(url, data, callback) {
 		url: url,
 		type: "POST",
 		data: data,
-		timeout: 10000,
+		timeout: 30000,
 		dataType: "json",
 		async: true,
 		success: function(success_data) { //请求成功的回调
@@ -70,7 +70,7 @@ var xhrPost = function(url, data, callback) {
 	console.log('XHRP-Data:', data);
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
-	xhr.timeout = 10000; //10秒超时
+	xhr.timeout = 30000; //10秒超时
 	xhr.onload = function(e) {
 		console.log("XHRP:onload:", e);
 		if(this.readyState === 4 && this.status === 200) {

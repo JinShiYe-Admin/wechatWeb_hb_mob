@@ -12,7 +12,7 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<title>管理考勤</title>
-		<link rel="stylesheet" href="../../css/weui.min.css" />
+		<!--<link rel="stylesheet" href="../../css/weui.min.css" />-->
 		<!--<link href="../../css/mui.min.css" rel="stylesheet" />-->
 		<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=Z5iqNpaPerdxLv1m4Vd6PPgHYMZ3YbqH"></script>
 		<style>
@@ -55,42 +55,49 @@
 		<div id="conetent" class="weui-cells weui-cells_form mui-hidden">
 			<h3 style="text-align: center;">新增考勤地点</h3>
 			<!--输入列表-->
-			<div id="input_list">
-				<div>
-					<div class="weui-cells__title">考勤地点名称</div>
-					<div class="weui-cells">
+			<!--<div id="input_list">-->
+			<div>
+				<!--<div class="weui-cells__title">-->考勤地点名称：<input size="50" id="attendAdressText" v-model.lazy="cname.message" class="weui-input" type="text" :placeholder="'请输入考勤地点名称'">
+				<!--</div>-->
+				<!--<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
 								<input id="attendAdressText" v-model.lazy="cname.message" class="weui-input" type="text" :placeholder="'请输入考勤地点名称'">
 							</div>
 						</div>
-					</div>
-				</div>
-				<div class="tips">地址定位不准确时，可拖动地图中的红色水滴调整位置。</div>
-				<!--用来显示地图-->
-				<div id="allmap" style="height:500px;width:100%;"></div>
+					</div>-->
+			</div>
+			<br />
+			<div class="tips">地址定位不准确时，可拖动地图中的红色水滴调整位置。</div>
+			<!--用来显示地图-->
+			<div id="allmap" style="height:500px;width:100%;"></div>
 
-				<div id="r-result">
-
-				</div>
+			<div id="r-result">
+				<br />
+			</div>
+			<div>
 				考勤地点X坐标（经度）：<input type="text" id="longitude" /> 考勤地点Y坐标（纬度）：
 				<input type="text" id="latitude" /> &nbsp; &nbsp;
-				<!--<button id="search">查询</button>--><input type="button" onclick="search()" value="查询" />
-				<div class="weui-cells__title ">考勤地点半径</div>
-				<div class="weui-cells ">
+				<!--<button style="color: #5a99df;" onclick="search()">查询</button>--><input style="color: white;background:#5a99df ; border: none;" type="button" onclick="search()" value="查询" />&nbsp;&nbsp;&nbsp;&nbsp;<span class="tips">系统无法获取经纬度时，请使用拾取坐标系统查询后手动输入
+				<a target="_blank" style="color: #737373; text-decoration: underline;" href="http://api.map.baidu.com/lbsapi/getpoint/index.html">查询</a></span>
+			</div>
+		</div>
+		<br />
+		<div class="weui-cells__title ">考勤地点半径：<input size="10" id="attendAddressRedius" class="weui-input " type="text" oninput="getRedius(this.value)" :placeholder=" '请输入考勤地点半径' ">米<span class="tips">（建议500-1000米）</span></div>
+		<!--<div class="weui-cells ">
 					<div class="weui-cell ">
 						<div class="weui-cell__bd ">
 							<input id="attendAddressRedius" class="weui-input " type="text" oninput="getRedius(this.value)" :placeholder=" '请输入考勤地点半径' ">米<span class="tips">（建议500-1000米）</span>
 						</div>
 					</div>
-				</div>
-				<div class="tips">系统无法获取经纬度时，请使用拾取坐标系统查询后手动输入
-					<a target="_blank" style="color: #737373; text-decoration: underline;" href="http://api.map.baidu.com/lbsapi/getpoint/index.html">查询</a>
-				</div>
-			</div>
-			<!--开关列表-->
-			<div id="switch_list">
-				<!--<div>
+				</div>-->
+		<!--<div class="tips">系统无法获取经纬度时，请使用拾取坐标系统查询后手动输入
+				<a target="_blank" style="color: #737373; text-decoration: underline;" href="http://api.map.baidu.com/lbsapi/getpoint/index.html">查询</a>
+			</div>-->
+		<!--</div>-->
+		<!--开关列表-->
+		<div id="switch_list">
+			<!--<div>
 					<div class="weui-cell weui-cell_switch">
 						<div class="weui-cell__bd">{{islink.title}}</div>
 						<div class="weui-cell__ft">
@@ -99,7 +106,7 @@
 					</div>
 				</div>-->
 
-				<!--<div>
+			<!--<div>
 					<div class="weui-cell weui-cell_switch">
 						<div class="weui-cell__bd">{{iswrite.title}}</div>
 						<div class="weui-cell__ft">
@@ -116,10 +123,10 @@
 						</div>
 					</div>
 				</div>-->
-			</div>
-			<div class="weui-btn-area" v-if="editName =='添加'">
-				<button id="submit" v-on:click="submitClick" class="weui-btn weui-btn_primary">{{editName}}</button>
-			</div>
+		</div>
+		<div >
+			<button id="submit" onclick="submitClick()" class="weui-btn weui-btn_primary">添加</button>
+		</div>
 		</div>
 		<!--</template>-->
 		<!--<script src="../../js/mui.min.js"></script>-->
@@ -167,7 +174,7 @@
 					}
 				})
 				//给corpId赋值假数据
-				//												corpId = "wx6c4528c675d4a9c9";
+//																corpId = "wx6c4528c675d4a9c9";
 				//	getWebsitConfig();
 				var detail = utils.getDataFromUrl(window.location.href);
 				//				alert("detail " + JSON.stringify(detail));
@@ -261,7 +268,7 @@
 						Object.assign(this.$data, getDefaultData());
 					},
 					submitClick: function() {
-						//						alert(99);
+												alert(99);
 						//提交前先判断。如果都不为空，则允许提交
 						/**
 						 * 得到各input输入框的值
@@ -659,15 +666,93 @@
 					//addressComponents对象可以获取到详细的地址信息
 					var addComp = rs.addressComponents;
 					var site = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
-//					//将对应的HTML元素设置值
+					//					//将对应的HTML元素设置值
 					document.getElementById("attendAdressText").value = site;
-//					document.getElementById("longitude").value = pt.lng;
-//					document.getElementById("latitude").value = pt.lat;
+					//					document.getElementById("longitude").value = pt.lng;
+					//					document.getElementById("latitude").value = pt.lat;
 
 				});
 
 			}
 			//输入坐标查询地点，代码结束
+			
+			
+			
+			//添加考勤地点函数
+			function submitClick(){
+				console.log("点击添加---------------------")
+				//提交前先判断。如果都不为空，则允许提交
+						/**
+						 * 得到各input输入框的值
+						 */
+						var attendAdressValue = document.getElementById("attendAdressText").value;
+						//alert("attendAdressValue==="+attendAdressValue);
+						var attendAdressX = document.getElementById("longitude").value;
+						var attendAdressY = document.getElementById("latitude").value;
+						var attendAddressRedius = document.getElementById("attendAddressRedius").value;
+						//						alert("attendAddressRedius=="+attendAddressRedius);
+						if(attendAdressValue == "") {
+							alert("考勤地点名称不能为空！");
+							return;
+						} else if(attendAdressX == "") {
+							alert("考勤地点X坐标不能为空！");
+							return;
+						} else if(attendAdressY == "") {
+							alert("考勤地点Y坐标不能为空！");
+							return;
+						} else if(attendAddressRedius == "") {
+							alert("考勤地点半径不能为空！");
+							return;
+						} else {
+							//input 输入框的值都填写了，则提交，进行添加。
+							var tempData = {
+								"corpId": corpId,
+								"areaName": attendAdressValue,
+								"areaX": attendAdressX,
+								"areaY": attendAdressY,
+								"areaRedius": attendAddressRedius,
+								"uuid": "",
+								"appid": "",
+								"token": "",
+								"sign": ""
+							}
+							console.log("tempData===="+JSON.stringify(tempData))
+							$.ajax({
+								url: "https://jbyj.jiaobaowang.net/AttendanceService/addAttendArea",
+								type: "POST",
+								data: JSON.stringify(tempData),
+								timeout: 1000,
+								dataType: "json",
+								async: false,
+								success: function(data) {
+									console.log("新增考勤地点接口返回的情况======" + JSON.stringify(data));
+									/**
+									 * 如果接口返回正常，则跳转到显示考勤地点页面
+									 */
+									if(data.RspCode == 0) {
+										//给用户提示，添加成功
+										alert("添加成功");
+										//									window.location="../pcWeb-HUI/attendenceManage_address.html";
+										//										vm.resetData();
+										//										vm.editName = '添加'
+										//清空input输入框
+										document.getElementById("attendAdressText").value = "";
+										document.getElementById("longitude").value = "";
+										document.getElementById("latitude").value = "";
+										document.getElementById("attendAddressRedius").value = "";
+
+									} else if(data.RspCode == 1017) {
+										alert("存在同名的考勤地点");
+									}
+								},
+								error: function() {
+									$.toast("状态错误，请重新进入APP", "cancel", function() {
+										console.log('close');
+									});
+								}
+							})
+						}
+			}
 		</script>
 	</body>
 

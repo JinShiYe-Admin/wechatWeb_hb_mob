@@ -46,6 +46,7 @@
 						<tr class="text-c">
 							<th width="100">点评模板内容</th>
 							<th width="100">点评模板分类</th>
+							<th width="100">模板图片</th>
 							<th width="50">排序</th>
 							<th width="100">操作</th>
 						</tr>
@@ -54,6 +55,9 @@
 						<tr class="text-c" v-for='(evaluate,index) in evaluateArray' v-show="flag>0" style="display: none;">
 							<td><u style="cursor:pointer" class="text-primary">{{evaluate.TemplContent}}</u></td>
 							<td class="td-status"><span><a v-if="evaluate.TemplType==1">表扬</a><a v-else>待改进</a></span></td>
+							<td><u v-if='evaluate.TemplPic' style="cursor:pointer" class="text-primary">{{evaluate.AttendResult}}
+									<a data-title="模板图片"><img class="imgclass" width="50px" :src=evaluate.TemplPic></a>
+								</u></td>
 							<td><u style="cursor:pointer" class="text-primary">{{evaluate.OrderId}}</u></td>
 							<td class="td-manage">
 								<!--<a title="修改考勤类型" href="javascript:;" @click="modifyEvaluate(evaluate,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>-->
@@ -95,6 +99,20 @@
 						(*排序id越小越靠前)
 					</div>
 				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">图片上传：</label>
+					<div class="formControls skin-minimal col-xs-8 col-sm-9">
+						<div class="check-box">
+							<span class="btn-upload" id="select-pic">
+							  <a class="btn btn-primary radius" >选取文件</a>
+							  <input id="uploaderInput" type="file" class="input-file" accept="image/png, image/jpeg, image/jpg" @change="selectFile">
+							</span>
+							<div v-if="localPath!=''" class="picture-show" style="padding-top: 10px;">
+								<img :src="localPath" />
+							</div>
+						</div>
+					</div>
+				</div>
 				<div class="row cl submit-button">
 					<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
 						<input class="btn btn-primary radius" type="button" value="确定" @click="btnAdd()">
@@ -113,12 +131,20 @@
 		<script type="text/javascript" src="../../js/H-ui.admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
 		<script type="text/javascript" src="../../js/H-ui.admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
 		<script type="text/javascript" src="../../js/H-ui.admin/lib/laypage/1.2/laypage.js"></script>
+		<script src="../../js/utils/storageutil.js"></script>
+		<script src="../../js/utils/cryption.js"></script>
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/lib/plupload/moxie.min.js"></script>
+		<script src="../../js/lib/plupload/plupload.dev.js"></script>
+		<script src="../../js/lib/qiniu/qiniu.min.js"></script>
+		<script src="../../js/utils/cloudutil.js"></script>
+
 		<!--vue-->
 		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
-		<!--<script src='../../js/lib/vconsole/vconsole.min.js'></script>-->
+		<script src='../../js/lib/vconsole/vconsole.min.js'></script>
 		<script type="text/javascript">
 			$(function() {
 				$('.table-sort').dataTable({
@@ -147,6 +173,7 @@
 					userInfo: {}, //当前人员信息
 					evaluateArray: [],
 					evaluateFlag: 0 //0添加，1编辑
+
 				},
 				methods: {
 					modifyEvaluate: function(model, index) {
@@ -186,16 +213,69 @@
 				data: {
 					selectArray: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
 					TemplContent: "", //点评模板内容
-					TemplType: "1", //点评模板分类，1 表扬，2 待改进
-					OrderId: '0', //排序
-					evaluateModel: {} //要修改的的类型model
+					TemplType: 1, //点评模板分类，1 表扬，2 待改进
+					OrderId: 0, //排序
+					evaluateModel: {
+						OrderId: 0
+					}, //要修改的的类型model
+					localPath: ""
+				},
+				mounted: function() {
+					console.log("mounted")
+					this.uploadFile();
 				},
 				methods: {
+					selectFile: function(e) {
+						console.log("e.target.value:" + e.target.value);
+						console.log(e.target.files);
+						if(e.target.files.length > 0) {
+							var theFile = e.target.files[0];
+							if(this.isInType(theFile.type)) { //上传文件
+
+							} else {
+								this.emitUndefinedFile(); //清空上传文件
+								e.target.value = "";
+								layer.alert('所选文件类型错误，请重新选择') //提示错误
+							}
+						} else {
+							this.emitUndefinedFile(); //清空上传文件
+						}
+					},
+					emitUndefinedFile: function() { //清空上传文件
+						this.$emit("uploadedFile", null);
+					},
+					uploadFile: function() { //上传文件方法
+						console.log("*******uploadFile*******")
+						var com = this;
+						var thumbOption = {
+							type: 0
+						};
+						cloudutil.uploadQnSingleImg("select-pic", thumbOption, function(response) {
+							console.log("获取的上传七牛图片信息：" + JSON.stringify(response));
+							com.localPath = response.saveurl + "?imageView2/5/w/200";
+						})
+					},
+					isInType: function(type) {
+						switch(type) {
+							case "image/png":
+							case "image/jpeg":
+								return true;
+							default:
+								return false;
+						}
+					},
 					/**
 					 * 显示添加图片
 					 */
 					showAdd: function() {
+						$('#select' + this.evaluateModel.OrderId).val(0);
 						this.TemplContent = "";
+						this.OrderId = 0;
+						this.TemplType = 1;
+						this.localPath = '';
+						this.evaluateModel = {
+							OrderId: 0
+						}
 						$("#TemplTypeSelect").val(1);
 						this.show("添加点评模板");
 					},
@@ -233,6 +313,8 @@
 									corpId: evaluateData.userInfo.corpid, //单位ID
 									templContent: addEvaluateLayer.TemplContent, //考勤类型说明
 									templType: addEvaluateLayer.TemplType, //1 表扬，2 待改进
+									templPic: addEvaluateLayer.localPath, //模板图片
+									templPicThumb: addEvaluateLayer.localPath, //图片缩略图
 									orderId: addEvaluateLayer.OrderId //排序id
 								}
 								console.log('tempData:' + JSON.stringify(tempData));

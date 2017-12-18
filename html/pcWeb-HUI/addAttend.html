@@ -201,9 +201,9 @@
 				data: {
 					selectArray: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
 					AttendTypeNote: "", //考勤类型说明
-					attendTypeProp: "", //考勤类型属性,1 上班/上学,2 下班/放学
-					orderID: '', //排序
-					stat: '', //状态，1有效，0屏蔽
+					attendTypeProp: "1", //考勤类型属性,1 上班/上学,2 下班/放学
+					orderID: '0', //排序
+					stat: '1', //状态，1有效，0屏蔽
 					attendFlag: 0, //0添加，1编辑
 					attendModel: {} //要修改的的类型model
 				},
@@ -212,7 +212,15 @@
 					 * 显示添加图片
 					 */
 					showAdd: function() {
+						$('#select'+this.attendModel.OrderId).val(0);
 						this.AttendTypeNote = "";
+						this.orderID = 0;
+						this.attendTypeProp = 1;
+						this.stat = 1;
+						var tempModel = {
+							OrderId: 0
+						}
+						this.attendModel = tempModel;
 						$("#attendTypePropSelect").val(1);
 						$("#modifyStat").val(1);
 						this.show("添加考勤类型");

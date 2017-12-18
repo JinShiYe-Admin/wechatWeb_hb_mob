@@ -160,50 +160,18 @@
 					clickIndex = $(".weui-cells .weui-cell").index(this);
 					var leave = leaveApply.value[leaveApply.key[clickIndex]];
 					console.log("leave", leave);
+					var sKey = new Date().getTime() + "" + parseInt(Math.random() * 1000);
+					var sValue = {
+						leave: leave,
+						mineUserInfo: mineUserInfo
+					}
+					storageutil.setSessionStorage(sKey, JSON.stringify(sValue));
 					if(leave.ApplyStat == 1 || leave.ApplyStat == 2 || leave.ApplyStat == 3) {
 						//已通过，驳回，正在审核
-						var sKey = new Date().getTime() + "" + parseInt(Math.random() * 1000);
-						var sValue = {
-							leave: leave,
-							mineUserInfo: mineUserInfo
-						}
-						storageutil.setSessionStorage(sKey, JSON.stringify(sValue));
-						location.href = "leave-detail.html?flag=0&sKey=" + sKey;
+						location.href = "leave-detail.html?flag=2&sKey=" + sKey;
 					} else {
 						//未审批
-						$.actions({
-							actions: [{
-								text: "编辑",
-								onClick: function() {
-									var sKey = new Date().getTime() + "" + parseInt(Math.random() * 1000);
-									var sValue = {
-										leave: leave,
-										mineUserInfo: mineUserInfo
-									}
-									storageutil.setSessionStorage(sKey, JSON.stringify(sValue));
-									location.href = "addleaveapply.html?change=" + sKey;
-								}
-							}, {
-								text: "删除",
-								className: "color-danger",
-								onClick: function() {
-									$.modal({
-										title: "提示",
-										text: "确定删除?",
-										buttons: [{
-											text: "取消",
-											className: "default",
-										}, {
-											text: "确定",
-											className: "color-danger",
-											onClick: function() {
-												delLeaveApply(leave.ApplyId);
-											}
-										}]
-									});
-								}
-							}]
-						});
+						location.href = "leave-detail.html?flag=0&sKey=" + sKey;
 					}
 				});
 			}

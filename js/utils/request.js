@@ -180,7 +180,7 @@ var request = (function(mod) {
 	return mod;
 })(request || {})
 var processRequest = (function(mod) {
-	mod.URL = "https://jbyj.jiaobaowang.net/LeaveService/";
+	mod.URL = "https://jbyj.jiaobaowang.net/AttendanceService/";
 	mod.postData = function(url, data, callback) {
 		data = JSON.stringify(jQuery.extend({
 			uuid: "",
@@ -224,6 +224,11 @@ var layerPlus = (function(mod) {
 			callback();
 			layer.close(index);
 		});
+	}
+	mod.alert = function(content) {
+		layer.confirm(content, {
+			icon: 2
+		})
 	}
 	return mod;
 })(layerPlus || {})

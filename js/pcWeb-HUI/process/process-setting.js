@@ -17,7 +17,8 @@ Vue.component("process-setting", {
 			name: "",
 			note: "",
 			stat: 1,
-			curPage: 0
+			curPage: 0,
+			showEdit:false
 		}
 	},
 	mounted: function() {
@@ -152,7 +153,7 @@ Vue.component("process-setting", {
 		submitProcess: function() {
 			console.log("*****submitProcess*****");
 			if(this.name.length == 0) {
-				layer.alert("请输入流程类型");
+				layerPlus.alert("请输入流程类型");
 				return;
 			}
 			if(this.changeType === 0) {

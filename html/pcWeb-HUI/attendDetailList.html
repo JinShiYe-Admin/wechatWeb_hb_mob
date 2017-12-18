@@ -65,7 +65,7 @@
 			</div>
 		</div>
 		<!--_footer 作为公共模版分离出去-->
-		<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+		<!--<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>-->
 		<script type="text/javascript" src="../../js/H-ui.admin/lib/layer/2.4/layer.js"></script>
 		<script type="text/javascript" src="../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
 		<script type="text/javascript" src="../../js/H-ui.admin/static/h-ui.admin/js/H-ui.admin.js"></script>
@@ -105,7 +105,6 @@
 				el: "#attendData",
 				data: {
 					flag: 0,
-					requestFlag: 0,
 					userInfo: {}, //当前人员信息
 					attendTimeArrayAll: [], //考勤时间段列表,合并姓名、部门
 					attendTimeArray: [], //考勤时间段列表,从协议获取到的
@@ -219,8 +218,6 @@
 							if(tempModel.value == -1) {
 								attendData.departArray.splice(i, 1);
 							} else {
-								layer.load(2);
-								getDepartPerson(tempModel);
 								var temp000 = {
 									id: tempModel.value,
 									text: tempModel.title
@@ -239,7 +236,12 @@
 									var tempModel = attendData.departArray[i];
 									if(tempModel.value == node.id) {
 										if(node.checked) {
-											tempModel.flag = 1;
+											tempModel.flag = 1;//设置为选中状态
+											//判断是否有人员，没有获取
+											if (tempModel.peopleArray.length==0) {
+												layer.load(2);
+												getDepartPerson(tempModel);
+											}
 										} else {
 											tempModel.flag = 0;
 										}
@@ -272,15 +274,12 @@
 					cmd: 'departpersonsadmin',
 					type: 'findpage', //获取管理员全部管理部门
 					colid: model.value, //部门ID
-					colv: '1', //是否递归获取子级部门中所有人员,0否1是
+					colv: '0', //是否递归获取子级部门中所有人员,0否1是
 					callcol: 'base' //获取详细信息:info,获取普通信息:base
 				}
 				console.log('tempData:' + JSON.stringify(tempData));
 				unitWebsitePro(tempData, function(data) {
-					attendData.requestFlag++;
-					if(attendData.requestFlag >= attendData.departArray.length) {
-						layer.closeAll('loading');
-					}
+					layer.closeAll('loading');
 					if(data.RspCode == 0) {
 						for(var i = 0; i < data.RspData.length; i++) {
 							var tempModel = data.RspData[i];

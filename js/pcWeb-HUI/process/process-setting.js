@@ -17,7 +17,8 @@ Vue.component("process-setting", {
 			name: "",
 			note: "",
 			stat: 1,
-			curPage: 0
+			curPage: 0,
+			showEdit:false
 		}
 	},
 	mounted: function() {

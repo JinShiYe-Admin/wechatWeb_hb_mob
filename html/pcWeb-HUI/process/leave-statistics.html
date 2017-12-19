@@ -44,7 +44,7 @@
 					</thead>
 					<tbody>
 						<tr class="text-c" v-for='(personLeave,index) in personLeaves' v-show="flag>0">
-							<td><u style="cursor:pointer" class="text-primary">{{personLeave.DeptId|getDeptName}}</u></td>
+							<td><u style="cursor:pointer" class="text-primary">{{personLeave|getDeptName}}</u></td>
 							<td><u style="cursor:pointer" class="text-primary">{{personLeave.UserName}}</u></td>
 							<td v-for="leaveType in leaveTypes"><u style="cursor:pointer" class="text-primary">{{getLeaveDays(personLeave,leaveType)}}</u></td>
 							<td>{{personLeave.leaveArray|getAllLeaveDays}}</td>
@@ -105,6 +105,10 @@
 					leaveTypes: [] //请假类型
 				},
 				filters: {
+					/**
+					 * 获取总计天数
+					 * @param {Object} leaveArray
+					 */
 					getAllLeaveDays: function(leaveArray) {
 						var allLeaveDays = 0;
 						leaveArray.forEach(function(leave) {
@@ -112,13 +116,24 @@
 						})
 						return allLeaveDays;
 					},
-					getDeptName: function(deptId) {
+					/**
+					 * 获取部门名称
+					 * @param {Object} deptId
+					 */
+					getDeptName: function(personLeave) {
+						console.log("获取部门名称");
 						for(var i = 0; i < this.selectDeparts; i++) {
-
+							if(this.selectDeparts[i].value == personLeave.DeptId) {
+								personLeave.DeptName = this.selectDeparts[i].title;
+								return this.selectDeparts[i].title;
+							}
 						}
 					}
 				},
 				methods: {
+					/**
+					 * 搜索获取人员请假列表
+					 */
 					searchpersonLeaveList: function() {
 						//16.获取考勤统计
 						getpersonLeaveStat();
@@ -139,6 +154,11 @@
 							}
 						})
 					},
+					/**
+					 * 获取请假天数
+					 * @param {Object} personLeave
+					 * @param {Object} leaveType
+					 */
 					getLeaveDays: function(personLeave, leaveType) {
 						for(var i = 0; i < personLeave.LeaveArray.length; i++) {
 							if(leaveType == personLeave.LeaveArray[i].LeaveType) {
@@ -148,7 +168,9 @@
 					}
 				}
 			});
-			//导出统计表
+			/**
+			 * 
+			 */
 			function clickExport() {
 				if(leaveStatList.showPeopleArray.length == 0) {
 					layer.alert('当前日期没有考勤统计数据');
@@ -186,7 +208,9 @@
 					}
 				});
 			};
-
+			/**
+			 * 获取请假类型
+			 */
 			function getLeaveTypes() {
 				processRequest.postProcessData("getLeaveType", {
 					corpId: leaveStatList.userInfo.corpid,

@@ -53,8 +53,8 @@ Vue.component("choose-person", {
 			this.$emit("select-person", this.selectPerson);
 		},
 		toggleChoosePerson: function(person, index) {
-			if(Object.keys(this.choosePerson).length >= 50) {
-				alert("最多选择50人！");
+			if(Object.keys(this.choosePerson).length >= 20) {
+			 	layer.alert("最多选择20人！");
 				return;
 			}
 			console.log("toggleChoosePerson:" + JSON.stringify(person))

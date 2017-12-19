@@ -791,6 +791,7 @@
 			function submitLeaveForm() {
 				var submitForm = {
 					deptId: $("#selectTypeZeroInput").attr("data-values"),
+					deptName: $("#selectTypeZeroInput").attr("value"),
 					procTypeId: $("#selectTypeFirstInput").attr("data-values"),
 					leaveTypeId: $("#selectTypeSecondInput").attr("data-values"),
 					beginTime: beginTime,
@@ -821,10 +822,12 @@
 					if(submitForm.procTypeId == changeData.ProcessTypeId && submitForm.leaveTypeId == changeData.LeaveTypeId) {
 						if(submitForm.beginTime == changeData.ApplyBeginTime && submitForm.endTime == changeData.ApplyEndTime) {
 							if(submitForm.applyReason == changeData.ApplyReason && submitForm.applyPic == changeData.ApplyPic) {
-								if(submitForm.beginEndCnt == changeData.ApplyBeginEndCnt && submitForm.deptId == changeData.DeptId) {
-									$.hideLoading();
-									$.alert("未做任何修改", "提示");
-									return false;
+								if(submitForm.deptId == changeData.DeptId && submitForm.deptName == changeData.DeptName) {
+									if(submitForm.beginEndCnt == changeData.ApplyBeginEndCnt) {
+										$.hideLoading();
+										$.alert("未做任何修改", "提示");
+										return false;
+									}
 								}
 							}
 						}
@@ -889,7 +892,8 @@
 					$.hideLoading();
 					if(data.RspCode == 0 && data.RspData.Result == 1) {
 						$.toast("修改成功");
-						changeData.DeptId=submitForm.deptId;
+						changeData.DeptId = submitForm.deptId;
+						changeData.DeptName = submitForm.deptName;
 						changeData.ProcessTypeId = submitForm.procTypeId;
 						changeData.LeaveTypeId = submitForm.leaveTypeId;
 						changeData.ApplyBeginTime = submitForm.beginTime;
@@ -1073,7 +1077,7 @@
 						getProcType();
 					} else {
 						$.hideLoading();
-						$.alert("未获取到部门信息，无法" + webType + "请假申请" + errStr + "", "提示");
+						$.alert("未获取到部门信息，无法" + webType + "请假申请(" + data.RspTxt + ")", "提示");
 					}
 				});
 			}

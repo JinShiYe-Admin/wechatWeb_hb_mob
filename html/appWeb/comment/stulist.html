@@ -330,6 +330,7 @@
 		</script>
 		<script type="text/javascript">
 			var deptId; //部门id
+			var deptName; //部门名称
 			var mineUserInfo; //个人信息
 			var evalTemplate = {
 				key: [],
@@ -351,6 +352,7 @@
 					$.alert("未获取到有效的数据", "提示");
 				} else {
 					deptId = sValue.deptId;
+					deptName = sValue.deptName;
 					mineUserInfo = sValue.mineUserInfo;
 					getMembers();
 				}
@@ -570,6 +572,7 @@
 				var tempData = {
 					corpId: mineUserInfo.corpid,
 					deptId: deptId,
+					deptName: deptName,
 					evalMan: mineUserInfo.userid,
 					evalManName: mineUserInfo.name,
 					evalManAvatar: mineUserInfo.avatar,

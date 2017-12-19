@@ -257,5 +257,53 @@ var utils = (function(mod) {
 		}
 	};
 
+	/**
+	 * href 打开一个页面，并保存SessionStorage数据
+	 * @param {Object} data
+	 */
+	mod.hrefSessionStorage = function(url, data) {
+		var sKey = new Date().getTime() + "" + parseInt(Math.random() * 1000);
+		storageutil.setSessionStorage(sKey, JSON.stringify(data));
+		location.href = url + "?sKey=" + sKey;
+	}
+
+	/**
+	 * 通过url中的sKey,获取SessionStorage数据
+	 * @return data
+	 */
+	mod.getSessionStorageByUrlsKey = function() {
+		var search = location.search.toString();
+		var keyword = "?sKey=";
+		var index = search.indexOf(keyword);
+		if(index != -1) {
+			var sKey = search.substring(index + keyword.length);
+			var sValue = storageutil.getSessionStorage(sKey)
+			if(sValue) {
+				var obj = JSON.parse(sValue);
+				return obj;
+			} else {
+				return null;
+			}
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * 获取url中的key值
+	 * @param {Object} key
+	 */
+	mod.getValueFromUrlByKey = function(key) {
+		var search = location.search.toString();
+		var keyword = "?" + key + "=";
+		var index = search.indexOf(keyword);
+		if(index != -1) {
+			var value = search.substring(index + keyword.length);
+			return value;
+		} else {
+			return null;
+		}
+	}
+
 	return mod;
 })(window.utils || {});

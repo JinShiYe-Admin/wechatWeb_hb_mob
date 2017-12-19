@@ -98,12 +98,13 @@ var compress = (function(mod) {
 				break;
 			case -1: //居中裁剪成圓形
 				ctx.save(); // 保存当前ctx的状态
-				ctx.arc(suitableSize.width/2, suitableSize.height/2, 0, 2*Math.PI); //画出圆
+				ctx.arc(suitableSize.width / 2, suitableSize.height / 2, 0, 2 * Math.PI); //画出圆
 				ctx.clip(); //裁剪上面的圆形
 				ctx.drawImage(img, 0, 0, suitableSize, suitableSize.height); // 在刚刚裁剪的园上画图
 				ctx.restore(); // 还原状态
 				break;
 			default:
+				ctx.drawImage(img, 0, 0, suitableSize.width, suitableSize.height);
 				break;
 		}
 

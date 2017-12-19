@@ -409,6 +409,7 @@
 					layer.alert('请选择查询部门');
 					return false;
 				}
+				layer.load(2);
 				var tempData = {};
 				if(beginTime.length > 0) {
 					tempData = {
@@ -464,6 +465,7 @@
 					} else {
 						layer.alert(data.RspTxt);
 					}
+					layer.closeAll('loading');
 				});
 			};
 		</script>

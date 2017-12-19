@@ -134,6 +134,8 @@ Vue.component("leave-setting", {
 					zIndex: 999,
 					content: $('#edit-pocessInfo')
 				});
+			}else{
+				layer.closeAll("page");
 			}
 
 		},
@@ -183,6 +185,7 @@ Vue.component("leave-setting", {
 			}, function(response) {
 				console.log("添加流程类型的结果:" + JSON.stringify(response));
 				if(response.RspCode == 0) {
+					com.toggleLayer(false);
 					com.requireLeave(); //刷新数据
 				} else {
 					layer.alert(response.RspTxt)
@@ -222,8 +225,9 @@ Vue.component("leave-setting", {
 				console.log("修改请假信息的结果:" + JSON.stringify(response));
 				if(response.RspCode == 0) {
 					com.activeLeave.LeaveTypeName = com.name;
-					com.activeLeave.LeaveTypeNote.com.note;
+					com.activeLeave.LeaveTypeNote=com.note;
 					com.activeLeave.IsLeader = com.getIsLeader();
+					com.toggleLayer(false);
 				} else {
 					layer.alert(response.RspTxt)
 				}

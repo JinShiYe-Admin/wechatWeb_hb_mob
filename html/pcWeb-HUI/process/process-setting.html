@@ -203,14 +203,14 @@
 					<div class="row cl">
 						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>流程类型：</label>
 						<div class="formControls col-xs-8 col-sm-9">
-							<input type="text" class="input-text"  maxlength="100" placeholder="最多100字" v-model.trim="name" placeholder="" id="username" name="username">
+							<input type="text" class="input-text"  maxlength="50" placeholder="最多50字" v-model.trim="name" placeholder="" id="username" name="username">
 						</div>
 					</div>
 					<div class="row cl">
 						<label class="form-label col-xs-4 col-sm-3">备注：</label>
 						<div class="formControls col-xs-8 col-sm-9">
-							<textarea name="beizhu" cols="" rows="" class="textarea" maxlength="500" placeholder="请输入备注" v-model.trim="note"></textarea>
-							<p class="textarea-numberbar"><em class="textarea-length">{{note.length}}</em>/500</p>
+							<textarea name="beizhu" cols="" rows="" class="textarea" maxlength="200" placeholder="请输入备注" v-model.trim="note"></textarea>
+							<p class="textarea-numberbar"><em class="textarea-length">{{note.length}}</em>/200</p>
 						</div>
 					</div>
 					<div class="row cl">

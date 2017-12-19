@@ -291,9 +291,11 @@
 				//检查有没有选择部门
 				var tempFlag = 0; //是否选择部门
 				var tempPeopleArray = []; //人员id数组
+				var tempDepartArray = []; //部门id数组
 				attendData.showPeopleArray = []; //清空
 				for(var a = 0; a < attendData.departArray.length; a++) {
 					var tempModel = attendData.departArray[a];
+					tempDepartArray.push(tempModel.value);
 					if(tempModel.flag == 1) {
 						tempFlag++;
 						for(var m = 0; m < tempModel.peopleArray.length; m++) {
@@ -317,6 +319,7 @@
 				endTime = endTime.replace(/-/g, '');
 				var tempData = {
 					corpId: attendData.userInfo.corpid, //单位ID
+					deptId:tempDepartArray,//部门ID，例如：[“1”, “2”, “3”]
 					userId: tempPeopleArray, //用户ID,例如：[“1”, “2”, “3”]
 					beginTime: startTime, //统计开始时间,年月日共八位如：20011010
 					endTime: endTime //统计结束时间,年月日共八位如：20011010

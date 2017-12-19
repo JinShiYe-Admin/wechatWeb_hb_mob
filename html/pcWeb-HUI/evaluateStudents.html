@@ -305,6 +305,10 @@
 							layer.alert('请输入点评模板内容');
 							return false;
 						}
+						if(addEvaluateLayer.localPath.length == 0) {
+							layer.alert('请选择模板图片');
+							return false;
+						}
 						if(evaluateData.evaluateFlag == 0) { //添加
 							//添加类型时，判断是否输入了值，有没有重复
 							if(checkInput(addEvaluateLayer.TemplContent, 0)) {

@@ -215,6 +215,7 @@ Vue.component("process-setting", {
 				if(response.RspCode == 0) {
 					com.activeProcess.ProcTypeName = com.name;
 					com.activeProcess.ProcTypeNote = com.note;
+					com.toggleLayer(false);
 				} else {
 					layer.alert(response.RspTxt);
 				}

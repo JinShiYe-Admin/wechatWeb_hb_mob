@@ -95,7 +95,7 @@ Vue.component("check-person-list", {
 		setAllUnselect: function() {
 			var com = this;
 			com.checkPersonList.forEach(function(checkPerson, index) {
-				checkPerson.isSelect = false;
+				com.$set(com.checkPersonList[index],"isSelect",com.isAllSelect);
 			})
 		},
 		/**

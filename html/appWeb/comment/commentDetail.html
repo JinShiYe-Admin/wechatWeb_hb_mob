@@ -13,59 +13,124 @@
 		<link rel="stylesheet" href="../../../js/demoCssJs/jquery-weui.min.css" />
 		<link rel="stylesheet" href="../../../js/demoCssJs/demos.css" />
 		<style>
-			body {
-				-webkit-overflow-scrolling: touch;
+			.weui-panel{
+  background-color:#FFFFFF;
+  margin-top:0px;
+  position:relative;
+  overflow:hidden;
+}
+			.weui-grids {
+				position: relative;
+				overflow: hidden;
 			}
 			
-			.weui-tab__bd-item {
+			.weui-grids:before {
+				content: " ";
+				position: absolute;
+				left: 0;
+				top: 0;
+				right: 0;
+				height: 1px;
+				border-top: 1px solid #FFFFFF;
+				color: #FFFFFF;
+				-webkit-transform-origin: 0 0;
+				transform-origin: 0 0;
+				-webkit-transform: scaleY(0.5);
+				transform: scaleY(0.5);
+			}
+			
+			.weui-grids:after {
+				content: " ";
+				position: absolute;
+				left: 0;
+				top: 0;
+				width: 1px;
+				bottom: 0;
+				border-left: 1px solid #FFFFFF;
+				color: #FFFFFF;
+				-webkit-transform-origin: 0 0;
+				transform-origin: 0 0;
+				-webkit-transform: scaleX(0.5);
+				transform: scaleX(0.5);
+			}
+			
+			.weui-grid {
+				position: relative;
+				float: left;
+				padding: 5px 5px;
+				width: 33.33333333%;
+				box-sizing: border-box;
+			}
+			
+			.weui-grid:before {
+				content: " ";
+				position: absolute;
+				right: 0;
+				top: 0;
+				width: 1px;
+				bottom: 0;
+				border-right: 1px solid #FFFFFF;
+				color: #FFFFFF;
+				-webkit-transform-origin: 100% 0;
+				transform-origin: 100% 0;
+				-webkit-transform: scaleX(0.5);
+				transform: scaleX(0.5);
+			}
+			
+			.weui-grid:after {
+				content: " ";
+				position: absolute;
+				left: 0;
+				bottom: 0;
+				right: 0;
+				height: 1px;
+				border-bottom: 1px solid #FFFFFF;
+				color: #FFFFFF;
+				-webkit-transform-origin: 0 100%;
+				transform-origin: 0 100%;
+				-webkit-transform: scaleY(0.5);
+				transform: scaleY(0.5);
+			}
+			
+			.weui-grid__icon {
 				width: 100%;
+				height: 100%;
+				margin: 0 auto;
 			}
 			
-			.weui-tab__bd {
-				margin-top: -50px;
+			.weui-grid:active {
+				background-color: #FFFFFF;
 			}
-			
-			.weui-tabbar {
-				bottom: -50px;
-			}
-			
-			.weui-cells {
-				margin-top: 0;
-			}
-			
-			.weui-media-box {
-				padding: 0;
-			}
-			.class-circle-grids-item {
-	overflow: hidden;
-	display: flex;
-	display: -webkit-flex;
-	width: 100%;
-	align-items: center;
-}
-
-.class-circle-grids-item img {
-	width: 100%;
-}
 		</style>
 	</head>
 
 	<body>
-		<div class="class-circle-grids">
-			<div class="class-circle-grids-item">
-				<img src="icon_tabbar.png">
-			</div>
-			<div class="class-circle-grids-item">
-				<img src="icon_tabbar.png">
-			</div>
-			<div class="class-circle-grids-item">
-				<img src="icon_tabbar.png">
-			</div>
-			<div class="class-circle-grids-item">
-				<img src="icon_tabbar.png">
+		<div id="list" class="page__bd">
+			<div class="weui-panel weui-panel_access"  v-for="(item,index) in datasource">
+				<div class="weui-panel__bd" >
+					<a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+						<div class="weui-media-box__hd">
+							<img class="weui-media-box__thumb" :src="item.BeEvalManAvatar" alt="">
+						</div>
+						<div class="weui-media-box__bd">
+							<h4 class="weui-media-box__title">{{item.BeEvalManName}}</h4>
+							<p class="weui-media-box__desc">{{item.EvalTime}}</p>
+						</div>
+					</a>
+					<p style="margin-left: 10px;">{{item.EvalContent}}</p>
+					<div class="weui-grids">
+						<a href="javascript:;" class="weui-grid">
+							<div class="weui-grid__icon">
+								<img :src="item.EvalEncThumb" alt="">
+							</div>
+						</a>
+
+					</div>
+					<br />
+				</div>
 			</div>
 		</div>
-
+		<script src="../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" src="../../../js/lib/vconsole/vconsole.min.js"></script>
 		<script type="text/javascript" src="../../../js/demoCssJs/jquery-2.1.4.js"></script>
 		<script type="text/javascript" src="../../../js/demoCssJs/jquery-weui.min.js"></script>
@@ -78,6 +143,18 @@
 		<script>
 			var loading = false; //下拉状态标记
 			var mineUserInfo; //个人信息
+
+			var vm = new Vue({
+				el: '#list',
+				data: {
+					datasource: []
+				},
+				updated:function(){
+//					console.log(JSON.stringify(vm.datasource));
+					console.log(document.getElementById("list").innerHTML);
+				}
+
+			})
 			window.onload = function() {
 				//				$.showLoading();
 				getEvaluation();
@@ -114,7 +191,8 @@
 					pageSize: 20,
 				}
 				getEvaluationPro(tempData, function(data) {
-					console.log(JSON.stringify(data));
+//					console.log(JSON.stringify(data));
+					vm.datasource = data.RspData.Data;
 				});
 			}
 		</script>

@@ -113,7 +113,7 @@
 					<div class="weui-cells person-container weui-flex">
 						<img v-bind:src="applyDetail.ApplyManPic?applyDetail.ApplyManPic:personalInfo.avatar" class="head-portrait display-inline">
 						<div class="display-inline name-time-container">
-							<p class="apply-name">{{applyDetail.ApplyManName?applyDetail.ApplyManName:personalInfo.name}}</p>
+							<p><span class="apply-name">{{applyDetail.ApplyManName?applyDetail.ApplyManName:personalInfo.name}}</span>-{{applyDetail.DeptName}}</p>
 							<p class="apply-time apply-info-container"><span class="apply-hint">申请时间:</span>{{applyDetail.ApplyTime}}</p>
 						</div>
 					</div>

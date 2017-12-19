@@ -675,13 +675,13 @@
 			}
 
 			function addExama() {
-				console.log(column_table.uploadedFile.length)
+				console.log(column_table.uploadedFile)
 				if(column_table.cname == "") {
 					alert("请输入名称");
 					return;
 
 				}
-				if(column_table.uploadedFile.length == 0||column_table.uploadedFile.length == undefined) {
+				if(JSON.stringify(column_table.uploadedFile) == "{}") {
 					alert("请添加文件");
 					return;
 

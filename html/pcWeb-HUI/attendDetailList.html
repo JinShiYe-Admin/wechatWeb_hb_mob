@@ -50,7 +50,7 @@
 					</thead>
 					<tbody>
 						<tr class="text-c" v-for='(attend,index) in showPeopleArray' v-show="flag>0" style="display: none;">
-							<td><u style="cursor:pointer" class="text-primary">{{attend.departName}}</u></td>
+							<td><u style="cursor:pointer" class="text-primary">{{attend.DeptName}}</u></td>
 							<td><u style="cursor:pointer" class="text-primary">{{attend.name}}</u></td>
 							<td v-for='(timeModel,index) in attend.timeList'>
 								<u v-if='timeModel.AttendPic' style="cursor:pointer" class="text-primary">{{timeModel.AttendResult}}

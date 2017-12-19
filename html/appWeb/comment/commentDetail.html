@@ -13,6 +13,12 @@
 		<link rel="stylesheet" href="../../../js/demoCssJs/jquery-weui.min.css" />
 		<link rel="stylesheet" href="../../../js/demoCssJs/demos.css" />
 		<style>
+			.weui-panel{
+  background-color:#FFFFFF;
+  margin-top:0px;
+  position:relative;
+  overflow:hidden;
+}
 			.weui-grids {
 				position: relative;
 				overflow: hidden;
@@ -99,7 +105,7 @@
 	</head>
 
 	<body>
-		<div id="list" class="page__bd" style="background-color: lightgrey;">
+		<div id="list" class="page__bd">
 			<div class="weui-panel weui-panel_access"  v-for="(item,index) in datasource">
 				<div class="weui-panel__bd" >
 					<a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">

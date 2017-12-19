@@ -87,16 +87,18 @@
 			function initListener() {
 				//点击班级
 				$("#dataList").on("click", ".weui-cell", function() {
-					console.log("weui-cell:" + this.id);
+					var deptId = this.getAttribute("id");
+					var deptName = this.getAttribute("title");
 					var data = {
-						deptId: this.id,
+						deptId: deptId,
+						deptName: deptName,
 						mineUserInfo: mineUserInfo
 					}
 					var href;
 					if(mineUserInfo.isleader == 1) {
 						href = "stulist.html";
 					} else {
-						href = "stulist.html";
+						href = "commentDetail.html";
 					}
 					utils.hrefSessionStorage(href, data);
 				});
@@ -150,8 +152,17 @@
 					if(data.RspCode == 0) {
 						$("#dataList").empty();
 						var departments = JSON.parse(data.RspData);
-						console.log("departments", departments);
-						showData(departments);
+						var mineDepart = [];
+						for(var i = 0; i < mineUserInfo.department.length; i++) {
+							for(var j = 0; j < departments.length; j++) {
+								if(departments[j].value == mineUserInfo.department[i]) {
+									mineDepart.push(departments[j]);
+									break;
+								}
+							}
+						}
+						console.log("departments", departments, mineDepart);
+						showData(mineDepart);
 					} else {
 						$.alert(data.RspTxt, "提示");
 					}
@@ -165,7 +176,7 @@
 						continue;
 					} else {
 						html = html + '\
-							<a id="' + departments[i].value + '" class="weui-cell weui-cell_access">\
+							<a id="' + departments[i].value + '" title="' + departments[i].title + '" class="weui-cell weui-cell_access">\
 								<div class="weui-cell__bd">\
 									<div class="weui-media-box weui-media-box_appmsg">\
 										<div class="weui-media-box__bd">\

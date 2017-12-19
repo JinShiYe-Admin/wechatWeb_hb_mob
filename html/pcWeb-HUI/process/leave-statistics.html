@@ -44,9 +44,9 @@
 					</thead>
 					<tbody>
 						<tr class="text-c" v-for='(personLeave,index) in personLeaves' v-show="flag>0">
-							<td><u style="cursor:pointer" class="text-primary">{{[personLeave.DeptId|getDeptName}}</u></td>
+							<td><u style="cursor:pointer" class="text-primary">{{personLeave.DeptId|getDeptName}}</u></td>
 							<td><u style="cursor:pointer" class="text-primary">{{personLeave.UserName}}</u></td>
-							<td v-for="leaveType in leaveTypes"><u style="cursor:pointer" class="text-primary">{getLeaveDays(personLeave,leaveType)}}</u></td>
+							<td v-for="leaveType in leaveTypes"><u style="cursor:pointer" class="text-primary">{{getLeaveDays(personLeave,leaveType)}}</u></td>
 							<td>{{personLeave.leaveArray|getAllLeaveDays}}</td>
 						</tr>
 					</tbody>
@@ -99,6 +99,7 @@
 					userInfo: {}, //当前人员信息
 					personLeaves: [], //请假统计数据
 					departArray: [], //管理的所有部门数组
+					selectDeparts: [], //所选部门
 					peopleArray: [], //管理的所有部门的人员数组
 					showPeopleArray: [], //显示部门对应的人员数组
 					leaveTypes: [] //请假类型
@@ -110,6 +111,11 @@
 							allLeaveDays += leave.LeaveDays
 						})
 						return allLeaveDays;
+					},
+					getDeptName: function(deptId) {
+						for(var i = 0; i < this.selectDeparts; i++) {
+
+						}
 					}
 				},
 				methods: {
@@ -129,7 +135,7 @@
 							if(response.RspCode == 0) {
 								com.departArray = response.RspData.Data;
 							} else {
-								layer.alert(response.RspTxt);
+								layer.alert(response.RspTx)
 							}
 						})
 					},
@@ -143,7 +149,7 @@
 				}
 			});
 			//导出统计表
-			var clickExport = function() {
+			function clickExport() {
 				if(leaveStatList.showPeopleArray.length == 0) {
 					layer.alert('当前日期没有考勤统计数据');
 					return false;
@@ -162,7 +168,7 @@
 				a.download = "请假统计.xls";
 			}
 			//13.获取当前人员信息
-			var getUserInfo = function() {
+			function getUserInfo() {
 				var tempData = {
 					cmd: 'userinfoadmin',
 					type: 'findpage', //获取某个详细信息
@@ -197,7 +203,7 @@
 			}
 
 			//获取管理的部门
-			var getPersonDepart = function() {
+			function getPersonDepart() {
 				var tempData = {
 					cmd: 'persondepartsadmin',
 					type: 'findpage' //获取管理员全部管理部门
@@ -266,7 +272,7 @@
 			}
 
 			//17.获取某部门ID下所有人员(PC管理端)
-			var getDepartPerson = function(model) {
+			function getDepartPerson(model) {
 				var tempData = {
 					cmd: 'departpersonsadmin',
 					type: 'findpage', //获取管理员全部管理部门
@@ -296,7 +302,7 @@
 			}
 
 			//把获取到的部门，按层级组合
-			var getNodeTree = function(nodes) {
+			function getNodeTree(nodes) {
 				if(typeof(nodes) === 'undefined' || nodes.length === 0) {
 					return []
 				}
@@ -323,7 +329,7 @@
 			}
 
 			//16.获取考勤统计
-			var getpersonLeaveStat = function() {
+			function getpersonLeaveStat() {
 				var startTime = $("#datemin").val();
 				var endTime = $("#datemax").val();
 				if(startTime == '') {

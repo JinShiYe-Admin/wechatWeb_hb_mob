@@ -46,7 +46,7 @@
 						<tr class="text-c" v-for='(personLeave,index) in personLeaves' v-show="flag>0">
 							<td><u style="cursor:pointer" class="text-primary">{{[personLeave.DeptId|getDeptName}}</u></td>
 							<td><u style="cursor:pointer" class="text-primary">{{personLeave.UserName}}</u></td>
-							<td v-for="leaveType in leaveTypes"><u style="cursor:pointer" class="text-primary">{{personLeave.LeaveArray|getLeaveDays}}</u></td>
+							<td v-for="leaveType in leaveTypes"><u style="cursor:pointer" class="text-primary">{getLeaveDays(personLeave,leaveType)}}</u></td>
 							<td>{{personLeave.leaveArray|getAllLeaveDays}}</td>
 						</tr>
 					</tbody>
@@ -103,23 +103,42 @@
 					showPeopleArray: [], //显示部门对应的人员数组
 					leaveTypes: [] //请假类型
 				},
-				methods: {
-					searchpersonLeaveList: function() {
-						//16.获取考勤统计
-						getpersonLeaveStat();
-					},
-					getLeaveTypes: function() {
-
-					},
-					getLeaveDays: function(leaveType) {
-						
-					},
+				filters: {
 					getAllLeaveDays: function(leaveArray) {
 						var allLeaveDays = 0;
 						leaveArray.forEach(function(leave) {
 							allLeaveDays += leave.LeaveDays
 						})
 						return allLeaveDays;
+					}
+				},
+				methods: {
+					searchpersonLeaveList: function() {
+						//16.获取考勤统计
+						getpersonLeaveStat();
+					},
+					//获取请假类型
+					getLeaveTypes: function() {
+						var com = this;
+						processRequest.postProcessData("getLeaveType", {
+							corpId: com.userInfo.corpid,
+							stat: 0,
+							pageIndex: 1,
+							pageSize: 0
+						}, function(response) {
+							if(response.RspCode == 0) {
+								com.departArray = response.RspData.Data;
+							} else {
+								layer.alert(response.RspTxt);
+							}
+						})
+					},
+					getLeaveDays: function(personLeave, leaveType) {
+						for(var i = 0; i < personLeave.LeaveArray.length; i++) {
+							if(leaveType == personLeave.LeaveArray[i].LeaveType) {
+								return personLeave.LeaveArray[i].LeaveDays;
+							}
+						}
 					}
 				}
 			});

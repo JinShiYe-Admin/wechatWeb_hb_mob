@@ -44,7 +44,7 @@
 					</thead>
 					<tbody>
 						<tr class="text-c" v-for='(personLeave,index) in personLeaves' v-show="flag>0">
-							<td><u style="cursor:pointer" class="text-primary">{{personLeave.DeptId|getDeptName}}</u></td>
+							<td><u style="cursor:pointer" class="text-primary">{{[personLeave.DeptId|getDeptName}}</u></td>
 							<td><u style="cursor:pointer" class="text-primary">{{personLeave.UserName}}</u></td>
 							<td v-for="leaveType in leaveTypes"><u style="cursor:pointer" class="text-primary">{{personLeave.LeaveArray|getLeaveDays}}</u></td>
 							<td>{{personLeave.leaveArray|getAllLeaveDays}}</td>
@@ -111,13 +111,15 @@
 					getLeaveTypes: function() {
 
 					},
-					getLeaveDays:function(){
+					getLeaveDays: function(leaveType) {
 						
 					},
-					getAllLeaveDays:function(LeaveArray){
-						LeaveArray.forEach(function(leave){
-							leave.
+					getAllLeaveDays: function(leaveArray) {
+						var allLeaveDays = 0;
+						leaveArray.forEach(function(leave) {
+							allLeaveDays += leave.LeaveDays
 						})
+						return allLeaveDays;
 					}
 				}
 			});

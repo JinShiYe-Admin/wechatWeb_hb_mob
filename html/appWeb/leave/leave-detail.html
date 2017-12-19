@@ -261,10 +261,13 @@
 							}]
 						});
 					},
+					/**
+					 * 删除请假申请
+					 */
 					delLeaveApply: function() {
 						$.showLoading();
 						processRequest.postProcessData("delLeaveApply ", {
-							leaveApplyId: leaveApplyId
+							leaveApplyId: this.applyDetail.ApplyId,
 						}, function(data) {
 							$.hideLoading();
 							if(data.RspCode == 0) {
@@ -347,7 +350,7 @@
 							if(response.RspCode == 0) {
 								com.showOptions = false
 								com.approveNote = "";
-								com.flag = 0;
+								com.flag = 2;
 								com.getApprList();
 							} else {
 								$.alert("审核失败(" + response.RspTxt + ")", "提示");

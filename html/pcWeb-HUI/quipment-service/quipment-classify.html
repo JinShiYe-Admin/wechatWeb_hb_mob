@@ -154,7 +154,7 @@
 					</div>
 					<div class="person-foot">
 						<div v-if="Object.keys(selectPerson).length>0">
-							<p>已选人员({{Object.keys(selectPerson).length}}/50)</p>
+							<p>已选人员({{Object.keys(selectPerson).length}}/20)</p>
 							<div v-for="key of Object.keys(selectPerson)" v-if="selectPerson[key]" class="person-container is-checked" v-on:click="delChoosePerson(key)">
 								{{selectPerson[key]}}
 							</div>
@@ -235,6 +235,7 @@
 		<script src="../../../js/vue-router.js"></script>
 		<script src="../../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
 		<script src="../../../js/H-ui.admin/static/h-ui/js/H-ui.js"></script>
+		<script src="../../../js/H-ui.admin/lib/layer/2.4/layer.js"></script>
 		<!--<script src="../../../js/H-ui.admin/static/h-ui/js/jQuery.Huifold.js"></script>-->
 		<script src="../../../js/utils/events.js"></script>
 		<script src="../../../js/utils/consts.js"></script>

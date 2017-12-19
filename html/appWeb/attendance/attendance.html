@@ -366,7 +366,7 @@
 	function getAttendArea() {
 		var tempData = {
 			corpId: userInfo.corpid, //单位ID
-			stat:1,
+			stat: 1,
 			//						corpId: "wx6c4528c675d4a9c9",
 			pageIndex: 1, //当前页数
 			pageSize: 0 //每页记录数，0 为全部
@@ -393,19 +393,20 @@
 	}
 
 	function addAttend(tempAttendType) {
-		var attendTypeId =  document.getElementById("attendType").data_id;
-		var departId =  document.getElementById("depart").data_id;
-		var attendAreaId =  document.getElementById("attendArea").data_id;
+		var attendTypeId = document.getElementById("attendType").data_id;
+		var departId = document.getElementById("depart").data_id;
+		var deptName = document.getElementById("depart").value;
+		var attendAreaId = document.getElementById("attendArea").data_id;
 
-		if(attendTypeId == undefined||attendTypeId=="") {
+		if(attendTypeId == undefined || attendTypeId == "") {
 			alert("请选择考勤类型");
 			return;
 		}
-		if(departId == undefined||departId=="") {
+		if(departId == undefined || departId == "") {
 			alert("请选择部门");
 			return;
 		}
-		if(attendAreaId == undefined||attendAreaId=="") {
+		if(attendAreaId == undefined || attendAreaId == "") {
 			alert("请选择考勤地点");
 			return;
 		}
@@ -428,6 +429,7 @@
 		var tempData = {
 			corpId: userInfo.corpid,
 			deptId: departId,
+			deptName: deptName,
 			userId: userInfo.userid,
 			userName: userInfo.name,
 			attendType: attendTypeId,
@@ -447,10 +449,14 @@
 				document.getElementById("depart").data_id = "";
 				document.getElementById("attendType").data_id = "";
 				document.getElementById("attendArea").data_id = "";
-				submitHomework.uploadedFiles = [];
+				submitHomework.displayGallery = {
+					display: 'none'
+				};
+				submitHomework.uploadedFiles.splice(submitHomework.selectIndex, 1);
+				displayAddBtnFun();
 				alert('添加成功')
 				sendmsg(data.RspData);
-				
+
 			} else {
 				alert(data.RspTxt)
 			}

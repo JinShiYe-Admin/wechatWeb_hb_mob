@@ -73,6 +73,14 @@
 				<div class="weui-tab__bd-item weui-tab__bd-item--active weui-pull-to-refresh">
 					<div class="weui-cells weui-cells_form">
 						<div class="weui-cell weui-cell_access">
+							<div class="weui-cell__hd"><label class="weui-label" for="selectTypeZeroInput">所在部门</label></div>
+							<div class="weui-cell__bd">
+								<input id="selectTypeZeroInput" class="weui-input" placeholder="选取所在部门" readonly="readonly" />
+							</div>
+							<div class="weui-cell__ft">
+							</div>
+						</div>
+						<div class="weui-cell weui-cell_access">
 							<div class="weui-cell__hd"><label class="weui-label" for="selectTypeFirstInput">流程类型</label></div>
 							<div class="weui-cell__bd">
 								<input id="selectTypeFirstInput" class="weui-input" placeholder="选取流程类型" readonly="readonly" />
@@ -205,6 +213,11 @@
 			var beginTime = ""; //请假开始时间
 			var endTime = ""; //请假结束时间
 			var webType = "提交";
+			var departData = {
+				key: [],
+				select: [],
+				value: {}
+			} //所在部门
 			var procTypeData = {
 				key: [],
 				select: [],
@@ -217,6 +230,7 @@
 			} //请假类型
 
 			var changeData; //修改请假申请的数据
+			var departSelectIndex; //所在部门选项初始化时的序号
 			var procTypeSelectIndex; //流程类型选项初始化时的序号
 			var leaveTypeSelectIndex; //请假类型选项初始化时的序号
 			var selectIndex; //当前显示的select
@@ -249,7 +263,7 @@
 					$("#submitForm").text("修改请假申请");
 					webType = "修改";
 					if(changeData) {
-						getProcType();
+						getDepartments()
 					} else {
 						$.hideLoading();
 						$.alert("未获取到有效的初始数据，无法修改请假申请", "提示");
@@ -289,6 +303,26 @@
 			 * 初始化流程类型和请假类型控件
 			 */
 			function initSelect() {
+				//所在部门
+				var depart = departData.select[departSelectIndex];
+				if(depart) {
+					$("#selectTypeZeroInput").attr("value", depart.title);
+					$("#selectTypeZeroInput").attr("data-values", depart.value);
+				}
+				$("#selectTypeZeroInput").select({
+					title: "所在部门",
+					closeText: "完成",
+					autoClose: false,
+					items: departData.select,
+					onOpen: function() {
+						selectIndex = 0;
+						openSelectMask();
+					},
+					onClose: function() {
+						closeSelectMask();
+					}
+				});
+				//流程类型
 				var procType = procTypeData.select[procTypeSelectIndex];
 				if(procType) {
 					$("#selectTypeFirstInput").attr("value", procType.title);
@@ -296,7 +330,7 @@
 				}
 				$("#selectTypeFirstInput").select({
 					title: "流程类型",
-					closeText: "关闭",
+					closeText: "完成",
 					autoClose: false,
 					items: procTypeData.select,
 					onOpen: function() {
@@ -307,6 +341,7 @@
 						closeSelectMask();
 					}
 				});
+				//请假类型
 				var leaveType = leaveTypeData.select[leaveTypeSelectIndex];
 				if(leaveType) {
 					$("#selectTypeSecondInput").attr("value", leaveType.title);
@@ -314,7 +349,7 @@
 				}
 				$("#selectTypeSecondInput").select({
 					title: "请假类型",
-					closeText: "关闭",
+					closeText: "完成",
 					autoClose: false,
 					items: leaveTypeData.select,
 					onOpen: function() {
@@ -335,7 +370,7 @@
 			function initDatePicker(begin, end) {
 				$("#selectTypeThirdInput").datetimePicker({
 					title: "开始时间",
-					toolbarCloseText: "关闭",
+					toolbarCloseText: "完成",
 					value: begin,
 					onChange: function(data) {
 						beginTime = data.value.join("");
@@ -350,7 +385,7 @@
 				});
 				$("#selectTypeFourthInput").datetimePicker({
 					title: "结束时间",
-					toolbarCloseText: "关闭",
+					toolbarCloseText: "完成",
 					value: end,
 					onChange: function(data) {
 						endTime = data.value.join("");
@@ -446,6 +481,9 @@
 				 */
 				$("#selectMask").click(function() {
 					switch(selectIndex) {
+						case 0:
+							$("#selectTypeZeroInput").select("close");
+							break;
 						case 1:
 							$("#selectTypeFirstInput").select("close");
 							break;
@@ -460,6 +498,11 @@
 			 * 提交请假申请
 			 */
 			function clickSubmitForm() {
+				var deptId = $("#selectTypeZeroInput").attr("data-values");
+				if(!deptId) {
+					$.alert("请选取所在部门");
+					return false;
+				}
 				var procTypeId = $("#selectTypeFirstInput").attr("data-values");
 				if(!procTypeId) {
 					$.alert("请选取流程类型");
@@ -747,6 +790,7 @@
 			 */
 			function submitLeaveForm() {
 				var submitForm = {
+					deptId: $("#selectTypeZeroInput").attr("data-values"),
 					procTypeId: $("#selectTypeFirstInput").attr("data-values"),
 					leaveTypeId: $("#selectTypeSecondInput").attr("data-values"),
 					beginTime: beginTime,
@@ -768,7 +812,6 @@
 				}
 				if(webType == "提交") {
 					submitForm.corpId = mineUserInfo.corpid;
-					submitForm.deptId = mineUserInfo.department[0];
 					submitForm.applyMan = mineUserInfo.userid;
 					submitForm.applyManName = mineUserInfo.name;
 					submitForm.applyManPic = mineUserInfo.avatar;
@@ -778,7 +821,7 @@
 					if(submitForm.procTypeId == changeData.ProcessTypeId && submitForm.leaveTypeId == changeData.LeaveTypeId) {
 						if(submitForm.beginTime == changeData.ApplyBeginTime && submitForm.endTime == changeData.ApplyEndTime) {
 							if(submitForm.applyReason == changeData.ApplyReason && submitForm.applyPic == changeData.ApplyPic) {
-								if(submitForm.beginEndCnt == changeData.ApplyBeginEndCnt) {
+								if(submitForm.beginEndCnt == changeData.ApplyBeginEndCnt && submitForm.deptId == changeData.DeptId) {
 									$.hideLoading();
 									$.alert("未做任何修改", "提示");
 									return false;
@@ -802,14 +845,25 @@
 					$.hideLoading();
 					if(data.RspCode == 0) {
 						$.toast("提交成功");
+						$("#selectTypeZeroInput").removeAttr("readonly");
+						$("#selectTypeFirstInput").removeAttr("readonly");
+						$("#selectTypeSecondInput").removeAttr("readonly");
+						$("#selectTypeThirdInput").removeAttr("readonly");
+						$("#selectTypeFourthInput").removeAttr("readonly");
+						$("#selectTypeZeroInput").attr("value", "");
+						$("#selectTypeZeroInput").attr("data-values", "");
 						$("#selectTypeFirstInput").attr("value", "");
 						$("#selectTypeFirstInput").attr("data-values", "");
 						$("#selectTypeSecondInput").attr("value", "");
 						$("#selectTypeSecondInput").attr("data-values", "");
-						$("#selectTypeThirdInput").removeAttr("readonly");
-						$("#selectTypeFourthInput").removeAttr("readonly");
+						$("#selectTypeZeroInput").val("");
+						$("#selectTypeFirstInput").val("");
+						$("#selectTypeSecondInput").val("");
 						$("#selectTypeThirdInput").val("");
 						$("#selectTypeFourthInput").val("");
+						$("#selectTypeZeroInput").attr("readonly", "readonly");
+						$("#selectTypeFirstInput").attr("readonly", "readonly");
+						$("#selectTypeSecondInput").attr("readonly", "readonly");
 						$("#selectTypeThirdInput").attr("readonly", "readonly");
 						$("#selectTypeFourthInput").attr("readonly", "readonly");
 						beginTime = "";
@@ -835,6 +889,7 @@
 					$.hideLoading();
 					if(data.RspCode == 0 && data.RspData.Result == 1) {
 						$.toast("修改成功");
+						changeData.DeptId=submitForm.deptId;
 						changeData.ProcessTypeId = submitForm.procTypeId;
 						changeData.LeaveTypeId = submitForm.leaveTypeId;
 						changeData.ApplyBeginTime = submitForm.beginTime;
@@ -863,7 +918,6 @@
 			function getProcType() {
 				var tempData = {
 					corpId: mineUserInfo.corpid,
-					//stat: 1,
 					pageIndex: 1,
 					pageSize: 0
 				}
@@ -950,10 +1004,10 @@
 					if(data.RspCode == 0) {
 						mineUserInfo = JSON.parse(data.RspData);
 						checkPower();
-						getProcType();
+						getDepartments();
 					} else {
 						$.hideLoading();
-						$.alert("未获取到有效的个人信息，无法提交请假申请(" + data.RspTxt + ")", "提示");
+						$.alert("未获取到个人信息，无法提交请假申请(" + data.RspTxt + ")", "提示");
 					}
 				});
 			}
@@ -984,6 +1038,44 @@
 			 */
 			function closeSelectMask() {
 				$("#selectMask").css("display", "none");
+			}
+
+			/**
+			 * 获取部门
+			 */
+			function getDepartments() {
+				var tempData = {
+					cmd: 'persondeparts',
+					type: 'findpage',
+				}
+				unitWebsitePro(tempData, function(data) {
+					$.hideLoading();
+					//data = persondepartsCallBack;
+					if(data.RspCode == 0) {
+						var departments = JSON.parse(data.RspData);
+						console.log("departments", departments);
+						for(var i = 0; i < mineUserInfo.department.length; i++) {
+							for(var j = 0; j < departments.length; j++) {
+								if(departments[j].value == mineUserInfo.department[i]) {
+									departData.key.push(departments[j].value);
+									departData.value[departments[j].value] = departments[j].value;
+									if(changeData && changeData.DeptId == departments[j].value) {
+										departSelectIndex = departData.select.length;
+									}
+									departData.select.push({
+										title: departments[j].title,
+										value: departments[j].value
+									});
+									break;
+								}
+							}
+						}
+						getProcType();
+					} else {
+						$.hideLoading();
+						$.alert("未获取到部门信息，无法" + webType + "请假申请" + errStr + "", "提示");
+					}
+				});
 			}
 		</script>
 	</body>

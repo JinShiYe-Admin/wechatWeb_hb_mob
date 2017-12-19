@@ -143,8 +143,8 @@
 					type: 'findpage',
 				}
 				unitWebsitePro(tempData, function(data) {
+					//data = persondepartsCallBack;
 					$.hideLoading();
-					data = persondepartsCallBack;
 					loading = false;
 					$(".weui-tab__bd-item").pullToRefreshDone();
 					if(data.RspCode == 0) {

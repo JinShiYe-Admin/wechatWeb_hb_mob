@@ -192,9 +192,8 @@ Vue.component("process-setting", {
 				ProcessTypeId: processId,
 				ProcTypeName: this.name,
 				ProcTypeNote: this.note,
-				ProcessListId: -1,
-				ApprManList: [],
-				ProcNote: ""
+				Stat: 1,
+				ApprManList: []
 			}
 			this.processList.splice(0, 0, process);
 		},

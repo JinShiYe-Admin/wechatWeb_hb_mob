@@ -137,7 +137,7 @@
 	<body>
 		<div id="leave-container">
 			<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 流程配置 <span class="c-gray en">&gt;</span> 请假类型配置
-				<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
+				<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
 			</nav>
 			<div class="page-container">
 				<router-view v-on:group-info="getCurleave" v-bind:classify="activeLeave"></router-view>
@@ -178,7 +178,7 @@
 					<div class="row cl">
 						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>请假类型：</label>
 						<div class="formControls col-xs-8 col-sm-9">
-							<input type="text" class="input-text" v-model.trim="name" id="username" name="username" maxlength="100" placeholder="最多100字">
+							<input type="text" class="input-text" v-model.trim="name" id="username" name="username" maxlength="50" placeholder="最多50字">
 						</div>
 					</div>
 					<div class="row cl">
@@ -197,8 +197,8 @@
 					<div class="row cl">
 						<label class="form-label col-xs-4 col-sm-3">备注：</label>
 						<div class="formControls col-xs-8 col-sm-9">
-							<textarea name="beizhu" cols="" rows="" class="textarea" placeholder="请输入备注" maxlength="500" v-model.trim="note"></textarea>
-							<p class="textarea-numberbar"><em class="textarea-length">{{note.length}}</em>/500</p>
+							<textarea name="beizhu" cols="" rows="" class="textarea" placeholder="请输入备注" maxlength="200" v-model.trim="note"></textarea>
+							<p class="textarea-numberbar"><em class="textarea-length">{{note.length}}</em>/200</p>
 						</div>
 					</div>
 					<div class="row cl">

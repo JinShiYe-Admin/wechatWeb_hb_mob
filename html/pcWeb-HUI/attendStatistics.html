@@ -48,7 +48,9 @@
 					</thead>
 					<tbody>
 						<tr class="text-c" v-for='(attend,index) in showPeopleArray' v-show="flag>0" style="display: none;">
-							<td><u style="cursor:pointer" class="text-primary">{{attend.DeptName}}</u></td>
+							<td><u v-if='attend.DeptName' style="cursor:pointer" class="text-primary">{{attend.DeptName}}</u>
+								<u v-else style="cursor:pointer" class="text-primary">{{attend.departName}}</u>
+							</td>
 							<td><u style="cursor:pointer" class="text-primary">{{attend.name}}</u></td>
 							<td><u style="cursor:pointer" class="text-primary">{{attend.AttendCnt}}</u></td>
 							<td><u style="cursor:pointer" class="text-primary">{{attend.LateCnt}}</u></td>

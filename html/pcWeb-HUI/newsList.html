@@ -44,8 +44,8 @@
 							<td style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;"><span :class="newsModel.stat==0?'label label-defaunt radius':'label label-success radius'"><a v-if="newsModel.stat==0">未通过</a><a v-else>已通过</a></span></td>
 							<td style="text-align: center;">
 								<button id="{{newsModel.newsid}}" class="btn btn-primary radius" @click="clickDel(newsModel,1,index)">{{newsModel.Prizt}}</button>&nbsp;&nbsp;&nbsp;
-								<a class="text-primary operate-cursor" @click="click(newsModel,index,item.cname )" title="编辑"><i class="Hui-iconfont"></i></a>
-								<a style="text-decoration:none" class="ml-5" @click="clickDel(newsModel,0,index)" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+								<a class="text-primary operate-cursor" @click="click(newsModel,index,item.cname )" title="编辑"><i class="Hui-iconfont" style="color: #4fbffd;"></i></a>
+								<a style="text-decoration:none" class="ml-5" @click="clickDel(newsModel,0,index)" title="删除"><i class="Hui-iconfont" style="color: #F96161;">&#xe6e2;</i></a>
 							</td>
 						</tr>
 					</tbody>

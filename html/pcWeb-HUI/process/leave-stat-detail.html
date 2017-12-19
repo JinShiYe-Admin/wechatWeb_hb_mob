@@ -105,21 +105,28 @@
 					leaves: [],
 				},
 				mounted: function() {
-
+					this.leaveStat = this.getLeaveStat();
+					this.getLeaves();
 				},
 				methods: {
+					/**
+					 * 获取请假状态
+					 */
 					getLeaveStat: function() {
 						var leaveStKey = events.getUrlParam(location.href, "leaveStat");
 						return events.getSessionObject(leaveStKey);
 					},
+					/**
+					 * 获取请假列表数据
+					 */
 					getLeaves: function() {
 						var com = this;
 						processRequest.postProcessData("getLeave", {
-							corpId: 1,
-							deptId: [1],
-							userId: [1],
-							beginTime: '',
-							endTime: '',
+							corpId: com.leaveStat.CorpId,
+							deptId: [com.leaveStat.DeptId],
+							userId: [com.leaveStat.UserId],
+							beginTime: com.leaveStat.beginTime,
+							endTime: com.leaveStat.endTime,
 							pageIndex: 1,
 							pageSize: 0
 						}, function(response) {

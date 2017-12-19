@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>学生点评</title>
+		<script type="text/javascript">
+			var WebVersion = "?" + Math.random();
+		</script>
+		<link rel="stylesheet" href="../../../css/weui.min.css" />
+		<link rel="stylesheet" href="../../../css/classCircle/class_circle_home.css" />
+		<link rel="stylesheet" href="../../../js/demoCssJs/jquery-weui.min.css" />
+		<link rel="stylesheet" href="../../../js/demoCssJs/demos.css" />
+		<style>
+			body {
+				-webkit-overflow-scrolling: touch;
+			}
+			
+			.weui-tab__bd-item {
+				width: 100%;
+			}
+			
+			.weui-tab__bd {
+				margin-top: -50px;
+			}
+			
+			.weui-tabbar {
+				bottom: -50px;
+			}
+			
+			.weui-cells {
+				margin-top: 0;
+			}
+			
+			.weui-media-box {
+				padding: 0;
+			}
+			.class-circle-grids-item {
+	overflow: hidden;
+	display: flex;
+	display: -webkit-flex;
+	width: 100%;
+	align-items: center;
+}
+
+.class-circle-grids-item img {
+	width: 100%;
+}
+		</style>
+	</head>
+
+	<body>
+		<div class="class-circle-grids">
+			<div class="class-circle-grids-item">
+				<img src="icon_tabbar.png">
+			</div>
+			<div class="class-circle-grids-item">
+				<img src="icon_tabbar.png">
+			</div>
+			<div class="class-circle-grids-item">
+				<img src="icon_tabbar.png">
+			</div>
+			<div class="class-circle-grids-item">
+				<img src="icon_tabbar.png">
+			</div>
+		</div>
+
+		<script type="text/javascript" src="../../../js/lib/vconsole/vconsole.min.js"></script>
+		<script type="text/javascript" src="../../../js/demoCssJs/jquery-2.1.4.js"></script>
+		<script type="text/javascript" src="../../../js/demoCssJs/jquery-weui.min.js"></script>
+		<script type="text/javascript">
+			document.write("<s" + "cript type='text/javascript' src='../../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
+			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
+			//document.write("<s" + "cript type='text/javascript' src='../../../temp/mineinfo.js" + WebVersion + "'></s" + "cript>");
+		</script>
+		<script>
+			var loading = false; //下拉状态标记
+			var mineUserInfo; //个人信息
+			window.onload = function() {
+				//				$.showLoading();
+				getEvaluation();
+				//				getMineInfo();
+			}
+
+			function initListener() {}
+			/**
+			 * 获取我的信息
+			 */
+			function getMineInfo() {
+				var tempData = {
+					cmd: 'userinfo',
+					type: 'findpage',
+					colv: ""
+				}
+				unitWebsitePro(tempData, function(data) {
+					//data = getMineInfoCallBack;
+					if(data.RspCode == 0) {
+						mineUserInfo = JSON.parse(data.RspData);
+					} else {
+						$.hideLoading();
+						$.alert("未获取到个人信息(" + data.RspTxt + ")", "提示");
+					}
+				});
+			}
+
+			function getEvaluation() {
+				var tempData = {
+					corpId: 'wx6c4528c675d4a9c9',
+					deptId: 11,
+					userId: "moshanglin",
+					pageIndex: 1,
+					pageSize: 20,
+				}
+				getEvaluationPro(tempData, function(data) {
+					console.log(JSON.stringify(data));
+				});
+			}
+		</script>
+	</body>
+
+</html>

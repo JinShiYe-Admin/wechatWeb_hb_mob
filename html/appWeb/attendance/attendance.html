@@ -395,6 +395,7 @@
 	function addAttend(tempAttendType) {
 		var attendTypeId = document.getElementById("attendType").data_id;
 		var departId = document.getElementById("depart").data_id;
+		var deptName = document.getElementById("depart").value;
 		var attendAreaId = document.getElementById("attendArea").data_id;
 
 		if(attendTypeId == undefined || attendTypeId == "") {
@@ -428,6 +429,7 @@
 		var tempData = {
 			corpId: userInfo.corpid,
 			deptId: departId,
+			deptName: deptName,
 			userId: userInfo.userid,
 			userName: userInfo.name,
 			attendType: attendTypeId,

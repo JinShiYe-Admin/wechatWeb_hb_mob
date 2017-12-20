@@ -44,7 +44,7 @@
 					</thead>
 					<tbody>
 						<tr class="text-c" v-for='(personLeave,index) in leaveStats' v-show="flag>0">
-							<td>{{personLeave|getDeptName}}</td>
+							<td>{{personLeave.DeptName}}</td>
 							<td><u style="cursor:pointer" class="text-primary" title="点击查看详情" v-on:click.stop="showLeaveStatDetail(personLeave)">{{personLeave.UserName}}</u></td>
 							<td v-for="leaveType in leaveTypes"><u style="cursor:pointer" class="text-primary">{{getLeaveDays(personLeave,leaveType)}}</u></td>
 							<td>{{personLeave.leaveArray|getAllLeaveDays}}</td>
@@ -78,7 +78,7 @@
 				data: {
 					beginTime: "",
 					endTime: "",
-					departArray: [{
+					departMock: [{
 							"value": 2,
 							"title": "湖北大区",
 							"parentvalue": 1,
@@ -223,6 +223,7 @@
 							"order": 0
 						}
 					], //管理的所有部门数组
+					departArray: [],
 					treeDeparts: [],
 					userInfo: {}, //当前人员信息
 					selectDeparts: [], //选择的部门
@@ -236,14 +237,15 @@
 					leaveStats: function(newVal, oldVal) {
 
 					},
-					treeDeparts: function(newVal, oldVal) {
+					departArray: function(newVal, oldVal) {
+						console.log("******departArray******");
 						if(newVal.length > 0) {
 							this.setSelectOptions();
 						}
 					}
 				},
 				mounted: function() {
-					this.getCanSelectDeparts(this.departArray)
+					this.getCanSelectDeparts(this.departMock)
 				},
 				filters: {
 					/**
@@ -273,6 +275,7 @@
 				},
 				methods: {
 					getUserInfo: function() {
+						console.log("*******getUserInfo*******");
 						var com = this;
 						request.requestPersonalInfo(function(response) {
 							if(response.RspCode == 0) {
@@ -286,6 +289,7 @@
 					},
 					//获取管理的部门
 					getDepartList: function() {
+						console.log("*******getDepartList*******");
 						var com = this;
 						var tempData = {
 							cmd: 'persondepartsadmin',
@@ -302,42 +306,47 @@
 						});
 					},
 					getCanSelectDeparts: function(departs) {
+						console.log("*******getCanSelectDeparts*******");
 						//去掉得到的部门中的‘全部’
-
 						var treeNodeDeparts = []
 						var allIndex = -1
 						for(var i = 0; i < departs.length; i++) {
 							depart = departs[i];
 							depart.flag = 0; //未选择
-							depart.perosnArray = []; //每个部门的人员数组
+							depart.personArray = []; //每个部门的人员数组
 							if(depart.value == -1) {
 								allIndex = i;
 							} else {
-								treeNodeDeparts.push({
-									id: depart.value,
-									text: depart.title
-								})
+								depart.id = depart.value;
+								depart.text = depart.title;
+								//								treeNodeDeparts.push({
+								//									id: depart.value,
+								//									text: depart.title
+								//								})
 							}
 						}
-						this.treeDeparts = treeNodeDeparts;
+						//						this.treeDeparts = treeNodeDeparts;
 						departs.splice(allIndex, 1);
 						this.departArray = departs;
 					},
 					setSelectOptions: function() {
+						console.log("*******setSelectOptions*******");
 						console.log("this.departArray:" + JSON.stringify(this.departArray));
 						$('#ddlLine').combotree({
 							multiple: true,
-							data: this.treeDeparts,
-							onCheck: this.changeSelectDeparts,
-							onClick: this.changeSelectDeparts
+							data: this.departArray,
+							onCheck: this.changeSelectDeparts
 						});
 					},
 					changeSelectDeparts: function(departInfo, isAdd) {
-						console.log("toggle的部門信息："+JSON.stringify(departInfo))
-						if(isAdd) {
-
-						} else {
-
+						console.log("*******changeSelectDeparts*******");
+						console.log("isAdd:" + isAdd);
+						console.log("toggle的部門信息：" + JSON.stringify(departInfo))
+						if(isAdd) { //添加
+							if(departInfo.personArray.length == 0) {
+//								layer.load(2);
+//								this.getDepartPerson(departInfo);
+							}
 						}
 					},
 					getSelectPerson: function() {
@@ -345,6 +354,7 @@
 					},
 					//17.获取某部门ID下所有人员(PC管理端)
 					getDepartPerson: function(depart) {
+						console.log("*******getDepartPerson*******");
 						var tempData = {
 							cmd: 'departpersonsadmin',
 							type: 'findpage', //获取管理员全部管理部门
@@ -356,7 +366,7 @@
 						unitWebsitePro(tempData, function(data) {
 							layer.closeAll('loading');
 							if(data.RspCode == 0) {
-								depart.personArray = [].concat(data.RspData);
+								depart.personArray = data.RspData;
 							} else {
 								layer.alert(data.RspTxt);
 							}

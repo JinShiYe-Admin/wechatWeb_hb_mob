@@ -82,9 +82,15 @@ Vue.component("check-person-list", {
 			this.getCurPage();
 			this.inputToggleAll();
 		},
+		/**
+		 * 获取当前页
+		 */
 		getCurPage: function() {
 			this.curPage = this.tablebases.page.info().page;
 		},
+		/**
+		 * 设置全取消选择
+		 */
 		setAllUnselect: function() {
 			var com = this;
 			com.checkPersonList.forEach(function(checkPerson, index) {
@@ -157,7 +163,7 @@ Vue.component("check-person-list", {
 			}
 		},
 		/**
-		 * 
+		 * 删除选择人员
 		 */
 		delSelectedPersons: function() {
 			console.log("****delSelectedPersons****");

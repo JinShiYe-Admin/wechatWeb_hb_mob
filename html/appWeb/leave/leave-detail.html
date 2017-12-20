@@ -301,63 +301,15 @@
 					},
 					requireDetail: function() {
 						console.log("****requireDetail******");
-						//						var sKey = events.getUrlParam(location.href, "sKey");
-						//						console.log("skey" + sKey);
-						//						var leaveInfo = JSON.parse(storageutil.getSessionStorage(sKey));
-						//						this.flag = parseInt(events.getUrlParam(location.href, "flag"));
-						//						console.log("获取的flag:" + this.flag);
-						//						console.log("this.flag type:" + typeof(this.flag));
-						//						if(leaveInfo == null) {
-						//							return;
-						//						}
-						var leaveInfo = {
-							"leave": {
-								"ApplyTime": "2017-12-20 10:33:40",
-								"ProcessTypeId": 7,
-								"ApprEndTime": "",
-								"ApplyBeginEndCnt": 1,
-								"ApplyBeginTime": "2017-12-20 10:32",
-								"ProcTypeName": "流程测试",
-								"ApplyReason": "石油",
-								"DeptId": 25,
-								"LeaveTypeId": 2,
-								"ApplyPic": "http://qn-cspb.jiaobaowang.net/wechat/leave/1513737213427318.jpg|http://qn-cspb.jiaobaowang.net/wechat/leave/1513737214624466.jpg|http://qn-cspb.jiaobaowang.net/wechat/leave/1513737215787425.jpg|http://qn-cspb.jiaobaowang.net/wechat/leave/1513737216416219.jpg|http://qn-cspb.jiaobaowang.net/wechat/leave/1513737216916601.jpg|http://qn-cspb.jiaobaowang.net/wechat/leave/1513737217552478.jpg|http://qn-cspb.jiaobaowang.net/wechat/leave/1513737218484755.jpg|http://qn-cspb.jiaobaowang.net/wechat/leave/1513737218937833.jpg|http://qn-cspb.jiaobaowang.net/wechat/leave/151373721944359.jpg",
-								"ApplyReasonThumb": "http://qn-cspb.jiaobaowang.net/wechat/leave/crop/1513737213427318.jpg|http://qn-cspb.jiaobaowang.net/wechat/leave/crop/1513737214624466.jpg|http://qn-cspb.jiaobaowang.net/wechat/leave/crop/1513737215787425.jpg|http://qn-cspb.jiaobaowang.net/wechat/leave/crop/1513737216416219.jpg|http://qn-cspb.jiaobaowang.net/wechat/leave/crop/1513737216916601.jpg|http://qn-cspb.jiaobaowang.net/wechat/leave/crop/1513737217552478.jpg|http://qn-cspb.jiaobaowang.net/wechat/leave/crop/1513737218484755.jpg|http://qn-cspb.jiaobaowang.net/wechat/leave/crop/1513737218937833.jpg|http://qn-cspb.jiaobaowang.net/wechat/leave/crop/151373721944359.jpg",
-								"ApplyStatNote": "待审批",
-								"ApplyId": 50,
-								"LeaveTypeName": "其他",
-								"ApplyEndTime": "2017-12-22 10:32",
-								"ApplyStat": 0,
-								"DeptName": "4-level depart"
-							},
-							"mineUserInfo": {
-								"corpid": "wx6c4528c675d4a9c9",
-								"userid": "anqi",
-								"name": "安琪",
-								"department": [
-									25,
-									2
-								],
-								"order": [
-									0,
-									0
-								],
-								"position": "",
-								"mobile": null,
-								"english_name": "",
-								"gender": 1,
-								"isleader": 1,
-								"telephone": null,
-								"email": null,
-								"weixinid": null,
-								"avatar": "http://shp.qpic.cn/bizmp/LlAHpaR9WIbXvzjGTAPgEfe6lmhQqEkJmaTza7r6u7EoSWaWgITucA/",
-								"status": 1,
-								"extattr": null,
-								"errcode": 0,
-								"errmsg": "ok",
-								"P2PData": null
-							}
-						};
+						var sKey = events.getUrlParam(location.href, "sKey");
+						console.log("skey" + sKey);
+						var leaveInfo = JSON.parse(storageutil.getSessionStorage(sKey));
+						this.flag = parseInt(events.getUrlParam(location.href, "flag"));
+						console.log("获取的flag:" + this.flag);
+						console.log("this.flag type:" + typeof(this.flag));
+						if(leaveInfo == null) {
+							return;
+						}
 						console.log("获取的levaeInfo:" + JSON.stringify(leaveInfo));
 						leaveInfo.leave.ApplyReasonThumb = this.changeToPics(leaveInfo.leave.ApplyReasonThumb);
 						this.applyDetail = leaveInfo.leave;

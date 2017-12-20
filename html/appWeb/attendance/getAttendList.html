@@ -267,6 +267,7 @@
 				if(beginTime.length > 0) {
 					tempData = {
 						corpId: attendData.userInfo.corpid, //单位ID
+						deptId:attendData.userInfo.department,//部门ID，例如：[“1”, “2”, “3”]
 						userId: tempId, //用户ID,例如：[“1”, “2”, “3”]
 						beginTime: beginTime, //统计开始时间,年月日共八位如：20011010
 						endTime: endTime, //统计结束时间,年月日共八位如：20011010
@@ -281,6 +282,7 @@
 					var endTime = myDate.toString().replace(/-/g, '');
 					tempData = {
 						corpId: attendData.userInfo.corpid, //单位ID
+						deptId:attendData.userInfo.department,//部门ID，例如：[“1”, “2”, “3”]
 						userId: tempId, //用户ID,例如：[“1”, “2”, “3”]
 						beginTime: '19900101', //统计开始时间,年月日共八位如：20011010
 						endTime: endTime, //统计结束时间,年月日共八位如：20011010

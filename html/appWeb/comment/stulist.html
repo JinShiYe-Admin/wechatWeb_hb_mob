@@ -146,7 +146,7 @@
 			/*点评模板---start---*/
 
 			.weui-popup__modal {
-				background: rgba(0, 0, 0, .3);
+				background: rgba(0, 0, 0, .2);
 			}
 
 			.template_bg {
@@ -242,12 +242,13 @@
 				width: 14px;
 				height: 14px;
 				margin-right: 2px;
-				vertical-align: text-top;
+				vertical-align: middle;
 				display: inline-block;
 			}
 
 			.weui-navbar__item.template_text_common .template_text_text {
 				display: inline-block;
+				vertical-align: middle;
 			}
 
 			.weui-popup__container .weui-navbar+.weui-tab__bd {
@@ -255,14 +256,58 @@
 				background: #F4F4F4;
 			}
 
+			.weui-popup__container .weui-grid {
+				padding: 15px;
+			}
+
+			.weui-popup__container .weui-grid__icon img {
+				border-radius: 50%;
+			}
+
+			a.weui-navbar__item:active {
+				background-color: transparent !important;
+			}
+
 			.weui-popup__container .weui-tab__bd-item {
 				border-radius: 0 0 8px 8px;
 			}
 			/*点评模板---end---*/
+			/*文字点评---start---*/
 
-			a:active {
-				background-color: transparent !important;
+			.eval-text__bg {
+				position: absolute;
+				width: 100%;
+				bottom: 0;
+				left: 0;
 			}
+
+			.upload-image__bg {
+				position: relative;
+				width: 100%;
+				height: 88px;
+				display: block;
+				background: white;
+				padding: 9px 0 0 9px;
+			}
+
+			.slide-box {
+				display: -webkit-box;
+				overflow-x: scroll;
+				-webkit-overflow-scrolling: touch;
+				list-style: none;
+				margin-right: 18px;
+			}
+
+			.slide-item {
+				float: initial;
+			}
+
+			.upload-image__num {
+				width: 100%;
+				text-align: center;
+				background: white;
+			}
+			/*文字点评---end---*/
 		</style>
 	</head>
 
@@ -316,6 +361,37 @@
 							</div>
 						</div>
 					</div>
+				</div>
+			</div>
+		</div>
+		<div id="evalText" class="weui-popup__container">
+			<div class="weui-popup__overlay"></div>
+			<div class="weui-popup__modal">
+				<div class="eval-text__bg">
+					<i class="weui-icon-cancel close-popup"></i>
+					<div>
+						<input type="text" />
+					</div>
+					<div class="upload-image__bg">
+						<ul class="slide-box">
+							<li class="weui-uploader__file slide-item weui-uploader__file_status" style="background-image:url(../../../image/classCircle/nodata.png)">
+								<div class="weui-uploader__file-content">
+									<i class="weui-icon-warn"></i>
+								</div>
+							</li>
+							<li class="weui-uploader__file slide-item weui-uploader__file_status" style="background-image:url(../../../image/classCircle/nodata.png)">
+								<div class="weui-uploader__file-content">50%</div>
+							</li>
+							<li class="weui-uploader__file slide-item" style="background-image:url(../../../image/classCircle/nodata.png)"></li>
+							<li class="weui-uploader__file slide-item" style="background-image:url(../../../image/classCircle/nodata.png)"></li>
+							<li class="weui-uploader__file slide-item">
+								<div class="weui-uploader__input-box">
+									<input id="uploaderInput" class="weui-uploader__input" accept="image/*" type="file">
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div class="upload-image__num">0/9</div>
 				</div>
 			</div>
 		</div>
@@ -543,7 +619,7 @@
 
 				//文字点评
 				$(".template_text_text").click(function() {
-					console.log("文字点评");
+					$("#evalText").popup();
 				});
 			}
 			/**

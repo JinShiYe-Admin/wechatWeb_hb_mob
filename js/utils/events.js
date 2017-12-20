@@ -84,6 +84,9 @@ var events = (function(mod) {
 		}
 		return {}
 	}
+	mod.setSessionObject = function(key, object) {
+		sessionStorage.setItem(key, JSON.stringify(object));
+	}
 	/**
 	 * 获取参数
 	 * @param {Object} url_string

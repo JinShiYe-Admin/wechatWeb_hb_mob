@@ -83,7 +83,7 @@
 			}
 			
 			.check-detail {
-				margin-bottom: 50px;
+				padding-bottom: 50px;
 			}
 			
 			.apply-pass {
@@ -328,7 +328,7 @@
 							if(response.RspCode == 0) {
 								com.checkList = response.RspData.Data;
 							} else {
-								$.alert("获取审核人员列表失败(" + response.RspTxt + ")", "提示");
+								$.alert(response.RspTxt, "提示");
 							}
 						})
 					},

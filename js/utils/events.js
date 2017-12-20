@@ -88,13 +88,25 @@ var events = (function(mod) {
 		sessionStorage.setItem(key, JSON.stringify(object));
 	}
 	/**
-	 * 获取参数
+	 * 	获取参数
 	 * @param {Object} url_string
 	 * @param {Object} param
 	 */
 	mod.getUrlParam = function(url_string, param) {
-		var eurl = new URL(url_string);
-		return eurl.searchParams.get(param);
+		try {
+			var eurl = new URL(url_string);
+			return eurl.searchParams.get(param);
+		} catch(e) {
+			if(!url_string) {
+				url_string = location.href;
+			}
+			param = param.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+			var regexS = "[\\?&]" + param + "=([^&#]*)";
+			var regex = new RegExp(regexS);
+			var results = regex.exec(url_string);
+			return results == null ? null : results[1];
+		}
+
 	}
 	return mod;
 })(events || {})

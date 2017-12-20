@@ -29,7 +29,7 @@
 				<input placeholder="结束时间" type="text" v-model="endTime" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax" class="input-text Wdate" style="width:120px;">
 				<select id="ddlLine" class="easyui-combotree" style="width: 205px; height: 24px;">
 				</select>
-				<button type="submit" class="btn btn-success radius" id="" name="" @click="searchPersonLeaveList()"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
+				<button type="submit" class="btn btn-success radius" id="" name="" @click="searchLeaveStats()"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
 				<a id="exportExcel" type="button" class="btn btn-success radius" @click="clickExport()">导出</a>
 			</div>
 			<div class="mt-20">
@@ -78,156 +78,10 @@
 				data: {
 					beginTime: "",
 					endTime: "",
-					departMock: [{
-							"value": 2,
-							"title": "湖北大区",
-							"parentvalue": 1,
-							"order": 2147483447
-						},
-						{
-							"value": 3,
-							"title": "荆门办事处",
-							"parentvalue": 2,
-							"order": 2147483447
-						},
-						{
-							"value": 4,
-							"title": "大区办公室",
-							"parentvalue": 2,
-							"order": 2147483247
-						},
-						{
-							"value": 5,
-							"title": "黄冈办事处",
-							"parentvalue": 2,
-							"order": 2147483047
-						},
-						{
-							"value": 6,
-							"title": "黄石咸宁鄂州办事处",
-							"parentvalue": 2,
-							"order": 2147482847
-						},
-						{
-							"value": 7,
-							"title": "襄阳孝感随州办事处",
-							"parentvalue": 2,
-							"order": 2147482647
-						},
-						{
-							"value": 8,
-							"title": "宜昌恩施办事处",
-							"parentvalue": 2,
-							"order": 2147482447
-						},
-						{
-							"value": 9,
-							"title": "荆州江汉办事处",
-							"parentvalue": 2,
-							"order": 2147482247
-						},
-						{
-							"value": 11,
-							"title": "开发部",
-							"parentvalue": 1,
-							"order": 2147483047
-						},
-						{
-							"value": 12,
-							"title": "测试子部门",
-							"parentvalue": 11,
-							"order": 100000000
-						},
-						{
-							"value": 13,
-							"title": "测试孙部门",
-							"parentvalue": 12,
-							"order": 100000000
-						},
-						{
-							"value": 14,
-							"title": "测试子部门2",
-							"parentvalue": 11,
-							"order": 99999000
-						},
-						{
-							"value": 15,
-							"title": "临时部门一",
-							"parentvalue": 11,
-							"order": 99998000
-						},
-						{
-							"value": 16,
-							"title": "临时部门二",
-							"parentvalue": 11,
-							"order": 99997000
-						},
-						{
-							"value": 17,
-							"title": "临时部门三",
-							"parentvalue": 11,
-							"order": 99996000
-						},
-						{
-							"value": 18,
-							"title": "临时部门四",
-							"parentvalue": 11,
-							"order": 99995000
-						},
-						{
-							"value": 19,
-							"title": "临时部门五",
-							"parentvalue": 11,
-							"order": 99994000
-						},
-						{
-							"value": 20,
-							"title": "临时部门六",
-							"parentvalue": 11,
-							"order": 99993000
-						},
-						{
-							"value": 21,
-							"title": "临时部门七",
-							"parentvalue": 11,
-							"order": 99992000
-						},
-						{
-							"value": 22,
-							"title": "临时部门八",
-							"parentvalue": 11,
-							"order": 99991000
-						},
-						{
-							"value": 23,
-							"title": "临时部门九",
-							"parentvalue": 11,
-							"order": 99990000
-						},
-						{
-							"value": 24,
-							"title": "临时部门十",
-							"parentvalue": 11,
-							"order": 99989000
-						},
-						{
-							"value": 25,
-							"title": "4-level depart",
-							"parentvalue": 13,
-							"order": 100000000
-						},
-						{
-							"value": -1,
-							"title": "全部",
-							"parentvalue": 0,
-							"order": 0
-						}
-					], //管理的所有部门数组
-					departArray: [],
-					treeDeparts: [],
+					departArray: [], //管理的所有部门数组
 					userInfo: {}, //当前人员信息
 					selectDeparts: [], //选择的部门
-					selectPersons: [], //选择的人员
+					selectPersonIds: [], //选择的人员id数组
 					leaveStats: [], //请假统计数据
 					peopleArray: [], //管理的所有部门的人员数组
 					showPeopleArray: [], //显示部门对应的人员数组
@@ -305,6 +159,10 @@
 							}
 						});
 					},
+					/**
+					 * 获取请假 
+					 * @param {Object} departs
+					 */
 					getCanSelectDeparts: function(departs) {
 						console.log("*******getCanSelectDeparts*******");
 						//去掉得到的部门中的‘全部’
@@ -319,16 +177,14 @@
 							} else {
 								depart.id = depart.value;
 								depart.text = depart.title;
-								//								treeNodeDeparts.push({
-								//									id: depart.value,
-								//									text: depart.title
-								//								})
 							}
 						}
-						//						this.treeDeparts = treeNodeDeparts;
 						departs.splice(allIndex, 1);
 						this.departArray = departs;
 					},
+					/**
+					 * 设置选项卡
+					 */
 					setSelectOptions: function() {
 						console.log("*******setSelectOptions*******");
 						console.log("this.departArray:" + JSON.stringify(this.departArray));
@@ -338,21 +194,67 @@
 							onCheck: this.changeSelectDeparts
 						});
 					},
+					/**
+					 * 改变选择的部门
+					 * @param {Object} departInfo
+					 * @param {Object} isAdd
+					 */
 					changeSelectDeparts: function(departInfo, isAdd) {
 						console.log("*******changeSelectDeparts*******");
 						console.log("isAdd:" + isAdd);
 						console.log("toggle的部門信息：" + JSON.stringify(departInfo))
 						if(isAdd) { //添加
-							if(departInfo.personArray.length == 0) {
-//								layer.load(2);
-//								this.getDepartPerson(departInfo);
+							if(departInfo.personArray.length == 0) { //如果人员数据为0，请求数据
+								layer.load(2); //加載中
+								this.getDepartPerson(departInfo); //获取部门人员
 							}
 						}
+						this.toggleSelectDeparts(departInfo, isAdd);
+						console.log("部門信息：" + JSON.stringify(this.departArray));
 					},
+					/**
+					 * 添加或刪除数据至已选数组
+					 * @param {Object} depart
+					 */
+					toggleSelectDeparts: function(depart, isAdd) {
+						if(isAdd) {
+							this.selectDeparts.push(depart);
+						} else {
+							var index = this.getIndexInSelectDeparts();
+							if(index >= 0) {
+								this.selectDeparts.splice(index, 1);
+							}
+						}
+						console.log("已选部门信息：" + JSON.stringify(this.selectDeparts))
+					},
+					/**
+					 * 获取部门在已选部门中的
+					 * @param {Object} depart
+					 */
+					getIndexInSelectDeparts: function(depart) {
+						for(var i = 0; i < this.selectDeparts.length; i++) {
+							if(this.selectDeparts[i].id == depart.id) {
+								return i
+							}
+						}
+						return -1
+					},
+					/**
+					 * 获取选择的人员
+					 */
 					getSelectPerson: function() {
-
+						this.selectPersonIds = [];
+						var selectPersonArr = []
+						for(var i = 0; i < this.selectDeparts.length; i++) {
+							selectPersonArr = selectPersonArr.concat(this.selectDeparts[i].personArray);
+						}
+						this.selectPersonIds = selectPersonArr.map(function(person) {
+							return person.userid
+						})
 					},
-					//17.获取某部门ID下所有人员(PC管理端)
+					/**
+					 * 17.获取某部门ID下所有人员(PC管理端)
+					 */
 					getDepartPerson: function(depart) {
 						console.log("*******getDepartPerson*******");
 						var tempData = {
@@ -398,7 +300,7 @@
 					/**
 					 * 搜索获取人员请假列表
 					 */
-					searchPersonLeaveList: function() {
+					searchLeaveStats: function() {
 						//16.获取请假统计
 						if(this.isSelectLegal()) {
 							this.getLeaveStats();
@@ -441,8 +343,8 @@
 						var com = this;
 						processRequest.postProcessData("getLeaveStat", {
 							corpId: com.userInfo.corpid,
-							deptId: com.selectDeparts,
-							userId: tempPeopleArray,
+							deptId: com.getDepartIds(),
+							userId: com.selectPersonIds,
 							beginTime: com.beginTime.replace(/-/g, ""),
 							endTime: com.endTime.replace(/-/g, "")
 						}, function(response) {
@@ -453,11 +355,16 @@
 							}
 						})
 					},
+					getDepartIds: function() {
+						return this.selectDeparts.map(function(depart) {
+							return depart.id;
+						})
+					},
 					/**
 					 * 选择的状态是否合法
 					 */
 					isSelectLegal: function() {
-						if(this.beginTime || this.endTime) {
+						if(!this.beginTime || !this.endTime) {
 							layer.alert("请选择开始时间或结束时间！");
 							return false;
 						}
@@ -491,33 +398,6 @@
 					}
 				}
 			});
-
-			//			//把获取到的部门，按层级组合
-			//			function getNodeTree(nodes) {
-			//				if(typeof(nodes) === 'undefined' || nodes.length === 0) {
-			//					return []
-			//				}
-			//				nodes.sort(function(a, b) {
-			//					return a.value - b.value
-			//				})
-			//				var map = {},
-			//					node, roots = [];
-			//				for(var i = 0; i < nodes.length; i++) {
-			//					node = nodes[i]
-			//					node.departList = []
-			//					node.personList = []
-			//					map[node.value] = i // use map to look-up the parents
-			//					if(typeof(map[node.parentvalue]) !== 'undefined') {
-			//						nodes[map[node.parentvalue]].departList.push(node)
-			//					} else {
-			//						if(node.value >= 0) {
-			//							roots.push(node);
-			//						}
-			//					}
-			//				}
-			//				console.log('getChildrenTree获取的数据：' + JSON.stringify(roots))
-			//				return roots
-			//			}
 		</script>
 	</body>
 

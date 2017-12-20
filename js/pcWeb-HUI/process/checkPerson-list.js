@@ -122,6 +122,7 @@ Vue.component("check-person-list", {
 		 */
 		getAllCheckPerson: function() {
 			console.log("****getAllCheckPerson*****");
+			this.isAllSelect = false;
 			this.getCheckPerson(1, 0);
 		},
 		/**

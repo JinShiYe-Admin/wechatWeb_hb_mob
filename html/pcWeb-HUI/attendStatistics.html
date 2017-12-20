@@ -297,8 +297,8 @@
 				attendData.showPeopleArray = []; //清空
 				for(var a = 0; a < attendData.departArray.length; a++) {
 					var tempModel = attendData.departArray[a];
-					tempDepartArray.push(tempModel.value);
 					if(tempModel.flag == 1) {
+						tempDepartArray.push(tempModel.value);
 						tempFlag++;
 						for(var m = 0; m < tempModel.peopleArray.length; m++) {
 							var tempModel1 = tempModel.peopleArray[m];

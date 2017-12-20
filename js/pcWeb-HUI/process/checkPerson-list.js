@@ -49,14 +49,7 @@ Vue.component("check-person-list", {
 			com.tablebases = $('.table-sort').DataTable({
 				pageLength: 10,
 				lengthChange: false,
-				columns: [{
-						"orderable": false
-					},
-					null,
-					{
-						"orderable": false
-					}
-				]
+				ordering: false
 			});
 			$('.table-sort').on('page.dt', function() {
 				var info = com.tablebases.page.info();
@@ -139,9 +132,9 @@ Vue.component("check-person-list", {
 				pageSize: 0
 			}, function(response) {
 				if(response.RspCode == 0) {
-					response.RspData.Data.forEach(function(person){
-						person.isSelect=false;
-					});//设置默认值
+					response.RspData.Data.forEach(function(person) {
+						person.isSelect = false;
+					}); //设置默认值
 					com.checkPersonList = response.RspData.Data;
 					com.checkedPerson = com.changeArrToObj(response.RspData.Data);
 				} else {

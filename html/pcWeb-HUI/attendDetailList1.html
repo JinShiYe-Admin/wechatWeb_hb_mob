@@ -49,7 +49,11 @@
 					</thead>
 					<tbody>
 						<tr class="text-c" v-for='(attend,index) in showPeopleArray' v-show="flag>0" style="display: none;">
-							<td><u style="cursor:pointer" class="text-primary">{{attend.departName}}</u></td>
+							<td><u v-if='attend.DeptName' style="cursor:pointer" class="text-primary">{{attend.DeptName}}</u>
+								<u v-else style="cursor:pointer" class="text-primary">{{attend.departName}}</u>
+							</td>
+							<!--<td><u v-else style="cursor:pointer" class="text-primary">{{attend.departName}}</u></td>-->
+							<!--<td><u style="cursor:pointer" class="text-primary">{{attend.departName}}</u></td>-->
 							<td><u style="cursor:pointer" class="text-primary">{{attend.name}}</u></td>
 							<td v-for='(timeModel,index) in attend.timeList'>
 								<u v-if='timeModel.AttendPic' style="cursor:pointer" class="text-primary">{{timeModel.AttendResult}}
@@ -393,9 +397,11 @@
 				//检查有没有选择部门
 				var tempFlag = 0; //是否选择部门
 				var tempPeopleArray = []; //人员id数组
+				var tempDepartArray = []; //部门id数组
 				attendData.showPeopleArray = []; //清空
 				for(var a = 0; a < attendData.departArray.length; a++) {
 					var tempModel = attendData.departArray[a];
+					tempDepartArray.push(tempModel.value);
 					if(tempModel.flag == 1) {
 						tempFlag++;
 						for(var m = 0; m < tempModel.peopleArray.length; m++) {
@@ -431,6 +437,7 @@
 				if(beginTime.length > 0) {
 					tempData = {
 						corpId: attendData.userInfo.corpid, //单位ID
+						deptId:tempDepartArray,//部门ID，例如：[“1”, “2”, “3”]
 						userId: tempPeopleArray, //用户ID,例如：[“1”, “2”, “3”]
 						beginTime: beginTime, //统计开始时间,年月日共八位如：20011010
 						endTime: beginTime, //统计结束时间,年月日共八位如：20011010
@@ -445,6 +452,7 @@
 					var endTime = myDate.toString().replace(/-/g, '');
 					tempData = {
 						corpId: attendData.userInfo.corpid, //单位ID
+						deptId:tempDepartArray,//部门ID，例如：[“1”, “2”, “3”]
 						userId: tempPeopleArray, //用户ID,例如：[“1”, “2”, “3”]
 						beginTime: endTime, //统计开始时间,年月日共八位如：20011010
 						endTime: endTime, //统计结束时间,年月日共八位如：20011010

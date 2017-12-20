@@ -35,9 +35,9 @@
 				<td><u style="cursor:pointer" class="text-primary">{{course.cname}}</u></td>
 				<td class="td-status"><span :class="course.stat==0?'label label-defaunt radius':'label label-success radius'"><a v-if="course.stat==0">已停用</a><a v-else>已启用</a></span></td>
 				<td class="td-manage">
-					<a style="text-decoration:none" @click="shieldSub(course,index)" href="javascript:;" title="停用"><i class="Hui-iconfont">&#xe631;</i></a>
-					<a title="修改科目名称" href="javascript:;" @click="modifyCourse(course,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>
-					<a title="删除" href="javascript:;" @click="removeCourse(course,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+					<a style="text-decoration:none" @click="shieldSub(course,index)" href="javascript:;" title="停用"><i class="Hui-iconfont" style="color: #4fbffd;">&#xe631;</i></a>
+					<a title="修改科目名称" href="javascript:;" @click="modifyCourse(course,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont" style="color: #4fbffd;">&#xe6df;</i></a>
+					<a title="删除" href="javascript:;" @click="removeCourse(course,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont" style="color: #F96161;">&#xe6e2;</i></a>
 				</td>
 				</tr>
 				</tbody>

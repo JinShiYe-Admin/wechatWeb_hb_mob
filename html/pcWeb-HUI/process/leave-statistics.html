@@ -14,7 +14,7 @@
 		<link rel="stylesheet" type="text/css" href="../../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
 		<link rel="stylesheet" type="text/css" href="../../../js/multiple/easyui.css" />
 		<!--<script type="text/javascript" src="../../js/multiple/jquery.min.js"></script>-->
-		<title>考勤统计</title>
+		<title>请假统计</title>
 
 	</head>
 
@@ -30,7 +30,7 @@
 				<select id="ddlLine" class="easyui-combotree" style="width: 205px; height: 24px;">
 				</select>
 				<button type="submit" class="btn btn-success radius" id="" name="" @click="searchPersonLeaveList()"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
-				<a id="exportExcel" type="button" class="btn btn-success radius" onclick="clickExport()">导出</a>
+				<a id="exportExcel" type="button" class="btn btn-success radius" @click="clickExport()">导出</a>
 			</div>
 			<div class="mt-20">
 				<table class="table table-border table-bordered table-hover table-bg">
@@ -40,16 +40,14 @@
 							<th width="100">姓名</th>
 							<th v-for="leaveType in leaveTypes" width="100">{{leaveType.LeaveTypeName}}</th>
 							<th width="100">总计</th>
-							<th width="100">详情</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr class="text-c" v-for='(personLeave,index) in personLeaves' v-show="flag>0">
-							<td><u style="cursor:pointer" class="text-primary">{{personLeave|getDeptName}}</u></td>
-							<td><u style="cursor:pointer" class="text-primary">{{personLeave.UserName}}</u></td>
+						<tr class="text-c" v-for='(personLeave,index) in leaveStats' v-show="flag>0">
+							<td>{{personLeave|getDeptName}}</td>
+							<td><u style="cursor:pointer" class="text-primary" title="点击查看详情" v-on:click.stop="showLeaveStatDetail(personLeave)">{{personLeave.UserName}}</u></td>
 							<td v-for="leaveType in leaveTypes"><u style="cursor:pointer" class="text-primary">{{getLeaveDays(personLeave,leaveType)}}</u></td>
 							<td>{{personLeave.leaveArray|getAllLeaveDays}}</td>
-							<td>详情</td>
 						</tr>
 					</tbody>
 				</table>
@@ -75,39 +73,177 @@
 		<script src="../../../js/utils/storageutil.js"></script>
 		<script src="../../../js/PublicProtocol.js"></script>
 		<script type="text/javascript">
-			$(function() {
-				$('.table-sort').dataTable({
-					"aaSorting": [
-						[1, "desc"]
-					], //默认第几个排序
-					"bStateSave": true, //状态保存
-					"aoColumnDefs": [
-						//{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
-						{
-							"orderable": false,
-							"aTargets": [0, 8, 9]
-						} // 制定列不参与排序
-					]
-				});
-				//获取当前人员信息
-				getUserInfo();
-			});
-
 			var leaveStatList = new Vue({
 				el: "#leave-stat-list",
 				data: {
 					beginTime: "",
 					endTime: "",
-					selectDeparts: [], //所选部门
-					flag: 0,//
-					requestFlag: 0,//
+					departArray: [{
+							"value": 2,
+							"title": "湖北大区",
+							"parentvalue": 1,
+							"order": 2147483447
+						},
+						{
+							"value": 3,
+							"title": "荆门办事处",
+							"parentvalue": 2,
+							"order": 2147483447
+						},
+						{
+							"value": 4,
+							"title": "大区办公室",
+							"parentvalue": 2,
+							"order": 2147483247
+						},
+						{
+							"value": 5,
+							"title": "黄冈办事处",
+							"parentvalue": 2,
+							"order": 2147483047
+						},
+						{
+							"value": 6,
+							"title": "黄石咸宁鄂州办事处",
+							"parentvalue": 2,
+							"order": 2147482847
+						},
+						{
+							"value": 7,
+							"title": "襄阳孝感随州办事处",
+							"parentvalue": 2,
+							"order": 2147482647
+						},
+						{
+							"value": 8,
+							"title": "宜昌恩施办事处",
+							"parentvalue": 2,
+							"order": 2147482447
+						},
+						{
+							"value": 9,
+							"title": "荆州江汉办事处",
+							"parentvalue": 2,
+							"order": 2147482247
+						},
+						{
+							"value": 11,
+							"title": "开发部",
+							"parentvalue": 1,
+							"order": 2147483047
+						},
+						{
+							"value": 12,
+							"title": "测试子部门",
+							"parentvalue": 11,
+							"order": 100000000
+						},
+						{
+							"value": 13,
+							"title": "测试孙部门",
+							"parentvalue": 12,
+							"order": 100000000
+						},
+						{
+							"value": 14,
+							"title": "测试子部门2",
+							"parentvalue": 11,
+							"order": 99999000
+						},
+						{
+							"value": 15,
+							"title": "临时部门一",
+							"parentvalue": 11,
+							"order": 99998000
+						},
+						{
+							"value": 16,
+							"title": "临时部门二",
+							"parentvalue": 11,
+							"order": 99997000
+						},
+						{
+							"value": 17,
+							"title": "临时部门三",
+							"parentvalue": 11,
+							"order": 99996000
+						},
+						{
+							"value": 18,
+							"title": "临时部门四",
+							"parentvalue": 11,
+							"order": 99995000
+						},
+						{
+							"value": 19,
+							"title": "临时部门五",
+							"parentvalue": 11,
+							"order": 99994000
+						},
+						{
+							"value": 20,
+							"title": "临时部门六",
+							"parentvalue": 11,
+							"order": 99993000
+						},
+						{
+							"value": 21,
+							"title": "临时部门七",
+							"parentvalue": 11,
+							"order": 99992000
+						},
+						{
+							"value": 22,
+							"title": "临时部门八",
+							"parentvalue": 11,
+							"order": 99991000
+						},
+						{
+							"value": 23,
+							"title": "临时部门九",
+							"parentvalue": 11,
+							"order": 99990000
+						},
+						{
+							"value": 24,
+							"title": "临时部门十",
+							"parentvalue": 11,
+							"order": 99989000
+						},
+						{
+							"value": 25,
+							"title": "4-level depart",
+							"parentvalue": 13,
+							"order": 100000000
+						},
+						{
+							"value": -1,
+							"title": "全部",
+							"parentvalue": 0,
+							"order": 0
+						}
+					], //管理的所有部门数组
+					treeDeparts: [],
 					userInfo: {}, //当前人员信息
-					personLeaves: [], //请假统计数据
-					departArray: [], //管理的所有部门数组
-
+					selectDeparts: [], //选择的部门
+					selectPersons: [], //选择的人员
+					leaveStats: [], //请假统计数据
 					peopleArray: [], //管理的所有部门的人员数组
 					showPeopleArray: [], //显示部门对应的人员数组
 					leaveTypes: [], //请假类型
+				},
+				watch: {
+					leaveStats: function(newVal, oldVal) {
+
+					},
+					treeDeparts: function(newVal, oldVal) {
+						if(newVal.length > 0) {
+							this.setSelectOptions();
+						}
+					}
+				},
+				mounted: function() {
+					this.getCanSelectDeparts(this.departArray)
 				},
 				filters: {
 					/**
@@ -136,6 +272,119 @@
 					}
 				},
 				methods: {
+					getUserInfo: function() {
+						var com = this;
+						request.requestPersonalInfo(function(response) {
+							if(response.RspCode == 0) {
+								com.userInfo = JSON.parse(response.RspData);
+								com.getDepartList();
+								com.getLeaveTypes();
+							} else {
+								layer.alert(response.RspTxt);
+							}
+						})
+					},
+					//获取管理的部门
+					getDepartList: function() {
+						var com = this;
+						var tempData = {
+							cmd: 'persondepartsadmin',
+							type: 'findpage' //获取管理员全部管理部门
+						}
+						console.log('tempData:' + JSON.stringify(tempData));
+						unitWebsitePro(tempData, function(data) {
+							if(data.RspCode == 0) {
+								var departs = JSON.parse(data.RspData);
+								com.getCanSelectDeparts(departs);
+							} else {
+								layer.alert(data.RspTxt);
+							}
+						});
+					},
+					getCanSelectDeparts: function(departs) {
+						//去掉得到的部门中的‘全部’
+
+						var treeNodeDeparts = []
+						var allIndex = -1
+						for(var i = 0; i < departs.length; i++) {
+							depart = departs[i];
+							depart.flag = 0; //未选择
+							depart.perosnArray = []; //每个部门的人员数组
+							if(depart.value == -1) {
+								allIndex = i;
+							} else {
+								treeNodeDeparts.push({
+									id: depart.value,
+									text: depart.title
+								})
+							}
+						}
+						this.treeDeparts = treeNodeDeparts;
+						departs.splice(allIndex, 1);
+						this.departArray = departs;
+					},
+					setSelectOptions: function() {
+						console.log("this.departArray:" + JSON.stringify(this.departArray));
+						$('#ddlLine').combotree({
+							multiple: true,
+							data: this.treeDeparts,
+							onCheck: this.changeSelectDeparts,
+							onClick: this.changeSelectDeparts
+						});
+					},
+					changeSelectDeparts: function(departInfo, isAdd) {
+						console.log("toggle的部門信息："+JSON.stringify(departInfo))
+						if(isAdd) {
+
+						} else {
+
+						}
+					},
+					getSelectPerson: function() {
+
+					},
+					//17.获取某部门ID下所有人员(PC管理端)
+					getDepartPerson: function(depart) {
+						var tempData = {
+							cmd: 'departpersonsadmin',
+							type: 'findpage', //获取管理员全部管理部门
+							colid: depart.value, //部门ID
+							colv: '0', //是否递归获取子级部门中所有人员,0否1是
+							callcol: 'base' //获取详细信息:info,获取普通信息:base
+						}
+						console.log('tempData:' + JSON.stringify(tempData));
+						unitWebsitePro(tempData, function(data) {
+							layer.closeAll('loading');
+							if(data.RspCode == 0) {
+								depart.personArray = [].concat(data.RspData);
+							} else {
+								layer.alert(data.RspTxt);
+							}
+						});
+					},
+					/**
+					 * 展示詳情頁
+					 * @param {Object} personLeave
+					 */
+					showLeaveStatDetail: function(personLeave) {
+						var leaveStatKey = "leaveStat" + Date.now();
+						events.setSessionObject(leaveStatKey, personLeave);
+						this.openContentWeb(leaveStatKey);
+					},
+					/**
+					 * 發開内頁
+					 * @param {Object} leaveStatKey
+					 */
+					openContentWeb: function(leaveStatKey) {
+						layer.open({
+							type: 2,
+							title: '请假统计详情',
+							shadeClose: true,
+							maxmin: true, //开启最大化最小化按钮
+							area: ['80%', '80%'],
+							content: './leave-stat-detail.html?leaveStat=' + leaveStatKey
+						});
+					},
 					/**
 					 * 搜索获取人员请假列表
 					 */
@@ -184,11 +433,11 @@
 							corpId: com.userInfo.corpid,
 							deptId: com.selectDeparts,
 							userId: tempPeopleArray,
-							beginTime: com.beginTime,
-							endTime: com.endTime
+							beginTime: com.beginTime.replace(/-/g, ""),
+							endTime: com.endTime.replace(/-/g, "")
 						}, function(response) {
 							if(response.RspCode == 0) {
-								com.personLeaves = response.RspData.Data;
+								com.leaveStats = response.RspData.Data;
 							} else {
 								layer.alert(com.RspTxt);
 							}
@@ -207,259 +456,58 @@
 							return false;
 						}
 						return true;
+					},
+
+					/**
+					 * 
+					 */
+					clickExport: function() {
+						if(this.leaveStats.length == 0) {
+							layer.alert('当前日期没有请假统计数据');
+							return false;
+						}
+						// 使用outerHTML属性获取整个table元素的HTML代码（包括<table>标签），然后包装成一个完整的HTML文档，设置charset为urf-8以防止中文乱码
+						var html = "<html><head><meta charset='utf-8' /></head><body>" + document.getElementsByTagName("table")[0].outerHTML + "</body></html>";
+						html = html.replace('<table', '<table border="1"');
+						// 实例化一个Blob对象，其构造函数的第一个参数是包含文件内容的数组，第二个参数是包含文件类型属性的对象
+						var blob = new Blob([html], {
+							type: "application/vnd.ms-excel"
+						});
+						var a = document.getElementById("exportExcel");
+						// 利用URL.createObjectURL()方法为a元素生成blob URL
+						a.href = URL.createObjectURL(blob);
+						// 设置文件名，目前只有Chrome和FireFox支持此属性
+						a.download = "请假统计.xls";
 					}
 				}
 			});
-			/**
-			 * 
-			 */
-			function clickExport() {
-				if(leaveStatList.personLeaves.length == 0) {
-					layer.alert('当前日期没有请假统计数据');
-					return false;
-				}
-				// 使用outerHTML属性获取整个table元素的HTML代码（包括<table>标签），然后包装成一个完整的HTML文档，设置charset为urf-8以防止中文乱码
-				var html = "<html><head><meta charset='utf-8' /></head><body>" + document.getElementsByTagName("table")[0].outerHTML + "</body></html>";
-				html = html.replace('<table', '<table border="1"');
-				// 实例化一个Blob对象，其构造函数的第一个参数是包含文件内容的数组，第二个参数是包含文件类型属性的对象
-				var blob = new Blob([html], {
-					type: "application/vnd.ms-excel"
-				});
-				var a = document.getElementById("exportExcel");
-				// 利用URL.createObjectURL()方法为a元素生成blob URL
-				a.href = URL.createObjectURL(blob);
-				// 设置文件名，目前只有Chrome和FireFox支持此属性
-				a.download = "请假统计.xls";
-			}
-			//13.获取当前人员信息
-			function getUserInfo() {
-				var tempData = {
-					cmd: 'userinfoadmin',
-					type: 'findpage', //获取某个详细信息
-					colv: '' //留空为取当前人员信息,不为空则为具体人员信息
-				}
-				console.log('tempData:' + JSON.stringify(tempData));
-				unitWebsitePro(tempData, function(data) {
-					if(data.RspCode == 0) {
-						leaveStatList.userInfo = JSON.parse(data.RspData);
-						//获取管理的部门
-						getPersonDepart();
-						getLeaveTypes();
-					} else {
-						layer.alert('请重新登录获取个人信息');
-					}
-				});
-			};
-			/**
-			 * 获取请假类型
-			 */
-			function getLeaveTypes() {
-				processRequest.postProcessData("getLeaveType", {
-					corpId: leaveStatList.userInfo.corpid,
-					stat: 0,
-					pageIndex: 1,
-					pageSize: 0
-				}, function(response) {
-					if(response.RspCode == 0) {
-						leaveStatList.leaveTypes = response.RspData.Data;
-					} else {
-						layer.alert(response.RspTxt);
-					}
-				})
-			}
 
-			//获取管理的部门
-			function getPersonDepart() {
-				var tempData = {
-					cmd: 'persondepartsadmin',
-					type: 'findpage' //获取管理员全部管理部门
-				}
-				console.log('tempData:' + JSON.stringify(tempData));
-				unitWebsitePro(tempData, function(data) {
-					if(data.RspCode == 0) {
-						leaveStatList.departArray = [].concat(JSON.parse(data.RspData));
-						var tempArray = []; //下拉框用
-						//去掉得到的部门中的‘全部’
-						for(var i = 0; i < leaveStatList.departArray.length; i++) {
-							var tempModel = leaveStatList.departArray[i];
-							tempModel.flag = 0; //未选择
-							tempModel.peopleArray = []; //每个部门的人员数组
-							if(tempModel.value == -1) {
-								leaveStatList.departArray.splice(i, 1);
-							} else {
-								var temp000 = {
-									id: tempModel.value,
-									text: tempModel.title
-								}
-								tempArray.push(temp000);
-							}
-						}
-						$('#ddlLine').combotree({
-							valueField: "id",
-							textField: "text",
-							multiple: true,
-							data: tempArray,
-							onCheck: function(node, checked) {
-								console.log('onCheck.node:' + JSON.stringify(node) + ',' + checked);
-								for(var i = 0; i < leaveStatList.departArray.length; i++) {
-									var tempModel = leaveStatList.departArray[i];
-									if(tempModel.value == node.id) {
-										if(node.checked) {
-											tempModel.flag = 1; //设置为选中状态
-											//判断是否有人员，没有获取
-											if(tempModel.peopleArray.length == 0) {
-												layer.load(2);
-												getDepartPerson(tempModel);
-											}
-										} else {
-											tempModel.flag = 0;
-										}
-									}
-								}
-							},
-							onClick: function(node, checked) {
-								console.log('onClick.node:' + JSON.stringify(node) + ',' + checked);
-								for(var i = 0; i < leaveStatList.departArray.length; i++) {
-									var tempModel = leaveStatList.departArray[i];
-									if(tempModel.value == node.id) {
-										if(node.checked) {
-											tempModel.flag = 1;
-										} else {
-											tempModel.flag = 0;
-										}
-									}
-								}
-							}
-						});
-					} else {
-						layer.alert(data.RspTxt);
-					}
-				});
-			}
-
-			//17.获取某部门ID下所有人员(PC管理端)
-			function getDepartPerson(model) {
-				var tempData = {
-					cmd: 'departpersonsadmin',
-					type: 'findpage', //获取管理员全部管理部门
-					colid: model.value, //部门ID
-					colv: '0', //是否递归获取子级部门中所有人员,0否1是
-					callcol: 'base' //获取详细信息:info,获取普通信息:base
-				}
-				console.log('tempData:' + JSON.stringify(tempData));
-				unitWebsitePro(tempData, function(data) {
-					layer.closeAll('loading');
-					if(data.RspCode == 0) {
-						for(var i = 0; i < data.RspData.length; i++) {
-							var tempModel = data.RspData[i];
-							tempModel.departName = model.title;
-							tempModel.value = model.value;
-						}
-						for(var a = 0; a < leaveStatList.departArray.length; a++) {
-							var tempModel = leaveStatList.departArray[a];
-							if(tempModel.value == model.value) {
-								tempModel.peopleArray = [].concat(data.RspData);
-							}
-						}
-					} else {
-						layer.alert(data.RspTxt);
-					}
-				});
-			}
-
-			//把获取到的部门，按层级组合
-			function getNodeTree(nodes) {
-				if(typeof(nodes) === 'undefined' || nodes.length === 0) {
-					return []
-				}
-				nodes.sort(function(a, b) {
-					return a.value - b.value
-				})
-				var map = {},
-					node, roots = [];
-				for(var i = 0; i < nodes.length; i++) {
-					node = nodes[i]
-					node.departList = []
-					node.personList = []
-					map[node.value] = i // use map to look-up the parents
-					if(typeof(map[node.parentvalue]) !== 'undefined') {
-						nodes[map[node.parentvalue]].departList.push(node)
-					} else {
-						if(node.value >= 0) {
-							roots.push(node);
-						}
-					}
-				}
-				console.log('getChildrenTree获取的数据：' + JSON.stringify(roots))
-				return roots
-			}
-
-			//16.获取考勤统计
-			function getPersonLeaveStat() {
-				var startTime = $("#datemin").val();
-				var endTime = $("#datemax").val();
-				if(startTime == '') {
-					layer.alert('请选择开始时间');
-					return false;
-				} else if(endTime == '') {
-					layer.alert('请选择结束时间');
-					return false;
-				}
-				//检查有没有选择部门
-				var tempFlag = 0; //是否选择部门
-				var tempPeopleArray = []; //人员id数组
-				leaveStatList.showPeopleArray = []; //清空
-				for(var a = 0; a < leaveStatList.departArray.length; a++) {
-					var tempModel = leaveStatList.departArray[a];
-					if(tempModel.flag == 1) {
-						tempFlag++;
-						for(var m = 0; m < tempModel.peopleArray.length; m++) {
-							var tempModel1 = tempModel.peopleArray[m];
-							tempPeopleArray.push(tempModel1.userid);
-							//给每一个人添加默认值
-							tempModel1.LateCnt = 0;
-							tempModel1.EarlyCnt = 0;
-							tempModel1.personLeaveCnt = 0;
-							tempModel1.LeaveCnt = 0;
-							leaveStatList.showPeopleArray.push(tempModel1);
-						}
-					}
-				}
-				if(tempFlag == 0) {
-					layer.alert('请选择查询的统计部门');
-					return false;
-				}
-				startTime = startTime.replace(/-/g, '');
-				endTime = endTime.replace(/-/g, '');
-
-				var tempData = {
-					corpId: leaveStatList.userInfo.corpid, //单位ID
-					userId: "", //用户ID,例如：[“1”, “2”, “3”]
-					beginTime: startTime, //统计开始时间,年月日共八位如：20011010
-					endTime: endTime //统计结束时间,年月日共八位如：20011010
-				}
-				console.log('tempData:' + JSON.stringify(tempData));
-				getpersonLeaveStatPro(tempData, function(data) {
-					if(data.RspCode == 0) {
-						//将获取到的统计，添加部门名称
-						for(var i = 0; i < data.RspData.Data.length; i++) {
-							var tempModel = data.RspData.Data[i];
-							for(var a = 0; a < leaveStatList.showPeopleArray.length; a++) {
-								var tempModel1 = leaveStatList.showPeopleArray[a];
-								if(tempModel.DeptId == tempModel1.value) {
-									if(tempModel.UserId == tempModel1.userid) {
-										console.log('tempModel.UserId:' + tempModel.UserId + ',' + tempModel1.userid);
-										tempModel1 = $.extend(tempModel1, tempModel);
-									}
-								}
-							}
-						}
-						leaveStatList.flag = 1;
-					} else {
-						layer.alert(data.RspTxt);
-					}
-				});
-			};
+			//			//把获取到的部门，按层级组合
+			//			function getNodeTree(nodes) {
+			//				if(typeof(nodes) === 'undefined' || nodes.length === 0) {
+			//					return []
+			//				}
+			//				nodes.sort(function(a, b) {
+			//					return a.value - b.value
+			//				})
+			//				var map = {},
+			//					node, roots = [];
+			//				for(var i = 0; i < nodes.length; i++) {
+			//					node = nodes[i]
+			//					node.departList = []
+			//					node.personList = []
+			//					map[node.value] = i // use map to look-up the parents
+			//					if(typeof(map[node.parentvalue]) !== 'undefined') {
+			//						nodes[map[node.parentvalue]].departList.push(node)
+			//					} else {
+			//						if(node.value >= 0) {
+			//							roots.push(node);
+			//						}
+			//					}
+			//				}
+			//				console.log('getChildrenTree获取的数据：' + JSON.stringify(roots))
+			//				return roots
+			//			}
 		</script>
 	</body>
 

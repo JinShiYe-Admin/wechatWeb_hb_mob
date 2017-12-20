@@ -83,7 +83,7 @@
 			}
 			
 			.check-detail {
-				margin-bottom: 50px;
+				padding-bottom: 50px;
 			}
 			
 			.apply-pass {
@@ -308,6 +308,9 @@
 						console.log("获取的flag:" + this.flag);
 						console.log("this.flag type:" + typeof(this.flag));
 						if(leaveInfo == null) {
+							$.alert("此请假记录不存在", "消息", function() {
+								history.go(-1);
+							});
 							return;
 						}
 						console.log("获取的levaeInfo:" + JSON.stringify(leaveInfo));
@@ -328,7 +331,7 @@
 							if(response.RspCode == 0) {
 								com.checkList = response.RspData.Data;
 							} else {
-								$.alert("获取审核人员列表失败(" + response.RspTxt + ")", "提示");
+								$.alert(response.RspTxt, "提示");
 							}
 						})
 					},

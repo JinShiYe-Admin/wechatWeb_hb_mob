@@ -15,11 +15,21 @@ Vue.component("check-person-list", {
 		}
 	},
 	watch: {
+		/**
+		 * 
+		 * @param {Object} newVal
+		 * @param {Object} oldVal
+		 */
 		checkedPerson: function(newVal, oldVal) {
 			console.log("*****chosedPerson******")
 			this.$emit("person-info", newVal);
 
 		},
+		/**
+		 * 审核人员列表
+		 * @param {Object} newVal
+		 * @param {Object} oldVal
+		 */
 		checkPersonList: function(newVal, oldVal) {
 			console.log("*****checkPersonList******");
 			console.log("newVal:" + JSON.stringify(newVal));
@@ -43,20 +53,16 @@ Vue.component("check-person-list", {
 				}
 			})
 		},
+		/**
+		 * 数据结构
+		 */
 		newTablebases: function() {
 			console.log("******newTablebases******");
 			var com = this;
 			com.tablebases = $('.table-sort').DataTable({
 				pageLength: 10,
 				lengthChange: false,
-				columns: [{
-						"orderable": false
-					},
-					null,
-					{
-						"orderable": false
-					}
-				]
+				ordering: false
 			});
 			$('.table-sort').on('page.dt', function() {
 				var info = com.tablebases.page.info();
@@ -89,9 +95,15 @@ Vue.component("check-person-list", {
 			this.getCurPage();
 			this.inputToggleAll();
 		},
+		/**
+		 * 获取当前页
+		 */
 		getCurPage: function() {
 			this.curPage = this.tablebases.page.info().page;
 		},
+		/**
+		 * 设置全取消选择
+		 */
 		setAllUnselect: function() {
 			var com = this;
 			com.checkPersonList.forEach(function(checkPerson, index) {
@@ -122,6 +134,7 @@ Vue.component("check-person-list", {
 		 */
 		getAllCheckPerson: function() {
 			console.log("****getAllCheckPerson*****");
+			this.isAllSelect = false;
 			this.getCheckPerson(1, 0);
 		},
 		/**
@@ -138,6 +151,9 @@ Vue.component("check-person-list", {
 				pageSize: 0
 			}, function(response) {
 				if(response.RspCode == 0) {
+					response.RspData.Data.forEach(function(person) {
+						person.isSelect = false;
+					}); //设置默认值
 					com.checkPersonList = response.RspData.Data;
 					com.checkedPerson = com.changeArrToObj(response.RspData.Data);
 				} else {
@@ -160,7 +176,7 @@ Vue.component("check-person-list", {
 			}
 		},
 		/**
-		 * 
+		 * 删除选择人员
 		 */
 		delSelectedPersons: function() {
 			console.log("****delSelectedPersons****");

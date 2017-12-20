@@ -13,12 +13,13 @@
 		<link rel="stylesheet" href="../../../js/demoCssJs/jquery-weui.min.css" />
 		<link rel="stylesheet" href="../../../js/demoCssJs/demos.css" />
 		<style>
-			.weui-panel{
-  background-color:#FFFFFF;
-  margin-top:0px;
-  position:relative;
-  overflow:hidden;
-}
+			.weui-panel {
+				background-color: #FFFFFF;
+				margin-top: 0px;
+				position: relative;
+				overflow: hidden;
+			}
+			
 			.weui-grids {
 				position: relative;
 				overflow: hidden;
@@ -106,27 +107,41 @@
 
 	<body>
 		<div id="list" class="page__bd">
-			<div class="weui-panel weui-panel_access"  v-for="(item,index) in datasource">
-				<div class="weui-panel__bd" >
-					<a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
-						<div class="weui-media-box__hd">
-							<img class="weui-media-box__thumb" :src="item.BeEvalManAvatar" alt="">
+			<div class="weui-panel weui-panel_access" v-for="(item,index) in datasource">
+				<div class="weui-panel__bd">
+					<template v-if="item.EvalType==3">
+						<a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+							<div class="weui-media-box__hd">
+								<img class="weui-media-box__thumb" :src="item.BeEvalManAvatar" style="border-radius: 50px;" alt="">
+							</div>
+							<div class="weui-media-box__bd">
+								<h4 class="weui-media-box__title">{{item.BeEvalManName}}</h4>
+								<p class="weui-media-box__desc">{{item.EvalTime}}</p>
+							</div>
+						</a>
+						<p style="margin-left: 10px;">{{item.EvalContent}}</p>
+						<div class="weui-grids">
+							<a href="javascript:;" class="weui-grid">
+								<div class="weui-grid__icon">
+									<img :src="item.EvalEncThumb" alt="">
+								</div>
+							</a>
 						</div>
-						<div class="weui-media-box__bd">
-							<h4 class="weui-media-box__title">{{item.BeEvalManName}}</h4>
-							<p class="weui-media-box__desc">{{item.EvalTime}}</p>
-						</div>
-					</a>
-					<p style="margin-left: 10px;">{{item.EvalContent}}</p>
-					<div class="weui-grids">
-						<a href="javascript:;" class="weui-grid">
-							<div class="weui-grid__icon">
-								<img :src="item.EvalEncThumb" alt="">
+						<br />
+					</template>
+					<template v-else>
+						<a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+							<div class="weui-media-box__hd">
+								<img class="weui-media-box__thumb" :src="item.EvalEncThumb" alt="" style="border-radius: 50px;">
+							</div>
+							<div class="weui-media-box__bd">
+								<h4 class="weui-media-box__title">+1分<span style="color:black;">{{" "+item.EvalContent}}</span></h4>
+								<p class="weui-media-box__desc">{{item.EvalTime+" 由"+item.EvalManName+"点评"}}</p>
 							</div>
 						</a>
 
-					</div>
-					<br />
+					</template>
+					
 				</div>
 			</div>
 		</div>
@@ -149,8 +164,8 @@
 				data: {
 					datasource: []
 				},
-				updated:function(){
-//					console.log(JSON.stringify(vm.datasource));
+				updated: function() {
+					//					console.log(JSON.stringify(vm.datasource));
 					console.log(document.getElementById("list").innerHTML);
 				}
 
@@ -191,7 +206,7 @@
 					pageSize: 20,
 				}
 				getEvaluationPro(tempData, function(data) {
-//					console.log(JSON.stringify(data));
+					//					console.log(JSON.stringify(data));
 					vm.datasource = data.RspData.Data;
 				});
 			}

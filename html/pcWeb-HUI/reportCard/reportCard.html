@@ -247,7 +247,7 @@
 						} else {
 							var types = files[0].type.toLowerCase().split("/");
 							console.log("types:" + types);
-							if(types[1] == "vnd.ms-excel" || types[1] == "csv" || types[1] == 'vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+							if(types[1] == "vnd.ms-excel" || types[1] == "csv" || types[1] == 'vnd.openxmlformats-officedocument.spreadsheetml.sheet'||types[1] == "") {
 								compress.postFile(data, function(filePath) {
 									if(filePath.RspCode == 0) {
 										console.log(JSON.stringify(filePath));

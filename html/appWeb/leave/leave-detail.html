@@ -308,6 +308,9 @@
 						console.log("获取的flag:" + this.flag);
 						console.log("this.flag type:" + typeof(this.flag));
 						if(leaveInfo == null) {
+							$.alert("此请假记录不存在", "消息", function() {
+								history.go(-1);
+							});
 							return;
 						}
 						console.log("获取的levaeInfo:" + JSON.stringify(leaveInfo));

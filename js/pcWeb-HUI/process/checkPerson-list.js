@@ -15,11 +15,21 @@ Vue.component("check-person-list", {
 		}
 	},
 	watch: {
+		/**
+		 * 
+		 * @param {Object} newVal
+		 * @param {Object} oldVal
+		 */
 		checkedPerson: function(newVal, oldVal) {
 			console.log("*****chosedPerson******")
 			this.$emit("person-info", newVal);
 
 		},
+		/**
+		 * 审核人员列表
+		 * @param {Object} newVal
+		 * @param {Object} oldVal
+		 */
 		checkPersonList: function(newVal, oldVal) {
 			console.log("*****checkPersonList******");
 			console.log("newVal:" + JSON.stringify(newVal));
@@ -43,6 +53,9 @@ Vue.component("check-person-list", {
 				}
 			})
 		},
+		/**
+		 * 数据结构
+		 */
 		newTablebases: function() {
 			console.log("******newTablebases******");
 			var com = this;

@@ -15,11 +15,21 @@ Vue.component("check-person-list", {
 		}
 	},
 	watch: {
+		/**
+		 * 
+		 * @param {Object} newVal
+		 * @param {Object} oldVal
+		 */
 		checkedPerson: function(newVal, oldVal) {
 			console.log("*****chosedPerson******")
 			this.$emit("person-info", newVal);
 
 		},
+		/**
+		 * 审核人员列表
+		 * @param {Object} newVal
+		 * @param {Object} oldVal
+		 */
 		checkPersonList: function(newVal, oldVal) {
 			console.log("*****checkPersonList******");
 			console.log("newVal:" + JSON.stringify(newVal));
@@ -43,6 +53,9 @@ Vue.component("check-person-list", {
 				}
 			})
 		},
+		/**
+		 * 数据结构
+		 */
 		newTablebases: function() {
 			console.log("******newTablebases******");
 			var com = this;
@@ -82,9 +95,15 @@ Vue.component("check-person-list", {
 			this.getCurPage();
 			this.inputToggleAll();
 		},
+		/**
+		 * 获取当前页
+		 */
 		getCurPage: function() {
 			this.curPage = this.tablebases.page.info().page;
 		},
+		/**
+		 * 设置全取消选择
+		 */
 		setAllUnselect: function() {
 			var com = this;
 			com.checkPersonList.forEach(function(checkPerson, index) {
@@ -157,7 +176,7 @@ Vue.component("check-person-list", {
 			}
 		},
 		/**
-		 * 
+		 * 删除选择人员
 		 */
 		delSelectedPersons: function() {
 			console.log("****delSelectedPersons****");

@@ -221,10 +221,17 @@ var getAttendStatPro = function(data0, callback) {
 	data0 = extendParameter(data0);
 	xhrPost(tempAttendUrl + 'getAttendStat', JSON.stringify(data0), callback);
 }
+
 //17.获取选择用考勤类型
 var getAttendTypeForSelPro = function(data0, callback) {
 	data0 = extendParameter(data0);
 	xhrPost(tempAttendUrl + 'getAttendTypeForSel', JSON.stringify(data0), callback);
+}
+
+//18.获取请假记录
+var getLeavePro = function(data0, callback) {
+	data0 = extendParameter(data0);
+	xhrPost(tempAttendUrl + 'getLeave', JSON.stringify(data0), callback);
 }
 
 //学生成长轨迹接口

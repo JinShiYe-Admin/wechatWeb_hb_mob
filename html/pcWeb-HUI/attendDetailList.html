@@ -14,7 +14,6 @@
 		<link href="../../js/H-ui.admin/lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" type="text/css" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
 		<link rel="stylesheet" type="text/css" href="../../js/multiple/easyui.css" />
-		<link href="../../js/H-ui.admin/lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css">
 		<!--<script type="text/javascript" src="../../js/multiple/jquery.min.js"></script>-->
 		<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
 		<script type="text/javascript" src="../../js/multiple/jquery.easyui.min.js"></script>
@@ -381,8 +380,8 @@
 				attendData.showPeopleArray = []; //清空
 				for(var a = 0; a < attendData.departArray.length; a++) {
 					var tempModel = attendData.departArray[a];
-					tempDepartArray.push(tempModel.value);
 					if(tempModel.flag == 1) {
+						tempDepartArray.push(tempModel.value);
 						tempFlag++;
 						for(var m = 0; m < tempModel.peopleArray.length; m++) {
 							var tempModel1 = tempModel.peopleArray[m];

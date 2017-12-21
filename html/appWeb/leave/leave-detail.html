@@ -238,9 +238,19 @@
 					this.initialData();
 				},
 				watch: {
-
+					checkList: function(newVal, oldVal) {
+						this.getFlag(newVal);
+					}
 				},
 				methods: {
+					getFlag: function(list) {
+						for(var i = 0; i < list.length; i++) {
+							if(list[i].ApprMan == this.personalInfo.userid && list[i].ApprStat > 0) {
+								this.flag = 2
+								break;
+							}
+						}
+					},
 					editLeave: function() {
 						location.href = "addleaveapply.html?change=" + events.getUrlParam(location.href, "sKey");
 					},
@@ -308,6 +318,9 @@
 						console.log("获取的flag:" + this.flag);
 						console.log("this.flag type:" + typeof(this.flag));
 						if(leaveInfo == null) {
+							$.alert("此请假记录不存在", "消息", function() {
+								history.go(-1);
+							});
 							return;
 						}
 						console.log("获取的levaeInfo:" + JSON.stringify(leaveInfo));

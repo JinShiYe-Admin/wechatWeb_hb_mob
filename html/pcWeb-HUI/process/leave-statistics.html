@@ -25,8 +25,8 @@
 
 		<div class="page-container" id="leave-stat-list">
 			<div class="text-c"> 日期范围：
-				<input placeholder="开始时间" type="text" v-model="beginTime" onfocus="WdatePicker({ maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}' })" id="datemin" class="input-text Wdate" style="width:120px;"> -
-				<input placeholder="结束时间" type="text" v-model="endTime" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax" class="input-text Wdate" style="width:120px;">
+				<input placeholder="开始时间" type="text" onfocus="WdatePicker({ maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}' })" id="datemin" class="input-text Wdate" style="width:120px;"> -
+				<input placeholder="结束时间" type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax" class="input-text Wdate" style="width:120px;">
 				<select id="ddlLine" class="easyui-combotree" style="width: 205px; height: 24px;">
 				</select>
 				<button type="submit" class="btn btn-success radius" id="" name="" @click="searchLeaveStats()"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
@@ -99,7 +99,7 @@
 					}
 				},
 				mounted: function() {
-					this.getCanSelectDeparts(this.departMock)
+					this.getUserInfo();
 				},
 				filters: {
 					/**
@@ -364,6 +364,11 @@
 					 * 选择的状态是否合法
 					 */
 					isSelectLegal: function() {
+						console.log($("#datemin").val())
+						console.log($("#datemax").val())
+						console.log(!this.endTime);
+						this.beginTime = $("#datemin").val();
+						this.endTime = $("#datemax").val();
 						if(!this.beginTime || !this.endTime) {
 							layer.alert("请选择开始时间或结束时间！");
 							return false;

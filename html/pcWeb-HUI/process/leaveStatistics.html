@@ -40,9 +40,10 @@
 						<tr class="text-c">
 							<th width="100">部门</th>
 							<th width="100">姓名</th>
-							<td width="100" v-for='(leaveTypeModel,index) in leaveTypeArray' v-show="flag>0" style="display: none;" style="font-weight: bold;">
+							<th width="100" v-for='(leaveTypeModel,index) in leaveTypeArray' v-show="flag>0" style="display: none;" style="font-weight: bold;">
 								{{leaveTypeModel.LeaveTypeName}}(天)
-							</td>
+							</th>
+							<th width="100">总计(天)</th>
 							<th width="100">操作</th>
 						</tr>
 					</thead>
@@ -55,6 +56,7 @@
 							<td v-for='(leaveType,index) in leaveModel.leaveTypeList'>
 								<u style="cursor:pointer" class="text-primary">{{leaveType.LeaveDays}}</u>
 							</td>
+							<td><u style="cursor:pointer" class="text-primary">{{leaveModel.sumDays}}</u></td>
 							<td class="td-manage">
 								<a title="请假明细" href="javascript:;" @click="searchLeaveDetailList(leaveModel,index)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont" style="color: #4fbffd;">&#xe665;</i></a>
 							</td>
@@ -124,6 +126,7 @@
 						tempArr1.push(model.value);
 						leaveData.leaveDetailModel.deptId = tempArr1;
 						leaveData.leaveDetailModel.userId = tempArr0;
+						leaveData.leaveDetailModel.userName = model.name;
 						var url = "leaveDetailList.html";
 						//						var ids = url.split("/");
 						var dataStr = JSON.stringify(leaveData.leaveDetailModel);
@@ -142,8 +145,15 @@
 					layer.alert('当前日期没有请假统计数据');
 					return false;
 				}
+				var table0 = document.getElementsByTagName('table')[0];
+				var table = table0.cloneNode(true); //深度复制，防止删除时，界面变动
+				//删除最后一列
+				for(var i = 0; i < leaveData.showPeopleArray.length + 1; i++) {
+					var row = table.rows[i];
+					row.deleteCell(leaveData.leaveTypeArray.length + 3);
+				}
 				// 使用outerHTML属性获取整个table元素的HTML代码（包括<table>标签），然后包装成一个完整的HTML文档，设置charset为urf-8以防止中文乱码
-				var html = "<html><head><meta charset='utf-8' /></head><body>" + document.getElementsByTagName("table")[0].outerHTML + "</body></html>";
+				var html = "<html><head><meta charset='utf-8' /></head><body>" + table.outerHTML + "</body></html>";
 				html = html.replace('<table', '<table border="1"');
 				// 实例化一个Blob对象，其构造函数的第一个参数是包含文件内容的数组，第二个参数是包含文件类型属性的对象
 				var blob = new Blob([html], {
@@ -185,16 +195,8 @@
 				console.log('tempData:' + JSON.stringify(tempData));
 				processRequest.postProcessData('getLeaveType', tempData, function(data) {
 					if(data.RspCode == 0) {
-						var tempModel = {
-							LeaveTypeName: '姓名'
-						}
-						var tempModel1 = {
-							LeaveTypeName: '部门'
-						}
 						leaveData.leaveTypeArray = [].concat(data.RspData.Data);
 						leaveData.leaveTypeArrayAll = [].concat(data.RspData.Data);
-						leaveData.leaveTypeArrayAll.splice(0, 0, tempModel);
-						leaveData.leaveTypeArrayAll.splice(0, 0, tempModel1);
 						//获取管理的部门
 						getPersonDepart();
 					} else {
@@ -353,6 +355,7 @@
 						for(var m = 0; m < tempModel.peopleArray.length; m++) {
 							var tempModel1 = tempModel.peopleArray[m];
 							tempPeopleArray.push(tempModel1.userid);
+							tempModel1.sumDays = 0;
 							tempModel1.leaveTypeList = [];
 							//给每一个人添加时间段数组
 							for(var n = 0; n < leaveData.leaveTypeArray.length; n++) {
@@ -400,23 +403,18 @@
 					if(data.RspCode == 0) {
 						//将获取到的统计，添加部门名称
 						for(var i = 0; i < data.RspData.Data.length; i++) { //循环获取到的统计值
-							console.log('111111');
 							var tempModel = data.RspData.Data[i];
 							for(var a = 0; a < leaveData.showPeopleArray.length; a++) { //循环要查询的人
-								console.log('111112');
 								var tempModel1 = leaveData.showPeopleArray[a];
 								if(tempModel.DeptId == tempModel1.value) { //如果部门一致
-									console.log('111113:' + tempModel.UserId + ',' + tempModel1.userid);
 									if(tempModel.UserId == tempModel1.userid) { //如果人员id一致
-										console.log('111114：' + tempModel1.leaveTypeList.length);
 										for(var b = 0; b < tempModel1.leaveTypeList.length; b++) { //循环当前人员的所有请假类型
 											var typeModel = tempModel1.leaveTypeList[b];
-											for(var i = 0; i < tempModel.LeaveArray.length; i++) { //循环获取的请假
-												var tempLeave = tempModel.LeaveArray[i];
-												console.log('111116:' + tempLeave.LeaveType + ',' + typeModel.LeaveTypeId);
+											for(var c = 0; c < tempModel.LeaveArray.length; c++) { //循环获取的请假
+												var tempLeave = tempModel.LeaveArray[c];
 												if(tempLeave.LeaveType == typeModel.LeaveTypeId) { //如果类型一致
-													//合并对象
-													console.log('111115');
+													tempModel1.sumDays = tempModel1.sumDays + tempLeave.LeaveDays; //总共请假天数
+													//合并对象s
 													typeModel = $.extend(typeModel, tempLeave);
 												}
 											}

@@ -170,7 +170,14 @@
 				}
 
 			})
+			 var deptId;
+			 var deptName;
+			 var mineUserInfo;
 			window.onload = function() {
+				var sValue = utils.getSessionStorageByUrlsKey();
+				deptId = sValue.deptId;
+				deptName = sValue.deptName;
+				mineUserInfo = sValue.mineUserInfo;
 				//				$.showLoading();
 				getEvaluation();
 				//				getMineInfo();
@@ -199,14 +206,18 @@
 
 			function getEvaluation() {
 				var tempData = {
-					corpId: 'wx6c4528c675d4a9c9',
-					deptId: 11,
-					userId: "moshanglin",
+					corpId:mineUserInfo.corpid,
+					deptId:deptId,
+					userId:mineUserInfo.userid,
+//					corpId: 'wx6c4528c675d4a9c9',
+//					deptId: 11,
+//					userId: "moshanglin",
 					pageIndex: 1,
 					pageSize: 20,
 				}
+				console.log("点评列表参数："+JSON.stringify(tempData));
 				getEvaluationPro(tempData, function(data) {
-					//					console.log(JSON.stringify(data));
+					console.log("点评列表数据："+JSON.stringify(data));
 					vm.datasource = data.RspData.Data;
 				});
 			}

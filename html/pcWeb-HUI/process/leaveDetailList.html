@@ -99,6 +99,7 @@
 				});
 				var detail = utils.getDataFromUrl(window.location.href);
 				console.log('detail=' + JSON.stringify(detail));
+				leaveData.userInfo = detail;
 				layer.load(2);
 				//获取请假详情
 				getLeaveDetailList(detail);
@@ -142,12 +143,21 @@
 			//导出统计表
 			var clickExport = function() {
 				if(leaveData.showPeopleArray.length == 0) {
-					layer.alert('当前日期没有请假统计数据');
+					layer.alert('当前日期没有请假数据');
 					return false;
 				}
+				var table0 = document.getElementsByTagName('table')[0];
+				var table= table0.cloneNode(true); //深度复制，防止删除时，界面变动
+				//删除请假照片列
+				for (var i = 0; i < leaveData.showPeopleArray.length+1; i++) {
+					var row = table.rows[i];
+					row.deleteCell(8);
+				}
 				// 使用outerHTML属性获取整个table元素的HTML代码（包括<table>标签），然后包装成一个完整的HTML文档，设置charset为urf-8以防止中文乱码
-				var html = "<html><head><meta charset='utf-8' /></head><body>" + document.getElementsByTagName("table")[0].outerHTML + "</body></html>";
+				var html = "<html><head><meta charset='utf-8' /></head><body>" + table.outerHTML + "</body></html>";
 				html = html.replace('<table', '<table border="1"');
+				html = html.replace(/(<\/?a.*?>)/g, '');
+				html = html.replace(/(<\/?img.*?>)/g, '');
 				// 实例化一个Blob对象，其构造函数的第一个参数是包含文件内容的数组，第二个参数是包含文件类型属性的对象
 				var blob = new Blob([html], {
 					type: "application/vnd.ms-excel"
@@ -156,7 +166,7 @@
 				// 利用URL.createObjectURL()方法为a元素生成blob URL
 				a.href = URL.createObjectURL(blob);
 				// 设置文件名，目前只有Chrome和FireFox支持此属性
-				a.download = "请假统计.xls";
+				a.download = leaveData.userInfo.userName + "请假明细.xls";
 			}
 			//13.获取当前人员信息
 			var getUserInfo = function() {

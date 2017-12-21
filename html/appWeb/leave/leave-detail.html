@@ -238,9 +238,19 @@
 					this.initialData();
 				},
 				watch: {
+					checkList: function(newVal, oldVal) {
 
+					}
 				},
 				methods: {
+					getFlag: function(list) {
+						for(var i = 0; i < list.length; i++) {
+							if(list[i].ApprMan == this.personalInfo.userid && list[i].ApprStat > 0) {
+								this.flag = 2
+								break;
+							}
+						}
+					},
 					editLeave: function() {
 						location.href = "addleaveapply.html?change=" + events.getUrlParam(location.href, "sKey");
 					},

@@ -386,7 +386,7 @@
 							var model = rspData[i];
 							if(model.value == -1) {
 								model.label = model.title;
-								column_table.depart_array.push(model);
+								column_table.depart_array.unshift(model);
 							} else {
 								model.label = model.title;
 								column_table.depart_array.push(model);
@@ -670,6 +670,7 @@
 					onConfirm: function(result) {
 						document.getElementById("depart").value = result[0].label;
 						document.getElementById("depart").data_id = result[0].value;
+						getexam(1);
 					}
 				});
 			}

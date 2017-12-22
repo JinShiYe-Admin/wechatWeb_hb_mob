@@ -122,14 +122,14 @@
 								if(filePath.RspCode == 0) {
 									console.log(JSON.stringify(filePath));
 									content.uploadedFile = filePath.RspData;
-									alert("上传文件成功");
+									$.alert("上传文件成功");
 
 								}
 
 							});
 				}else{
 					$('#uploaderInput').val('');
-					alert("文件格式不是excel格式")
+					$.alert("文件格式不是excel格式")
 				}
 
 						}
@@ -145,17 +145,17 @@
 
 			function addExama() {
 				if(content.cname==""){
-					alert("请输入名称");
+					$.alert("请输入名称");
 					return;
 					
 				}
 				if(content.uploadedFile.length==0){
-					alert("请添加文件");
+					$.alert("请添加文件");
 					return;
 					
 				}
 				if(document.getElementById("depart").data_id==undefined||document.getElementById("depart").data_id==""){
-					alert("请选择部门");
+					$.alert("请选择部门");
 					return;
 					
 				}
@@ -176,10 +176,10 @@
 				unitWebsitePro(tempData, function(data) {
 					console.log('添加成绩单数据：' + JSON.stringify(data.RspData))
 					if(data.RspCode == 0) {
-						alert("添加成功")
+						$.alert("添加成功")
 						content = JSON.parse(data.RspData);
 					} else {
-						alert(data.RspTxt)
+						$.alert(data.RspTxt)
 					}
 				})
 			}
@@ -207,7 +207,7 @@
 						console.log('重组部门:' + JSON.stringify(content.depart_array));
 
 					} else {
-						alert(data.RspTxt)
+						$.alert(data.RspTxt)
 					}
 				})
 

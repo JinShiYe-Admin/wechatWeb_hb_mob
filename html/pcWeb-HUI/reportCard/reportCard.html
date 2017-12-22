@@ -252,14 +252,14 @@
 									if(filePath.RspCode == 0) {
 										console.log(JSON.stringify(filePath));
 										column_table.uploadedFile = filePath.RspData;
-										alert("上传文件成功");
+										$.alert("上传文件成功");
 
 									}
 
 								});
 							} else {
 								$('#uploaderInput').val('');
-								alert("文件格式不是excel格式")
+								$.alert("文件格式不是excel格式")
 							}
 
 						}
@@ -307,7 +307,7 @@
 								type: 'del',
 								colid: item.examid
 							}
-							//							alert(JSON.stringify(para))
+							//							$.alert(JSON.stringify(para))
 							unitWebsitePro(para, function(data) {
 								if(data.RspCode == 0) {
 									layer.msg('已删除!', {
@@ -316,7 +316,7 @@
 									});
 									location.reload();
 								} else {
-									alert(data.RspTxt);
+									$.alert(data.RspTxt);
 								}
 							});
 						});
@@ -386,7 +386,7 @@
 							var model = rspData[i];
 							if(model.value == -1) {
 								model.label = model.title;
-								column_table.depart_array.push(model);
+								column_table.depart_array.unshift(model);
 							} else {
 								model.label = model.title;
 								column_table.depart_array.push(model);
@@ -540,7 +540,7 @@
 							"order": 0,
 							"label": "全部"
 						}]
-						alert(data.RspTxt)
+						$.alert(data.RspTxt)
 					}
 				})
 
@@ -670,6 +670,7 @@
 					onConfirm: function(result) {
 						document.getElementById("depart").value = result[0].label;
 						document.getElementById("depart").data_id = result[0].value;
+						getexam(1);
 					}
 				});
 			}
@@ -677,12 +678,12 @@
 			function addExama() {
 				console.log(column_table.uploadedFile)
 				if(column_table.cname == "") {
-					alert("请输入名称");
+					$.alert("请输入名称");
 					return;
 
 				}
 				if(JSON.stringify(column_table.uploadedFile) == "{}") {
-					alert("请添加文件");
+					$.alert("请添加文件");
 					return;
 
 				}
@@ -706,10 +707,10 @@
 				unitWebsitePro(tempData, function(data) {
 					console.log('添加成绩单数据：' + JSON.stringify(data.RspData))
 					if(data.RspCode == 0) {
-						alert("添加成功")
+						$.alert("添加成功")
 						content = JSON.parse(data.RspData);
 					} else {
-						alert(data.RspTxt)
+						$.alert(data.RspTxt)
 					}
 				})
 			}

@@ -108,5 +108,16 @@ var events = (function(mod) {
 		}
 
 	}
+	/**
+	 * 设置自动刷新
+	 */
+	mod.setShowAutoFresh = function() {
+		window.onpageshow = function(event) {
+			console.log("自动刷新：" + event.persisted)
+			if(event.persisted) {
+				window.location.reload();
+			}
+		};
+	}
 	return mod;
 })(events || {})

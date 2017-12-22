@@ -41,9 +41,11 @@
 			.item-info {
 				font-size: 0.8em;
 			}
-			.weui-cells{
+			
+			.weui-cells {
 				margin-top: 6px;
 			}
+			
 			.weui-pull-to-refresh__layer {
 				padding: 0;
 			}
@@ -150,10 +152,12 @@
 		<script src="../../../js/jquery-weui.min.js"></script>
 		<script src="../../../js/vue.js"></script>
 		<script src="../../../js/vue-router.js"></script>
+		<script src="../../../js/utils/events.js"></script>
 		<script src="../../../js/utils/consts.js"></script>
 		<script src="../../../js/utils/request.js"></script>
 		<script src="../../../js/utils/storageutil.js"></script>
 		<script>
+			events.setShowAutoFresh();
 			var list = new Vue({
 				el: "#tabs",
 				data: {

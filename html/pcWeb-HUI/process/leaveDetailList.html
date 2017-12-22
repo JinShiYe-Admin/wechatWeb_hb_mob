@@ -32,13 +32,13 @@
 							<th width="100">姓名</th>
 							<th width="100">请假类型</th>
 							<th width="100">申请状态说明</th>
-							<th width="100">申请开始时间</th>
-							<th width="100">申请结束时间</th>
+							<th width="150">申请开始时间</th>
+							<th width="150">申请结束时间</th>
 							<th width="100">申请共计时间(天)</th>
 							<th width="100">请假事由</th>
 							<th width="100">请假事由图片</th>
-							<th width="100">提出申请时间</th>
-							<th width="100">审批结束时间</th>
+							<th width="150">提出申请时间</th>
+							<th width="150">审批结束时间</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -81,7 +81,7 @@
 		<script src="../../../js/PublicProtocol.js"></script>
 		<script src="../../../js/utils/request.js" type="text/javascript" />
 		<script src="../../../js/utils/consts.js" type="text/javascript"></script>
-		<script src='../../../js/lib/vconsole/vconsole.min.js'></script>
+		<!--<script src='../../../js/lib/vconsole/vconsole.min.js'></script>-->
 		<script type="text/javascript">
 			$(function() {
 				$('.table-sort').dataTable({
@@ -104,7 +104,7 @@
 				//获取请假详情
 				getLeaveDetailList(detail);
 			});
-			
+
 			//获取请假详情
 			var getLeaveDetailList = function(tempData) {
 				console.log('tempData:' + JSON.stringify(tempData));
@@ -112,7 +112,7 @@
 					layer.closeAll('loading');
 					if(data.RspCode == 0) {
 						leaveData.flag = 1;
-						for (var i = 0; i < data.RspData.Data.length; i++) {
+						for(var i = 0; i < data.RspData.Data.length; i++) {
 							var tempModel = data.RspData.Data[i];
 							tempModel.picArray = tempModel.ApplyPic.split("|");
 						}
@@ -147,9 +147,9 @@
 					return false;
 				}
 				var table0 = document.getElementsByTagName('table')[0];
-				var table= table0.cloneNode(true); //深度复制，防止删除时，界面变动
+				var table = table0.cloneNode(true); //深度复制，防止删除时，界面变动
 				//删除请假照片列
-				for (var i = 0; i < leaveData.showPeopleArray.length+1; i++) {
+				for(var i = 0; i < leaveData.showPeopleArray.length + 1; i++) {
 					var row = table.rows[i];
 					row.deleteCell(8);
 				}
@@ -420,10 +420,10 @@
 										console.log('111114：' + tempModel1.leaveTypeList.length);
 										for(var b = 0; b < tempModel1.leaveTypeList.length; b++) { //循环当前人员的所有请假类型
 											var typeModel = tempModel1.leaveTypeList[b];
-											for(var i = 0; i < tempModel.LeaveArray.length; i++) {//循环获取的请假
+											for(var i = 0; i < tempModel.LeaveArray.length; i++) { //循环获取的请假
 												var tempLeave = tempModel.LeaveArray[i];
 												console.log('111116:' + tempLeave.LeaveType + ',' + typeModel.LeaveTypeId);
-												if(tempLeave.LeaveType == typeModel.LeaveTypeId) {//如果类型一致
+												if(tempLeave.LeaveType == typeModel.LeaveTypeId) { //如果类型一致
 													//合并对象
 													console.log('111115');
 													typeModel = $.extend(typeModel, tempLeave);

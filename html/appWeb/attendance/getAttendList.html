@@ -215,7 +215,7 @@
 						//16.获取考勤统计
 						getAttend(0);
 					} else {
-						alert('请重新登录获取个人信息');
+						$.toast('请重新登录获取个人信息');
 					}
 				});
 			};
@@ -243,16 +243,16 @@
 				var beginTime = attendData.beginTime;
 				var endTime = attendData.endTime;
 				if(beginTime == '' && endTime.length > 0) {
-					alert('请选择开始查询日期');
+					$.toast('请选择开始查询日期');
 					return false;
 				} else if(endTime == '' && beginTime.length > 0) {
-					alert('请选择结束查询日期');
+					$.toast('请选择结束查询日期');
 					return false;
 				}
 				beginTime = beginTime.replace(/-/g, '');
 				endTime = endTime.replace(/-/g, '');
 				if(beginTime > endTime) {
-					alert('开始时间不能大于结束时间');
+					$.toast('开始时间不能大于结束时间');
 					return false;
 				}
 				var tempPage = 1;
@@ -338,7 +338,7 @@
 							}
 						}
 					} else {
-						alert(data.RspTxt);
+						$.toast(data.RspTxt);
 					}
 				});
 			};

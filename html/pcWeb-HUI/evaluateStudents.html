@@ -218,7 +218,8 @@
 					evaluateModel: {
 						OrderId: 0
 					}, //要修改的的类型model
-					localPath: ""
+					localPath: "",
+					uploader: {}
 				},
 				mounted: function() {
 					console.log("mounted")
@@ -250,7 +251,7 @@
 						var thumbOption = {
 							type: 0
 						};
-						cloudutil.uploadQnSingleImg("select-pic", thumbOption, function(response) {
+						this.uploader = cloudutil.uploadQnSingleImg("select-pic", thumbOption, function(response) {
 							console.log("获取的上传七牛图片信息：" + JSON.stringify(response));
 							com.localPath = response.saveurl + "?imageView2/5/w/200";
 						})

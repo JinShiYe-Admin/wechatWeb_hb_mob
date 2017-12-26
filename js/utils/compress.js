@@ -27,6 +27,60 @@ var compress = (function(mod) {
 		}
 		reader.readAsDataURL(file);
 	}
+	mod.getSquareFile = function(file, width, callback) {
+		var reader = new FileReader();
+		reader.onload = function() {
+			var result = this.result;
+			var formData = new FormData();
+			mod.getImgInfo(result, function(img, imgInfo) {
+				console.log("获取的文件信息：" + JSON.stringify(imgInfo));
+				console.log("原图尺寸：" + result.length);
+				var newDataUrl = mod.getSquareCanvasUrl(img, mod.getSquareImageSize(imgInfo, width));
+				var blob = mod.base64ToBlob(newDataUrl, 'image/jpeg');
+				console.log("blob.type:" + blob.type);
+				console.log('要传递的文件大小：' + blob.size);
+				callback(blob);
+			})
+		}
+		reader.readAsDataURL(file);
+	}
+	/**
+	 * 获取方形图片的裁剪大小
+	 * @param {Object} imgInfo
+	 * @param {Object} width
+	 */
+	mod.getSquareImageSize = function(imgInfo, width) {
+		console.log("*****裁剪成方形：getSquareImage*****");
+		var squreInfo = {};
+		if(imgInfo.width >= imgInfo.height) {
+			squreInfo.direction = 0; //0 为左右裁剪
+		} else {
+			squreInfo.direction = 1; //上下裁剪
+		}
+		squreInfo.distance = Math.abs(squreInfo.width - squreInfo.height) / 2;
+		squreInfo.sideLength = width;
+		return squreInfo; //获取方形图片的信息
+	}
+
+	mod.getSquareCanvasUrl = function(img, squareInfo) {
+		console.log("*****重绘图片的宽高******");
+		console.log("orientation:" + orientation);
+		var imageType = 'image/jpeg',
+			imageArgu = 0.7;
+		var canvas = document.createElement('canvas');
+		canvas.width = squareInfo.sideLength;
+		canvas.height = suitableSize.sideLength;
+		var ctx = canvas.getContext('2d');
+		var drawLeft = 0,
+			drawRight = 0;
+		if(squareInfo.direction === 0) {
+			drawLeft = -squareInfo.distance;
+		} else {
+			drawRight = -squareInfo.distance;
+		}
+		ctx.drawImage(img, drawLeft, drawRight, suitableSize.width, suitableSize.height);
+		return canvas.toDataURL(imageType, imageArgu);
+	}
 	mod.postFile = function(formData, callback) {
 		console.log("开始上传");
 		//		console.log("url="+consts.UPLOADURL+"data="+formData);
@@ -96,12 +150,8 @@ var compress = (function(mod) {
 				ctx.rotate(-180 * Math.PI / 180);
 				ctx.drawImage(img, 0, 0, suitableSize.width, suitableSize.height);
 				break;
-			case -1: //居中裁剪成圓形
-				ctx.save(); // 保存当前ctx的状态
-				ctx.arc(suitableSize.width / 2, suitableSize.height / 2, 0, 2 * Math.PI); //画出圆
-				ctx.clip(); //裁剪上面的圆形
-				ctx.drawImage(img, 0, 0, suitableSize, suitableSize.height); // 在刚刚裁剪的园上画图
-				ctx.restore(); // 还原状态
+			case -1: //居中裁剪成方形
+
 				break;
 			default:
 				ctx.drawImage(img, 0, 0, suitableSize.width, suitableSize.height);

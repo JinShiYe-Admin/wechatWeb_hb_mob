@@ -285,7 +285,7 @@ var cloudutil = (function(mod) {
 	mod.uploadQnSingleImg = function(buttonSelector, manageOptions, callback) {
 		console.log("uploadQnSingleImg上传图片")
 		var originalName = "";
-		var qnFileUploader = Qiniu.uploader({
+		return Qiniu.uploader({
 			disable_statistics_report: false, // 禁止自动发送上传统计信息到七牛，默认允许发送
 			runtimes: 'html5,flash,html4', // 上传模式,依次退化
 			browse_button: buttonSelector, // 上传选择的点选按钮，**必需**
@@ -304,7 +304,7 @@ var cloudutil = (function(mod) {
 			save_key: false, // 默认 false。若在服务端生成 uptoken 的上传策略中指定了 `save_key`，则开启，SDK在前端将不对key进行任何处理
 			get_new_uptoken: true, // 设置上传文件的时候是否每次都重新获取新的 uptoken
 			domain: storageutil.QNPBDOMAIN, // bucket 域名，下载资源时用到，如：'http://xxx.bkt.clouddn.com/' **必需**
-			max_file_size: '100mb', // 最大文件体积限制
+			max_file_size: '10mb', // 最大文件体积限制
 			flash_swf_url: '../../js/lib/plupload/Moxie.swf', //引入 flash,相对路径
 			max_retries: 3, // 上传失败最大重试次数
 			dragdrop: false, // 开启可拖曳上传
@@ -362,7 +362,7 @@ var cloudutil = (function(mod) {
 					//队列文件处理完毕后,处理相关的事情
 					console.log("UploadComplete:");
 				},
-				'Key': function(up, file) {
+				'Key': function(up,file) {
 					// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
 					// 该配置必须要在 unique_names: false , save_key: false 时才生效
 					if(uptokenData && uptokenData.code) { //成功

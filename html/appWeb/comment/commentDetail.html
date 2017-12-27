@@ -135,7 +135,7 @@
 								<img class="weui-media-box__thumb" :src="item.EvalEncThumb" alt="" style="border-radius: 50px;">
 							</div>
 							<div class="weui-media-box__bd">
-								<h4 class="weui-media-box__title">+1分<span style="color:black;">{{" "+item.EvalContent}}</span></h4>
+								<h4 class="weui-media-box__title">{{item.EvalType==1?"+1分":"-1分"}}<span style="color:black;">{{" "+item.EvalContent}}</span></h4>
 								<p class="weui-media-box__desc">{{item.EvalTime+" 由"+item.EvalManName+"点评"}}</p>
 							</div>
 						</a>
@@ -203,15 +203,23 @@
 				console.log("点评列表参数：" + JSON.stringify(tempData));
 				getEvaluationPro(tempData, function(data) {
 					console.log("点评列表数据：" + JSON.stringify(data));
-					for(var i = 0; i < data.RspData.Data.length; i++) {
-						var model = data.RspData.Data[i];
-						var ThumbArr = model.EvalEncThumb.split("|");
-						var EvalEncArr = model.EvalEnc.split("|");
-						model.ThumbArr = ThumbArr;
-						model.EvalEncArr = EvalEncArr;
+					if(data.RspCode == 0) {
+						if(data.RspData.Data.length == 0) {
+							$.alert("暂无点评", "提示");
+						}
+						for(var i = 0; i < data.RspData.Data.length; i++) {
+							var model = data.RspData.Data[i];
+							var ThumbArr = model.EvalEncThumb.split("|");
+							var EvalEncArr = model.EvalEnc.split("|");
+							model.ThumbArr = ThumbArr;
+							model.EvalEncArr = EvalEncArr;
+						}
+
+						vm.datasource = data.RspData.Data;
+					} else {
+						$.alert(data.RspTxt, "提示");
 					}
 
-					vm.datasource = data.RspData.Data;
 				});
 			}
 		</script>

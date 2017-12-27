@@ -661,7 +661,13 @@
 				//点评模板，查看表现
 				$(".template_top_right").click(function() {
 					if(beEvalMans.length == 1) {
-						location.href = "commentDetail.html?sKey=" + utils.getValueFromUrlByKey("sKey");
+						var data = {
+							deptId: deptId,
+							deptName: deptName,
+							mineUserInfo: members.value[beEvalMans[0][0]]
+						}
+						data.mineUserInfo.corpid = mineUserInfo.corpid;
+						utils.hrefSessionStorage("commentDetail.html", data);
 					}
 				});
 

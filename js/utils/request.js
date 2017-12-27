@@ -23,6 +23,8 @@ var request = (function(mod) {
 			console.log("获取的部门列表值：" + JSON.stringify(response));
 			if(response.RspCode == 0) {
 				callback(JSON.parse(response.RspData));
+			}else{
+				layer.alert(response.RspTxt);
 			}
 		})
 	}

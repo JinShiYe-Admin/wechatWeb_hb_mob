@@ -7,9 +7,9 @@ var request = (function(mod) {
 		jQuery.getJSON(url, data, callback);
 	}
 	mod.postData = function(url, data, callback) {
-		jQuery.post(url, data, function(data) {
-			if(data.RspCode == 13) {
-				alert("用户没有登录或已超时，关闭当前页面，从新从企业管理端登录")
+		jQuery.post(url, data, function(response) {
+			if(response.RspCode == 13) {
+				layer.alert("当前用户没有登录或登录已超时，请关闭当前页面，重新从企业管理端登录")
 			} else {
 				callback(data);
 			}
@@ -47,6 +47,7 @@ var request = (function(mod) {
 				callback(response.RspData);
 			} else {
 				callback([]);
+				layer.alert(response.RspTxt);
 			}
 		})
 	}
@@ -168,7 +169,7 @@ var request = (function(mod) {
 	 */
 	mod.requestPersonalInfo = function(callback) {
 		var comData = {
-			cmd: "userinfo",
+			cmd: "userinfoadmin",
 			type: "findpage",
 			colv: ""
 		}

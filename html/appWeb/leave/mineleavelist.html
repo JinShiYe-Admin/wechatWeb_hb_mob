@@ -155,6 +155,12 @@
 				getMineInfo();
 			}
 
+			window.onpageshow = function(event) {
+				if(event.persisted) {
+					window.location.reload();
+				}
+			};
+
 			function initListener() {
 				$(".weui-cells").on("click", ".weui-cell", function(e) {
 					clickIndex = $(".weui-cells .weui-cell").index(this);

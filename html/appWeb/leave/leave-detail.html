@@ -163,7 +163,7 @@
 				</div>
 				<div v-if="flag==1" class="weui-cell weui-cell_vcode input-container">
 					<div class="weui-cell__bd">
-						<input type="text" class="weui-input" v-model.trim="approveNote" placeholder="请输入内容" />
+						<input type="text" class="weui-input" v-model.trim="approveNote" maxlength="200" placeholder="请输入内容,最多200字！" />
 					</div>
 					<div class="weui-cell__ft">
 						<button class="weui-vcode-btn" id="showIOSActionSheet" v-on:click="showOptions=true">审核</button>

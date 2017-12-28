@@ -488,10 +488,17 @@
 					deptId = sValue.deptId;
 					deptName = sValue.deptName;
 					mineUserInfo = sValue.mineUserInfo;
-					getMembers();
+					if(typeof(sValue.members) == "undefined") {
+						getMembers();
+					} else {
+						addMemberData(sValue.members);
+						getEvalTemplate();
+					}
 				}
 				console.log("deptId:" + deptId);
+				console.log("deptName:" + deptName);
 				console.log("mineUserInfo", mineUserInfo);
+				console.log("members", members);
 			}
 
 			/**

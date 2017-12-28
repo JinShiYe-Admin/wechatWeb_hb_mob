@@ -35,6 +35,43 @@
 			.weui-media-box {
 				padding: 0;
 			}
+
+			.weui-media-box__thumb {
+				width: 60px;
+				height: 60px;
+			}
+
+			.class-head {
+				margin-right: 10px;
+			}
+
+			.weui-media-box__thumb {
+				vertical-align: middle;
+			}
+
+			.class-student-number {
+				font-size: 14px;
+				color: #666666;
+				margin: 2px 0 3px 0;
+			}
+
+			.class-comment {
+				font-size: 12px;
+			}
+
+			.class-comment-content {
+				display: inline-block;
+			}
+
+			.class-comment-content-text {
+				margin-right: 5px;
+			}
+
+			.class-comment-content-icon {
+				width: 20px;
+				height: 20px;
+				vertical-align: middle;
+			}
 		</style>
 	</head>
 
@@ -79,6 +116,10 @@
 		<script>
 			var loading = false; //下拉状态标记
 			var mineUserInfo; //个人信息
+			var mineDepart = {
+				key: [],
+				value: {}
+			}; //我所在的班级
 			window.onload = function() {
 				$.showLoading();
 				getMineInfo();
@@ -88,19 +129,16 @@
 				//点击班级
 				$("#dataList").on("click", ".weui-cell", function() {
 					var deptId = this.getAttribute("id");
-					var deptName = this.getAttribute("title");
+					var deptData = mineDepart.value[deptId];
 					var data = {
 						deptId: deptId,
-						deptName: deptName,
+						deptName: deptData.title,
 						mineUserInfo: mineUserInfo
 					}
-					var href;
-					if(mineUserInfo.isleader == 1) {
-						href = "stulist.html";
-					} else {
-						href = "commentDetail.html";
+					if(deptData.getMembers) {
+						data.members = deptData.members
 					}
-					utils.hrefSessionStorage(href, data);
+					utils.hrefSessionStorage("stulist.html", data);
 				});
 
 				//下拉刷新
@@ -111,7 +149,7 @@
 						return false
 					};
 					loading = true;
-					getDepartments();
+					getMineInfo();
 				});
 			}
 			/**
@@ -127,10 +165,20 @@
 					//data = getMineInfoCallBack;
 					if(data.RspCode == 0) {
 						mineUserInfo = JSON.parse(data.RspData);
-						initListener();
-						getDepartments();
+						if(mineUserInfo.isleader == 1) {
+							//老师
+							initListener();
+							getDepartments();
+						} else {
+							//家长
+							utils.hrefSessionStorage("commentDetail.html", {
+								mineUserInfo: mineUserInfo
+							});
+						}
 					} else {
 						$.hideLoading();
+						loading = false;
+						$(".weui-tab__bd-item").pullToRefreshDone();
 						$.alert("未获取到个人信息(" + data.RspTxt + ")", "提示");
 					}
 				});
@@ -146,48 +194,129 @@
 				}
 				unitWebsitePro(tempData, function(data) {
 					//data = persondepartsCallBack;
-					$.hideLoading();
-					loading = false;
-					$(".weui-tab__bd-item").pullToRefreshDone();
 					if(data.RspCode == 0) {
-						$("#dataList").empty();
 						var departments = JSON.parse(data.RspData);
-						var mineDepart = [];
+						mineDepart = null;
+						mineDepart = {
+							key: [],
+							value: {}
+						}
 						for(var i = 0; i < mineUserInfo.department.length; i++) {
 							for(var j = 0; j < departments.length; j++) {
 								if(departments[j].value == mineUserInfo.department[i]) {
-									mineDepart.push(departments[j]);
+									mineDepart.key.push(departments[j].value);
+									mineDepart.value[departments[j].value] = departments[j];
+									mineDepart.value[departments[j].value].getMembers = false;
+									mineDepart.value[departments[j].value].members = [];
 									break;
 								}
 							}
 						}
-						console.log("departments", departments, mineDepart);
-						showData(mineDepart);
+						console.log("departments", departments);
+						getMembers(0);
 					} else {
+						$.hideLoading();
+						loading = false;
+						$(".weui-tab__bd-item").pullToRefreshDone();
 						$.alert(data.RspTxt, "提示");
 					}
 				});
 			}
 
-			function showData(departments) {
-				var html = "";
-				for(var i = 0; i < departments.length; i++) {
-					if(departments[i].value == -1) {
-						continue;
+			/**
+			 * 获取部门成员
+			 */
+			function getMembers(index) {
+				var tempData = {
+					cmd: 'departpersons',
+					type: 'findpage',
+					colid: mineDepart.key[index],
+					colv: 0,
+					callcol: "info"
+				}
+				unitWebsitePro(tempData, function(data) {
+					//data = getDepartPersonsCallBack;
+					if(data.RspCode == 0) {
+						mineDepart.value[mineDepart.key[index]].getMembers = true;
+						mineDepart.value[mineDepart.key[index]].members = data.RspData;
+					}
+					if(index == mineDepart.key.length - 1) {
+						//获取完所有部门成员
+						getWeekEval();
 					} else {
-						html = html + '\
-							<a id="' + departments[i].value + '" title="' + departments[i].title + '" class="weui-cell weui-cell_access">\
-								<div class="weui-cell__bd">\
-									<div class="weui-media-box weui-media-box_appmsg">\
-										<div class="weui-media-box__bd">\
-											<h4 class="weui-media-box__title">' + departments[i].title + '</h4>\
+						index++;
+						getMembers(index);
+					}
+				});
+			}
+
+			/**
+			 * 获取班级本周点评情况
+			 */
+			function getWeekEval() {
+				var temp = {
+					corpId: mineUserInfo.corpid,
+					deptIds: mineDepart.key
+				}
+				getWeekEvalPro(temp, function(data) {
+					$.hideLoading();
+					loading = false;
+					$(".weui-tab__bd-item").pullToRefreshDone();
+					if(data.RspCode == 0) {
+						for(var i = 0; i < data.RspData.Data.length; i++) {
+							mineDepart.value[data.RspData.Data[i].DeptId].PraiseCnt = data.RspData.Data[i].PraiseCnt;
+							mineDepart.value[data.RspData.Data[i].DeptId].ImproveCnt = data.RspData.Data[i].ImproveCnt;
+						}
+					} else {
+						$.alert(data.RspTxt, "提示");
+					}
+					showData();
+				});
+			}
+
+			function showData() {
+				console.log("mineDepart", mineDepart);
+				$("#dataList").empty();
+				var html = "";
+				for(var i = 0; i < mineDepart.key.length; i++) {
+					var data = mineDepart.value[mineDepart.key[i]];
+					var praise, improved;
+					if(typeof(data.PraiseCnt) == "undefined" || data.PraiseCnt == 0) {
+						praise = "0";
+					} else {
+						praise = "+" + data.PraiseCnt + "分";
+					}
+					if(typeof(data.ImproveCnt) == "undefined" || data.ImproveCnt == 0) {
+						improved = "0";
+					} else {
+						improved = "-" + data.ImproveCnt + "分";
+					}
+					html = html + '\
+						<a id="' + data.value + '" class="weui-cell weui-cell_access">\
+							<div class="weui-media-box__hd class-head">\
+								<img class="weui-media-box__thumb" src="../../../image/comment/classhead.png">\
+							</div>\
+							<div class="weui-cell__bd">\
+								<div class="weui-media-box weui-media-box_appmsg">\
+									<div class="weui-media-box__bd">\
+										<h4 class="weui-media-box__title">' + data.title + '</h4>\
+										<div class="weui-media-box__desc class-student-number">' + data.members.length + '个学生</div>\
+										<div class="weui-media-box__desc class-comment">\
+											<div class="class-comment-content class-comment-content-text">本周表现</div>\
+											<div class="class-comment-content">\
+												<img src="../../../image/comment/praise.png" class="class-comment-content-icon" />\
+											</div>\
+											<div class="class-comment-content class-comment-content-text">' + praise + '</div>\
+											<div class="class-comment-content">\
+												<img src="../../../image/comment/improved.png" class="class-comment-content-icon" />\
+											</div>\
+											<div class="class-comment-content">' + improved + '</div>\
 										</div>\
 									</div>\
 								</div>\
-								<div class="weui-cell__ft">\
-								</div>\
-							</a>';
-					}
+							</div>\
+							<div class="weui-cell__ft"></div>\
+						</a>';
 				}
 				$("#dataList").append(html);
 			}

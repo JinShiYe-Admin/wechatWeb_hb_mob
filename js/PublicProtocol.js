@@ -266,3 +266,21 @@ var getEvaluationPro = function(data0, callback) {
 	data0 = extendParameter(data0);
 	xhrPost(tempEvaluationUrl + 'getEvaluation', JSON.stringify(data0), callback);
 }
+
+//6.获取班级列表
+var getDeptsByUserPro = function(data0, callback) {
+	data0 = extendParameter(data0);
+	xhrPost(tempEvaluationUrl + 'getDeptsByUser', JSON.stringify(data0), callback);
+}
+
+//7.获取本周点评情况
+var getWeekEvalPro = function(data0, callback) {
+	data0 = extendParameter(data0);
+	xhrPost(tempEvaluationUrl + 'getWeekEval', JSON.stringify(data0), callback);
+}
+
+//8.获取多人点评统计
+var getEvalStatByUsersPro = function(data0, callback) {
+	data0 = extendParameter(data0);
+	xhrPost(tempEvaluationUrl + 'getEvalStatByUsers', JSON.stringify(data0), callback);
+}

@@ -1,3 +1,4 @@
+
 Vue.component("leave-setting", {
 	template: "#leave-list",
 	data: function() {
@@ -58,7 +59,7 @@ Vue.component("leave-setting", {
 					com.corpId = JSON.parse(response.RspData).corpid;
 					com.requireLeave();
 				}
-			})
+			},1)
 		},
 		newTablebases: function() {
 			console.log("*****newTablebases******");
@@ -66,17 +67,7 @@ Vue.component("leave-setting", {
 			this.tablebases = $('.table-sort').DataTable({
 				pageLength: 10,
 				lengthChange: false,
-				columns: [
-					null,
-					null,
-					null,
-					{
-						"orderable": false
-					},
-					{
-						"orderable": false
-					}
-				]
+				ordering: false
 			});
 			com.tablebases.table(0).page(com.curPage).draw(false);
 		},

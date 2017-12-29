@@ -51,7 +51,7 @@ Vue.component("check-person-list", {
 					com.corpId = JSON.parse(response.RspData).corpid;
 					com.getAllCheckPerson();
 				}
-			})
+			},1)
 		},
 		/**
 		 * 数据结构

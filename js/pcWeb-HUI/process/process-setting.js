@@ -45,7 +45,7 @@ Vue.component("process-setting", {
 					com.corpId = JSON.parse(response.RspData).corpid;
 					com.requireProcess();
 				}
-			})
+			},1)
 		},
 		/**
 		 * 表格
@@ -55,17 +55,7 @@ Vue.component("process-setting", {
 			this.tablebases = $('.table-sort').DataTable({
 				pageLength: 10,
 				lengthChange: false,
-				columns: [
-					null,
-					null,
-					null,
-					{
-						"orderable": false
-					},
-					{
-						"orderable": false
-					}
-				]
+				ordering: false
 			});
 			this.tablebases.table(0).page(this.curPage).draw(false);
 		},

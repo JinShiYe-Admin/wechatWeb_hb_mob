@@ -3,15 +3,18 @@
  * 依赖consts.js
  */
 var request = (function(mod) {
-	mod.getData = function(url, data, callback) {
+	mod.getData = function(url, data, callback, type) {
 		jQuery.getJSON(url, data, callback);
 	}
-	mod.postData = function(url, data, callback) {
+	mod.postData = function(url, data, callback, type) {
 		jQuery.post(url, data, function(response) {
+			console.log("请求返回的值：" + JSON.stringify(response))
 			if(response.RspCode == 13) {
-				layer.alert("当前用户没有登录或登录已超时，请关闭当前页面，重新从企业管理端登录")
+				if(layer && type) {
+					layer.alert("当前用户没有登录或登录已超时，请关闭当前页面，重新从企业管理端登录")
+				}
 			} else {
-				callback(data);
+				callback(response);
 			}
 		});
 	}
@@ -23,7 +26,7 @@ var request = (function(mod) {
 			console.log("获取的部门列表值：" + JSON.stringify(response));
 			if(response.RspCode == 0) {
 				callback(JSON.parse(response.RspData));
-			}else{
+			} else {
 				layer.alert(response.RspTxt);
 			}
 		})
@@ -167,18 +170,20 @@ var request = (function(mod) {
 		})
 	}
 	/**
-	 * 获取的个人信息
+	 * 
+	 * @param {Object} callback 回调
+	 * @param {Object} type 类型
 	 */
-	mod.requestPersonalInfo = function(callback) {
+	mod.requestPersonalInfo = function(callback, type) {
 		var comData = {
-			cmd: "userinfoadmin",
+			cmd: type ? "userinfoadmin" : "userinfo",
 			type: "findpage",
 			colv: ""
 		}
 		mod.postData(consts.MAINURL, JSON.stringify(comData), function(response) {
 			console.log("获取的个人信息:" + JSON.stringify(response));
 			callback(response);
-		})
+		}, type)
 	}
 	return mod;
 })(request || {})

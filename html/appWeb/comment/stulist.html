@@ -16,17 +16,19 @@
 				-webkit-overflow-scrolling: touch;
 			}
 
-			.weui-tab {
-				display: none;
-			}
-
 			.weui-tab__bd-item {
 				width: 100%;
+				background: #F5F5F5;
 			}
 
 			#dataList .weui-grid {
 				/*一行四个成员*/
 				width: 25%;
+				padding: 15px 10px;
+			}
+
+			#dataList .weui-grid__label {
+				margin-top: 11px;
 			}
 
 			.weui-grid:before,
@@ -70,21 +72,19 @@
 				display: none;
 			}
 			/*多选框---end---*/
-			/*身份是老师---start---*/
 
 			.teacher-show .weui-tab__bd {
-				padding-bottom: 50px;
+				padding-bottom: 100px;
 			}
 
-			.weui-tabbar {
-				display: none;
+			.eval-students {
+				bottom: 50px;
 			}
 
 			.teacher-show .weui-tabbar {
 				display: flex;
 				display: -webkit-flex;
 			}
-			/*身份是老师---end---*/
 			/*底部多选---start---*/
 
 			.weui-tabbar__item {
@@ -346,21 +346,88 @@
 				background-size: cover;
 			}
 			/*文字点评---end---*/
+			/*点评数据---start---*/
+
+			.eval-double-bg {
+				position: absolute;
+				top: 60px;
+				left: 10%;
+				width: 80%;
+				height: 15px;
+				margin-left: -1px;
+				background: white;
+				border: 1px solid white;
+				border-radius: 7px;
+				font-size: 11px;
+				text-align: center;
+				text-align: -webkit-center;
+			}
+
+			.eval-double-bg .eval-number {
+				width: 49%;
+			}
+
+			.eval-double-bg .eval-improved {
+				margin-left: 2%;
+			}
+
+			.eval-number {
+				line-height: 15px;
+				float: left;
+			}
+
+			.eval-number.eval-praise {
+				background: #CCEBFB;
+				border-radius: 7px 0 0 7px;
+				color: #0099E8;
+			}
+
+			.eval-number.eval-improved {
+				background: #FFD9D8;
+				border-radius: 0 7px 7px 0;
+				color: #F45C3E;
+			}
+
+			.eval-zero {
+				background: #D8D8D8;
+				color: white;
+			}
+
+			.eval-single-bg {
+				position: absolute;
+				top: 60px;
+				left: 30%;
+				width: 40%;
+				height: 14px;
+				margin-left: -1px;
+				background: white;
+				border: 1px solid white;
+				border-radius: 7px;
+				text-align: center;
+				text-align: -webkit-center;
+				font-size: 11px;
+			}
+
+			.eval-single-bg .eval-number {
+				width: 100%;
+				border-radius: 7px;
+			}
+			/*点评数据---end---*/
 		</style>
 	</head>
 
 	<body>
-		<div id="weuitab" class="weui-tab stu-checkbox-hide">
+		<div id="weuitab" class="weui-tab stu-checkbox-hide teacher-show">
 			<div class="weui-tab__bd">
 				<div class="weui-tab__bd-item weui-tab__bd-item--active">
 					<div id="dataList" class="weui-grids weui-cells_checkbox">
 					</div>
 				</div>
 			</div>
-			<div class="weui-tabbar">
+			<div class="weui-tabbar eval-students">
 				<div class="weui-tabbar__item weui-tabbar_students">
 					<div class="weui-tabbar__icon">
-						<img src="../../../image/comment/addactive.png" />
+						<img src="../../../image/comment/add.png" />
 					</div>
 					<div class="weui-tabbar__label">点评多人</div>
 				</div>
@@ -370,6 +437,26 @@
 				<div class="weui-tabbar__item weui-tabbar_cancle">
 					<div class="weui-tabbar__label">取消</div>
 				</div>
+			</div>
+			<div class="weui-tabbar">
+				<a href="https://jsypay.jiaobaowang.net/wxth/appschweb/app/index.aspx" class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
+						<img class="img" src="../../../image/utils/wxhome.png">
+					</div>
+					<p class="weui-tabbar__label">微校园</p>
+				</a>
+				<a href="classlist.html" class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
+						<img class="img" src="../../../image/comment/start.png">
+					</div>
+					<p class="weui-tabbar__label">学生点评</p>
+				</a>
+				<a href="stulist.html" class="weui-tabbar__item weui-bar__item--on">
+					<div class="weui-tabbar__icon">
+						<img class="img" src="../../../image/comment/listactive.png">
+					</div>
+					<p class="weui-tabbar__label">学生列表</p>
+				</a>
 			</div>
 		</div>
 		<div id="evalTemplate" class="weui-popup__container">
@@ -516,11 +603,49 @@
 					//data = getDepartPersonsCallBack;
 					if(data.RspCode == 0) {
 						addMemberData(data.RspData);
-						getEvalTemplate();
+						getEvalStatByUsers();
 					} else {
 						$.hideLoading();
-						$.alert("未获取到成员信息(" + data.RspTxt + ")", "提示");
+						$.alert("获取到成员信息失败(" + data.RspTxt + ")", "提示");
 					}
+				});
+			}
+
+			/**
+			 * 获取点评的数据
+			 */
+			function getEvalStatByUsers() {
+				var temp = {
+					corpId: mineUserInfo.corpid,
+					deptId: deptId,
+					userIds: members.key
+				}
+				getEvalStatByUsersPro(temp, function(data) {
+					if(data.RspCode == 0) {
+						for(var i = 0; i < data.RspData.Data.length; i++) {
+							var evalStat = data.RspData.Data[i];
+							if(evalStat.PraiseCnt != 0 && evalStat.ImproveCnt != 0) {
+								//都不为0
+								$("[for='" + evalStat.BeEvalMan + "'] .eval-single-bg").css("display", "none");
+								$("[for='" + evalStat.BeEvalMan + "'] .eval-double-bg .eval-praise").text(evalStat.PraiseCnt);
+								$("[for='" + evalStat.BeEvalMan + "'] .eval-double-bg .eval-improved").text(evalStat.ImproveCnt * -1);
+								$("[for='" + evalStat.BeEvalMan + "'] .eval-double-bg").css("display", "block");
+							} else if(evalStat.PraiseCnt != 0 && evalStat.ImproveCnt == 0) {
+								var ele = $("[for='" + evalStat.BeEvalMan + "'] .eval-single-bg .eval-number");
+								ele.text(evalStat.PraiseCnt);
+								ele.removeClass("eval-zero");
+								ele.addClass("eval-praise");
+							} else if(evalStat.PraiseCnt == 0 && evalStat.ImproveCnt != 0) {
+								var ele = $("[for='" + evalStat.BeEvalMan + "'] .eval-single-bg .eval-number");
+								ele.text(evalStat.ImproveCnt * -1);
+								ele.removeClass("eval-zero");
+								ele.addClass("eval-improved");
+							}
+						}
+					} else {
+						$.alert("获取点评数据失败(" + data.RspTxt + ")", "提示");
+					}
+					getEvalTemplate();
 				});
 			}
 
@@ -539,9 +664,8 @@
 					if(data.RspCode == 0) {
 						addEvalTemplate(data.RspData.Data);
 					} else {
-						$.alert("未获取到点评模版(" + data.RspTxt + ")", "提示");
+						$.alert("获取到点评模版失败(" + data.RspTxt + ")", "提示");
 					}
-					initData();
 					initListener();
 					initUploader();
 				});
@@ -564,6 +688,13 @@
 							<div class="weui-cell__hd">\
 								<div class="weui-grid__icon">\
 									<img class="stu-headimage" src="' + data[i].avatar + '">\
+								</div>\
+								<div class="eval-double-bg" style="display: none;">\
+									<div class="eval-number eval-praise">0</div>\
+								 	<div class="eval-number eval-improved">-0</div>\
+								</div>\
+								<div class="eval-single-bg">\
+									<div class="eval-number eval-zero">0</div>\
 								</div>\
 								<p class="weui-grid__label">' + data[i].name + '</p>\
 							</div>\
@@ -598,17 +729,6 @@
 				}
 				$("#praise .weui-grids").append(praiseHtml);
 				$("#improved .weui-grids").append(improvedHtml);
-			}
-
-			/**
-			 * 初始化数据
-			 */
-			function initData() {
-				if(mineUserInfo.isleader == 1) {
-					//上级，老师
-					$("#weuitab").addClass("teacher-show");
-				}
-				$("#weuitab").css("display", "block");
 			}
 
 			/**
@@ -655,7 +775,6 @@
 					var checkeds = $("#dataList input:checked");
 					if(checkeds.length != 0) {
 						console.log("checkeds", checkeds);
-						$('.weui-tabbar_cancle').trigger("click");
 						for(var i = 0; i < checkeds.length; i++) {
 							var stu = members.value[checkeds[i].id];
 							var temp = [stu.userid, stu.name, stu.avatar];
@@ -782,8 +901,10 @@
 					$(".template_top_center").text("点评" + beEvalMans[0][1] + "等" + beEvalMans.length + "人");
 					$(".template_top_right").text("");
 				}
+				$('[href="#praise"]').addClass("weui-bar__item--on");
+				$('[href="#improved"]').removeClass("weui-bar__item--on");
 				$("#praise").addClass("weui-tab__bd-item--active");
-				$("#improved").removeClass("weui-tab__bd-item");
+				$("#improved").removeClass("weui-tab__bd-item--active");
 				$("#evalTemplate").popup();
 			}
 
@@ -807,9 +928,67 @@
 					$.hideLoading();
 					if(data.RspCode == 0) {
 						$.toast("点评成功");
+						$('.weui-tabbar_cancle').trigger("click");
 						$.closePopup();
 						if(tempData.evalType == 3) { //文字点评
 							textEvaluationClear();
+						} else {
+							for(var i = 0; i < beEvalMans.length; i++) {
+								var id = beEvalMans[i][0];
+								var singleEle = $("[for='" + id + "'] .eval-single-bg");
+								var cssDisplay = singleEle.css("display");
+								if(cssDisplay == "none") {
+									//显示两种类型的数据
+									var ele, num;
+									if(tempData.evalType == 1) {
+										//表扬
+										ele = $("[for='" + id + "'] .eval-double-bg .eval-praise");
+										num = ele.text() * 1 + 1;
+									} else {
+										//待改进
+										ele = $("[for='" + id + "'] .eval-double-bg .eval-improved");
+										num = ele.text() * 1 - 1;
+									}
+									ele.text(num);
+								} else {
+									var ele = $("[for='" + id + "'] .eval-single-bg .eval-number");
+									var num = ele.text() * 1;
+									var hasPraise = ele.hasClass("eval-praise");
+									var hasImproved = ele.hasClass("eval-improved");
+									var isSingle = false; //是否只有一种类型
+									if(!hasPraise && !hasImproved) { //默认值
+										isSingle = true;
+									}
+									if(hasPraise && tempData.evalType == 1) {
+										isSingle = true;
+									}
+									if(hasImproved && tempData.evalType == 2) {
+										isSingle = true;
+									}
+
+									if(isSingle) {
+										ele.removeClass("eval-zero");
+										if(tempData.evalType == 1) {
+											ele.addClass("eval-praise");
+											ele.text(num + 1);
+										} else {
+											ele.addClass("eval-improved");
+											ele.text(num - 1);
+										}
+									} else {
+										singleEle.css("display", "none");
+										if(hasPraise) {
+											$("[for='" + id + "'] .eval-double-bg .eval-praise").text(num);
+											$("[for='" + id + "'] .eval-double-bg .eval-improved").text(-1);
+										}
+										if(hasImproved) {
+											$("[for='" + id + "'] .eval-double-bg .eval-praise").text(1);
+											$("[for='" + id + "'] .eval-double-bg .eval-improved").text(num);
+										}
+										$("[for='" + id + "'] .eval-double-bg").css("display", "block");
+									}
+								}
+							}
 						}
 					} else {
 						$.alert(data.RspTxt, "提示");

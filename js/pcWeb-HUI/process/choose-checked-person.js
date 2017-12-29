@@ -73,7 +73,7 @@ Vue.component("choose-person", {
 					com.corpId = JSON.parse(response.RspData).corpid;
 					com.requireProcess();
 				}
-			})
+			},1)
 		},
 		/**
 		 * 请求部门人员

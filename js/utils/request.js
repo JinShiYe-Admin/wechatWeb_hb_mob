@@ -10,7 +10,7 @@ var request = (function(mod) {
 		jQuery.post(url, data, function(response) {
 			console.log("请求返回的值：" + JSON.stringify(response))
 			if(response.RspCode == 13) {
-				if(layer && type) {
+				if(type) {
 					layer.alert("当前用户没有登录或登录已超时，请关闭当前页面，重新从企业管理端登录")
 				}
 			} else {

@@ -83,7 +83,11 @@
 			}
 			
 			.check-detail {
-				padding-bottom: 50px;
+				padding-bottom: 103px;
+			}
+			
+			.show-detail {
+				padding-bottom: 53px;
 			}
 			
 			.apply-pass {
@@ -103,13 +107,16 @@
 				text-align: center;
 				color: #cfcfcf;
 			}
+			.weui-gallery__img{
+				bottom: 0;
+			}
 		</style>
 	</head>
 
 	<body>
 		<div id="detail-container" class="page actionsheet js_show" style="position: relative;">
-			<template v-show="applyDetail.ApplyManName">
-				<div v-bind:class="[{'check-detail':flag<2}]">
+			<template v-if="applyDetail.ApplyManName">
+				<div v-bind:class="[{'check-detail':flag<2},{'show-detail':flag>=2}]">
 					<div class="weui-cells person-container weui-flex">
 						<img v-bind:src="applyDetail.ApplyManPic?applyDetail.ApplyManPic:personalInfo.avatar" class="head-portrait display-inline">
 						<div class="display-inline name-time-container">
@@ -161,20 +168,54 @@
 						</div>
 					</template>
 				</div>
-				<div v-if="flag==1" class="weui-cell weui-cell_vcode input-container">
-					<div class="weui-cell__bd">
-						<input type="text" class="weui-input" v-model.trim="approveNote" maxlength="200" placeholder="请输入内容,最多200字！" />
+				<div class=" input-container">
+					<div v-if="flag==1" class="weui-cell weui-cell_vcode">
+						<div class="weui-cell__bd">
+							<input type="text" class="weui-input" v-model.trim="approveNote" maxlength="200" placeholder="请输入内容,最多200字！" />
+						</div>
+						<div class="weui-cell__ft">
+							<button class="weui-vcode-btn" id="showIOSActionSheet" v-on:click="showOptions=true">审核</button>
+						</div>
 					</div>
-					<div class="weui-cell__ft">
-						<button class="weui-vcode-btn" id="showIOSActionSheet" v-on:click="showOptions=true">审核</button>
+					<div v-if="flag == 0" class="weui-flex">
+						<div class="weui-flex__item">
+							<div class="placeholder" style="color: #46BDFF;" v-on:click="editLeave()">编辑</div>
+						</div>
+						<div class="weui-flex__item">
+							<div class="placeholder" style="color: red;" v-on:click="delLeave()">删除</div>
+						</div>
 					</div>
-				</div>
-				<div v-if="flag == 0" class="weui-flex input-container">
-					<div class="weui-flex__item">
-						<div class="placeholder" style="color: #46BDFF;" v-on:click="editLeave()">编辑</div>
-					</div>
-					<div class="weui-flex__item">
-						<div class="placeholder" style="color: red;" v-on:click="delLeave()">删除</div>
+					<div class="weui-tabbar">
+						<a href="https://jsypay.jiaobaowang.net/wxth/appschweb/app/index.aspx" class="weui-tabbar__item">
+							<div class="weui-tabbar__icon">
+								<img class="img" src="../../../image/utils/wxhome.png">
+							</div>
+							<p class="weui-tabbar__label">微校园</p>
+						</a>
+						<a href="addleaveapply.html" class="weui-tabbar__item">
+							<div class="weui-tabbar__icon">
+								<img class="img" src="../../../image/leave/apply.png">
+							</div>
+							<p class="weui-tabbar__label">请假申请</p>
+						</a>
+						<a href="mineleavelist.html" class="weui-tabbar__item ">
+							<div class="weui-tabbar__icon">
+								<img src="../../../image/leave/applyquery.png">
+							</div>
+							<p class="weui-tabbar__label">请假查询</p>
+						</a>
+						<a v-if="isChecker" href="leave-check.html" class="weui-tabbar__item ">
+							<div class="weui-tabbar__icon">
+								<img src="../../../image/leave/checkquery.png">
+							</div>
+							<p class="weui-tabbar__label">请假审核</p>
+						</a>
+						<a href="leave-detail.html" class="weui-tabbar__item weui-bar__item--on">
+							<div class="weui-tabbar__icon">
+								<img src="../../../image/leave/leave-detail.png">
+							</div>
+							<p class="weui-tabbar__label">请假详情</p>
+						</a>
 					</div>
 				</div>
 				<div>
@@ -232,7 +273,8 @@
 					pageIndex: 1,
 					pageSize: 0,
 					flag: 0, //0查看 1审核
-					previewImg: ""
+					previewImg: "",
+					isChecker: 0
 				},
 				mounted: function() {
 					this.initialData();
@@ -315,6 +357,7 @@
 						console.log("skey" + sKey);
 						var leaveInfo = JSON.parse(storageutil.getSessionStorage(sKey));
 						this.flag = parseInt(events.getUrlParam(location.href, "flag"));
+						this.isChecker = parseInt(events.getUrlParam(location.href, "isChecker"));
 						console.log("获取的flag:" + this.flag);
 						console.log("this.flag type:" + typeof(this.flag));
 						if(leaveInfo == null) {

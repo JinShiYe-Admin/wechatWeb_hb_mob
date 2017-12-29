@@ -147,6 +147,7 @@
 			var page = 1; //当前页码
 			var mineUserInfo; //个人信息
 			var clickIndex; //点击的序号
+			var isChecker = 0; //是否是审核人员
 			var leaveApply = {
 				key: [],
 				value: {}
@@ -169,7 +170,8 @@
 					var sKey = new Date().getTime() + "" + parseInt(Math.random() * 1000);
 					var sValue = {
 						leave: leave,
-						mineUserInfo: mineUserInfo
+						mineUserInfo: mineUserInfo,
+						isChecker: isChecker
 					}
 					storageutil.setSessionStorage(sKey, JSON.stringify(sValue));
 					if(leave.ApplyStat == 1 || leave.ApplyStat == 2 || leave.ApplyStat == 3) {
@@ -367,7 +369,8 @@
 				}
 				processRequest.postProcessData("getApprPowerByUser ", tempData, function(data) {
 					if(data.RspCode == 0 && data.RspData.Result != 0) {
-						$("#checkItem").css("display", "block")
+						$("#checkItem").css("display", "block");
+						isChecker = 1;
 					}
 				});
 			}

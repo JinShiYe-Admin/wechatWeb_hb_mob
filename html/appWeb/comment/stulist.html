@@ -307,10 +307,15 @@
 				float: initial;
 			}
 
-			.upload-image__num {
+			.upload-image__num,
+			.eval-text-persion {
 				width: 100%;
 				text-align: center;
 				background: white;
+			}
+
+			.eval-text-persion {
+				padding: 5px 0;
 			}
 
 			#evalText .weui-icon-cancel {
@@ -494,6 +499,7 @@
 			<div class="weui-popup__modal">
 				<i class="weui-icon-cancel"></i>
 				<div class="eval-text__bg">
+					<div class="eval-text-persion"></div>
 					<div class="weui-cells">
 						<div class="weui-cell weui-cell_vcode">
 							<div class="weui-cell__bd">
@@ -600,7 +606,7 @@
 					callcol: "info"
 				}
 				unitWebsitePro(tempData, function(data) {
-					//data = getDepartPersonsCallBack;
+					data = getDepartPersonsCallBack;
 					if(data.RspCode == 0) {
 						addMemberData(data.RspData);
 						getEvalStatByUsers();
@@ -775,6 +781,7 @@
 					var checkeds = $("#dataList input:checked");
 					if(checkeds.length != 0) {
 						console.log("checkeds", checkeds);
+						$('.weui-tabbar_cancle').trigger("click");
 						for(var i = 0; i < checkeds.length; i++) {
 							var stu = members.value[checkeds[i].id];
 							var temp = [stu.userid, stu.name, stu.avatar];
@@ -895,10 +902,14 @@
 			function showEvalTemplate() {
 				console.log("showEvalTemplate", beEvalMans);
 				if(beEvalMans.length == 1) {
-					$(".template_top_center").text("点评" + beEvalMans[0][1]);
+					var str = "点评" + beEvalMans[0][1];
+					$(".template_top_center").text(str);
+					$(".eval-text-persion").text(str);
 					$(".template_top_right").text("查看表现");
 				} else {
-					$(".template_top_center").text("点评" + beEvalMans[0][1] + "等" + beEvalMans.length + "人");
+					var str = "点评" + beEvalMans[0][1] + "等" + beEvalMans.length + "人";
+					$(".template_top_center").text(str);
+					$(".eval-text-persion").text(str);
 					$(".template_top_right").text("");
 				}
 				$('[href="#praise"]').addClass("weui-bar__item--on");
@@ -928,7 +939,6 @@
 					$.hideLoading();
 					if(data.RspCode == 0) {
 						$.toast("点评成功");
-						$('.weui-tabbar_cancle').trigger("click");
 						$.closePopup();
 						if(tempData.evalType == 3) { //文字点评
 							textEvaluationClear();

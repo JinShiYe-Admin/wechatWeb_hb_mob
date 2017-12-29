@@ -29,7 +29,7 @@ var request = (function(mod) {
 			} else {
 				layer.alert(response.RspTxt);
 			}
-		})
+		},1)
 	}
 	mod.getDepartPersons = function(id, colv, callcol, callback) {
 		if(callcol) {
@@ -54,7 +54,7 @@ var request = (function(mod) {
 				callback([]);
 				layer.alert(response.RspTxt);
 			}
-		})
+		},1)
 	}
 	mod.publishMessage = function(users, content, callback) {
 
@@ -117,7 +117,7 @@ var request = (function(mod) {
 		mod.postData(consts.MAINURL, JSON.stringify(comData), function(response) {
 			console.log("查询维修种类获取的值:" + JSON.stringify(response));
 			callback(response);
-		})
+		},1)
 
 	}
 	/**
@@ -135,7 +135,7 @@ var request = (function(mod) {
 		mod.postData(consts.MAINURL, JSON.stringify(comData), function(response) {
 			console.log("添加维修服务组获取的数据" + JSON.stringify(response));
 			callback(response);
-		})
+		},1)
 	}
 	/**
 	 * 编辑维修组
@@ -151,7 +151,7 @@ var request = (function(mod) {
 		mod.postData(consts.MAINURL, JSON.stringify(comData), function(response) {
 			console.log("编辑维修组的结果：" + JSON.stringify(response));
 			callback(response);
-		})
+		},1)
 	}
 	/**
 	 * 删除维修组
@@ -167,7 +167,7 @@ var request = (function(mod) {
 		mod.postData(consts.MAINURL, JSON.stringify(comData), function(response) {
 			console.log("删除维修组的结果:" + JSON.stringify(response));
 			callback(response);
-		})
+		},1)
 	}
 	/**
 	 * 

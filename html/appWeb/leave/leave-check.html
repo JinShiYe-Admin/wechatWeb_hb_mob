@@ -328,7 +328,8 @@
 						var sKey = new Date().getTime();
 						var sValue = {
 							leave: item,
-							mineUserInfo: this.personalInfo
+							mineUserInfo: this.personalInfo,
+							isChecker: 1
 						}
 						storageutil.setSessionStorage(sKey, JSON.stringify(sValue));
 						location.href = "leave-detail.html?flag=" + this.getFlag(item) + "&sKey=" + sKey;

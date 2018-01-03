@@ -152,6 +152,9 @@
 
 				</div>
 			</div>
+									<div class="weui-gallery" :style="displayGallery">
+							<span class="weui-gallery__img" @click="clickGigImg" :style="{backgroundImage:'url('+selectImgPath+')'}"></span>
+						</div>
 		</div>
 		<script src="../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" src="../../../js/lib/vconsole/vconsole.min.js"></script>
@@ -170,6 +173,10 @@
 			var vm = new Vue({
 				el: '#list',
 				data: {
+					 displayGallery: {
+		                display: 'none'
+		            },
+		            selectImgPath: '',
 					mineUserInfo: {},
 					datasource: [],
 					depart_array: []
@@ -182,10 +189,20 @@
 				methods: {
 					ThumbClick: function(imgurl) {
 						console.log(imgurl)
+		                vm.selectImgPath = imgurl;
+						 vm.displayGallery = {
+		                    display: 'block'
+		                };
 						//					$("#content").css("background-image", "url(" + imgurl + ")");
 						//					$("#list").css("display", "none");
 
 					},
+							            clickGigImg: function () { //点击放大后的图片，隐藏显示
+		                vm.displayGallery = {
+		                    display: 'none'
+		                };
+		            },
+
 					del: function(index) {
 						$.modal({
 							title: "提示",
@@ -210,27 +227,27 @@
 			var deptName;
 			var mineUserInfo;
 			window.onload = function() {
-				//				mineUserInfo = {
-				//					"corpid": "wx6c4528c675d4a9c9",
-				//					"userid": "songyanming",
-				//					"name": "宋艳明",
-				//					"department": [11],
-				//					"order": [0],
-				//					"position": "",
-				//					"mobile": null,
-				//					"english_name": "",
-				//					"gender": 1,
-				//					"isleader": 1,
-				//					"telephone": null,
-				//					"email": null,
-				//					"weixinid": null,
-				//					"avatar": "http://shp.qpic.cn/bizmp/LlAHpaR9WIbXvzjGTAPgEfe6lmhQqEkJOvvoMW928nibnU4bRQ5wWJA/",
-				//					"status": 1,
-				//					"extattr": null,
-				//					"errcode": 0,
-				//					"errmsg": "ok",
-				//					"P2PData": null
-				//				}
+//								mineUserInfo = {
+//									"corpid": "wx6c4528c675d4a9c9",
+//									"userid": "songyanming",
+//									"name": "宋艳明",
+//									"department": [11],
+//									"order": [0],
+//									"position": "",
+//									"mobile": null,
+//									"english_name": "",
+//									"gender": 1,
+//									"isleader": 0,
+//									"telephone": null,
+//									"email": null,
+//									"weixinid": null,
+//									"avatar": "http://shp.qpic.cn/bizmp/LlAHpaR9WIbXvzjGTAPgEfe6lmhQqEkJOvvoMW928nibnU4bRQ5wWJA/",
+//									"status": 1,
+//									"extattr": null,
+//									"errcode": 0,
+//									"errmsg": "ok",
+//									"P2PData": null
+//								}
 				var sValue = utils.getSessionStorageByUrlsKey();
 				mineUserInfo = sValue.mineUserInfo;
 				vm.mineUserInfo = mineUserInfo;
@@ -239,9 +256,9 @@
 					deptName = sValue.deptName;
 					document.getElementById("depart").value = deptName;
 					document.getElementById("depart").data_id = deptId;
-					//					document.getElementById("depart").value = "开发部";
-					//					document.getElementById("depart").data_id = "11";
-					//					deptId = document.getElementById("depart").data_id;
+//										document.getElementById("depart").value = "开发部";
+//										document.getElementById("depart").data_id = "11";
+//										deptId = document.getElementById("depart").data_id;
 					getEvaluation();
 					getDepart();
 				} else {
@@ -251,64 +268,64 @@
 			}
 
 			function getDepart() {
-				//				var rspData = [{
-				//					"value": 11,
-				//					"title": "开发部",
-				//					"parentvalue": 1,
-				//					"order": 2147483047
-				//				}, {
-				//					"value": 12,
-				//					"title": "测试子部门",
-				//					"parentvalue": 11,
-				//					"order": 100000000
-				//				}, {
-				//					"value": 13,
-				//					"title": "测试孙部门",
-				//					"parentvalue": 12,
-				//					"order": 100000000
-				//				}, {
-				//					"value": 14,
-				//					"title": "测试子部门2",
-				//					"parentvalue": 11,
-				//					"order": 99999000
-				//				}, {
-				//					"value": -1,
-				//					"title": "全部",
-				//					"parentvalue": 0,
-				//					"order": 0
-				//				}]
-
-				//				mineUserInfo.depart_array = [];
-				//				for(var i = 0; i < rspData.length; i++) {
-				//					var model = rspData[i];
-				//					if(model.value == -1) {
-				//						continue;
-				//					} else {
-				//						//						for(var j = 0; j < mineUserInfo.department.length; j++) {
-				//						//							if(model.value == mineUserInfo.department[j]) {
-				//						model.label = model.title;
-				//						mineUserInfo.depart_array.push(model);
-				//						if(i == 0) {
-				//							if(mineUserInfo.isleader == 0) {
-				//								document.getElementById("depart").value = model.label;
-				//								document.getElementById("depart").data_id = model.value;
-				//								deptId = model.value;
-				//								getEvaluation();
-				//							}
-				//
-				//						}
-				//
-				//						//							}
-				//
-				//						//						}
-				//
-				//					}
-				//				}
-				//				deptId = 11;
-				//				getEvaluation();
-				//				console.log('重组部门:' + JSON.stringify(mineUserInfo.depart_array));
-				//
-				//				return;
+//								var rspData = [{
+//									"value": 11,
+//									"title": "开发部",
+//									"parentvalue": 1,
+//									"order": 2147483047
+//								}, {
+//									"value": 12,
+//									"title": "测试子部门",
+//									"parentvalue": 11,
+//									"order": 100000000
+//								}, {
+//									"value": 13,
+//									"title": "测试孙部门",
+//									"parentvalue": 12,
+//									"order": 100000000
+//								}, {
+//									"value": 14,
+//									"title": "测试子部门2",
+//									"parentvalue": 11,
+//									"order": 99999000
+//								}, {
+//									"value": -1,
+//									"title": "全部",
+//									"parentvalue": 0,
+//									"order": 0
+//								}]
+//
+//								mineUserInfo.depart_array = [];
+//								for(var i = 0; i < rspData.length; i++) {
+//									var model = rspData[i];
+//									if(model.value == -1) {
+//										continue;
+//									} else {
+//										//						for(var j = 0; j < mineUserInfo.department.length; j++) {
+//										//							if(model.value == mineUserInfo.department[j]) {
+//										model.label = model.title;
+//										mineUserInfo.depart_array.push(model);
+//										if(i == 0) {
+//											if(mineUserInfo.isleader == 0) {
+//												document.getElementById("depart").value = model.label;
+//												document.getElementById("depart").data_id = model.value;
+//												deptId = model.value;
+//												getEvaluation();
+//											}
+//				
+//										}
+//				
+//										//							}
+//				
+//										//						}
+//				
+//									}
+//								}
+//								deptId = 11;
+//								getEvaluation();
+//								console.log('重组部门:' + JSON.stringify(mineUserInfo.depart_array));
+				
+//								return;
 				var tempData = {
 					cmd: 'persondeparts',
 					type: 'findpage',

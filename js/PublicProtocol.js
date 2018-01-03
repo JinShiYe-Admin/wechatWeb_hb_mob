@@ -284,3 +284,8 @@ var getEvalStatByUsersPro = function(data0, callback) {
 	data0 = extendParameter(data0);
 	xhrPost(tempEvaluationUrl + 'getEvalStatByUsers', JSON.stringify(data0), callback);
 }
+//8.删除点评
+var delEvaluation = function(data0, callback) {
+	data0 = extendParameter(data0);
+	xhrPost(tempEvaluationUrl + 'delEvaluation', JSON.stringify(data0), callback);
+}

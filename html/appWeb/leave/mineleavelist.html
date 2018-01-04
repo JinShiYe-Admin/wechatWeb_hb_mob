@@ -106,25 +106,25 @@
 				</div>
 			</div>
 			<div class="weui-tabbar">
-				<a href="https://jsypay.jiaobaowang.net/wxth/appschweb/app/index.aspx" class="weui-tabbar__item">
+				<a title="https://jsypay.jiaobaowang.net/wxth/appschweb/app/index.aspx" class="weui-tabbar__item">
 					<div class="weui-tabbar__icon">
 						<img class="img" src="../../../image/utils/wxhome.png">
 					</div>
 					<p class="weui-tabbar__label">微校园</p>
 				</a>
-				<a href="addleaveapply.html" class="weui-tabbar__item">
+				<a title="addleaveapply.html" class="weui-tabbar__item">
 					<div class="weui-tabbar__icon">
 						<img class="img" src="../../../image/leave/apply.png">
 					</div>
 					<p class="weui-tabbar__label">请假申请</p>
 				</a>
-				<a href="mineleavelist.html" class="weui-tabbar__item weui-bar__item--on">
+				<a title="mineleavelist.html" class="weui-tabbar__item weui-bar__item--on">
 					<div class="weui-tabbar__icon">
 						<img src="../../../image/leave/applyqueryactive.png">
 					</div>
 					<p class="weui-tabbar__label">请假查询</p>
 				</a>
-				<a id="checkItem" href="leave-check.html" class="weui-tabbar__item" style="display: none;">
+				<a id="checkItem" title="leave-check.html" class="weui-tabbar__item" style="display: none;">
 					<div class="weui-tabbar__icon">
 						<img src="../../../image/leave/checkquery.png">
 					</div>
@@ -144,7 +144,8 @@
 		</script>
 		<script>
 			var loading = false; //下拉,上拉状态标记
-			var page = 1; //当前页码
+			var page = 0; //当前页码
+			var totalPage = 0; //总页码
 			var mineUserInfo; //个人信息
 			var clickIndex; //点击的序号
 			var isChecker = 0; //是否是审核人员
@@ -152,13 +153,46 @@
 				key: [],
 				value: {}
 			} //请假列表数据
-			window.onload = function() {
-				getMineInfo();
-			}
 
 			window.onpageshow = function(event) {
-				if(event.persisted) {
-					window.location.reload();
+				var sKey = utils.getValueFromUrlByKey("sKey");
+				history.replaceState({}, "请假列表", "mineleavelist.html");
+				initListener();
+				console.log("sKey", sKey);
+				if(sKey === null) {
+					getMineInfo();
+				} else {
+					var sValue = storageutil.getSessionStorage(sKey);
+					if(sValue === null) {
+						getMineInfo();
+					} else {
+						var obj = JSON.parse(sValue);
+						if(typeof(obj.mineUserInfo) == "undefined") {
+							getMineInfo();
+						} else {
+							mineUserInfo = obj.mineUserInfo;
+							$("#pullUp").css("margin-top", "1.5em");
+							initPullDown();
+							initPullUp();
+							if(obj.isChecker) {
+								showCheck();
+							} else {
+								checkPower();
+							}
+							page = obj.page;
+							totalPage = obj.totalPage;
+							if(page == 0) {
+								getLeaveApply(1);
+							} else {
+								checkPage();
+								var data = obj.leaveApply;
+								for(var i = 0; i < data.key.length; i++) {
+									showData([data.value[data.key[i]]], 0)
+								}
+								$(".weui-tab__bd-item").scrollTop(obj.scrollTop);
+							}
+						}
+					}
 				}
 			};
 
@@ -173,26 +207,59 @@
 						mineUserInfo: mineUserInfo,
 						isChecker: isChecker
 					}
-					storageutil.setSessionStorage(sKey, JSON.stringify(sValue));
 					if(leave.ApplyStat == 1 || leave.ApplyStat == 2 || leave.ApplyStat == 3) {
 						//已通过，驳回，正在审核
+						savaData(0);
+						storageutil.setSessionStorage(sKey, JSON.stringify(sValue));
 						location.href = "leave-detail.html?flag=2&sKey=" + sKey;
 					} else {
 						//未审批
+						var mineKey = savaData(1);
+						sValue.mineKey = mineKey;
+						storageutil.setSessionStorage(sKey, JSON.stringify(sValue));
 						location.href = "leave-detail.html?flag=0&sKey=" + sKey;
 					}
 				});
+
+				$(".weui-tabbar__item").click(function() {
+					savaData(0);
+					location.href = this.getAttribute("title");
+				});
+			}
+
+			/**
+			 * 保存页面数据
+			 * @param {Object} type 页面跳转类型：0，不需要更改；1，数据可能会变化
+			 */
+			function savaData(type) {
+				var sKey = new Date().getTime() + "" + parseInt(Math.random() * 1000);
+				var scrollTop = $(".weui-tab__bd-item").scrollTop();
+				var sValue = {
+					type: type,
+					mineUserInfo: mineUserInfo,
+					isChecker: isChecker,
+					page: page,
+					totalPage: totalPage,
+					leaveApply: leaveApply,
+					scrollTop: scrollTop
+				}
+				storageutil.setSessionStorage(sKey, JSON.stringify(sValue));
+				history.replaceState({}, "请假列表", "mineleavelist.html?sKey=" + sKey);
+				return sKey;
 			}
 
 			/**
 			 * 显示请假列表
 			 * @param {Object} data
+			 * @param {Object} type
 			 */
-			function showData(data) {
+			function showData(data, type) {
 				var html = "";
 				for(var i = 0; i < data.length; i++) {
-					data[i].ApplyBeginTime = data[i].ApplyBeginTime.substring(0, data[i].ApplyBeginTime.length - 3);
-					data[i].ApplyEndTime = data[i].ApplyEndTime.substring(0, data[i].ApplyEndTime.length - 3);
+					if(type) {
+						data[i].ApplyBeginTime = data[i].ApplyBeginTime.substring(0, data[i].ApplyBeginTime.length - 3);
+						data[i].ApplyEndTime = data[i].ApplyEndTime.substring(0, data[i].ApplyEndTime.length - 3);
+					}
 					leaveApply.key.push(data[i].ApplyId);
 					leaveApply.value[data[i].ApplyId] = data[i];
 					var className = "apply-state-naudited";
@@ -286,7 +353,6 @@
 						$("#pullUp").css("margin-top", "1.5em");
 						initPullDown();
 						initPullUp();
-						initListener();
 						checkPower();
 						getLeaveApply(1);
 					} else {
@@ -315,6 +381,7 @@
 					$(".weui-tab__bd-item").pullToRefreshDone();
 					if(data.RspCode == 0) {
 						page = pageIndex;
+						totalPage = data.RspData.TotalPage;
 						if(pageIndex == 1) { //获取第一页的内容
 							$("#leaveList").empty();
 							leaveApply = null;
@@ -323,38 +390,15 @@
 								value: {}
 							}
 						}
-						if(pageIndex >= data.RspData.TotalPage) {
+						checkPage();
+						showData(data.RspData.Data, 1);
+					} else {
+						if(page == 0) {
 							$("#pullUp i").css("display", "none");
-							$("#pullUp span").text("没有更多了");
+							$("#pullUp span").text("加载失败");
 							$(".weui-tab__bd-item").destroyInfinite();
-						} else {
-							$("#pullUp i").css("display", "inline-block");
-							$("#pullUp span").text("正在加载");
-							$(".weui-tab__bd-item").infinite();
 						}
-						showData(data.RspData.Data);
-					} else {
 						$.alert("获取请假列表失败(" + data.RspTxt + ")", "提示");
-					}
-				});
-			}
-
-			/**
-			 * 删除请假申请
-			 */
-			function delLeaveApply(leaveApplyId) {
-				$.showLoading();
-				processRequest.postProcessData("delLeaveApply ", {
-					leaveApplyId: leaveApplyId
-				}, function(data) {
-					$.hideLoading();
-					if(data.RspCode == 0) {
-						$.toast("删除成功");
-						$(".weui-cells").find(".weui-cell")[clickIndex].remove();
-						leaveApply.key.splice(clickIndex, 1);
-						delete leaveApply.value[leaveApplyId];
-					} else {
-						$.alert("删除失败(" + data.RspTxt + ")", "提示");
 					}
 				});
 			}
@@ -369,10 +413,32 @@
 				}
 				processRequest.postProcessData("getApprPowerByUser ", tempData, function(data) {
 					if(data.RspCode == 0 && data.RspData.Result != 0) {
-						$("#checkItem").css("display", "block");
-						isChecker = 1;
+						showCheck();
 					}
 				});
+			}
+
+			/**
+			 * 显示请假审核
+			 */
+			function showCheck() {
+				$("#checkItem").css("display", "block");
+				isChecker = 1;
+			}
+
+			/**
+			 * 检查是否有下一页
+			 */
+			function checkPage() {
+				if(page >= totalPage) {
+					$("#pullUp i").css("display", "none");
+					$("#pullUp span").text("没有更多了");
+					$(".weui-tab__bd-item").destroyInfinite();
+				} else {
+					$("#pullUp i").css("display", "inline-block");
+					$("#pullUp span").text("正在加载");
+					$(".weui-tab__bd-item").infinite();
+				}
 			}
 		</script>
 	</body>

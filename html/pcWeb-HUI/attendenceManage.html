@@ -535,6 +535,9 @@
 							 */
 							initLaypage(data.RspData.TotalPage, pageindex);
 						}
+					},
+					error: function() {
+						alert("获取考勤时间段数据失败！");
 					}
 				})
 				//				unitWebsitePro(tempData, function(data) {

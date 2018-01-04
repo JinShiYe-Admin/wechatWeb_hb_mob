@@ -339,7 +339,7 @@ function addEdule() {
 	unitWebsitePro(tempData, function(data) {
 		console.log('添加课程表:' + JSON.stringify(data));
 		if(data.RspCode == 0) {
-			alert(data.RspTxt);
+			alert("课程表添加成功");
 //			mui.back();
 		} else {
 			mui.toast(data.RspTxt)

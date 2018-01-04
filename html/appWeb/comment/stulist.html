@@ -797,7 +797,8 @@
 						var data = {
 							deptId: deptId,
 							deptName: deptName,
-							mineUserInfo: members.value[beEvalMans[0][0]]
+							mineUserInfo: members.value[beEvalMans[0][0]],
+							isTeacher: 1
 						}
 						data.mineUserInfo.corpid = mineUserInfo.corpid;
 						utils.hrefSessionStorage("commentDetail.html", data);

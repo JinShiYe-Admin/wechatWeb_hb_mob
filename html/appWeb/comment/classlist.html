@@ -135,9 +135,9 @@
 						deptName: deptData.title,
 						mineUserInfo: mineUserInfo
 					}
-//					if(deptData.getMembers) {
-//						data.members = deptData.members
-//					}
+					//					if(deptData.getMembers) {
+					//						data.members = deptData.members
+					//					}
 					utils.hrefSessionStorage("stulist.html", data);
 				});
 
@@ -172,7 +172,8 @@
 						} else {
 							//家长
 							utils.hrefSessionStorage("commentDetail.html", {
-								mineUserInfo: mineUserInfo
+								mineUserInfo: mineUserInfo,
+								isTeacher: 0
 							});
 						}
 					} else {

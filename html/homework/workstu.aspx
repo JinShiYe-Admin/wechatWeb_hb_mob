@@ -197,7 +197,7 @@
 			            });
 			        },
 			        clickSubmitBtn: function () { //提交按钮
-			            if (submitHomework.workTitle.trim().length == 0 && submitHomework.uploadedFiles.length == 0) {
+			            if (submitHomework.workTitle.trim().length == 0 && isNull(submitHomework.workTitle) && submitHomework.uploadedFiles.length == 0) {
 			                $.alert('请作答后再提交');
 			                return;
 			            }
@@ -242,6 +242,13 @@
 			        }
 			    }
 			});
+			
+			function isNull(str) {
+				if(str == "") return true;
+				var regu = "^[ ]+$";
+				var re = new RegExp(regu);
+				return re.test(str);
+			}
 
 			//从相册中选择照片后，上传
 			//index--从相册选择照片回调里面，照片的索引，files--选择的照片信息，filesSum--选择照片之前，现存的照片张数

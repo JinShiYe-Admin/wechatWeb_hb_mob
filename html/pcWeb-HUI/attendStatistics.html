@@ -29,7 +29,7 @@
 			<div class="text-c"> 日期范围：
 				<input placeholder="开始时间" type="text" onfocus="WdatePicker({ maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}' })" id="datemin" class="input-text Wdate" style="width:120px;"> -
 				<input placeholder="结束时间" type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax" class="input-text Wdate" style="width:120px;">
-				<select id="ddlLine" class="easyui-combotree" style="width: 205px; height: 24px;">
+				<select id="ddlLine" class="easyui-combotree" style="width: 205px; height: 30px;">
 				</select>
 				<button type="submit" class="btn btn-success radius" id="" name="" @click="searchAttendList()"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
 				<a id="exportExcel" type="button" class="btn btn-success radius" onclick="clickExport()">导出</a>

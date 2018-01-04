@@ -5,7 +5,6 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<title id="title">学生点评
-			<a href="">123</a>
 		</title>
 		<script type="text/javascript">
 			var WebVersion = "?" + Math.random();
@@ -104,63 +103,96 @@
 			.weui-grid:active {
 				background-color: #FFFFFF;
 			}
+			
+			.weui-photo-browser-modal {
+				/*查看图片时的背景*/
+				z-index: 999;
+			}
 		</style>
 	</head>
 
 	<body id="content">
-		<div id="list" class="page__bd">
-			<div class="weui-cell">
-				<div class="weui-cell__hd"><label class="weui-label">部门</label></div>
-				<div class="weui-cell__bd">
-					<input id="depart" data_id="" onclick="selectDepart(this)" class="weui-input" placeholder="请选择部门">
-				</div>
-			</div>
-			<div class="weui-panel weui-panel_access" v-for="(item,index) in datasource">
-				<div class="weui-panel__bd">
-					<template v-if="item.EvalType==3">
-						<a @click="del(index)" href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
-							<div class="weui-media-box__hd">
-								<img class="weui-media-box__thumb" :src="item.BeEvalManAvatar" style="border-radius: 40px;width: 40px;height: 40px;" alt="">
-							</div>
-							<div class="weui-media-box__bd">
-								<h4 class="weui-media-box__title">{{item.BeEvalManName}}</h4>
-								<p class="weui-media-box__desc">{{item.EvalTime}}</p>
-							</div>
-						</a>
-						<p style="margin-left: 10px;">{{item.EvalContent}}</p>
-						<div class="weui-grids" id="thumbs">
-							<a href="javascript:;" class="weui-grid" v-for="(Thumb,index) in item.ThumbArr">
-								<div class="weui-grid__icon">
-									<img :src="Thumb" alt="" class="thumb" @click="ThumbClick(item.EvalEncArr[index])">
+
+		<div id="list" class="weui-tab">
+			<div class="weui-tab__bd">
+				<div class="weui-tab__bd-item weui-tab__bd-item--active" id="tab0">
+
+					<div class="weui-cell" v-if="isTeacher==0">
+						<div class="weui-cell__hd"><label class="weui-label">部门</label></div>
+						<div class="weui-cell__bd">
+							<input id="depart" data_id="" onclick="selectDepart(this)" class="weui-input" placeholder="请选择部门">
+						</div>
+					</div>
+					<div id="show" style="display: none;padding-left: 15px;padding-bottom: 10px;padding-top: 10px;border-top:1px solid lightgray">学生表现：
+						<div style="display: inline-block;width: 100px;padding-left: 10px;"><img style="vertical-align: middle;width: 20px;height: 20px;" src="../../../image/comment/praise.png" />{{"+"+EvaluationPro.PraiseCnt+"分"}}</div>
+						<div style="display: inline-block;width: 80px;"><img style="vertical-align: middle;width: 20px;height: 20px" src="../../../image/comment/improved.png" />{{"-"+EvaluationPro.PraiseCnt+"分"}}</div>
+					</div>
+
+					<div class="weui-panel weui-panel_access" v-for="(item,index) in datasource">
+						<div class="weui-panel__bd">
+							<template v-if="item.EvalType==3">
+								<a @click="del(index)" href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+									<div class="weui-media-box__hd">
+										<img class="weui-media-box__thumb" :src="item.BeEvalManAvatar" style="border-radius: 40px;width: 40px;height: 40px;" alt="">
+									</div>
+									<div class="weui-media-box__bd">
+										<h4 class="weui-media-box__title">{{item.BeEvalManName}}</h4>
+										<p class="weui-media-box__desc">{{item.EvalTime}}</p>
+									</div>
+								</a>
+								<p style="margin-left: 10px;">{{item.EvalContent}}</p>
+								<div class="weui-grids" id="thumbs" v-if="item.ThumbArr.length!=0">
+									<a href="javascript:;" class="weui-grid" v-for="(Thumb,index) in item.ThumbArr">
+										<div class="weui-grid__icon">
+											<img :src="Thumb" alt="" class="thumb" @click="ThumbClick(item.EvalEncArr,index)">
+										</div>
+									</a>
 								</div>
-							</a>
-						</div>
-						<br />
-					</template>
-					<template v-else>
-						<a @click="del(index)" href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
-							<div class="weui-media-box__hd">
-								<img class="weui-media-box__thumb" :src="item.EvalEncThumb" alt="" style="border-radius: 50px;">
-							</div>
-							<div class="weui-media-box__bd">
-								<h4 class="weui-media-box__title">{{item.EvalType==1?"+1分":"-1分"}}<span style="color:black;">{{" "+item.EvalContent}}</span></h4>
-								<p class="weui-media-box__desc">{{item.EvalTime+" 由"+item.EvalManName+"点评"}}</p>
-							</div>
-						</a>
+								<br />
+							</template>
+							<template v-else>
+								<a @click="del(index)" href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+									<div class="weui-media-box__hd">
+										<img class="weui-media-box__thumb" :src="item.EvalEncThumb" alt="" style="border-radius: 50px;">
+									</div>
+									<div class="weui-media-box__bd">
+										<h4 class="weui-media-box__title">{{item.EvalType==1?"+1分":"-1分"}}<span style="color:black;">{{" "+item.EvalContent}}</span></h4>
+										<p class="weui-media-box__desc">{{item.EvalTime+" 由"+item.EvalManName+"点评"}}</p>
+									</div>
+								</a>
 
-					</template>
+							</template>
+
+						</div>
+					</div>
 
 				</div>
 			</div>
-									<div class="weui-gallery" :style="displayGallery">
-							<span class="weui-gallery__img" @click="clickGigImg" :style="{backgroundImage:'url('+selectImgPath+')'}"></span>
-						</div>
 		</div>
+		<div class="weui_tab footer-menu">
+			<div class="weui-tabbar">
+				<a href="https://jsypay.jiaobaowang.net/wxth/appschweb/app/index.aspx" class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
+						<img class="img" src="../../../image/utils/wxhome.png">
+					</div>
+					<p class="weui-tabbar__label">微校园</p>
+				</a>
+				<a href="classlist.html" class="weui-tabbar__item weui-bar__item--on">
+					<div class="weui-tabbar__icon">
+						<img class="img" src="../../../image/comment/startactive.png">
+					</div>
+					<p class="weui-tabbar__label">学生点评</p>
+				</a>
+
+			</div>
+		</div>
+
 		<script src="../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" src="../../../js/lib/vconsole/vconsole.min.js"></script>
 		<script type="text/javascript" src="../../../js/demoCssJs/jquery-2.1.4.js"></script>
 		<script type="text/javascript" src="../../../js/weui.min.js"></script>
 		<script type="text/javascript" src="../../../js/demoCssJs/jquery-weui.min.js"></script>
+		<script type="text/javascript" src="../../../js/demoCssJs/swiper.min.js"></script>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
@@ -173,37 +205,37 @@
 			var vm = new Vue({
 				el: '#list',
 				data: {
-					 displayGallery: {
-		                display: 'none'
-		            },
-		            selectImgPath: '',
+					EvaluationPro: {
+						PraiseCnt: 0,
+						ImproveCnt: 0
+					},
+					isTeacher: 1,
+					displayGallery: {
+						display: 'none'
+					},
+					selectImgPath: '',
 					mineUserInfo: {},
 					datasource: [],
 					depart_array: []
 
 				},
-				updated: function() {
-					//					console.log(JSON.stringify(vm.datasource));
-					//					console.log(document.getElementById("list").innerHTML);
-				},
 				methods: {
-					ThumbClick: function(imgurl) {
-						console.log(imgurl)
-		                vm.selectImgPath = imgurl;
-						 vm.displayGallery = {
-		                    display: 'block'
-		                };
-						//					$("#content").css("background-image", "url(" + imgurl + ")");
-						//					$("#list").css("display", "none");
+					ThumbClick: function(images, index) {
+						var pb = $.photoBrowser({
+							initIndex: index,
+							items: images,
+							onOpen: function() {},
+							onClose: function() {
+
+							}
+						});
+						pb.open();
 
 					},
-							            clickGigImg: function () { //点击放大后的图片，隐藏显示
-		                vm.displayGallery = {
-		                    display: 'none'
-		                };
-		            },
-
 					del: function(index) {
+						if(vm.isTeacher == 0) {
+							return;
+						}
 						$.modal({
 							title: "提示",
 							text: "确定删除?",
@@ -227,40 +259,37 @@
 			var deptName;
 			var mineUserInfo;
 			window.onload = function() {
-//								mineUserInfo = {
-//									"corpid": "wx6c4528c675d4a9c9",
-//									"userid": "songyanming",
-//									"name": "宋艳明",
-//									"department": [11],
-//									"order": [0],
-//									"position": "",
-//									"mobile": null,
-//									"english_name": "",
-//									"gender": 1,
-//									"isleader": 0,
-//									"telephone": null,
-//									"email": null,
-//									"weixinid": null,
-//									"avatar": "http://shp.qpic.cn/bizmp/LlAHpaR9WIbXvzjGTAPgEfe6lmhQqEkJOvvoMW928nibnU4bRQ5wWJA/",
-//									"status": 1,
-//									"extattr": null,
-//									"errcode": 0,
-//									"errmsg": "ok",
-//									"P2PData": null
-//								}
+				//				mineUserInfo = {
+				//					"corpid": "wx6c4528c675d4a9c9",
+				//					"userid": "songyanming",
+				//					"name": "宋艳明",
+				//					"department": [11],
+				//					"order": [0],
+				//					"position": "",
+				//					"mobile": null,
+				//					"english_name": "",
+				//					"gender": 1,
+				//					"isleader": 1,
+				//					"telephone": null,
+				//					"email": null,
+				//					"weixinid": null,
+				//					"avatar": "http://shp.qpic.cn/bizmp/LlAHpaR9WIbXvzjGTAPgEfe6lmhQqEkJOvvoMW928nibnU4bRQ5wWJA/",
+				//					"status": 1,
+				//					"extattr": null,
+				//					"errcode": 0,
+				//					"errmsg": "ok",
+				//					"P2PData": null
+				//				}
 				var sValue = utils.getSessionStorageByUrlsKey();
 				mineUserInfo = sValue.mineUserInfo;
 				vm.mineUserInfo = mineUserInfo;
-				if(mineUserInfo.isleader == 1) {
+				vm.isTeacher = sValue.isTeacher;
+				if(vm.isTeacher == 1) {
+					document.getElementById("title").innerHTML = vm.mineUserInfo.name + "的点评";
 					deptId = sValue.deptId;
 					deptName = sValue.deptName;
-					document.getElementById("depart").value = deptName;
-					document.getElementById("depart").data_id = deptId;
-//										document.getElementById("depart").value = "开发部";
-//										document.getElementById("depart").data_id = "11";
-//										deptId = document.getElementById("depart").data_id;
 					getEvaluation();
-					getDepart();
+					getEvalStatByUsersPr()
 				} else {
 					getDepart();
 				}
@@ -268,64 +297,9 @@
 			}
 
 			function getDepart() {
-//								var rspData = [{
-//									"value": 11,
-//									"title": "开发部",
-//									"parentvalue": 1,
-//									"order": 2147483047
-//								}, {
-//									"value": 12,
-//									"title": "测试子部门",
-//									"parentvalue": 11,
-//									"order": 100000000
-//								}, {
-//									"value": 13,
-//									"title": "测试孙部门",
-//									"parentvalue": 12,
-//									"order": 100000000
-//								}, {
-//									"value": 14,
-//									"title": "测试子部门2",
-//									"parentvalue": 11,
-//									"order": 99999000
-//								}, {
-//									"value": -1,
-//									"title": "全部",
-//									"parentvalue": 0,
-//									"order": 0
-//								}]
-//
-//								mineUserInfo.depart_array = [];
-//								for(var i = 0; i < rspData.length; i++) {
-//									var model = rspData[i];
-//									if(model.value == -1) {
-//										continue;
-//									} else {
-//										//						for(var j = 0; j < mineUserInfo.department.length; j++) {
-//										//							if(model.value == mineUserInfo.department[j]) {
-//										model.label = model.title;
-//										mineUserInfo.depart_array.push(model);
-//										if(i == 0) {
-//											if(mineUserInfo.isleader == 0) {
-//												document.getElementById("depart").value = model.label;
-//												document.getElementById("depart").data_id = model.value;
-//												deptId = model.value;
-//												getEvaluation();
-//											}
-//				
-//										}
-//				
-//										//							}
-//				
-//										//						}
-//				
-//									}
-//								}
-//								deptId = 11;
-//								getEvaluation();
-//								console.log('重组部门:' + JSON.stringify(mineUserInfo.depart_array));
-				
-//								return;
+				//				getDetaultDepart();
+				//				return;
+
 				var tempData = {
 					cmd: 'persondeparts',
 					type: 'findpage',
@@ -351,15 +325,12 @@
 
 							}
 						}
-						if(mineUserInfo.isleader == 0) {
-							var deptObj = mineUserInfo.depart_array[0];
-							document.getElementById("depart").value = deptObj.label;
-							document.getElementById("depart").data_id = deptObj.value;
-							deptId = deptObj.value;
-							getEvaluation();
-						}
-						console.log('重组部门:' + JSON.stringify(userInfo.depart_array));
-
+						var deptObj = mineUserInfo.depart_array[0];
+						document.getElementById("depart").value = deptObj.label;
+						document.getElementById("depart").data_id = deptObj.value;
+						deptId = deptObj.value;
+						getEvaluation();
+						getEvalStatByUsersPr();
 					} else {
 						alert(data.RspTxt)
 					}
@@ -374,7 +345,7 @@
 					userId: mineUserInfo.userid,
 					//					corpId: 'wx6c4528c675d4a9c9',
 					//					deptId: 11,
-					//					userId: "songyanming",
+					//					userId: "moshanglin",
 					pageIndex: 1,
 					pageSize: 20,
 				}
@@ -387,13 +358,53 @@
 						}
 						for(var i = 0; i < data.RspData.Data.length; i++) {
 							var model = data.RspData.Data[i];
-							var ThumbArr = model.EvalEncThumb.split("|");
-							var EvalEncArr = model.EvalEnc.split("|");
-							model.ThumbArr = ThumbArr;
-							model.EvalEncArr = EvalEncArr;
+							if(model.EvalEncThumb == "") {
+
+								model.ThumbArr = [];
+								model.EvalEncArr = [];
+							} else {
+								var ThumbArr = model.EvalEncThumb.split("|");
+								var EvalEncArr = model.EvalEnc.split("|");
+
+								model.ThumbArr = ThumbArr;
+								model.EvalEncArr = EvalEncArr;
+							}
+
+							if(i == 0) {
+								console.log("1111112" + model.ThumbArr.length)
+							}
 						}
 
 						vm.datasource = data.RspData.Data;
+					} else {
+						$.alert(data.RspTxt, "提示");
+					}
+
+				});
+			}
+			//8.获取多人点评统计
+			function getEvalStatByUsersPr() {
+				var tempArr = [];
+				tempArr.push(mineUserInfo.userid);
+				//				tempArr.push("songyanming");
+				var tempData = {
+					corpId: mineUserInfo.corpid,
+					deptId: deptId,
+					userIds: tempArr,
+					//					corpId: 'wx6c4528c675d4a9c9',
+					//					deptId: 11,
+					//					userIds: tempArr,
+
+				}
+				console.log("多人点评统计参数：" + JSON.stringify(tempData));
+				getEvalStatByUsersPro(tempData, function(data) {
+					console.log("多人点评统计数据：" + JSON.stringify(data));
+					if(data.RspCode == 0) {
+						if(data.RspData.Data.length == 0) {
+							$.alert("暂无统计", "提示");
+						}
+						vm.EvaluationPro = data.RspData.Data[0];
+						document.getElementById("show").style.display = "block"
 					} else {
 						$.alert(data.RspTxt, "提示");
 					}
@@ -424,9 +435,7 @@
 				document.activeElement.blur();
 				var self = input_item;
 				weui.picker(mineUserInfo.depart_array, {
-					onChange: function(result) {
-						//						console.log(result);
-					},
+					onChange: function(result) {},
 					onConfirm: function(result) {
 						document.getElementById("depart").value = result[0].label;
 						document.getElementById("depart").data_id = result[0].value;
@@ -434,6 +443,62 @@
 						getEvaluation();
 					}
 				});
+			}
+
+			function getDetaultDepart() {
+				var rspData = [{
+					"value": 11,
+					"title": "开发部",
+					"parentvalue": 1,
+					"order": 2147483047
+				}, {
+					"value": 12,
+					"title": "测试子部门",
+					"parentvalue": 11,
+					"order": 100000000
+				}, {
+					"value": 13,
+					"title": "测试孙部门",
+					"parentvalue": 12,
+					"order": 100000000
+				}, {
+					"value": 14,
+					"title": "测试子部门2",
+					"parentvalue": 11,
+					"order": 99999000
+				}, {
+					"value": -1,
+					"title": "全部",
+					"parentvalue": 0,
+					"order": 0
+				}]
+
+				mineUserInfo.depart_array = [];
+				for(var i = 0; i < rspData.length; i++) {
+					var model = rspData[i];
+					if(model.value == -1) {
+						continue;
+					} else {
+						for(var j = 0; j < mineUserInfo.department.length; j++) {
+							if(model.value == mineUserInfo.department[j]) {
+								model.label = model.title;
+								mineUserInfo.depart_array.push(model);
+								if(i == 0) {
+									document.getElementById("depart").value = model.label;
+									document.getElementById("depart").data_id = model.value;
+									deptId = model.value;
+									getEvaluation();
+
+								}
+
+							}
+
+						}
+
+					}
+				}
+				getEvaluation();
+				getEvalStatByUsersPr();
 			}
 		</script>
 	</body>

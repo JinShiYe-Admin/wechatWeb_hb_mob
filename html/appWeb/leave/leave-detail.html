@@ -107,10 +107,12 @@
 				text-align: center;
 				color: #cfcfcf;
 			}
-			.weui-gallery__img{
+			
+			.weui-gallery__img {
 				bottom: 0;
 			}
-			.weui-tabbar{
+			
+			.weui-tabbar {
 				position: relative;
 			}
 		</style>
@@ -236,8 +238,8 @@
 						</div>
 					</div>
 				</div>
-				<div class="weui-gallery" id="gallery" v-on:click="showGallery=false" v-bind:class="[{'display-block':showGallery},{'display-none':!showGallery}]">
-					<span class="weui-gallery__img" id="galleryImg" v-bind:style="{backgroundImage:'url('+previewImg+')'}"></span>
+				<div class="swiper-container" data-space-between='10' data-pagination='.swiper-pagination' id="gallery">
+
 				</div>
 				<div id="loadingToast" v-bind:class="[{'display-none':!showToast},{'display-block':showToast}]">
 					<div class="weui-mask_transparent"></div>
@@ -248,8 +250,10 @@
 				</div>
 			</template>
 		</div>
+		<script src="../../../js/lib/swiper/swiper.min.js"></script>
 		<script src="../../../js/jquery.min.js"></script>
 		<script src="../../../js/jquery-weui.min.js"></script>
+
 		<script src="../../../js/lib/vconsole/vconsole.min.js"></script>
 		<script src="../../../js/vue.js"></script>
 		<script src="../../../js/vue-router.js"></script>
@@ -269,14 +273,14 @@
 					applyDetail: {},
 					personalInfo: {},
 					checkList: [],
-					showGallery: false,
 					showOptions: false,
 					showToast: false,
 					approveNote: "",
 					pageIndex: 1,
 					pageSize: 0,
 					flag: 0, //0查看 1审核
-					previewImg: "",
+					previewImgs: [],
+					photoBrower: {},
 					isChecker: 0
 				},
 				mounted: function() {
@@ -285,6 +289,17 @@
 				watch: {
 					checkList: function(newVal, oldVal) {
 						this.getFlag(newVal);
+					},
+					previewImgs: function(newVal, oldVal) {
+						this.photoBrower = $.photoBrower({
+							items: newVal,
+							onOpen: function() {
+								page.allow_back = false
+							},
+							onClose: function() {
+								page.allow_back = true
+							}
+						})
 					}
 				},
 				methods: {
@@ -343,8 +358,7 @@
 					},
 					showGalleryFun: function(index) {
 						console.log("****showGallery*****");
-						this.getPreviewImg(index);
-						this.showGallery = true;
+						this.photoBrower.open(index);
 					},
 					initialData: function() {
 						console.log("*****getInitialData****");
@@ -371,6 +385,7 @@
 						}
 						console.log("获取的levaeInfo:" + JSON.stringify(leaveInfo));
 						leaveInfo.leave.ApplyReasonThumb = this.changeToPics(leaveInfo.leave.ApplyReasonThumb);
+						this.previewImgs = this.changeToPics(leaveInfo.leave.ApplyPic);
 						this.applyDetail = leaveInfo.leave;
 						this.personalInfo = leaveInfo.mineUserInfo;
 						this.getApprList();

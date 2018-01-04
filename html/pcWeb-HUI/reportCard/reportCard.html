@@ -252,14 +252,14 @@
 									if(filePath.RspCode == 0) {
 										console.log(JSON.stringify(filePath));
 										column_table.uploadedFile = filePath.RspData;
-										$.alert("上传文件成功");
+										alert("上传文件成功");
 
 									}
 
 								});
 							} else {
 								$('#uploaderInput').val('');
-								$.alert("文件格式不是excel格式")
+								alert("文件格式不是excel格式")
 							}
 
 						}
@@ -307,7 +307,7 @@
 								type: 'del',
 								colid: item.examid
 							}
-							//							$.alert(JSON.stringify(para))
+							//							alert(JSON.stringify(para))
 							unitWebsitePro(para, function(data) {
 								if(data.RspCode == 0) {
 									layer.msg('已删除!', {
@@ -316,7 +316,7 @@
 									});
 									location.reload();
 								} else {
-									$.alert(data.RspTxt);
+									alert(data.RspTxt);
 								}
 							});
 						});
@@ -395,152 +395,8 @@
 						console.log('重组部门:' + JSON.stringify(column_table.depart_array));
 
 					} else {
-						column_table.depart_array = [{
-							"value": 2,
-							"title": "湖北大区",
-							"parentvalue": 1,
-							"order": 2147483447,
-							"label": "湖北大区"
-						}, {
-							"value": 3,
-							"title": "荆门办事处",
-							"parentvalue": 2,
-							"order": 2147483447,
-							"label": "荆门办事处"
-						}, {
-							"value": 4,
-							"title": "大区办公室",
-							"parentvalue": 2,
-							"order": 2147483247,
-							"label": "大区办公室"
-						}, {
-							"value": 5,
-							"title": "黄冈办事处",
-							"parentvalue": 2,
-							"order": 2147483047,
-							"label": "黄冈办事处"
-						}, {
-							"value": 6,
-							"title": "黄石咸宁鄂州办事处",
-							"parentvalue": 2,
-							"order": 2147482847,
-							"label": "黄石咸宁鄂州办事处"
-						}, {
-							"value": 7,
-							"title": "襄阳孝感随州办事处",
-							"parentvalue": 2,
-							"order": 2147482647,
-							"label": "襄阳孝感随州办事处"
-						}, {
-							"value": 8,
-							"title": "宜昌恩施办事处",
-							"parentvalue": 2,
-							"order": 2147482447,
-							"label": "宜昌恩施办事处"
-						}, {
-							"value": 9,
-							"title": "荆州江汉办事处",
-							"parentvalue": 2,
-							"order": 2147482247,
-							"label": "荆州江汉办事处"
-						}, {
-							"value": 11,
-							"title": "开发部",
-							"parentvalue": 1,
-							"order": 2147483047,
-							"label": "开发部"
-						}, {
-							"value": 12,
-							"title": "测试子部门",
-							"parentvalue": 11,
-							"order": 100000000,
-							"label": "测试子部门"
-						}, {
-							"value": 13,
-							"title": "测试孙部门",
-							"parentvalue": 12,
-							"order": 100000000,
-							"label": "测试孙部门"
-						}, {
-							"value": 14,
-							"title": "测试子部门2",
-							"parentvalue": 11,
-							"order": 99999000,
-							"label": "测试子部门2"
-						}, {
-							"value": 15,
-							"title": "临时部门一",
-							"parentvalue": 11,
-							"order": 99998000,
-							"label": "临时部门一"
-						}, {
-							"value": 16,
-							"title": "临时部门二",
-							"parentvalue": 11,
-							"order": 99997000,
-							"label": "临时部门二"
-						}, {
-							"value": 17,
-							"title": "临时部门三",
-							"parentvalue": 11,
-							"order": 99996000,
-							"label": "临时部门三"
-						}, {
-							"value": 18,
-							"title": "临时部门四",
-							"parentvalue": 11,
-							"order": 99995000,
-							"label": "临时部门四"
-						}, {
-							"value": 19,
-							"title": "临时部门五",
-							"parentvalue": 11,
-							"order": 99994000,
-							"label": "临时部门五"
-						}, {
-							"value": 20,
-							"title": "临时部门六",
-							"parentvalue": 11,
-							"order": 99993000,
-							"label": "临时部门六"
-						}, {
-							"value": 21,
-							"title": "临时部门七",
-							"parentvalue": 11,
-							"order": 99992000,
-							"label": "临时部门七"
-						}, {
-							"value": 22,
-							"title": "临时部门八",
-							"parentvalue": 11,
-							"order": 99991000,
-							"label": "临时部门八"
-						}, {
-							"value": 23,
-							"title": "临时部门九",
-							"parentvalue": 11,
-							"order": 99990000,
-							"label": "临时部门九"
-						}, {
-							"value": 24,
-							"title": "临时部门十",
-							"parentvalue": 11,
-							"order": 99989000,
-							"label": "临时部门十"
-						}, {
-							"value": 25,
-							"title": "4-level depart",
-							"parentvalue": 13,
-							"order": 100000000,
-							"label": "4-level depart"
-						}, {
-							"value": -1,
-							"title": "全部",
-							"parentvalue": 0,
-							"order": 0,
-							"label": "全部"
-						}]
-						$.alert(data.RspTxt)
+						column_table.depart_array = []
+						alert(data.RspTxt)
 					}
 				})
 
@@ -573,88 +429,7 @@
 						initLaypage(data.RspData.pg.PageCount, pageindex);
 					} else {
 						document.getElementById("column_table").style.display = "block";
-						column_table.dt = [{
-							"examid": 13,
-							"dptname": "开发部",
-							"dptid": 11,
-							"cname": "18个",
-							"rectime": "2017-12-15T15:51:44.86",
-							"recname": "毛慧敏",
-							"recuser": "maohuimin",
-							"ROWSTAT": null
-						}, {
-							"examid": 4,
-							"dptname": "开发部",
-							"dptid": 11,
-							"cname": "开发部",
-							"rectime": "2017-12-14T09:21:33.127",
-							"recname": "宋艳明",
-							"recuser": "songyanming",
-							"ROWSTAT": null
-						}, {
-							"examid": 5,
-							"dptname": "开发部",
-							"dptid": 11,
-							"cname": "开发部",
-							"rectime": "2017-12-14T09:37:47.287",
-							"recname": "宋艳明",
-							"recuser": "songyanming",
-							"ROWSTAT": null
-						}, {
-							"examid": 7,
-							"dptname": "开发部",
-							"dptid": 11,
-							"cname": "开发部",
-							"rectime": "2017-12-14T10:22:17.027",
-							"recname": "宋艳明",
-							"recuser": "songyanming",
-							"ROWSTAT": null
-						}, {
-							"examid": 8,
-							"dptname": "测试子部门",
-							"dptid": 12,
-							"cname": "开发部12月份成绩单",
-							"rectime": "2017-12-14T10:37:34.813",
-							"recname": "宋艳明",
-							"recuser": "songyanming",
-							"ROWSTAT": null
-						}, {
-							"examid": 6,
-							"dptname": "开发部",
-							"dptid": 11,
-							"cname": "开发部12月份成绩单",
-							"rectime": "2017-12-14T10:17:16.777",
-							"recname": "宋艳明",
-							"recuser": "songyanming",
-							"ROWSTAT": null
-						}, {
-							"examid": 1,
-							"dptname": "开发部",
-							"dptid": 11,
-							"cname": "开发部9月成绩单",
-							"rectime": "2017-12-07T14:20:25",
-							"recname": "顾元生",
-							"recuser": "guyuansheng",
-							"ROWSTAT": null
-						}, {
-							"examid": 12,
-							"dptname": "开发部",
-							"dptid": 11,
-							"cname": "科目错误",
-							"rectime": "2017-12-15T15:46:47.643",
-							"recname": "毛慧敏",
-							"recuser": "maohuimin",
-							"ROWSTAT": null
-						}, {
-							"examid": 11,
-							"dptname": "开发部",
-							"dptid": 11,
-							"cname": "物理100",
-							"rectime": "2017-12-15T15:31:45.543",
-							"recname": "毛慧敏",
-							"recuser": "maohuimin",
-							"ROWSTAT": null
-						}];
+						column_table.dt = [];
 						//						column_table.dt = [];
 					}
 				});
@@ -678,12 +453,12 @@
 			function addExama() {
 				console.log(column_table.uploadedFile)
 				if(column_table.cname == "") {
-					$.alert("请输入名称");
+					alert("请输入名称");
 					return;
 
 				}
 				if(JSON.stringify(column_table.uploadedFile) == "{}") {
-					$.alert("请添加文件");
+					alert("请添加文件");
 					return;
 
 				}
@@ -707,10 +482,10 @@
 				unitWebsitePro(tempData, function(data) {
 					console.log('添加成绩单数据：' + JSON.stringify(data.RspData))
 					if(data.RspCode == 0) {
-						$.alert("添加成功")
+						alert("添加成功")
 						content = JSON.parse(data.RspData);
 					} else {
-						$.alert(data.RspTxt)
+						alert(data.RspTxt)
 					}
 				})
 			}

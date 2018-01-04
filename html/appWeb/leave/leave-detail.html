@@ -63,7 +63,8 @@
 				left: 0;
 				right: 0;
 				background: white;
-				box-shadow: 0 -1px 5px darkgray;
+				border-top: solid 1px #000000;
+				/*box-shadow: 0 -1px 5px darkgray;*/
 			}
 			
 			.input-item {
@@ -114,6 +115,11 @@
 			
 			.weui-tabbar {
 				position: relative;
+			}
+			
+			.weui-photo-browser-modal {
+				/*查看图片时的背景*/
+				z-index: 999;
 			}
 		</style>
 	</head>
@@ -238,9 +244,6 @@
 						</div>
 					</div>
 				</div>
-				<div class="swiper-container" data-space-between='10' data-pagination='.swiper-pagination' id="gallery">
-
-				</div>
 				<div id="loadingToast" v-bind:class="[{'display-none':!showToast},{'display-block':showToast}]">
 					<div class="weui-mask_transparent"></div>
 					<div class="weui-toast">
@@ -250,10 +253,11 @@
 				</div>
 			</template>
 		</div>
-		<script src="../../../js/lib/swiper/swiper.min.js"></script>
+
 		<script src="../../../js/jquery.min.js"></script>
 		<script src="../../../js/jquery-weui.min.js"></script>
 
+		<script src="../../../js/demoCssJs/swiper.min.js"></script>
 		<script src="../../../js/lib/vconsole/vconsole.min.js"></script>
 		<script src="../../../js/vue.js"></script>
 		<script src="../../../js/vue-router.js"></script>
@@ -266,6 +270,7 @@
 			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
 		</script>
+
 		<script type="text/javascript">
 			var detail = new Vue({
 				el: "#detail-container",
@@ -280,7 +285,7 @@
 					pageSize: 0,
 					flag: 0, //0查看 1审核
 					previewImgs: [],
-					photoBrower: {},
+					photoBrowser: {},
 					isChecker: 0
 				},
 				mounted: function() {
@@ -291,14 +296,8 @@
 						this.getFlag(newVal);
 					},
 					previewImgs: function(newVal, oldVal) {
-						this.photoBrower = $.photoBrower({
-							items: newVal,
-							onOpen: function() {
-								page.allow_back = false
-							},
-							onClose: function() {
-								page.allow_back = true
-							}
+						this.photoBrowser = $.photoBrowser({
+							items: newVal
 						})
 					}
 				},
@@ -358,7 +357,7 @@
 					},
 					showGalleryFun: function(index) {
 						console.log("****showGallery*****");
-						this.photoBrower.open(index);
+						this.photoBrowser.open(parseInt(index));
 					},
 					initialData: function() {
 						console.log("*****getInitialData****");
@@ -374,7 +373,7 @@
 						console.log("skey" + sKey);
 						var leaveInfo = JSON.parse(storageutil.getSessionStorage(sKey));
 						this.flag = parseInt(events.getUrlParam(location.href, "flag"));
-						this.isChecker = parseInt(events.getUrlParam(location.href, "isChecker"));
+						this.isChecker = parseInt(leaveInfo.isChecker);
 						console.log("获取的flag:" + this.flag);
 						console.log("this.flag type:" + typeof(this.flag));
 						if(leaveInfo == null) {

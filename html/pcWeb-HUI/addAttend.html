@@ -131,7 +131,7 @@
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
-		<script src='../../js/lib/vconsole/vconsole.min.js'></script>
+		<!--<script src='../../js/lib/vconsole/vconsole.min.js'></script>-->
 		<script type="text/javascript">
 			$(function() {
 				$('.table-sort').dataTable({
@@ -188,7 +188,7 @@
 										layer.alert('删除失败');
 									}
 								} else {
-									alert(data.RspTxt);
+									layer.alert(data.RspTxt);
 								}
 							});
 						});
@@ -334,7 +334,7 @@
 				var index = obj.selectedIndex; //序号，取当前选中选项的序号
 				var val = obj.options[index].value;
 				model.orderid = val;
-				//				alert('model.orderid:'+model.orderid);
+				//				layer.alert('model.orderid:'+model.orderid);
 				addAttendLayer.orderID = model.orderid;
 			}
 			//13.获取当前人员信息
@@ -368,7 +368,7 @@
 						attendData.attendArray = [].concat(data.RspData.Data);
 						attendData.flag = 1;
 					} else {
-						alert(data.RspTxt);
+						layer.alert(data.RspTxt);
 					}
 				});
 			};
@@ -388,18 +388,18 @@
 						//获取科目列表
 						getUserInfo();
 					} else {
-						alert(data.RspTxt);
+						layer.alert(data.RspTxt);
 					}
 				});
 			};
 			//添加课程时，判断是否输入了值，有没有重复,flag=0添加，flag=1修改
 			var checkInput = function(text, flag) {
 				if(text.trim().length == 0) {
-					alert('考勤名称不能为空');
+					layer.alert('考勤名称不能为空');
 					return false;
 				}
 				if(isNull(text)) {
-					alert('考勤名称不能为空');
+					layer.alert('考勤名称不能为空');
 					return false;
 				}
 				var tempFlag = 0;
@@ -414,7 +414,7 @@
 				} else if(tempFlag == 1 && flag == 1) {
 					return true;
 				} else {
-					alert('存在同名的考勤类型');
+					layer.alert('存在同名的考勤类型');
 					return false;
 				}
 			}

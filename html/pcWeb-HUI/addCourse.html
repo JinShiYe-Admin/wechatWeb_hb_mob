@@ -60,6 +60,7 @@
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
+		<!--<script src='../../js/lib/vconsole/vconsole.min.js'></script>-->
 		<script type="text/javascript">
 			$(function() {
 				$('.table-sort').dataTable({
@@ -139,7 +140,7 @@
 										time: 1000
 									});
 								} else {
-									alert(data.RspTxt);
+									layer.alert(data.RspTxt);
 								}
 							});
 						});
@@ -172,7 +173,7 @@
 											time: 1000
 										});
 									} else {
-										alert(data.RspTxt);
+										layer.alert(data.RspTxt);
 									}
 								});
 							});
@@ -190,7 +191,7 @@
 											time: 1000
 										});
 									} else {
-										alert(data.RspTxt);
+										layer.alert(data.RspTxt);
 									}
 								});
 							});
@@ -220,7 +221,7 @@
 //							courseData.subIndex++;
 						}
 					} else {
-//						alert(data.RspTxt);
+						layer.alert(data.RspTxt);
 					}
 				});
 			};
@@ -238,7 +239,7 @@
 						//获取科目列表
 						getSubArray();
 					} else {
-						alert(data.RspTxt);
+						layer.alert(data.RspTxt);
 					}
 				});
 			};
@@ -259,18 +260,18 @@
 						//获取科目列表
 						getSubArray();
 					} else {
-						alert(data.RspTxt);
+						layer.alert(data.RspTxt);
 					}
 				});
 			};
 			//添加课程时，判断是否输入了值，有没有重复
 			var checkInput = function(text) {
 				if(text.trim().length == 0) {
-					alert('不能加入空数据');
+					layer.alert('不能加入空数据');
 					return false;
 				}
 				if(isNull(text)) {
-					alert('不能加入空数据');
+					layer.alert('不能加入空数据');
 					return false;
 				}
 				var tempFlag = 0;
@@ -283,7 +284,7 @@
 				if(tempFlag == 0) {
 					return true;
 				} else {
-					alert('不能添加重复课程');
+					layer.alert('不能添加重复课程');
 					return false;
 				}
 			}

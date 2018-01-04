@@ -116,6 +116,7 @@
 			.weui-tabbar {
 				position: relative;
 			}
+			
 			.weui-photo-browser-modal {
 				/*查看图片时的背景*/
 				z-index: 999;
@@ -296,13 +297,7 @@
 					},
 					previewImgs: function(newVal, oldVal) {
 						this.photoBrowser = $.photoBrowser({
-							items: newVal,
-							onOpen: function() {
-								page.allow_back = false
-							},
-							onClose: function() {
-								page.allow_back = true
-							}
+							items: newVal
 						})
 					}
 				},

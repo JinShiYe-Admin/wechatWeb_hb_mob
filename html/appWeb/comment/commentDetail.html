@@ -108,6 +108,9 @@
 				/*查看图片时的背景*/
 				z-index: 999;
 			}
+			/*.weui-tab {
+            margin-top:-30px;
+        }*/
 		</style>
 	</head>
 
@@ -125,7 +128,7 @@
 					</div>
 					<div id="show" style="display: none;padding-left: 15px;padding-bottom: 10px;padding-top: 10px;border-top:1px solid lightgray">学生表现：
 						<div style="display: inline-block;width: 100px;padding-left: 10px;"><img style="vertical-align: middle;width: 20px;height: 20px;" src="../../../image/comment/praise.png" />{{"+"+EvaluationPro.PraiseCnt+"分"}}</div>
-						<div style="display: inline-block;width: 80px;"><img style="vertical-align: middle;width: 20px;height: 20px" src="../../../image/comment/improved.png" />{{"-"+EvaluationPro.PraiseCnt+"分"}}</div>
+						<div style="display: inline-block;width: 80px;"><img style="vertical-align: middle;width: 20px;height: 20px" src="../../../image/comment/improved.png" />{{"-"+EvaluationPro.ImproveCnt+"分"}}</div>
 					</div>
 
 					<div class="weui-panel weui-panel_access" v-for="(item,index) in datasource">
@@ -200,6 +203,21 @@
 			//document.write("<s" + "cript type='text/javascript' src='../../../temp/mineinfo.js" + WebVersion + "'></s" + "cript>");
 		</script>
 		<script>
+				var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
+	var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight;
+	$('.weui-tab').css({
+		'height': (allheight - barheight) + 20 + 'px'
+	});
+	$('.weui-tab__bd').css({
+		'height': (allheight - barheight) + 20 + 'px'
+	});
+	$('.weui-tab__bd-item').css({
+		'height': (allheight - barheight) + 20 + 'px'
+	});
+	var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
+	$('.wrap').css({
+		'left': (tabar_width - 30) * 50 / tabar_width + '%'
+	});
 			var loading = false; //下拉状态标记
 			var mineUserInfo; //个人信息
 			var vm = new Vue({
@@ -209,7 +227,7 @@
 						PraiseCnt: 0,
 						ImproveCnt: 0
 					},
-					isTeacher: 1,
+					isTeacher: 0,
 					displayGallery: {
 						display: 'none'
 					},
@@ -259,31 +277,31 @@
 			var deptName;
 			var mineUserInfo;
 			window.onload = function() {
-				//				mineUserInfo = {
-				//					"corpid": "wx6c4528c675d4a9c9",
-				//					"userid": "songyanming",
-				//					"name": "宋艳明",
-				//					"department": [11],
-				//					"order": [0],
-				//					"position": "",
-				//					"mobile": null,
-				//					"english_name": "",
-				//					"gender": 1,
-				//					"isleader": 1,
-				//					"telephone": null,
-				//					"email": null,
-				//					"weixinid": null,
-				//					"avatar": "http://shp.qpic.cn/bizmp/LlAHpaR9WIbXvzjGTAPgEfe6lmhQqEkJOvvoMW928nibnU4bRQ5wWJA/",
-				//					"status": 1,
-				//					"extattr": null,
-				//					"errcode": 0,
-				//					"errmsg": "ok",
-				//					"P2PData": null
-				//				}
-				var sValue = utils.getSessionStorageByUrlsKey();
-				mineUserInfo = sValue.mineUserInfo;
-				vm.mineUserInfo = mineUserInfo;
-				vm.isTeacher = sValue.isTeacher;
+								mineUserInfo = {
+									"corpid": "wx6c4528c675d4a9c9",
+									"userid": "songyanming",
+									"name": "宋艳明",
+									"department": [11],
+									"order": [0],
+									"position": "",
+									"mobile": null,
+									"english_name": "",
+									"gender": 1,
+									"isleader": 1,
+									"telephone": null,
+									"email": null,
+									"weixinid": null,
+									"avatar": "http://shp.qpic.cn/bizmp/LlAHpaR9WIbXvzjGTAPgEfe6lmhQqEkJOvvoMW928nibnU4bRQ5wWJA/",
+									"status": 1,
+									"extattr": null,
+									"errcode": 0,
+									"errmsg": "ok",
+									"P2PData": null
+								}
+//				var sValue = utils.getSessionStorageByUrlsKey();
+//				mineUserInfo = sValue.mineUserInfo;
+//				vm.mineUserInfo = mineUserInfo;
+//				vm.isTeacher = sValue.isTeacher;
 				if(vm.isTeacher == 1) {
 					document.getElementById("title").innerHTML = vm.mineUserInfo.name + "的点评";
 					deptId = sValue.deptId;
@@ -297,8 +315,8 @@
 			}
 
 			function getDepart() {
-				//				getDetaultDepart();
-				//				return;
+								getDetaultDepart();
+								return;
 
 				var tempData = {
 					cmd: 'persondeparts',
@@ -340,12 +358,12 @@
 
 			function getEvaluation() {
 				var tempData = {
-					corpId: mineUserInfo.corpid,
-					deptId: deptId,
-					userId: mineUserInfo.userid,
-					//					corpId: 'wx6c4528c675d4a9c9',
-					//					deptId: 11,
-					//					userId: "moshanglin",
+//					corpId: mineUserInfo.corpid,
+//					deptId: deptId,
+//					userId: mineUserInfo.userid,
+										corpId: 'wx6c4528c675d4a9c9',
+										deptId: 11,
+										userId: "moshanglin",
 					pageIndex: 1,
 					pageSize: 20,
 				}
@@ -385,15 +403,15 @@
 			//8.获取多人点评统计
 			function getEvalStatByUsersPr() {
 				var tempArr = [];
-				tempArr.push(mineUserInfo.userid);
-				//				tempArr.push("songyanming");
+//				tempArr.push(mineUserInfo.userid);
+								tempArr.push("moshanglin");
 				var tempData = {
-					corpId: mineUserInfo.corpid,
-					deptId: deptId,
-					userIds: tempArr,
-					//					corpId: 'wx6c4528c675d4a9c9',
-					//					deptId: 11,
-					//					userIds: tempArr,
+//					corpId: mineUserInfo.corpid,
+//					deptId: deptId,
+//					userIds: tempArr,
+										corpId: 'wx6c4528c675d4a9c9',
+										deptId: 11,
+										userIds: tempArr,
 
 				}
 				console.log("多人点评统计参数：" + JSON.stringify(tempData));

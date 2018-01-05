@@ -121,6 +121,30 @@
 				/*查看图片时的背景*/
 				z-index: 999;
 			}
+			
+			.swiper-container {
+				width: 100%;
+				height: 100%;
+			}
+			
+			.swiper-slide {
+				text-align: center;
+				font-size: 18px;
+				background: #000000;
+				/* Center slide text vertically */
+				display: -webkit-box;
+				display: -ms-flexbox;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-box-pack: center;
+				-ms-flex-pack: center;
+				-webkit-justify-content: center;
+				justify-content: center;
+				-webkit-box-align: center;
+				-ms-flex-align: center;
+				-webkit-align-items: center;
+				align-items: center;
+			}
 		</style>
 	</head>
 
@@ -251,11 +275,22 @@
 						<p class="weui-toast__content">数据加载中</p>
 					</div>
 				</div>
+				<div class="swiper-container" v-bind:class="[{'display-none':!showGallery},{'display-block':showGallery}]">
+					<!-- Additional required wrapper -->
+					<div class="swiper-wrapper">
+						<!-- Slides -->
+						<div v-for="(image,index) in previewImgs" class="swiper-slide" v-on:click="showGallery=false" v-bind:style="{backgroundImage:'url('+image.fileurl+')',
+          backgroundSize:'contain',backgroundPosition:'center',backgroundRepeat:'no-repeat'}">
+						</div>
+					</div>
+					<!-- If we need pagination -->
+					<div v-show="previewImgs.length>1" class="swiper-pagination"></div>
+				</div>
 			</template>
 		</div>
 
 		<script src="../../../js/jquery.min.js"></script>
-		<script src="../../../js/jquery-weui.min.js"></script>
+		<script src="../../../js/demoCssJs/jquery-weui.min.js"></script>
 
 		<script src="../../../js/demoCssJs/swiper.min.js"></script>
 		<script src="../../../js/lib/vconsole/vconsole.min.js"></script>
@@ -280,6 +315,7 @@
 					checkList: [],
 					showOptions: false,
 					showToast: false,
+					showGallery: false,
 					approveNote: "",
 					pageIndex: 1,
 					pageSize: 0,
@@ -296,8 +332,9 @@
 						this.getFlag(newVal);
 					},
 					previewImgs: function(newVal, oldVal) {
-						this.photoBrowser = $.photoBrowser({
-							items: newVal
+						this.photoBrowser = new Swiper('.swiper-container', {
+							pagination: '.swiper-pagination',
+							paginationClickable: true
 						})
 					}
 				},
@@ -357,7 +394,8 @@
 					},
 					showGalleryFun: function(index) {
 						console.log("****showGallery*****");
-						this.photoBrowser.open(parseInt(index));
+						this.photoBrowser.activeIndex = parseInt(index);
+						this.showGallery = true;
 					},
 					initialData: function() {
 						console.log("*****getInitialData****");

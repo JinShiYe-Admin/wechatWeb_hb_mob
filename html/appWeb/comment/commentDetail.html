@@ -277,31 +277,31 @@
 			var deptName;
 			var mineUserInfo;
 			window.onload = function() {
-								mineUserInfo = {
-									"corpid": "wx6c4528c675d4a9c9",
-									"userid": "songyanming",
-									"name": "宋艳明",
-									"department": [11],
-									"order": [0],
-									"position": "",
-									"mobile": null,
-									"english_name": "",
-									"gender": 1,
-									"isleader": 1,
-									"telephone": null,
-									"email": null,
-									"weixinid": null,
-									"avatar": "http://shp.qpic.cn/bizmp/LlAHpaR9WIbXvzjGTAPgEfe6lmhQqEkJOvvoMW928nibnU4bRQ5wWJA/",
-									"status": 1,
-									"extattr": null,
-									"errcode": 0,
-									"errmsg": "ok",
-									"P2PData": null
-								}
-//				var sValue = utils.getSessionStorageByUrlsKey();
-//				mineUserInfo = sValue.mineUserInfo;
-//				vm.mineUserInfo = mineUserInfo;
-//				vm.isTeacher = sValue.isTeacher;
+//								mineUserInfo = {
+//									"corpid": "wx6c4528c675d4a9c9",
+//									"userid": "songyanming",
+//									"name": "宋艳明",
+//									"department": [11],
+//									"order": [0],
+//									"position": "",
+//									"mobile": null,
+//									"english_name": "",
+//									"gender": 1,
+//									"isleader": 1,
+//									"telephone": null,
+//									"email": null,
+//									"weixinid": null,
+//									"avatar": "http://shp.qpic.cn/bizmp/LlAHpaR9WIbXvzjGTAPgEfe6lmhQqEkJOvvoMW928nibnU4bRQ5wWJA/",
+//									"status": 1,
+//									"extattr": null,
+//									"errcode": 0,
+//									"errmsg": "ok",
+//									"P2PData": null
+//								}
+				var sValue = utils.getSessionStorageByUrlsKey();
+				mineUserInfo = sValue.mineUserInfo;
+				vm.mineUserInfo = mineUserInfo;
+				vm.isTeacher = sValue.isTeacher;
 				if(vm.isTeacher == 1) {
 					document.getElementById("title").innerHTML = vm.mineUserInfo.name + "的点评";
 					deptId = sValue.deptId;
@@ -315,8 +315,8 @@
 			}
 
 			function getDepart() {
-								getDetaultDepart();
-								return;
+//								getDetaultDepart();
+//								return;
 
 				var tempData = {
 					cmd: 'persondeparts',
@@ -358,14 +358,14 @@
 
 			function getEvaluation() {
 				var tempData = {
-//					corpId: mineUserInfo.corpid,
-//					deptId: deptId,
-//					userId: mineUserInfo.userid,
-										corpId: 'wx6c4528c675d4a9c9',
-										deptId: 11,
-										userId: "moshanglin",
+					corpId: mineUserInfo.corpid,
+					deptId: deptId,
+					userId: mineUserInfo.userid,
+//										corpId: 'wx6c4528c675d4a9c9',
+//										deptId: 11,
+//										userId: "moshanglin",
 					pageIndex: 1,
-					pageSize: 20,
+					pageSize: 100,
 				}
 				console.log("点评列表参数：" + JSON.stringify(tempData));
 				getEvaluationPro(tempData, function(data) {
@@ -403,15 +403,15 @@
 			//8.获取多人点评统计
 			function getEvalStatByUsersPr() {
 				var tempArr = [];
-//				tempArr.push(mineUserInfo.userid);
-								tempArr.push("moshanglin");
+				tempArr.push(mineUserInfo.userid);
+//								tempArr.push("moshanglin");
 				var tempData = {
-//					corpId: mineUserInfo.corpid,
-//					deptId: deptId,
-//					userIds: tempArr,
-										corpId: 'wx6c4528c675d4a9c9',
-										deptId: 11,
-										userIds: tempArr,
+					corpId: mineUserInfo.corpid,
+					deptId: deptId,
+					userIds: tempArr,
+//										corpId: 'wx6c4528c675d4a9c9',
+//										deptId: 11,
+//										userIds: tempArr,
 
 				}
 				console.log("多人点评统计参数：" + JSON.stringify(tempData));

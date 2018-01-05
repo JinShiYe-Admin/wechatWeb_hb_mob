@@ -184,7 +184,7 @@
 		        console.log('onload');
 		        initQNUploader();
 		        getSub();
-		        getDepart();
+		        getUserInfo();
 		        //对按钮进行监听
 		        document.getElementById("notice").addEventListener('toggle', function (event) {
 		            homework.issend = homework.issend == 0 ? 1 : 0;
@@ -377,6 +377,7 @@
 		                $.alert("最多只能上传9张照片");
 		            } else {
 		                var file = files[index];
+		                var types = file.type.toLowerCase().split("/");
 		                if (types[1] == "png" || types[1] == "jpg" || types[1] == "jpeg") {
 		                EXIF.getData(file, function () {
 		                    $.showLoading('加载中...');
@@ -558,31 +559,53 @@
 		    }
 
 		    function getDepart() {
+				var tempData = {
+					cmd: 'persondeparts',
+					type: 'findpage',
+				}
+				unitWebsitePro(tempData, function(data) {
+						console.log('部门:' + JSON.stringify(data));
+						var rspData = JSON.parse(data.RspData);
+						if(data.RspCode == 0) {
+							for(var i = 0; i < rspData.length; i++) {
+								var model = rspData[i];
+								if(model.value == -1) {
+									continue;
+								} else {
+									for(var j = 0; j < userInfo.department.length; j++) {
+										if(model.value == userInfo.department[j]) {
+											model.label = model.title;
+											homework.depart_array.push(model);
+										}
 
-		        var tempData = {
-		            cmd: 'persondeparts',
-		            type: 'findpage',
-		        }
-		        unitWebsitePro(tempData, function (data) {
-		            console.log('部门:' + JSON.stringify(data));
-		            var rspData = JSON.parse(data.RspData);
-		            if (data.RspCode == 0) {
-		                for (var i = 0; i < rspData.length; i++) {
-		                    var model = rspData[i];
-		                    if (model.value == -1) {
-		                        continue;
-		                    } else {
-		                        model.label = model.title;
-		                        homework.depart_array.push(model);
-		                    }
-		                }
+									}
+								}
+								}
 
-		            } else {
-		                mui.toast(data.RspTxt)
-		            }
-		        })
+							} else {
+								mui.toast(data.RspTxt)
+							}
+						})
 
-		    }
+				}
+		    				var userInfo;
+				function getUserInfo() {
+					var tempData = {
+						cmd: 'userinfo',
+						type: 'findpage',
+						colv: ''
+					}
+					console.log(JSON.stringify(tempData))
+					unitWebsitePro(tempData, function(data) {
+						console.log('获取当前人员信息' + JSON.stringify(data.RspData))
+						if(data.RspCode == 0) {
+							userInfo = JSON.parse(data.RspData);
+							getDepart();
+						} else {
+							alert(data.RspTxt)
+						}
+					})
+				}
 
 		    function getPerson(colid) {
 		        var tempData = {

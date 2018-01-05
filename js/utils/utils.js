@@ -305,5 +305,13 @@ var utils = (function(mod) {
 		}
 	}
 
+	/**
+	 * 当前时间+随机数
+	 */
+	mod.timeAndRandom = function() {
+		var value = new Date().getTime() + "" + parseInt(Math.random() * 1000);
+		return value;
+	}
+
 	return mod;
 })(window.utils || {});

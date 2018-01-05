@@ -373,7 +373,7 @@
 						console.log("skey" + sKey);
 						var leaveInfo = JSON.parse(storageutil.getSessionStorage(sKey));
 						this.flag = parseInt(events.getUrlParam(location.href, "flag"));
-						this.isChecker = parseInt(events.getUrlParam(location.href, "isChecker"));
+						this.isChecker = parseInt(leaveInfo.isChecker);
 						console.log("获取的flag:" + this.flag);
 						console.log("this.flag type:" + typeof(this.flag));
 						if(leaveInfo == null) {

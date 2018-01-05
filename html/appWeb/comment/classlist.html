@@ -7,6 +7,11 @@
 		<title>学生点评</title>
 		<script type="text/javascript">
 			var WebVersion = "?" + Math.random();
+			var indexParents = location.href.indexOf("?isParents=1");
+			console.log("indexParents:" + indexParents);
+			if(indexParents != -1) {
+				history.go(-1);
+			}
 		</script>
 		<link rel="stylesheet" href="../../../css/weui.min.css" />
 		<link rel="stylesheet" href="../../../js/demoCssJs/jquery-weui.min.css" />
@@ -120,9 +125,49 @@
 				key: [],
 				value: {}
 			}; //我所在的班级
-			window.onload = function() {
-				$.showLoading();
-				getMineInfo();
+
+			window.onpageshow = function(event) {
+				if(indexParents != -1) {
+					history.go(-1);
+				} else {
+					var sKey = utils.getValueFromUrlByKey("sKey");
+					history.replaceState({}, "学生点评", "classlist.html");
+					console.log("sKey", sKey);
+					if(sKey === null) {
+						$.showLoading();
+						getMineInfo();
+					} else {
+						var sValue = storageutil.getSessionStorage(sKey);
+						if(sValue === null) {
+							$.showLoading();
+							getMineInfo();
+						} else {
+							var obj = JSON.parse(sValue);
+							if(typeof(obj.mineUserInfo) == "undefined") {
+								$.showLoading();
+								getMineInfo();
+							} else {
+								mineUserInfo = obj.mineUserInfo;
+								mineDepart = obj.mineDepart;
+								initListener();
+								showData();
+								$(".weui-tab__bd-item").scrollTop(obj.scrollTop);
+							}
+						}
+					}
+				}
+			}
+
+			function saveData() {
+				var sKey = utils.timeAndRandom();
+				var scrollTop = $(".weui-tab__bd-item").scrollTop();
+				var sValue = {
+					mineUserInfo: mineUserInfo,
+					mineDepart: mineDepart,
+					scrollTop: scrollTop
+				}
+				storageutil.setSessionStorage(sKey, JSON.stringify(sValue));
+				history.replaceState({}, "学生点评", "classlist.html?sKey=" + sKey);
 			}
 
 			function initListener() {
@@ -135,9 +180,7 @@
 						deptName: deptData.title,
 						mineUserInfo: mineUserInfo
 					}
-					//					if(deptData.getMembers) {
-					//						data.members = deptData.members
-					//					}
+					saveData();
 					utils.hrefSessionStorage("stulist.html", data);
 				});
 
@@ -171,6 +214,7 @@
 							getDepartments();
 						} else {
 							//家长
+							history.replaceState({}, "学生点评", "classlist.html?isParents=1");
 							utils.hrefSessionStorage("commentDetail.html", {
 								mineUserInfo: mineUserInfo,
 								isTeacher: 0

@@ -274,6 +274,10 @@
 					layer.alert('不能加入空数据');
 					return false;
 				}
+				if(text.length > 20) {
+					layer.alert('科目名称不能大于20个字');
+					return false;
+				}
 				var tempFlag = 0;
 				for(var i = 0; i < courseData.courseArray.length; i++) {
 					var tempModel = courseData.courseArray[i];

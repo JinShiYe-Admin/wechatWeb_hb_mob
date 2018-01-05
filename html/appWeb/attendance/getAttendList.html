@@ -125,7 +125,7 @@
 		<script src="../../../js/PublicProtocol.js"></script>
 		<script src="../../../js/utils/utils.js"></script>
 		<script src="../../../js/utils/storageutil.js"></script>
-		<!--<script src='../../../js/lib/vconsole/vconsole.min.js'></script>-->
+		<script src='../../../js/lib/vconsole/vconsole.min.js'></script>
 		<script type="text/javascript">
 			$(function() {
 				//获取当前人员信息
@@ -214,14 +214,15 @@
 					colv: '' //留空为取当前人员信息,不为空则为具体人员信息
 				}
 				console.log('tempData:' + JSON.stringify(tempData));
-				unitWebsitePro(tempData, function(data) {
-					if(data.RspCode == 0) {
-						attendData.userInfo = JSON.parse(data.RspData);
-						getAttend(0);
-					} else {
-						$.toast('请重新登录获取个人信息');
-					}
-				});
+				//				unitWebsitePro(tempData, function(data) {
+				//					if(data.RspCode == 0) {
+				//						attendData.userInfo = JSON.parse(data.RspData);
+				attendData.userInfo = JSON.parse('{\"corpid\":\"wx6c4528c675d4a9c9\",\"userid\":\"zhaoqiwang\",\"name\":\"赵启旺\",\"department\":[11],\"order\":null,\"position\":null,\"mobile\":null,\"english_name\":null,\"gender\":0,\"isleader\":0,\"telephone\":null,\"email\":null,\"weixinid\":null,\"avatar\":null,\"status\":0,\"extattr\":null,\"errcode\":0,\"errmsg\":null,\"P2PData\":null}');
+				getAttend(0);
+				//					} else {
+				//						$.toast('请重新登录获取个人信息');
+				//					}
+				//				});
 			};
 
 			//刷新
@@ -248,15 +249,30 @@
 				var endTime = attendData.endTime;
 				if(beginTime == '' && endTime.length > 0) {
 					$.toast('请选择开始查询日期');
+					setTimeout(function() {
+						$(".weui-loadmore").hide();
+						loading = false;
+						$(".weui-pull-to-refresh").pullToRefreshDone();
+					}, 1000); //模拟延迟
 					return false;
 				} else if(endTime == '' && beginTime.length > 0) {
 					$.toast('请选择结束查询日期');
+					setTimeout(function() {
+						$(".weui-loadmore").hide();
+						loading = false;
+						$(".weui-pull-to-refresh").pullToRefreshDone();
+					}, 1000); //模拟延迟
 					return false;
 				}
 				beginTime = beginTime.replace(/-/g, '');
 				endTime = endTime.replace(/-/g, '');
 				if(beginTime > endTime) {
 					$.toast('开始时间不能大于结束时间');
+					setTimeout(function() {
+						$(".weui-loadmore").hide();
+						loading = false;
+						$(".weui-pull-to-refresh").pullToRefreshDone();
+					}, 1000); //模拟延迟
 					return false;
 				}
 				var tempPage = 1;

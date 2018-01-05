@@ -146,7 +146,7 @@
 			<a class="weui-btn weui-btn_primary" @click="clickSubmitBtn()" v-if="stat<2">{{submitBtnTitle}}</a>
 			<input id="qnInput" style="display: none;">
 			<!--<div class="weui-gallery" style="display: block">-->
-			<div class="weui-gallery" :style="displayGallery" v-if="stat<2">
+			<div class="weui-gallery weui-popup__container" :style="displayGallery" v-if="stat<2">
 				<span class="weui-gallery__img" @click="clickGigImg" :style="{backgroundImage:'url('+selectImgPath+')'}"></span>
 				<div class="weui-gallery__opr">
 					<a href="javascript:" class="weui-gallery__del">

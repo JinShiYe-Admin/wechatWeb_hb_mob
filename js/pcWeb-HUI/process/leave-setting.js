@@ -1,4 +1,3 @@
-
 Vue.component("leave-setting", {
 	template: "#leave-list",
 	data: function() {
@@ -59,7 +58,7 @@ Vue.component("leave-setting", {
 					com.corpId = JSON.parse(response.RspData).corpid;
 					com.requireLeave();
 				}
-			},1)
+			}, 1)
 		},
 		newTablebases: function() {
 			console.log("*****newTablebases******");
@@ -67,7 +66,8 @@ Vue.component("leave-setting", {
 			this.tablebases = $('.table-sort').DataTable({
 				pageLength: 10,
 				lengthChange: false,
-				ordering: false
+				ordering: false,
+				searching: false
 			});
 			com.tablebases.table(0).page(com.curPage).draw(false);
 		},
@@ -125,7 +125,7 @@ Vue.component("leave-setting", {
 					zIndex: 999,
 					content: $('#edit-pocessInfo')
 				});
-			}else{
+			} else {
 				layer.closeAll("page");
 			}
 
@@ -216,7 +216,7 @@ Vue.component("leave-setting", {
 				console.log("修改请假信息的结果:" + JSON.stringify(response));
 				if(response.RspCode == 0) {
 					com.activeLeave.LeaveTypeName = com.name;
-					com.activeLeave.LeaveTypeNote=com.note;
+					com.activeLeave.LeaveTypeNote = com.note;
 					com.activeLeave.IsLeader = com.getIsLeader();
 					com.toggleLayer(false);
 				} else {

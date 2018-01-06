@@ -125,6 +125,9 @@
 			.submit-btn {
 				width: 58px;
 			}
+			.status-color{
+				color: #5EB95E;
+			}
 		</style>
 	</head>
 
@@ -189,7 +192,7 @@
 								<span v-for="(apprMan,index) in process.ApprManList">{{apprMan.ApprManName}}<span v-if="index<process.ApprManList.length-1" class="Hui-iconfont Hui-iconfont-slider-right"></span></span>
 							</td>
 							<td class="text-c">{{process.ProcTypeNote}}</td>
-							<td class="td-status"><span class="label  radius" v-bind:class="[{'label-defaunt':!process.Stat},{'label-success':process.Stat}]">{{process.Stat?"有效":"屏蔽"}}</span></td>
+							<td class="text-c status-color">{{process.Stat?"有效":"屏蔽"}}</td>
 							<td class="td-manage">
 								<span class="Hui-iconfont Hui-iconfont-edit edit-groupName manage-item" title="编辑流程信息" v-on:click.stop="changeProcessInfo(process)"></span>
 								<span class="Hui-iconfont Hui-iconfont-user-group edit-process manage-item" title="更改流程链" v-on:click.stop="changeProcessList(process)"></span>

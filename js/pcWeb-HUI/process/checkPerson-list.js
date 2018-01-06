@@ -51,7 +51,7 @@ Vue.component("check-person-list", {
 					com.corpId = JSON.parse(response.RspData).corpid;
 					com.getAllCheckPerson();
 				}
-			},1)
+			}, 1)
 		},
 		/**
 		 * 数据结构
@@ -62,7 +62,8 @@ Vue.component("check-person-list", {
 			com.tablebases = $('.table-sort').DataTable({
 				pageLength: 10,
 				lengthChange: false,
-				ordering: false
+				ordering: false,
+				searching: false
 			});
 			$('.table-sort').on('page.dt', function() {
 				var info = com.tablebases.page.info();

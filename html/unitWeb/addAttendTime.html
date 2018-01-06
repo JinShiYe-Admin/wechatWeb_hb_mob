@@ -38,7 +38,7 @@
 				<div>
 					<div class="weui-cells__title">考勤类型说明：
 						<select id="attendTypeNote" name="sel" onFocus="Myselect()">
-							<option value=""></option>
+							<option value="" selected></option>
 						</select>
 					</div>
 					<!--<div>
@@ -55,7 +55,7 @@
 					<div class="weui-cells__title">打卡开始时间：
 						<select id="beginHour">
 							<option value=""></option>
-							<option value="0">0</option>
+							<option value="0" selected>0</option>
 							<option value="1">1</option>
 							<option value="2">2</option>
 							<option value="3">3</option>
@@ -83,7 +83,7 @@
 						时
 						<select id="beginMinute">
 							<option value=""></option>
-							<option value="0">0</option>
+							<option value="0" selected>0</option>
 							<option value="1">1</option>
 							<option value="2">2</option>
 							<option value="3">3</option>
@@ -150,7 +150,7 @@
 					<div class="weui-cells__title">上班或下班时间：
 						<select id="workTimePoint_Hour">
 							<option value=""></option>
-								<option value="0">0</option>
+								<option value="0" selected>0</option>
 							<option value="1">1</option>
 							<option value="2">2</option>
 							<option value="3">3</option>
@@ -178,7 +178,7 @@
 						时
 						<select id="workTimePoint_Minute">
 							<option value=""></option>
-							<option value="0">0</option>
+							<option value="0" selected>0</option>
 							<option value="1">1</option>
 							<option value="2">2</option>
 							<option value="3">3</option>
@@ -246,7 +246,7 @@
 					<div class="weui-cells__title">打卡结束时间：
 						<select id="cardEndTimePoint_Hour">
 							<option value=""></option>
-							<option value="0">0</option>
+							<option value="0" selected>0</option>
 							<option value="1">1</option>
 							<option value="2">2</option>
 							<option value="3">3</option>
@@ -274,7 +274,7 @@
 						时
 						<select id="cardEndTimePoint_Minute">
 							<option value=""></option>
-							<option value="0">0</option>
+							<option value="0" selected>0</option>
 							<option value="1">1</option>
 							<option value="2">2</option>
 							<option value="3">3</option>
@@ -538,6 +538,8 @@
 			document.write("<s" + "cript type='text/javascript' src='../../js/importJS.js?" + Math.random() + "'></s" + "cript>");
 		</script>
 		<script>
+			
+		
 			console.log(11111111111111);
 			var corpId = "";
 			var attendTypeId;
@@ -637,6 +639,8 @@
 			console.log("selectArray--==========" + selectArray);
 			console.log("selectArray---json======" + JSON.stringify(selectArray));
 			console.log("optionAttendTypePropertyArray---json======" + JSON.stringify(optionAttendTypePropertyArray));
+			
+			
 			//	getWebsitConfig();
 			/**
 			 * 从考勤类型列表数据每一行记录点超链接跳转到此页面，将考勤类型记录对象得到，detail即是
@@ -1126,6 +1130,8 @@
 			}
 			
 			
+			//获取到考勤类型数据后，再执行Myselect函数，将其赋到select的option中
+			Myselect();
 			/**
 			 * 函数功能：计算分钟值是否是2位，若是1位即个位数，需十位补0，让其达到2位
 			 * param : 分钟值

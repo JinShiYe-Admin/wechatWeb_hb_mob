@@ -127,6 +127,7 @@
 			}; //我所在的班级
 
 			window.onpageshow = function(event) {
+				indexParents = location.href.indexOf("?isParents=1");
 				if(indexParents != -1) {
 					history.go(-1);
 				} else {

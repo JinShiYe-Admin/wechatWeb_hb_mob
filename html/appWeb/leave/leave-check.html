@@ -157,7 +157,7 @@
 		<script src="../../../js/utils/request.js"></script>
 		<script src="../../../js/utils/storageutil.js"></script>
 		<script>
-//			events.setShowAutoFresh();
+			//			events.setShowAutoFresh();
 			var list = new Vue({
 				el: "#tabs",
 				data: {
@@ -210,10 +210,27 @@
 					initialData: function() {
 						console.log("****initialData******")
 						var com = this;
-						this.getPersonalInfo(function() {
-							console.log("****getPersonalInfo*****");
-							com.refreshList(com.setData);
-						});
+						if(!this.setSaveSatus()) {
+							this.getPersonalInfo(function() {
+								console.log("****getPersonalInfo*****");
+								com.refreshList(com.setData);
+							});
+						}
+					},
+					setSaveSatus: function() {
+						var sKey = events.getUrlParam("sKey")
+						if(sKey != null) {
+							var data = JSON.parse(sessionStorage.getItem(sKey));
+							this.personalInfo = data.mineUserInfo;
+							this.tabs = data.tabs;
+							this.activeIndex = data.activeTab;
+							$("#tab0").scrollTop = data.scrollTops[0];
+							$("#tab1").scrollTop = data.scrollTops[1];
+							$("#tab2").scrollTop = data.scrollTops[2];
+							$("#tab3").scrollTop = data.scrollTops[3];
+							return true
+						}
+						return false
 					},
 					initialLoad: function() {
 						console.log("*****initialLoad*****");
@@ -236,6 +253,20 @@
 								self.loading = false;
 							})
 						});
+					},
+					savePageData: function(item) {
+						var sKey = new Date().getTime();
+						var sValue = {
+							leave: item,
+							mineUserInfo: this.personalInfo,
+							isChecker: 1,
+							tabs: this.tabs,
+							activeTab: this.activeIndex,
+							scrollTops: [$("#tab0").scrollTop(), $("#tab1").scrollTop(), $("#tab2").scrollTop(), $("#tab3").scrollTop()]
+						}
+						storageutil.setSessionStorage(sKey, JSON.stringify(sValue));
+						history.replaceState({}, "请假列表", "leave-check.html?sKey=" + sKey);
+						return sKey;
 					},
 					/**
 					 * 获取单位Id
@@ -325,14 +356,8 @@
 					 */
 					jumpToDetail: function(item) {
 						console.log("******jumpToDetail*******");
-						var sKey = new Date().getTime();
-						var sValue = {
-							leave: item,
-							mineUserInfo: this.personalInfo,
-							isChecker: 1
-						}
-						storageutil.setSessionStorage(sKey, JSON.stringify(sValue));
-						location.href = "leave-detail.html?flag=" + this.getFlag(item) + "&sKey=" + sKey;
+
+						location.href = "leave-detail.html?flag=" + this.getFlag(item) + "&sKey=" + this.savePageData(item);
 					},
 					getFlag: function(item) {
 						if(item.ApprStat == 0) { //未审

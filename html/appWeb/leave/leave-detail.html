@@ -115,7 +115,8 @@
 			.weui-tabbar {
 				position: relative;
 			}
-			.swiper-container{
+			
+			.swiper-container {
 				position: fixed;
 				top: 0;
 				left: 0;
@@ -174,7 +175,6 @@
 							<div class="weui-uploader__bd">
 								<ul class="weui-uploader__files">
 									<li class="weui-uploader__file" v-for="(img,index) in applyDetail.ApplyReasonThumb" v-on:click="showGalleryFun(index)" v-bind:style="{backgroundImage:'url(' +img+ ')'}">
-
 									</li>
 								</ul>
 							</div>
@@ -316,7 +316,7 @@
 					approveNote: "",
 					pageIndex: 1,
 					pageSize: 0,
-					flag: 0, //0查看 1审核
+					flag: 0, //0修改 1审核 2查看
 					previewImgs: [],
 					photoBrowser: {},
 					isChecker: 0
@@ -336,12 +336,19 @@
 					}
 				},
 				methods: {
-					getFlag: function(list) {
-						for(var i = 0; i < list.length; i++) {
-							if(list[i].ApprMan == this.personalInfo.userid && list[i].ApprStat > 0) {
-								this.flag = 2
+					getFlag: function(data) {
+						switch(data.ApplyStat) {
+							case 0:
+
 								break;
-							}
+							case 1:
+							case 2:
+								if(this.flag == 0 || this.flag == 1) {
+									this.flag = 2
+								}
+								break;
+							default:
+								break;
 						}
 					},
 					editLeave: function() {
@@ -408,19 +415,16 @@
 						console.log("skey" + sKey);
 						var leaveInfo = JSON.parse(storageutil.getSessionStorage(sKey));
 						this.flag = parseInt(events.getUrlParam(location.href, "flag"));
-						this.isChecker = parseInt(leaveInfo.isChecker);
-						console.log("获取的flag:" + this.flag);
-						console.log("this.flag type:" + typeof(this.flag));
 						if(leaveInfo == null) {
 							$.alert("此请假记录不存在", "消息", function() {
 								history.go(-1);
 							});
 							return;
 						}
+						this.isChecker = parseInt(leaveInfo.isChecker);
+						console.log("获取的flag:" + this.flag);
+						console.log("this.flag type:" + typeof(this.flag));
 						console.log("获取的levaeInfo:" + JSON.stringify(leaveInfo));
-						leaveInfo.leave.ApplyReasonThumb = this.changeToPics(leaveInfo.leave.ApplyReasonThumb);
-						this.previewImgs = this.changeToPics(leaveInfo.leave.ApplyPic);
-						this.applyDetail = leaveInfo.leave;
 						this.personalInfo = leaveInfo.mineUserInfo;
 						this.getApprList();
 					},
@@ -435,6 +439,14 @@
 							console.log("获取的数据：" + JSON.stringify(response));
 							if(response.RspCode == 0) {
 								com.checkList = response.RspData.Data;
+								response.RspData.ApplyReasonThumb = com.changeToPics(response.RspData.ApplyReasonThumb);
+								com.getFlag(response.RspData)
+								com.previewImgs = com.changeToPics(response.RspData.ApplyPic);
+								com.applyDetail = response.RspData;
+							} else if(response.RspCode == 13) {
+								$.alert("此请假记录不存在", "消息", function() {
+									history.go(-1);
+								});
 							} else {
 								$.alert(response.RspTxt, "提示");
 							}

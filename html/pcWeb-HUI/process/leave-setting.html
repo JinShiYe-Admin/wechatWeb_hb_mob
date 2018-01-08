@@ -132,6 +132,9 @@
 			.submit-btn {
 				width: 58px;
 			}
+			.status-color{
+				color: #5EB95E;
+			}
 		</style>
 	</head>
 
@@ -166,7 +169,7 @@
 								{{leave.IsLeader|getLeaveRelation}}
 							</td>
 							<td class="text-c">{{leave.LeaveTypeNote}}</td>
-							<td class="td-status"><span class="label  radius" v-bind:class="[{'label-defaunt':!leave.Stat},{'label-success':leave.Stat}]">{{leave.Stat?"有效":"屏蔽"}}</span></td>
+							<td class="text-c status-color">{{leave.Stat?"有效":"屏蔽"}}</td>
 							<td class="td-manage">
 								<span class="Hui-iconfont Hui-iconfont-edit edit-groupName manage-item" title="编辑请假信息" v-on:click.stop="changeLeaveInfo(leave)"></span>
 								<span class="Hui-iconfont manage-item" title="显示/屏蔽" v-bind:class="[{'Hui-iconfont-yanjing':leave.Stat}, {'Hui-iconfont-niming':!leave.Stat},{'close-leave':!leave.Stat},{'show-leave':leave.Stat}]" v-on:click.stop="changeState(leave,index)"></span>

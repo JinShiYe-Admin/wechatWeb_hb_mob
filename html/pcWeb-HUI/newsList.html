@@ -41,9 +41,10 @@
 						<tr class="text-c" v-for="(newsModel,index) in item.newsArray" :data-index="index">
 							<td style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;"> {{newsModel.topic}}</td>
 							<td style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{{newsModel.subtopic}}</td>
-							<td style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;"><span :class="newsModel.stat==0?'label label-defaunt radius':'label label-success radius'"><a v-if="newsModel.stat==0">未通过</a><a v-else>已通过</a></span></td>
-							<td style="text-align: center;">
-								<button id="{{newsModel.newsid}}" class="btn btn-primary radius" @click="clickDel(newsModel,1,index)">{{newsModel.Prizt}}</button>&nbsp;&nbsp;&nbsp;
+							<td style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;"><span v-if="newsModel.stat==0" style="color:#fb9191;">未通过</span><span v-else style="color:#5EB95E;">已通过</span></td>
+							<td style="text-align: center;"> 
+								<a id="{{newsModel.newsid}}"   @click="clickDel(newsModel,1,index)">{{newsModel.Prizt}}</a>&nbsp;&nbsp;&nbsp;
+							 
 								<a class="text-primary operate-cursor" @click="click(newsModel,index,item.cname )" title="编辑"><i class="Hui-iconfont" style="color: #4fbffd;"></i></a>
 								<a style="text-decoration:none" class="ml-5" @click="clickDel(newsModel,0,index)" title="删除"><i class="Hui-iconfont" style="color: #F96161;">&#xe6e2;</i></a>
 							</td>
@@ -121,7 +122,8 @@
 				el: '#newsData',
 				data: {
 					item: {
-						newsArray: []
+						newsArray: [ 
+						]
 					}
 				},
 				updated: function() {
@@ -179,14 +181,14 @@
 				unitWebsitePro(tempData, function(data) {
 					console.log(JSON.stringify(data));
 					if(data.RspCode == 0000 && stat == 1) {
-						model.Prizt = '不通过';
+						model.Prizt = '<i class=\"Hui-iconfont\" style=\"color: #4fbffd;\">&#xe706</i>';
 						model.stat = 1;
 						layer.msg('审核已完成', {
 								icon: 1,
 								time: 1000
 						});
 					} else if(data.RspCode == 0000 && stat == 0) {
-						model.Prizt = '通过';
+						model.Prizt = '<i class=\"Hui-iconfont\" style=\"color: #4fbffd;\">&#xe676</i>';
 						model.stat = 0;
 						layer.msg('审核已完成', {
 								icon: 1,
@@ -222,9 +224,9 @@
 							for(var i = 0; i < data.RspData.dt.length; i++) {
 								var tempModel = data.RspData.dt[i];
 								if(tempModel.stat == 1)
-									tempModel.Prizt = "不通过";
+									tempModel.Prizt = "<i class=\"Hui-iconfont\" style=\"color: #4fbffd;\">&#xe706</i>";
 								if(tempModel.stat == 0)
-									tempModel.Prizt = "通过";
+									tempModel.Prizt = "<i class=\"Hui-iconfont\" style=\"color: #4fbffd;\">&#xe676</i>";
 							}
 							console.log('后台返回数据----' + JSON.stringify(data.RspData.dt));
 							newsData.item.newsArray = data.RspData.dt;

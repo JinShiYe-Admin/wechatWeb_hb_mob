@@ -336,13 +336,15 @@ function getColumnData(pageindex) {
 				corpId = rep.corpid;
 
 			} else if(data.RspCode == 7) {
-				$.toast("登录超时，请重新进入APP", "cancel", function() {
-					console.log('close');
-				});
+				alert("登录超时，请重新进入企业微信后台管理")
+//				$.toast("登录超时，请重新进入APP", "cancel", function() {
+//					console.log('close');
+//				});
 			}
 		},
 		error: function() {
-			console.log("error");
+			alert("获取用户基本信息失败！")
+//			console.log("error");
 		}
 	})
 	//假数据 单位标识
@@ -469,9 +471,10 @@ function clickOff(attendAreaId, corpId, areaName, areaX, areaY, areaRedius, stat
 			}
 		},
 		error: function() {
-			$.toast("状态错误，请重新进入企业微信管理后台", "cancel", function() {
-				console.log('close');
-			});
+			alert("操作失败")
+//			$.toast("状态错误，请重新进入企业微信管理后台", "cancel", function() {
+//				console.log('close');
+//			});
 		}
 	})
 

@@ -164,13 +164,15 @@
 							corpId = rep.corpid;
 
 						} else if(data.RspCode == 7) {
-							$.toast("登录超时，请重新进入APP", "cancel", function() {
-								console.log('close');
-							});
+							alert("登录超时，请重新进入企业微信后台管理")
+							//							$.toast("登录超时，请重新进入APP", "cancel", function() {
+							//								console.log('close');
+							//							});
 						}
 					},
 					error: function() {
-						console.log("error");
+						alert("获取用户基本信息失败")
+						//						console.log("error");
 					}
 				})
 				//给corpId赋值假数据
@@ -268,7 +270,7 @@
 						Object.assign(this.$data, getDefaultData());
 					},
 					submitClick: function() {
-						alert(99);
+//						alert(99);
 						//提交前先判断。如果都不为空，则允许提交
 						/**
 						 * 得到各input输入框的值
@@ -281,6 +283,9 @@
 						//						alert("attendAddressRedius=="+attendAddressRedius);
 						if(attendAdressValue == "") {
 							alert("考勤地点名称不能为空！");
+							return;
+						} else if(attendAdressValue.length > 200) {
+							alert("考勤地点名称字数太长！最大允许200字");
 							return;
 						} else if(attendAdressX == "") {
 							alert("考勤地点X坐标不能为空！");
@@ -748,9 +753,9 @@
 						},
 						error: function() {
 							alert("状态错误，请重新进入企业微信后台管理");
-//							$.toast("状态错误，请重新进入", "cancel", function() {
-//								console.log('close');
-//							});
+							//							$.toast("状态错误，请重新进入", "cancel", function() {
+							//								console.log('close');
+							//							});
 						}
 					})
 				}

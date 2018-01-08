@@ -279,7 +279,8 @@
 
 				});
 
-				if(utils.getSystem() == "Android") {
+				var isAndroidIndex = window.navigator.userAgent.toLowerCase().indexOf("android");
+				if(isAndroidIndex != -1) {
 					//安卓手机点击报修数量，将输入框移到视图中
 					$("#deviceNumber").click(function() {
 						document.getElementById("deviceNumber").scrollIntoView(true);

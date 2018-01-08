@@ -140,7 +140,7 @@
 									</div>
 									<div class="weui-media-box__bd">
 										<h4 class="weui-media-box__title">{{item.EvalManName}}</h4>
-										<p class="weui-media-box__desc">{{item.EvalTime}}</p>
+										<p class="weui-media-box__desc">{{item.EvalTime+" "+item.DeptName}}</p>
 									</div>
 								</a>
 								<p style="margin-left: 10px;">{{item.EvalContent}}</p>
@@ -160,7 +160,7 @@
 									</div>
 									<div class="weui-media-box__bd">
 										<h4 class="weui-media-box__title">{{item.EvalType==1?"+1分":"-1分"}}<span style="color:black;">{{" "+item.EvalContent}}</span></h4>
-										<p class="weui-media-box__desc">{{item.EvalTime+" 由"+item.EvalManName+"点评"}}</p>
+										<p class="weui-media-box__desc">{{item.EvalTime+" 由"+item.EvalManName+"点评"+" "+item.DeptName}}</p>
 									</div>
 								</a>
 
@@ -282,8 +282,8 @@
 			var mineUserInfo;
 			var teacherInfo = {};
 			window.onload = function() {
-//				var sValue = getDefaultUserInfo(0);
-				var sValue = utils.getSessionStorageByUrlsKey();
+				var sValue = getDefaultUserInfo(0);
+//				var sValue = utils.getSessionStorageByUrlsKey();
 				mineUserInfo = sValue.mineUserInfo;
 				vm.mineUserInfo = mineUserInfo;
 				vm.isTeacher = sValue.isTeacher;
@@ -291,7 +291,6 @@
 					teacherInfo = sValue.teacherInfo;
 					document.getElementById("title").innerHTML = vm.mineUserInfo.name + "的点评";
 					deptId = sValue.deptId;
-					deptName = sValue.deptName;
 					getEvaluation();
 					getEvalStatByUsersPr()
 				} else {
@@ -301,8 +300,8 @@
 			}
 
 			function getDepart() {
-//				getDetaultDepart();
-//				return;
+				getDetaultDepart();
+				return;
 
 				var tempData = {
 					cmd: 'persondeparts',
@@ -314,6 +313,7 @@
 
 					if(data.RspCode == 0) {
 						mineUserInfo.depart_array = [];
+						mineUserInfo.departIds = [];
 						for(var i = 0; i < rspData.length; i++) {
 							var model = rspData[i];
 							if(model.value == -1) {
@@ -325,6 +325,7 @@
 									if(model.value == mineUserInfo.department[j]) {
 										model.label = model.title;
 										mineUserInfo.depart_array.push(model);
+										mineUserInfo.departIds.push(model.value);
 									}
 
 								}
@@ -336,7 +337,7 @@
 						document.getElementById("depart").data_id = deptObj.value;
 						deptId = deptObj.value;
 						getEvaluation();
-						getEvalStatByUsersPr();
+						getEvalStatByDeptIds(mineUserInfo.departIds);
 					} else {
 						alert(data.RspTxt)
 					}
@@ -361,6 +362,7 @@
 						}
 						for(var i = 0; i < data.RspData.Data.length; i++) {
 							var model = data.RspData.Data[i];
+//							model.EvalTime = dateUtils.format(model.EvalTime)
 							if(model.EvalEncThumb == "") {
 
 								model.ThumbArr = [];
@@ -413,6 +415,33 @@
 
 				});
 			}
+			//10.获取多部门点评统计
+			function getEvalStatByDeptIds(deptIds) {
+				var tempArr = [];
+				var tempData = {
+					corpId: mineUserInfo.corpid,
+					deptIds: deptIds,
+					userId: mineUserInfo.userid,
+				}
+				console.log("多人点评统计参数：" + JSON.stringify(tempData));
+				getEvalStatByDepts(tempData, function(data) {
+					console.log("多人点评统计数据：" + JSON.stringify(data));
+					if(data.RspCode == 0) {
+						if(data.RspData.Data.length == 0) {
+							vm.EvaluationPro.ImproveCnt = 0;
+							vm.EvaluationPro.PraiseCnt = 0;
+							//							$.alert("暂无统计", "提示");
+						} else {
+							vm.EvaluationPro = data.RspData.Data[0];
+
+						}
+						document.getElementById("show").style.display = "block"
+					} else {
+						$.alert(data.RspTxt, "提示");
+					}
+
+				});
+			}
 
 			function delEvaluatio(index) {
 				var model = vm.datasource[index];
@@ -443,7 +472,8 @@
 						document.getElementById("depart").data_id = result[0].value;
 						deptId = result[0].value;
 						getEvaluation();
-						getEvalStatByUsersPr();
+						var dept_array =  [deptId]
+						getEvalStatByDepts(dept_array);
 					}
 				});
 			}
@@ -517,6 +547,7 @@
 				}]
 
 				mineUserInfo.depart_array = [];
+				mineUserInfo.departIds = [];
 				for(var i = 0; i < rspData.length; i++) {
 					var model = rspData[i];
 					if(model.value == -1) {
@@ -529,6 +560,7 @@
 							if(model.value == mineUserInfo.department[j]) {
 								model.label = model.title;
 								mineUserInfo.depart_array.push(model);
+								mineUserInfo.departIds.push(model.value)
 
 							}
 
@@ -541,7 +573,7 @@
 				document.getElementById("depart").data_id = deptObj.value;
 				deptId = deptObj.value;
 				getEvaluation();
-				getEvalStatByUsersPr();
+				getEvalStatByDeptIds(mineUserInfo.departIds);
 
 			}
 		</script>

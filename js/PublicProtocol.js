@@ -289,3 +289,8 @@ var delEvaluation = function(data0, callback) {
 	data0 = extendParameter(data0);
 	xhrPost(tempEvaluationUrl + 'delEvaluation', JSON.stringify(data0), callback);
 }
+//10.获取多部门点评统计
+var getEvalStatByDepts = function(data0, callback) {
+	data0 = extendParameter(data0);
+	xhrPost(tempEvaluationUrl + 'getEvalStatByDepts', JSON.stringify(data0), callback);
+}

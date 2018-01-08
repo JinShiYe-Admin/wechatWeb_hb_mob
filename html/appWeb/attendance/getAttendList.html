@@ -214,15 +214,14 @@
 					colv: '' //留空为取当前人员信息,不为空则为具体人员信息
 				}
 				console.log('tempData:' + JSON.stringify(tempData));
-				//				unitWebsitePro(tempData, function(data) {
-				//					if(data.RspCode == 0) {
-				//						attendData.userInfo = JSON.parse(data.RspData);
-				attendData.userInfo = JSON.parse('{\"corpid\":\"wx6c4528c675d4a9c9\",\"userid\":\"zhaoqiwang\",\"name\":\"赵启旺\",\"department\":[11],\"order\":null,\"position\":null,\"mobile\":null,\"english_name\":null,\"gender\":0,\"isleader\":0,\"telephone\":null,\"email\":null,\"weixinid\":null,\"avatar\":null,\"status\":0,\"extattr\":null,\"errcode\":0,\"errmsg\":null,\"P2PData\":null}');
-				getAttend(0);
-				//					} else {
-				//						$.toast('请重新登录获取个人信息');
-				//					}
-				//				});
+				unitWebsitePro(tempData, function(data) {
+					if(data.RspCode == 0) {
+						attendData.userInfo = JSON.parse(data.RspData);
+						getAttend(0);
+					} else {
+						$.toast('请重新登录获取个人信息');
+					}
+				});
 			};
 
 			//刷新

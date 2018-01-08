@@ -55,7 +55,8 @@ Vue.component("process-setting", {
 			this.tablebases = $('.table-sort').DataTable({
 				pageLength: 10,
 				lengthChange: false,
-				ordering: false
+				ordering: false,
+				searching: false
 			});
 			this.tablebases.table(0).page(this.curPage).draw(false);
 		},

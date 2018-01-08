@@ -13,32 +13,28 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-stat-bar-style" content="black">
 		<title>管理考勤</title>
-		<script type="text/javascript">
-			var WebVersion = "?" + Math.random();
-			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css' + WebVersion + '" />');
-			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css' + WebVersion + '" />');
-			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css' + WebVersion + '" />');
-			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css' + WebVersion + '" id="skin" />');
-			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css' + WebVersion + '" />');
-		</script>
-		<style>
-			.operate-edit {
-				text-decoration: none;
-			}
-			
-			#column_info .row {
-				margin-left: 0;
-				margin-right: 0;
-			}
-			
-			#column_info .submit-button {
-				margin-bottom: 15px;
-			}
-			
-			#column_info .input-text[type="number"] {
-				width: 100%;
-			}
-		</style>
+		<script type="text/javascript">var WebVersion = "?" + Math.random();
+document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css' + WebVersion + '" />');
+document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css' + WebVersion + '" />');
+document.write('<link rel="stylesheet" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css' + WebVersion + '" />');
+document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css' + WebVersion + '" id="skin" />');
+document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css' + WebVersion + '" />');</script>
+		<style>.operate-edit {
+	text-decoration: none;
+}
+
+#column_info .row {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+#column_info .submit-button {
+	margin-bottom: 15px;
+}
+
+#column_info .input-text[type="number"] {
+	width: 100%;
+}</style>
 	</head>
 
 	<body>
@@ -90,396 +86,396 @@
 			</table>
 		</template>
 
-		<script type="text/javascript">
-			document.write("<s" + "cript type='text/javascript' src='../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/layer/2.4/layer.js" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/static/h-ui/js/H-ui.min.js" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/static/h-ui.admin/js/H-ui.admin.js" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/laypage/1.2/laypage.js" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/vue.min.js" + WebVersion + "'></s" + "cript>");
-		</script>
-		<script>
-			//栏目表组件
-			Vue.component('column-table', {
-				props: ['value'],
-				template: '#temp_column_table',
-				methods: {
-					/**
-					 * 点击编辑
-					 * @param {Object} index
-					 */
-					clickEdit: function(item) {
-						this.$emit("click-edit", item);
-					},
+		<script type="text/javascript">document.write("<s" + "cript type='text/javascript' src='../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
+document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
+document.write("<s" + "cript type='text/javascript' src='../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
+document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js" + WebVersion + "'></s" + "cript>");
+document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/layer/2.4/layer.js" + WebVersion + "'></s" + "cript>");
+document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/static/h-ui/js/H-ui.min.js" + WebVersion + "'></s" + "cript>");
+document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/static/h-ui.admin/js/H-ui.admin.js" + WebVersion + "'></s" + "cript>");
+document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/laypage/1.2/laypage.js" + WebVersion + "'></s" + "cript>");
+document.write("<s" + "cript type='text/javascript' src='../../js/vue.min.js" + WebVersion + "'></s" + "cript>");</script>
+		<script>//栏目表组件
+Vue.component('column-table', {
+	props: ['value'],
+	template: '#temp_column_table',
+	methods: {
+		/**
+		 * 点击编辑
+		 * @param {Object} index
+		 */
+		clickEdit: function(item) {
+			this.$emit("click-edit", item);
+		},
 
-					clickDel: function(item) {
-						this.$emit("click-del", item);
-					},
-					clickShield: function(item) {
-						this.$emit("click-shield", item);
-					}
-				}
-			});
-			//考勤地点数据表
-			//数据模型名称：areaDataModel
-			var areaDataModel = new Vue({
-				el: "#areaDataTable",
-				data: {
-					//这是假数据，等接口通以后从14.获取考勤地点接口获取考勤地点数据数组及总的记录数，及假设每页显示10条的话服务器端传过来的总页数，赋值到areaDataModel.tableAreaData,即对象.属性
-					tableAreaData: [],
-				},
-				methods: {
-					/**
-					 * 点击添加栏目
-					 */
-					add: function() {
-						var tempData = {
-							type: 'add'
-						}
-						//						var url = "../unitWeb/column.html";
-						var url = "../unitWeb/addAttendAddress.html";
-						var ids = url.split("/");
-						var dataStr = JSON.stringify(tempData);
-						var index = layer.open({
-							type: 2,
-							title: "新增考勤地点",
-							content: url + "?v=" + Math.random() + "&data=" + encodeURIComponent(dataStr),
-							end: function() {
-								//								alert("666666666666")
-								console.log("刷新---------------------")
-								location.reload();
-							}
-						});
-						layer.full(index);
-
-						//						column_info.showAdd();
-					},
-					/**
-					 * 点击编辑
-					 * @param {Object} index 栏目序号
-					 */
-					edit: function(item) {
-						console.log("点击编辑----item===" + item);
-						console.log("每个对象的属性==" + item.AttendAreaId);
-						item.type = 'edit';
-						//						var url = "'../unitWeb/editAttendAddress.html?attendAddressId='+item.AttendAreaId+'&attendAddressName='+item.AreaName+'&attendAddressX='+item.AreaX+'&attendAddressY='+item.AreaY+'&attendAddressRedius='+item.AreaRedius";
-						var url = "../unitWeb/editAttendAddress.html";
-						var ids = url.split("/");
-						var dataStr = JSON.stringify(item);
-						console.log("每条记录对象的json字符串表示===" + dataStr);
-						var index = layer.open({
-							type: 2,
-							title: "编辑考勤地点",
-							//							content: url + "?v=" + Math.random() + "&data=" + encodeURIComponent(dataStr),
-							content: url + "?v=" + Math.random() + "&data=" + encodeURIComponent(dataStr),
-							end: function() {
-								console.log("刷新")
-								location.reload();
-							}
-						});
-						layer.full(index);
-
-						//						column_info.showEdit(this.dt[index]);
-					},
-					shield: function(item) {
-
-					},
-					del: function(item) { //删除考勤地点记录
-						console.log("删除--item===" + item.AttendAreaId);
-						layer.confirm('删除后无法恢复,确认要删除吗？', function(index) {
-							console.log("删除--index==" + index);
-							layer.close(index);
-							/**
-							 * 通过考勤地点记录的编号删除该条记录
-							 */
-							//alert("AttendAreaId=="+item.AttendAreaId);
-							var tempData = {
-								"attendAreaId": item.AttendAreaId,
-
-								"uuid": "",
-								"appid": "",
-								"token": "",
-								"sign": ""
-							}
-							$.ajax({
-								url: "https://jbyj.jiaobaowang.net/AttendanceService/delAttendArea",
-								type: "POST",
-								data: JSON.stringify(tempData),
-								timeout: 1000,
-								dataType: "json",
-								async: false,
-								success: function(data) {
-									console.log("删除考勤地点接口返回的情况======" + JSON.stringify(data));
-									/**
-									 * 如果接口返回正常，则跳转到显示考勤地点页面
-									 */
-									if(data.RspCode == 0) {
-										//给用户提示，删除成功
-										alert("删除成功");
-										window.location = "../pcWeb-HUI/attendenceManage_address.html";
-
-									} else if(data.RspCode == 1014) {
-										alert("有关联的考勤记录");
-									}
-								},
-								error: function() {
-									$.toast("状态错误，请重新进入APP", "cancel", function() {
-										console.log('close');
-									});
-								}
-							})
-
-						});
-
-					},
-
-				}
-			});
-
-			//栏目信息
-			var column_info = new Vue({
-				el: "#column_info",
-				data: {
-					cname: "",
-					linkurl: "",
-					orderid: "",
-					note: "",
-					istop: "",
-					type: ""
-				},
-				methods: {
-
-					/**
-					 * 显示编辑栏目
-					 */
-					showEdit: function(value) {
-						this.cname = value.cname;
-						this.linkurl = value.linkurl;
-						this.orderid = value.orderid;
-						this.note = value.note;
-						this.istop = value.istop;
-						this.type = "删除";
-						this.show("编辑栏目");
-					},
-					/**
-					 * 显示页面
-					 */
-					show: function(title) {
-						layer.open({
-							type: 1,
-							title: title,
-							area: '500px',
-							content: $('#column_info') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
-						});
-					}
-				}
-			});
-
-			//提示的弹出框
-			var column_modal = new Vue({
-				el: "#column_modal",
-				data: {
-					title: "",
-					content: ""
-				},
-				methods: {
-					/**
-					 * 显示弹出框
-					 * @param {Object} title 标题
-					 * @param {Object} content 内容
-					 */
-					show: function(title, content) {
-						this.title = title;
-						this.content = content;
-						$("#column_modal").modal("show");
-					}
-				}
-			});
-			/**
-			 * 该页面一加载，获取考勤地点数据，从数据库
-			 */
-			window.onload = function() {
-				getColumnData(1);
-				//getAttendAddress(1);
+		clickDel: function(item) {
+			this.$emit("click-del", item);
+		},
+		clickShield: function(item) {
+			this.$emit("click-shield", item);
+		}
+	}
+});
+//考勤地点数据表
+//数据模型名称：areaDataModel
+var areaDataModel = new Vue({
+	el: "#areaDataTable",
+	data: {
+		//这是假数据，等接口通以后从14.获取考勤地点接口获取考勤地点数据数组及总的记录数，及假设每页显示10条的话服务器端传过来的总页数，赋值到areaDataModel.tableAreaData,即对象.属性
+		tableAreaData: [],
+	},
+	methods: {
+		/**
+		 * 点击添加栏目
+		 */
+		add: function() {
+			var tempData = {
+				type: 'add'
 			}
-
-			/**
-			 * 获取栏目列表
-			 * @param {Object} pageindex 列表序号
-			 */
-			var corpId = "";
-
-			function getColumnData(pageindex) {
-				//				var tempData = {
-				//					cmd: 'chn',
-				//					type: 'findpage',
-				//					pagesize: '10',
-				//					pageindex: pageindex
-				//				}
-				/**
-				 * 先从c#接口获取登录者的单位标识
-				 */
-				var tempData = {
-					cmd: 'userinfo',
-					type: 'findpage',
-					colv: ''
+			//						var url = "../unitWeb/column.html";
+			var url = "../unitWeb/addAttendAddress.html";
+			var ids = url.split("/");
+			var dataStr = JSON.stringify(tempData);
+			var index = layer.open({
+				type: 2,
+				title: "新增考勤地点",
+				content: url + "?v=" + Math.random() + "&data=" + encodeURIComponent(dataStr),
+				end: function() {
+					//								alert("666666666666")
+					console.log("刷新---------------------")
+					location.reload();
 				}
+			});
+			layer.full(index);
 
-				$.ajax({
-					url: "https://jsypay.jiaobaowang.net/wxth/appschweb/schwebapi.aspx",
-					type: "POST",
-					data: JSON.stringify(tempData),
-					timeout: 1000,
-					dataType: "json",
-					async: false,
-					success: function(data) {
-						console.log("用户基本信息==============" + JSON.stringify(data))
-						if(data.RspCode == 0) {
-							var rep = JSON.parse(data.RspData);
+			//						column_info.showAdd();
+		},
+		/**
+		 * 点击编辑
+		 * @param {Object} index 栏目序号
+		 */
+		edit: function(item) {
+			console.log("点击编辑----item===" + item);
+			console.log("每个对象的属性==" + item.AttendAreaId);
+			item.type = 'edit';
+			//						var url = "'../unitWeb/editAttendAddress.html?attendAddressId='+item.AttendAreaId+'&attendAddressName='+item.AreaName+'&attendAddressX='+item.AreaX+'&attendAddressY='+item.AreaY+'&attendAddressRedius='+item.AreaRedius";
+			var url = "../unitWeb/editAttendAddress.html";
+			var ids = url.split("/");
+			var dataStr = JSON.stringify(item);
+			console.log("每条记录对象的json字符串表示===" + dataStr);
+			var index = layer.open({
+				type: 2,
+				title: "编辑考勤地点",
+				//							content: url + "?v=" + Math.random() + "&data=" + encodeURIComponent(dataStr),
+				content: url + "?v=" + Math.random() + "&data=" + encodeURIComponent(dataStr),
+				end: function() {
+					console.log("刷新")
+					location.reload();
+				}
+			});
+			layer.full(index);
 
-							corpId = rep.corpid;
+			//						column_info.showEdit(this.dt[index]);
+		},
+		shield: function(item) {
 
-						} else if(data.RspCode == 7) {
-							$.toast("登录超时，请重新进入APP", "cancel", function() {
-								console.log('close');
-							});
-						}
-					},
-					error: function() {
-						console.log("error");
-					}
-				})
-				//假数据 单位标识
-//				corpId = "wx6c4528c675d4a9c9";
-
+		},
+		del: function(item) { //删除考勤地点记录
+			console.log("删除--item===" + item.AttendAreaId);
+			layer.confirm('删除后无法恢复,确认要删除吗？', function(index) {
+				console.log("删除--index==" + index);
+				layer.close(index);
 				/**
-				 * 注意：公共的验证参数不要忘，每个接口必传
+				 * 通过考勤地点记录的编号删除该条记录
 				 */
-				var requestDataForAttendArea = {
-					"corpId": corpId, //暂时写死，此值是从顾工c#接口中获取登陆者的单位标识
-					"pageIndex": pageindex,
-					"pageSize": 10,
-					"stat": 0,
+				//alert("AttendAreaId=="+item.AttendAreaId);
+				var tempData = {
+					"attendAreaId": item.AttendAreaId,
+
 					"uuid": "",
 					"appid": "",
 					"token": "",
 					"sign": ""
 				}
 				$.ajax({
-					type: "post",
-					url: "https://jbyj.jiaobaowang.net/AttendanceService/getAttendArea", //应该是绑定.9机器的域名，考勤管理模块应该也是部署在此阿里云服务机器上。
-					async: false,
-					data: JSON.stringify(requestDataForAttendArea),
-					success: function(data) {
-						console.log("获取的考勤地点数据=====" + JSON.stringify(data));
-						if(data.RspCode == 0) {
-
-							//从接口返回的数据中通过键拿数组的值
-							console.log("data.RspData.Data=====" + data.RspData.Data);
-							for(i = 0, len = data.RspData.Data.length; i < len; i++) {
-								//								areaDataModel.tableAreaData = data.RspData.Data;
-								areaDataModel.tableAreaData.push({
-									AreaName: data.RspData.Data[i].AreaName,
-									AreaX: data.RspData.Data[i].AreaX,
-									AreaY: data.RspData.Data[i].AreaY,
-									AttendAreaId: data.RspData.Data[i].AttendAreaId,
-									AreaRedius: data.RspData.Data[i].AreaRedius,
-									Stat: data.RspData.Data[i].Stat,//每条记录的状态，0：被屏蔽的，1：有效的
-									corpId: corpId
-								})
-							}
-
-							/**
-							 * 根据总页数初始化页码数
-							 */
-							initLaypage(data.RspData.TotalPage, pageindex);
-							areaDataModel.recordsTotalCount = data.RspData.TotalCnt; //同理从接口返回的数据中通过键拿值
-							areaDataModel.totalPages = data.RspData.TotalPage; //从接口返回的数据中通过总页数的键拿总页数的值
-						}
-					},
-					error: function() {
-						alert("获取考勤地点数据失败！");
-					}
-				})
-				//				unitWebsitePro(tempData, function(data) {
-				//					if(data.RspCode == 0) {
-				//						column_table.dt = data.RspData.dt;
-				//						initLaypage(data.RspData.pg.PageCount, pageindex);
-				//					} else {
-				//						column_table.dt = [];
-				//						column_modal.show("获取数据失败", data.RspTxt);
-				//					}
-				//				});
-			}
-
-			/**
-			 * 初始化页码
-			 * @param {Object} pages 通过后台拿到的总页数
-			 * @param {Object} curr 初始化当前页
-			 */
-			function initLaypage(pages, curr) {
-				laypage({
-					cont: 'pages', //容器
-					pages: pages, //通过后台拿到的总页数
-					curr: curr, //初始化当前页
-					jump: function(e, first) { //触发分页后的回调
-						//console.log("jump: " + first + " " + JSON.stringify(e));
-						if(!first) {
-							getColumnData(e.curr);
-						}
-					}
-				});
-			}
-
-			//屏蔽或恢复某条考勤地点
-			function clickOff(attendAreaId, corpId, areaName, areaX, areaY, areaRedius, status) {
-				console.log("屏蔽---attendAreaId===" + attendAreaId + "\ncorpId===" + corpId + "\nareaName===" + areaName + "\nareaX==" + areaX + "\nareaY=" + areaY + "\nareaRedius=" + areaRedius + "\nstatus=" + status)
-
-				var tempData = {
-					"attendAreaId": attendAreaId,
-					"corpId": corpId,
-					"areaName": areaName,
-					"areaX": areaX,
-					"areaY": areaY,
-					"areaRedius": areaRedius,
-					"stat": status,
-					"uuid": "",
-					"appid": "",
-					"token": "",
-					"sign": ""
-				}
-				console.log("tempData=="+JSON.stringify(tempData))
-				$.ajax({
-					url: "https://jbyj.jiaobaowang.net/AttendanceService/setAttendArea",
+					url: "https://jbyj.jiaobaowang.net/AttendanceService/delAttendArea",
 					type: "POST",
 					data: JSON.stringify(tempData),
 					timeout: 1000,
 					dataType: "json",
 					async: false,
 					success: function(data) {
-						console.log("屏蔽考勤地点接口返回的情况======" + JSON.stringify(data));
+						console.log("删除考勤地点接口返回的情况======" + JSON.stringify(data));
 						/**
 						 * 如果接口返回正常，则跳转到显示考勤地点页面
 						 */
 						if(data.RspCode == 0) {
-							//给用户提示，屏蔽成功
-							alert("操作成功");
+							//给用户提示，删除成功
+							alert("删除成功");
 							window.location = "../pcWeb-HUI/attendenceManage_address.html";
 
-						} 
+						} else if(data.RspCode == 1014) {
+							alert("有关联的考勤记录");
+						}
 					},
 					error: function() {
-						$.toast("状态错误，请重新进入企业微信管理后台", "cancel", function() {
+						$.toast("状态错误，请重新进入APP", "cancel", function() {
 							console.log('close');
 						});
 					}
 				})
 
+			});
+
+		},
+
+	}
+});
+
+//栏目信息
+var column_info = new Vue({
+	el: "#column_info",
+	data: {
+		cname: "",
+		linkurl: "",
+		orderid: "",
+		note: "",
+		istop: "",
+		type: ""
+	},
+	methods: {
+
+		/**
+		 * 显示编辑栏目
+		 */
+		showEdit: function(value) {
+			this.cname = value.cname;
+			this.linkurl = value.linkurl;
+			this.orderid = value.orderid;
+			this.note = value.note;
+			this.istop = value.istop;
+			this.type = "删除";
+			this.show("编辑栏目");
+		},
+		/**
+		 * 显示页面
+		 */
+		show: function(title) {
+			layer.open({
+				type: 1,
+				title: title,
+				area: '500px',
+				content: $('#column_info') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+			});
+		}
+	}
+});
+
+//提示的弹出框
+var column_modal = new Vue({
+	el: "#column_modal",
+	data: {
+		title: "",
+		content: ""
+	},
+	methods: {
+		/**
+		 * 显示弹出框
+		 * @param {Object} title 标题
+		 * @param {Object} content 内容
+		 */
+		show: function(title, content) {
+			this.title = title;
+			this.content = content;
+			$("#column_modal").modal("show");
+		}
+	}
+});
+/**
+ * 该页面一加载，获取考勤地点数据，从数据库
+ */
+window.onload = function() {
+	getColumnData(1);
+	//getAttendAddress(1);
+}
+
+/**
+ * 获取栏目列表
+ * @param {Object} pageindex 列表序号
+ */
+var corpId = "";
+
+function getColumnData(pageindex) {
+	//				var tempData = {
+	//					cmd: 'chn',
+	//					type: 'findpage',
+	//					pagesize: '10',
+	//					pageindex: pageindex
+	//				}
+	/**
+	 * 先从c#接口获取登录者的单位标识
+	 */
+	var tempData = {
+		cmd: 'userinfo',
+		type: 'findpage',
+		colv: ''
+	}
+
+	$.ajax({
+		url: "https://jsypay.jiaobaowang.net/wxth/appschweb/schwebapi.aspx",
+		type: "POST",
+		data: JSON.stringify(tempData),
+		timeout: 1000,
+		dataType: "json",
+		async: false,
+		success: function(data) {
+			console.log("用户基本信息==============" + JSON.stringify(data))
+			if(data.RspCode == 0) {
+				var rep = JSON.parse(data.RspData);
+
+				corpId = rep.corpid;
+
+			} else if(data.RspCode == 7) {
+				$.toast("登录超时，请重新进入APP", "cancel", function() {
+					console.log('close');
+				});
 			}
-		</script>
+		},
+		error: function() {
+			console.log("error");
+		}
+	})
+	//假数据 单位标识
+//	corpId = "wx6c4528c675d4a9c9";
+
+	/**
+	 * 注意：公共的验证参数不要忘，每个接口必传
+	 */
+	var requestDataForAttendArea = {
+		"corpId": corpId, //暂时写死，此值是从顾工c#接口中获取登陆者的单位标识
+		"pageIndex": pageindex,
+		"pageSize": 10,
+		"stat": 0,
+		"uuid": "",
+		"appid": "",
+		"token": "",
+		"sign": ""
+	}
+	$.ajax({
+		type: "post",
+		url: "https://jbyj.jiaobaowang.net/AttendanceService/getAttendArea", //应该是绑定.9机器的域名，考勤管理模块应该也是部署在此阿里云服务机器上。
+		async: false,
+		data: JSON.stringify(requestDataForAttendArea),
+		success: function(data) {
+			console.log("获取的考勤地点数据=====" + JSON.stringify(data));
+			if(data.RspCode == 0) {
+
+				//将原有的所装数据的数组清空
+				areaDataModel.tableAreaData=[]
+	
+				//从接口返回的数据中通过键拿数组的值
+				console.log("data.RspData.Data=====" + data.RspData.Data);
+				for(i = 0, len = data.RspData.Data.length; i < len; i++) {
+					//								areaDataModel.tableAreaData = data.RspData.Data;
+					areaDataModel.tableAreaData.push({
+						AreaName: data.RspData.Data[i].AreaName,
+						AreaX: data.RspData.Data[i].AreaX,
+						AreaY: data.RspData.Data[i].AreaY,
+						AttendAreaId: data.RspData.Data[i].AttendAreaId,
+						AreaRedius: data.RspData.Data[i].AreaRedius,
+						Stat: data.RspData.Data[i].Stat, //每条记录的状态，0：被屏蔽的，1：有效的
+						corpId: corpId
+					})
+				}
+
+				/**
+				 * 根据总页数初始化页码数
+				 */
+				initLaypage(data.RspData.TotalPage, pageindex);
+				areaDataModel.recordsTotalCount = data.RspData.TotalCnt; //同理从接口返回的数据中通过键拿值
+				areaDataModel.totalPages = data.RspData.TotalPage; //从接口返回的数据中通过总页数的键拿总页数的值
+			}
+		},
+		error: function() {
+			alert("获取考勤地点数据失败！");
+		}
+	})
+	//				unitWebsitePro(tempData, function(data) {
+	//					if(data.RspCode == 0) {
+	//						column_table.dt = data.RspData.dt;
+	//						initLaypage(data.RspData.pg.PageCount, pageindex);
+	//					} else {
+	//						column_table.dt = [];
+	//						column_modal.show("获取数据失败", data.RspTxt);
+	//					}
+	//				});
+}
+
+/**
+ * 初始化页码
+ * @param {Object} pages 通过后台拿到的总页数
+ * @param {Object} curr 初始化当前页
+ */
+function initLaypage(pages, curr) {
+	console.log("currentPage=" + curr)
+	laypage({
+		cont: 'pages', //容器
+		pages: pages, //通过后台拿到的总页数
+		curr: curr, //初始化当前页
+		jump: function(e, first) { //触发分页后的回调
+			//console.log("jump: " + first + " " + JSON.stringify(e));
+			if(!first) {
+				getColumnData(e.curr);
+			}
+		}
+	});
+}
+
+//屏蔽或恢复某条考勤地点
+function clickOff(attendAreaId, corpId, areaName, areaX, areaY, areaRedius, status) {
+	console.log("屏蔽---attendAreaId===" + attendAreaId + "\ncorpId===" + corpId + "\nareaName===" + areaName + "\nareaX==" + areaX + "\nareaY=" + areaY + "\nareaRedius=" + areaRedius + "\nstatus=" + status)
+
+	var tempData = {
+		"attendAreaId": attendAreaId,
+		"corpId": corpId,
+		"areaName": areaName,
+		"areaX": areaX,
+		"areaY": areaY,
+		"areaRedius": areaRedius,
+		"stat": status,
+		"uuid": "",
+		"appid": "",
+		"token": "",
+		"sign": ""
+	}
+	console.log("tempData==" + JSON.stringify(tempData))
+	$.ajax({
+		url: "https://jbyj.jiaobaowang.net/AttendanceService/setAttendArea",
+		type: "POST",
+		data: JSON.stringify(tempData),
+		timeout: 1000,
+		dataType: "json",
+		async: false,
+		success: function(data) {
+			console.log("屏蔽考勤地点接口返回的情况======" + JSON.stringify(data));
+			/**
+			 * 如果接口返回正常，则跳转到显示考勤地点页面
+			 */
+			if(data.RspCode == 0) {
+				//给用户提示，屏蔽成功
+				alert("操作成功");
+				window.location = "../pcWeb-HUI/attendenceManage_address.html";
+
+			}
+		},
+		error: function() {
+			$.toast("状态错误，请重新进入企业微信管理后台", "cancel", function() {
+				console.log('close');
+			});
+		}
+	})
+
+}</script>
 	</body>
 
 </html>

@@ -532,7 +532,7 @@
 			</div>
 		</div>
 		<input id="qnInput" style="display: none;" />
-		<script type="text/javascript" src="../../../js/lib/vconsole/vconsole.min.js"></script>
+		<!--<script type="text/javascript" src="../../../js/lib/vconsole/vconsole.min.js"></script>-->
 		<script type="text/javascript" src="../../../js/demoCssJs/jquery-2.1.4.js"></script>
 		<script type="text/javascript" src="../../../js/demoCssJs/jquery-weui.min.js"></script>
 		<script type="text/javascript" src="../../../js/lib/plupload/moxie.min.js"></script>
@@ -798,7 +798,8 @@
 							deptId: deptId,
 							deptName: deptName,
 							mineUserInfo: members.value[beEvalMans[0][0]],
-							isTeacher: 1
+							isTeacher: 1,
+							teacherInfo: mineUserInfo
 						}
 						data.mineUserInfo.corpid = mineUserInfo.corpid;
 						utils.hrefSessionStorage("commentDetail.html", data);

@@ -278,6 +278,13 @@
 					}
 
 				});
+
+				if(utils.getSystem() == "Android") {
+					//安卓手机点击报修数量，将输入框移到视图中
+					$("#deviceNumber").click(function() {
+						document.getElementById("deviceNumber").scrollIntoView(true);
+					});
+				}
 			}
 
 			/**

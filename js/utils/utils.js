@@ -313,5 +313,25 @@ var utils = (function(mod) {
 		return value;
 	}
 
+	/**
+	 * 判断是安卓还是苹果系统
+	 */
+	mod.getSystem = function() {
+		var userAgent = window.navigator.userAgent.toLowerCase();
+		if(userAgent.indexOf("iphone") != -1) {
+			return "iOS";
+		}
+		if(userAgent.indexOf("ipod") != -1) {
+			return "iOS";
+		}
+		if(userAgent.indexOf("ipad") != -1) {
+			return "iOS";
+		}
+		if(userAgent.indexOf("android") != -1) {
+			return "Android";
+		}
+		return "unknown";
+	}
+
 	return mod;
 })(window.utils || {});

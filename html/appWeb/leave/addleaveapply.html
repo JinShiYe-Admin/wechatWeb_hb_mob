@@ -238,6 +238,12 @@
 			window.onload = function() {
 				$.showLoading();
 				initData();
+				if(utils.getSystem() == "Android") {
+					//安卓手机点击请假事由，将输入框移到视图中
+					$("#represon").click(function() {
+						document.getElementById("represon").scrollIntoView(true);
+					});
+				}
 			}
 
 			function initData() {

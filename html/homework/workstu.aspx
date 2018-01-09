@@ -14,7 +14,7 @@
 		<link rel="stylesheet" href="lib/weui.min.css" />
 		<link rel="stylesheet" href="css/jquery-weui.css" />
 		<link rel="stylesheet" href="css/demos.css" />
-		<link rel="stylesheet" href="<%=Jsy.Weixin.QY.Suite.Com.Config.GetKey(" schwebadminurl ")%>css/utils/iconfont.css" />
+		<link rel="stylesheet" href="<%=Jsy.Weixin.QY.Suite.Com.Config.GetKey("schwebadminurl")%>css/utils/iconfont.css" />
 		<style>
 			body,
 			html {
@@ -147,20 +147,19 @@
 						</div>
 					</div>
 					<a class="weui-btn weui-btn_primary" @click="clickSubmitBtn()" v-if="stat<2">{{submitBtnTitle}}</a>
-					<input id="qnInput" style="display: none;">
-					<!--<div class="weui-gallery" style="display: block">-->
-					<div class="weui-gallery" :style="displayGallery" v-if="stat<2" style="z-index: 999999;">
-						<span class="weui-gallery__img" @click="clickGigImg" :style="{backgroundImage:'url('+selectImgPath+')'}"></span>
-						<div class="weui-gallery__opr">
-							<a href="javascript:" class="weui-gallery__del">
-								<i class="weui-icon-delete weui-icon_gallery-delete" @click="deleteImg"></i>
-							</a>
-						</div>
-					</div>
+				</div>
+			</div>
+			<input id="qnInput" style="display: none;">
+			<div class="weui-gallery" :style="displayGallery" v-if="stat<2" style="z-index: 999999;position:absolute;">
+				<span class="weui-gallery__img" @click="clickGigImg" :style="{backgroundImage:'url('+selectImgPath+')'}"></span>
+				<div class="weui-gallery__opr">
+					<a href="javascript:" class="weui-gallery__del">
+						<i class="weui-icon-delete weui-icon_gallery-delete" @click="deleteImg"></i>
+					</a>
 				</div>
 			</div>
 			<div class="weui-tabbar" style="">
-				<a href="index.aspx" class="weui-tabbar__item">
+				<a href="https://jsypay.jiaobaowang.net/wxth/appschweb/app/index.aspx" class="weui-tabbar__item">
 					<div class="weui-tabbar__icon">
 						<img class="img" src="images/pic_ico_index0.png" alt="">
 					</div>
@@ -180,29 +179,6 @@
 				</a>
 			</div>
 		</div>
-		<!--<div class="weui_tab footer-menu">
-			<div class="weui-tabbar">
-				<a href="index.aspx" class="weui-tabbar__item">
-					<div class="wrap">
-						<img class="img" src="images/pic_ico_index0.png" alt="">
-						<%--<div class="notice">8</div>--%>
-					</div>
-					<p class="weui-tabbar__label">微校园</p>
-				</a>
-				<a href="#" class="weui-tabbar__item weui-bar__item--on">
-					<div class="wrap">
-						<img class="img" src="images/pic_ico_repshow.png" alt="">
-					</div>
-					<p class="weui-tabbar__label">作业详情</p>
-				</a>
-				<a href="workmine.aspx" class="weui-tabbar__item">
-					<div class="wrap">
-						<img class="img" src="./images/pic_ico_workmine0.png" alt="">
-					</div>
-					<p class="weui-tabbar__label">我的作业</p>
-				</a>
-			</div>
-		</div>-->
 		<script src='lib/jquery-2.1.4.js'></script>
 		<script src='js/touch.min.js'></script>
 		<script src='js/jquery-weui.js?v=1.1'></script>
@@ -223,55 +199,25 @@
 		<script src='<%=Jsy.Weixin.QY.Suite.Com.Config.GetKey("schwebadminurl")%>js/utils/compress.js'></script>
 		<script src='<%=Jsy.Weixin.QY.Suite.Com.Config.GetKey("schwebadminurl")%>js/utils/pluploadutil.js'></script>
 		<script>
-//			var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
-//			var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
-//			$('.weui-tab__bd').css({
-//				'height': (allheight - barheight) * 100 / allheight + '%'
-//			});
-//
-//			//有红点提示的宽度调整
-//			var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
-//			$('.wrap').css({
-//				'left': (tabar_width - 30) * 50 / tabar_width + '%'
-//			});
-//			window.addEventListener("resize", function() {
-//				var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
-//				var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
-//				$('.weui-tab__bd').css({
-//					'height': (allheight - barheight) * 100 / allheight + '%'
-//				});
-//				//有红点提示的宽度调整
-//				var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
-//				$('.wrap').css({
-//					'left': (tabar_width - 30) * 50 / tabar_width + '%'
-//				});
-//			}, false);
-			
-			//每个选项栏的高度重新调整
-			var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight;
-			var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight;
+			var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
+			var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
 			$('.weui-tab__bd').css({
 				'height': (allheight - barheight) * 100 / allheight + '%'
 			});
-			$('.weui-tab__bd-item').css({
-				'height': (allheight - barheight) * 100 / allheight + '%' + 50
-			});
+
 			//有红点提示的宽度调整
-			var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth;
+			var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
 			$('.wrap').css({
 				'left': (tabar_width - 30) * 50 / tabar_width + '%'
 			});
 			window.addEventListener("resize", function() {
-				var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight;
-				var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight;
+				var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
+				var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
 				$('.weui-tab__bd').css({
 					'height': (allheight - barheight) * 100 / allheight + '%'
 				});
-				$('.weui-tab__bd-item').css({
-					'height': (allheight - barheight) * 100 / allheight + '%' + 50
-				});
-
-				var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth;
+				//有红点提示的宽度调整
+				var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
 				$('.wrap').css({
 					'left': (tabar_width - 30) * 50 / tabar_width + '%'
 				});

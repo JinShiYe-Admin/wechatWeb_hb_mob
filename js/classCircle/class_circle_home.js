@@ -618,7 +618,7 @@ function initRouter() {
 				if(userId == this.userId) {
 					return false;
 				}
-				$(document.body).destroyInfinite();
+				//$(document.body).destroyInfinite();
 				showPersonTrends(userId);
 			},
 			/**
@@ -740,7 +740,7 @@ function initRouter() {
 			if(this.allow_back) {
 				if(from.params.id > to.params.id) {
 					//返回上一个空间
-					$(document.body).destroyInfinite();
+					//$(document.body).destroyInfinite();
 				} else {
 					setUserSpaceBeforePosition(from.params.id);
 				}
@@ -775,16 +775,16 @@ function initRouter() {
 				} else {
 					setUserSpaceBeforePosition(from.params.id);
 				}
-				$(document.body).removeClass("refreshing");
-				$(document.body).removeClass("touching");
-				$(document.body).removeClass("pull-down");
-				$(document.body).removeClass("pull-up");
-				$(document.body).removeClass("weui-pull-to-refresh");
-				$(document.body).unbind($.touchEvents.start);
-				$(document.body).unbind($.touchEvents.move);
-				$(document.body).unbind($.touchEvents.end);
-				$(document.body).destroyInfinite();
-				document.body.style.webkitTransform = "translate3d(0px,0px,0px)";
+				//				$(document.body).removeClass("refreshing");
+				//				$(document.body).removeClass("touching");
+				//				$(document.body).removeClass("pull-down");
+				//				$(document.body).removeClass("pull-up");
+				//				$(document.body).removeClass("weui-pull-to-refresh");
+				//				$(document.body).unbind($.touchEvents.start);
+				//				$(document.body).unbind($.touchEvents.move);
+				//				$(document.body).unbind($.touchEvents.end);
+				//				$(document.body).destroyInfinite();
+				//				document.body.style.webkitTransform = "translate3d(0px,0px,0px)";
 				next();
 			} else {
 				if(this.photo_browser) {
@@ -915,17 +915,17 @@ function initHomeLoadmore(id) {
 function initSpacePullToRefresh(spaceId) {
 	console.log("initSpacePullToRefresh:" + spaceId);
 	//初始化下拉刷新
-	$(document.body).pullToRefresh();
-	$(document.body).on("pull-to-refresh", function() {
-		var id = router_user_space.$route.params.id;
-		if(!space_data[id].allow_loaddata) {
-			$(this).pullToRefreshDone();
-			return false;
-		}
-		console.log("个人空间下拉刷新:" + id);
-		space_data[id].allow_loaddata = false;
-		getUserSpace(space_data[id].userId, 1, id, this);
-	});
+	//	$(document.body).pullToRefresh();
+	//	$(document.body).on("pull-to-refresh", function() {
+	//		var id = router_user_space.$route.params.id;
+	//		if(!space_data[id].allow_loaddata) {
+	//			$(this).pullToRefreshDone();
+	//			return false;
+	//		}
+	//		console.log("个人空间下拉刷新:" + id);
+	//		space_data[id].allow_loaddata = false;
+	//		getUserSpace(space_data[id].userId, 1, id, this);
+	//	});
 	//初始化上拉加载更多
 	$(document.body).infinite();
 	$(document.body).infinite().on("infinite", function() {
@@ -1336,9 +1336,9 @@ function getUserSpace(publisherIds, pageIndex, id, element) {
 		//允许下拉刷新或者上拉加载更多
 		space_data[id].allow_loaddata = true;
 		//收起下拉刷新
-		if(element != undefined) {
-			$(element).pullToRefreshDone();
-		}
+		//		if(element != undefined) {
+		//			$(element).pullToRefreshDone();
+		//		}
 		if(data.RspCode == 0) {
 			space_data[id].show_error = false;
 			if(pageIndex == 1 && data.RspData.Data.length == 0) {

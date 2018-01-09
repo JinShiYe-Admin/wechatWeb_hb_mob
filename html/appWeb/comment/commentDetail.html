@@ -294,44 +294,35 @@
 					getEvaluation();
 					getEvalStatByUsersPr()
 				} else {
-					getDepart();
+					getDepts();
 				}
 
 			}
 
-			function getDepart() {
-//				getDetaultDepart();
-//				return;
-
+			function getDepts() {
 				var tempData = {
-					cmd: 'persondeparts',
-					type: 'findpage',
+					corpId: mineUserInfo.corpid,
+					userId: mineUserInfo.userid,
 				}
-				unitWebsitePro(tempData, function(data) {
+				getDeptsByUserPro(tempData, function(data) {
 					console.log('部门:' + JSON.stringify(data));
-					var rspData = JSON.parse(data.RspData);
+					var rspData = data.RspData.Data;
 
 					if(data.RspCode == 0) {
 						mineUserInfo.depart_array = [];
 						mineUserInfo.departIds = [];
 						for(var i = 0; i < rspData.length; i++) {
 							var model = rspData[i];
-							if(model.value == -1) {
-								model.label = "全部";
-								model.value = 0;
-								mineUserInfo.depart_array.unshift(model);
-							} else {
-								for(var j = 0; j < mineUserInfo.department.length; j++) {
-									if(model.value == mineUserInfo.department[j]) {
-										model.label = model.title;
-										mineUserInfo.depart_array.push(model);
-										mineUserInfo.departIds.push(model.value);
-									}
-
-								}
-
-							}
+							model.label = model.DeptName;
+							model.value = model.DeptId
+							mineUserInfo.depart_array.push(model);
+							mineUserInfo.departIds.push(model.DeptId);
 						}
+						var allDept = {
+							value: 0,
+							label: "全部"
+						}
+						mineUserInfo.depart_array.unshift(allDept);
 						var deptObj = mineUserInfo.depart_array[0];
 						document.getElementById("depart").value = deptObj.label;
 						document.getElementById("depart").data_id = deptObj.value;
@@ -362,7 +353,7 @@
 						}
 						for(var i = 0; i < data.RspData.Data.length; i++) {
 							var model = data.RspData.Data[i];
-//							model.EvalTime = dateUtils.format(model.EvalTime)
+							//							model.EvalTime = dateUtils.format(model.EvalTime)
 							if(model.EvalEncThumb == "") {
 
 								model.ThumbArr = [];
@@ -472,7 +463,7 @@
 						document.getElementById("depart").data_id = result[0].value;
 						deptId = result[0].value;
 						getEvaluation();
-						var dept_array =  [deptId]
+						var dept_array = [deptId]
 						getEvalStatByDepts(dept_array);
 					}
 				});
@@ -515,65 +506,6 @@
 				}
 
 				return data
-
-			}
-
-			function getDetaultDepart() {
-				var rspData = [{
-					"value": 11,
-					"title": "开发部",
-					"parentvalue": 1,
-					"order": 2147483047
-				}, {
-					"value": 12,
-					"title": "测试子部门",
-					"parentvalue": 11,
-					"order": 100000000
-				}, {
-					"value": 13,
-					"title": "测试孙部门",
-					"parentvalue": 12,
-					"order": 100000000
-				}, {
-					"value": 14,
-					"title": "测试子部门2",
-					"parentvalue": 11,
-					"order": 99999000
-				}, {
-					"value": -1,
-					"title": "全部",
-					"parentvalue": 0,
-					"order": 0
-				}]
-
-				mineUserInfo.depart_array = [];
-				mineUserInfo.departIds = [];
-				for(var i = 0; i < rspData.length; i++) {
-					var model = rspData[i];
-					if(model.value == -1) {
-						model.label = "全部";
-						model.value = 0;
-						mineUserInfo.depart_array.unshift(model);
-
-					} else {
-						for(var j = 0; j < mineUserInfo.department.length; j++) {
-							if(model.value == mineUserInfo.department[j]) {
-								model.label = model.title;
-								mineUserInfo.depart_array.push(model);
-								mineUserInfo.departIds.push(model.value)
-
-							}
-
-						}
-
-					}
-				}
-				var deptObj = mineUserInfo.depart_array[0];
-				document.getElementById("depart").value = deptObj.label;
-				document.getElementById("depart").data_id = deptObj.value;
-				deptId = deptObj.value;
-				getEvaluation();
-				getEvalStatByDeptIds(mineUserInfo.departIds);
 
 			}
 		</script>

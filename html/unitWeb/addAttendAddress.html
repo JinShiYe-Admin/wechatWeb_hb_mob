@@ -269,80 +269,7 @@
 						Object.assign(this.$data, getDefaultData());
 					},
 					submitClick: function() {
-//						alert(99);
-						//提交前先判断。如果都不为空，则允许提交
-						/**
-						 * 得到各input输入框的值
-						 */
-						var attendAdressValue = document.getElementById("attendAdressText").value;
-						//alert("attendAdressValue==="+attendAdressValue);
-						var attendAdressX = document.getElementById("longitude").value;
-						var attendAdressY = document.getElementById("latitude").value;
-						var attendAddressRedius = document.getElementById("attendAddressRedius").value;
-						//						alert("attendAddressRedius=="+attendAddressRedius);
-						if(attendAdressValue == "") {
-							alert("考勤地点名称不能为空！");
-							return;
-						} else if(attendAdressValue.length > 200) {
-							alert("考勤地点名称字数太长！最大允许200字");
-							return;
-						} else if(attendAdressX == "") {
-							alert("考勤地点X坐标不能为空！");
-							return;
-						} else if(attendAdressY == "") {
-							alert("考勤地点Y坐标不能为空！");
-							return;
-						} else if(attendAddressRedius == "") {
-							alert("考勤地点半径不能为空！");
-							return;
-						} else {
-							//input 输入框的值都填写了，则提交，进行添加。
-							var tempData = {
-								"corpId": corpId,
-								"areaName": attendAdressValue,
-								"areaX": attendAdressX,
-								"areaY": attendAdressY,
-								"areaRedius": attendAddressRedius,
-								"uuid": "",
-								"appid": "",
-								"token": "",
-								"sign": ""
-							}
-							$.ajax({
-								url: "https://jbyj.jiaobaowang.net/AttendanceService/addAttendArea",
-								type: "POST",
-								data: JSON.stringify(tempData),
-								timeout: 1000,
-								dataType: "json",
-								async: false,
-								success: function(data) {
-									console.log("新增考勤地点接口返回的情况======" + JSON.stringify(data));
-									/**
-									 * 如果接口返回正常，则跳转到显示考勤地点页面
-									 */
-									if(data.RspCode == 0) {
-										//给用户提示，添加成功
-										alert("添加成功");
-										//									window.location="../pcWeb-HUI/attendenceManage_address.html";
-										//										vm.resetData();
-										//										vm.editName = '添加'
-										//清空input输入框
-										document.getElementById("attendAdressText").value = "";
-										document.getElementById("longitude").value = "";
-										document.getElementById("latitude").value = "";
-										document.getElementById("attendAddressRedius").value = "";
-
-									} else if(data.RspCode == 1017) {
-										alert("存在同名的考勤地点");
-									}
-								},
-								error: function() {
-									alert("添加失败")
-//									$.toast("状态错误，请重新进入APP", "cancel", function() {
-//										console.log('close');
-//									});
-								}
-							})
+//						
 						}
 
 						//						if(vm.type == 'add') { //添加栏目
@@ -752,7 +679,7 @@
 							}
 						},
 						error: function() {
-							alert("状态错误，请重新进入企业微信后台管理");
+							alert("添加失败");
 							//							$.toast("状态错误，请重新进入", "cancel", function() {
 							//								console.log('close');
 							//							});

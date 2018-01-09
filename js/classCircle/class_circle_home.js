@@ -672,7 +672,7 @@ function initRouter() {
 			initData: function(id, leave) {
 				console.log("initData:id:", id);
 				console.log("initData:space_data:", space_data);
-				document.body.style.webkitTransform = "translate3d(0px,0px,0px)";
+				//document.body.style.webkitTransform = "translate3d(0px,0px,0px)";
 				router_user_space = this;
 				var temp_scrollTop = 0;
 				if(space_data[id] != undefined) {
@@ -2029,6 +2029,7 @@ function showImages(page, index, images) {
 		onClose: function() {
 			page.allow_back = true;
 			page.photo_browser = null;
+			$(".weui-photo-browser-modal").remove();
 		}
 	});
 	page.photo_browser = pb;

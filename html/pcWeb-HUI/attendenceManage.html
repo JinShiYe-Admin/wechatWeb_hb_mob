@@ -279,9 +279,10 @@
 									}
 								},
 								error: function() {
-									$.toast("状态错误，请重新进入APP", "cancel", function() {
-										console.log('close');
-									});
+									alert("删除失败！");
+									//									$.toast("状态错误，请重新进入APP", "cancel", function() {
+									//										console.log('close');
+									//									});
 								}
 							})
 
@@ -427,10 +428,11 @@
 						}
 					},
 					error: function() {
-						console.log("error");
+						//						console.log("error");
+						alert("获取用户基本信息失败");
 					}
 				})
-//				corpId = "wx6c4528c675d4a9c9";
+				//				corpId = "wx6c4528c675d4a9c9";
 				var requestDataForAttendTime = {
 					"corpId": corpId, //暂时写死，此值是从顾工c#接口中获取登陆者的单位标识
 					"pageIndex": pageindex,

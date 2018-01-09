@@ -598,7 +598,7 @@
 				}
 			})
 			//给corpId赋值假数据
-			//			corpId = "wx6c4528c675d4a9c9";
+						corpId = "wx6c4528c675d4a9c9";
 			/**
 			 * 获取考勤类型记录数据列表
 			 */
@@ -862,19 +862,19 @@
 						if(optionObjectNoteText == "") {
 							alert("考勤类型说明不能为空！");
 							return;
-						} else if(beginHour == "" || beginHour == 0) {
+						} else if(beginHour == "" ) {
 							alert("打卡开始时间（小时）不能为空！");
 							return;
 						} else if(beginMinute == "") {
 							alert("打卡开始时间（分钟）不能为空！");
 							return;
-						} else if(workTimePoint_Hour == "" || workTimePoint_Hour == 0) {
+						} else if(workTimePoint_Hour == "" ) {
 							alert("上班或下班时间（小时）不能为空！");
 							return;
 						} else if(workTimePoint_Minute == "") {
 							alert("上班或下班时间（分钟）不能为空！");
 							return;
-						} else if(cardEndTimePoint_Hour == "" || cardEndTimePoint_Hour == 0) {
+						} else if(cardEndTimePoint_Hour == "" ) {
 							alert("打卡结束时间（小时）不能为空！");
 							return;
 						} else if(cardEndTimePoint_Minute == "") {

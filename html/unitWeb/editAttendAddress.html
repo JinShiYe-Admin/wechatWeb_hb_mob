@@ -52,7 +52,7 @@
 			<!--输入列表-->
 			<div id="input_list">
 				<div>
-					<div class="weui-cells__title">考勤地点名称：<input size="35" id="attendAdressText" v-model.lazy="cname.message" class="weui-input" type="text"></div>
+					<div class="weui-cells__title">考勤地点名称：<input size="50" id="attendAdressText" v-model.lazy="cname.message" class="weui-input" type="text"></div>
 
 					<!--<div class="weui-cells">
 						<div class="weui-cell">
@@ -142,7 +142,7 @@
 			</div>
 			<br />
 			<!--<div class="weui-btn-area" v-if="editName =='修改'">-->
-			<button style=" width:350px ; height: 50px; margin-left: 550px; background:#5a99df  ; border: none; color: white; font-size: 20px;" id="submit" onclick="submitClick()" class="weui-btn weui-btn_primary">修改</button>
+			<button style=" width:350px ; height: 50px; margin-left: 450px; background:#5a99df  ; border: none; color: white; font-size: 20px;" id="submit" onclick="submitClick()" class="weui-btn weui-btn_primary">修改</button>
 			<!--</div>-->
 		</div>
 		<!--</template>-->
@@ -832,9 +832,10 @@
 								}
 							},
 							error: function() {
-								$.toast("状态错误，请重新进入APP", "cancel", function() {
-									console.log('close');
-								});
+								alert("修改失败");
+//								$.toast("状态错误，请重新进入APP", "cancel", function() {
+//									console.log('close');
+//								});
 							}
 						})
 				}

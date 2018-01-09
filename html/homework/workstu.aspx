@@ -102,60 +102,85 @@
 			.pickeredule-calendar-day {
 				text-decoration: underline;
 			}
+			
+			.scrollgo {
+				overflow: auto;
+				-webkit-overflow-scrolling: touch;
+				width: 100%;
+				height: 100%;
+			}
 		</style>
 	</head>
 
 	<body ontouchstart>
-		<div class="weui-tab" id="wrapper">
+		<div class="weui-tab scrollgo" id="submitHomework">
 			<div class="weui-tab__bd">
 				<div class="weui-tab__bd-item weui-tab__bd-item--active" id="tab0">
 					<%=newsstr %>
-					<div id="submitHomework">
-						<div class="weui-cells__title">请填写您的作业回复</div>
-						<div class="weui-cells weui-cells_form">
-							<div class="weui-cell">
-								<div class="weui-cell__bd">
-									<textarea name="MSG" rows=4 class="weui-textarea" placeholder="点击填写" v-model="workTitle" v-if="stat<2"></textarea>
-									<div class="weui-textarea-counter"></div>
-								</div>
+					<div class="weui-cells__title">请填写您的作业回复</div>
+					<div class="weui-cells weui-cells_form">
+						<div class="weui-cell">
+							<div class="weui-cell__bd">
+								<textarea name="MSG" rows=4 class="weui-textarea" placeholder="点击填写" v-model="workTitle" v-if="stat<2"></textarea>
+								<div class="weui-textarea-counter"></div>
 							</div>
 						</div>
+					</div>
 
-						<div class="weui-cells weui-cells_form" v-if="stat<2">
-							<div class="weui-cell">
-								<div class="weui-cell__bd">
-									<div class="weui-uploader">
-										<div class="weui-uploader__hd">
-											<p class="weui-uploader__title">上传照片</p>
-										</div>
-										<div class="weui-uploader__bd">
-											<ul class="weui-uploader__files" id="uploaderFiles">
-												<li v-for="(file,index) of uploadedFiles" @click="clickImg(index)" v-bind:class="['weui-uploader__file']" v-bind:style="{'background-image':'url('+file.ImgUrl+')'}"></li>
-											</ul>
-											<div class="weui-uploader__input-box" :style="displayAddBtn">
-												<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" v-on:change="selectFile($event)">
-											</div>
+					<div class="weui-cells weui-cells_form" v-if="stat<2">
+						<div class="weui-cell">
+							<div class="weui-cell__bd">
+								<div class="weui-uploader">
+									<div class="weui-uploader__hd">
+										<p class="weui-uploader__title">上传照片</p>
+									</div>
+									<div class="weui-uploader__bd">
+										<ul class="weui-uploader__files" id="uploaderFiles">
+											<li v-for="(file,index) of uploadedFiles" @click="clickImg(index)" v-bind:class="['weui-uploader__file']" v-bind:style="{'background-image':'url('+file.ImgUrl+')'}"></li>
+										</ul>
+										<div class="weui-uploader__input-box" :style="displayAddBtn">
+											<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" v-on:change="selectFile($event)">
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-						<a class="weui-btn weui-btn_primary" @click="clickSubmitBtn()" v-if="stat<2">{{submitBtnTitle}}</a>
-						<input id="qnInput" style="display: none;">
-						<!--<div class="weui-gallery" style="display: block">-->
-						<div class="weui-gallery" :style="displayGallery" v-if="stat<2" style="z-index: 999999;">
-							<span class="weui-gallery__img" @click="clickGigImg" :style="{backgroundImage:'url('+selectImgPath+')'}"></span>
-							<div class="weui-gallery__opr">
-								<a href="javascript:" class="weui-gallery__del">
-									<i class="weui-icon-delete weui-icon_gallery-delete" @click="deleteImg"></i>
-								</a>
-							</div>
+					</div>
+					<a class="weui-btn weui-btn_primary" @click="clickSubmitBtn()" v-if="stat<2">{{submitBtnTitle}}</a>
+					<input id="qnInput" style="display: none;">
+					<!--<div class="weui-gallery" style="display: block">-->
+					<div class="weui-gallery" :style="displayGallery" v-if="stat<2" style="z-index: 999999;">
+						<span class="weui-gallery__img" @click="clickGigImg" :style="{backgroundImage:'url('+selectImgPath+')'}"></span>
+						<div class="weui-gallery__opr">
+							<a href="javascript:" class="weui-gallery__del">
+								<i class="weui-icon-delete weui-icon_gallery-delete" @click="deleteImg"></i>
+							</a>
 						</div>
 					</div>
 				</div>
 			</div>
+			<div class="weui-tabbar" style="">
+				<a href="index.aspx" class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
+						<img class="img" src="images/pic_ico_index0.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">微校园</p>
+				</a>
+				<a href="#" class="weui-tabbar__item weui-bar__item--on">
+					<div class="weui-tabbar__icon">
+						<img class="img" src="images/pic_ico_repshow.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">作业详情</p>
+				</a>
+				<a href="workmine.aspx" class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
+						<img src="./images/pic_ico_workmine0.png" alt="">
+					</div>
+					<p class="weui-tabbar__label">我的作业</p>
+				</a>
+			</div>
 		</div>
-		<div class="weui_tab footer-menu">
+		<!--<div class="weui_tab footer-menu">
 			<div class="weui-tabbar">
 				<a href="index.aspx" class="weui-tabbar__item">
 					<div class="wrap">
@@ -177,7 +202,7 @@
 					<p class="weui-tabbar__label">我的作业</p>
 				</a>
 			</div>
-		</div>
+		</div>-->
 		<script src='lib/jquery-2.1.4.js'></script>
 		<script src='js/touch.min.js'></script>
 		<script src='js/jquery-weui.js?v=1.1'></script>
@@ -198,25 +223,55 @@
 		<script src='<%=Jsy.Weixin.QY.Suite.Com.Config.GetKey("schwebadminurl")%>js/utils/compress.js'></script>
 		<script src='<%=Jsy.Weixin.QY.Suite.Com.Config.GetKey("schwebadminurl")%>js/utils/pluploadutil.js'></script>
 		<script>
-			var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
-			var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
+//			var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
+//			var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
+//			$('.weui-tab__bd').css({
+//				'height': (allheight - barheight) * 100 / allheight + '%'
+//			});
+//
+//			//有红点提示的宽度调整
+//			var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
+//			$('.wrap').css({
+//				'left': (tabar_width - 30) * 50 / tabar_width + '%'
+//			});
+//			window.addEventListener("resize", function() {
+//				var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
+//				var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
+//				$('.weui-tab__bd').css({
+//					'height': (allheight - barheight) * 100 / allheight + '%'
+//				});
+//				//有红点提示的宽度调整
+//				var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
+//				$('.wrap').css({
+//					'left': (tabar_width - 30) * 50 / tabar_width + '%'
+//				});
+//			}, false);
+			
+			//每个选项栏的高度重新调整
+			var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight;
+			var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight;
 			$('.weui-tab__bd').css({
 				'height': (allheight - barheight) * 100 / allheight + '%'
 			});
-
+			$('.weui-tab__bd-item').css({
+				'height': (allheight - barheight) * 100 / allheight + '%' + 50
+			});
 			//有红点提示的宽度调整
-			var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
+			var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth;
 			$('.wrap').css({
 				'left': (tabar_width - 30) * 50 / tabar_width + '%'
 			});
 			window.addEventListener("resize", function() {
-				var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
-				var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight
+				var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight;
+				var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight;
 				$('.weui-tab__bd').css({
 					'height': (allheight - barheight) * 100 / allheight + '%'
 				});
-				//有红点提示的宽度调整
-				var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
+				$('.weui-tab__bd-item').css({
+					'height': (allheight - barheight) * 100 / allheight + '%' + 50
+				});
+
+				var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth;
 				$('.wrap').css({
 					'left': (tabar_width - 30) * 50 / tabar_width + '%'
 				});

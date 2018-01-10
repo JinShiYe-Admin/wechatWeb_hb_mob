@@ -166,7 +166,7 @@
 						<div class="formControls col-xs-8 col-sm-9"> <span class="btn-upload form-group">
 				<input class="input-text upload-url" type="text" name="uploadfile" id="uploadfile" readonly nullmsg="请添加附件！" style="width:200px">
 				<a   v-on:change="selectFile($event)" href="javascript:void();" class="btn btn-primary radius upload-btn"><i class="Hui-iconfont">&#xe642;</i> 浏览文件</a>
-				<input type="file" multiple name="file-2" class="input-file">
+				<input type="file" multiple name="file-2" class="input-file"  v-on:change="selectFile($event)">
 				</span> </div>
 					</div>
 					<div id="submitArea" class="row cl submit-button">
@@ -236,6 +236,7 @@
 				methods: {
 
 					selectFile: function(event) { //从手机中选择图片后到界面的回调
+						console.log(111111111)
 						// 如果没有选中文件，直接返回  
 						var files = event.target.files;
 						var data = new FormData();

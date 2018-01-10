@@ -92,6 +92,7 @@ Vue.component("select-load-pic", {
 		 * 点击删除图片
 		 */
 		delBtn: function() {
+			console.log("*********************删除图片********************");
 			var self = this;
 			layer.confirm('确定删除', function(num) {
 				layer.close(num);

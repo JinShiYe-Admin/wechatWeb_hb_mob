@@ -213,7 +213,7 @@
 						<a href="javascript:;" v-on:click="delPersons()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
 						<a href="javascript:;"  v-on:click="addPersons()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加审核人员</a></span>
 				</div>
-				<table v-if="checkPersonList.length>0" class="table table-border table-bordered table-bg table-hover table-sort">
+				<table v-if="checkPersonList.length>0" class="table table-border table-bordered table-bg table-hover table-sort mt-20">
 					<thead>
 						<tr class="text-c">
 							<th width="100"><input type="checkbox" v-on:change="getAllCheckStatus($event)" v-model:checked="isAllSelect" name="selectCheckedPerson" /></th>

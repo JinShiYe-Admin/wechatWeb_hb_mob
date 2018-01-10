@@ -308,6 +308,7 @@
 				el: "#detail-container",
 				data: {
 					applyDetail: {},
+					applyId: 0,
 					personalInfo: {},
 					checkList: [],
 					showOptions: false,
@@ -421,10 +422,12 @@
 							});
 							return;
 						}
+
 						this.isChecker = parseInt(leaveInfo.isChecker);
 						console.log("获取的flag:" + this.flag);
 						console.log("this.flag type:" + typeof(this.flag));
 						console.log("获取的levaeInfo:" + JSON.stringify(leaveInfo));
+						this.applyId = leaveInfo.leave.ApplyId
 						this.personalInfo = leaveInfo.mineUserInfo;
 						this.getApprList();
 					},
@@ -432,7 +435,7 @@
 						console.log("*****getApprList*****");
 						var com = this;
 						processRequest.postProcessData("getProcessApproveById", {
-							applyId: this.applyDetail.ApplyId,
+							applyId: this.applyId,
 							pageIndex: this.pageIndex,
 							pageSize: 0
 						}, function(response) {

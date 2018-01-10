@@ -336,14 +336,14 @@ function getColumnData(pageindex) {
 				corpId = rep.corpid;
 
 			} else if(data.RspCode == 7) {
-				alert("登录超时，请重新进入企业微信后台管理")
+				alert("登录后不操作时间太长，用户信息已过期，请重新进入企业微信后台管理")
 //				$.toast("登录超时，请重新进入APP", "cancel", function() {
 //					console.log('close');
 //				});
 			}
 		},
 		error: function() {
-			alert("获取用户基本信息失败！")
+			alert("获取用户基本信息失败，请重新点击前往服务商后台");
 //			console.log("error");
 		}
 	})

@@ -14,7 +14,7 @@
 		<link rel="stylesheet" href="lib/weui.min.css" />
 		<link rel="stylesheet" href="css/jquery-weui.css" />
 		<link rel="stylesheet" href="css/demos.css" />
-		<link rel="stylesheet" href="<%=Jsy.Weixin.QY.Suite.Com.Config.GetKey(" schwebadminurl ")%>css/utils/iconfont.css" />
+		<link rel="stylesheet" href="<%=Jsy.Weixin.QY.Suite.Com.Config.GetKey("schwebadminurl")%>css/utils/iconfont.css" />
 		<style>
 			body,
 			html {
@@ -102,77 +102,78 @@
 			.pickeredule-calendar-day {
 				text-decoration: underline;
 			}
+			
+			.scrollgo {
+				overflow: auto;
+				-webkit-overflow-scrolling: touch;
+				width: 100%;
+				height: 100%;
+			}
 		</style>
 	</head>
 
 	<body ontouchstart>
-		<div class="weui-tab" id="wrapper">
+		<div class="weui-tab scrollgo" id="submitHomework">
 			<div class="weui-tab__bd">
 				<div class="weui-tab__bd-item weui-tab__bd-item--active" id="tab0">
 					<%=newsstr %>
-					<div id="submitHomework">
-						<div class="weui-cells__title">请填写您的作业回复</div>
-						<div class="weui-cells weui-cells_form">
-							<div class="weui-cell">
-								<div class="weui-cell__bd">
-									<textarea name="MSG" rows=4 class="weui-textarea" placeholder="点击填写" v-model="workTitle" v-if="stat<2"></textarea>
-									<div class="weui-textarea-counter"></div>
-								</div>
+					<div class="weui-cells__title">请填写您的作业回复</div>
+					<div class="weui-cells weui-cells_form">
+						<div class="weui-cell">
+							<div class="weui-cell__bd">
+								<textarea name="MSG" rows=4 class="weui-textarea" placeholder="点击填写" v-model="workTitle" v-if="stat<2"></textarea>
+								<div class="weui-textarea-counter"></div>
 							</div>
 						</div>
+					</div>
 
-						<div class="weui-cells weui-cells_form" v-if="stat<2">
-							<div class="weui-cell">
-								<div class="weui-cell__bd">
-									<div class="weui-uploader">
-										<div class="weui-uploader__hd">
-											<p class="weui-uploader__title">上传照片</p>
-										</div>
-										<div class="weui-uploader__bd">
-											<ul class="weui-uploader__files" id="uploaderFiles">
-												<li v-for="(file,index) of uploadedFiles" @click="clickImg(index)" v-bind:class="['weui-uploader__file']" v-bind:style="{'background-image':'url('+file.ImgUrl+')'}"></li>
-											</ul>
-											<div class="weui-uploader__input-box" :style="displayAddBtn">
-												<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" v-on:change="selectFile($event)">
-											</div>
+					<div class="weui-cells weui-cells_form" v-if="stat<2">
+						<div class="weui-cell">
+							<div class="weui-cell__bd">
+								<div class="weui-uploader">
+									<div class="weui-uploader__hd">
+										<p class="weui-uploader__title">上传照片</p>
+									</div>
+									<div class="weui-uploader__bd">
+										<ul class="weui-uploader__files" id="uploaderFiles">
+											<li v-for="(file,index) of uploadedFiles" @click="clickImg(index)" v-bind:class="['weui-uploader__file']" v-bind:style="{'background-image':'url('+file.ImgUrl+')'}"></li>
+										</ul>
+										<div class="weui-uploader__input-box" :style="displayAddBtn">
+											<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" v-on:change="selectFile($event)">
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-						<a class="weui-btn weui-btn_primary" @click="clickSubmitBtn()" v-if="stat<2">{{submitBtnTitle}}</a>
-						<input id="qnInput" style="display: none;">
-						<!--<div class="weui-gallery" style="display: block">-->
-						<div class="weui-gallery" :style="displayGallery" v-if="stat<2" style="z-index: 999999;">
-							<span class="weui-gallery__img" @click="clickGigImg" :style="{backgroundImage:'url('+selectImgPath+')'}"></span>
-							<div class="weui-gallery__opr">
-								<a href="javascript:" class="weui-gallery__del">
-									<i class="weui-icon-delete weui-icon_gallery-delete" @click="deleteImg"></i>
-								</a>
-							</div>
-						</div>
 					</div>
+					<a class="weui-btn weui-btn_primary" @click="clickSubmitBtn()" v-if="stat<2">{{submitBtnTitle}}</a>
 				</div>
 			</div>
-		</div>
-		<div class="weui_tab footer-menu">
-			<div class="weui-tabbar">
-				<a href="index.aspx" class="weui-tabbar__item">
-					<div class="wrap">
+			<input id="qnInput" style="display: none;">
+			<div class="weui-gallery" :style="displayGallery" v-if="stat<2" style="z-index: 999999;position:absolute;">
+				<span class="weui-gallery__img" @click="clickGigImg" :style="{backgroundImage:'url('+selectImgPath+')'}"></span>
+				<div class="weui-gallery__opr">
+					<a href="javascript:" class="weui-gallery__del">
+						<i class="weui-icon-delete weui-icon_gallery-delete" @click="deleteImg"></i>
+					</a>
+				</div>
+			</div>
+			<div class="weui-tabbar" style="">
+				<a href="https://jsypay.jiaobaowang.net/wxth/appschweb/app/index.aspx" class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
 						<img class="img" src="images/pic_ico_index0.png" alt="">
-						<%--<div class="notice">8</div>--%>
 					</div>
 					<p class="weui-tabbar__label">微校园</p>
 				</a>
 				<a href="#" class="weui-tabbar__item weui-bar__item--on">
-					<div class="wrap">
+					<div class="weui-tabbar__icon">
 						<img class="img" src="images/pic_ico_repshow.png" alt="">
 					</div>
 					<p class="weui-tabbar__label">作业详情</p>
 				</a>
 				<a href="workmine.aspx" class="weui-tabbar__item">
-					<div class="wrap">
-						<img class="img" src="./images/pic_ico_workmine0.png" alt="">
+					<div class="weui-tabbar__icon">
+						<img src="./images/pic_ico_workmine0.png" alt="">
 					</div>
 					<p class="weui-tabbar__label">我的作业</p>
 				</a>

@@ -1,6 +1,6 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="worktecsend.aspx.cs" Inherits="Jsy.Weixin.QY.Suite.appschweb.app.worktecsend" %>
 
-<!doctype html>
+<!--<!doctype html>-->
 <html>
 
 	<head>
@@ -135,7 +135,7 @@
 					</div>
 					<p class="weui-tabbar__label">作业管理</p>
 				</a>
-				<%--				<a href="workmine.aspx" class="weui-tabbar__item">
+				<%--	<a href="workmine.aspx" class="weui-tabbar__item">
 					<div class="weui-tabbar__icon">
 						<img class="img" src="images/pic_ico_workmine0.png" alt="">
 					</div>
@@ -379,37 +379,37 @@
 		                var file = files[index];
 		                var types = file.type.toLowerCase().split("/");
 		                if (types[1] == "png" || types[1] == "jpg" || types[1] == "jpeg") {
-		                EXIF.getData(file, function () {
-		                    $.showLoading('加载中...');
-		                    var orientation = EXIF.getTag(this, 'Orientation'); //获取旋转信息
-		                    console.log('orientation:' + JSON.stringify(orientation));
-		                    //显示文件
-		                    var reader = new FileReader();
-		                    reader.onload = function () {
-		                        var result = this.result;
-		                        var maxSize = 2 * 1024 * 1024;
-		                        compress.getImgInfo(result, function (img, imgInfo) {
-		                            console.log("获取的文件信息：" + JSON.stringify(imgInfo));
-		                            console.log("原图尺寸：" + result.length);
-		                            var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)), orientation);
-		                            var blob = compress.base64ToBlob(newDataUrl, 'image/jpeg');
-		                            console.log("blob.type:" + blob.type);
-		                            console.log('要传递的文件大小：' + blob.size);
-		                            blob.lastModifiedDate = new Date();
-		                            qnFileUploader.addFile(blob, Date.now() + '.jpg');
-		                            index++;
-		                            uploadFiles(index, files, filesSum);
-		                        });
+		                    EXIF.getData(file, function () {
+		                        $.showLoading('加载中...');
+		                        var orientation = EXIF.getTag(this, 'Orientation'); //获取旋转信息
+		                        console.log('orientation:' + JSON.stringify(orientation));
+		                        //显示文件
+		                        var reader = new FileReader();
+		                        reader.onload = function () {
+		                            var result = this.result;
+		                            var maxSize = 2 * 1024 * 1024;
+		                            compress.getImgInfo(result, function (img, imgInfo) {
+		                                console.log("获取的文件信息：" + JSON.stringify(imgInfo));
+		                                console.log("原图尺寸：" + result.length);
+		                                var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)), orientation);
+		                                var blob = compress.base64ToBlob(newDataUrl, 'image/jpeg');
+		                                console.log("blob.type:" + blob.type);
+		                                console.log('要传递的文件大小：' + blob.size);
+		                                blob.lastModifiedDate = new Date();
+		                                qnFileUploader.addFile(blob, Date.now() + '.jpg');
+		                                index++;
+		                                uploadFiles(index, files, filesSum);
+		                            });
+		                        }
+		                        reader.readAsDataURL(file);
+		                    });
+		                } else {
+		                    if (index + 1 < filesSum.length) {
+		                        index++;
+		                        uploadFiles(index, files, filesSum);
 		                    }
-		                    reader.readAsDataURL(file);
-		                });
-		                }else{
-		                	       if (index + 1 < filesSum.length) {
-			                    index++;
-			                    uploadFiles(index, files, filesSum);
-			                }
-			                $('#uploaderInput').val('');
-			                $.toast("请选择png,jpg,jpeg类型的图片");
+		                    $('#uploaderInput').val('');
+		                    $.toast("请选择png,jpg,jpeg类型的图片");
 		                }
 		            }
 		        }
@@ -497,180 +497,180 @@
 		                }
 		            }
 		        });
-		    }
-		    /**
+            }
+            /**
 			 * 获取七牛上传token
 			 */
-		    function getQNUpToken(file) {
-		        var myDate = new Date();
-		        var fileName = myDate.getTime() + "" + parseInt(Math.random() * 1000);
-		        var types = file.name.split(".");
-		        fileName = fileName + "." + types[types.length - 1];
-		        var getTokenData = {
-		            appId: storageutil.QNQYWXKID,
-		            mainSpace: storageutil.QNPUBSPACE,
-		            saveSpace: storageutil.QNSSPACEWEBCON,
-		            fileArray: [{
-		                qnFileName: fileName,
-		            }]
-		        }
-		        var upToken;
-		        cloudutil.getFileUpTokens(getTokenData, function (data) {
-		            upToken = data;
-		        });
-		        return upToken;
-		    }
-		    //判断照片添加按钮是否显示，大于9张时隐藏
-		    function displayAddBtnFun() {
-		        if (homework.uploadedFiles.length >= 9) {
-		            homework.displayAddBtn = {
-		                display: 'none'
-		            };
-		        } else {
-		            homework.displayAddBtn = {
-		                display: 'block'
-		            };
-		        }
-		    }
+            function getQNUpToken(file) {
+                var myDate = new Date();
+                var fileName = myDate.getTime() + "" + parseInt(Math.random() * 1000);
+                var types = file.name.split(".");
+                fileName = fileName + "." + types[types.length - 1];
+                var getTokenData = {
+                    appId: storageutil.QNQYWXKID,
+                    mainSpace: storageutil.QNPUBSPACE,
+                    saveSpace: storageutil.QNSSPACEWEBCON,
+                    fileArray: [{
+                        qnFileName: fileName,
+                    }]
+                }
+                var upToken;
+                cloudutil.getFileUpTokens(getTokenData, function (data) {
+                    upToken = data;
+                });
+                return upToken;
+            }
+            //判断照片添加按钮是否显示，大于9张时隐藏
+            function displayAddBtnFun() {
+                if (homework.uploadedFiles.length >= 9) {
+                    homework.displayAddBtn = {
+                        display: 'none'
+                    };
+                } else {
+                    homework.displayAddBtn = {
+                        display: 'block'
+                    };
+                }
+            }
 
-		    function getSub() {
-		        var tempData = {
-		            cmd: 'sub',
-		            type: 'findpage',
-		            pagesize: 1000,
-		            pageindex: 1,
-		            stat: '1'
-		        }
-		        $.showLoading('加载中...');
-		        unitWebsitePro(tempData, function (data) {
-		            $.hideLoading();
-		            console.log('科目:' + JSON.stringify(data));
-		            if (data.RspCode == 0) {
-		                homework.sub_array = data.RspData.dt;
-		                for (var i = 0; i < homework.sub_array.length; i++) {
-		                    var model = homework.sub_array[i];
-		                    model.value = model.subid;
-		                    model.label = model.cname;
-		                }
-		            } else {
-		                mui.toast(data.RspTxt)
-		            }
-		        })
-		    }
+            function getSub() {
+                var tempData = {
+                    cmd: 'sub',
+                    type: 'findpage',
+                    pagesize: 1000,
+                    pageindex: 1,
+                    stat: '1'
+                }
+                $.showLoading('加载中...');
+                unitWebsitePro(tempData, function (data) {
+                    $.hideLoading();
+                    console.log('科目:' + JSON.stringify(data));
+                    if (data.RspCode == 0) {
+                        homework.sub_array = data.RspData.dt;
+                        for (var i = 0; i < homework.sub_array.length; i++) {
+                            var model = homework.sub_array[i];
+                            model.value = model.subid;
+                            model.label = model.cname;
+                        }
+                    } else {
+                        mui.toast(data.RspTxt)
+                    }
+                })
+            }
 
-		    function getDepart() {
-				var tempData = {
-					cmd: 'persondeparts',
-					type: 'findpage',
-				}
-				unitWebsitePro(tempData, function(data) {
-						console.log('部门:' + JSON.stringify(data));
-						var rspData = JSON.parse(data.RspData);
-						if(data.RspCode == 0) {
-							for(var i = 0; i < rspData.length; i++) {
-								var model = rspData[i];
-								if(model.value == -1) {
-									continue;
-								} else {
-									for(var j = 0; j < userInfo.department.length; j++) {
-										if(model.value == userInfo.department[j]) {
-											model.label = model.title;
-											homework.depart_array.push(model);
-										}
+            function getDepart() {
+                var tempData = {
+                    cmd: 'persondeparts',
+                    type: 'findpage',
+                }
+                unitWebsitePro(tempData, function (data) {
+                    console.log('部门:' + JSON.stringify(data));
+                    var rspData = JSON.parse(data.RspData);
+                    if (data.RspCode == 0) {
+                        for (var i = 0; i < rspData.length; i++) {
+                            var model = rspData[i];
+                            if (model.value == -1) {
+                                continue;
+                            } else {
+                                for (var j = 0; j < userInfo.department.length; j++) {
+                                    if (model.value == userInfo.department[j]) {
+                                        model.label = model.title;
+                                        homework.depart_array.push(model);
+                                    }
 
-									}
-								}
-								}
+                                }
+                            }
+                        }
 
-							} else {
-								mui.toast(data.RspTxt)
-							}
-						})
+                    } else {
+                        mui.toast(data.RspTxt)
+                    }
+                })
 
-				}
-		    				var userInfo;
-				function getUserInfo() {
-					var tempData = {
-						cmd: 'userinfo',
-						type: 'findpage',
-						colv: ''
-					}
-					console.log(JSON.stringify(tempData))
-					unitWebsitePro(tempData, function(data) {
-						console.log('获取当前人员信息' + JSON.stringify(data.RspData))
-						if(data.RspCode == 0) {
-							userInfo = JSON.parse(data.RspData);
-							getDepart();
-						} else {
-							alert(data.RspTxt)
-						}
-					})
-				}
+            }
+            var userInfo;
+            function getUserInfo() {
+                var tempData = {
+                    cmd: 'userinfo',
+                    type: 'findpage',
+                    colv: ''
+                }
+                console.log(JSON.stringify(tempData))
+                unitWebsitePro(tempData, function (data) {
+                    console.log('获取当前人员信息' + JSON.stringify(data.RspData))
+                    if (data.RspCode == 0) {
+                        userInfo = JSON.parse(data.RspData);
+                        getDepart();
+                    } else {
+                        alert(data.RspTxt)
+                    }
+                })
+            }
 
-		    function getPerson(colid) {
-		        var tempData = {
-		            cmd: 'departpersons',
-		            type: 'findpage',
-		            colid: colid,
-		            colv: 0,
-		            callcol: 'info',
-		        }
-		        unitWebsitePro(tempData, function (data) {
-		            var tempArr = [];
-		            console.log('人员:' + JSON.stringify(data));
-		            for (var i = 0; i < data.RspData.length; i++) {
-		                var model = data.RspData[i];
-		                if (model.isleader == 0) {
-		                    tempArr.push(model);
+            function getPerson(colid) {
+                var tempData = {
+                    cmd: 'departpersons',
+                    type: 'findpage',
+                    colid: colid,
+                    colv: 0,
+                    callcol: 'info',
+                }
+                unitWebsitePro(tempData, function (data) {
+                    var tempArr = [];
+                    console.log('人员:' + JSON.stringify(data));
+                    for (var i = 0; i < data.RspData.length; i++) {
+                        var model = data.RspData[i];
+                        if (model.isleader == 0) {
+                            tempArr.push(model);
 
-		                }
-		            }
-		            if (data.RspCode == 0) {
-		                for (var i = 0; i < homework.depart_array.length; i++) {
-		                    var model = homework.depart_array[i];
-		                    console.log("model=" + JSON.stringify(model))
-		                    if (model.value == colid) {
-		                        model.persons = tempArr;
-		                        homework.classes.currClass.persons = model.persons;
-		                    }
-		                }
+                        }
+                    }
+                    if (data.RspCode == 0) {
+                        for (var i = 0; i < homework.depart_array.length; i++) {
+                            var model = homework.depart_array[i];
+                            console.log("model=" + JSON.stringify(model))
+                            if (model.value == colid) {
+                                model.persons = tempArr;
+                                homework.classes.currClass.persons = model.persons;
+                            }
+                        }
 
-		            } else {
-		                mui.toast(data.RspTxt)
-		            }
-		        })
+                    } else {
+                        mui.toast(data.RspTxt)
+                    }
+                })
 
-		    }
+            }
 
-		    function selectClass(input_item) {
-		        document.activeElement.blur();
-		        var self = input_item;
-		        weui.picker(homework.depart_array, {
-		            onChange: function (result) {
-		                //						console.log(result);
-		            },
-		            onConfirm: function (result) {
-		                homework.classes.currClass.name = result[0].label;
-		                homework.classes.currClass.id = result[0].value;
-		                getPerson(result[0].value)
-		            }
-		        });
-		    }
+            function selectClass(input_item) {
+                document.activeElement.blur();
+                var self = input_item;
+                weui.picker(homework.depart_array, {
+                    onChange: function (result) {
+                        //						console.log(result);
+                    },
+                    onConfirm: function (result) {
+                        homework.classes.currClass.name = result[0].label;
+                        homework.classes.currClass.id = result[0].value;
+                        getPerson(result[0].value)
+                    }
+                });
+            }
 
-		    function selectSubject(input_item) {
-		        document.activeElement.blur();
-		        var self = input_item;
-		        weui.picker(homework.sub_array, {
-		            onChange: function (result) {
-		                //						console.log(result);
-		            },
-		            onConfirm: function (result) {
-		                homework.subject.currSubject.name = result[0].label;
-		                homework.subject.currSubject.id = result[0].value;
-		                //						console.log(result);
-		            }
-		        });
-		    }
+            function selectSubject(input_item) {
+                document.activeElement.blur();
+                var self = input_item;
+                weui.picker(homework.sub_array, {
+                    onChange: function (result) {
+                        //						console.log(result);
+                    },
+                    onConfirm: function (result) {
+                        homework.subject.currSubject.name = result[0].label;
+                        homework.subject.currSubject.id = result[0].value;
+                        //						console.log(result);
+                    }
+                });
+            }
 		</script>
 		<script>
 		    var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight

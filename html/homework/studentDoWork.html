@@ -12,35 +12,48 @@
 			document.write('<link rel="stylesheet" href="../../js/demoCssJs/demos.css?' + Math.random() + '" />');
 			document.write('<link rel="stylesheet" href="../../css/utils/iconfont.css?' + Math.random() + '" />');
 		</script>
+		<style type="text/css">
+			.scrollgo {
+				overflow: auto;
+				-webkit-overflow-scrolling: touch;
+				width: 100%;
+				height: 100%;
+			}
+		</style>
 	</head>
 
 	<body>
-		<div id="submitHomework">
-			<textarea name="MSG" cols=0 rows=4 placeholder="根据老师的要求来完成作业吧" v-model="workTitle" v-if="stat<2"></textarea>
-			<div class="weui-cells weui-cells_form" v-if="stat<2">
-				<div class="weui-cell">
-					<div class="weui-cell__bd">
-						<div class="weui-uploader">
-							<div class="weui-uploader__hd">
-								<p class="weui-uploader__title">上传照片</p>
-							</div>
-							<div class="weui-uploader__bd">
-								<ul class="weui-uploader__files" id="uploaderFiles">
-									<li v-for="(file,index) of uploadedFiles" @click="clickImg(index)" v-bind:class="['weui-uploader__file']" v-bind:style="{'background-image':'url('+file.ImgUrl+')'}"></li>
-								</ul>
-								<div class="weui-uploader__input-box" :style="displayAddBtn">
-									<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" multiple="" v-on:change="selectFile($event)">
+		<div class="weui-tab scrollgo" id="submitHomework">
+			<div class="weui-tab__bd">
+				<div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active  weui-pull-to-refresh infinite">
+					<textarea name="MSG" cols=0 rows=4 placeholder="根据老师的要求来完成作业吧" v-model="workTitle" v-if="stat<2"></textarea>
+					<textarea name="MSG" cols=0 rows=4 placeholder="根据老师的要求来完成作业吧" v-model="workTitle" v-if="stat<2"></textarea>
+					<textarea name="MSG" cols=0 rows=4 placeholder="根据老师的要求来完成作业吧" v-model="workTitle" v-if="stat<2"></textarea>
+					<textarea name="MSG" cols=0 rows=4 placeholder="根据老师的要求来完成作业吧" v-model="workTitle" v-if="stat<2"></textarea>
+					<div class="weui-cells weui-cells_form" v-if="stat<2">
+						<div class="weui-cell">
+							<div class="weui-cell__bd">
+								<div class="weui-uploader">
+									<div class="weui-uploader__hd">
+										<p class="weui-uploader__title">上传照片</p>
+									</div>
+									<div class="weui-uploader__bd">
+										<ul class="weui-uploader__files" id="uploaderFiles">
+											<li v-for="(file,index) of uploadedFiles" @click="clickImg(index)" v-bind:class="['weui-uploader__file']" v-bind:style="{'background-image':'url('+file.ImgUrl+')'}"></li>
+										</ul>
+										<div class="weui-uploader__input-box" :style="displayAddBtn">
+											<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" multiple="" v-on:change="selectFile($event)">
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
+					<a class="weui-btn weui-btn_primary" @click="clickSubmitBtn()" v-if="stat<2">{{submitBtnTitle}}</a>
 				</div>
 			</div>
-			<a class="weui-btn weui-btn_primary" @click="clickSubmitBtn()" v-if="stat<2">{{submitBtnTitle}}</a>
-			<a href="javascript:;" class="weui-btn weui-btn_primary" @click="clickSubmitBtn2()" v-if="stat<2">宋-老师发布作业</a>
 			<input id="qnInput" style="display: none;">
-			<!--<div class="weui-gallery" style="display: block">-->
-			<div class="weui-gallery" :style="displayGallery" v-if="stat<2">
+			<div class="weui-gallery" :style="displayGallery" v-if="stat<2" style="position:absolute;z-index: 999999;">
 				<span class="weui-gallery__img" @click="clickGigImg" :style="{backgroundImage:'url('+selectImgPath+')'}"></span>
 				<div class="weui-gallery__opr">
 					<a href="javascript:" class="weui-gallery__del">
@@ -48,27 +61,24 @@
 					</a>
 				</div>
 			</div>
-		</div>
-		<div class="weui_tab footer-menu">
-			<div class="weui-tabbar">
-				<a href="index.aspx" class="weui-tabbar__item">
-					<div class="wrap">
-						<img class="img" src="images/pic_ico_index0.png" alt="">
-						<%--<div class="notice">8</div>--%>
+			<div class="weui-tabbar" style="">
+				<a href="https://jsypay.jiaobaowang.net/wxth/appschweb/app/index.aspx" class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
+						<img class="img" src="../../../image/考勤/pic_ico_index0.png" alt="">
 					</div>
 					<p class="weui-tabbar__label">微校园</p>
 				</a>
-				<a href="#" class="weui-tabbar__item weui-bar__item--on">
-					<div class="wrap">
-						<img class="img" src="images/pic_ico_repshow.png" alt="">
+				<a href="attendance.html" class="weui-tabbar__item">
+					<div class="weui-tabbar__icon">
+						<img class="img" src="../../../image/考勤/打卡灰.png" alt="">
 					</div>
-					<p class="weui-tabbar__label">作业详情</p>
+					<p class="weui-tabbar__label">签到</p>
 				</a>
-				<a href="workmine.aspx" class="weui-tabbar__item">
-					<div class="wrap">
-						<img class="img" src="./images/pic_ico_workmine0.png" alt="">
+				<a href="getAttendList.html" class="weui-tabbar__item weui-bar__item--on">
+					<div class="weui-tabbar__icon">
+						<img src="../../../image/考勤/考勤查询.png" alt="">
 					</div>
-					<p class="weui-tabbar__label">我的作业</p>
+					<p class="weui-tabbar__label">考勤查询</p>
 				</a>
 			</div>
 		</div>
@@ -103,6 +113,35 @@
 				initQNUploader();
 				findWork();
 			}
+			//每个选项栏的高度重新调整
+			var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight;
+			var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight;
+			$('.weui-tab__bd').css({
+				'height': (allheight - barheight) * 100 / allheight + '%'
+			});
+			$('.weui-tab__bd-item').css({
+				'height': (allheight - barheight) * 100 / allheight + '%'
+			});
+			//有红点提示的宽度调整
+			var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth;
+			$('.wrap').css({
+				'left': (tabar_width - 30) * 50 / tabar_width + '%'
+			});
+			window.addEventListener("resize", function() {
+				var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight;
+				var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight;
+				$('.weui-tab__bd').css({
+					'height': (allheight - barheight) * 100 / allheight + '%'
+				});
+				$('.weui-tab__bd-item').css({
+					'height': (allheight - barheight) * 100 / allheight + '%'
+				});
+
+				var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth;
+				$('.wrap').css({
+					'left': (tabar_width - 30) * 50 / tabar_width + '%'
+				});
+			}, false);
 			var submitHomework = new Vue({
 				el: '#submitHomework',
 				data: {
@@ -245,7 +284,7 @@
 								reader.readAsDataURL(file);
 							});
 						} else {
-							if (index+1<filesSum.length) {
+							if(index + 1 < filesSum.length) {
 								index++;
 								uploadFiles(index, files, filesSum);
 							}
@@ -285,7 +324,7 @@
 							displayAddBtnFun();
 						}
 					} else {
-						alert(data.RspTxt);
+						//						alert(data.RspTxt);
 					}
 				});
 			}

@@ -769,7 +769,7 @@
 				return document.getElementById(id);
 			}
 
-			map.centerAndZoom("济南", 12); // 初始化地图,设置城市和地图级别。
+//			map.centerAndZoom("济南", 12); // 初始化地图,设置城市和地图级别。
 
 			var ac = new BMap.Autocomplete( //建立一个自动完成的对象
 				{
@@ -820,6 +820,8 @@
 						document.getElementById("attendAdressX").value = pp.lng;
 						document.getElementById("attendAdressY").value = pp.lat;
 
+						var redius = document.getElementById("attendAddressRedius").value;
+						getRedius(redius);
 					});
 
 					//标注对象

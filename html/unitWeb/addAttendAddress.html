@@ -660,7 +660,8 @@
 						document.getElementById("attendAdressText").value = site;
 						document.getElementById("longitude").value = pp.lng;
 						document.getElementById("latitude").value = pp.lat;
-
+						var redius = document.getElementById("attendAddressRedius").value;
+						getRedius(redius);
 					});
 
 					//标注对象

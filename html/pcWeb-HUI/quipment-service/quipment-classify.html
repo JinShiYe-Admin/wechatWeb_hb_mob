@@ -185,7 +185,7 @@
 		<template id="classify-list">
 			<div>
 				<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a class="btn btn-primary radius" v-on:click="addService()" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加维修组</a></span> </div>
-				<table id="list" v-if="classifyList.length>0" class="table table-border table-bordered table-bg table-hover table-sort">
+				<table id="list" v-if="classifyList.length>0" class="table table-border table-bordered table-bg table-hover table-sort mt-20">
 					<thead>
 						<tr class="text-c">
 							<th width="300">维修组</th>
@@ -203,7 +203,7 @@
 
 							<td class="text-c">{{classify.recname}}</td>
 							<td>{{classify.rectime|formatTime}}</td>
-							<td class="td-status"><span class="label  radius" v-bind:class="[{'label-defaunt':!classify.stat},{'label-success':classify.stat}]">{{classify.stat?"显示":"屏蔽"}}</span></td>
+							<td class="text-c" style="color: #5eb95e;">{{classify.stat?"显示":"屏蔽"}}</td>
 							<td class="td-manage">
 								<span class="Hui-iconfont manage-item" title="显示/屏蔽" v-bind:class="[{'Hui-iconfont-yanjing':classify.stat}, {'Hui-iconfont-niming':!classify.stat},{'close-classify':!classify.stat},{'show-classify':classify.stat}]" v-on:click.stop="changeState(classify,index)"></span>
 								<span class="Hui-iconfont Hui-iconfont-edit edit-groupName manage-item" title="编辑组名" v-on:click.stop="changeGroupName(classify)"></span>

@@ -268,13 +268,13 @@
 					resetData: function() { //重置数据
 						Object.assign(this.$data, getDefaultData());
 					}
-//					submitClick: function() {
-////						
-//						}
-//
-//						//			
-//
-//					}
+					//					submitClick: function() {
+					////						
+					//						}
+					//
+					//						//			
+					//
+					//					}
 				}
 
 			})
@@ -533,6 +533,24 @@
 				var marker = new BMap.Marker(point);
 				map.addOverlay(marker);
 
+				marker.enableDragging(); //设置可拖拽
+				marker.addEventListener("dragend", function(e) { //拖动事件 
+					var pt = e.point;
+					console.log("pt======" + pt);
+					console.log("")
+					geoc.getLocation(pt, function(rs) {
+						console.log("rs===========" + JSON.stringify(rs));
+						//addressComponents对象可以获取到详细的地址信息
+						var addComp = rs.addressComponents;
+						var site = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+						//将对应的HTML元素设置值
+						document.getElementById("attendAdressText").value = site;
+						document.getElementById("longitude").value = pt.lng;
+						document.getElementById("latitude").value = pt.lat;
+
+					});
+
+				})
 				//根据点解析出地址
 				geoc.getLocation(point, function(rs) {
 					console.log("rs===========" + JSON.stringify(rs));

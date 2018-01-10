@@ -561,10 +561,14 @@
 				}
 
 				var point = new BMap.Point(X, Y);
+				//根据点转到该点所在区域地图
+				map.centerAndZoom(point, 14)
 				map.clearOverlays();
 				//创建标注对象
 				var marker = new BMap.Marker(point);
 				map.addOverlay(marker);
+				var redius = document.getElementById("attendAddressRedius").value;
+				getRedius(redius);
 				//根据半径输入框里原来的值显示范围
 				//				getRedius();
 				//根据点解析出地址

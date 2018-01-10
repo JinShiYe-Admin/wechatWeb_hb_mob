@@ -46,7 +46,7 @@
 				</span>
 			</div>
 			<column-table :value="dt" @click-edit="edit" @click-del="del" @click-shield="shield"></column-table>
-			<div id="pages" style="margin-top: 20px;"></div>
+			<div id="pages" style="margin-top: 20px;" class="hidden"></div>
 		</div>
 		<div id="column_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
@@ -113,6 +113,7 @@
 				</div>
 			</form>
 		</div>
+
 		<!--表格-->
 		<template id="temp_column_table">
 			<table class="table table-border table-bordered table-bg">
@@ -180,8 +181,7 @@
 			var column_table = new Vue({
 				el: "#column_table",
 				data: {
-										dt: []
-
+					dt: []
 
 				},
 				methods: {
@@ -189,6 +189,7 @@
 					 * 点击添加栏目
 					 */
 					add: function() {
+
 						var tempData = {
 							type: 'add'
 						}
@@ -241,9 +242,8 @@
 							var tempStr = '停用'
 						}
 						layer.confirm('确认要' + tempStr + '吗？', function(index) {
-							console.log('item1:'+JSON.stringify(item))
+							console.log('item1:' + JSON.stringify(item))
 							layer.close(index);
-									
 
 							var para = {
 								cmd: 'chn',
@@ -262,8 +262,8 @@
 									} else {
 										item.stat = 0;
 									}
-									console.log('item2:'+JSON.stringify(item))
-									console.log('dt:'+JSON.stringify(column_table.dt))
+									console.log('item2:' + JSON.stringify(item))
+									console.log('dt:' + JSON.stringify(column_table.dt))
 									layer.msg('已' + tempStr + '!', {
 										icon: 1,
 										time: 1000
@@ -403,6 +403,9 @@
 			 * @param {Object} curr 初始化当前页
 			 */
 			function initLaypage(pages, curr) {
+				if(pages > 1) {
+					document.getElementById("pages").className = "";
+				}
 				laypage({
 					cont: 'pages', //容器
 					pages: pages, //通过后台拿到的总页数

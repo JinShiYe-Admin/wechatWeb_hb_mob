@@ -52,8 +52,8 @@
 			<!--输入列表-->
 			<div id="input_list">
 				<div>
-					<div class="weui-cells__title">考勤地点名称：<input id="attendAdressText" v-model.lazy="cname.message" class="weui-input" type="text"></div>
-					
+					<div class="weui-cells__title">考勤地点名称：<input size="50" id="attendAdressText" v-model.lazy="cname.message" class="weui-input" type="text"></div>
+
 					<!--<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
@@ -80,9 +80,9 @@
 				<!-- 	</div> -->
 				<!-- </div> -->
 				<!-- 	</div> -->
-				<br />
-				考勤地点X坐标（经度）<input id="attendAdressX" type="text"> 考勤地点Y坐标（纬度）
-				<input id="attendAdressY" type="text">&nbsp; &nbsp;<input style="color: white;background:#5a99df ; border: none; width: 60px;height: 25px;"  type="button" onclick="search()" value="查询" />&nbsp;&nbsp;&nbsp;&nbsp;<span class="tips">系统无法获取经纬度时，请使用拾取坐标系统查询后手动输入
+				<br /> 考勤地点X坐标（经度）
+				<input id="attendAdressX" type="text"> 考勤地点Y坐标（纬度）
+				<input id="attendAdressY" type="text">&nbsp; &nbsp;<input style="color: white;background:#5a99df ; border: none; width: 60px;height: 25px;" type="button" onclick="search()" value="查询" />&nbsp;&nbsp;&nbsp;&nbsp;<span class="tips">系统无法获取经纬度时，请使用拾取坐标系统查询后手动输入
 				<a target="_blank" style="color: #737373; text-decoration: underline;" href="http://api.map.baidu.com/lbsapi/getpoint/index.html">查询</a></span>
 				<!-- <div>
 				<div class="weui-cells__title">考勤地点Y坐标</div>
@@ -94,7 +94,7 @@
 					</div>
 				</div>
 			</div> -->
-			
+
 				<div>
 					<br />
 					<div class="weui-cells__title">考勤地点半径：<input placeholder="请输入半径" size="10" id="attendAddressRedius" class="weui-input" type="text" oninput="getRedius(this.value)">米<span class="tips">（建议500-1000米）</span></div>
@@ -142,7 +142,7 @@
 			</div>
 			<br />
 			<!--<div class="weui-btn-area" v-if="editName =='修改'">-->
-			<button style=" width:350px ; height: 50px; margin-left: 550px; background:#5a99df  ; border: none; color: white; font-size: 20px;" id="submit" onclick="submitClick()" class="weui-btn weui-btn_primary">修改</button>
+			<button style=" width:350px ; height: 50px; margin-left: 450px; background:#5a99df  ; border: none; color: white; font-size: 20px;" id="submit" onclick="submitClick()" class="weui-btn weui-btn_primary">修改</button>
 			<!--</div>-->
 		</div>
 		<!--</template>-->
@@ -538,12 +538,12 @@
 						map.addOverlay(marker);
 						var redius = document.getElementById("attendAddressRedius").value;
 						getRedius(redius);
-//						var circle = new BMap.Circle(point, redius, {
-//							strokeColor: "blue",
-//							strokeWeight: 2,
-//							strokeOpacity: 0.5
-//						}); //创建圆
-//						map.addOverlay(circle);
+						//						var circle = new BMap.Circle(point, redius, {
+						//							strokeColor: "blue",
+						//							strokeWeight: 2,
+						//							strokeOpacity: 0.5
+						//						}); //创建圆
+						//						map.addOverlay(circle);
 					});
 
 				})
@@ -769,6 +769,7 @@
 				 * 得到各input输入框的值
 				 */
 				var attendAdressValue = document.getElementById("attendAdressText").value;
+				console.log("地点名称字数===" + attendAdressValue.length)
 				//alert("attendAdressValue==="+attendAdressValue);
 				var attendAdressX = document.getElementById("attendAdressX").value;
 				var attendAdressY = document.getElementById("attendAdressY").value;
@@ -789,6 +790,9 @@
 					return;
 				} else if(attendAdressValue == "") {
 					alert("考勤地点名称不能为空！");
+					return;
+				} else if(attendAdressValue.length > 200) {
+					alert("考勤地点名称字数太长！最大允许200字");
 					return;
 				} else {
 					//input 输入框的值都填写了，则提交，进行修改即更新。
@@ -828,9 +832,10 @@
 								}
 							},
 							error: function() {
-								$.toast("状态错误，请重新进入APP", "cancel", function() {
-									console.log('close');
-								});
+								alert("修改失败");
+//								$.toast("状态错误，请重新进入APP", "cancel", function() {
+//									console.log('close');
+//								});
 							}
 						})
 				}

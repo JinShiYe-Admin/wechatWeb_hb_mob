@@ -121,7 +121,7 @@
 				<div class="weui-tab__bd-item weui-tab__bd-item--active" id="tab0">
 
 					<div class="weui-cell" v-if="isTeacher==0">
-						<div class="weui-cell__hd"><label class="weui-label">部门</label></div>
+						<div class="weui-cell__hd"><label class="weui-label">班级</label></div>
 						<div class="weui-cell__bd">
 							<input id="depart" data_id="" onclick="selectDepart(this)" class="weui-input" placeholder="请选择部门">
 						</div>
@@ -136,11 +136,11 @@
 							<template v-if="item.EvalType==3">
 								<a @click="del(index)" href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
 									<div class="weui-media-box__hd">
-										<img class="weui-media-box__thumb" :src="item.BeEvalManAvatar" style="border-radius: 40px;width: 40px;height: 40px;" alt="">
+										<img class="weui-media-box__thumb" :src="item.EvalManAvatar" style="border-radius: 40px;width: 40px;height: 40px;" alt="">
 									</div>
 									<div class="weui-media-box__bd">
-										<h4 class="weui-media-box__title">{{item.BeEvalManName}}</h4>
-										<p class="weui-media-box__desc">{{item.EvalTime}}</p>
+										<h4 class="weui-media-box__title">{{item.EvalManName}}</h4>
+										<p class="weui-media-box__desc">{{item.EvalTime+" "+item.DeptName}}</p>
 									</div>
 								</a>
 								<p style="margin-left: 10px;">{{item.EvalContent}}</p>
@@ -160,7 +160,7 @@
 									</div>
 									<div class="weui-media-box__bd">
 										<h4 class="weui-media-box__title">{{item.EvalType==1?"+1分":"-1分"}}<span style="color:black;">{{" "+item.EvalContent}}</span></h4>
-										<p class="weui-media-box__desc">{{item.EvalTime+" 由"+item.EvalManName+"点评"}}</p>
+										<p class="weui-media-box__desc">{{item.EvalTime+" 由"+item.EvalManName+"点评"+" "+item.DeptName}}</p>
 									</div>
 								</a>
 
@@ -203,21 +203,21 @@
 			//document.write("<s" + "cript type='text/javascript' src='../../../temp/mineinfo.js" + WebVersion + "'></s" + "cript>");
 		</script>
 		<script>
-				var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
-	var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight;
-	$('.weui-tab').css({
-		'height': (allheight - barheight) + 20 + 'px'
-	});
-	$('.weui-tab__bd').css({
-		'height': (allheight - barheight) + 20 + 'px'
-	});
-	$('.weui-tab__bd-item').css({
-		'height': (allheight - barheight) + 20 + 'px'
-	});
-	var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
-	$('.wrap').css({
-		'left': (tabar_width - 30) * 50 / tabar_width + '%'
-	});
+			var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
+			var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight;
+			$('.weui-tab').css({
+				'height': (allheight - barheight) + 'px'
+			});
+			$('.weui-tab__bd').css({
+				'height': (allheight - barheight) + 'px'
+			});
+			$('.weui-tab__bd-item').css({
+				'height': (allheight - barheight) + 'px'
+			});
+			var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
+			$('.wrap').css({
+				'left': (tabar_width - 30) * 50 / tabar_width + '%'
+			});
 			var loading = false; //下拉状态标记
 			var mineUserInfo; //个人信息
 			var vm = new Vue({
@@ -254,6 +254,10 @@
 						if(vm.isTeacher == 0) {
 							return;
 						}
+						console.log("当前老师：" + teacherInfo.userid + "---点评人：" + vm.datasource[index].EvalMan)
+						if(teacherInfo.userid != vm.datasource[index].EvalMan) {
+							return;
+						}
 						$.modal({
 							title: "提示",
 							text: "确定删除?",
@@ -276,79 +280,55 @@
 			var deptId;
 			var deptName;
 			var mineUserInfo;
+			var teacherInfo = {};
 			window.onload = function() {
-//								mineUserInfo = {
-//									"corpid": "wx6c4528c675d4a9c9",
-//									"userid": "songyanming",
-//									"name": "宋艳明",
-//									"department": [11],
-//									"order": [0],
-//									"position": "",
-//									"mobile": null,
-//									"english_name": "",
-//									"gender": 1,
-//									"isleader": 1,
-//									"telephone": null,
-//									"email": null,
-//									"weixinid": null,
-//									"avatar": "http://shp.qpic.cn/bizmp/LlAHpaR9WIbXvzjGTAPgEfe6lmhQqEkJOvvoMW928nibnU4bRQ5wWJA/",
-//									"status": 1,
-//									"extattr": null,
-//									"errcode": 0,
-//									"errmsg": "ok",
-//									"P2PData": null
-//								}
+//				var sValue = getDefaultUserInfo(0);
 				var sValue = utils.getSessionStorageByUrlsKey();
 				mineUserInfo = sValue.mineUserInfo;
 				vm.mineUserInfo = mineUserInfo;
 				vm.isTeacher = sValue.isTeacher;
 				if(vm.isTeacher == 1) {
+					teacherInfo = sValue.teacherInfo;
 					document.getElementById("title").innerHTML = vm.mineUserInfo.name + "的点评";
 					deptId = sValue.deptId;
-					deptName = sValue.deptName;
 					getEvaluation();
 					getEvalStatByUsersPr()
 				} else {
-					getDepart();
+					getDepts();
 				}
 
 			}
 
-			function getDepart() {
-//								getDetaultDepart();
-//								return;
-
+			function getDepts() {
 				var tempData = {
-					cmd: 'persondeparts',
-					type: 'findpage',
+					corpId: mineUserInfo.corpid,
+					userId: mineUserInfo.userid,
 				}
-				unitWebsitePro(tempData, function(data) {
+				getDeptsByUserPro(tempData, function(data) {
 					console.log('部门:' + JSON.stringify(data));
-					var rspData = JSON.parse(data.RspData);
+					var rspData = data.RspData.Data;
 
 					if(data.RspCode == 0) {
 						mineUserInfo.depart_array = [];
+						mineUserInfo.departIds = [];
 						for(var i = 0; i < rspData.length; i++) {
 							var model = rspData[i];
-							if(model.value == -1) {
-								continue;
-							} else {
-								for(var j = 0; j < mineUserInfo.department.length; j++) {
-									if(model.value == mineUserInfo.department[j]) {
-										model.label = model.title;
-										mineUserInfo.depart_array.push(model);
-									}
-
-								}
-
-							}
+							model.label = model.DeptName;
+							model.value = model.DeptId
+							mineUserInfo.depart_array.push(model);
+							mineUserInfo.departIds.push(model.DeptId);
 						}
+						var allDept = {
+							value: 0,
+							label: "全部"
+						}
+						mineUserInfo.depart_array.unshift(allDept);
 						var deptObj = mineUserInfo.depart_array[0];
 						document.getElementById("depart").value = deptObj.label;
 						document.getElementById("depart").data_id = deptObj.value;
 						deptId = deptObj.value;
 						getEvaluation();
-						getEvalStatByUsersPr();
+						getEvalStatByDeptIds(mineUserInfo.departIds);
 					} else {
 						alert(data.RspTxt)
 					}
@@ -361,9 +341,6 @@
 					corpId: mineUserInfo.corpid,
 					deptId: deptId,
 					userId: mineUserInfo.userid,
-//										corpId: 'wx6c4528c675d4a9c9',
-//										deptId: 11,
-//										userId: "moshanglin",
 					pageIndex: 1,
 					pageSize: 100,
 				}
@@ -376,6 +353,7 @@
 						}
 						for(var i = 0; i < data.RspData.Data.length; i++) {
 							var model = data.RspData.Data[i];
+							//							model.EvalTime = dateUtils.format(model.EvalTime)
 							if(model.EvalEncThumb == "") {
 
 								model.ThumbArr = [];
@@ -389,7 +367,7 @@
 							}
 
 							if(i == 0) {
-								console.log("1111112" + model.ThumbArr.length)
+								console.log("文字点评图片个数" + model.ThumbArr.length)
 							}
 						}
 
@@ -404,24 +382,50 @@
 			function getEvalStatByUsersPr() {
 				var tempArr = [];
 				tempArr.push(mineUserInfo.userid);
-//								tempArr.push("moshanglin");
 				var tempData = {
 					corpId: mineUserInfo.corpid,
 					deptId: deptId,
 					userIds: tempArr,
-//										corpId: 'wx6c4528c675d4a9c9',
-//										deptId: 11,
-//										userIds: tempArr,
-
 				}
 				console.log("多人点评统计参数：" + JSON.stringify(tempData));
 				getEvalStatByUsersPro(tempData, function(data) {
 					console.log("多人点评统计数据：" + JSON.stringify(data));
 					if(data.RspCode == 0) {
 						if(data.RspData.Data.length == 0) {
-							$.alert("暂无统计", "提示");
+							vm.EvaluationPro.ImproveCnt = 0;
+							vm.EvaluationPro.PraiseCnt = 0;
+							//							$.alert("暂无统计", "提示");
+						} else {
+							vm.EvaluationPro = data.RspData.Data[0];
+
 						}
-						vm.EvaluationPro = data.RspData.Data[0];
+						document.getElementById("show").style.display = "block"
+					} else {
+						$.alert(data.RspTxt, "提示");
+					}
+
+				});
+			}
+			//10.获取多部门点评统计
+			function getEvalStatByDeptIds(deptIds) {
+				var tempArr = [];
+				var tempData = {
+					corpId: mineUserInfo.corpid,
+					deptIds: deptIds,
+					userId: mineUserInfo.userid,
+				}
+				console.log("多人点评统计参数：" + JSON.stringify(tempData));
+				getEvalStatByDepts(tempData, function(data) {
+					console.log("多人点评统计数据：" + JSON.stringify(data));
+					if(data.RspCode == 0) {
+						if(data.RspData.Data.length == 0) {
+							vm.EvaluationPro.ImproveCnt = 0;
+							vm.EvaluationPro.PraiseCnt = 0;
+							//							$.alert("暂无统计", "提示");
+						} else {
+							vm.EvaluationPro = data.RspData.Data[0];
+
+						}
 						document.getElementById("show").style.display = "block"
 					} else {
 						$.alert(data.RspTxt, "提示");
@@ -459,64 +463,50 @@
 						document.getElementById("depart").data_id = result[0].value;
 						deptId = result[0].value;
 						getEvaluation();
+						var dept_array = [deptId]
+						getEvalStatByDepts(dept_array);
 					}
 				});
 			}
 
-			function getDetaultDepart() {
-				var rspData = [{
-					"value": 11,
-					"title": "开发部",
-					"parentvalue": 1,
-					"order": 2147483047
-				}, {
-					"value": 12,
-					"title": "测试子部门",
-					"parentvalue": 11,
-					"order": 100000000
-				}, {
-					"value": 13,
-					"title": "测试孙部门",
-					"parentvalue": 12,
-					"order": 100000000
-				}, {
-					"value": 14,
-					"title": "测试子部门2",
-					"parentvalue": 11,
-					"order": 99999000
-				}, {
-					"value": -1,
-					"title": "全部",
-					"parentvalue": 0,
-					"order": 0
-				}]
-
-				mineUserInfo.depart_array = [];
-				for(var i = 0; i < rspData.length; i++) {
-					var model = rspData[i];
-					if(model.value == -1) {
-						continue;
-					} else {
-						for(var j = 0; j < mineUserInfo.department.length; j++) {
-							if(model.value == mineUserInfo.department[j]) {
-								model.label = model.title;
-								mineUserInfo.depart_array.push(model);
-								if(i == 0) {
-									document.getElementById("depart").value = model.label;
-									document.getElementById("depart").data_id = model.value;
-									deptId = model.value;
-									getEvaluation();
-
-								}
-
-							}
-
-						}
-
-					}
+			function getDefaultUserInfo(isTeacher) {
+				var data = {}
+				userInfo = {
+					"corpid": "wx6c4528c675d4a9c9",
+					"userid": "songyanming",
+					"name": "宋艳明",
+					"department": [11],
+					"order": [0],
+					"position": "",
+					"mobile": null,
+					"english_name": "",
+					"gender": 1,
+					"isleader": 1,
+					"telephone": null,
+					"email": null,
+					"weixinid": null,
+					"avatar": "http://shp.qpic.cn/bizmp/LlAHpaR9WIbXvzjGTAPgEfe6lmhQqEkJOvvoMW928nibnU4bRQ5wWJA/",
+					"status": 1,
+					"extattr": null,
+					"errcode": 0,
+					"errmsg": "ok",
+					"P2PData": null
 				}
-				getEvaluation();
-				getEvalStatByUsersPr();
+				data.mineUserInfo = userInfo;
+				if(isTeacher == 0) {
+					data.isTeacher = 0;
+
+				} else {
+					data.isTeacher = 1;
+					data.teacherInfo = {
+						userid: "songyanming"
+					}
+					data.deptId = "11"
+					data.deptName = "开发部"
+				}
+
+				return data
+
 			}
 		</script>
 	</body>

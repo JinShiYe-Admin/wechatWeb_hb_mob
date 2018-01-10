@@ -77,8 +77,7 @@
 			</div>
 			<div>
 				考勤地点X坐标（经度）：<input type="text" id="longitude" /> 考勤地点Y坐标（纬度）：
-				<input type="text" id="latitude" /> &nbsp; &nbsp;
-				<!--<button style="color: #5a99df;" onclick="search()">查询</button>--><input style="color: white;background:#5a99df ; border: none;" type="button" onclick="search()" value="查询" />&nbsp;&nbsp;&nbsp;&nbsp;<span class="tips">系统无法获取经纬度时，请使用拾取坐标系统查询后手动输入
+				<input type="text" id="latitude" />&nbsp;&nbsp;<input style="color: white;background:#5a99df ; border: none; width: 60px;height: 25px;" type="button" onclick="search()" value="查询" />&nbsp;&nbsp;&nbsp;&nbsp;<span class="tips">系统无法获取经纬度时，请使用拾取坐标系统查询后手动输入
 				<a target="_blank" style="color: #737373; text-decoration: underline;" href="http://api.map.baidu.com/lbsapi/getpoint/index.html">查询</a></span>
 			</div>
 		</div>
@@ -124,8 +123,8 @@
 					</div>
 				</div>-->
 		</div>
-		<div >
-			<button id="submit" onclick="submitClick()" class="weui-btn weui-btn_primary">添加</button>
+		<div>
+			<button style=" width:350px ; height: 50px; margin-left: 450px; background:#5a99df  ; border: none; color: white; font-size: 20px;" id="submit" onclick="submitClick()" class="weui-btn weui-btn_primary">添加</button>
 		</div>
 		</div>
 		<!--</template>-->
@@ -164,17 +163,19 @@
 							corpId = rep.corpid;
 
 						} else if(data.RspCode == 7) {
-							$.toast("登录超时，请重新进入APP", "cancel", function() {
-								console.log('close');
-							});
+							alert("登录超时，请重新进入企业微信后台管理")
+							//							$.toast("登录超时，请重新进入APP", "cancel", function() {
+							//								console.log('close');
+							//							});
 						}
 					},
 					error: function() {
-						console.log("error");
+						alert("获取用户基本信息失败")
+						//						console.log("error");
 					}
 				})
 				//给corpId赋值假数据
-//																corpId = "wx6c4528c675d4a9c9";
+				//																corpId = "wx6c4528c675d4a9c9";
 				//	getWebsitConfig();
 				var detail = utils.getDataFromUrl(window.location.href);
 				//				alert("detail " + JSON.stringify(detail));
@@ -266,142 +267,14 @@
 				methods: {
 					resetData: function() { //重置数据
 						Object.assign(this.$data, getDefaultData());
-					},
-					submitClick: function() {
-												alert(99);
-						//提交前先判断。如果都不为空，则允许提交
-						/**
-						 * 得到各input输入框的值
-						 */
-						var attendAdressValue = document.getElementById("attendAdressText").value;
-						//alert("attendAdressValue==="+attendAdressValue);
-						var attendAdressX = document.getElementById("longitude").value;
-						var attendAdressY = document.getElementById("latitude").value;
-						var attendAddressRedius = document.getElementById("attendAddressRedius").value;
-						//						alert("attendAddressRedius=="+attendAddressRedius);
-						if(attendAdressValue == "") {
-							alert("考勤地点名称不能为空！");
-							return;
-						} else if(attendAdressX == "") {
-							alert("考勤地点X坐标不能为空！");
-							return;
-						} else if(attendAdressY == "") {
-							alert("考勤地点Y坐标不能为空！");
-							return;
-						} else if(attendAddressRedius == "") {
-							alert("考勤地点半径不能为空！");
-							return;
-						} else {
-							//input 输入框的值都填写了，则提交，进行添加。
-							var tempData = {
-								"corpId": corpId,
-								"areaName": attendAdressValue,
-								"areaX": attendAdressX,
-								"areaY": attendAdressY,
-								"areaRedius": attendAddressRedius,
-								"uuid": "",
-								"appid": "",
-								"token": "",
-								"sign": ""
-							}
-							$.ajax({
-								url: "https://jbyj.jiaobaowang.net/AttendanceService/addAttendArea",
-								type: "POST",
-								data: JSON.stringify(tempData),
-								timeout: 1000,
-								dataType: "json",
-								async: false,
-								success: function(data) {
-									console.log("新增考勤地点接口返回的情况======" + JSON.stringify(data));
-									/**
-									 * 如果接口返回正常，则跳转到显示考勤地点页面
-									 */
-									if(data.RspCode == 0) {
-										//给用户提示，添加成功
-										alert("添加成功");
-										//									window.location="../pcWeb-HUI/attendenceManage_address.html";
-										//										vm.resetData();
-										//										vm.editName = '添加'
-										//清空input输入框
-										document.getElementById("attendAdressText").value = "";
-										document.getElementById("longitude").value = "";
-										document.getElementById("latitude").value = "";
-										document.getElementById("attendAddressRedius").value = "";
-
-									} else if(data.RspCode == 1017) {
-										alert("存在同名的考勤地点");
-									}
-								},
-								error: function() {
-									$.toast("状态错误，请重新进入APP", "cancel", function() {
-										console.log('close');
-									});
-								}
-							})
-						}
-
-						//						if(vm.type == 'add') { //添加栏目
-						//							alert(000)
-						//							var para = {
-						//								cmd: 'chn',
-						//								type: 'add',
-						//								cname: vm.cname.message,
-						//								islink: boolToInt(vm.islink.check),
-						//								linkurl: vm.linkurl.message,
-						//								iswrite: boolToInt(vm.iswrite.check),
-						//								note: vm.note.message,
-						//								orderid: vm.orderid.message,
-						//								pid: 0,
-						//								istop: boolToInt(vm.istop.check)
-						//							}
-						//							if(para.cname==""){
-						//								alert("请输入栏目名称");
-						//								return;
-						//							}
-						//							if(para.islink==1&&para.linkurl==''){
-						//								alert("请输入链接地址");
-						//								return;
-						//							}
-						//							if(para.note==""){
-						//								alert("请输入备注");
-						//								return;
-						//							}
-						//
-						//							var reg = /^[1-9]\d*$/
-						//								var numFlag = reg.test(vm.orderid.message);
-						//								if(numFlag == false) {
-						//									alert('请输入正确排序ID')
-						//									return;
-						//								}
-						//							
-						//							
-						//							//							alert(JSON.stringify(para))
-						//							unitWebsitePro(para, function(data) {
-						//								if(data.RspCode == 0) {
-						//									alert('添加成功');
-						//									vm.resetData();
-						//									vm.editName = '添加'
-						////									mui.back()
-						//								}
-						//								//								alert(JSON.stringify(data));
-						//							});
-						//						} else if(vm.type == 'edit') { //删除栏目
-						//							var para = {
-						//								cmd: 'chn',
-						//								type: 'del',
-						//								colid: vm.colid
-						//							}
-						//							//							alert(JSON.stringify(para))
-						//							unitWebsitePro(para, function(data) {
-						//								if(data.RspCode == 0) {
-						//									vm.resetData();
-						////									mui.back()
-						//								}
-						//								//								alert(JSON.stringify(data));
-						//							});
-						//						}
-
 					}
+//					submitClick: function() {
+////						
+//						}
+//
+//						//			
+//
+//					}
 				}
 
 			})
@@ -675,83 +548,85 @@
 
 			}
 			//输入坐标查询地点，代码结束
-			
-			
-			
+
 			//添加考勤地点函数
-			function submitClick(){
+			function submitClick() {
 				console.log("点击添加---------------------")
 				//提交前先判断。如果都不为空，则允许提交
-						/**
-						 * 得到各input输入框的值
-						 */
-						var attendAdressValue = document.getElementById("attendAdressText").value;
-						//alert("attendAdressValue==="+attendAdressValue);
-						var attendAdressX = document.getElementById("longitude").value;
-						var attendAdressY = document.getElementById("latitude").value;
-						var attendAddressRedius = document.getElementById("attendAddressRedius").value;
-						//						alert("attendAddressRedius=="+attendAddressRedius);
-						if(attendAdressValue == "") {
-							alert("考勤地点名称不能为空！");
-							return;
-						} else if(attendAdressX == "") {
-							alert("考勤地点X坐标不能为空！");
-							return;
-						} else if(attendAdressY == "") {
-							alert("考勤地点Y坐标不能为空！");
-							return;
-						} else if(attendAddressRedius == "") {
-							alert("考勤地点半径不能为空！");
-							return;
-						} else {
-							//input 输入框的值都填写了，则提交，进行添加。
-							var tempData = {
-								"corpId": corpId,
-								"areaName": attendAdressValue,
-								"areaX": attendAdressX,
-								"areaY": attendAdressY,
-								"areaRedius": attendAddressRedius,
-								"uuid": "",
-								"appid": "",
-								"token": "",
-								"sign": ""
-							}
-							console.log("tempData===="+JSON.stringify(tempData))
-							$.ajax({
-								url: "https://jbyj.jiaobaowang.net/AttendanceService/addAttendArea",
-								type: "POST",
-								data: JSON.stringify(tempData),
-								timeout: 1000,
-								dataType: "json",
-								async: false,
-								success: function(data) {
-									console.log("新增考勤地点接口返回的情况======" + JSON.stringify(data));
-									/**
-									 * 如果接口返回正常，则跳转到显示考勤地点页面
-									 */
-									if(data.RspCode == 0) {
-										//给用户提示，添加成功
-										alert("添加成功");
-										//									window.location="../pcWeb-HUI/attendenceManage_address.html";
-										//										vm.resetData();
-										//										vm.editName = '添加'
-										//清空input输入框
-										document.getElementById("attendAdressText").value = "";
-										document.getElementById("longitude").value = "";
-										document.getElementById("latitude").value = "";
-										document.getElementById("attendAddressRedius").value = "";
+				/**
+				 * 得到各input输入框的值
+				 */
+				var attendAdressValue = document.getElementById("attendAdressText").value;
+				//alert("attendAdressValue==="+attendAdressValue);
+				var attendAdressX = document.getElementById("longitude").value;
+				var attendAdressY = document.getElementById("latitude").value;
+				var attendAddressRedius = document.getElementById("attendAddressRedius").value;
+				//						alert("attendAddressRedius=="+attendAddressRedius);
+				if(attendAdressValue == "") {
+					alert("考勤地点名称不能为空！");
+					return;
+				} else if(attendAdressValue.length > 200) {
+					alert("考勤地点名称字数太长！最大允许200字");
+					return;
+				} else if(attendAdressX == "") {
+					alert("考勤地点X坐标不能为空！");
+					return;
+				} else if(attendAdressY == "") {
+					alert("考勤地点Y坐标不能为空！");
+					return;
+				} else if(attendAddressRedius == "") {
+					alert("考勤地点半径不能为空！");
+					return;
+				} else {
+					//input 输入框的值都填写了，则提交，进行添加。
+					var tempData = {
+						"corpId": corpId,
+						"areaName": attendAdressValue,
+						"areaX": attendAdressX,
+						"areaY": attendAdressY,
+						"areaRedius": attendAddressRedius,
+						"uuid": "",
+						"appid": "",
+						"token": "",
+						"sign": ""
+					}
+					console.log("tempData====" + JSON.stringify(tempData))
+					$.ajax({
+						url: "https://jbyj.jiaobaowang.net/AttendanceService/addAttendArea",
+						type: "POST",
+						data: JSON.stringify(tempData),
+						timeout: 1000,
+						dataType: "json",
+						async: false,
+						success: function(data) {
+							console.log("新增考勤地点接口返回的情况======" + JSON.stringify(data));
+							/**
+							 * 如果接口返回正常，则跳转到显示考勤地点页面
+							 */
+							if(data.RspCode == 0) {
+								//给用户提示，添加成功
+								alert("添加成功");
+								//									window.location="../pcWeb-HUI/attendenceManage_address.html";
+								//										vm.resetData();
+								//										vm.editName = '添加'
+								//清空input输入框
+								document.getElementById("attendAdressText").value = "";
+								document.getElementById("longitude").value = "";
+								document.getElementById("latitude").value = "";
+								document.getElementById("attendAddressRedius").value = "";
 
-									} else if(data.RspCode == 1017) {
-										alert("存在同名的考勤地点");
-									}
-								},
-								error: function() {
-									$.toast("状态错误，请重新进入APP", "cancel", function() {
-										console.log('close');
-									});
-								}
-							})
+							} else if(data.RspCode == 1017) {
+								alert("存在同名的考勤地点");
+							}
+						},
+						error: function() {
+							alert("添加失败");
+							//							$.toast("状态错误，请重新进入", "cancel", function() {
+							//								console.log('close');
+							//							});
 						}
+					})
+				}
 			}
 		</script>
 	</body>

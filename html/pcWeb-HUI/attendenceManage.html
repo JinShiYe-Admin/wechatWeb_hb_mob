@@ -279,9 +279,10 @@
 									}
 								},
 								error: function() {
-									$.toast("状态错误，请重新进入APP", "cancel", function() {
-										console.log('close');
-									});
+									alert("删除失败！");
+									//									$.toast("状态错误，请重新进入APP", "cancel", function() {
+									//										console.log('close');
+									//									});
 								}
 							})
 
@@ -423,18 +424,19 @@
 							//							$.toast("登录超时，请重新进入APP", "cancel", function() {
 							//								console.log('close');
 							//							});
-							alert("登录超时，请重新进入企业微信后台管理");
+							alert("登录后不操作时间太长，用户信息已过期，请重新进入企业微信后台管理")
 						}
 					},
 					error: function() {
-						console.log("error");
+						//						console.log("error");
+						alert("获取用户基本信息失败，请重新点击前往服务商后台");
 					}
 				})
-//				corpId = "wx6c4528c675d4a9c9";
+				//				corpId = "wx6c4528c675d4a9c9";
 				var requestDataForAttendTime = {
 					"corpId": corpId, //暂时写死，此值是从顾工c#接口中获取登陆者的单位标识
 					"pageIndex": pageindex,
-					"pageSize": 2,
+					"pageSize": 10,
 					"uuid": "",
 					"appid": "",
 					"token": "",

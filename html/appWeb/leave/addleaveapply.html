@@ -183,7 +183,7 @@
 			</div>
 		</div>
 		<div id="selectMask" class="select-mask"></div>
-		<script type="text/javascript" src="../../../js/lib/vconsole/vconsole.min.js"></script>
+		<!--<script type="text/javascript" src="../../../js/lib/vconsole/vconsole.min.js"></script>-->
 		<script type="text/javascript" src="../../../js/demoCssJs/jquery-2.1.4.js"></script>
 		<script type="text/javascript" src="../../../js/demoCssJs/jquery-weui.min.js"></script>
 		<script type="text/javascript" src="../../../js/lib/plupload/moxie.min.js"></script>
@@ -238,6 +238,12 @@
 			window.onload = function() {
 				$.showLoading();
 				initData();
+				if(utils.getSystem() == "Android") {
+					//安卓手机点击请假事由，将输入框移到视图中
+					$("#represon").click(function() {
+						document.getElementById("represon").scrollIntoView(true);
+					});
+				}
 			}
 
 			function initData() {

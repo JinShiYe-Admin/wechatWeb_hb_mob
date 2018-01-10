@@ -57,8 +57,8 @@ document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.adm
 				<thead class="text-c">
 					<tr>
 						<th>考勤地点</th>
-						<th>考勤地点X坐标</th>
-						<th>考勤地点Y坐标</th>
+						<th>考勤地点X坐标（经度）</th>
+						<th>考勤地点Y坐标（纬度）</th>
 						<th>考勤地点半径（米）</th>
 						<th>状态</th>
 						<th>操作</th>
@@ -336,13 +336,15 @@ function getColumnData(pageindex) {
 				corpId = rep.corpid;
 
 			} else if(data.RspCode == 7) {
-				$.toast("登录超时，请重新进入APP", "cancel", function() {
-					console.log('close');
-				});
+				alert("登录后不操作时间太长，用户信息已过期，请重新进入企业微信后台管理")
+//				$.toast("登录超时，请重新进入APP", "cancel", function() {
+//					console.log('close');
+//				});
 			}
 		},
 		error: function() {
-			console.log("error");
+			alert("获取用户基本信息失败，请重新点击前往服务商后台");
+//			console.log("error");
 		}
 	})
 	//假数据 单位标识
@@ -469,9 +471,10 @@ function clickOff(attendAreaId, corpId, areaName, areaX, areaY, areaRedius, stat
 			}
 		},
 		error: function() {
-			$.toast("状态错误，请重新进入企业微信管理后台", "cancel", function() {
-				console.log('close');
-			});
+			alert("操作失败")
+//			$.toast("状态错误，请重新进入企业微信管理后台", "cancel", function() {
+//				console.log('close');
+//			});
 		}
 	})
 

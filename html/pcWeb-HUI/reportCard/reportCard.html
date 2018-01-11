@@ -155,7 +155,7 @@
 						<div class="formControls col-xs-8 col-sm-9">
 							<span class="select-box">
 							<select name="" id="dpt" class="select" size="1" title="请选择部门" :value="dptid">
-						<option :value="item.value" v-for="(item,index) in depart_array">{{item.label}}</option>
+						<option :value="item.value" v-for="(item,index) in depart_array" v-if="index>0">{{item.label}}</option>
 
 							</select>
 						</span>

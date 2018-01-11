@@ -44,7 +44,7 @@
 							<td style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;"><span v-if="newsModel.stat==0" style="color:#fb9191;">未通过</span><span v-else style="color:#5EB95E;">已通过</span></td>
 							<td style="text-align: center;"> 
 								<a id="{{newsModel.newsid}}"   @click="clickDel(newsModel,1,index)">
-									<i v-if="newsModel.Prizt==1" class="Hui-iconfont" style="color: #4fbffd;">&#xe706</i>
+									<i v-if="newsModel.Prizt==1" class="Hui-iconfont" style="color: #fb9191;">&#xe631</i>
 									<i v-else  class="Hui-iconfont" style="color: #4fbffd;">&#xe676</i>
 								</a>&nbsp;&nbsp;&nbsp;
 							  <!--{{newsModel.Prizt}}-->
@@ -125,7 +125,7 @@
 				el: '#newsData',
 				data: {
 					item: {
-						newsArray: [ ]
+						newsArray: []
 					}
 				},
 				updated: function() {

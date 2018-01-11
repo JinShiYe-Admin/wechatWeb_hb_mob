@@ -63,7 +63,6 @@
 				left: 0;
 				right: 0;
 				background: white;
-			
 			}
 			
 			.input-container:before {
@@ -345,10 +344,14 @@
 						this.getFlag(newVal);
 					},
 					previewImgs: function(newVal, oldVal) {
-						this.photoBrowser = new Swiper('.swiper-container', {
-							pagination: '.swiper-pagination',
-							paginationClickable: true
+						console.log("获取的预览图片:" + JSON.stringify(newVal))
+						this.$nextTick(function() {
+							this.photoBrowser = new Swiper('.swiper-container', {
+								pagination: '.swiper-pagination',
+								paginationClickable: true
+							})
 						})
+
 					}
 				},
 				methods: {
@@ -479,7 +482,7 @@
 						var com = this;
 						com.showToast = true;
 						processRequest.postProcessData("setProcessApprove", {
-							procApproveId: com.applyDetail.ApprId,
+							procApproveId: com.applyDetail.ApplyId,
 							procApproveNote: com.approveNote,
 							proApproveStat: type
 						}, function(response) {

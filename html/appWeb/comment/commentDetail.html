@@ -282,8 +282,8 @@
 			var mineUserInfo;
 			var teacherInfo = {};
 			window.onload = function() {
-//				var sValue = getDefaultUserInfo(0);
-				var sValue = utils.getSessionStorageByUrlsKey();
+				var sValue = getDefaultUserInfo(0);
+//				var sValue = utils.getSessionStorageByUrlsKey();
 				mineUserInfo = sValue.mineUserInfo;
 				vm.mineUserInfo = mineUserInfo;
 				vm.isTeacher = sValue.isTeacher;
@@ -464,7 +464,7 @@
 						deptId = result[0].value;
 						getEvaluation();
 						var dept_array = [deptId]
-						getEvalStatByDepts(dept_array);
+						getEvalStatByDeptIds(dept_array);
 					}
 				});
 			}

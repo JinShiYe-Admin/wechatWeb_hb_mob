@@ -171,7 +171,7 @@
 						}
 					},
 					error: function() {
-						alert("获取用户基本信息失败")
+//						alert("获取用户基本信息失败")
 						//						console.log("error");
 					}
 				})
@@ -377,6 +377,7 @@
 					var marker = new BMap.Marker(r.point);
 					map.addOverlay(marker);
 					map.panTo(r.point);
+					
 					//将浏览器定位到的点的数据填充到对应的input输入框中
 
 					var addComp = r.address;
@@ -614,7 +615,7 @@
 				return document.getElementById(id);
 			}
 
-			map.centerAndZoom("济南", 12); // 初始化地图,设置城市和地图级别。
+//			map.centerAndZoom("济南", 12); // 初始化地图,设置城市和地图级别。
 
 			var ac = new BMap.Autocomplete( //建立一个自动完成的对象
 				{

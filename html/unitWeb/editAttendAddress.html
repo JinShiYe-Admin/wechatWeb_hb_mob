@@ -63,28 +63,30 @@
 					</div>-->
 				</div>
 				<br />
-				<div class="tips">地址定位不准确时，可拖动地图中的红色水滴调整位置。</div>
-				<!--用来显示地图-->
-				<div id="allmap" style="height: 500px; width: 100%;"></div>
-				<div id="r-result"></div>
-				<!-- <div> -->
-				<!--<div class="weui-cells__title">{{linkurl.title+" (有链接时，不允许投稿；链接默认打开。)"}}</div>-->
-				<!--<div class="weui-cell__ft" style="margin-top: -35px;margin-right: 15px;">
+				<div class="tips">地址定位不准确时，可拖动地图中的红色水滴调整位置。也可搜索请输入：<input id="suggestId" type="text" /></div>
+				<div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
+			</div>
+			<!--用来显示地图-->
+			<div id="allmap" style="height: 500px; width: 100%;"></div>
+			<div id="r-result"></div>
+			<!-- <div> -->
+			<!--<div class="weui-cells__title">{{linkurl.title+" (有链接时，不允许投稿；链接默认打开。)"}}</div>-->
+			<!--<div class="weui-cell__ft" style="margin-top: -35px;margin-right: 15px;">
 						<input class="weui-switch" type="checkbox" v-model="islink.check">
 					</div>-->
-				<!--<div v-if="islink.check" class="weui-cells">-->
-				<!-- <div class="weui-cells__title">考勤地点X坐标</div> -->
-				<!-- <div class="weui-cell"> -->
-				<!-- <div class="weui-cell__bd"> -->
-				<!-- 	<input id="attendAdressX" class="weui-input" type="text"> -->
-				<!-- 	</div> -->
-				<!-- </div> -->
-				<!-- 	</div> -->
-				<br /> 考勤地点X坐标（经度）
-				<input id="attendAdressX" type="text"> 考勤地点Y坐标（纬度）
-				<input id="attendAdressY" type="text">&nbsp; &nbsp;<input style="color: white;background:#5a99df ; border: none; width: 60px;height: 25px;" type="button" onclick="search()" value="查询" />&nbsp;&nbsp;&nbsp;&nbsp;<span class="tips">系统无法获取经纬度时，请使用拾取坐标系统查询后手动输入
+			<!--<div v-if="islink.check" class="weui-cells">-->
+			<!-- <div class="weui-cells__title">考勤地点X坐标</div> -->
+			<!-- <div class="weui-cell"> -->
+			<!-- <div class="weui-cell__bd"> -->
+			<!-- 	<input id="attendAdressX" class="weui-input" type="text"> -->
+			<!-- 	</div> -->
+			<!-- </div> -->
+			<!-- 	</div> -->
+			<br /> 考勤地点X坐标（经度）
+			<input id="attendAdressX" type="text"> 考勤地点Y坐标（纬度）
+			<input id="attendAdressY" type="text">&nbsp; &nbsp;<input style="color: white;background:#5a99df ; border: none; width: 60px;height: 25px;" type="button" onclick="search()" value="查询" />&nbsp;&nbsp;&nbsp;&nbsp;<span class="tips">系统无法获取经纬度时，请使用拾取坐标系统查询后手动输入
 				<a target="_blank" style="color: #737373; text-decoration: underline;" href="http://api.map.baidu.com/lbsapi/getpoint/index.html">查询</a></span>
-				<!-- <div>
+			<!-- <div>
 				<div class="weui-cells__title">考勤地点Y坐标</div>
 				<div class="weui-cells">
 					<div class="weui-cell">
@@ -95,25 +97,25 @@
 				</div>
 			</div> -->
 
-				<div>
-					<br />
-					<div class="weui-cells__title">考勤地点半径：<input placeholder="请输入半径" size="10" id="attendAddressRedius" class="weui-input" type="text" oninput="getRedius(this.value)">米<span class="tips">（建议500-1000米）</span></div>
-					<!--<div class="weui-cells">
+			<div>
+				<br />
+				<div class="weui-cells__title">考勤地点半径：<input placeholder="请输入半径" size="10" id="attendAddressRedius" class="weui-input" type="text" oninput="getRedius(this.value)">米<span class="tips">（建议500-1000米）</span></div>
+				<!--<div class="weui-cells">
 						<div class="weui-cell">
 							<div class="weui-cell__bd">
 								<input id="attendAddressRedius" class="weui-input" type="text" oninput="getRedius(this.value)">米<span class="tips">（建议500-1000米）</span>
 							</div>
 						</div>
 					</div>-->
-				</div>
-				<!--<div class="tips">
+			</div>
+			<!--<div class="tips">
 					系统无法获取经纬度时，请使用拾取坐标系统查询后手动输入
 					<a target="_blank" style="color: #737373; text-decoration: underline;" href="http://api.map.baidu.com/lbsapi/getpoint/index.html">查询</a>
 				</div>-->
-			</div>
-			<!--开关列表-->
-			<div id="switch_list">
-				<!--<div>
+		</div>
+		<!--开关列表-->
+		<div id="switch_list">
+			<!--<div>
 					<div class="weui-cell weui-cell_switch">
 						<div class="weui-cell__bd">{{islink.title}}</div>
 						<div class="weui-cell__ft">
@@ -122,7 +124,7 @@
 					</div>
 				</div>-->
 
-				<!--<div>
+			<!--<div>
 					<div class="weui-cell weui-cell_switch">
 						<div class="weui-cell__bd">{{iswrite.title}}</div>
 						<div class="weui-cell__ft">
@@ -139,11 +141,11 @@
 						</div>
 					</div>
 				</div>-->
-			</div>
-			<br />
-			<!--<div class="weui-btn-area" v-if="editName =='修改'">-->
-			<button style=" width:350px ; height: 50px; margin-left: 450px; background:#5a99df  ; border: none; color: white; font-size: 20px;" id="submit" onclick="submitClick()" class="weui-btn weui-btn_primary">修改</button>
-			<!--</div>-->
+		</div>
+		<br />
+		<!--<div class="weui-btn-area" v-if="editName =='修改'">-->
+		<button style=" width:350px ; height: 50px; margin-left: 450px; background:#5a99df  ; border: none; color: white; font-size: 20px;" id="submit" onclick="submitClick()" class="weui-btn weui-btn_primary">修改</button>
+		<!--</div>-->
 		</div>
 		<!--</template>-->
 		<script src="../../js/mui.min.js"></script>
@@ -559,10 +561,14 @@
 				}
 
 				var point = new BMap.Point(X, Y);
+				//根据点转到该点所在区域地图
+				map.centerAndZoom(point, 14)
 				map.clearOverlays();
 				//创建标注对象
 				var marker = new BMap.Marker(point);
 				map.addOverlay(marker);
+				var redius = document.getElementById("attendAddressRedius").value;
+				getRedius(redius);
 				//根据半径输入框里原来的值显示范围
 				//				getRedius();
 				//根据点解析出地址
@@ -762,6 +768,95 @@
 
 			}
 
+			// 百度地图API功能---搜索
+			function G(id) {
+				return document.getElementById(id);
+			}
+
+//			map.centerAndZoom("济南", 12); // 初始化地图,设置城市和地图级别。
+
+			var ac = new BMap.Autocomplete( //建立一个自动完成的对象
+				{
+					"input": "suggestId",
+					"location": map
+				});
+
+			ac.addEventListener("onhighlight", function(e) { //鼠标放在下拉列表上的事件
+				var str = "";
+				var _value = e.fromitem.value;
+				var value = "";
+				if(e.fromitem.index > -1) {
+					value = _value.province + _value.city + _value.district + _value.street + _value.business;
+				}
+				str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+
+				value = "";
+				if(e.toitem.index > -1) {
+					_value = e.toitem.value;
+					value = _value.province + _value.city + _value.district + _value.street + _value.business;
+				}
+				str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
+				G("searchResultPanel").innerHTML = str;
+			});
+
+			var myValue;
+			ac.addEventListener("onconfirm", function(e) { //鼠标点击下拉列表后的事件
+				var _value = e.item.value;
+				myValue = _value.province + _value.city + _value.district + _value.street + _value.business;
+				G("searchResultPanel").innerHTML = "onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
+
+				setPlace();
+			});
+
+			function setPlace() {
+				map.clearOverlays(); //清除地图上所有覆盖物
+				function myFun() {
+					var pp = local.getResults().getPoi(0).point; //获取第一个智能搜索的结果
+					map.centerAndZoom(pp, 18);
+					//将此点的数据赋值到对应的HTML element上
+					geoc.getLocation(pp, function(rs) {
+						console.log("rs===========" + JSON.stringify(rs));
+						//addressComponents对象可以获取到详细的地址信息
+						var addComp = rs.addressComponents;
+						var site = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+						//将对应的HTML元素设置值
+						document.getElementById("attendAdressText").value = site;
+						document.getElementById("attendAdressX").value = pp.lng;
+						document.getElementById("attendAdressY").value = pp.lat;
+
+						var redius = document.getElementById("attendAddressRedius").value;
+						getRedius(redius);
+					});
+
+					//标注对象
+					var marker = new BMap.Marker(pp)
+					map.addOverlay(marker); //添加标注
+					//设置标注可拖动，并得到拖动后的点的数据，并赋值到对应的HTML document上
+					marker.enableDragging(); //设置可拖拽
+					marker.addEventListener("dragend", function(e) { //拖动事件 
+						var pt = e.point;
+						console.log("pt======" + pt);
+						console.log("")
+						geoc.getLocation(pt, function(rs) {
+							console.log("rs===========" + JSON.stringify(rs));
+							//addressComponents对象可以获取到详细的地址信息
+							var addComp = rs.addressComponents;
+							var site = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+							//将对应的HTML元素设置值
+							document.getElementById("attendAdressText").value = site;
+							document.getElementById("attendAdressX").value = pt.lng;
+							document.getElementById("attendAdressY").value = pt.lat;
+
+						});
+
+					})
+				}
+				var local = new BMap.LocalSearch(map, { //智能搜索
+					onSearchComplete: myFun
+				});
+				local.search(myValue);
+			}
+
 			function submitClick() {
 				//alert(99);
 				//提交前先判断。如果都不为空，则允许提交
@@ -833,9 +928,9 @@
 							},
 							error: function() {
 								alert("修改失败");
-//								$.toast("状态错误，请重新进入APP", "cancel", function() {
-//									console.log('close');
-//								});
+								//								$.toast("状态错误，请重新进入APP", "cancel", function() {
+								//									console.log('close');
+								//								});
 							}
 						})
 				}

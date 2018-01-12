@@ -617,7 +617,7 @@
 				map.addOverlay(marker);
 				map.addOverlay(circle);
 
-//				marker.enableDragging(); //设置可拖拽
+				//				marker.enableDragging(); //设置可拖拽
 				marker.addEventListener("dragend", function(e) { //拖动事件 
 					var pt = e.point;
 
@@ -786,7 +786,7 @@
 
 			function setPlace() {
 				map.clearOverlays(); //清除地图上所有覆盖物
-				var inputTipsCity
+				
 				//智能搜索完成时触发该函数
 				function myFun() {
 					var pp = local.getResults().getPoi(0).point; //获取第一个智能搜索的结果
@@ -801,18 +801,37 @@
 						//addressComponents对象可以获取到详细的地址信息
 						var addComp = rs.addressComponents;
 						var site = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
-						inputTipsCity = addComp.city
 						//将对应的HTML元素设置值
 						document.getElementById("attendAdressText").value = site;
 
-						var redius = document.getElementById("attendAddressRedius").value;
-						getRedius(redius);
 					});
-
+					var redius = document.getElementById("attendAddressRedius").value;
+					getRedius(redius);
 					//标注对象
 					var marker = new BMap.Marker(pp)
+					map.clearOverlays();
 					map.addOverlay(marker); //添加标注
-					
+					//设置点可移动
+					marker.enableDragging(); //设置可拖拽
+					marker.addEventListener("dragend", function(e) { //拖动事件 
+						
+						var pt = e.point;
+						console.log("pt==myFun====" +JSON.stringify(pt));
+						document.getElementById("longitude").value = pt.lng;
+						document.getElementById("latitude").value = pt.lat;
+						geoc.getLocation(pt, function(rs) {
+							//							console.log("rs===========" + JSON.stringify(rs));
+							//addressComponents对象可以获取到详细的地址信息
+							var addComp = rs.addressComponents;
+							var site = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+							//将对应的HTML元素设置值
+							document.getElementById("attendAdressText").value = site;
+
+							//
+
+						});
+
+					})
 				}
 				var local = new BMap.LocalSearch(map, { //智能搜索
 					onSearchComplete: myFun

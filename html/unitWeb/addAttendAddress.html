@@ -171,7 +171,7 @@
 						}
 					},
 					error: function() {
-						alert("获取用户基本信息失败")
+						//						alert("获取用户基本信息失败")
 						//						console.log("error");
 					}
 				})
@@ -361,13 +361,7 @@
 			// 百度地图API功能
 			var map = new BMap.Map("allmap");
 			//			var point = new BMap.Point(116.331398, 39.897445);
-			// 百度地图API功能---搜索
 
-			var ac = new BMap.Autocomplete( //建立一个自动完成的对象
-				{
-					"input": "suggestId",
-					"location": map
-				});
 			var geoc = new BMap.Geocoder(); //创建解析对象
 
 			/**
@@ -383,6 +377,13 @@
 					console.log("浏览器定位成功======================")
 					console.log("r===" + JSON.stringify(r))
 					map.centerAndZoom(r.point, 12);
+					// 百度地图API功能---搜索
+
+					var ac = new BMap.Autocomplete( //建立一个自动完成的对象
+						{
+							"input": "suggestId",
+							"location": map
+						});
 					map.enableScrollWheelZoom(true);
 					var marker = new BMap.Marker(r.point);
 					map.addOverlay(marker);
@@ -786,7 +787,7 @@
 
 			function setPlace() {
 				map.clearOverlays(); //清除地图上所有覆盖物
-				
+
 				//智能搜索完成时触发该函数
 				function myFun() {
 					var pp = local.getResults().getPoi(0).point; //获取第一个智能搜索的结果
@@ -814,9 +815,9 @@
 					//设置点可移动
 					marker.enableDragging(); //设置可拖拽
 					marker.addEventListener("dragend", function(e) { //拖动事件 
-						
+
 						var pt = e.point;
-						console.log("pt==myFun====" +JSON.stringify(pt));
+						console.log("pt==myFun====" + JSON.stringify(pt));
 						document.getElementById("longitude").value = pt.lng;
 						document.getElementById("latitude").value = pt.lat;
 						geoc.getLocation(pt, function(rs) {

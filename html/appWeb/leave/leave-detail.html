@@ -347,6 +347,8 @@
 						console.log("获取的预览图片:" + JSON.stringify(newVal))
 						this.$nextTick(function() {
 							this.photoBrowser = new Swiper('.swiper-container', {
+								width: window.innerWidth,
+								height: window.innerHeight,
 								pagination: '.swiper-pagination',
 								paginationClickable: true
 							})

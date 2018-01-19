@@ -334,7 +334,8 @@
 					flag: 0, //0修改 1审核 2查看
 					previewImgs: [],
 					photoBrowser: {},
-					isChecker: 0
+					isChecker: 0,
+					apprId: -1
 				},
 				mounted: function() {
 					this.initialData();
@@ -447,6 +448,9 @@
 						console.log("this.flag type:" + typeof(this.flag));
 						console.log("获取的levaeInfo:" + JSON.stringify(leaveInfo));
 						this.applyId = leaveInfo.leave.ApplyId
+						if(leaveInfo.leave.ApprId){
+							this.apprId = parseInt(leaveInfo.leave.ApprId);
+						}
 						this.personalInfo = leaveInfo.mineUserInfo;
 						this.getApprList();
 					},
@@ -483,7 +487,7 @@
 						var com = this;
 						com.showToast = true;
 						processRequest.postProcessData("setProcessApprove", {
-							procApproveId: com.applyDetail.ApplyId,
+							procApproveId: com.apprId,
 							procApproveNote: com.approveNote,
 							proApproveStat: type
 						}, function(response) {

@@ -1012,9 +1012,21 @@ function getMineInfo() {
 		console.log('getMineInfo:', data);
 		if(data.RspCode == 0) {
 			mineUserInfo = JSON.parse(data.RspData);
-			//获取我所属的部门的所有成员
-			temp_data = 0;
-			getDepartmentMember(mineUserInfo.department[temp_data]);
+			if(mineUserInfo.department.length == 0) {
+				//没有部门
+				$.hideLoading();
+				$.alert("没有部门，没有查看权限，请联系管理员进行分配", "加载失败");
+				router.push({
+					name: "error",
+					params: {
+						id: 0
+					}
+				});
+			} else {
+				//获取我所属的部门的所有成员
+				temp_data = 0;
+				getDepartmentMember(mineUserInfo.department[temp_data]);
+			}
 		} else {
 			console.log("getMineInfo:error:")
 			$.hideLoading();

@@ -11,8 +11,8 @@
 		<style type="text/css">
 			body,
 			html {
-				overflow: auto;
-				-webkit-overflow-scrolling: touch;
+				/*overflow: auto;*/
+				/*-webkit-overflow-scrolling: touch;*/
 			}
 			
 			#allmap {
@@ -86,15 +86,16 @@
 		<title>签到考勤</title>
 	</head>
 
-	<body ontouchstart>
+	<body>
 		<div class="weui-tab" id="wrapper">
 			<div class="weui-tab__bd">
 				<div class="weui-tab__bd-item weui-tab__bd-item--active" id="tab0">
-
-					<div style="margin-top:10px;margin-bottom: 10px;">
+<p></p>
+					<div>
 						<span>当前位置：</span><span id="tempAddress"></span>
 						<span><a onclick="refresh()"><img style="vertical-align: bottom;"  height="25px" width="25px" src="../../../image/考勤/刷新.png" /></a></span>
 					</div>
+					<p></p>
 
 					<div id="allmap"></div>
 
@@ -118,7 +119,7 @@
 						</div>
 					</div>
 
-					<div id="submitHomework" style="margin-top: -20px;">
+					<div id="submitHomework" >
 						<div class="weui-cells weui-cells_form">
 							<div class="weui-cell">
 								<div class="weui-cell__bd">
@@ -158,7 +159,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="weui_tab footer-menu">
+		<div  id="bottomView" class="weui_tab footer-menu">
 			<div class="weui-tabbar">
 				<a href="https://jsypay.jiaobaowang.net/wxth/appschweb/app/index.aspx" class="weui-tabbar__item">
 					<div class="weui-tabbar__icon">
@@ -220,13 +221,13 @@
 	var allheight = document.getElementsByClassName('weui-tab')[0].scrollHeight
 	var barheight = document.getElementsByClassName('weui-tabbar')[0].scrollHeight;
 	$('.weui-tab').css({
-		'height': (allheight - barheight) + 30 + 'px'
+		'height': (allheight - barheight)  + 'px'
 	});
 	$('.weui-tab__bd').css({
-		'height': (allheight - barheight) + 30 + 'px'
+		'height': (allheight - barheight)  + 'px'
 	});
 	$('.weui-tab__bd-item').css({
-		'height': (allheight - barheight) + 30 + 'px'
+		'height': (allheight - barheight)  + 'px'
 	});
 	var tabar_width = document.getElementsByClassName('weui-tabbar__item')[0].scrollWidth
 	$('.wrap').css({

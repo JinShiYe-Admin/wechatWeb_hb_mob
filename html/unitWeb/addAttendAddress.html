@@ -68,7 +68,8 @@
 					</div>-->
 			</div>
 			<br />
-			<div class="tips">地址定位不准确时，可拖动地图中的红色水滴调整位置。</div>
+			<div class="tips">地址定位不准确时，可拖动地图中的红色水滴调整位置。也可搜索请输入：<input id="suggestId" type="text" /></div>
+			<div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
 			<!--用来显示地图-->
 			<div id="allmap" style="height:500px;width:100%;"></div>
 
@@ -170,12 +171,12 @@
 						}
 					},
 					error: function() {
-						alert("获取用户基本信息失败")
+																		alert("获取用户基本信息失败")
 						//						console.log("error");
 					}
 				})
 				//给corpId赋值假数据
-				//																corpId = "wx6c4528c675d4a9c9";
+				//				corpId = "wx6c4528c675d4a9c9";
 				//	getWebsitConfig();
 				var detail = utils.getDataFromUrl(window.location.href);
 				//				alert("detail " + JSON.stringify(detail));
@@ -367,15 +368,26 @@
 			 * 根据浏览器定位
 			 */
 			var geolocation = new BMap.Geolocation();
+			var broswerPoisitionPoint
+			var myValue;
 
 			geolocation.getCurrentPosition(function(r) {
 				if(this.getStatus() == BMAP_STATUS_SUCCESS) {
-					console.log("r==="+JSON.stringify(r))
+
+					console.log("浏览器定位成功======================")
+					console.log("r===" + JSON.stringify(r))
 					map.centerAndZoom(r.point, 12);
+
 					map.enableScrollWheelZoom(true);
 					var marker = new BMap.Marker(r.point);
 					map.addOverlay(marker);
 					map.panTo(r.point);
+					//未拖动的点标注所在的地图，智能搜索，输入提示
+					//定义一个标示
+					//
+
+					broswerPoisitionPoint = r.point
+
 					//将浏览器定位到的点的数据填充到对应的input输入框中
 
 					var addComp = r.address;
@@ -384,29 +396,110 @@
 					document.getElementById("attendAdressText").value = site;
 					document.getElementById("longitude").value = r.point.lng;
 					document.getElementById("latitude").value = r.point.lat;
-
+					var browserPositionCity = new String(addComp.city)
+					console.log("browserPositionCity=====" + browserPositionCity)
 					/**
 					 * 浏览器定位到的红点也是可以拖动的
 					 */
 					marker.enableDragging(); //设置可拖拽
-					marker.addEventListener("dragend", function(e) { //拖动事件 
+					var dragCountInSameCity = 0
+					marker.addEventListener("dragend", function(e) { //拖动结束事件 
+						console.log("拖动后回调的event-----type=" + JSON.stringify(e.type))
+
+						//						console.log("拖动后回调的event-----target=" + JSON.stringify(e.target))
+						console.log("拖动后回调的event-----pixel=" + JSON.stringify(e.pixel))
+						console.log("拖动后回调的event-----point=" + JSON.stringify(e.point))
+						var center = map.getCenter();
+						console.log("center===" + JSON.stringify(center))
+
+						dragCountInSameCity++
 						var pt = e.point;
-						console.log("pt======" + pt);
-						console.log("")
+						//						map.centerAndZoom(pt, 12)
+//						var ac = new BMap.Autocomplete( //建立一个自动完成的对象
+//							{
+//								"input": "suggestId",
+//								"location": map
+//							});
+//
+//						ac.addEventListener("onhighlight", function(e) { //鼠标放在下拉列表上的事件
+//							var str = "";
+//							var _value = e.fromitem.value;
+//							var value = "";
+//							if(e.fromitem.index > -1) {
+//								value = _value.province + _value.city + _value.district + _value.street + _value.business;
+//							}
+//							str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+//
+//							value = "";
+//							if(e.toitem.index > -1) {
+//								_value = e.toitem.value;
+//								value = _value.province + _value.city + _value.district + _value.street + _value.business;
+//							}
+//							str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
+//							G("searchResultPanel").innerHTML = str;
+//						});
+//
+//						ac.addEventListener("onconfirm", function(e) { //鼠标点击下拉列表后的事件
+//							var _value = e.item.value;
+//							myValue = _value.province + _value.city + _value.district + _value.street + _value.business;
+//							G("searchResultPanel").innerHTML = "onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
+//
+//							setPlace();
+//						});
+
+						//将对应HTML元素赋上值
+						document.getElementById("longitude").value = pt.lng;
+						document.getElementById("latitude").value = pt.lat;
+						//调用解析对象的getLocation()获得该点的地址
+						//将拖动后的点的所在城市解析出来，与浏览器定位到的城市对比，不同则初始化地图，相同则不初始化地图
 						geoc.getLocation(pt, function(rs) {
-							console.log("rs===========" + JSON.stringify(rs));
+							console.log("拖动后在回调函数内@@@@@@@@@@@@@@@@@@@")
+							//							console.log("拖动后解析出来的数据===========" + JSON.stringify(rs));
 							//addressComponents对象可以获取到详细的地址信息
 							var addComp = rs.addressComponents;
 							var site = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
 							//将对应的HTML元素设置值
 							document.getElementById("attendAdressText").value = site;
-							document.getElementById("longitude").value = pt.lng;
-							document.getElementById("latitude").value = pt.lat;
 
 						});
 
+						//	
+
 					})
 					//					alert('您的位置：' + r.point.lng + ',' + r.point.lat);
+
+//					百度地图API功能-- - 搜索
+
+										var ac = new BMap.Autocomplete( //建立一个自动完成的对象
+											{
+												"input": "suggestId",
+												"location": map
+											});
+										ac.addEventListener("onhighlight", function(e) { //鼠标放在下拉列表上的事件
+											var str = "";
+											var _value = e.fromitem.value;
+											var value = "";
+											if(e.fromitem.index > -1) {
+												value = _value.province + _value.city + _value.district + _value.street + _value.business;
+											}
+											str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+					
+											value = "";
+											if(e.toitem.index > -1) {
+												_value = e.toitem.value;
+												value = _value.province + _value.city + _value.district + _value.street + _value.business;
+											}
+											str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
+											G("searchResultPanel").innerHTML = str;
+										});
+					
+										ac.addEventListener("onconfirm", function(e) { //鼠标点击下拉列表后的事件
+											var _value = e.item.value;
+											myValue = _value.province + _value.city + _value.district + _value.street + _value.business;
+											G("searchResultPanel").innerHTML = "onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
+					
+											setPlace();
+										});
 				} else {
 					alert('failed' + this.getStatus());
 				}
@@ -515,6 +608,7 @@
 				var lat = document.getElementById("latitude").value;
 				console.log("getRedius---lng===" + lng);
 				var point = new BMap.Point(lng, lat);
+				console.log("getRedius--point==" + JSON.stringify(point))
 				var circle = new BMap.Circle(point, redius, {
 					strokeColor: "blue",
 					strokeWeight: 2,
@@ -525,11 +619,11 @@
 				var marker = new BMap.Marker(point);
 				map.addOverlay(marker);
 				map.addOverlay(circle);
-				
-				
-				marker.enableDragging(); //设置可拖拽
+
+				//				marker.enableDragging(); //设置可拖拽
 				marker.addEventListener("dragend", function(e) { //拖动事件 
 					var pt = e.point;
+
 					geoc.getLocation(pt, function(rs) {
 						//addressComponents对象可以获取到详细的地址信息
 						var addComp = rs.addressComponents;
@@ -567,11 +661,14 @@
 				}
 
 				var point = new BMap.Point(X, Y);
+				//根据点转到该点所在区域地图
+				map.centerAndZoom(point, 14)
 				map.clearOverlays();
 				//创建标注对象
 				var marker = new BMap.Marker(point);
 				map.addOverlay(marker);
-
+				var redius = document.getElementById("attendAddressRedius").value;
+				getRedius(redius);
 				marker.enableDragging(); //设置可拖拽
 				marker.addEventListener("dragend", function(e) { //拖动事件 
 					var pt = e.point;
@@ -586,6 +683,7 @@
 						document.getElementById("attendAdressText").value = site;
 						document.getElementById("longitude").value = pt.lng;
 						document.getElementById("latitude").value = pt.lat;
+						//
 
 					});
 
@@ -605,6 +703,7 @@
 
 			}
 			//输入坐标查询地点，代码结束
+			// 百度地图API功能---搜索
 
 			//添加考勤地点函数
 			function submitClick() {
@@ -671,6 +770,8 @@
 								document.getElementById("longitude").value = "";
 								document.getElementById("latitude").value = "";
 								document.getElementById("attendAddressRedius").value = "";
+								//将圆形覆盖物去掉
+								map.clearOverlays(); //清除地图上所有覆盖物
 
 							} else if(data.RspCode == 1017) {
 								alert("存在同名的考勤地点");
@@ -684,6 +785,66 @@
 						}
 					})
 				}
+			}
+
+			function setPlace() {
+				map.clearOverlays(); //清除地图上所有覆盖物
+
+				//智能搜索完成时触发该函数
+				function myFun() {
+					var pp = local.getResults().getPoi(0).point; //获取第一个智能搜索的结果
+					console.log("第一个智能搜索的结果pp=" + JSON.stringify(pp))
+					map.centerAndZoom(pp, 18);
+					//将此点的数据赋值到对应的HTML element上
+					document.getElementById("longitude").value = pp.lng;
+					document.getElementById("latitude").value = pp.lat;
+					geoc.getLocation(pp, function(rs) {
+						console.log("myFun----geoc.getLocation--------------------")
+						//						console.log("myFun---rs===========" + JSON.stringify(rs));
+						//addressComponents对象可以获取到详细的地址信息
+						var addComp = rs.addressComponents;
+						var site = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+						//将对应的HTML元素设置值
+						document.getElementById("attendAdressText").value = site;
+
+					});
+					var redius = document.getElementById("attendAddressRedius").value;
+					getRedius(redius);
+					//标注对象
+					var marker = new BMap.Marker(pp)
+					map.clearOverlays();
+					map.addOverlay(marker); //添加标注
+					//设置点可移动
+					marker.enableDragging(); //设置可拖拽
+					marker.addEventListener("dragend", function(e) { //拖动事件 
+
+						var pt = e.point;
+						console.log("pt==myFun====" + JSON.stringify(pt));
+						document.getElementById("longitude").value = pt.lng;
+						document.getElementById("latitude").value = pt.lat;
+						geoc.getLocation(pt, function(rs) {
+							//							console.log("rs===========" + JSON.stringify(rs));
+							//addressComponents对象可以获取到详细的地址信息
+							var addComp = rs.addressComponents;
+							var site = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+							//将对应的HTML元素设置值
+							document.getElementById("attendAdressText").value = site;
+
+							//
+
+						});
+
+					})
+				}
+				var local = new BMap.LocalSearch(map, { //智能搜索
+					onSearchComplete: myFun
+				});
+				console.log("myValue===="+myValue)
+				local.search(myValue);
+			}
+
+			function G(id) {
+				return document.getElementById(id);
 			}
 		</script>
 	</body>

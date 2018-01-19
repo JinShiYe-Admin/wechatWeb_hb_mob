@@ -245,6 +245,10 @@
 								alert("请输入备注");
 								return;
 							}
+							if(para.note.length > 20) {
+								alert("备注不能超过20字");
+								return;
+							}
 
 							var reg = /[1-9]/
 							var numFlag = reg.test(vm.orderid.message);

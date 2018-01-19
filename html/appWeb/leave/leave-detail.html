@@ -63,7 +63,6 @@
 				left: 0;
 				right: 0;
 				background: white;
-			
 			}
 			
 			.input-container:before {
@@ -335,7 +334,8 @@
 					flag: 0, //0修改 1审核 2查看
 					previewImgs: [],
 					photoBrowser: {},
-					isChecker: 0
+					isChecker: 0,
+					apprId: -1
 				},
 				mounted: function() {
 					this.initialData();
@@ -345,9 +345,14 @@
 						this.getFlag(newVal);
 					},
 					previewImgs: function(newVal, oldVal) {
-						this.photoBrowser = new Swiper('.swiper-container', {
-							pagination: '.swiper-pagination',
-							paginationClickable: true
+						console.log("获取的预览图片:" + JSON.stringify(newVal))
+						this.$nextTick(function() {
+							this.photoBrowser = new Swiper('.swiper-container', {
+								width: window.innerWidth,
+								height: window.innerHeight,
+								pagination: '.swiper-pagination',
+								paginationClickable: true
+							})
 						})
 					}
 				},
@@ -414,7 +419,7 @@
 					},
 					showGalleryFun: function(index) {
 						console.log("****showGallery*****");
-						this.photoBrowser.activeIndex = parseInt(index);
+						this.photoBrowser.slideTo(parseInt(index));
 						this.showGallery = true;
 					},
 					initialData: function() {
@@ -443,6 +448,9 @@
 						console.log("this.flag type:" + typeof(this.flag));
 						console.log("获取的levaeInfo:" + JSON.stringify(leaveInfo));
 						this.applyId = leaveInfo.leave.ApplyId
+						if(leaveInfo.leave.ApprId){
+							this.apprId = parseInt(leaveInfo.leave.ApprId);
+						}
 						this.personalInfo = leaveInfo.mineUserInfo;
 						this.getApprList();
 					},
@@ -479,7 +487,7 @@
 						var com = this;
 						com.showToast = true;
 						processRequest.postProcessData("setProcessApprove", {
-							procApproveId: com.applyDetail.ApprId,
+							procApproveId: com.apprId,
 							procApproveNote: com.approveNote,
 							proApproveStat: type
 						}, function(response) {

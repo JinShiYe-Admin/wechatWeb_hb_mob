@@ -514,6 +514,10 @@
 	function selectDepart(input_item) {
 		document.activeElement.blur();
 		var self = input_item;
+		if(userInfo.depart_array==undefined||userInfo.depart_array.length==0){
+			alert("暂无部门")
+		}
+		
 		weui.picker(userInfo.depart_array, {
 			onChange: function(result) {
 				//						console.log(result);
@@ -528,6 +532,9 @@
 	function selectAttendArea(input_item) {
 		document.activeElement.blur();
 		var self = input_item;
+		if(attendArea.attendAreaList.length==0){
+			alert("暂无考勤地点")
+		}
 		weui.picker(attendArea.attendAreaList, {
 			onChange: function(result) {
 				//						console.log(result);
@@ -542,6 +549,9 @@
 	function selectAttendType(input_item) {
 		document.activeElement.blur();
 		var self = input_item;
+		if(attendType.attendTypeList.length==0){
+			alert("暂无考勤类型")
+		}
 		weui.picker(attendType.attendTypeList, {
 			onChange: function(result) {
 				//						console.log(result);

@@ -614,7 +614,7 @@
 			}
 			$.ajax({
 				type: "post",
-				url: "https://jbyj.jiaobaowang.net/AttendanceService/getAttendType", //应该是绑定.9机器的域名，考勤管理模块应该也是部署在此阿里云服务机器上。
+				url: "https://jbyj.jiaobaowang.net/AttendanceService/getAttendTypeForSel", //应该是绑定.9机器的域名，考勤管理模块应该也是部署在此阿里云服务机器上。
 				async: false,
 				data: JSON.stringify(requestDataForAttendType),
 				success: function(data) {

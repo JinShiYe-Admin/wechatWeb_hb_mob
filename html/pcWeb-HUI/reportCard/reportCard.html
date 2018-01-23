@@ -487,6 +487,7 @@
 					console.log('添加成绩单数据：' + JSON.stringify(data.RspData))
 					if(data.RspCode == 0) {
 						alert("添加成功")
+						$('#uploaderInput').val('');
 						content = JSON.parse(data.RspData);
 					} else {
 						alert(data.RspTxt)

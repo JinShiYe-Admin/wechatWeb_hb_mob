@@ -14,12 +14,12 @@
 		<title>配置首页轮播图</title>
 		<script type="text/javascript">
 			var WebVersion = "?" + Math.random();
-			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css' + WebVersion + '" />');
-			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css' + WebVersion + '" />');
-			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css' + WebVersion + '" />');
-			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css' + WebVersion + '" id="skin" />');
-			document.write('<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css' + WebVersion + '" />');
 		</script>
+		<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui/css/H-ui.min.css" />
+		<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css" />
+		<link rel="stylesheet" href="../../js/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+		<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
+		<link rel="stylesheet" href="../../js/H-ui.admin/static/h-ui.admin/css/style.css" />
 		<style>
 			.operate-edit {
 				text-decoration: none;
@@ -66,10 +66,6 @@
 				line-height: 1.6em;
 				margin-top: 3px;
 			}
-
-			/*#__vconsole * {
-				z-index: 99999999 !important;
-			}*/
 		</style>
 	</head>
 
@@ -197,21 +193,20 @@
 				</tbody>
 			</table>
 		</template>
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/lib/layer/2.4/layer.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
+		<script type="text/javascript" src="../../js/H-ui.admin/static/h-ui.admin/js/H-ui.admin.js"></script>
+		<script type="text/javascript" src="../../js/vue.min.js"></script>
+		<script type="text/javascript" src="../../js/lib/plupload/moxie.min.js"></script>
+		<script type="text/javascript" src="../../js/lib/plupload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../../js/lib/qiniu/qiniu.min.js"></script>
+		<script type="text/javascript" src="../../js/utils/cryption.js"></script>
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../js/PublicProtocol.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/utils.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/storageutil.js" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/jquery/1.9.1/jquery.min.js" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/lib/layer/2.4/layer.js" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/static/h-ui/js/H-ui.min.js" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/H-ui.admin/static/h-ui.admin/js/H-ui.admin.js" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/vue.min.js" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/moxie.min.js" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/lib/plupload/plupload.full.min.js" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/lib/qiniu/qiniu.min.js" + WebVersion + "'></s" + "cript>");
-			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cryption.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/cloudutil.js" + WebVersion + "'></s" + "cript>");
-			//document.write("<s" + "cript type='text/javascript' src='../../js/lib/vconsole/vconsole.min.js?" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../js/utils/compress.js?" + WebVersion + "'></s" + "cript>");
 		</script>
 		<script>
@@ -392,7 +387,7 @@
 									console.log("原图尺寸", result.length);
 									var ratio = img.naturalWidth / img.naturalHeight;
 									console.log("ratio", ratio);
-									if(ratio >= 4 / 3 && ratio < 2) {
+									if(ratio >= 4 / 3 && ratio <= 4) {
 										var newDataUrl = compress.getCanvasDataUrl(img, compress.getSuitableSize(imgInfo, Math.ceil(result.length / maxSize)));
 										var blob = compress.base64ToBlob(newDataUrl, 'image/jpeg');
 										console.log('文件大小:' + blob.size);
@@ -406,7 +401,7 @@
 										}
 									} else {
 										$('#uploaderInput').val('');
-										pictureModal.show("图片选取失败", "请选择宽高比在4:3至2:1范围内的图片");
+										pictureModal.show("图片选取失败", "请选择宽高比在4:3至4:1范围内的图片");
 									}
 								});
 							}

@@ -598,7 +598,7 @@
 				}
 			})
 			//给corpId赋值假数据
-						corpId = "wx6c4528c675d4a9c9";
+//						corpId = "wx6c4528c675d4a9c9";
 			/**
 			 * 获取考勤类型记录数据列表
 			 */
@@ -612,9 +612,10 @@
 				"token": "",
 				"sign": ""
 			}
+			console.log("requestDataForAttendType==="+JSON.stringify(requestDataForAttendType))
 			$.ajax({
 				type: "post",
-				url: "https://jbyj.jiaobaowang.net/AttendanceService/getAttendType", //应该是绑定.9机器的域名，考勤管理模块应该也是部署在此阿里云服务机器上。
+				url: "https://jbyj.jiaobaowang.net/AttendanceService/getAttendTypeForTime", //应该是绑定.9机器的域名，考勤管理模块应该也是部署在此阿里云服务机器上。
 				async: false,
 				data: JSON.stringify(requestDataForAttendType),
 				success: function(data) {
@@ -925,7 +926,7 @@
 									} else if(data.RspCode == 1018) {
 										alert("签到时间不能交叉");
 									} else if(data.RspCode == 1019) {
-										alert("同一个考勤类型记录也只能有一个时间段");
+										alert("同一个考勤类型只能有一个时间段");
 									}
 								},
 								error: function() {

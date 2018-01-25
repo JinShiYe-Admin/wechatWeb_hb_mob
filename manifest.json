@@ -544,6 +544,25 @@
 				],
 				"refer": [],
 				"priority": 0
+			},
+			"html/appWeb/html-app/home.html": {
+				"resources": [],
+				"refer": [
+					"html/appWeb/html-app/all.html"
+				],
+				"priority": 0
+			},
+			"html/appWeb/html-app/all.html": {
+				"resources": [
+					"html/appWeb/html-app/tab-top-subpage-1.html"
+				],
+				"refer": [
+					"html/appWeb/html-app/tab-top-subpage-5.html",
+					"html/appWeb/html-app/tab-top-subpage-2.html",
+					"html/appWeb/html-app/tab-top-subpage-4.html",
+					"html/appWeb/html-app/tab-top-subpage-3.html"
+				],
+				"priority": 0
 			}
 		},
 		"idle": {

@@ -83,7 +83,7 @@
 	</head>
 
 	<body>
-		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 成绩单 <span class="c-gray en">&gt;</span>成绩单
+		<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 成绩单
 			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
 		</nav>
 		<div id="column_table" class="page-container" style="display: none;">
@@ -143,18 +143,18 @@
 			</table>
 			<!--添加地址-->
 			<div id="dataAdd" style="display: none;">
-				<form class="form form-horizontal">
+				<form class="form form-horizontal" id="form-member-add">
 					<div id="clCname" class="row cl">
 						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>成绩单名称：</label>
 						<div class="formControls col-xs-8 col-sm-9">
-							<input  v-model="cname" id="dataCname" type="text" class="input-text" maxlength="20" placeholder="请输入成绩单名称，最多20字"></input>
+							<input v-model="cname" id="dataCname" type="text" class="input-text" maxlength="20" placeholder="请输入成绩单名称，最多20字"></input>
 						</div>
 					</div>
 					<div id="clOrderid" class="row cl">
 						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>部门：</label>
 						<div class="formControls col-xs-8 col-sm-9">
 							<span class="select-box">
-							<select name="" id="dpt" class="select" size="1" title="请选择部门" :value="dptid">
+							<select name="" id="dpt" class="select" size="1" title="请选择部门">
 						<option :value="item.value" v-for="(item,index) in depart_array" v-if="index>0">{{item.label}}</option>
 
 							</select>
@@ -166,12 +166,12 @@
 						<div class="formControls col-xs-8 col-sm-9"> <span class="btn-upload form-group">
 				<input class="input-text upload-url" type="text" name="uploadfile" id="uploadfile" readonly nullmsg="请添加附件！" style="width:200px">
 				<a   v-on:change="selectFile($event)" href="javascript:void();" class="btn btn-primary radius upload-btn"><i class="Hui-iconfont">&#xe642;</i> 浏览文件</a>
-				<input type="file" multiple name="file-2" class="input-file"  v-on:change="selectFile($event)">
+				<input id="file" type="file" multiple name="file-2" class="input-file"  v-on:change="selectFile($event)">
 				</span> </div>
 					</div>
 					<div id="submitArea" class="row cl submit-button">
 						<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
-							<input id="submitBtn" onclick="addExama()" class="btn btn-primary radius" type="button" value="提交成绩单" />
+							<input id="submitBtn" class="btn btn-primary radius"  type="submit" value="提交成绩单" />
 						</div>
 					</div>
 				</form>
@@ -198,6 +198,8 @@
 		<script src="../../../js/appweb/choose-file.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../../js/utils/consts.js"></script>
 		<script src="../../../js/utils/events.js"></script>
+
+
 		<!--<script src="../../../js/compress.js"></script>-->
 		<script type="text/javascript">
 			document.write("<s" + "cript type='text/javascript' src='../../../js/utils/compress.js?" + Math.random() + "'></s" + "cript>");
@@ -211,16 +213,20 @@
 			document.write("<s" + "cript type='text/javascript' src='../../../js/H-ui.admin/lib/laypage/1.2/laypage.js" + WebVersion + "'></s" + "cript>");
 			document.write("<s" + "cript type='text/javascript' src='../../../js/vue.min.js" + WebVersion + "'></s" + "cript>");
 		</script>
+		<script type="text/javascript" src="../../../js/H-ui.admin/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+		<script type="text/javascript" src="../../../js/H-ui.admin/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+		<script type="text/javascript" src="../../../js/H-ui.admin/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 		<script>
 			var flag = 0;
 			var examid = 0;
+			var layer1;
 			//栏目表
 			var column_table = new Vue({
 				el: "#column_table",
 				data: {
 					cname: "",
-					dptid:0,
-					dptname:"",
+					dptid: 0,
+					dptname: "",
 					uploadedFile: {},
 					depart_array: [],
 					dt: [{
@@ -231,7 +237,7 @@
 					}]
 				},
 				updated: function() {
-
+console.log("updated:deptid="+column_table.dptid);
 				},
 				methods: {
 
@@ -248,9 +254,9 @@
 						} else {
 							var types = files[0].type.toLowerCase().split("/");
 							console.log("types:" + types);
-							var isTrue = types=="";
-							console.log("isTrue:"+isTrue)
-							if(types[1] == "vnd.ms-excel" || types[1] == "csv" || types[1] == 'vnd.openxmlformats-officedocument.spreadsheetml.sheet'||types == "") {
+							var isTrue = types == "";
+							console.log("isTrue:" + isTrue)
+							if(types[1] == "vnd.ms-excel" || types[1] == "csv" || types[1] == 'vnd.openxmlformats-officedocument.spreadsheetml.sheet' || types == "") {
 								compress.postFile(data, function(filePath) {
 									if(filePath.RspCode == 0) {
 										console.log(JSON.stringify(filePath));
@@ -271,15 +277,23 @@
 					/**
 					 * 点击添加栏目
 					 */
+
 					add: function() {
+
 						$("#dataCname").val("");
 						$("#uploadfile").val("");
-						layer.open({
+						$("#file").val("");
+						
+						layer1 = layer.open({
 							type: 1,
 							title: "添加",
 							area: '500px',
 							zIndex: 999,
-							content: $('#dataAdd')
+							content: $('#dataAdd'),
+							end: function() {
+								console.log("刷新")
+								location.reload();
+							}
 						});
 						//						var tempData = {
 						//							type: 'add'
@@ -326,24 +340,24 @@
 
 					},
 					clickEdit: function(item) {
-//						console.log(888888+JSON.stringify(item))
-//						flag=1;
-//						examid = item.examid;
-//						getexam(1);
-//						flag=0;
-//column_table.cname = item.cname;
-//column_table.dptid = item.dptid;
-////column_table.uploadfile = item.dptid;
-////						$("#dataOrderid").val(item.dptid);
-////						$("#uploadfile").val(item.orderid);
-//						console.log("999999"+$("#dataCname").val())
-//												layer.open({
-//							type: 1,
-//							title: "修改",
-//							area: '500px',
-//							zIndex: 999,
-//							content: $('#dataAdd')
-//						});
+						//						console.log(888888+JSON.stringify(item))
+						//						flag=1;
+						//						examid = item.examid;
+						//						getexam(1);
+						//						flag=0;
+						//column_table.cname = item.cname;
+						//column_table.dptid = item.dptid;
+						////column_table.uploadfile = item.dptid;
+						////						$("#dataOrderid").val(item.dptid);
+						////						$("#uploadfile").val(item.orderid);
+						//						console.log("999999"+$("#dataCname").val())
+						//												layer.open({
+						//							type: 1,
+						//							title: "修改",
+						//							area: '500px',
+						//							zIndex: 999,
+						//							content: $('#dataAdd')
+						//						});
 						var url = "reportCardDetaill.html";
 						var ids = url.split("/");
 						var dataStr = JSON.stringify(item);
@@ -365,6 +379,7 @@
 			});
 
 			window.onload = function() {
+//				getDepts();
 				getDepart()
 				getexam(1);
 
@@ -410,7 +425,7 @@
 			 * @param {Object} pageindex 列表序号
 			 */
 			function getexam(pageindex) {
-				
+
 				//				if(document.getElementById("depart").data_id==-1){
 				//					document.getElementById("depart").data_id = "";
 				//				}
@@ -487,6 +502,7 @@
 					console.log('添加成绩单数据：' + JSON.stringify(data.RspData))
 					if(data.RspCode == 0) {
 						alert("添加成功")
+						layer.close(layer1);
 						content = JSON.parse(data.RspData);
 					} else {
 						alert(data.RspTxt)
@@ -514,6 +530,44 @@
 						}
 					}
 				});
+			}
+			$("#form-member-add").validate({
+				onkeyup: false,
+				focusCleanup: true,
+				success: "valid",
+				submitHandler: function(form) {
+					addExama();
+				}
+			});
+						function getDepts() {
+				var tempData = {
+					corpId: "wx6c4528c675d4a9c9",
+					userId: "songyanming",
+				}
+				getDeptsByUserPro(tempData, function(data) {
+					console.log('部门:' + JSON.stringify(data));
+					var rspData = data.RspData.Data;
+
+					if(data.RspCode == 0) {
+						column_table.depart_array=[];
+						for(var i = 0; i < rspData.length; i++) {
+							var model = rspData[i]
+							if(model.value == -1) {
+								model.label = model.DeptName;
+								model.value = model.DeptId
+							} else {
+								model.label = model.DeptName;
+								model.value = model.DeptId
+								column_table.depart_array.push(model);
+							}
+
+						}
+	
+					} else {
+						alert(data.RspTxt)
+					}
+				})
+
 			}
 		</script>
 	</body>

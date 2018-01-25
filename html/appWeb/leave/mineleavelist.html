@@ -155,6 +155,9 @@
 			} //请假列表数据
 
 			window.onpageshow = function(event) {
+				if(event.persisted) {
+					$("#leaveList").empty();
+				}
 				var sKey = utils.getValueFromUrlByKey("sKey");
 				history.replaceState({}, "请假列表", "mineleavelist.html");
 				initListener();

@@ -125,12 +125,12 @@ var request = (function(mod) {
 	 * @param {Object} name
 	 * @param {Object} callbak
 	 */
-	mod.addServiceGroup = function(name, callback) {
+	mod.addServiceGroup = function(name, gusers, callback) {
 		var comData = {
 			cmd: 'devkindsadmin',
 			type: 'add',
 			cname: name,
-			gusers: ""
+			gusers: gusers
 		}
 		mod.postData(consts.MAINURL, JSON.stringify(comData), function(response) {
 			console.log("添加维修服务组获取的数据" + JSON.stringify(response));

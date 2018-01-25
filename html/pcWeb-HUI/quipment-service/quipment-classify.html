@@ -20,7 +20,6 @@
 			.inline-block {
 				display: inline-block;
 			}
-			
 			/*body {
 				background-color: #F8F8F8;
 			}*/
@@ -126,7 +125,8 @@
 			.manage-item {
 				padding: 5px 5px;
 			}
-			.multi-choose-container{
+			
+			.multi-choose-container {
 				padding-bottom: 16px;
 			}
 		</style>
@@ -223,7 +223,7 @@
 								<textarea type="text" class="textarea radius" v-model.trim="serviceGroupName" maxlength="20" placeholder="请输入维修组名称,最多20字"></textarea>
 							</div>
 							<div class="modal-footer">
-								<button class="btn btn-primary" v-bind:disabled="serviceGroupName.length==0" v-on:click="changeClick()">确定</button>
+								<button class="btn btn-primary" v-bind:disabled="serviceGroupName.length==0" v-on:click="addPersons()">添加维修人员</button>
 								<button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
 							</div>
 						</div>
@@ -296,16 +296,30 @@
 						console.log("删除人员后的数据：" + JSON.stringify(this.selectPerson))
 					},
 					choosePerson: function() {
-						console.log("*******choosePerson*******")
-						request.editSeviceGroup({
-							colid: this.classify.kindsid,
-							callcol: "gusers",
-							colv: this.personToString(this.selectPerson)
-						}, function(response) {
-							if(response.RspCode == 0) {
-								router.go(-1);
-							}
-						})
+						if(this.classify.kindsid) {
+							console.log("*******choosePerson*******")
+							request.editSeviceGroup({
+								colid: this.classify.kindsid,
+								callcol: "gusers",
+								colv: this.personToString(this.selectPerson)
+							}, function(response) {
+								if(response.RspCode == 0) {
+									router.go(-1);
+								} else {
+									layer.alert(response.RspTxt)
+								}
+							})
+						} else {
+							request.addServiceGroup(this.classify.cname,
+								this.personToString(this.selectPerson),
+								function(response) {
+									if(response.RspCode == 0) {
+										router.go(-1);
+									} else {
+										layer.alert(response.RspTxt);
+									}
+								})
+						}
 
 					},
 					personToString: function(person) {

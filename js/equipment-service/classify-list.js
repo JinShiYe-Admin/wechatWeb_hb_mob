@@ -84,11 +84,7 @@ Vue.component("classify-list", {
 		},
 		addServiceGroup: function() {
 			console.log("****addServiceGroup****");
-			var com = this;
-			if(com.serviceGroupName.length > 20) {
-				layer.alert("组名最多20字！");
-				return;
-			}
+			
 			request.addServiceGroup(this.serviceGroupName, function(response) {
 				if(response.RspCode == 0) {
 					com.getAllGroups();
@@ -147,6 +143,17 @@ Vue.component("classify-list", {
 			router.push({
 				name: 'chooseDepart'
 			})
+		},
+		addPersons:function(){
+			if(this.serviceGroupName.length > 20) {
+				layer.alert("组名最多20字！");
+				return;
+			}
+			var classify={
+				cname:this.serviceGroupName,
+				gusers:{}
+			}
+			this.changePerson(classify)
 		},
 		delClassify: function(classify, index) {
 			console.log("*****delClassify*****")

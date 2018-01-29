@@ -94,7 +94,7 @@
 					<div class="weui-cell weui-cell_switch">
 						<div class="weui-cell__bd">{{iswrite.title}}</div>
 						<div class="weui-cell__ft">
-							<input :disabled="(islink.check)||(iswrite_all==0)" class="weui-switch" type="checkbox" v-model="iswrite.check">
+							<input :disabled="islink.check" class="weui-switch" type="checkbox" v-model="iswrite.check">
 						</div>
 					</div>
 				</div>
@@ -123,7 +123,7 @@
 		</script>
 		<script>
 			window.onload = function() {
-				getWebsitConfig();
+//				getWebsitConfig();
 				var detail = utils.getDataFromUrl(window.location.href);
 				//				alert("detail " + JSON.stringify(detail));
 				vm.type = detail.type;
@@ -200,7 +200,7 @@
 					},
 					iswrite: {
 						title: "是否允许投稿",
-						check: false
+						check: true
 					},
 					istop: {
 						title: "是否显示首页",
